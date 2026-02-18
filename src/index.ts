@@ -1,10 +1,30 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { getCategories } from "./data.js";
 
 const server = new McpServer({
   name: "agentdeals",
   version: "0.1.0",
 });
+
+server.registerTool(
+  "list_categories",
+  {
+    description:
+      "List available categories of developer tool offers (cloud hosting, databases, CI/CD, etc.)",
+  },
+  async () => {
+    const categories = getCategories();
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(categories, null, 2),
+        },
+      ],
+    };
+  }
+);
 
 async function main() {
   const transport = new StdioServerTransport();
