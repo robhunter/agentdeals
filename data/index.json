@@ -1,0 +1,94 @@
+{
+  "offers": [
+    {
+      "vendor": "Vercel",
+      "category": "Cloud Hosting",
+      "description": "Free tier for frontend deployments with serverless functions",
+      "tier": "Hobby",
+      "url": "https://vercel.com/pricing",
+      "tags": ["hosting", "serverless", "frontend", "jamstack"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "PlanetScale",
+      "category": "Databases",
+      "description": "Serverless MySQL with generous free tier — 1 database, 1B row reads/mo",
+      "tier": "Hobby",
+      "url": "https://planetscale.com/pricing",
+      "tags": ["database", "mysql", "serverless"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "Supabase",
+      "category": "Databases",
+      "description": "Open source Firebase alternative with free tier — Postgres, Auth, Storage, Realtime",
+      "tier": "Free",
+      "url": "https://supabase.com/pricing",
+      "tags": ["database", "postgres", "auth", "storage", "realtime", "baas"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "category": "CI/CD",
+      "description": "Free CI/CD for public repos, 2000 min/mo for private repos",
+      "tier": "Free",
+      "url": "https://github.com/pricing",
+      "tags": ["ci", "cd", "automation", "github"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "Sentry",
+      "category": "Monitoring",
+      "description": "Error tracking and performance monitoring — 5K errors free/mo",
+      "tier": "Developer",
+      "url": "https://sentry.io/pricing/",
+      "tags": ["monitoring", "errors", "performance", "observability"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "Clerk",
+      "category": "Auth",
+      "description": "Drop-in auth with 10K monthly active users free",
+      "tier": "Free",
+      "url": "https://clerk.com/pricing",
+      "tags": ["auth", "authentication", "identity", "users"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "Resend",
+      "category": "Email",
+      "description": "Developer-first email API — 3K emails/mo free",
+      "tier": "Free",
+      "url": "https://resend.com/pricing",
+      "tags": ["email", "api", "transactional"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "Render",
+      "category": "Cloud Hosting",
+      "description": "Free tier for static sites and web services with auto-deploy from Git",
+      "tier": "Free",
+      "url": "https://render.com/pricing",
+      "tags": ["hosting", "paas", "deployment", "docker"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "Neon",
+      "category": "Databases",
+      "description": "Serverless Postgres with branching — free tier includes 0.5 GB storage",
+      "tier": "Free",
+      "url": "https://neon.tech/pricing",
+      "tags": ["database", "postgres", "serverless", "branching"],
+      "verifiedDate": "2026-02-18"
+    },
+    {
+      "vendor": "Cloudflare Workers",
+      "category": "Cloud Hosting",
+      "description": "Edge compute with 100K requests/day free",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/workers/platform/pricing/",
+      "tags": ["edge", "serverless", "hosting", "workers"],
+      "verifiedDate": "2026-02-18"
+    }
+  ]
+}
