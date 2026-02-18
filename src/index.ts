@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { getCategories } from "./data.js";
+import { z } from "zod";
+import { getCategories, searchOffers } from "./data.js";
 
 const server = new McpServer({
   name: "agentdeals",
@@ -20,6 +21,29 @@ server.registerTool(
         {
           type: "text" as const,
           text: JSON.stringify(categories, null, 2),
+        },
+      ],
+    };
+  }
+);
+
+server.registerTool(
+  "search_offers",
+  {
+    description:
+      "Search developer tool offers by keyword, category, or vendor name. Returns matching deals with details and URLs.",
+    inputSchema: {
+      query: z.string().optional().describe("Keyword to search for in vendor names, descriptions, and tags"),
+      category: z.string().optional().describe("Filter results to a specific category (e.g. 'Databases', 'Cloud Hosting')"),
+    },
+  },
+  async ({ query, category }) => {
+    const results = searchOffers(query, category);
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify(results, null, 2),
         },
       ],
     };
