@@ -1,0 +1,24 @@
+{
+  "name": "agentdeals",
+  "version": "0.1.0",
+  "description": "MCP server aggregating developer tool deals, free tiers, and startup programs",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "node --test test/**/*.test.ts",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "ts-node": "^10.9.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
