@@ -4,6 +4,28 @@
   "description": "MCP server aggregating developer tool deals, free tiers, and startup programs",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "agentdeals": "dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "developer-tools",
+    "deals",
+    "free-tier",
+    "startup-programs",
+    "model-context-protocol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robhunter/agentdeals"
+  },
+  "license": "MIT",
+  "author": "Rob Hunter",
+  "mcpName": "io.github.robhunter/agentdeals",
+  "files": [
+    "dist",
+    "data"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
