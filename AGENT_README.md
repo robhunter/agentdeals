@@ -37,9 +37,29 @@ npm install          # Install dependencies
 npm run build        # Compile TypeScript
 npm run dev          # Run in development mode
 npm test             # Run tests
-npm start            # Run compiled server
+npm start            # Run compiled server (stdio transport)
+npm run serve        # Run HTTP server (streamable-http transport)
 ```
+
+### HTTP Transport
+
+The server supports two transport modes:
+
+- **stdio** (`npm start`): For local MCP clients that communicate over stdin/stdout
+- **HTTP** (`npm run serve`): For remote access via streamable-http transport at `/mcp`
+
+The HTTP server port defaults to 3000 and can be configured via the `PORT` environment variable:
+
+```bash
+PORT=8080 npm run serve
+```
+
+Endpoints:
+- `POST /mcp` — MCP JSON-RPC requests (requires `Accept: application/json, text/event-stream` header)
+- `GET /mcp` — SSE stream for server-initiated notifications
+- `DELETE /mcp` — Session termination
+- `GET /health` — Health check
 
 ## Current Status
 
-Not yet started. Awaiting initial implementation from seed issues.
+MCP server is functional with stdio and HTTP transports. 13 passing tests. Issues #7 and #8 complete.

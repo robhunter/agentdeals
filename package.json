@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "serve": "node dist/serve.js",
     "dev": "ts-node src/index.ts",
     "test": "node --test --test-concurrency 1 test/**/*.test.ts",
     "lint": "tsc --noEmit"

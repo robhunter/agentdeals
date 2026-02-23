@@ -1,0 +1,199 @@
+import { describe, it, afterEach } from "node:test";
+import assert from "node:assert";
+import { spawn, type ChildProcess } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PORT = 3456; // Use non-default port to avoid conflicts
+
+function startHttpServer(): Promise<ChildProcess> {
+  return new Promise((resolve, reject) => {
+    const serverPath = path.join(__dirname, "..", "dist", "serve.js");
+    const proc = spawn("node", [serverPath], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PORT: String(PORT) },
+    });
+
+    const timeout = setTimeout(() => {
+      proc.kill();
+      reject(new Error("Server startup timeout"));
+    }, 5000);
+
+    proc.stderr!.on("data", (data: Buffer) => {
+      if (data.toString().includes("running on http")) {
+        clearTimeout(timeout);
+        resolve(proc);
+      }
+    });
+
+    proc.on("error", (err) => {
+      clearTimeout(timeout);
+      reject(err);
+    });
+  });
+}
+
+async function mcpRequest(
+  path: string,
+  body: unknown,
+  sessionId?: string
+): Promise<{ status: number; headers: Headers; text: string }> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/event-stream",
+  };
+  if (sessionId) {
+    headers["Mcp-Session-Id"] = sessionId;
+  }
+
+  const response = await fetch(`http://localhost:${PORT}${path}`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  return {
+    status: response.status,
+    headers: response.headers,
+    text: await response.text(),
+  };
+}
+
+function parseSSEData(text: string): any[] {
+  const results: any[] = [];
+  for (const line of text.split("\n")) {
+    if (line.startsWith("data: ")) {
+      try {
+        results.push(JSON.parse(line.slice(6)));
+      } catch {
+        // skip non-JSON lines
+      }
+    }
+  }
+  return results;
+}
+
+describe("HTTP transport", () => {
+  let proc: ChildProcess | null = null;
+
+  afterEach(() => {
+    if (proc) {
+      proc.kill();
+      proc = null;
+    }
+  });
+
+  it("responds to health check", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/health`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.strictEqual(body.status, "ok");
+  });
+
+  it("initializes and responds to tool calls over HTTP", async () => {
+    proc = await startHttpServer();
+
+    // Initialize
+    const initResp = await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "test-client", version: "1.0.0" },
+      },
+    });
+
+    assert.strictEqual(initResp.status, 200);
+    const sessionId = initResp.headers.get("mcp-session-id");
+    assert.ok(sessionId, "Should return a session ID");
+
+    const initData = parseSSEData(initResp.text);
+    assert.strictEqual(initData.length, 1);
+    assert.strictEqual(initData[0].result.serverInfo.name, "agentdeals");
+
+    // Send initialized notification + list_categories tool call
+    const toolResp = await mcpRequest(
+      "/mcp",
+      [
+        { jsonrpc: "2.0", method: "notifications/initialized" },
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "list_categories", arguments: {} },
+        },
+      ],
+      sessionId
+    );
+
+    assert.strictEqual(toolResp.status, 200);
+    const toolData = parseSSEData(toolResp.text);
+    const toolResult = toolData.find((d: any) => d.id === 2);
+    assert.ok(toolResult, "Should have a tool response");
+
+    const categories = JSON.parse(toolResult.result.content[0].text);
+    assert.ok(Array.isArray(categories));
+    assert.ok(categories.length > 0);
+  });
+
+  it("search_offers works over HTTP", async () => {
+    proc = await startHttpServer();
+
+    // Initialize
+    const initResp = await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "test-client", version: "1.0.0" },
+      },
+    });
+
+    const sessionId = initResp.headers.get("mcp-session-id");
+    assert.ok(sessionId);
+
+    // Search
+    const searchResp = await mcpRequest(
+      "/mcp",
+      [
+        { jsonrpc: "2.0", method: "notifications/initialized" },
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "search_offers", arguments: { query: "postgres" } },
+        },
+      ],
+      sessionId
+    );
+
+    assert.strictEqual(searchResp.status, 200);
+    const searchData = parseSSEData(searchResp.text);
+    const searchResult = searchData.find((d: any) => d.id === 2);
+    assert.ok(searchResult);
+
+    const offers = JSON.parse(searchResult.result.content[0].text);
+    assert.ok(Array.isArray(offers));
+    assert.ok(offers.length >= 2);
+    for (const offer of offers) {
+      const searchable = [offer.vendor, offer.description, ...offer.tags]
+        .join(" ")
+        .toLowerCase();
+      assert.ok(searchable.includes("postgres"));
+    }
+  });
+
+  it("returns 404 for unknown paths", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/unknown`);
+    assert.strictEqual(response.status, 404);
+  });
+});
