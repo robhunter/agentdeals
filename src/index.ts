@@ -15,15 +15,28 @@ server.registerTool(
       "List available categories of developer tool offers (cloud hosting, databases, CI/CD, etc.)",
   },
   async () => {
-    const categories = getCategories();
-    return {
-      content: [
-        {
-          type: "text" as const,
-          text: JSON.stringify(categories, null, 2),
-        },
-      ],
-    };
+    try {
+      const categories = getCategories();
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(categories, null, 2),
+          },
+        ],
+      };
+    } catch (err) {
+      console.error("list_categories error:", err);
+      return {
+        isError: true,
+        content: [
+          {
+            type: "text" as const,
+            text: `Error listing categories: ${err instanceof Error ? err.message : String(err)}`,
+          },
+        ],
+      };
+    }
   }
 );
 
@@ -38,15 +51,28 @@ server.registerTool(
     },
   },
   async ({ query, category }) => {
-    const results = searchOffers(query, category);
-    return {
-      content: [
-        {
-          type: "text" as const,
-          text: JSON.stringify(results, null, 2),
-        },
-      ],
-    };
+    try {
+      const results = searchOffers(query, category);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(results, null, 2),
+          },
+        ],
+      };
+    } catch (err) {
+      console.error("search_offers error:", err);
+      return {
+        isError: true,
+        content: [
+          {
+            type: "text" as const,
+            text: `Error searching offers: ${err instanceof Error ? err.message : String(err)}`,
+          },
+        ],
+      };
+    }
   }
 );
 
