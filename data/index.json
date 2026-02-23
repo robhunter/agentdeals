@@ -10,15 +10,6 @@
       "verifiedDate": "2026-02-18"
     },
     {
-      "vendor": "PlanetScale",
-      "category": "Databases",
-      "description": "Serverless MySQL with generous free tier — 1 database, 1B row reads/mo",
-      "tier": "Hobby",
-      "url": "https://planetscale.com/pricing",
-      "tags": ["database", "mysql", "serverless"],
-      "verifiedDate": "2026-02-18"
-    },
-    {
       "vendor": "Supabase",
       "category": "Databases",
       "description": "Open source Firebase alternative with free tier — Postgres, Auth, Storage, Realtime",
@@ -48,7 +39,7 @@
     {
       "vendor": "Clerk",
       "category": "Auth",
-      "description": "Drop-in auth with 10K monthly active users free",
+      "description": "Drop-in auth with 50K monthly active users free, unlimited apps",
       "tier": "Free",
       "url": "https://clerk.com/pricing",
       "tags": ["auth", "authentication", "identity", "users"],
@@ -75,7 +66,7 @@
     {
       "vendor": "Neon",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — free tier includes 0.5 GB storage",
+      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month, 0.5 GB storage",
       "tier": "Free",
       "url": "https://neon.tech/pricing",
       "tags": ["database", "postgres", "serverless", "branching"],
