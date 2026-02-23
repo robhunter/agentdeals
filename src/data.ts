@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { Offer, OfferIndex } from "./types.js";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
 
 let cachedOffers: Offer[] | null = null;
@@ -10,14 +12,41 @@ export function loadOffers(): Offer[] {
   if (cachedOffers) return cachedOffers;
 
   if (!fs.existsSync(INDEX_PATH)) {
+    console.error(`Data index not found at ${INDEX_PATH}, using empty offer list`);
     cachedOffers = [];
     return cachedOffers;
   }
 
-  const raw = fs.readFileSync(INDEX_PATH, "utf-8");
-  const data: OfferIndex = JSON.parse(raw);
-  cachedOffers = data.offers ?? [];
+  let raw: string;
+  try {
+    raw = fs.readFileSync(INDEX_PATH, "utf-8");
+  } catch (err) {
+    console.error(`Failed to read data index: ${err}`);
+    cachedOffers = [];
+    return cachedOffers;
+  }
+
+  let data: OfferIndex;
+  try {
+    data = JSON.parse(raw);
+  } catch (err) {
+    console.error(`Data index contains malformed JSON: ${err}`);
+    cachedOffers = [];
+    return cachedOffers;
+  }
+
+  if (!data || !Array.isArray(data.offers)) {
+    console.error("Data index is missing 'offers' array, using empty offer list");
+    cachedOffers = [];
+    return cachedOffers;
+  }
+
+  cachedOffers = data.offers;
   return cachedOffers;
+}
+
+export function resetCache(): void {
+  cachedOffers = null;
 }
 
 export function getCategories(): { name: string; count: number }[] {

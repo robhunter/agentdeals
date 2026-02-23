@@ -2,12 +2,13 @@
   "name": "agentdeals",
   "version": "0.1.0",
   "description": "MCP server aggregating developer tool deals, free tiers, and startup programs",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "test": "node --test test/**/*.test.ts",
+    "test": "node --test --test-concurrency 1 test/**/*.test.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
