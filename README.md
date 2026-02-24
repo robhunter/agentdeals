@@ -2,7 +2,7 @@
 
 An MCP server that aggregates free tiers, startup credits, and developer tool deals — so your AI agent (or you) can find the best infrastructure offers without leaving the workflow.
 
-AgentDeals indexes real, verified pricing data from 31 developer infrastructure vendors across 11 categories. Connect any MCP-compatible client and search deals by keyword or category.
+AgentDeals indexes real, verified pricing data from 50 developer infrastructure vendors across 13 categories. Connect any MCP-compatible client and search deals by keyword or category.
 
 ## Quick Start — Remote (Recommended)
 
@@ -95,11 +95,11 @@ No parameters. Returns all categories with offer counts.
 
 ## Categories
 
-Auth, CI/CD, Cloud Hosting, Cloud IaaS, Databases, Email, Messaging, Monitoring, Search, Storage, Web Scraping
+Auth, CI/CD, Cloud Hosting, Cloud IaaS, Databases, Developer Tools, Email, Infrastructure, Messaging, Monitoring, Search, Storage, Web Scraping
 
 ## Stats
 
-- **31** vendor offers across **11** categories
+- **50** vendor offers across **13** categories
 - Data verified as of 2026-02-24
 
 ## Development
@@ -107,7 +107,7 @@ Auth, CI/CD, Cloud Hosting, Cloud IaaS, Databases, Email, Messaging, Monitoring,
 ```bash
 npm install          # Install dependencies
 npm run build        # Compile TypeScript
-npm test             # Run tests (14 passing)
+npm test             # Run tests (20 passing)
 npm run serve        # Run HTTP server (port 3000)
 npm start            # Run stdio server
 ```
