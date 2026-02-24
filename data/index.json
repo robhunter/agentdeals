@@ -7,52 +7,7 @@
       "tier": "Hobby",
       "url": "https://vercel.com/pricing",
       "tags": ["hosting", "serverless", "frontend", "jamstack"],
-      "verifiedDate": "2026-02-18"
-    },
-    {
-      "vendor": "Supabase",
-      "category": "Databases",
-      "description": "Open source Firebase alternative with free tier — Postgres, Auth, Storage, Realtime",
-      "tier": "Free",
-      "url": "https://supabase.com/pricing",
-      "tags": ["database", "postgres", "auth", "storage", "realtime", "baas"],
-      "verifiedDate": "2026-02-18"
-    },
-    {
-      "vendor": "GitHub Actions",
-      "category": "CI/CD",
-      "description": "Free CI/CD for public repos, 2000 min/mo for private repos",
-      "tier": "Free",
-      "url": "https://github.com/pricing",
-      "tags": ["ci", "cd", "automation", "github"],
-      "verifiedDate": "2026-02-18"
-    },
-    {
-      "vendor": "Sentry",
-      "category": "Monitoring",
-      "description": "Error tracking and performance monitoring — 5K errors free/mo",
-      "tier": "Developer",
-      "url": "https://sentry.io/pricing/",
-      "tags": ["monitoring", "errors", "performance", "observability"],
-      "verifiedDate": "2026-02-18"
-    },
-    {
-      "vendor": "Clerk",
-      "category": "Auth",
-      "description": "Drop-in auth with 50K monthly active users free, unlimited apps",
-      "tier": "Free",
-      "url": "https://clerk.com/pricing",
-      "tags": ["auth", "authentication", "identity", "users"],
-      "verifiedDate": "2026-02-18"
-    },
-    {
-      "vendor": "Resend",
-      "category": "Email",
-      "description": "Developer-first email API — 3K emails/mo free",
-      "tier": "Free",
-      "url": "https://resend.com/pricing",
-      "tags": ["email", "api", "transactional"],
-      "verifiedDate": "2026-02-18"
+      "verifiedDate": "2026-02-23"
     },
     {
       "vendor": "Render",
@@ -61,16 +16,7 @@
       "tier": "Free",
       "url": "https://render.com/pricing",
       "tags": ["hosting", "paas", "deployment", "docker"],
-      "verifiedDate": "2026-02-18"
-    },
-    {
-      "vendor": "Neon",
-      "category": "Databases",
-      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month, 0.5 GB storage",
-      "tier": "Free",
-      "url": "https://neon.tech/pricing",
-      "tags": ["database", "postgres", "serverless", "branching"],
-      "verifiedDate": "2026-02-18"
+      "verifiedDate": "2026-02-23"
     },
     {
       "vendor": "Cloudflare Workers",
@@ -79,7 +25,259 @@
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "tags": ["edge", "serverless", "hosting", "workers"],
-      "verifiedDate": "2026-02-18"
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Netlify",
+      "category": "Cloud Hosting",
+      "description": "Free hosting with 300 credits/month — covers ~30 GB bandwidth or ~20 production deploys",
+      "tier": "Free",
+      "url": "https://www.netlify.com/pricing/",
+      "tags": ["hosting", "static", "edge", "deployment", "jamstack"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Cloudflare Pages",
+      "category": "Cloud Hosting",
+      "description": "Unlimited sites and bandwidth, 500 builds/month, 100 custom domains per project",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/pages/platform/limits/",
+      "tags": ["hosting", "static", "edge", "deployment"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "AWS",
+      "category": "Cloud IaaS",
+      "description": "Always-free tier includes Lambda (1M invocations/mo), DynamoDB (25 GB), CloudWatch. New accounts get $200 credit for 6 months",
+      "tier": "Free Tier",
+      "url": "https://aws.amazon.com/free/",
+      "tags": ["cloud", "iaas", "lambda", "serverless", "credits", "startup"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Google Cloud",
+      "category": "Cloud IaaS",
+      "description": "Always-free tier includes 1 e2-micro VM, 5 GB Cloud Storage, 1 TiB BigQuery queries, 2M Cloud Functions invocations/mo",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/free",
+      "tags": ["cloud", "iaas", "compute", "serverless", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Azure",
+      "category": "Cloud IaaS",
+      "description": "Always-free tier includes Azure Functions (1M req/mo), Cosmos DB (1K RU/s + 25 GB). New accounts get 12-month free VMs and SQL",
+      "tier": "Free Tier",
+      "url": "https://azure.microsoft.com/en-us/pricing/free-services/",
+      "tags": ["cloud", "iaas", "serverless", "credits", "startup"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "DigitalOcean",
+      "category": "Cloud IaaS",
+      "description": "$200 credit for 60 days for new accounts. Hatch startup program offers up to $100K credits. Free static sites, functions (90K GiB-seconds/mo)",
+      "tier": "Credits",
+      "url": "https://www.digitalocean.com/pricing",
+      "tags": ["cloud", "iaas", "credits", "startup", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Supabase",
+      "category": "Databases",
+      "description": "Open source Firebase alternative with free tier — Postgres, Auth, Storage, Realtime",
+      "tier": "Free",
+      "url": "https://supabase.com/pricing",
+      "tags": ["database", "postgres", "auth", "storage", "realtime", "baas"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Neon",
+      "category": "Databases",
+      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month, 0.5 GB storage",
+      "tier": "Free",
+      "url": "https://neon.tech/pricing",
+      "tags": ["database", "postgres", "serverless", "branching"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "MongoDB Atlas",
+      "category": "Databases",
+      "description": "Free 512 MB shared cluster (M0), always free, available on AWS/Azure/GCP",
+      "tier": "M0 Free",
+      "url": "https://www.mongodb.com/pricing",
+      "tags": ["database", "mongodb", "nosql", "document", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "CockroachDB",
+      "category": "Databases",
+      "description": "Free serverless distributed SQL — 50M Request Units + 10 GiB storage/month, scales to zero",
+      "tier": "Basic",
+      "url": "https://www.cockroachlabs.com/pricing/",
+      "tags": ["database", "sql", "distributed", "serverless", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Turso",
+      "category": "Databases",
+      "description": "Edge SQLite — 100 databases, 5 GB storage, 500M rows read/month free",
+      "tier": "Free",
+      "url": "https://turso.tech/pricing",
+      "tags": ["database", "sqlite", "edge", "serverless", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Upstash",
+      "category": "Databases",
+      "description": "Serverless Redis — 500K commands/month, 256 MB storage, 10 GB bandwidth free",
+      "tier": "Free",
+      "url": "https://upstash.com/pricing",
+      "tags": ["database", "redis", "cache", "serverless", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "category": "CI/CD",
+      "description": "Free CI/CD for public repos, 2000 min/mo for private repos",
+      "tier": "Free",
+      "url": "https://github.com/pricing",
+      "tags": ["ci", "cd", "automation", "github"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "GitLab CI",
+      "category": "CI/CD",
+      "description": "400 compute minutes/month, 10 GiB storage, 5 users. New accounts limited to 3 top-level groups",
+      "tier": "Free",
+      "url": "https://about.gitlab.com/pricing/",
+      "tags": ["ci", "cd", "devops", "gitlab", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "CircleCI",
+      "category": "CI/CD",
+      "description": "30K credits/month (~3K build minutes), 5 users, 30x concurrency, no credit card required",
+      "tier": "Free",
+      "url": "https://circleci.com/pricing/",
+      "tags": ["ci", "cd", "automation", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Sentry",
+      "category": "Monitoring",
+      "description": "Error tracking and performance monitoring — 5K errors free/mo",
+      "tier": "Developer",
+      "url": "https://sentry.io/pricing/",
+      "tags": ["monitoring", "errors", "performance", "observability"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Datadog",
+      "category": "Monitoring",
+      "description": "Infrastructure monitoring free for up to 5 hosts with 1-day metric retention and 1000+ integrations",
+      "tier": "Free",
+      "url": "https://www.datadoghq.com/pricing/",
+      "tags": ["monitoring", "infrastructure", "observability", "apm"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "category": "Monitoring",
+      "description": "Free tier with 10K metric series, 50 GB logs, 50 GB traces, 14-day retention, 3 users",
+      "tier": "Free",
+      "url": "https://grafana.com/pricing/",
+      "tags": ["monitoring", "observability", "metrics", "logs", "traces", "grafana"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "BetterStack",
+      "category": "Monitoring",
+      "description": "10 uptime monitors, 3 GB logs (3-day retention), 100K exceptions/mo, unlimited team members",
+      "tier": "Free",
+      "url": "https://betterstack.com/pricing",
+      "tags": ["monitoring", "uptime", "logging", "observability", "status page"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Clerk",
+      "category": "Auth",
+      "description": "Drop-in auth with 50K monthly active users free, unlimited apps",
+      "tier": "Free",
+      "url": "https://clerk.com/pricing",
+      "tags": ["auth", "authentication", "identity", "users"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Resend",
+      "category": "Email",
+      "description": "Developer-first email API — 3K emails/mo free",
+      "tier": "Free",
+      "url": "https://resend.com/pricing",
+      "tags": ["email", "api", "transactional"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Algolia",
+      "category": "Search",
+      "description": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
+      "tier": "Build",
+      "url": "https://www.algolia.com/pricing",
+      "tags": ["search", "api", "full-text", "ai", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Cloudflare R2",
+      "category": "Storage",
+      "description": "Object storage with zero egress fees — 10 GB storage, 1M writes, 10M reads/month free",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/r2/pricing/",
+      "tags": ["storage", "object storage", "s3", "cdn", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Backblaze B2",
+      "category": "Storage",
+      "description": "Object storage — first 10 GB always free, free egress via Cloudflare/CDN partners",
+      "tier": "Free Allowance",
+      "url": "https://www.backblaze.com/cloud-storage/pricing",
+      "tags": ["storage", "object storage", "s3-compatible", "backup", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "CloudAMQP",
+      "category": "Messaging",
+      "description": "Managed RabbitMQ — 1M messages/month, 20 connections, 100 queues free",
+      "tier": "Little Lemur",
+      "url": "https://www.cloudamqp.com/plans.html",
+      "tags": ["messaging", "rabbitmq", "queues", "amqp", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Bright Data",
+      "category": "Web Scraping",
+      "description": "Web MCP Server — 5K requests/month free for search and scrape-to-markdown via MCP",
+      "tier": "Free",
+      "url": "https://brightdata.com/products/web-scraper",
+      "tags": ["scraping", "mcp", "data", "web", "api", "free tier"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Railway",
+      "category": "Cloud Hosting",
+      "description": "$5/month Hobby plan with $5 resource credit included — 48 GB RAM, 48 vCPU, 5 GB volume storage",
+      "tier": "Hobby",
+      "url": "https://railway.com/pricing",
+      "tags": ["hosting", "paas", "deployment", "docker", "low-cost"],
+      "verifiedDate": "2026-02-23"
+    },
+    {
+      "vendor": "Fly.io",
+      "category": "Cloud Hosting",
+      "description": "Global app hosting — free 7-day trial for new accounts. Legacy free tier (3 shared VMs) for pre-Oct 2024 accounts",
+      "tier": "Trial",
+      "url": "https://fly.io/pricing",
+      "tags": ["hosting", "edge", "deployment", "docker", "global"],
+      "verifiedDate": "2026-02-23"
     }
   ]
 }
