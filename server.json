@@ -7,18 +7,9 @@
     "url": "https://github.com/robhunter/agentdeals",
     "source": "github"
   },
-  "packages": [
-    {
-      "registryType": "npm",
-      "registryBaseUrl": "https://registry.npmjs.org",
-      "identifier": "agentdeals",
-      "version": "0.1.0",
-      "transport": { "type": "stdio" }
-    }
-  ],
   "remotes": [
     {
-      "transportType": "streamableHttp",
+      "type": "streamable-http",
       "url": "https://agentdeals-production.up.railway.app/mcp"
     }
   ]
