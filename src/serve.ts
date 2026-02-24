@@ -4,9 +4,37 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer } from "./server.js";
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
+const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
+const CLEANUP_INTERVAL_MS = 60 * 1000; // 60 seconds
 
-// Map of session ID → transport for multi-session support
-const sessions = new Map<string, StreamableHTTPServerTransport>();
+interface SessionEntry {
+  transport: StreamableHTTPServerTransport;
+  lastActivity: number;
+}
+
+// Map of session ID → transport + last activity for multi-session support
+const sessions = new Map<string, SessionEntry>();
+
+function touchSession(sessionId: string): void {
+  const entry = sessions.get(sessionId);
+  if (entry) {
+    entry.lastActivity = Date.now();
+  }
+}
+
+// Periodic cleanup of idle sessions
+setInterval(() => {
+  const now = Date.now();
+  for (const [sid, entry] of sessions) {
+    const idleMs = now - entry.lastActivity;
+    if (idleMs > SESSION_IDLE_TIMEOUT_MS) {
+      const idleMinutes = Math.round(idleMs / 60000);
+      console.error(`Cleaned up idle session ${sid} after ${idleMinutes}m`);
+      entry.transport.close?.();
+      sessions.delete(sid);
+    }
+  }
+}, CLEANUP_INTERVAL_MS).unref();
 
 function isInitializeRequest(body: unknown): boolean {
   if (Array.isArray(body)) {
@@ -38,14 +66,15 @@ const httpServer = createHttpServer(async (req, res) => {
 
       if (sessionId && sessions.has(sessionId)) {
         // Existing session — route to its transport
-        const transport = sessions.get(sessionId)!;
+        touchSession(sessionId);
+        const { transport } = sessions.get(sessionId)!;
         await transport.handleRequest(req, res, parsedBody);
       } else if (!sessionId && isInitializeRequest(parsedBody)) {
         // New session — create transport + server
         const transport = new StreamableHTTPServerTransport({
           sessionIdGenerator: () => randomUUID(),
           onsessioninitialized: (sid) => {
-            sessions.set(sid, transport);
+            sessions.set(sid, { transport, lastActivity: Date.now() });
           },
         });
 
@@ -72,7 +101,8 @@ const httpServer = createHttpServer(async (req, res) => {
       // SSE stream — route to existing session
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
       if (sessionId && sessions.has(sessionId)) {
-        await sessions.get(sessionId)!.handleRequest(req, res);
+        touchSession(sessionId);
+        await sessions.get(sessionId)!.transport.handleRequest(req, res);
       } else {
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Invalid or missing session ID" }));
@@ -81,7 +111,7 @@ const httpServer = createHttpServer(async (req, res) => {
       // Session termination
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
       if (sessionId && sessions.has(sessionId)) {
-        const transport = sessions.get(sessionId)!;
+        const { transport } = sessions.get(sessionId)!;
         await transport.handleRequest(req, res);
         sessions.delete(sessionId);
       } else {
@@ -94,7 +124,7 @@ const httpServer = createHttpServer(async (req, res) => {
     }
   } else if (url.pathname === "/health") {
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ status: "ok" }));
+    res.end(JSON.stringify({ status: "ok", sessions: sessions.size }));
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
