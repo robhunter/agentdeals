@@ -278,6 +278,177 @@
       "url": "https://fly.io/pricing",
       "tags": ["hosting", "edge", "deployment", "docker", "global"],
       "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Deno Deploy",
+      "category": "Cloud Hosting",
+      "description": "Edge runtime — 1M requests/month, 100 GB egress, 1 GiB KV storage, 450K KV reads/month, 15 hours CPU time/month",
+      "tier": "Free",
+      "url": "https://deno.com/deploy/pricing",
+      "tags": ["hosting", "edge", "serverless", "typescript", "kv", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Val Town",
+      "category": "Cloud Hosting",
+      "description": "Serverless scripting platform — 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
+      "tier": "Free",
+      "url": "https://www.val.town/pricing",
+      "tags": ["hosting", "serverless", "scripting", "functions", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Auth0",
+      "category": "Auth",
+      "description": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login. No credit card required",
+      "tier": "Free",
+      "url": "https://auth0.com/pricing",
+      "tags": ["auth", "authentication", "identity", "oauth", "sso", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Postmark",
+      "category": "Email",
+      "description": "Transactional email API — 100 emails/month free, never expires, no credit card required",
+      "tier": "Free",
+      "url": "https://postmarkapp.com/pricing",
+      "tags": ["email", "api", "transactional", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Mailchimp",
+      "category": "Email",
+      "description": "Email marketing — 250 contacts, 500 sends/month, marketing CRM, forms and landing pages included",
+      "tier": "Free",
+      "url": "https://mailchimp.com/pricing/",
+      "tags": ["email", "marketing", "newsletter", "crm", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Firebase",
+      "category": "Databases",
+      "description": "Full BaaS — Auth (50K MAU), Firestore (1 GiB storage, 50K reads/day), Cloud Functions (2M invocations/month), Hosting, Analytics, Crashlytics all free",
+      "tier": "Spark",
+      "url": "https://firebase.google.com/pricing",
+      "tags": ["database", "baas", "auth", "serverless", "hosting", "analytics", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Convex",
+      "category": "Databases",
+      "description": "Reactive backend — 1M function calls/month, 0.5 GB database + vector storage, 1 GB file storage, real-time sync",
+      "tier": "Free",
+      "url": "https://www.convex.dev/plans",
+      "tags": ["database", "baas", "realtime", "serverless", "vector", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Appwrite Cloud",
+      "category": "Databases",
+      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth. Projects pause after 1 week of inactivity",
+      "tier": "Free",
+      "url": "https://appwrite.io/pricing",
+      "tags": ["database", "baas", "auth", "storage", "serverless", "open-source", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Aiven",
+      "category": "Databases",
+      "description": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) — 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
+      "tier": "Free",
+      "url": "https://aiven.io/pricing",
+      "tags": ["database", "postgres", "mysql", "redis", "managed", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Cloudflare Queues",
+      "category": "Messaging",
+      "description": "Message queues on Workers — 10K operations/day free, 24-hour message retention",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/queues/platform/pricing/",
+      "tags": ["messaging", "queues", "serverless", "cloudflare", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "QStash",
+      "category": "Messaging",
+      "description": "Serverless message queue by Upstash — 1,000 messages/day, 10 active schedules, 7-day max delay, retries free",
+      "tier": "Free",
+      "url": "https://upstash.com/pricing/qstash",
+      "tags": ["messaging", "queues", "serverless", "scheduling", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Pusher",
+      "category": "Messaging",
+      "description": "Real-time messaging — 200K messages/day, 100 concurrent connections free",
+      "tier": "Sandbox",
+      "url": "https://pusher.com/channels/pricing",
+      "tags": ["messaging", "realtime", "websockets", "pubsub", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Ably",
+      "category": "Messaging",
+      "description": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "tier": "Free",
+      "url": "https://ably.com/pricing",
+      "tags": ["messaging", "realtime", "websockets", "pubsub", "chat", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Axiom",
+      "category": "Monitoring",
+      "description": "Observability platform — 500 GB ingest/month, 25 GB storage, 30-day retention, 2 datasets, 1 user",
+      "tier": "Personal",
+      "url": "https://axiom.co/pricing",
+      "tags": ["monitoring", "observability", "logging", "analytics", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Checkly",
+      "category": "Monitoring",
+      "description": "Synthetic monitoring — 10 uptime monitors, 1K browser check runs, 10K API check runs/month, 4 locations",
+      "tier": "Hobby",
+      "url": "https://www.checklyhq.com/pricing/",
+      "tags": ["monitoring", "uptime", "synthetic", "api", "browser", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Firecrawl",
+      "category": "Web Scraping",
+      "description": "Web scraping API — 500 credits (up to 500 pages), 2 concurrent requests, no credit card required",
+      "tier": "Free",
+      "url": "https://www.firecrawl.dev/pricing",
+      "tags": ["scraping", "api", "data", "web", "crawling", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Windsurf",
+      "category": "Developer Tools",
+      "description": "AI coding assistant (formerly Codeium) — 25 prompt credits/month, unlimited previews and deploys, all premium models",
+      "tier": "Free",
+      "url": "https://windsurf.com/pricing",
+      "tags": ["developer tools", "ai", "code completion", "ide", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Tigris",
+      "category": "Storage",
+      "description": "S3-compatible object storage — 5 GB free, 10K writes + 100K reads/month, zero egress fees",
+      "tier": "Free",
+      "url": "https://www.tigrisdata.com/pricing/",
+      "tags": ["storage", "object storage", "s3-compatible", "zero-egress", "free tier"],
+      "verifiedDate": "2026-02-24"
+    },
+    {
+      "vendor": "Hetzner",
+      "category": "Infrastructure",
+      "description": "Budget cloud VMs from €3.49/month (2 vCPU, 4 GB RAM, 40 GB SSD). No free tier but exceptionally competitive pricing with 20 TB traffic included",
+      "tier": "Budget",
+      "url": "https://www.hetzner.com/cloud/",
+      "tags": ["infrastructure", "cloud", "vps", "compute", "budget", "eu"],
+      "verifiedDate": "2026-02-24"
     }
   ]
 }
