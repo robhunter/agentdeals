@@ -62,4 +62,4 @@ Endpoints:
 
 ## Current Status
 
-MCP server is functional with stdio and HTTP transports. 13 passing tests. Issues #7 and #8 complete.
+MCP server is functional with stdio and HTTP transports. 31 vendor entries across 11 categories. 14 passing tests. Multi-session HTTP support. Registry manifests in place (server.json, glama.json, smithery.yaml).
