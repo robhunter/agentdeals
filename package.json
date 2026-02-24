@@ -32,7 +32,9 @@
     "serve": "node dist/serve.js",
     "dev": "ts-node src/index.ts",
     "test": "node --test --test-concurrency 1 test/**/*.test.ts",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "check:staleness": "node scripts/check-staleness.js",
+    "check:pricing": "node scripts/check-pricing-changes.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0"
