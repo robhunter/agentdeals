@@ -190,6 +190,89 @@ describe("HTTP transport", () => {
     }
   });
 
+  it("supports two concurrent sessions", async () => {
+    proc = await startHttpServer();
+
+    // Initialize client A
+    const initA = await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "client-a", version: "1.0.0" },
+      },
+    });
+    assert.strictEqual(initA.status, 200);
+    const sessionA = initA.headers.get("mcp-session-id");
+    assert.ok(sessionA, "Client A should get a session ID");
+
+    // Initialize client B
+    const initB = await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "client-b", version: "1.0.0" },
+      },
+    });
+    assert.strictEqual(initB.status, 200);
+    const sessionB = initB.headers.get("mcp-session-id");
+    assert.ok(sessionB, "Client B should get a session ID");
+
+    // Sessions should be different
+    assert.notStrictEqual(sessionA, sessionB, "Sessions should have different IDs");
+
+    // Both clients can make tool calls independently
+    const [toolRespA, toolRespB] = await Promise.all([
+      mcpRequest(
+        "/mcp",
+        [
+          { jsonrpc: "2.0", method: "notifications/initialized" },
+          {
+            jsonrpc: "2.0",
+            id: 2,
+            method: "tools/call",
+            params: { name: "list_categories", arguments: {} },
+          },
+        ],
+        sessionA
+      ),
+      mcpRequest(
+        "/mcp",
+        [
+          { jsonrpc: "2.0", method: "notifications/initialized" },
+          {
+            jsonrpc: "2.0",
+            id: 2,
+            method: "tools/call",
+            params: { name: "search_offers", arguments: { query: "redis" } },
+          },
+        ],
+        sessionB
+      ),
+    ]);
+
+    assert.strictEqual(toolRespA.status, 200);
+    assert.strictEqual(toolRespB.status, 200);
+
+    const dataA = parseSSEData(toolRespA.text);
+    const resultA = dataA.find((d: any) => d.id === 2);
+    assert.ok(resultA, "Client A should get list_categories result");
+    const categories = JSON.parse(resultA.result.content[0].text);
+    assert.ok(Array.isArray(categories));
+
+    const dataB = parseSSEData(toolRespB.text);
+    const resultB = dataB.find((d: any) => d.id === 2);
+    assert.ok(resultB, "Client B should get search_offers result");
+    const offers = JSON.parse(resultB.result.content[0].text);
+    assert.ok(Array.isArray(offers));
+    assert.ok(offers.length > 0);
+  });
+
   it("returns 404 for unknown paths", async () => {
     proc = await startHttpServer();
 
