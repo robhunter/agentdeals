@@ -279,4 +279,48 @@ describe("HTTP transport", () => {
     const response = await fetch(`http://localhost:${PORT}/unknown`);
     assert.strictEqual(response.status, 404);
   });
+
+  it("health endpoint returns session count", async () => {
+    proc = await startHttpServer();
+
+    // Initially 0 sessions
+    const health0 = await fetch(`http://localhost:${PORT}/health`);
+    const body0 = await health0.json() as any;
+    assert.strictEqual(body0.status, "ok");
+    assert.strictEqual(body0.sessions, 0);
+
+    // Create a session
+    await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "test-client", version: "1.0.0" },
+      },
+    });
+
+    // Now 1 session
+    const health1 = await fetch(`http://localhost:${PORT}/health`);
+    const body1 = await health1.json() as any;
+    assert.strictEqual(body1.sessions, 1);
+
+    // Create another session
+    await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "test-client-2", version: "1.0.0" },
+      },
+    });
+
+    // Now 2 sessions
+    const health2 = await fetch(`http://localhost:${PORT}/health`);
+    const body2 = await health2.json() as any;
+    assert.strictEqual(body2.sessions, 2);
+  });
 });
