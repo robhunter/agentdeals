@@ -6,7 +6,12 @@
       "description": "Free tier for frontend deployments with serverless functions",
       "tier": "Hobby",
       "url": "https://vercel.com/pricing",
-      "tags": ["hosting", "serverless", "frontend", "jamstack"],
+      "tags": [
+        "hosting",
+        "serverless",
+        "frontend",
+        "jamstack"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -15,7 +20,12 @@
       "description": "Free tier for static sites and web services with auto-deploy from Git",
       "tier": "Hobby",
       "url": "https://render.com/pricing",
-      "tags": ["hosting", "paas", "deployment", "docker"],
+      "tags": [
+        "hosting",
+        "paas",
+        "deployment",
+        "docker"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -24,7 +34,12 @@
       "description": "Edge compute with 100K requests/day free",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers/platform/pricing/",
-      "tags": ["edge", "serverless", "hosting", "workers"],
+      "tags": [
+        "edge",
+        "serverless",
+        "hosting",
+        "workers"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -33,7 +48,13 @@
       "description": "300 credits/month (deploys at 15 credits each, bandwidth at 10 credits/GB, compute at 5 credits/GB-hour). Legacy accounts (pre-Sep 2025) keep 100GB bandwidth + 300 build minutes",
       "tier": "Free",
       "url": "https://www.netlify.com/pricing/",
-      "tags": ["hosting", "static", "edge", "deployment", "jamstack"],
+      "tags": [
+        "hosting",
+        "static",
+        "edge",
+        "deployment",
+        "jamstack"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -42,7 +63,12 @@
       "description": "Up to 100 sites (soft limit), unlimited bandwidth, 500 builds/month, 100 custom domains per project",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/pages/platform/limits/",
-      "tags": ["hosting", "static", "edge", "deployment"],
+      "tags": [
+        "hosting",
+        "static",
+        "edge",
+        "deployment"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -51,7 +77,13 @@
       "description": "$5/month Hobby plan with $5 resource credit included — 48 GB RAM, 48 vCPU, 5 GB volume storage",
       "tier": "Hobby",
       "url": "https://railway.com/pricing",
-      "tags": ["hosting", "paas", "deployment", "docker", "low-cost"],
+      "tags": [
+        "hosting",
+        "paas",
+        "deployment",
+        "docker",
+        "low-cost"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -60,7 +92,13 @@
       "description": "Global app hosting — free trial for new accounts (2 hours runtime OR 7 days, whichever comes first). Legacy free tier (3 shared VMs) for pre-2025 accounts",
       "tier": "Trial",
       "url": "https://fly.io/pricing",
-      "tags": ["hosting", "edge", "deployment", "docker", "global"],
+      "tags": [
+        "hosting",
+        "edge",
+        "deployment",
+        "docker",
+        "global"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -69,7 +107,14 @@
       "description": "Edge runtime — 1M requests/month, 100 GB egress, 1 GiB KV storage, 450K KV reads/month, 15 hours CPU time/month",
       "tier": "Free",
       "url": "https://deno.com/deploy/pricing",
-      "tags": ["hosting", "edge", "serverless", "typescript", "kv", "free tier"],
+      "tags": [
+        "hosting",
+        "edge",
+        "serverless",
+        "typescript",
+        "kv",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -78,7 +123,13 @@
       "description": "Serverless scripting platform — 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
       "tier": "Free",
       "url": "https://www.val.town/pricing",
-      "tags": ["hosting", "serverless", "scripting", "functions", "free tier"],
+      "tags": [
+        "hosting",
+        "serverless",
+        "scripting",
+        "functions",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -87,7 +138,13 @@
       "description": "1 free web service (1 vCPU, 512 MB RAM, 2 GB SSD), 1 free Postgres database (1 GB, 5 hr/month runtime), 100 GB egress, scale-to-zero",
       "tier": "Starter",
       "url": "https://www.koyeb.com/pricing",
-      "tags": ["hosting", "paas", "deployment", "scale-to-zero", "free tier"],
+      "tags": [
+        "hosting",
+        "paas",
+        "deployment",
+        "scale-to-zero",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -96,7 +153,14 @@
       "description": "Always-free tier includes Lambda (1M invocations/mo), DynamoDB (25 GB), CloudWatch. New accounts get $100 credit at sign-up + up to $100 more via activities, free plan for 6 months",
       "tier": "Free Tier",
       "url": "https://aws.amazon.com/free/",
-      "tags": ["cloud", "iaas", "lambda", "serverless", "credits", "startup"],
+      "tags": [
+        "cloud",
+        "iaas",
+        "lambda",
+        "serverless",
+        "credits",
+        "startup"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -105,7 +169,13 @@
       "description": "Always-free tier includes 1 e2-micro VM, 5 GB Cloud Storage, 1 TiB BigQuery queries, 2M Cloud Functions invocations/mo",
       "tier": "Always Free",
       "url": "https://cloud.google.com/free",
-      "tags": ["cloud", "iaas", "compute", "serverless", "free tier"],
+      "tags": [
+        "cloud",
+        "iaas",
+        "compute",
+        "serverless",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -114,7 +184,13 @@
       "description": "Always-free tier includes Azure Functions (1M req/mo), Cosmos DB (1K RU/s + 25 GB). New accounts get 12-month free VMs and SQL",
       "tier": "Free Tier",
       "url": "https://azure.microsoft.com/en-us/pricing/free-services/",
-      "tags": ["cloud", "iaas", "serverless", "credits", "startup"],
+      "tags": [
+        "cloud",
+        "iaas",
+        "serverless",
+        "credits",
+        "startup"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -123,7 +199,13 @@
       "description": "$200 credit for 60 days for new accounts. Hatch startup program offers up to $100K credits. Free static sites (up to 3), functions (90K GiB-seconds/mo)",
       "tier": "Credits",
       "url": "https://www.digitalocean.com/pricing",
-      "tags": ["cloud", "iaas", "credits", "startup", "free tier"],
+      "tags": [
+        "cloud",
+        "iaas",
+        "credits",
+        "startup",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -132,7 +214,14 @@
       "description": "Always Free includes 2 AMD VMs (1/8 OCPU, 1 GB each), up to 4 Arm VMs (24 GB total), 200 GB block volumes, 10 GB object storage, 2 Autonomous Databases, Load Balancer",
       "tier": "Always Free",
       "url": "https://www.oracle.com/cloud/free/",
-      "tags": ["cloud", "iaas", "compute", "arm", "database", "free tier"],
+      "tags": [
+        "cloud",
+        "iaas",
+        "compute",
+        "arm",
+        "database",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -141,7 +230,14 @@
       "description": "Open source Firebase alternative with free tier — Postgres, Auth, Storage, Realtime",
       "tier": "Free",
       "url": "https://supabase.com/pricing",
-      "tags": ["database", "postgres", "auth", "storage", "realtime", "baas"],
+      "tags": [
+        "database",
+        "postgres",
+        "auth",
+        "storage",
+        "realtime",
+        "baas"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -150,7 +246,12 @@
       "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month, 0.5 GB storage",
       "tier": "Free",
       "url": "https://neon.com/pricing",
-      "tags": ["database", "postgres", "serverless", "branching"],
+      "tags": [
+        "database",
+        "postgres",
+        "serverless",
+        "branching"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -159,7 +260,13 @@
       "description": "Free 512 MB shared cluster (M0), always free, available on AWS/Azure/GCP",
       "tier": "M0 Free",
       "url": "https://www.mongodb.com/pricing",
-      "tags": ["database", "mongodb", "nosql", "document", "free tier"],
+      "tags": [
+        "database",
+        "mongodb",
+        "nosql",
+        "document",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -168,7 +275,13 @@
       "description": "Free serverless distributed SQL — 50M Request Units + 10 GiB storage/month, scales to zero",
       "tier": "Basic",
       "url": "https://www.cockroachlabs.com/pricing/",
-      "tags": ["database", "sql", "distributed", "serverless", "free tier"],
+      "tags": [
+        "database",
+        "sql",
+        "distributed",
+        "serverless",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -177,7 +290,13 @@
       "description": "Edge SQLite — 100 databases, 5 GB storage, 500M rows read/month, 10M rows written/month free",
       "tier": "Free",
       "url": "https://turso.tech/pricing",
-      "tags": ["database", "sqlite", "edge", "serverless", "free tier"],
+      "tags": [
+        "database",
+        "sqlite",
+        "edge",
+        "serverless",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -186,7 +305,14 @@
       "description": "Serverless Redis — 500K commands/month (256MB data). QStash: 1,000 messages/day free",
       "tier": "Free",
       "url": "https://upstash.com/pricing",
-      "tags": ["database", "redis", "cache", "serverless", "messaging", "free tier"],
+      "tags": [
+        "database",
+        "redis",
+        "cache",
+        "serverless",
+        "messaging",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -195,7 +321,15 @@
       "description": "Full BaaS — Auth (50K MAU), Firestore (1 GiB storage, 50K reads/day), Cloud Functions (2M invocations/month), Hosting, Analytics, Crashlytics all free",
       "tier": "Spark",
       "url": "https://firebase.google.com/pricing",
-      "tags": ["database", "baas", "auth", "serverless", "hosting", "analytics", "free tier"],
+      "tags": [
+        "database",
+        "baas",
+        "auth",
+        "serverless",
+        "hosting",
+        "analytics",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -204,7 +338,14 @@
       "description": "Reactive backend — 1M function calls/month, 0.5 GB database + vector storage, 1 GB file storage, real-time sync",
       "tier": "Free",
       "url": "https://www.convex.dev/plans",
-      "tags": ["database", "baas", "realtime", "serverless", "vector", "free tier"],
+      "tags": [
+        "database",
+        "baas",
+        "realtime",
+        "serverless",
+        "vector",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -213,7 +354,15 @@
       "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth. Projects pause after 1 week of inactivity",
       "tier": "Free",
       "url": "https://appwrite.io/pricing",
-      "tags": ["database", "baas", "auth", "storage", "serverless", "open-source", "free tier"],
+      "tags": [
+        "database",
+        "baas",
+        "auth",
+        "storage",
+        "serverless",
+        "open-source",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -222,7 +371,14 @@
       "description": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) — 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
       "tier": "Free",
       "url": "https://aiven.io/pricing",
-      "tags": ["database", "postgres", "mysql", "redis", "managed", "free tier"],
+      "tags": [
+        "database",
+        "postgres",
+        "mysql",
+        "redis",
+        "managed",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -231,7 +387,13 @@
       "description": "Serverless Postgres with branching — 15 GB storage, 75 req/s, 10 branches, daily backups. No cold starts or inactivity pausing",
       "tier": "Free",
       "url": "https://xata.io/pricing",
-      "tags": ["database", "postgres", "serverless", "branching", "free tier"],
+      "tags": [
+        "database",
+        "postgres",
+        "serverless",
+        "branching",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -240,7 +402,14 @@
       "description": "SQLite at the edge — 5M rows read/day, 100K rows written/day, 5 GB total storage. Resets daily at midnight UTC",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/d1/platform/pricing/",
-      "tags": ["database", "sqlite", "edge", "serverless", "cloudflare", "free tier"],
+      "tags": [
+        "database",
+        "sqlite",
+        "edge",
+        "serverless",
+        "cloudflare",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -249,7 +418,14 @@
       "description": "Open-source Firebase alternative with Postgres + Hasura GraphQL — 1 GB database, 5 GB storage, 5 GB bandwidth free",
       "tier": "Free",
       "url": "https://nhost.io/pricing",
-      "tags": ["database", "postgres", "graphql", "baas", "open-source", "free tier"],
+      "tags": [
+        "database",
+        "postgres",
+        "graphql",
+        "baas",
+        "open-source",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -258,7 +434,13 @@
       "description": "Instant GraphQL and REST APIs on your data — 1 GB data passthrough/month, 60 req/min free",
       "tier": "Free",
       "url": "https://hasura.io/pricing",
-      "tags": ["database", "graphql", "api", "serverless", "free tier"],
+      "tags": [
+        "database",
+        "graphql",
+        "api",
+        "serverless",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -267,7 +449,12 @@
       "description": "Free CI/CD for public repos, 2000 min/mo for private repos",
       "tier": "Free",
       "url": "https://github.com/pricing",
-      "tags": ["ci", "cd", "automation", "github"],
+      "tags": [
+        "ci",
+        "cd",
+        "automation",
+        "github"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -276,7 +463,13 @@
       "description": "400 compute minutes/month, 10 GiB storage, 5 users. New accounts limited to 3 top-level groups",
       "tier": "Free",
       "url": "https://about.gitlab.com/pricing/",
-      "tags": ["ci", "cd", "devops", "gitlab", "free tier"],
+      "tags": [
+        "ci",
+        "cd",
+        "devops",
+        "gitlab",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -285,7 +478,12 @@
       "description": "30K credits/month (up to 6,000 build minutes on small Docker), 5 users, 30x concurrency, no credit card required",
       "tier": "Free",
       "url": "https://circleci.com/pricing/",
-      "tags": ["ci", "cd", "automation", "free tier"],
+      "tags": [
+        "ci",
+        "cd",
+        "automation",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -294,7 +492,13 @@
       "description": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
       "tier": "Personal",
       "url": "https://buildkite.com/pricing/",
-      "tags": ["ci", "cd", "automation", "self-hosted", "free tier"],
+      "tags": [
+        "ci",
+        "cd",
+        "automation",
+        "self-hosted",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -303,7 +507,13 @@
       "description": "CI/CD built into Bitbucket — 50 build minutes/month, 1 GB Git LFS, 5 users on free plan",
       "tier": "Free",
       "url": "https://bitbucket.org/product/features/pipelines",
-      "tags": ["ci", "cd", "automation", "bitbucket", "free tier"],
+      "tags": [
+        "ci",
+        "cd",
+        "automation",
+        "bitbucket",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -312,7 +522,12 @@
       "description": "Developer tier: 5K errors/month, 5M spans/month, 50 session replays, 5GB application logs, 1GB attachments",
       "tier": "Developer",
       "url": "https://sentry.io/pricing/",
-      "tags": ["monitoring", "errors", "performance", "observability"],
+      "tags": [
+        "monitoring",
+        "errors",
+        "performance",
+        "observability"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -321,7 +536,12 @@
       "description": "Infrastructure monitoring free for up to 5 hosts with 1-day metric retention",
       "tier": "Free",
       "url": "https://www.datadoghq.com/pricing/",
-      "tags": ["monitoring", "infrastructure", "observability", "apm"],
+      "tags": [
+        "monitoring",
+        "infrastructure",
+        "observability",
+        "apm"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -330,7 +550,14 @@
       "description": "Free tier with 10K metric series, 50 GB logs, 50 GB traces, 14-day retention, 3 users",
       "tier": "Free",
       "url": "https://grafana.com/pricing/",
-      "tags": ["monitoring", "observability", "metrics", "logs", "traces", "grafana"],
+      "tags": [
+        "monitoring",
+        "observability",
+        "metrics",
+        "logs",
+        "traces",
+        "grafana"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -339,7 +566,13 @@
       "description": "10 uptime monitors, 3 GB logs (3-day retention), 100K exceptions/mo, unlimited team members",
       "tier": "Free",
       "url": "https://betterstack.com/pricing",
-      "tags": ["monitoring", "uptime", "logging", "observability", "status page"],
+      "tags": [
+        "monitoring",
+        "uptime",
+        "logging",
+        "observability",
+        "status page"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -348,17 +581,30 @@
       "description": "Observability platform — 500 GB ingest/month, 25 GB storage, 30-day retention, 2 datasets, 1 user",
       "tier": "Personal",
       "url": "https://axiom.co/pricing",
-      "tags": ["monitoring", "observability", "logging", "analytics", "free tier"],
+      "tags": [
+        "monitoring",
+        "observability",
+        "logging",
+        "analytics",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
       "vendor": "Checkly",
-      "category": "Monitoring",
+      "category": "Testing",
       "description": "Synthetic monitoring — 10 uptime monitors, 1K browser check runs, 10K API check runs/month, 4 locations",
       "tier": "Hobby",
       "url": "https://www.checklyhq.com/pricing/",
-      "tags": ["monitoring", "uptime", "synthetic", "api", "browser", "free tier"],
-      "verifiedDate": "2026-02-24"
+      "tags": [
+        "monitoring",
+        "uptime",
+        "synthetic",
+        "api",
+        "browser",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-25"
     },
     {
       "vendor": "New Relic",
@@ -366,7 +612,14 @@
       "description": "Full observability platform — 100 GB data ingest/month, 1 full platform user, unlimited basic users, 500 synthetic checks, 8+ days retention",
       "tier": "Free",
       "url": "https://newrelic.com/pricing",
-      "tags": ["monitoring", "apm", "observability", "logs", "distributed tracing", "free tier"],
+      "tags": [
+        "monitoring",
+        "apm",
+        "observability",
+        "logs",
+        "distributed tracing",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -375,7 +628,13 @@
       "description": "50 uptime monitors, 5-minute check intervals, 3-month log retention, email alerts. Personal/non-commercial use only on free tier",
       "tier": "Free",
       "url": "https://uptimerobot.com/pricing/",
-      "tags": ["monitoring", "uptime", "alerts", "status page", "free tier"],
+      "tags": [
+        "monitoring",
+        "uptime",
+        "alerts",
+        "status page",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -384,7 +643,12 @@
       "description": "Drop-in auth with 50K monthly retained users free, unlimited apps",
       "tier": "Hobby",
       "url": "https://clerk.com/pricing",
-      "tags": ["auth", "authentication", "identity", "users"],
+      "tags": [
+        "auth",
+        "authentication",
+        "identity",
+        "users"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -393,7 +657,14 @@
       "description": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login. No credit card required",
       "tier": "Free",
       "url": "https://auth0.com/pricing",
-      "tags": ["auth", "authentication", "identity", "oauth", "sso", "free tier"],
+      "tags": [
+        "auth",
+        "authentication",
+        "identity",
+        "oauth",
+        "sso",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -402,7 +673,14 @@
       "description": "10,500 MAU, OAuth 2.0/OIDC/SAML, MFA (email/SMS/app), passwordless, multi-tenancy, feature flags. No credit card required",
       "tier": "Free",
       "url": "https://www.kinde.com/pricing/",
-      "tags": ["auth", "authentication", "identity", "mfa", "saml", "free tier"],
+      "tags": [
+        "auth",
+        "authentication",
+        "identity",
+        "mfa",
+        "saml",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -411,7 +689,14 @@
       "description": "AuthKit with up to 1M MAU free for user management — email/password, social login, MFA. Enterprise SSO/SCIM priced separately",
       "tier": "Free",
       "url": "https://workos.com/pricing",
-      "tags": ["auth", "authentication", "identity", "sso", "enterprise", "free tier"],
+      "tags": [
+        "auth",
+        "authentication",
+        "identity",
+        "sso",
+        "enterprise",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -420,7 +705,11 @@
       "description": "Developer-first email API — 3K emails/mo free",
       "tier": "Free",
       "url": "https://resend.com/pricing",
-      "tags": ["email", "api", "transactional"],
+      "tags": [
+        "email",
+        "api",
+        "transactional"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -429,7 +718,12 @@
       "description": "Transactional email API — 100 emails/month free, never expires, no credit card required",
       "tier": "Free",
       "url": "https://postmarkapp.com/pricing",
-      "tags": ["email", "api", "transactional", "free tier"],
+      "tags": [
+        "email",
+        "api",
+        "transactional",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -438,7 +732,13 @@
       "description": "Email marketing — 250 contacts, 500 sends/month, marketing CRM, forms and landing pages included",
       "tier": "Free",
       "url": "https://mailchimp.com/pricing/",
-      "tags": ["email", "marketing", "newsletter", "crm", "free tier"],
+      "tags": [
+        "email",
+        "marketing",
+        "newsletter",
+        "crm",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -447,7 +747,13 @@
       "description": "Email API — 6,000 emails/month (200/day limit), 1,500 contacts, email editor and templates",
       "tier": "Free",
       "url": "https://www.mailjet.com/pricing/",
-      "tags": ["email", "api", "transactional", "marketing", "free tier"],
+      "tags": [
+        "email",
+        "api",
+        "transactional",
+        "marketing",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -456,7 +762,13 @@
       "description": "300 emails/day, up to 100K contacts, marketing automation, segmentation, landing pages. Formerly Sendinblue",
       "tier": "Free",
       "url": "https://www.brevo.com/pricing/",
-      "tags": ["email", "marketing", "automation", "crm", "free tier"],
+      "tags": [
+        "email",
+        "marketing",
+        "automation",
+        "crm",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -465,7 +777,13 @@
       "description": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
       "tier": "Build",
       "url": "https://www.algolia.com/pricing",
-      "tags": ["search", "api", "full-text", "ai", "free tier"],
+      "tags": [
+        "search",
+        "api",
+        "full-text",
+        "ai",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -474,7 +792,13 @@
       "description": "Object storage with zero egress fees — 10 GB storage, 1M writes, 10M reads/month free",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/r2/pricing/",
-      "tags": ["storage", "object storage", "s3", "cdn", "free tier"],
+      "tags": [
+        "storage",
+        "object storage",
+        "s3",
+        "cdn",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -483,7 +807,13 @@
       "description": "Object storage — first 10 GB always free, free egress via Cloudflare/CDN partners",
       "tier": "Free Allowance",
       "url": "https://www.backblaze.com/cloud-storage/pricing",
-      "tags": ["storage", "object storage", "s3-compatible", "backup", "free tier"],
+      "tags": [
+        "storage",
+        "object storage",
+        "s3-compatible",
+        "backup",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -492,7 +822,13 @@
       "description": "S3-compatible object storage — 5 GB free, 10K writes + 100K reads/month, zero egress fees",
       "tier": "Free",
       "url": "https://www.tigrisdata.com/pricing/",
-      "tags": ["storage", "object storage", "s3-compatible", "zero-egress", "free tier"],
+      "tags": [
+        "storage",
+        "object storage",
+        "s3-compatible",
+        "zero-egress",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -501,7 +837,14 @@
       "description": "Media management — 25 credits/month (1 credit = 1 GB storage OR 1 GB bandwidth OR 1K transformations), up to 3 users",
       "tier": "Free",
       "url": "https://cloudinary.com/pricing",
-      "tags": ["storage", "media", "images", "video", "cdn", "free tier"],
+      "tags": [
+        "storage",
+        "media",
+        "images",
+        "video",
+        "cdn",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -510,7 +853,13 @@
       "description": "File uploads for TypeScript apps — 2 GB storage, 2 GB bandwidth/month free",
       "tier": "Free",
       "url": "https://uploadthing.com/pricing",
-      "tags": ["storage", "file uploads", "typescript", "nextjs", "free tier"],
+      "tags": [
+        "storage",
+        "file uploads",
+        "typescript",
+        "nextjs",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -519,7 +868,13 @@
       "description": "Managed RabbitMQ — 1M messages/month, 20 connections, 100 queues free",
       "tier": "Little Lemur",
       "url": "https://www.cloudamqp.com/plans.html",
-      "tags": ["messaging", "rabbitmq", "queues", "amqp", "free tier"],
+      "tags": [
+        "messaging",
+        "rabbitmq",
+        "queues",
+        "amqp",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -528,7 +883,13 @@
       "description": "Message queues on Workers — 10K operations/day free, 24-hour message retention",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/queues/platform/pricing/",
-      "tags": ["messaging", "queues", "serverless", "cloudflare", "free tier"],
+      "tags": [
+        "messaging",
+        "queues",
+        "serverless",
+        "cloudflare",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -537,7 +898,13 @@
       "description": "Serverless message queue by Upstash — 1,000 messages/day, 10 active schedules, 7-day max delay, retries free",
       "tier": "Free",
       "url": "https://upstash.com/pricing/qstash",
-      "tags": ["messaging", "queues", "serverless", "scheduling", "free tier"],
+      "tags": [
+        "messaging",
+        "queues",
+        "serverless",
+        "scheduling",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -546,7 +913,13 @@
       "description": "Real-time messaging — 200K messages/day, 100 concurrent connections free",
       "tier": "Sandbox",
       "url": "https://pusher.com/channels/pricing",
-      "tags": ["messaging", "realtime", "websockets", "pubsub", "free tier"],
+      "tags": [
+        "messaging",
+        "realtime",
+        "websockets",
+        "pubsub",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -555,7 +928,14 @@
       "description": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
       "tier": "Free",
       "url": "https://ably.com/pricing",
-      "tags": ["messaging", "realtime", "websockets", "pubsub", "chat", "free tier"],
+      "tags": [
+        "messaging",
+        "realtime",
+        "websockets",
+        "pubsub",
+        "chat",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -564,7 +944,14 @@
       "description": "Web MCP Server — 5K requests/month free for search and scrape-to-markdown via MCP",
       "tier": "Free",
       "url": "https://brightdata.com/products/web-scraper",
-      "tags": ["scraping", "mcp", "data", "web", "api", "free tier"],
+      "tags": [
+        "scraping",
+        "mcp",
+        "data",
+        "web",
+        "api",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-23"
     },
     {
@@ -573,7 +960,14 @@
       "description": "Web scraping API — 500 credits (up to 500 pages), 2 concurrent requests, no credit card required",
       "tier": "Free",
       "url": "https://www.firecrawl.dev/pricing",
-      "tags": ["scraping", "api", "data", "web", "crawling", "free tier"],
+      "tags": [
+        "scraping",
+        "api",
+        "data",
+        "web",
+        "crawling",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -582,7 +976,14 @@
       "description": "Web scraping and automation — $5 platform credits/month (renews), 3 concurrent Actor runs, 7-day data retention",
       "tier": "Free",
       "url": "https://apify.com/pricing",
-      "tags": ["scraping", "automation", "data", "web", "actors", "free tier"],
+      "tags": [
+        "scraping",
+        "automation",
+        "data",
+        "web",
+        "actors",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -591,7 +992,13 @@
       "description": "AI coding assistant (formerly Codeium) — 25 prompt credits/month, unlimited previews and deploys, all premium models",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
-      "tags": ["developer tools", "ai", "code completion", "ide", "free tier"],
+      "tags": [
+        "developer tools",
+        "ai",
+        "code completion",
+        "ide",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -600,7 +1007,13 @@
       "description": "AI code assistant — 2,000 completions/month, 50 chat messages/month, works in VS Code/JetBrains/GitHub.com. Students and OSS maintainers get Pro free",
       "tier": "Free",
       "url": "https://github.com/features/copilot/plans",
-      "tags": ["developer tools", "ai", "code completion", "ide", "free tier"],
+      "tags": [
+        "developer tools",
+        "ai",
+        "code completion",
+        "ide",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -609,7 +1022,13 @@
       "description": "AI-powered code editor — 2,000 completions/month, 50 slow premium requests/month, VS Code-based",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
-      "tags": ["developer tools", "ai", "code completion", "ide", "free tier"],
+      "tags": [
+        "developer tools",
+        "ai",
+        "code completion",
+        "ide",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -618,25 +1037,43 @@
       "description": "Project management for dev teams — 250 active issues (unlimited archived), unlimited members, 2 teams, AI agents, API",
       "tier": "Free",
       "url": "https://linear.app/pricing",
-      "tags": ["developer tools", "project management", "issues", "agile", "free tier"],
+      "tags": [
+        "developer tools",
+        "project management",
+        "issues",
+        "agile",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
       "vendor": "Snyk",
-      "category": "Developer Tools",
+      "category": "Security",
       "description": "Developer security — unlimited tests for open-source, 200 tests/month for private repos, code and dependency scanning",
       "tier": "Free",
       "url": "https://snyk.io/plans/",
-      "tags": ["developer tools", "security", "scanning", "dependencies", "free tier"],
+      "tags": [
+        "developer tools",
+        "security",
+        "scanning",
+        "dependencies",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
       "vendor": "SonarCloud",
-      "category": "Developer Tools",
+      "category": "Security",
       "description": "Code quality and security analysis — free and unlimited for open-source projects, 15+ languages, CI/CD integration",
       "tier": "Free",
       "url": "https://www.sonarsource.com/products/sonarcloud/pricing/",
-      "tags": ["developer tools", "code quality", "security", "static analysis", "free tier"],
+      "tags": [
+        "developer tools",
+        "code quality",
+        "security",
+        "static analysis",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -645,7 +1082,14 @@
       "description": "Budget cloud VMs from €3.49/month (2 vCPU, 4 GB RAM, 40 GB SSD). No free tier but exceptionally competitive pricing with 20 TB traffic included",
       "tier": "Budget",
       "url": "https://www.hetzner.com/cloud/",
-      "tags": ["infrastructure", "cloud", "vps", "compute", "budget", "eu"],
+      "tags": [
+        "infrastructure",
+        "cloud",
+        "vps",
+        "compute",
+        "budget",
+        "eu"
+      ],
       "verifiedDate": "2026-02-24"
     },
     {
@@ -654,7 +1098,13 @@
       "description": "Free authoritative DNS hosting — unlimited zones and queries, 1,000 records/zone, DDoS protection, free SSL/TLS",
       "tier": "Free",
       "url": "https://www.cloudflare.com/plans/free/",
-      "tags": ["dns", "domain", "ddos", "ssl", "free tier"],
+      "tags": [
+        "dns",
+        "domain",
+        "ddos",
+        "ssl",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -663,7 +1113,13 @@
       "description": "Free DNS hosting — up to 50 domains, primary and secondary DNS, dynamic DNS, IPv6 support, geographically distributed nameservers",
       "tier": "Free",
       "url": "https://dns.he.net/",
-      "tags": ["dns", "domain", "dynamic dns", "ipv6", "free tier"],
+      "tags": [
+        "dns",
+        "domain",
+        "dynamic dns",
+        "ipv6",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -672,7 +1128,13 @@
       "description": "Open-source DNS with automatic DNSSEC — free forever, run by a non-profit. REST API, dynamic DNS, rate-limited to 300 changes/domain/day",
       "tier": "Free",
       "url": "https://desec.io/",
-      "tags": ["dns", "domain", "dnssec", "open-source", "free tier"],
+      "tags": [
+        "dns",
+        "domain",
+        "dnssec",
+        "open-source",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -681,7 +1143,13 @@
       "description": "Edge cloud — free developer account with 100 GB bandwidth, 1M requests/month, 5 GB object storage, image optimizer, WebSockets, DDoS protection",
       "tier": "Free Developer",
       "url": "https://www.fastly.com/pricing",
-      "tags": ["cdn", "edge", "delivery", "compute", "free tier"],
+      "tags": [
+        "cdn",
+        "edge",
+        "delivery",
+        "compute",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -690,7 +1158,13 @@
       "description": "Free CDN for open-source — unlimited bandwidth and requests, serves npm packages and GitHub repos, multi-provider redundancy",
       "tier": "Free",
       "url": "https://www.jsdelivr.com/",
-      "tags": ["cdn", "open-source", "npm", "github", "free tier"],
+      "tags": [
+        "cdn",
+        "open-source",
+        "npm",
+        "github",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -699,7 +1173,13 @@
       "description": "Feature management — unlimited seats and flags, 1K client MAU, 1 project, 3 environments, A/B testing, 5K session replays/month",
       "tier": "Developer",
       "url": "https://launchdarkly.com/pricing/",
-      "tags": ["feature flags", "experimentation", "ab testing", "rollout", "free tier"],
+      "tags": [
+        "feature flags",
+        "experimentation",
+        "ab testing",
+        "rollout",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -708,7 +1188,12 @@
       "description": "Feature flags and remote config — 50K API requests/month, unlimited flags/environments/identities, A/B testing, 1 user",
       "tier": "Free",
       "url": "https://www.flagsmith.com/pricing",
-      "tags": ["feature flags", "remote config", "ab testing", "free tier"],
+      "tags": [
+        "feature flags",
+        "remote config",
+        "ab testing",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -717,7 +1202,13 @@
       "description": "Feature flags (formerly Split.io) — 2 developers, 25K client MAU, unlimited flags and environments, CI/CD pipelines for rollout",
       "tier": "Free",
       "url": "https://www.harness.io/pricing",
-      "tags": ["feature flags", "ci", "cd", "rollout", "free tier"],
+      "tags": [
+        "feature flags",
+        "ci",
+        "cd",
+        "rollout",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -726,7 +1217,13 @@
       "description": "ELK-based log management — 1 GB/day ingestion, 1-day retention, 10 alerts, ML-powered analytics",
       "tier": "Community",
       "url": "https://logz.io/pricing/",
-      "tags": ["logging", "elk", "observability", "analytics", "free tier"],
+      "tags": [
+        "logging",
+        "elk",
+        "observability",
+        "analytics",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -735,7 +1232,13 @@
       "description": "Cloud log management by SolarWinds — 100 MB/month, 48-hour searchable logs, 7-day archive, unlimited sources, real-time tail",
       "tier": "Free",
       "url": "https://www.papertrail.com/plans/",
-      "tags": ["logging", "syslog", "search", "real-time", "free tier"],
+      "tags": [
+        "logging",
+        "syslog",
+        "search",
+        "real-time",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -744,7 +1247,13 @@
       "description": "Payment processing — no monthly fees, 2.9% + $0.30 per transaction. Full API, dashboard, and test mode free. Pay only when processing live payments",
       "tier": "Pay-as-you-go",
       "url": "https://stripe.com/pricing",
-      "tags": ["payments", "api", "billing", "subscriptions", "free tier"],
+      "tags": [
+        "payments",
+        "api",
+        "billing",
+        "subscriptions",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -753,7 +1262,13 @@
       "description": "Merchant of record — no monthly fees, 5% + $0.50 per transaction. Handles sales tax/VAT globally, license keys, fraud protection",
       "tier": "Pay-as-you-go",
       "url": "https://www.lemonsqueezy.com/pricing",
-      "tags": ["payments", "merchant of record", "billing", "tax", "free tier"],
+      "tags": [
+        "payments",
+        "merchant of record",
+        "billing",
+        "tax",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -762,7 +1277,13 @@
       "description": "Headless CMS — 10K records, 100K API calls/month, 10 users, 25 content types, 2 environments. Personal/non-commercial use",
       "tier": "Free",
       "url": "https://www.contentful.com/pricing/",
-      "tags": ["cms", "headless", "api", "content", "free tier"],
+      "tags": [
+        "cms",
+        "headless",
+        "api",
+        "content",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -771,7 +1292,14 @@
       "description": "Structured content platform — 10K documents, 1M CDN requests/month, 100 GB assets, 20 users, GROQ query language. No time limit",
       "tier": "Free",
       "url": "https://www.sanity.io/pricing",
-      "tags": ["cms", "headless", "api", "content", "groq", "free tier"],
+      "tags": [
+        "cms",
+        "headless",
+        "api",
+        "content",
+        "groq",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -780,7 +1308,13 @@
       "description": "GraphQL headless CMS — 1K content entries, 500K API calls/month, 3 seats, 20 models, unlimited asset storage",
       "tier": "Hobby",
       "url": "https://hygraph.com/pricing",
-      "tags": ["cms", "headless", "graphql", "content", "free tier"],
+      "tags": [
+        "cms",
+        "headless",
+        "graphql",
+        "content",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -789,7 +1323,14 @@
       "description": "ML model hub — $0.10/month free inference credits, 200+ models via Inference Providers, unlimited model hosting on Hub",
       "tier": "Free",
       "url": "https://huggingface.co/docs/inference-providers/pricing",
-      "tags": ["ai", "ml", "inference", "models", "open-source", "free tier"],
+      "tags": [
+        "ai",
+        "ml",
+        "inference",
+        "models",
+        "open-source",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -798,7 +1339,14 @@
       "description": "Ultra-fast LLM inference on LPU hardware — free tier with ~30 RPM, access to Llama 3.3 70B, Whisper, and more. No credit card required",
       "tier": "Free",
       "url": "https://groq.com/pricing",
-      "tags": ["ai", "ml", "llm", "inference", "fast", "free tier"],
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "fast",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -807,7 +1355,14 @@
       "description": "Free access to Gemini 2.5 Pro (5 RPM), Flash (10 RPM), Flash-Lite (15 RPM). 1M token context window, no credit card required",
       "tier": "Free",
       "url": "https://ai.google.dev/gemini-api/docs/pricing",
-      "tags": ["ai", "ml", "llm", "inference", "multimodal", "free tier"],
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "multimodal",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -816,7 +1371,14 @@
       "description": "Access to all Mistral models including Large, Codestral, Pixtral — 2 RPM, 1B tokens/month. No credit card required",
       "tier": "Experiment",
       "url": "https://mistral.ai/pricing",
-      "tags": ["ai", "ml", "llm", "inference", "code", "free tier"],
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "code",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -825,7 +1387,14 @@
       "description": "AI model router — ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3), OpenAI-compatible API, ~20 RPM per model",
       "tier": "Free",
       "url": "https://openrouter.ai/pricing",
-      "tags": ["ai", "ml", "llm", "inference", "api", "free tier"],
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "api",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -834,7 +1403,14 @@
       "description": "AI inference at the edge — 10,000 neurons/day free across text generation, image classification, translation, speech-to-text models",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
-      "tags": ["ai", "ml", "inference", "edge", "serverless", "free tier"],
+      "tags": [
+        "ai",
+        "ml",
+        "inference",
+        "edge",
+        "serverless",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -843,7 +1419,14 @@
       "description": "Product analytics — 1M events/month, 5K session replays, 1M feature flag requests, 100K error events, A/B testing. No credit card required",
       "tier": "Free",
       "url": "https://posthog.com/pricing",
-      "tags": ["analytics", "product", "session replay", "feature flags", "ab testing", "free tier"],
+      "tags": [
+        "analytics",
+        "product",
+        "session replay",
+        "feature flags",
+        "ab testing",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -852,7 +1435,13 @@
       "description": "Product analytics — 10K MTU, 10M events, 1K session replays/month, unlimited feature flags, 1-year retention, unlimited team members",
       "tier": "Starter",
       "url": "https://amplitude.com/pricing",
-      "tags": ["analytics", "product", "experimentation", "session replay", "free tier"],
+      "tags": [
+        "analytics",
+        "product",
+        "experimentation",
+        "session replay",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -861,7 +1450,13 @@
       "description": "Product analytics — 1M events/month, 10K session replays, funnels/retention/flows, unlimited seats. Pauses tracking when limit reached",
       "tier": "Free",
       "url": "https://mixpanel.com/pricing/",
-      "tags": ["analytics", "product", "funnels", "retention", "free tier"],
+      "tags": [
+        "analytics",
+        "product",
+        "funnels",
+        "retention",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -870,7 +1465,13 @@
       "description": "Serverless workflow orchestration — 50K function executions/month, 100K events, 5 concurrent steps, 3 users, unlimited environments",
       "tier": "Hobby",
       "url": "https://www.inngest.com/pricing",
-      "tags": ["background jobs", "serverless", "workflows", "scheduling", "free tier"],
+      "tags": [
+        "background jobs",
+        "serverless",
+        "workflows",
+        "scheduling",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -879,7 +1480,13 @@
       "description": "Background jobs platform — $5 free monthly compute, 20 concurrent runs, unlimited tasks, 5 team members, 10 schedules",
       "tier": "Free",
       "url": "https://trigger.dev/pricing",
-      "tags": ["background jobs", "serverless", "scheduling", "queues", "free tier"],
+      "tags": [
+        "background jobs",
+        "serverless",
+        "scheduling",
+        "queues",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -888,16 +1495,28 @@
       "description": "Serverless cache and pub/sub — 5 GB data transfer/month free, sub-millisecond latency, no infrastructure to manage",
       "tier": "Free",
       "url": "https://www.gomomento.com/pricing",
-      "tags": ["database", "cache", "serverless", "pubsub", "free tier"],
+      "tags": [
+        "database",
+        "cache",
+        "serverless",
+        "pubsub",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
       "vendor": "Doppler",
-      "category": "Developer Tools",
+      "category": "Secrets Management",
       "description": "Secrets management — up to 5 team members, unlimited secrets, projects, and environments. CLI, SDKs, and integrations included",
       "tier": "Free",
       "url": "https://www.doppler.com/pricing",
-      "tags": ["developer tools", "secrets", "env vars", "security", "free tier"],
+      "tags": [
+        "developer tools",
+        "secrets",
+        "env vars",
+        "security",
+        "free tier"
+      ],
       "verifiedDate": "2026-02-25"
     },
     {
@@ -906,11 +1525,21 @@
       "description": "$50,000/year in credits for Y Combinator companies — auto-renews annually. Covers product analytics, session replay, feature flags, and experimentation. Must have raised less than $25M",
       "tier": "YC Deal",
       "url": "https://posthog.com/startups",
-      "tags": ["analytics", "product analytics", "session replay", "feature flags", "yc", "startup credits"],
+      "tags": [
+        "analytics",
+        "product analytics",
+        "session replay",
+        "feature flags",
+        "yc",
+        "startup credits"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "accelerator",
-        "conditions": ["Y Combinator batch company", "Raised less than $25M"],
+        "conditions": [
+          "Y Combinator batch company",
+          "Raised less than $25M"
+        ],
         "program": "PostHog for Y Combinator"
       }
     },
@@ -920,11 +1549,20 @@
       "description": "$25,000 in credits toward monthly Team plan for up to 2 years. Includes access to $1M+ in partner deals (AWS, Google, Intercom) and Analytics Academy",
       "tier": "Startup Program",
       "url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
-      "tags": ["analytics", "cdp", "customer data", "startup credits", "data pipeline"],
+      "tags": [
+        "analytics",
+        "cdp",
+        "customer data",
+        "startup credits",
+        "data pipeline"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "accelerator",
-        "conditions": ["Incorporated less than 2 years ago", "Raised no more than $5M in total funding"],
+        "conditions": [
+          "Incorporated less than 2 years ago",
+          "Raised no more than $5M in total funding"
+        ],
         "program": "Segment Startup Program"
       }
     },
@@ -934,11 +1572,19 @@
       "description": "1 year free Growth plan — 200K MTUs or 100M events/month. All Growth features including Behavioral Cohorts, Pathfinder, experimentation, and predictive audiences. 96%+ approval rate",
       "tier": "Startup Scholarship",
       "url": "https://amplitude.com/startups",
-      "tags": ["analytics", "product analytics", "startup credits", "experimentation", "cohorts"],
+      "tags": [
+        "analytics",
+        "product analytics",
+        "startup credits",
+        "experimentation",
+        "cohorts"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "accelerator",
-        "conditions": ["Under 20 employees and less than $10M raised, OR Y Combinator/Sequoia/AWS company (no funding/headcount cap)"],
+        "conditions": [
+          "Under 20 employees and less than $10M raised, OR Y Combinator/Sequoia/AWS company (no funding/headcount cap)"
+        ],
         "program": "Amplitude Startup Scholarship"
       }
     },
@@ -948,11 +1594,23 @@
       "description": "Up to $100,000 in AWS credits plus $10,000 in Business Support credits for startups backed by approved accelerators, VCs, or incubators. Must be pre-Series B",
       "tier": "Portfolio",
       "url": "https://aws.amazon.com/activate/",
-      "tags": ["cloud", "iaas", "credits", "startup credits", "accelerator", "aws"],
+      "tags": [
+        "cloud",
+        "iaas",
+        "credits",
+        "startup credits",
+        "accelerator",
+        "aws"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "accelerator",
-        "conditions": ["Backed by approved VC, accelerator, or incubator", "Have provider Organization ID", "Pre-Series B", "Founded within last 10 years"],
+        "conditions": [
+          "Backed by approved VC, accelerator, or incubator",
+          "Have provider Organization ID",
+          "Pre-Series B",
+          "Founded within last 10 years"
+        ],
         "program": "AWS Activate Portfolio"
       }
     },
@@ -962,11 +1620,21 @@
       "description": "3-6 months free on Plus or Business plan (up to $6,000 value) for early-stage startups. Must be a new non-paying Notion customer",
       "tier": "Startup Program",
       "url": "https://www.notion.com/startups",
-      "tags": ["developer tools", "productivity", "docs", "wiki", "startup credits"],
+      "tags": [
+        "developer tools",
+        "productivity",
+        "docs",
+        "wiki",
+        "startup credits"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "accelerator",
-        "conditions": ["Fewer than 100 employees", "Valid company domain and website", "New non-paying Notion customer"],
+        "conditions": [
+          "Fewer than 100 employees",
+          "Valid company domain and website",
+          "New non-paying Notion customer"
+        ],
         "program": "Notion for Startups"
       }
     },
@@ -976,11 +1644,20 @@
       "description": "Free 1-year All Products Pack subscription (IntelliJ IDEA Ultimate, WebStorm, PyCharm, CLion, Rider, GoLand, RubyMine, etc.) for active open source project contributors. Renewable annually",
       "tier": "OSS License",
       "url": "https://www.jetbrains.com/community/opensource/",
-      "tags": ["developer tools", "ide", "open source", "oss", "jetbrains"],
+      "tags": [
+        "developer tools",
+        "ide",
+        "open source",
+        "oss",
+        "jetbrains"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "oss",
-        "conditions": ["Core contributor to a non-commercial open source project", "Project meets Open Source Definition"],
+        "conditions": [
+          "Core contributor to a non-commercial open source project",
+          "Project meets Open Source Definition"
+        ],
         "program": "JetBrains Open Source Licenses"
       }
     },
@@ -990,11 +1667,22 @@
       "description": "Free Teams account for open source projects — includes full platform access (Mac, Windows, iOS, Android, Linux, browser), SSH key management, Git commit signing, and secrets management. Non-expiring membership",
       "tier": "OSS Teams",
       "url": "https://github.com/1Password/1password-teams-open-source",
-      "tags": ["developer tools", "security", "passwords", "secrets", "open source", "oss"],
+      "tags": [
+        "developer tools",
+        "security",
+        "passwords",
+        "secrets",
+        "open source",
+        "oss"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "oss",
-        "conditions": ["Active open source project", "Project 30+ days old and actively maintained", "Uses permissive open source license"],
+        "conditions": [
+          "Active open source project",
+          "Project 30+ days old and actively maintained",
+          "Uses permissive open source license"
+        ],
         "program": "1Password for Open Source Projects"
       }
     },
@@ -1004,11 +1692,20 @@
       "description": "Free sponsored plan with Business features — 5M errors, 1B spans, 5,000 GB logs, 100K replays, 500 cron monitors, 25 uptime monitors, 3K continuous profile hours. No term limit",
       "tier": "OSS Sponsored",
       "url": "https://sentry.io/for/open-source/",
-      "tags": ["monitoring", "error tracking", "performance", "open source", "oss", "apm"],
+      "tags": [
+        "monitoring",
+        "error tracking",
+        "performance",
+        "open source",
+        "oss",
+        "apm"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "oss",
-        "conditions": ["Project released under a permissive open source license (e.g. Apache, MIT)"],
+        "conditions": [
+          "Project released under a permissive open source license (e.g. Apache, MIT)"
+        ],
         "program": "Sentry for Open Source"
       }
     },
@@ -1018,11 +1715,21 @@
       "description": "$350,000+ in aggregate partner perks for Brex cardholders — includes $5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud, 20 free GitHub Enterprise seats, 6mo free Notion, $500 Anthropic credits, and 30+ more partner discounts",
       "tier": "Partner Perks",
       "url": "https://www.brex.com/solutions/startups",
-      "tags": ["fintech", "startup perks", "credits", "aws", "google cloud", "partner discounts"],
+      "tags": [
+        "fintech",
+        "startup perks",
+        "credits",
+        "aws",
+        "google cloud",
+        "partner discounts"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "fintech",
-        "conditions": ["Brex cardholder", "US-registered corporation or LLC"],
+        "conditions": [
+          "Brex cardholder",
+          "US-registered corporation or LLC"
+        ],
         "program": "Brex Partner Perks"
       }
     },
@@ -1032,11 +1739,21 @@
       "description": "1 year free Datadog (up to $100K value), $5K AWS credits, up to $200K Google Cloud credits, and 30% off QuickBooks Online for Mercury banking customers",
       "tier": "Banking Perks",
       "url": "https://mercury.com/perks",
-      "tags": ["fintech", "startup perks", "banking", "datadog", "aws credits", "google cloud"],
+      "tags": [
+        "fintech",
+        "startup perks",
+        "banking",
+        "datadog",
+        "aws credits",
+        "google cloud"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "fintech",
-        "conditions": ["Mercury banking customer", "New to Datadog (for Datadog perk)"],
+        "conditions": [
+          "Mercury banking customer",
+          "New to Datadog (for Datadog perk)"
+        ],
         "program": "Mercury Perks"
       }
     },
@@ -1046,11 +1763,19 @@
       "description": "Up to $5,000 in AWS credits plus partner discounts on Notion, and other tools. Part of $350K+ total partner rewards program",
       "tier": "Partner Rewards",
       "url": "https://ramp.com/rewards/aws",
-      "tags": ["fintech", "startup perks", "credits", "aws", "partner discounts"],
+      "tags": [
+        "fintech",
+        "startup perks",
+        "credits",
+        "aws",
+        "partner discounts"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "fintech",
-        "conditions": ["Ramp cardholder"],
+        "conditions": [
+          "Ramp cardholder"
+        ],
         "program": "Ramp Partner Rewards"
       }
     },
@@ -1060,11 +1785,20 @@
       "description": "$50,000+ in founder perks — $5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, plus Notion, Slack, Zendesk, Intercom, and more",
       "tier": "Founder Perks",
       "url": "https://stripe.com/atlas",
-      "tags": ["fintech", "incorporation", "startup perks", "aws", "digitalocean", "github"],
+      "tags": [
+        "fintech",
+        "incorporation",
+        "startup perks",
+        "aws",
+        "digitalocean",
+        "github"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "fintech",
-        "conditions": ["Incorporated through Stripe Atlas ($500 one-time fee)"],
+        "conditions": [
+          "Incorporated through Stripe Atlas ($500 one-time fee)"
+        ],
         "program": "Stripe Atlas Founder Perks"
       }
     },
@@ -1074,11 +1808,20 @@
       "description": "$5K AWS credits, up to $100K Google Cloud credits (usage-based annual cap), $5K MongoDB credits, $9K off Slack, and $50K Segment credits for SVB startup banking customers. Now a division of First Citizens BancShares",
       "tier": "Banking Offers",
       "url": "https://www.svb.com/startup-banking/",
-      "tags": ["fintech", "banking", "startup perks", "aws", "google cloud", "credits"],
+      "tags": [
+        "fintech",
+        "banking",
+        "startup perks",
+        "aws",
+        "google cloud",
+        "credits"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "fintech",
-        "conditions": ["SVB startup banking customer"],
+        "conditions": [
+          "SVB startup banking customer"
+        ],
         "program": "SVB Startup Banking Offers"
       }
     },
@@ -1088,11 +1831,21 @@
       "description": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot, Codespaces, and Actions minutes",
       "tier": "Student Pack",
       "url": "https://education.github.com/pack",
-      "tags": ["developer tools", "student", "github", "ide", "education", "copilot"],
+      "tags": [
+        "developer tools",
+        "student",
+        "github",
+        "ide",
+        "education",
+        "copilot"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "student",
-        "conditions": ["Enrolled in a degree-granting educational institution", "Valid student ID or enrollment verification"],
+        "conditions": [
+          "Enrolled in a degree-granting educational institution",
+          "Valid student ID or enrollment verification"
+        ],
         "program": "GitHub Student Developer Pack"
       }
     },
@@ -1102,12 +1855,587 @@
       "description": "Up to $200,000 in Google Cloud credits over 2 years for startups backed by approved accelerators, VCs, or incubators. Year 1: $100K (usage-matched). Year 2: $100K at 20% match. Includes technical training and support",
       "tier": "Startup Program",
       "url": "https://cloud.google.com/startup",
-      "tags": ["cloud", "iaas", "credits", "startup credits", "google cloud", "accelerator"],
+      "tags": [
+        "cloud",
+        "iaas",
+        "credits",
+        "startup credits",
+        "google cloud",
+        "accelerator"
+      ],
       "verifiedDate": "2026-02-25",
       "eligibility": {
         "type": "accelerator",
-        "conditions": ["Backed by approved VC, accelerator, or incubator", "Applied through approved referral partner (e.g. SVB, Stripe)"],
+        "conditions": [
+          "Backed by approved VC, accelerator, or incubator",
+          "Applied through approved referral partner (e.g. SVB, Stripe)"
+        ],
         "program": "Google for Startups Cloud Program"
+      }
+    },
+    {
+      "vendor": "Typesense Cloud",
+      "category": "Search",
+      "description": "One-time free credit: 720 hours cluster runtime + 10 GB bandwidth (does not replenish). Smallest node: 0.5 GB RAM / 2 vCPU",
+      "tier": "Free Credit",
+      "url": "https://cloud.typesense.org/",
+      "tags": [
+        "search",
+        "full-text",
+        "typo-tolerant",
+        "free credit"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Statically",
+      "category": "CDN",
+      "description": "Free CDN for open source projects — serves files from GitHub, GitLab, Bitbucket repos and npm packages. ~20-30 MB file size limit",
+      "tier": "Free",
+      "url": "https://statically.io/",
+      "tags": [
+        "cdn",
+        "open-source",
+        "static",
+        "github"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Highlight.io",
+      "category": "Logging",
+      "description": "500 sessions, 1K errors, 1M logs, 25M traces/month. 3-month retention for sessions/errors, 30-day for logs/traces. Up to 15 seats",
+      "tier": "Free",
+      "url": "https://www.highlight.io/pricing",
+      "tags": [
+        "logging",
+        "observability",
+        "session-replay",
+        "error-tracking",
+        "tracing"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Baselime",
+      "category": "Logging",
+      "description": "Acquired by Cloudflare. Up to 1B events/month, 7-day retention, unlimited seats and environments. Includes tracing, log management, error tracking, metrics",
+      "tier": "Free",
+      "url": "https://baselime.io/",
+      "tags": [
+        "logging",
+        "observability",
+        "cloudflare",
+        "tracing",
+        "serverless"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Polar",
+      "category": "Payments",
+      "description": "Merchant of record — no monthly fee, 4% + $0.40 per transaction (includes Stripe fees). +1.5% for international cards, +0.5% for subscriptions",
+      "tier": "Pay-as-you-go",
+      "url": "https://polar.sh/",
+      "tags": [
+        "payments",
+        "merchant-of-record",
+        "subscriptions",
+        "open-source"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Paddle",
+      "category": "Payments",
+      "description": "Merchant of record — no monthly fee, 5% + $0.50 per transaction. All-in-one: payments, tax compliance, fraud protection, buyer support",
+      "tier": "Standard",
+      "url": "https://www.paddle.com/pricing",
+      "tags": [
+        "payments",
+        "merchant-of-record",
+        "tax-compliance",
+        "subscriptions"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Socket.dev",
+      "category": "Security",
+      "description": "Supply chain security for open source dependencies. Free for all OSS repositories + first private repo. Package health scores free for everyone",
+      "tier": "Free",
+      "url": "https://socket.dev/pricing",
+      "tags": [
+        "security",
+        "supply-chain",
+        "dependencies",
+        "open-source"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Infisical",
+      "category": "Secrets Management",
+      "description": "5 identities, 3 projects, 3 environments, 10 integrations. Includes CLI, SDKs, K8s operator, webhooks, 2FA, secret scanning and sharing",
+      "tier": "Free",
+      "url": "https://infisical.com/pricing",
+      "tags": [
+        "secrets",
+        "secrets-management",
+        "environment-variables",
+        "encryption"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "HashiCorp Vault",
+      "category": "Secrets Management",
+      "description": "Self-hosted free (BSL 1.1 license). HCP Vault Secrets cloud free tier: 25 apps, 25 static secrets, 5 versions, 5 syncs",
+      "tier": "Community / HCP Free",
+      "url": "https://www.hashicorp.com/products/vault/pricing",
+      "tags": [
+        "secrets",
+        "secrets-management",
+        "encryption",
+        "self-hosted",
+        "cloud"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "GrowthBook",
+      "category": "Feature Flags",
+      "description": "Cloud free: 3 users, unlimited flags/experiments/traffic. Self-hosted free: unlimited everything. Warehouse Native support",
+      "tier": "Starter / Open Source",
+      "url": "https://www.growthbook.io/pricing",
+      "tags": [
+        "feature-flags",
+        "experimentation",
+        "ab-testing",
+        "open-source"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Statsig",
+      "category": "Feature Flags",
+      "description": "2M+ metered events/month free, unlimited feature flags at all tiers. Includes 50K session replays. Experimentation and analytics built in",
+      "tier": "Free",
+      "url": "https://statsig.com/pricing",
+      "tags": [
+        "feature-flags",
+        "experimentation",
+        "ab-testing",
+        "analytics"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Zuplo",
+      "category": "API Gateway",
+      "description": "1M requests/month, 10 GB egress, up to 10 projects, unlimited production edge environments. Developer Portal included. No custom domains on free tier",
+      "tier": "Free",
+      "url": "https://zuplo.com/pricing",
+      "tags": [
+        "api-gateway",
+        "edge",
+        "rate-limiting",
+        "developer-portal"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Kong",
+      "category": "API Gateway",
+      "description": "Open source API gateway (Apache 2.0). Self-hosted with no request or usage limits. Lacks enterprise features (Manager GUI, advanced analytics)",
+      "tier": "OSS",
+      "url": "https://konghq.com/pricing",
+      "tags": [
+        "api-gateway",
+        "open-source",
+        "self-hosted",
+        "microservices"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Hookdeck",
+      "category": "API Gateway",
+      "description": "Event gateway — 10K events/month, 100K discarded requests, 3-day retention, 5 events/sec throughput. SOC2 compliant",
+      "tier": "Developer",
+      "url": "https://hookdeck.com/pricing",
+      "tags": [
+        "api-gateway",
+        "webhooks",
+        "event-gateway",
+        "reliability"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Unkey",
+      "category": "API Gateway",
+      "description": "API key management — 1K keys, 150K verifications/month, 7-day logs, 30-day audit logs. Unlimited APIs. Ratelimiting included",
+      "tier": "Free",
+      "url": "https://www.unkey.com/pricing",
+      "tags": [
+        "api-gateway",
+        "api-keys",
+        "rate-limiting",
+        "authentication"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "GitHub Container Registry",
+      "category": "Container Registry",
+      "description": "Container images currently free for both public and private repos (GitHub may change with 1-month notice). Non-container packages: 500 MB storage, 1 GB transfer/mo",
+      "tier": "Free",
+      "url": "https://github.com/features/packages",
+      "tags": [
+        "container-registry",
+        "docker",
+        "packages",
+        "github"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Docker Hub",
+      "category": "Container Registry",
+      "description": "1 private repository, unlimited public repositories. 200 pulls per 6-hour window (authenticated). No automated builds on free tier",
+      "tier": "Personal",
+      "url": "https://www.docker.com/pricing/",
+      "tags": [
+        "container-registry",
+        "docker",
+        "images",
+        "packages"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Cypress Cloud",
+      "category": "Testing",
+      "description": "50 users, 500 test results/month, 30-day data retention. Parallelization included. Separate OSS plan available (100K results/mo) via application",
+      "tier": "Starter",
+      "url": "https://www.cypress.io/pricing",
+      "tags": [
+        "testing",
+        "e2e",
+        "browser-testing",
+        "ci-cd"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Postman",
+      "category": "Testing",
+      "description": "Free for individuals — unlimited collections, API testing, mock servers. Teams: up to 3 users, 25 monitoring calls/month",
+      "tier": "Free",
+      "url": "https://www.postman.com/pricing/",
+      "tags": [
+        "testing",
+        "api-testing",
+        "api-development",
+        "mock-servers"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Directus",
+      "category": "Headless CMS",
+      "description": "Self-hosted free (BSL license, free for <$5M revenue). Cloud free tier discontinued Nov 2025 — Cloud starts at $15/mo",
+      "tier": "Self-Hosted",
+      "url": "https://directus.io/pricing",
+      "tags": [
+        "headless-cms",
+        "backend",
+        "self-hosted",
+        "api"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Loops",
+      "category": "Email",
+      "description": "1,000 contacts, 4,000 emails per 30 days (marketing + transactional). All features included. Transactional-only recipients don't count toward contact limit",
+      "tier": "Free",
+      "url": "https://loops.so/pricing",
+      "tags": [
+        "email",
+        "marketing",
+        "transactional",
+        "automation"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "ClouDNS",
+      "category": "DNS & Domain Management",
+      "description": "1 DNS zone, 50 records, 500K queries/month, 4 Unicast DNS servers. Includes mail forwarding, dynamic DNS, web redirects",
+      "tier": "Free",
+      "url": "https://www.cloudns.net/pricing/",
+      "tags": [
+        "dns",
+        "domain",
+        "nameserver",
+        "dynamic-dns"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Tinybird",
+      "category": "Analytics",
+      "description": "Real-time analytics data platform — 10 GB storage, 10 QPS max, 0.25 vCPUs compute. Shared infrastructure, community support",
+      "tier": "Free",
+      "url": "https://www.tinybird.co/pricing",
+      "tags": [
+        "analytics",
+        "real-time",
+        "data-platform",
+        "sql",
+        "api"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Novu",
+      "category": "Messaging",
+      "description": "Notification infrastructure — 10K workflow runs/month, 20 workflows, 2 environments, 3 team members. All channels: email, in-app, SMS, chat, push",
+      "tier": "Free",
+      "url": "https://novu.co/pricing",
+      "tags": [
+        "messaging",
+        "notifications",
+        "multi-channel",
+        "workflow"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Svix",
+      "category": "Messaging",
+      "description": "Webhook delivery — 50K messages/month, 50 msg/sec throughput, 30-day payload retention, 3 team members. 99.9% SLA",
+      "tier": "Free",
+      "url": "https://www.svix.com/pricing/",
+      "tags": [
+        "messaging",
+        "webhooks",
+        "delivery",
+        "reliability"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Crisp",
+      "category": "Messaging",
+      "description": "Customer messaging platform — 2 seats, 100 contacts, unlimited conversations. Website chat widget, shared inbox, desktop/mobile apps",
+      "tier": "Free",
+      "url": "https://crisp.chat/en/pricing/",
+      "tags": [
+        "messaging",
+        "chat",
+        "customer-support",
+        "live-chat"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Mintlify",
+      "category": "Developer Tools",
+      "description": "Developer documentation platform — custom domain, web editor, API playground, custom components, LLM optimizations. For individuals",
+      "tier": "Hobby",
+      "url": "https://mintlify.com/pricing",
+      "tags": [
+        "docs",
+        "documentation",
+        "api-docs",
+        "developer-portal"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "GitHub Pages",
+      "category": "Cloud Hosting",
+      "description": "Static site hosting — 1 GB published site size, 100 GB bandwidth/month, 10 builds/hour. Included with all GitHub accounts",
+      "tier": "Free",
+      "url": "https://docs.github.com/en/pages",
+      "tags": [
+        "hosting",
+        "static",
+        "github",
+        "jekyll"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Pulsetic",
+      "category": "Monitoring",
+      "description": "Uptime monitoring — 10 monitors (HTTP/heartbeat/API), 5-minute check interval, 3 regions, 3-month history, 3 status pages",
+      "tier": "Free",
+      "url": "https://pulsetic.com/pricing/",
+      "tags": [
+        "monitoring",
+        "uptime",
+        "status-page",
+        "alerting"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Nile",
+      "category": "Databases",
+      "description": "Postgres for multi-tenant apps — 1 GB storage, 50M serverless query tokens, 500 max connections. Unlimited databases and tenant DBs. Always-on (no cold starts)",
+      "tier": "Free",
+      "url": "https://www.thenile.dev/pricing",
+      "tags": [
+        "database",
+        "postgres",
+        "multi-tenant",
+        "serverless"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Cron-job.org",
+      "category": "Background Jobs",
+      "description": "Free cron job scheduling — unlimited jobs (fair use), 60-second minimum interval, 30-second execution timeout. Auto-disables after 25+ consecutive failures",
+      "tier": "Free",
+      "url": "https://cron-job.org/en/",
+      "tags": [
+        "cron",
+        "scheduling",
+        "background-jobs",
+        "automation"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "OneSignal",
+      "category": "Messaging",
+      "description": "Push notification platform — unlimited mobile push, up to 10K web push subscribers, 100 emails/day. Multi-platform: iOS, Android, web",
+      "tier": "Free",
+      "url": "https://onesignal.com/pricing",
+      "tags": [
+        "messaging",
+        "push-notifications",
+        "mobile",
+        "web-push"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "n8n",
+      "category": "Background Jobs",
+      "description": "Workflow automation — self-hosted free (Sustainable Use License). 400+ integrations, visual workflow builder. Cloud starts at paid tier",
+      "tier": "Self-Hosted",
+      "url": "https://n8n.io/pricing/",
+      "tags": [
+        "automation",
+        "workflow",
+        "integrations",
+        "self-hosted"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Retool",
+      "category": "Developer Tools",
+      "description": "Internal tools builder — free for up to 5 users, unlimited apps. Drag-and-drop UI, 100+ integrations, custom components",
+      "tier": "Free",
+      "url": "https://retool.com/pricing",
+      "tags": [
+        "internal-tools",
+        "low-code",
+        "admin-panel",
+        "dashboard"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "MinIO",
+      "category": "Storage",
+      "description": "S3-compatible object storage — self-hosted free (GNU AGPL v3). High performance, Kubernetes-native. No usage limits when self-hosted",
+      "tier": "Open Source",
+      "url": "https://min.io/pricing",
+      "tags": [
+        "storage",
+        "s3-compatible",
+        "object-storage",
+        "self-hosted"
+      ],
+      "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "Backblaze",
+      "category": "Storage",
+      "description": "Flamethrower Startup Program — up to $100K in B2 Cloud Storage credits. For founders and small teams building data-heavy products (AI/ML, media, gaming, SaaS). Launched Feb 2026",
+      "tier": "Flamethrower",
+      "url": "https://www.backblaze.com/contact-sales/startup",
+      "tags": [
+        "storage",
+        "s3-compatible",
+        "startup-credits",
+        "cloud-storage"
+      ],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": [
+          "Startup building data-heavy products",
+          "Application reviewed case-by-case"
+        ],
+        "program": "Backblaze Flamethrower"
+      }
+    },
+    {
+      "vendor": "DigitalOcean",
+      "category": "Cloud IaaS",
+      "description": "Hatch startup program — up to $100K compute credits over 12 months + 3 months free GPU access. 15 months Standard support. Partner perks from Cloudflare, Stripe, Retool, HubSpot",
+      "tier": "Hatch",
+      "url": "https://www.digitalocean.com/startups",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "gpu",
+        "compute"
+      ],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": [
+          "Series A or less (max $10M raised)",
+          "New DigitalOcean customer",
+          "Affiliated with approved accelerator/incubator/VC",
+          "Product startup (not service-based)"
+        ],
+        "program": "DigitalOcean Hatch"
+      }
+    },
+    {
+      "vendor": "Atlassian",
+      "category": "Developer Tools",
+      "description": "50 seats free for 12 months — Jira Premium, Confluence Premium, Loom Business + AI, Jira Product Discovery, Compass, Bitbucket Premium. Dedicated CSM and onboarding",
+      "tier": "Startup Program",
+      "url": "https://www.atlassian.com/software/startups",
+      "tags": [
+        "project-management",
+        "collaboration",
+        "startup-credits",
+        "jira",
+        "confluence"
+      ],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": [
+          "Not an existing Atlassian paid customer",
+          "VC-funded or partner accelerator affiliated",
+          "Raised no more than $10M"
+        ],
+        "program": "Atlassian for Startups"
       }
     }
   ]
