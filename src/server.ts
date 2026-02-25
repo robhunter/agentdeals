@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, searchOffers } from "./data.js";
+import { getCategories, getOfferDetails, searchOffers } from "./data.js";
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -76,6 +76,50 @@ export function createServer(): McpServer {
             {
               type: "text" as const,
               text: `Error searching offers: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_offer_details",
+    {
+      description:
+        "Get full details for a specific vendor by name, including related vendors in the same category.",
+      inputSchema: {
+        vendor: z.string().describe("Vendor name (case-insensitive match)"),
+      },
+    },
+    async ({ vendor }) => {
+      try {
+        const result = getOfferDetails(vendor);
+        if ("error" in result) {
+          const msg = result.suggestions.length > 0
+            ? `${result.error} Did you mean: ${result.suggestions.join(", ")}?`
+            : `${result.error} No similar vendors found.`;
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: msg }],
+          };
+        }
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result.offer, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("get_offer_details error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error getting offer details: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
