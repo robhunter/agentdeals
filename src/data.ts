@@ -62,6 +62,33 @@ export function getCategories(): { name: string; count: number }[] {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+export function getOfferDetails(
+  vendorName: string
+): { offer: Offer & { relatedVendors: string[] } } | { error: string; suggestions: string[] } {
+  const offers = loadOffers();
+  const lowerName = vendorName.toLowerCase();
+  const match = offers.find((o) => o.vendor.toLowerCase() === lowerName);
+
+  if (match) {
+    const relatedVendors = offers
+      .filter((o) => o.category === match.category && o.vendor !== match.vendor)
+      .slice(0, 5)
+      .map((o) => o.vendor);
+    return { offer: { ...match, relatedVendors } };
+  }
+
+  // No exact match — suggest similar vendors
+  const suggestions = offers
+    .filter((o) => o.vendor.toLowerCase().includes(lowerName) || lowerName.includes(o.vendor.toLowerCase()))
+    .slice(0, 5)
+    .map((o) => o.vendor);
+
+  return {
+    error: `Vendor "${vendorName}" not found.`,
+    suggestions: suggestions.length > 0 ? suggestions : [],
+  };
+}
+
 export function searchOffers(
   query?: string,
   category?: string
