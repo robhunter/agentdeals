@@ -49,13 +49,14 @@ export function createServer(): McpServer {
         query: z.string().optional().describe("Keyword to search for in vendor names, descriptions, and tags"),
         category: z.string().optional().describe("Filter results to a specific category (e.g. 'Databases', 'Cloud Hosting')"),
         eligibility_type: z.enum(["public", "accelerator", "oss", "student", "fintech", "geographic", "enterprise"]).optional().describe("Filter by eligibility type: public, accelerator, oss, student, fintech, geographic, enterprise"),
+        sort: z.enum(["vendor", "category", "newest"]).optional().describe("Sort results: vendor (alphabetical by vendor name), category (by category then vendor), newest (most recently verified first)"),
         limit: z.number().optional().describe("Maximum results to return (default: all results, or 20 when offset is provided)"),
         offset: z.number().optional().describe("Number of results to skip (default: 0)"),
       },
     },
-    async ({ query, category, eligibility_type, limit, offset }) => {
+    async ({ query, category, eligibility_type, sort, limit, offset }) => {
       try {
-        const allResults = searchOffers(query, category, eligibility_type);
+        const allResults = searchOffers(query, category, eligibility_type, sort);
         const total = allResults.length;
         const usePagination = limit !== undefined || offset !== undefined;
         const effectiveOffset = offset ?? 0;

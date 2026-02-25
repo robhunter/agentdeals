@@ -92,7 +92,8 @@ export function getOfferDetails(
 export function searchOffers(
   query?: string,
   category?: string,
-  eligibilityType?: string
+  eligibilityType?: string,
+  sort?: string
 ): Offer[] {
   let results = loadOffers();
 
@@ -123,6 +124,18 @@ export function searchOffers(
         .toLowerCase();
       return terms.every((term) => searchable.includes(term));
     });
+  }
+
+  if (sort === "vendor") {
+    results = [...results].sort((a, b) => a.vendor.localeCompare(b.vendor));
+  } else if (sort === "category") {
+    results = [...results].sort((a, b) =>
+      a.category.localeCompare(b.category) || a.vendor.localeCompare(b.vendor)
+    );
+  } else if (sort === "newest") {
+    results = [...results].sort((a, b) =>
+      b.verifiedDate.localeCompare(a.verifiedDate)
+    );
   }
 
   return results;
