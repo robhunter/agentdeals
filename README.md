@@ -42,18 +42,26 @@ npx agentdeals
 
 | Tool | Description |
 |------|-------------|
-| `search_offers` | Search deals by keyword, category, or vendor name. Returns matching offers with pricing details and URLs. |
+| `search_offers` | Search deals by keyword, category, or vendor name. Supports pagination via limit/offset. |
 | `list_categories` | List all available deal categories (Cloud Hosting, Databases, CI/CD, etc.). |
+| `get_offer_details` | Get full details for a specific vendor, including related vendors in the same category. |
 
 ### search_offers
 
 **Parameters:**
 - `query` (string, optional) — Keyword to search vendor names, descriptions, and tags
 - `category` (string, optional) — Filter to a specific category
+- `limit` (number, optional) — Maximum results to return
+- `offset` (number, optional) — Number of results to skip
 
 ### list_categories
 
 No parameters. Returns all categories with offer counts.
+
+### get_offer_details
+
+**Parameters:**
+- `vendor` (string, required) — Vendor name (case-insensitive match)
 
 ## Example
 
@@ -107,7 +115,7 @@ AI / ML, Analytics, Auth, Background Jobs, CDN, CI/CD, Cloud Hosting, Cloud IaaS
 ```bash
 npm install          # Install dependencies
 npm run build        # Compile TypeScript
-npm test             # Run tests (21 passing)
+npm test             # Run tests (30 passing)
 npm run serve        # Run HTTP server (port 3000)
 npm start            # Run stdio server
 ```
