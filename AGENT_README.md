@@ -63,4 +63,4 @@ Endpoints:
 
 ## Current Status
 
-MCP server is functional with stdio and HTTP transports. 3 tools (search_offers with pagination, list_categories, get_offer_details). 100 vendor entries across 22 categories. 30 passing tests. Multi-session HTTP support with idle timeout cleanup. Registry manifests in place (server.json, glama.json, smithery.yaml). Glama ownership claim endpoint at /.well-known/glama.json. Staleness detection and pricing change monitor scripts available.
+MCP server is functional with stdio and HTTP transports. 3 tools (search_offers with pagination/sorting/eligibility filtering, list_categories, get_offer_details). 115 offers (100 public + 15 conditional) across 22 categories with eligibility schema (accelerator, oss, fintech, student types). 41 passing tests. Multi-session HTTP support with idle timeout cleanup. Deployed on Railway. Listed on Official MCP Registry and Glama. Registry manifests in place (server.json, glama.json, smithery.yaml). Staleness detection and pricing change monitor scripts available.
