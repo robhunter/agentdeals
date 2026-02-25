@@ -44,20 +44,27 @@ export function createServer(): McpServer {
     "search_offers",
     {
       description:
-        "Search developer tool offers by keyword, category, or vendor name. Returns matching deals with details and URLs.",
+        "Search developer tool offers by keyword, category, or vendor name. Returns matching deals with details and URLs. Supports pagination via limit/offset.",
       inputSchema: {
         query: z.string().optional().describe("Keyword to search for in vendor names, descriptions, and tags"),
         category: z.string().optional().describe("Filter results to a specific category (e.g. 'Databases', 'Cloud Hosting')"),
+        limit: z.number().optional().describe("Maximum results to return (default: all results, or 20 when offset is provided)"),
+        offset: z.number().optional().describe("Number of results to skip (default: 0)"),
       },
     },
-    async ({ query, category }) => {
+    async ({ query, category, limit, offset }) => {
       try {
-        const results = searchOffers(query, category);
+        const allResults = searchOffers(query, category);
+        const total = allResults.length;
+        const usePagination = limit !== undefined || offset !== undefined;
+        const effectiveOffset = offset ?? 0;
+        const effectiveLimit = limit ?? (usePagination ? 20 : total);
+        const results = allResults.slice(effectiveOffset, effectiveOffset + effectiveLimit);
         return {
           content: [
             {
               type: "text" as const,
-              text: JSON.stringify(results, null, 2),
+              text: JSON.stringify({ results, total, limit: effectiveLimit, offset: effectiveOffset }, null, 2),
             },
           ],
         };
