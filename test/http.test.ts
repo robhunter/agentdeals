@@ -284,7 +284,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(body["$schema"], "https://glama.ai/mcp/schemas/connector.json");
     assert.ok(Array.isArray(body.maintainers));
     assert.strictEqual(body.maintainers.length, 1);
-    assert.strictEqual(body.maintainers[0].email, "rob@robbobobbo.com");
+    assert.strictEqual(body.maintainers[0].email, "rob.v.hunter@gmail.com");
   });
 
   it("returns 404 for unknown paths", async () => {
