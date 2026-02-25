@@ -273,6 +273,19 @@ describe("HTTP transport", () => {
     assert.ok(offers.length > 0);
   });
 
+  it("serves /.well-known/glama.json", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/.well-known/glama.json`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    const body = await response.json() as any;
+    assert.strictEqual(body["$schema"], "https://glama.ai/mcp/schemas/connector.json");
+    assert.ok(Array.isArray(body.maintainers));
+    assert.strictEqual(body.maintainers.length, 1);
+    assert.strictEqual(body.maintainers[0].email, "rob@robbobobbo.com");
+  });
+
   it("returns 404 for unknown paths", async () => {
     proc = await startHttpServer();
 
