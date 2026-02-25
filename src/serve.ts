@@ -125,6 +125,14 @@ const httpServer = createHttpServer(async (req, res) => {
   } else if (url.pathname === "/health") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ status: "ok", sessions: sessions.size }));
+  } else if (url.pathname === "/.well-known/glama.json") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      "$schema": "https://glama.ai/mcp/schemas/connector.json",
+      "maintainers": [
+        { "email": "rob@robbobobbo.com" }
+      ]
+    }));
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
