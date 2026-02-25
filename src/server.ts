@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getOfferDetails, searchOffers } from "./data.js";
+import { getCategories, getDealChanges, getOfferDetails, searchOffers } from "./data.js";
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -122,6 +122,43 @@ export function createServer(): McpServer {
             {
               type: "text" as const,
               text: `Error getting offer details: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_deal_changes",
+    {
+      description:
+        "Get recent pricing and free tier changes for developer tools. Tracks free tier removals, limit reductions/increases, new free tiers, and pricing restructures.",
+      inputSchema: {
+        since: z.string().optional().describe("ISO date string (YYYY-MM-DD). Only return changes on or after this date. Default: 30 days ago"),
+        change_type: z.enum(["free_tier_removed", "limits_reduced", "limits_increased", "new_free_tier", "pricing_restructured"]).optional().describe("Filter by type of change"),
+        vendor: z.string().optional().describe("Filter by vendor name (case-insensitive partial match)"),
+      },
+    },
+    async ({ since, change_type, vendor }) => {
+      try {
+        const result = getDealChanges(since, change_type, vendor);
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("get_deal_changes error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error getting deal changes: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
