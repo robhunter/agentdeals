@@ -45,6 +45,7 @@ npx agentdeals
 | `search_offers` | Search deals by keyword, category, or vendor name. Supports pagination via limit/offset. |
 | `list_categories` | List all available deal categories (Cloud Hosting, Databases, CI/CD, etc.). |
 | `get_offer_details` | Get full details for a specific vendor, including related vendors in the same category. |
+| `get_deal_changes` | Get recent pricing and free tier changes. Tracks removals, reductions, increases, and restructures. |
 
 ### search_offers
 
@@ -62,6 +63,13 @@ No parameters. Returns all categories with offer counts.
 
 **Parameters:**
 - `vendor` (string, required) — Vendor name (case-insensitive match)
+
+### get_deal_changes
+
+**Parameters:**
+- `since` (string, optional) — ISO date (YYYY-MM-DD). Only return changes on or after this date. Default: 30 days ago
+- `change_type` (string, optional) — Filter by type: `free_tier_removed`, `limits_reduced`, `limits_increased`, `new_free_tier`, `pricing_restructured`
+- `vendor` (string, optional) — Filter by vendor name (case-insensitive partial match)
 
 ## Example
 
