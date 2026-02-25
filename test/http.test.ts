@@ -179,7 +179,8 @@ describe("HTTP transport", () => {
     const searchResult = searchData.find((d: any) => d.id === 2);
     assert.ok(searchResult);
 
-    const offers = JSON.parse(searchResult.result.content[0].text);
+    const searchBody = JSON.parse(searchResult.result.content[0].text);
+    const offers = searchBody.results;
     assert.ok(Array.isArray(offers));
     assert.ok(offers.length >= 2);
     for (const offer of offers) {
@@ -268,9 +269,9 @@ describe("HTTP transport", () => {
     const dataB = parseSSEData(toolRespB.text);
     const resultB = dataB.find((d: any) => d.id === 2);
     assert.ok(resultB, "Client B should get search_offers result");
-    const offers = JSON.parse(resultB.result.content[0].text);
-    assert.ok(Array.isArray(offers));
-    assert.ok(offers.length > 0);
+    const searchBody = JSON.parse(resultB.result.content[0].text);
+    assert.ok(Array.isArray(searchBody.results));
+    assert.ok(searchBody.results.length > 0);
   });
 
   it("serves /.well-known/glama.json", async () => {

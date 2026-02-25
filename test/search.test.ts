@@ -81,10 +81,12 @@ describe("search_offers tool", () => {
       ])) as any[];
 
       const result = responses.find((r: any) => r.id === 2) as any;
-      const offers = JSON.parse(result.result.content[0].text);
+      const body = JSON.parse(result.result.content[0].text);
+      const offers = body.results;
 
       assert.ok(Array.isArray(offers));
       assert.ok(offers.length >= 2);
+      assert.strictEqual(body.total, offers.length);
       for (const offer of offers) {
         const searchable = [offer.vendor, offer.description, ...offer.tags]
           .join(" ")
@@ -113,10 +115,12 @@ describe("search_offers tool", () => {
       ])) as any[];
 
       const result = responses.find((r: any) => r.id === 2) as any;
-      const offers = JSON.parse(result.result.content[0].text);
+      const body = JSON.parse(result.result.content[0].text);
+      const offers = body.results;
 
       assert.ok(Array.isArray(offers));
       assert.ok(offers.length >= 2);
+      assert.strictEqual(body.total, offers.length);
       for (const offer of offers) {
         assert.strictEqual(offer.category, "Databases");
       }
@@ -142,10 +146,122 @@ describe("search_offers tool", () => {
       ])) as any[];
 
       const result = responses.find((r: any) => r.id === 2) as any;
-      const offers = JSON.parse(result.result.content[0].text);
+      const body = JSON.parse(result.result.content[0].text);
 
-      assert.ok(Array.isArray(offers));
-      assert.strictEqual(offers.length, 0);
+      assert.ok(Array.isArray(body.results));
+      assert.strictEqual(body.results.length, 0);
+      assert.strictEqual(body.total, 0);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("paginates with limit and offset", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { limit: 5, offset: 0 },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+
+      assert.strictEqual(body.results.length, 5);
+      assert.strictEqual(body.limit, 5);
+      assert.strictEqual(body.offset, 0);
+      assert.ok(body.total >= 5);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("paginates with offset beyond results", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { limit: 10, offset: 99999 },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+
+      assert.strictEqual(body.results.length, 0);
+      assert.strictEqual(body.offset, 99999);
+      assert.ok(body.total > 0);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("paginates with category filter", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { category: "Databases", limit: 2, offset: 0 },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+
+      assert.strictEqual(body.results.length, 2);
+      assert.ok(body.total >= 2);
+      for (const offer of body.results) {
+        assert.strictEqual(offer.category, "Databases");
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns all results when no limit/offset provided", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: {},
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+
+      assert.strictEqual(body.results.length, body.total);
+      assert.ok(body.total >= 100);
+      assert.strictEqual(body.offset, 0);
     } finally {
       proc.kill();
     }
@@ -168,7 +284,8 @@ describe("search_offers tool", () => {
       ])) as any[];
 
       const result = responses.find((r: any) => r.id === 2) as any;
-      const offers = JSON.parse(result.result.content[0].text);
+      const body = JSON.parse(result.result.content[0].text);
+      const offers = body.results;
 
       assert.ok(offers.length > 0);
       for (const offer of offers) {
