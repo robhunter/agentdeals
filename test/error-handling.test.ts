@@ -129,9 +129,10 @@ describe("error handling", () => {
 
       const result = responses.find((r: any) => r.id === 2) as any;
       assert.ok(result.result, "Should return a result, not crash");
-      const offers = JSON.parse(result.result.content[0].text);
-      assert.ok(Array.isArray(offers));
-      assert.strictEqual(offers.length, 0, "Should return empty offers for missing offers array");
+      const body = JSON.parse(result.result.content[0].text);
+      assert.ok(Array.isArray(body.results));
+      assert.strictEqual(body.results.length, 0, "Should return empty offers for missing offers array");
+      assert.strictEqual(body.total, 0);
     } finally {
       proc.kill();
     }
