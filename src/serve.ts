@@ -130,7 +130,7 @@ const httpServer = createHttpServer(async (req, res) => {
     res.end(JSON.stringify({
       "$schema": "https://glama.ai/mcp/schemas/connector.json",
       "maintainers": [
-        { "email": "rob@robbobobbo.com" }
+        { "email": "rob.v.hunter@gmail.com" }
       ]
     }));
   } else {
