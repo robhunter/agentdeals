@@ -92,7 +92,7 @@ describe("list_categories tool", () => {
 
       // Verify categories are sorted alphabetically
       const names = categories.map((c: any) => c.name);
-      const sorted = [...names].sort();
+      const sorted = [...names].sort((a: string, b: string) => a.localeCompare(b));
       assert.deepStrictEqual(names, sorted);
     } finally {
       proc.kill();
