@@ -454,6 +454,172 @@ describe("eligibility filtering", () => {
   });
 });
 
+describe("search sorting", () => {
+  it("sorts by vendor name alphabetically", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { sort: "vendor", limit: 10 },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const vendors = body.results.map((o: any) => o.vendor);
+
+      for (let i = 1; i < vendors.length; i++) {
+        assert.ok(
+          vendors[i - 1].localeCompare(vendors[i]) <= 0,
+          `${vendors[i - 1]} should come before ${vendors[i]}`
+        );
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("sorts by category then vendor", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { sort: "category", limit: 20 },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const results = body.results;
+
+      for (let i = 1; i < results.length; i++) {
+        const catCmp = results[i - 1].category.localeCompare(results[i].category);
+        if (catCmp === 0) {
+          assert.ok(
+            results[i - 1].vendor.localeCompare(results[i].vendor) <= 0,
+            `Within ${results[i].category}: ${results[i - 1].vendor} should come before ${results[i].vendor}`
+          );
+        } else {
+          assert.ok(catCmp < 0, `${results[i - 1].category} should come before ${results[i].category}`);
+        }
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("sorts by newest verified date first", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { sort: "newest", limit: 10 },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const dates = body.results.map((o: any) => o.verifiedDate);
+
+      for (let i = 1; i < dates.length; i++) {
+        assert.ok(
+          dates[i - 1] >= dates[i],
+          `${dates[i - 1]} should be >= ${dates[i]} (newest first)`
+        );
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("preserves index order when sort is omitted", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { limit: 3 },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      // First entry in index is Vercel
+      assert.strictEqual(body.results[0].vendor, "Vercel");
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("sorting works with pagination", async () => {
+    const proc = startServer();
+    try {
+      // Get first page sorted by vendor
+      const responses1 = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { sort: "vendor", limit: 5, offset: 0 },
+          },
+        },
+        {
+          jsonrpc: "2.0",
+          id: 3,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { sort: "vendor", limit: 5, offset: 5 },
+          },
+        },
+      ])) as any[];
+
+      const page1 = JSON.parse((responses1.find((r: any) => r.id === 2) as any).result.content[0].text);
+      const page2 = JSON.parse((responses1.find((r: any) => r.id === 3) as any).result.content[0].text);
+
+      // Last vendor on page 1 should come before first vendor on page 2
+      const lastPage1 = page1.results[page1.results.length - 1].vendor;
+      const firstPage2 = page2.results[0].vendor;
+      assert.ok(
+        lastPage1.localeCompare(firstPage2) <= 0,
+        `Page 1 last (${lastPage1}) should come before page 2 first (${firstPage2})`
+      );
+    } finally {
+      proc.kill();
+    }
+  });
+});
+
 describe("get_offer_details with eligibility", () => {
   it("includes eligibility in response for conditional deals", async () => {
     const proc = startServer();
