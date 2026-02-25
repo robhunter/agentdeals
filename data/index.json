@@ -899,6 +899,216 @@
       "url": "https://www.doppler.com/pricing",
       "tags": ["developer tools", "secrets", "env vars", "security", "free tier"],
       "verifiedDate": "2026-02-25"
+    },
+    {
+      "vendor": "PostHog",
+      "category": "Analytics",
+      "description": "$50,000/year in credits for Y Combinator companies — auto-renews annually. Covers product analytics, session replay, feature flags, and experimentation. Must have raised less than $25M",
+      "tier": "YC Deal",
+      "url": "https://posthog.com/startups",
+      "tags": ["analytics", "product analytics", "session replay", "feature flags", "yc", "startup credits"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": ["Y Combinator batch company", "Raised less than $25M"],
+        "program": "PostHog for Y Combinator"
+      }
+    },
+    {
+      "vendor": "Segment",
+      "category": "Analytics",
+      "description": "$25,000 in credits toward monthly Team plan for up to 2 years. Includes access to $1M+ in partner deals (AWS, Google, Intercom) and Analytics Academy",
+      "tier": "Startup Program",
+      "url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
+      "tags": ["analytics", "cdp", "customer data", "startup credits", "data pipeline"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": ["Incorporated less than 2 years ago", "Raised no more than $5M in total funding"],
+        "program": "Segment Startup Program"
+      }
+    },
+    {
+      "vendor": "Amplitude",
+      "category": "Analytics",
+      "description": "1 year free Growth plan — 200K MTUs or 100M events/month. All Growth features including Behavioral Cohorts, Pathfinder, experimentation, and predictive audiences. 96%+ approval rate",
+      "tier": "Startup Scholarship",
+      "url": "https://amplitude.com/startups",
+      "tags": ["analytics", "product analytics", "startup credits", "experimentation", "cohorts"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": ["Under 20 employees and less than $10M raised, OR Y Combinator/Sequoia/AWS company (no funding/headcount cap)"],
+        "program": "Amplitude Startup Scholarship"
+      }
+    },
+    {
+      "vendor": "AWS Activate",
+      "category": "Cloud IaaS",
+      "description": "Up to $100,000 in AWS credits plus $10,000 in Business Support credits for startups backed by approved accelerators, VCs, or incubators. Must be pre-Series B",
+      "tier": "Portfolio",
+      "url": "https://aws.amazon.com/activate/",
+      "tags": ["cloud", "iaas", "credits", "startup credits", "accelerator", "aws"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": ["Backed by approved VC, accelerator, or incubator", "Have provider Organization ID", "Pre-Series B", "Founded within last 10 years"],
+        "program": "AWS Activate Portfolio"
+      }
+    },
+    {
+      "vendor": "Notion",
+      "category": "Developer Tools",
+      "description": "3-6 months free on Plus or Business plan (up to $6,000 value) for early-stage startups. Must be a new non-paying Notion customer",
+      "tier": "Startup Program",
+      "url": "https://www.notion.com/startups",
+      "tags": ["developer tools", "productivity", "docs", "wiki", "startup credits"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": ["Fewer than 100 employees", "Valid company domain and website", "New non-paying Notion customer"],
+        "program": "Notion for Startups"
+      }
+    },
+    {
+      "vendor": "JetBrains",
+      "category": "Developer Tools",
+      "description": "Free 1-year All Products Pack subscription (IntelliJ IDEA Ultimate, WebStorm, PyCharm, CLion, Rider, GoLand, RubyMine, etc.) for active open source project contributors. Renewable annually",
+      "tier": "OSS License",
+      "url": "https://www.jetbrains.com/community/opensource/",
+      "tags": ["developer tools", "ide", "open source", "oss", "jetbrains"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "oss",
+        "conditions": ["Core contributor to a non-commercial open source project", "Project meets Open Source Definition"],
+        "program": "JetBrains Open Source Licenses"
+      }
+    },
+    {
+      "vendor": "1Password",
+      "category": "Developer Tools",
+      "description": "Free Teams account for open source projects — includes full platform access (Mac, Windows, iOS, Android, Linux, browser), SSH key management, Git commit signing, and secrets management. Non-expiring membership",
+      "tier": "OSS Teams",
+      "url": "https://github.com/1Password/1password-teams-open-source",
+      "tags": ["developer tools", "security", "passwords", "secrets", "open source", "oss"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "oss",
+        "conditions": ["Active open source project", "Project 30+ days old and actively maintained", "Uses permissive open source license"],
+        "program": "1Password for Open Source Projects"
+      }
+    },
+    {
+      "vendor": "Sentry",
+      "category": "Monitoring",
+      "description": "Free sponsored plan with Business features — 5M errors, 1B spans, 5,000 GB logs, 100K replays, 500 cron monitors, 25 uptime monitors, 3K continuous profile hours. No term limit",
+      "tier": "OSS Sponsored",
+      "url": "https://sentry.io/for/open-source/",
+      "tags": ["monitoring", "error tracking", "performance", "open source", "oss", "apm"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "oss",
+        "conditions": ["Project released under a permissive open source license (e.g. Apache, MIT)"],
+        "program": "Sentry for Open Source"
+      }
+    },
+    {
+      "vendor": "Brex",
+      "category": "Startup Programs",
+      "description": "$350,000+ in aggregate partner perks for Brex cardholders — includes $5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud, 20 free GitHub Enterprise seats, 6mo free Notion, $500 Anthropic credits, and 30+ more partner discounts",
+      "tier": "Partner Perks",
+      "url": "https://www.brex.com/solutions/startups",
+      "tags": ["fintech", "startup perks", "credits", "aws", "google cloud", "partner discounts"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "fintech",
+        "conditions": ["Brex cardholder", "US-registered corporation or LLC"],
+        "program": "Brex Partner Perks"
+      }
+    },
+    {
+      "vendor": "Mercury",
+      "category": "Startup Programs",
+      "description": "1 year free Datadog (up to $100K value), $5K AWS credits, up to $200K Google Cloud credits, and 30% off QuickBooks Online for Mercury banking customers",
+      "tier": "Banking Perks",
+      "url": "https://mercury.com/perks",
+      "tags": ["fintech", "startup perks", "banking", "datadog", "aws credits", "google cloud"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "fintech",
+        "conditions": ["Mercury banking customer", "New to Datadog (for Datadog perk)"],
+        "program": "Mercury Perks"
+      }
+    },
+    {
+      "vendor": "Ramp",
+      "category": "Startup Programs",
+      "description": "Up to $5,000 in AWS credits plus partner discounts on Notion, and other tools. Part of $350K+ total partner rewards program",
+      "tier": "Partner Rewards",
+      "url": "https://ramp.com/rewards/aws",
+      "tags": ["fintech", "startup perks", "credits", "aws", "partner discounts"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "fintech",
+        "conditions": ["Ramp cardholder"],
+        "program": "Ramp Partner Rewards"
+      }
+    },
+    {
+      "vendor": "Stripe Atlas",
+      "category": "Startup Programs",
+      "description": "$50,000+ in founder perks — $5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, plus Notion, Slack, Zendesk, Intercom, and more",
+      "tier": "Founder Perks",
+      "url": "https://stripe.com/atlas",
+      "tags": ["fintech", "incorporation", "startup perks", "aws", "digitalocean", "github"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "fintech",
+        "conditions": ["Incorporated through Stripe Atlas ($500 one-time fee)"],
+        "program": "Stripe Atlas Founder Perks"
+      }
+    },
+    {
+      "vendor": "SVB (Silicon Valley Bank)",
+      "category": "Startup Programs",
+      "description": "$5K AWS credits, up to $100K Google Cloud credits (usage-based annual cap), $5K MongoDB credits, $9K off Slack, and $50K Segment credits for SVB startup banking customers. Now a division of First Citizens BancShares",
+      "tier": "Banking Offers",
+      "url": "https://www.svb.com/startup-banking/",
+      "tags": ["fintech", "banking", "startup perks", "aws", "google cloud", "credits"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "fintech",
+        "conditions": ["SVB startup banking customer"],
+        "program": "SVB Startup Banking Offers"
+      }
+    },
+    {
+      "vendor": "GitHub",
+      "category": "Developer Tools",
+      "description": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot, Codespaces, and Actions minutes",
+      "tier": "Student Pack",
+      "url": "https://education.github.com/pack",
+      "tags": ["developer tools", "student", "github", "ide", "education", "copilot"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "student",
+        "conditions": ["Enrolled in a degree-granting educational institution", "Valid student ID or enrollment verification"],
+        "program": "GitHub Student Developer Pack"
+      }
+    },
+    {
+      "vendor": "Google Cloud",
+      "category": "Cloud IaaS",
+      "description": "Up to $200,000 in Google Cloud credits over 2 years for startups backed by approved accelerators, VCs, or incubators. Year 1: $100K (usage-matched). Year 2: $100K at 20% match. Includes technical training and support",
+      "tier": "Startup Program",
+      "url": "https://cloud.google.com/startup",
+      "tags": ["cloud", "iaas", "credits", "startup credits", "google cloud", "accelerator"],
+      "verifiedDate": "2026-02-25",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": ["Backed by approved VC, accelerator, or incubator", "Applied through approved referral partner (e.g. SVB, Stripe)"],
+        "program": "Google for Startups Cloud Program"
+      }
     }
   ]
 }

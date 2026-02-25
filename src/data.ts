@@ -91,7 +91,8 @@ export function getOfferDetails(
 
 export function searchOffers(
   query?: string,
-  category?: string
+  category?: string,
+  eligibilityType?: string
 ): Offer[] {
   let results = loadOffers();
 
@@ -99,6 +100,13 @@ export function searchOffers(
     const lowerCategory = category.toLowerCase();
     results = results.filter(
       (o) => o.category.toLowerCase() === lowerCategory
+    );
+  }
+
+  if (eligibilityType) {
+    const lowerType = eligibilityType.toLowerCase();
+    results = results.filter(
+      (o) => o.eligibility?.type.toLowerCase() === lowerType
     );
   }
 

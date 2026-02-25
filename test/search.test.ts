@@ -301,6 +301,189 @@ describe("search_offers tool", () => {
   });
 });
 
+describe("eligibility filtering", () => {
+  it("filters by eligibility_type=accelerator", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { eligibility_type: "accelerator" },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const offers = body.results;
+
+      assert.ok(offers.length >= 5);
+      for (const offer of offers) {
+        assert.ok(offer.eligibility);
+        assert.strictEqual(offer.eligibility.type, "accelerator");
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("filters by eligibility_type=oss", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { eligibility_type: "oss" },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const offers = body.results;
+
+      assert.ok(offers.length >= 3);
+      for (const offer of offers) {
+        assert.ok(offer.eligibility);
+        assert.strictEqual(offer.eligibility.type, "oss");
+        assert.ok(Array.isArray(offer.eligibility.conditions));
+        assert.ok(typeof offer.eligibility.program === "string");
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("filters by eligibility_type=fintech", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { eligibility_type: "fintech" },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const offers = body.results;
+
+      assert.ok(offers.length >= 5);
+      for (const offer of offers) {
+        assert.ok(offer.eligibility);
+        assert.strictEqual(offer.eligibility.type, "fintech");
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns all offers when eligibility_type is omitted (backwards compatible)", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: {},
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+
+      assert.ok(body.total >= 115);
+      const withElig = body.results.filter((o: any) => o.eligibility);
+      const withoutElig = body.results.filter((o: any) => !o.eligibility);
+      assert.ok(withElig.length >= 15);
+      assert.ok(withoutElig.length >= 100);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("combines eligibility_type with category filter", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { eligibility_type: "accelerator", category: "Analytics" },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const offers = body.results;
+
+      assert.ok(offers.length >= 3);
+      for (const offer of offers) {
+        assert.strictEqual(offer.eligibility.type, "accelerator");
+        assert.strictEqual(offer.category, "Analytics");
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+});
+
+describe("get_offer_details with eligibility", () => {
+  it("includes eligibility in response for conditional deals", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "JetBrains" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const offer = JSON.parse(result.result.content[0].text);
+
+      assert.strictEqual(offer.vendor, "JetBrains");
+      assert.ok(offer.eligibility);
+      assert.strictEqual(offer.eligibility.type, "oss");
+      assert.ok(Array.isArray(offer.eligibility.conditions));
+      assert.ok(offer.eligibility.conditions.length > 0);
+      assert.strictEqual(offer.eligibility.program, "JetBrains Open Source Licenses");
+    } finally {
+      proc.kill();
+    }
+  });
+});
+
 describe("get_offer_details tool", () => {
   it("returns full details for exact vendor match", async () => {
     const proc = startServer();
