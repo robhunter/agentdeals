@@ -6,7 +6,7 @@ A remote MCP server that aggregates publicly available discounts, free tiers, st
 
 ## Success Criteria
 
-- Working MCP server responding to `search_offers` and `list_categories` tools
+- Working MCP server responding to `search_offers`, `list_categories`, and `get_offer_details` tools
 - Index of real vendor offers with verified data
 - Deployed and accessible (ngrok for dev, hosted service for launch)
 - Registered on MCP registries
@@ -59,7 +59,8 @@ Endpoints:
 - `GET /mcp` — SSE stream for server-initiated notifications
 - `DELETE /mcp` — Session termination
 - `GET /health` — Health check
+- `GET /.well-known/glama.json` — Glama registry ownership verification
 
 ## Current Status
 
-MCP server is functional with stdio and HTTP transports. 100 vendor entries across 22 categories. 21 passing tests. Multi-session HTTP support with idle timeout cleanup. Registry manifests in place (server.json, glama.json, smithery.yaml). Staleness detection and pricing change monitor scripts available.
+MCP server is functional with stdio and HTTP transports. 3 tools (search_offers with pagination, list_categories, get_offer_details). 100 vendor entries across 22 categories. 30 passing tests. Multi-session HTTP support with idle timeout cleanup. Registry manifests in place (server.json, glama.json, smithery.yaml). Glama ownership claim endpoint at /.well-known/glama.json. Staleness detection and pricing change monitor scripts available.
