@@ -89,7 +89,7 @@ describe("get_deal_changes tool", () => {
 
       assert.ok(Array.isArray(body.changes));
       assert.strictEqual(body.total, body.changes.length);
-      assert.strictEqual(body.total, 11);
+      assert.strictEqual(body.total, 19);
     } finally {
       proc.kill();
     }
