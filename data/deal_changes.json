@@ -1,0 +1,136 @@
+{
+  "changes": [
+    {
+      "vendor": "Brave Search API",
+      "change_type": "free_tier_removed",
+      "date": "2026-02-12",
+      "summary": "Free tier replaced with $9/mo Starter plan with monthly credits",
+      "previous_state": "5,000 free queries/month, 3 QPS",
+      "current_state": "$9/mo for ~1,000 queries + credits, new attribution requirement",
+      "impact": "high",
+      "source_url": "https://brave.com/blog/search-api-update",
+      "category": "Search",
+      "alternatives": ["SerpAPI", "Google Custom Search"]
+    },
+    {
+      "vendor": "X API (Twitter)",
+      "change_type": "free_tier_removed",
+      "date": "2026-02-09",
+      "summary": "Free tier replaced with pay-per-use + $10 one-time credit",
+      "previous_state": "Free basic endpoints (Like, Follow, List, etc.)",
+      "current_state": "Pay-per-use pricing, $10 one-time credit for existing users, free plan expired Feb 13",
+      "impact": "high",
+      "source_url": "https://developer.x.com/en",
+      "category": "APIs",
+      "alternatives": ["Bluesky API", "Mastodon API"]
+    },
+    {
+      "vendor": "Spotify API",
+      "change_type": "limits_reduced",
+      "date": "2026-02-11",
+      "summary": "Premium subscription now required for development mode",
+      "previous_state": "Free developer access to Web API",
+      "current_state": "Spotify Premium subscription required for dev mode",
+      "impact": "high",
+      "source_url": "https://developer.spotify.com/",
+      "category": "APIs",
+      "alternatives": ["Last.fm API", "MusicBrainz API"]
+    },
+    {
+      "vendor": "Amazon SP-API",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-31",
+      "summary": "Free access ended after 10+ years, now $1,400/year + per-call fees starting April 30",
+      "previous_state": "Free API access for 10+ years",
+      "current_state": "$1,400/year subscription + per-call fees (effective April 30, 2026)",
+      "impact": "high",
+      "source_url": "https://developer-docs.amazon.com/sp-api/",
+      "category": "APIs",
+      "alternatives": []
+    },
+    {
+      "vendor": "PythonAnywhere",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-15",
+      "summary": "$5 Hacker tier eliminated, features merged into free and higher tiers",
+      "previous_state": "$5/mo Hacker tier with custom domains and more storage",
+      "current_state": "Free tier and $10/mo+ paid tiers only, Hacker tier removed",
+      "impact": "medium",
+      "source_url": "https://www.pythonanywhere.com/pricing/",
+      "category": "Hosting",
+      "alternatives": ["Render", "Railway", "Replit"]
+    },
+    {
+      "vendor": "LocalStack",
+      "change_type": "free_tier_removed",
+      "date": "2026-03-23",
+      "summary": "Community Edition (open-source) shutting down entirely on March 23, 2026",
+      "previous_state": "Free open-source Community Edition with core AWS service emulation",
+      "current_state": "Paid-only (Starter at $35/mo). CE no longer maintained after March 23",
+      "impact": "high",
+      "source_url": "https://localstack.cloud/",
+      "category": "Testing",
+      "alternatives": ["Testcontainers", "MinIO", "ElasticMQ"]
+    },
+    {
+      "vendor": "Google Gemini",
+      "change_type": "limits_reduced",
+      "date": "2025-12-15",
+      "summary": "Free tier rate limits reduced 50-80%, Gemini 2.0 Flash deprecated",
+      "previous_state": "Higher rate limits on free tier, Gemini 2.0 Flash available",
+      "current_state": "Reduced rate limits, 2.0 Flash retiring March 3 2026, 3.x paid-only, 2.5 series free tier preserved",
+      "impact": "medium",
+      "source_url": "https://ai.google.dev/pricing",
+      "category": "AI/ML APIs",
+      "alternatives": ["OpenRouter", "Groq", "Together AI"]
+    },
+    {
+      "vendor": "Netlify",
+      "change_type": "pricing_restructured",
+      "date": "2025-09-04",
+      "summary": "Restructured to credit-based pricing; sites pause on credit exhaustion",
+      "previous_state": "Traditional tiered pricing with fixed monthly allowances",
+      "current_state": "300 credits/month free, sites pause on exhaustion",
+      "impact": "medium",
+      "source_url": "https://www.netlify.com/pricing/",
+      "category": "Hosting",
+      "alternatives": ["Vercel", "Cloudflare Pages", "GitHub Pages"]
+    },
+    {
+      "vendor": "Supabase",
+      "change_type": "limits_reduced",
+      "date": "2026-02-01",
+      "summary": "Project pause policy tightened — inactive projects now pause after 1 week",
+      "previous_state": "Longer inactivity window before project pause",
+      "current_state": "Projects pause after 1 week of inactivity on free tier",
+      "impact": "medium",
+      "source_url": "https://supabase.com/pricing",
+      "category": "Databases",
+      "alternatives": ["Neon", "PlanetScale", "CockroachDB"]
+    },
+    {
+      "vendor": "Cloudflare",
+      "change_type": "new_free_tier",
+      "date": "2026-02-04",
+      "summary": "Queues added to Workers free plan — message queuing now free",
+      "previous_state": "Queues was paid-only",
+      "current_state": "Queues included in free Workers plan",
+      "impact": "medium",
+      "source_url": "https://developers.cloudflare.com/queues/",
+      "category": "Cloud IaaS",
+      "alternatives": []
+    },
+    {
+      "vendor": "GitHub Actions",
+      "change_type": "limits_increased",
+      "date": "2026-01-01",
+      "summary": "Hosted runners 39% cheaper across all tiers",
+      "previous_state": "Previous per-minute pricing for hosted runners",
+      "current_state": "39% reduction in per-minute pricing for hosted runners",
+      "impact": "medium",
+      "source_url": "https://github.blog/changelog/",
+      "category": "CI/CD",
+      "alternatives": ["GitLab CI", "CircleCI", "Buildkite"]
+    }
+  ]
+}

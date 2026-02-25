@@ -18,3 +18,20 @@ export interface Offer {
 export interface OfferIndex {
   offers: Offer[];
 }
+
+export interface DealChange {
+  vendor: string;
+  change_type: "free_tier_removed" | "limits_reduced" | "limits_increased" | "new_free_tier" | "pricing_restructured";
+  date: string;
+  summary: string;
+  previous_state: string;
+  current_state: string;
+  impact: "high" | "medium" | "low";
+  source_url: string;
+  category: string;
+  alternatives: string[];
+}
+
+export interface DealChangesIndex {
+  changes: DealChange[];
+}

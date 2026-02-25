@@ -1,12 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, OfferIndex } from "./types.js";
+import type { Offer, OfferIndex, DealChange, DealChangesIndex } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
+const CHANGES_PATH = path.join(__dirname, "..", "data", "deal_changes.json");
 
 let cachedOffers: Offer[] | null = null;
+let cachedChanges: DealChange[] | null = null;
 
 export function loadOffers(): Offer[] {
   if (cachedOffers) return cachedOffers;
@@ -47,6 +49,7 @@ export function loadOffers(): Offer[] {
 
 export function resetCache(): void {
   cachedOffers = null;
+  cachedChanges = null;
 }
 
 export function getCategories(): { name: string; count: number }[] {
@@ -139,4 +142,74 @@ export function searchOffers(
   }
 
   return results;
+}
+
+export function loadDealChanges(): DealChange[] {
+  if (cachedChanges) return cachedChanges;
+
+  if (!fs.existsSync(CHANGES_PATH)) {
+    console.error(`Deal changes file not found at ${CHANGES_PATH}, using empty list`);
+    cachedChanges = [];
+    return cachedChanges;
+  }
+
+  let raw: string;
+  try {
+    raw = fs.readFileSync(CHANGES_PATH, "utf-8");
+  } catch (err) {
+    console.error(`Failed to read deal changes: ${err}`);
+    cachedChanges = [];
+    return cachedChanges;
+  }
+
+  let data: DealChangesIndex;
+  try {
+    data = JSON.parse(raw);
+  } catch (err) {
+    console.error(`Deal changes contains malformed JSON: ${err}`);
+    cachedChanges = [];
+    return cachedChanges;
+  }
+
+  if (!data || !Array.isArray(data.changes)) {
+    console.error("Deal changes is missing 'changes' array, using empty list");
+    cachedChanges = [];
+    return cachedChanges;
+  }
+
+  cachedChanges = data.changes;
+  return cachedChanges;
+}
+
+export function getDealChanges(
+  since?: string,
+  changeType?: string,
+  vendor?: string
+): { changes: DealChange[]; total: number } {
+  let results = loadDealChanges();
+
+  if (since) {
+    results = results.filter((c) => c.date >= since);
+  } else {
+    // Default: last 30 days
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
+    results = results.filter((c) => c.date >= thirtyDaysAgo);
+  }
+
+  if (changeType) {
+    const lowerType = changeType.toLowerCase();
+    results = results.filter((c) => c.change_type === lowerType);
+  }
+
+  if (vendor) {
+    const lowerVendor = vendor.toLowerCase();
+    results = results.filter((c) => c.vendor.toLowerCase().includes(lowerVendor));
+  }
+
+  // Sort by date, newest first
+  results = [...results].sort((a, b) => b.date.localeCompare(a.date));
+
+  return { changes: results, total: results.length };
 }
