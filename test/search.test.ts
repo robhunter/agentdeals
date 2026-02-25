@@ -300,3 +300,103 @@ describe("search_offers tool", () => {
     }
   });
 });
+
+describe("get_offer_details tool", () => {
+  it("returns full details for exact vendor match", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "Neon" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const offer = JSON.parse(result.result.content[0].text);
+
+      assert.strictEqual(offer.vendor, "Neon");
+      assert.strictEqual(offer.category, "Databases");
+      assert.ok(typeof offer.description === "string");
+      assert.ok(typeof offer.url === "string");
+      assert.ok(Array.isArray(offer.tags));
+      assert.ok(Array.isArray(offer.relatedVendors));
+      assert.ok(offer.relatedVendors.length > 0);
+      assert.ok(!offer.relatedVendors.includes("Neon"));
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("matches vendor name case-insensitively", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "nEoN" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const offer = JSON.parse(result.result.content[0].text);
+      assert.strictEqual(offer.vendor, "Neon");
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns error with suggestions for unknown vendor", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "Cloud" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(result.result.isError);
+      const text = result.result.content[0].text;
+      assert.ok(text.includes("not found"));
+      assert.ok(text.includes("Did you mean"));
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns error with no suggestions for completely unknown vendor", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "zzzznonexistent99999" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(result.result.isError);
+      const text = result.result.content[0].text;
+      assert.ok(text.includes("not found"));
+      assert.ok(text.includes("No similar vendors found"));
+    } finally {
+      proc.kill();
+    }
+  });
+});
