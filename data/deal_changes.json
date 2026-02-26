@@ -335,6 +335,42 @@
       "source_url": "https://community.openai.com/t/assistants-api-beta-deprecation-august-26-2026-sunset/1354666",
       "category": "AI/ML",
       "alternatives": ["Anthropic Claude API", "Google Gemini API", "Cohere API"]
+    },
+    {
+      "vendor": "Hetzner",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-01",
+      "summary": "Cloud & dedicated server prices increasing 30-50%. Entry-level CX23: €2.99→€3.99/mo (+33%). Applies to new and existing customers. Driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand",
+      "previous_state": "Lower cloud server pricing across Germany, Finland, US, and Singapore data centers (e.g., CX23 at €2.99/mo)",
+      "current_state": "30-37% increase on cloud servers, up to 50% on select dedicated/storage products. All regions and all customers (new and existing) affected. Announced Feb 23, 2026",
+      "impact": "high",
+      "source_url": "https://www.hetzner.com/pressroom/statement-price-adjustment/",
+      "category": "Cloud Hosting",
+      "alternatives": ["DigitalOcean", "Vultr", "OVHcloud"]
+    },
+    {
+      "vendor": "Anthropic",
+      "change_type": "limits_increased",
+      "date": "2026-02-05",
+      "summary": "Claude Opus 4.6 API pricing at $5/$25 per MTok (input/output) — 67% below previous Opus 4/4.1 pricing of $15/$75. Frontier AI model at mid-tier prices",
+      "previous_state": "Opus 4/4.1 priced at $15/$75 per million tokens (input/output)",
+      "current_state": "Opus 4.6 at $5/$25 per MTok. Extended context (>200K tokens): $10/$37.50. Batch API: $2.50/$12.50. Price reduction began with Opus 4.5 generation",
+      "impact": "high",
+      "source_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+      "category": "AI/ML APIs",
+      "alternatives": ["OpenAI GPT-4o", "Google Gemini", "Mistral"]
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "limits_reduced",
+      "date": "2026-02-09",
+      "summary": "Ads launched in ChatGPT Free and Go ($8/mo) tiers. Sponsored units from major brands appear below responses on first prompt. $60 CPM, $200K minimum ad commitment",
+      "previous_state": "Ad-free experience across all ChatGPT tiers including Free",
+      "current_state": "Free and Go tiers show contextual ads (labeled 'sponsored') below responses. Plus/Pro/Business/Enterprise/Education tiers remain ad-free. Users can opt out at cost of reduced daily message limits",
+      "impact": "high",
+      "source_url": "https://openai.com/index/testing-ads-in-chatgpt/",
+      "category": "AI/ML",
+      "alternatives": ["Anthropic Claude", "Google Gemini", "Perplexity"]
     }
   ]
 }
