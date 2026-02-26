@@ -227,6 +227,30 @@
       "source_url": "https://sentry.io/pricing/",
       "category": "Monitoring",
       "alternatives": ["Datadog", "New Relic", "BetterStack"]
+    },
+    {
+      "vendor": "Neon",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-15",
+      "summary": "Moved to fully usage-based pricing model post-Databricks acquisition — free tier storage now per-project, projects increased 10→100, branches capped at 10 per project, Neon Auth added",
+      "previous_state": "Free tier: 0.5 GB total storage, 191.9 compute hours, 10 projects, unlimited branches",
+      "current_state": "Free tier: 0.5 GB per project (up to 5 GB across 100 projects), 100 CU-hours/month per project, 10 branches/project, Neon Auth 60K MAU, auto-scaling up to 2 CU, scale-to-zero",
+      "impact": "medium",
+      "source_url": "https://neon.com/pricing",
+      "category": "Databases",
+      "alternatives": ["Supabase", "CockroachDB", "Turso"]
+    },
+    {
+      "vendor": "Vercel",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-01",
+      "summary": "Pro plan moved to credit-based model ($20/mo credit pool), Hobby plan metrics renamed and restructured — bandwidth→Fast Data Transfer, serverless split into Active CPU + Provisioned Memory, Blob Storage and Image Transformations added",
+      "previous_state": "Hobby: 100 GB bandwidth, 100 GB-hours serverless. Pro: fixed per-resource allocations",
+      "current_state": "Hobby: 100 GB/mo Fast Data Transfer, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage, 5K image transformations. Pro: $20/mo credit pool across all resources, SAML SSO and HIPAA included",
+      "impact": "medium",
+      "source_url": "https://vercel.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": ["Netlify", "Cloudflare Pages", "Render"]
     }
   ]
 }
