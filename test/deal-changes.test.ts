@@ -78,7 +78,7 @@ describe("get_deal_changes tool", () => {
           method: "tools/call",
           params: {
             name: "get_deal_changes",
-            arguments: { since: "2025-01-01" },
+            arguments: { since: "2024-01-01" },
           },
         },
       ])) as any[];
@@ -89,7 +89,7 @@ describe("get_deal_changes tool", () => {
 
       assert.ok(Array.isArray(body.changes));
       assert.strictEqual(body.total, body.changes.length);
-      assert.strictEqual(body.total, 21);
+      assert.strictEqual(body.total, 25);
     } finally {
       proc.kill();
     }
