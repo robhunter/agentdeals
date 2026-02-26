@@ -251,6 +251,54 @@
       "source_url": "https://vercel.com/pricing",
       "category": "Cloud Hosting",
       "alternatives": ["Netlify", "Cloudflare Pages", "Render"]
+    },
+    {
+      "vendor": "Atlassian",
+      "change_type": "pricing_restructured",
+      "date": "2026-02-17",
+      "summary": "Data Center pricing increased 15-40% across Jira, Confluence, and JSM. New DC licenses end March 30 — cloud mandatory for new customers",
+      "previous_state": "Standard Data Center pricing with Advantaged/legacy discounts",
+      "current_state": "15% standard list increase, 18-40% for legacy Advantaged pricing tiers. No new DC licenses after March 30, 2026. Full DC end-of-life March 2029",
+      "impact": "high",
+      "source_url": "https://www.atlassian.com/licensing/future-pricing",
+      "category": "Developer Tools",
+      "alternatives": ["Linear", "Jira Cloud", "Shortcut"]
+    },
+    {
+      "vendor": "Docker Hub",
+      "change_type": "pricing_restructured",
+      "date": "2024-12-10",
+      "summary": "Docker Pro +80% ($5→$9/mo), Team +67% ($9→$15/mo). Free tier: Build Cloud minutes removed, Scout repos cut 3→1, private repos limited to 1 with 2GB storage",
+      "previous_state": "Pro $5/user/month, Team $9/user/month. Free tier included Build Cloud minutes, 3 Scout repos",
+      "current_state": "Pro $9/user/month, Team $15/user/month. Free: 1 private repo (2GB), 1 Scout repo, no Build Cloud minutes, 40 pulls/hour",
+      "impact": "high",
+      "source_url": "https://www.docker.com/blog/november-2024-updated-plans-announcement/",
+      "category": "Container Registry",
+      "alternatives": ["GitHub Container Registry", "Quay.io", "Podman"]
+    },
+    {
+      "vendor": "DigitalOcean",
+      "change_type": "limits_increased",
+      "date": "2025-01-22",
+      "summary": "Hatch startup program expanded to up to $100K compute credits plus up to 3 months free H100 GPU access for AI/ML startups",
+      "previous_state": "Standard Hatch startup credits program",
+      "current_state": "Up to $100K compute credits (12 months, excludes GPU). Separate GPU benefit: discounted H100 at ~$1.90/hr (vs $3.39 standard) plus up to 3 months free GPU access",
+      "impact": "medium",
+      "source_url": "https://investors.digitalocean.com/news/news-details/2025/DigitalOcean-Announces-New-Benefits-for-Hatch-Startup-Program/default.aspx",
+      "category": "Cloud IaaS",
+      "alternatives": ["AWS Activate", "Google Cloud for Startups", "Azure for Startups"]
+    },
+    {
+      "vendor": "Google Cloud",
+      "change_type": "limits_increased",
+      "date": "2026-01-01",
+      "summary": "Google for Startups Cloud Program now offers up to $350K GCP credits for AI-first startups, plus $10K Anthropic (Claude) partner credits via Model Garden",
+      "previous_state": "Up to $200K GCP credits for standard startups",
+      "current_state": "Scale AI Tier: up to $350K GCP credits ($250K year 1, $100K year 2). Standard: $200K. Partner credits: $10K Anthropic/Claude via Model Garden, Fireworks AI, MongoDB Atlas, CockroachDB, 1yr free GitLab Ultimate",
+      "impact": "high",
+      "source_url": "https://cloud.google.com/startup/ai",
+      "category": "Cloud IaaS",
+      "alternatives": ["AWS Activate", "Azure for Startups", "DigitalOcean Hatch"]
     }
   ]
 }
