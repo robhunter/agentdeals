@@ -371,6 +371,42 @@
       "source_url": "https://openai.com/index/testing-ads-in-chatgpt/",
       "category": "AI/ML",
       "alternatives": ["Anthropic Claude", "Google Gemini", "Perplexity"]
+    },
+    {
+      "vendor": "HashiCorp Terraform Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-03-31",
+      "summary": "Legacy HCP Terraform Free plan discontinued March 31, 2026. Users auto-migrated to enhanced usage-based free tier (available since 2023): 500 managed resources, unlimited users, VCS integration",
+      "previous_state": "Legacy Free plan with ~5 workspaces, limited state management, user-count-based model",
+      "current_state": "Enhanced free tier: 500 managed resources, unlimited users, VCS-driven workflows, remote state management, SSO, policy enforcement. Legacy plan EOL March 31. Paid tiers start at $0.00015/managed resource/hour",
+      "impact": "medium",
+      "source_url": "https://www.hashicorp.com/en/blog/continuing-hcp-terraform-s-enhanced-free-tier-experience",
+      "category": "IaC",
+      "alternatives": ["Spacelift", "Scalr", "env0", "OpenTofu"]
+    },
+    {
+      "vendor": "Google Programmable Search Engine",
+      "change_type": "limits_reduced",
+      "date": "2026-01-22",
+      "summary": "Free full-web search being discontinued. Free tier restricted to max 50 domains per search engine. Migration deadline January 1, 2027",
+      "previous_state": "Free search across the entire web with 10,000 queries/day limit via Custom Search JSON API",
+      "current_state": "Free tier restricted to searching up to 50 specified domains only. Full-web search requires paid Google Cloud Search or Vertex AI Search. Takes effect January 1, 2027",
+      "impact": "high",
+      "source_url": "https://developers.google.com/custom-search",
+      "category": "Search",
+      "alternatives": ["Brave Search API", "SerpAPI", "Bing Web Search API", "Meilisearch"]
+    },
+    {
+      "vendor": "odrive",
+      "change_type": "free_tier_removed",
+      "date": "2026-03-31",
+      "summary": "odrive free tier discontinued effective March 31, 2026. Previously offered free unified cloud storage sync across multiple providers (Google Drive, Dropbox, S3, etc.)",
+      "previous_state": "Free tier with basic sync across multiple cloud storage providers, file manager interface",
+      "current_state": "Free tier removed. Business plans at $20/user/month (min 5 users) or $200/year org subscription. March 31, 2026 deadline",
+      "impact": "medium",
+      "source_url": "https://www.odrive.com/pricing",
+      "category": "Storage",
+      "alternatives": ["rclone", "Cyberduck", "MultCloud"]
     }
   ]
 }
