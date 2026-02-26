@@ -287,6 +287,20 @@ describe("HTTP transport", () => {
     assert.strictEqual(body.maintainers[0].email, "rob.v.hunter@gmail.com");
   });
 
+  it("serves landing page at root URL", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("AgentDeals"));
+    assert.ok(html.includes("search_offers"));
+    assert.ok(html.includes("list_categories"));
+    assert.ok(html.includes("get_offer_details"));
+    assert.ok(html.includes("get_deal_changes"));
+  });
+
   it("returns 404 for unknown paths", async () => {
     proc = await startHttpServer();
 
