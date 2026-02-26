@@ -2,6 +2,7 @@ import { createServer as createHttpServer } from "node:http";
 import { randomUUID } from "node:crypto";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
+import { loadOffers, getCategories, loadDealChanges } from "./data.js";
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
@@ -35,6 +36,114 @@ setInterval(() => {
     }
   }
 }, CLEANUP_INTERVAL_MS).unref();
+
+// Build landing page HTML at startup with real stats
+const offers = loadOffers();
+const categories = getCategories();
+const dealChanges = loadDealChanges();
+const stats = {
+  offers: offers.length,
+  categories: categories.length,
+  tools: 4,
+  dealChanges: dealChanges.length,
+};
+
+function buildLandingPage(): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentDeals — Developer Infrastructure Deals via MCP</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.6}
+a{color:#58a6ff;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+.hero{text-align:center;padding:3rem 0 2rem}
+.hero h1{font-size:2.5rem;color:#f0f6fc;margin-bottom:.5rem}
+.hero p{font-size:1.15rem;color:#8b949e;max-width:540px;margin:0 auto}
+.stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1.5rem 0;border-top:1px solid #21262d;border-bottom:1px solid #21262d;margin:1.5rem 0}
+.stat{text-align:center}
+.stat .num{font-size:1.75rem;font-weight:700;color:#f0f6fc}
+.stat .label{font-size:.8rem;color:#8b949e;text-transform:uppercase;letter-spacing:.05em}
+section{margin:2rem 0}
+section h2{font-size:1.3rem;color:#f0f6fc;margin-bottom:.75rem;border-bottom:1px solid #21262d;padding-bottom:.4rem}
+section p{color:#8b949e;margin-bottom:.75rem}
+.tools{list-style:none}
+.tools li{padding:.6rem 0;border-bottom:1px solid #161b22}
+.tools li:last-child{border-bottom:none}
+.tool-name{font-weight:600;color:#f0f6fc;font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.9rem}
+.tool-desc{color:#8b949e;font-size:.9rem}
+pre{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:1rem;overflow-x:auto;font-size:.85rem;color:#c9d1d9;line-height:1.5}
+code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace}
+.links{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.5rem}
+.link-btn{display:inline-block;padding:.5rem 1rem;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:.9rem;transition:border-color .15s}
+.link-btn:hover{border-color:#58a6ff;text-decoration:none}
+footer{text-align:center;color:#484f58;font-size:.8rem;padding:2rem 0 1rem;border-top:1px solid #21262d;margin-top:2rem}
+@media(max-width:600px){.hero h1{font-size:1.75rem}.stats{gap:1rem}.stat .num{font-size:1.3rem}pre{font-size:.75rem}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>AgentDeals</h1>
+    <p>MCP server aggregating free tiers, startup credits, and developer infrastructure deals. Query from any MCP client.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="num">${stats.offers}</div><div class="label">Offers</div></div>
+    <div class="stat"><div class="num">${stats.categories}</div><div class="label">Categories</div></div>
+    <div class="stat"><div class="num">${stats.tools}</div><div class="label">MCP Tools</div></div>
+    <div class="stat"><div class="num">${stats.dealChanges}</div><div class="label">Tracked Changes</div></div>
+  </div>
+
+  <section>
+    <h2>What is this?</h2>
+    <p>AgentDeals is a remote MCP server that indexes free tiers, startup programs, and promotional offers from developer infrastructure companies. AI coding agents and developers can query it to find relevant deals for their projects.</p>
+    <p>Whether you're looking for a free database, CI/CD minutes, cloud hosting credits, or startup accelerator perks — AgentDeals aggregates them in one place, accessible via any MCP-compatible client.</p>
+  </section>
+
+  <section>
+    <h2>Tools</h2>
+    <ul class="tools">
+      <li><span class="tool-name">search_offers</span><br><span class="tool-desc">Search deals by keyword, category, or vendor. Supports pagination, sorting, and eligibility filtering.</span></li>
+      <li><span class="tool-name">list_categories</span><br><span class="tool-desc">List all deal categories with offer counts.</span></li>
+      <li><span class="tool-name">get_offer_details</span><br><span class="tool-desc">Get full details for a specific vendor, including related vendors in the same category.</span></li>
+      <li><span class="tool-name">get_deal_changes</span><br><span class="tool-desc">Track recent pricing and free tier changes — removals, reductions, increases, and restructures.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Connect</h2>
+    <p>Add AgentDeals to your MCP client. For Claude Desktop or Cursor, add this to your MCP config:</p>
+    <pre><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "https://agentdeals-production.up.railway.app/mcp"
+    }
+  }
+}</code></pre>
+    <p>Or connect directly via the streamable-http endpoint at <code>/mcp</code>.</p>
+  </section>
+
+  <section>
+    <h2>Links</h2>
+    <div class="links">
+      <a class="link-btn" href="https://github.com/robhunter/agentdeals">GitHub</a>
+      <a class="link-btn" href="https://modelcontextprotocol.io/servers/agentdeals">MCP Registry</a>
+      <a class="link-btn" href="https://glama.ai/mcp/servers/agentdeals">Glama</a>
+    </div>
+  </section>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+const landingPageHtml = buildLandingPage();
 
 function isInitializeRequest(body: unknown): boolean {
   if (Array.isArray(body)) {
@@ -133,6 +242,9 @@ const httpServer = createHttpServer(async (req, res) => {
         { "email": "rob.v.hunter@gmail.com" }
       ]
     }));
+  } else if (url.pathname === "/") {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(landingPageHtml);
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
