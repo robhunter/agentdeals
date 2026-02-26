@@ -3,7 +3,7 @@
     {
       "vendor": "Vercel",
       "category": "Cloud Hosting",
-      "description": "Free tier for frontend deployments with serverless functions",
+      "description": "Hobby plan with 100 GB/month Fast Data Transfer, 1M function invocations, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage, 5K image transformations/month",
       "tier": "Hobby",
       "url": "https://vercel.com/pricing",
       "tags": [
@@ -12,7 +12,7 @@
         "frontend",
         "jamstack"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-02-26"
     },
     {
       "vendor": "Render",
@@ -243,7 +243,7 @@
     {
       "vendor": "Neon",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month, 0.5 GB storage",
+      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 0.5 GB storage per project, up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero",
       "tier": "Free",
       "url": "https://neon.com/pricing",
       "tags": [
@@ -252,7 +252,7 @@
         "serverless",
         "branching"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-02-26"
     },
     {
       "vendor": "MongoDB Atlas",
@@ -3048,6 +3048,34 @@
           "Not existing IBM Cloud paying customer"
         ],
         "program": "IBM Cloud for Startups"
+      }
+    },
+    {
+      "vendor": "Cloudflare",
+      "category": "Startup Programs",
+      "description": "Up to $250K in Cloudflare credits across 4 tiers: Bootstrapped ($5K), Up-and-Coming ($25K), Seed-Funded ($100K), High Growth ($250K). Covers Workers, R2, Workers AI, Stream, Durable Objects, and more. Credits expire within 1 year. Max $10K toward R2/Cache Reserve, up to $50K for Workers AI",
+      "tier": "Startup Program",
+      "url": "https://www.cloudflare.com/forstartups/",
+      "tags": [
+        "cloud",
+        "startup credits",
+        "edge",
+        "workers",
+        "cloudflare",
+        "infrastructure"
+      ],
+      "verifiedDate": "2026-02-26",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": [
+          "Software-based product",
+          "Founded within 5 years",
+          "Bootstrapped: valid matching email",
+          "Up-and-Coming: funding up to $1M, active LinkedIn",
+          "Seed-Funded: $1M-$5M raised, approved VC/accelerator partner",
+          "High Growth: Tier 1 VC/accelerator, or mission-critical AI app, or Workers Launchpad participant"
+        ],
+        "program": "Cloudflare for Startups"
       }
     },
     {
