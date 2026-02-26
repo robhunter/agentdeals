@@ -78,7 +78,7 @@
       "date": "2025-12-15",
       "summary": "Free tier rate limits reduced 50-80%, Gemini 2.0 Flash deprecated",
       "previous_state": "Higher rate limits on free tier, Gemini 2.0 Flash available",
-      "current_state": "Reduced rate limits, 2.0 Flash retiring March 3 2026, 3.x paid-only, 2.5 series free tier preserved",
+      "current_state": "Reduced rate limits, 2.0 Flash retiring March 31 2026, 3.x paid-only, 2.5 series free tier preserved",
       "impact": "medium",
       "source_url": "https://ai.google.dev/pricing",
       "category": "AI/ML APIs",
