@@ -2791,6 +2791,423 @@
         "free tier"
       ],
       "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Canva",
+      "category": "Design",
+      "description": "2M+ templates, 4.5M+ free stock photos/graphics/elements, 5 GB cloud storage. Standard exports (PNG, JPG, PDF). No Brand Kit, no custom fonts, no transparent backgrounds",
+      "tier": "Free",
+      "url": "https://www.canva.com/pricing/",
+      "tags": [
+        "design",
+        "graphics",
+        "templates",
+        "image editing",
+        "presentations"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Penpot",
+      "category": "Design",
+      "description": "Open-source design platform — unlimited teams, unlimited designers/developers, unlimited design files, team libraries. Self-hostable (MPL 2.0). Cloud-hosted free tier has ~10 GB storage",
+      "tier": "Professional",
+      "url": "https://penpot.app/pricing",
+      "tags": [
+        "design",
+        "ui",
+        "open source",
+        "prototyping",
+        "collaboration",
+        "figma alternative"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "GitGuardian",
+      "category": "Security",
+      "description": "Secrets detection for up to 25 developers — 420+ secret types, unlimited real-time scanning, 500 historical scan detections, CLI (ggshield) for pre-commit hooks, VSCode extension, 10K API calls/month",
+      "tier": "Free",
+      "url": "https://www.gitguardian.com/pricing",
+      "tags": [
+        "security",
+        "secrets detection",
+        "code scanning",
+        "devsecops",
+        "pre-commit"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Sendbird",
+      "category": "Communication",
+      "description": "Chat SDK — Developer plan: 1,000 MAU, 20 peak concurrent connections, unlimited messages/month, unlimited storage (6-month retention). All Pro features included (typing indicators, read receipts, push notifications)",
+      "tier": "Developer",
+      "url": "https://sendbird.com/pricing/chat",
+      "tags": [
+        "chat",
+        "messaging",
+        "sdk",
+        "real-time",
+        "communication"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Knock",
+      "category": "Messaging",
+      "description": "Notification infrastructure — 10,000 notifications/month, 500 guide active users, unlimited workflows/broadcasts/channels/team members. All delivery channels included",
+      "tier": "Developer",
+      "url": "https://knock.app/pricing",
+      "tags": [
+        "notifications",
+        "messaging",
+        "push",
+        "email",
+        "in-app",
+        "workflows"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Mapbox",
+      "category": "Maps/Geolocation",
+      "description": "50,000 map loads/month (web), 100,000 temporary geocoding requests/month, 100,000 directions requests/month, 25,000 mobile MAUs. Free tiers across Maps, Navigation, Search, and Tilequery APIs",
+      "tier": "Free",
+      "url": "https://www.mapbox.com/pricing",
+      "tags": [
+        "maps",
+        "geolocation",
+        "geocoding",
+        "navigation",
+        "mapping",
+        "gis"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Google Maps Platform",
+      "category": "Maps/Geolocation",
+      "description": "Per-SKU free usage (restructured March 2025): Essentials 10K calls/SKU/month, Pro 5K, Enterprise 1K. Covers Maps, Routes, Places, Environment APIs. Separate from one-time $300 trial credit",
+      "tier": "Free",
+      "url": "https://mapsplatform.google.com/pricing/",
+      "tags": [
+        "maps",
+        "geolocation",
+        "geocoding",
+        "places",
+        "google",
+        "gis"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Instatus",
+      "category": "Status Pages",
+      "description": "Starter plan: 15 monitors, 2-minute check interval, 5 team members, 2 on-call members, public status page, 200 subscribers, email alerts",
+      "tier": "Starter",
+      "url": "https://instatus.com/pricing",
+      "tags": [
+        "status page",
+        "uptime",
+        "monitoring",
+        "incidents",
+        "alerts"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Tally",
+      "category": "Forms",
+      "description": "Unlimited forms, unlimited submissions, collect payments, file uploads, e-signatures, conditional logic, calculations, 45+ languages. Integrations with Google Sheets, Notion, Airtable, Zapier, Make",
+      "tier": "Free",
+      "url": "https://tally.so/pricing",
+      "tags": [
+        "forms",
+        "surveys",
+        "payments",
+        "no-code",
+        "data collection"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Formbricks",
+      "category": "Forms",
+      "description": "Open-source survey platform — Community Edition (self-hosted): unlimited seats, unlimited surveys, unlimited responses, all question types, advanced logic, custom styling, API access, all SDKs and integrations (MPL 2.0)",
+      "tier": "Community",
+      "url": "https://formbricks.com/pricing",
+      "tags": [
+        "forms",
+        "surveys",
+        "open source",
+        "self-hosted",
+        "feedback",
+        "product research"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Mux",
+      "category": "Video",
+      "description": "100,000 delivery minutes/month, up to 10 stored videos, on-demand video only (no live streaming). No credit card required",
+      "tier": "Free",
+      "url": "https://www.mux.com/pricing",
+      "tags": [
+        "video",
+        "streaming",
+        "media",
+        "cdn",
+        "encoding",
+        "player"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Lokalise",
+      "category": "Developer Tools",
+      "description": "Localization platform — 1 project, 2 target languages, 500K hosted words, 500 translation keys, 10K processed words/year, 2 advanced seats, 1 integration, 1 automation, 1 GB OTA calls",
+      "tier": "Free",
+      "url": "https://lokalise.com/pricing/",
+      "tags": [
+        "localization",
+        "i18n",
+        "translation",
+        "internationalization",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Cal.com",
+      "category": "Developer Tools",
+      "description": "Open-source scheduling — unlimited event types, unlimited bookings, unlimited calendar connections, routing forms, workflow automation, payment processing, Cal Video conferencing. 1 user",
+      "tier": "Free",
+      "url": "https://cal.com/pricing",
+      "tags": [
+        "scheduling",
+        "calendar",
+        "booking",
+        "open source",
+        "appointments"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Tawk.to",
+      "category": "Communication",
+      "description": "100% free live chat software — unlimited agents, unlimited concurrent chats, unlimited message history, unlimited sites, 45+ languages, CRM, ticketing, knowledge base, video/voice chat, screen sharing",
+      "tier": "Free",
+      "url": "https://www.tawk.to/pricing/",
+      "tags": [
+        "live chat",
+        "customer support",
+        "messaging",
+        "crm",
+        "ticketing",
+        "free"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Uploadcare",
+      "category": "Storage",
+      "description": "File uploading API and image CDN — free tier for small-scale projects with file upload widget, image transformations, adaptive delivery. 100 MB file size limit. Usage resets monthly",
+      "tier": "Free",
+      "url": "https://uploadcare.com/pricing/",
+      "tags": [
+        "file upload",
+        "image cdn",
+        "media",
+        "storage",
+        "image optimization"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "IBM Cloud",
+      "category": "Startup Programs",
+      "description": "Builder tier: $1,000/month for 12 months ($12K total). Premium tier: $10,000/month for 12 months ($120K total, requires approved VC/accelerator affiliation). 170+ cloud products (AI, IoT, data, dev tools). No-cost, no-equity",
+      "tier": "Startup Program",
+      "url": "https://www.ibm.com/partners/startup",
+      "tags": [
+        "cloud",
+        "startup credits",
+        "ai",
+        "ibm",
+        "infrastructure"
+      ],
+      "verifiedDate": "2026-02-26",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": [
+          "Less than 5 years old",
+          "Privately held",
+          "Builder tier: revenue under $1M",
+          "Premium tier: affiliated with approved VC/accelerator",
+          "Not existing IBM Cloud paying customer"
+        ],
+        "program": "IBM Cloud for Startups"
+      }
+    },
+    {
+      "vendor": "Healthchecks.io",
+      "category": "Monitoring",
+      "description": "Cron job and scheduled task monitoring — 20 monitors, 100 log entries per job, email/webhook/Slack/Telegram alerts, API access. Also free for open-source projects (Business plan)",
+      "tier": "Free",
+      "url": "https://healthchecks.io/pricing/",
+      "tags": [
+        "monitoring",
+        "cron",
+        "scheduled tasks",
+        "heartbeat",
+        "dead man switch",
+        "alerts"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "ImageKit",
+      "category": "Storage",
+      "description": "Real-time image and video optimization with CDN — 20 GB bandwidth/month, 20 GB media storage, unlimited image transformations, 1,000 video processing units. No credit card required",
+      "tier": "Free",
+      "url": "https://imagekit.io/plans/",
+      "tags": [
+        "image optimization",
+        "cdn",
+        "media",
+        "image transformation",
+        "video",
+        "storage"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Expo",
+      "category": "Developer Tools",
+      "description": "React Native build and deployment platform — 30 builds/month (up to 15 iOS), 1,000 MAU for EAS Update, 100,000 hosting requests, 1M CPU-ms, 1 GB hosting storage. No credit card required",
+      "tier": "Free",
+      "url": "https://expo.dev/pricing",
+      "tags": [
+        "mobile",
+        "react native",
+        "ios",
+        "android",
+        "build",
+        "deployment",
+        "ota updates"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Crowdin",
+      "category": "Developer Tools",
+      "description": "Localization management — free forever for open-source (unlimited projects/translators). Private: 1 project, 60K hosted words, 1 integration, Crowdin AI access. CLI, GitHub integration, REST API",
+      "tier": "Free",
+      "url": "https://crowdin.com/pricing",
+      "tags": [
+        "localization",
+        "i18n",
+        "translation",
+        "open source",
+        "internationalization"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Permit.io",
+      "category": "Auth",
+      "description": "Authorization-as-a-service — 1,000 MAU, all authorization models (RBAC/ABAC/ReBAC), unlimited PDPs, no-code UI, GitOps workflows, GitHub/Terraform integration, SDKs and APIs",
+      "tier": "Free",
+      "url": "https://www.permit.io/pricing",
+      "tags": [
+        "authorization",
+        "rbac",
+        "abac",
+        "permissions",
+        "access control",
+        "policy"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Codecov",
+      "category": "Testing",
+      "description": "Code coverage reporting and analytics — free for up to 5 users with unlimited public and private repos. Always free for open-source. Integrates with GitHub, GitLab, Bitbucket CI/CD",
+      "tier": "Developer",
+      "url": "https://about.codecov.io/pricing/",
+      "tags": [
+        "code coverage",
+        "testing",
+        "ci/cd",
+        "code quality",
+        "analytics"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Dub.co",
+      "category": "Developer Tools",
+      "description": "Open-source link management — 1,000 links, 1,000 tracked clicks/month, up to 3 custom domains, API with native SDKs, analytics. No credit card required",
+      "tier": "Free",
+      "url": "https://dub.co/pricing",
+      "tags": [
+        "links",
+        "url shortener",
+        "analytics",
+        "open source",
+        "attribution"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Stytch",
+      "category": "Auth",
+      "description": "Authentication and fraud prevention — 10,000 MAU, passwordless login, OAuth, MFA, session management, device fingerprinting, 5 SSO/SCIM connections, 1,000 M2M tokens, password breach detection",
+      "tier": "Free",
+      "url": "https://stytch.com/pricing",
+      "tags": [
+        "auth",
+        "authentication",
+        "passwordless",
+        "oauth",
+        "mfa",
+        "identity",
+        "fraud prevention"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Liveblocks",
+      "category": "Developer Tools",
+      "description": "Real-time collaboration infrastructure — 100 MAU, 500 monthly active rooms, 8 GB storage. Presence, cursors, comments, notifications, text editor components",
+      "tier": "Free",
+      "url": "https://liveblocks.io/pricing",
+      "tags": [
+        "real-time",
+        "collaboration",
+        "multiplayer",
+        "presence",
+        "comments",
+        "sdk"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Nango",
+      "category": "Developer Tools",
+      "description": "Integration infrastructure for 600+ APIs — 10 connections, unified auth/data syncing/webhook handling, unlimited development/testing time. All API integrations accessible",
+      "tier": "Free",
+      "url": "https://nango.dev/pricing",
+      "tags": [
+        "integrations",
+        "api",
+        "oauth",
+        "data sync",
+        "webhooks",
+        "unified api"
+      ],
+      "verifiedDate": "2026-02-26"
     }
   ]
 }

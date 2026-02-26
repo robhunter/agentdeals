@@ -2,7 +2,7 @@
 
 An MCP server that aggregates free tiers, startup credits, and developer tool deals — so your AI agent (or you) can find the best infrastructure offers without leaving the workflow.
 
-AgentDeals indexes real, verified pricing data from 175+ developer infrastructure vendors across 34 categories. Connect any MCP-compatible client and search deals by keyword or category.
+AgentDeals indexes real, verified pricing data from 200+ developer infrastructure vendors across 38 categories. Connect any MCP-compatible client and search deals by keyword or category.
 
 ## Quick Start — Remote (Recommended)
 
@@ -111,11 +111,11 @@ No parameters. Returns all categories with offer counts.
 
 ## Categories
 
-AI / ML, Analytics, API Gateway, Auth, Background Jobs, Browser Automation, CDN, CI/CD, Cloud Hosting, Cloud IaaS, Communication, Container Registry, DNS & Domain Management, Databases, Design, Developer Tools, Documentation, Email, Error Tracking, Feature Flags, Headless CMS, Infrastructure, Logging, Messaging, Monitoring, Payments, Search, Secrets Management, Security, Storage, Startup Programs, Testing, Web Scraping, Workflow Automation
+AI / ML, Analytics, API Gateway, Auth, Background Jobs, Browser Automation, CDN, CI/CD, Cloud Hosting, Cloud IaaS, Communication, Container Registry, DNS & Domain Management, Databases, Design, Developer Tools, Documentation, Email, Error Tracking, Feature Flags, Forms, Headless CMS, Infrastructure, Logging, Maps/Geolocation, Messaging, Monitoring, Payments, Search, Secrets Management, Security, Status Pages, Storage, Startup Programs, Testing, Video, Web Scraping, Workflow Automation
 
 ## Stats
 
-- **176** vendor offers across **34** categories
+- **202** vendor offers across **38** categories
 - Data verified as of 2026-02-26
 
 ## Development
