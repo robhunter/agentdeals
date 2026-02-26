@@ -299,6 +299,64 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("list_categories"));
     assert.ok(html.includes("get_offer_details"));
     assert.ok(html.includes("get_deal_changes"));
+    assert.ok(html.includes("Browse Deals"), "Landing page should have Browse Deals section");
+    assert.ok(html.includes("deal-search"), "Landing page should have search input");
+    assert.ok(html.includes("/api/offers"), "Landing page should fetch from /api/offers");
+  });
+
+  it("GET /api/offers returns offers with pagination", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/offers?limit=3&offset=0`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.offers));
+    assert.strictEqual(body.offers.length, 3);
+    assert.ok(typeof body.total === "number");
+    assert.ok(body.total > 3);
+    // Each offer has expected fields
+    for (const o of body.offers) {
+      assert.ok(o.vendor);
+      assert.ok(o.category);
+      assert.ok(o.description);
+    }
+  });
+
+  it("GET /api/offers filters by query and category", async () => {
+    proc = await startHttpServer();
+
+    // Filter by category
+    const catResp = await fetch(`http://localhost:${PORT}/api/offers?category=Databases&limit=100`);
+    const catBody = await catResp.json() as any;
+    assert.ok(catBody.total > 0);
+    for (const o of catBody.offers) {
+      assert.strictEqual(o.category, "Databases");
+    }
+
+    // Filter by query
+    const qResp = await fetch(`http://localhost:${PORT}/api/offers?q=postgres&limit=100`);
+    const qBody = await qResp.json() as any;
+    assert.ok(qBody.total > 0);
+    for (const o of qBody.offers) {
+      const searchable = [o.vendor, o.description, o.category, ...(o.tags || [])].join(" ").toLowerCase();
+      assert.ok(searchable.includes("postgres"));
+    }
+  });
+
+  it("GET /api/categories returns categories with counts", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/categories`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.categories));
+    assert.ok(body.categories.length > 0);
+    for (const c of body.categories) {
+      assert.ok(typeof c.name === "string");
+      assert.ok(typeof c.count === "number");
+      assert.ok(c.count > 0);
+    }
   });
 
   it("returns 404 for unknown paths", async () => {
