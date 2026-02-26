@@ -48,6 +48,33 @@ const stats = {
   dealChanges: dealChanges.length,
 };
 
+// Prepare recent deal changes for landing page (5 most recent, sorted newest first)
+const recentChanges = [...dealChanges]
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .slice(0, 5);
+
+const changeTypeBadge: Record<string, { label: string; color: string }> = {
+  free_tier_removed: { label: "removed", color: "#f85149" },
+  limits_reduced: { label: "reduced", color: "#d29922" },
+  limits_increased: { label: "increased", color: "#3fb950" },
+  new_free_tier: { label: "new", color: "#58a6ff" },
+  pricing_restructured: { label: "restructured", color: "#bc8cff" },
+};
+
+function buildChangesHtml(): string {
+  return recentChanges.map((c) => {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    return `      <div class="change-entry">
+        <div class="change-header">
+          <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
+          <span class="change-vendor">${c.vendor}</span>
+          <span class="change-date">${c.date}</span>
+        </div>
+        <div class="change-summary">${c.summary}</div>
+      </div>`;
+  }).join("\n");
+}
+
 function buildLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -81,6 +108,13 @@ code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace}
 .links{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.5rem}
 .link-btn{display:inline-block;padding:.5rem 1rem;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:.9rem;transition:border-color .15s}
 .link-btn:hover{border-color:#58a6ff;text-decoration:none}
+.change-entry{padding:.75rem 0;border-bottom:1px solid #161b22}
+.change-entry:last-child{border-bottom:none}
+.change-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.25rem}
+.change-badge{display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.7rem;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:.03em}
+.change-vendor{font-weight:600;color:#f0f6fc;font-size:.9rem}
+.change-date{color:#484f58;font-size:.8rem;margin-left:auto}
+.change-summary{color:#8b949e;font-size:.85rem}
 footer{text-align:center;color:#484f58;font-size:.8rem;padding:2rem 0 1rem;border-top:1px solid #21262d;margin-top:2rem}
 @media(max-width:600px){.hero h1{font-size:1.75rem}.stats{gap:1rem}.stat .num{font-size:1.3rem}pre{font-size:.75rem}}
 </style>
@@ -116,6 +150,12 @@ footer{text-align:center;color:#484f58;font-size:.8rem;padding:2rem 0 1rem;borde
   </section>
 
   <section>
+    <h2>Recent Pricing Changes</h2>
+    <p>Tracked by our <code>get_deal_changes</code> tool — no other deals aggregator monitors these.</p>
+${buildChangesHtml()}
+  </section>
+
+  <section>
     <h2>Connect</h2>
     <p>Add AgentDeals to your MCP client. For Claude Desktop or Cursor, add this to your MCP config:</p>
     <pre><code>{
@@ -133,7 +173,7 @@ footer{text-align:center;color:#484f58;font-size:.8rem;padding:2rem 0 1rem;borde
     <div class="links">
       <a class="link-btn" href="https://github.com/robhunter/agentdeals">GitHub</a>
       <a class="link-btn" href="https://modelcontextprotocol.io/servers/agentdeals">MCP Registry</a>
-      <a class="link-btn" href="https://glama.ai/mcp/servers/agentdeals">Glama</a>
+      <a class="link-btn" href="https://glama.ai/mcp/connectors/io.github.robhunter/agentdeals">Glama Connector</a>
     </div>
   </section>
 
