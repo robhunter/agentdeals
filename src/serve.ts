@@ -2,7 +2,7 @@ import { createServer as createHttpServer } from "node:http";
 import { randomUUID } from "node:crypto";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
-import { loadOffers, getCategories, loadDealChanges } from "./data.js";
+import { loadOffers, getCategories, searchOffers, loadDealChanges } from "./data.js";
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
@@ -116,6 +116,24 @@ code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace}
 .change-date{color:#484f58;font-size:.8rem;margin-left:auto}
 .change-summary{color:#8b949e;font-size:.85rem}
 footer{text-align:center;color:#484f58;font-size:.8rem;padding:2rem 0 1rem;border-top:1px solid #21262d;margin-top:2rem}
+.browse-controls{margin-bottom:1rem}
+.search-input{width:100%;padding:.6rem .8rem;background:#161b22;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:.9rem;outline:none}
+.search-input:focus{border-color:#58a6ff}
+.search-input::placeholder{color:#484f58}
+.category-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.cat-pill{display:inline-block;padding:.2rem .6rem;border-radius:10px;font-size:.75rem;font-weight:500;background:#21262d;color:#8b949e;border:1px solid #30363d;cursor:pointer;transition:all .15s}
+.cat-pill:hover{border-color:#58a6ff;color:#c9d1d9}
+.cat-pill.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
+.deal-cards{display:grid;gap:.75rem;margin-top:.75rem}
+.deal-card{background:#161b22;border:1px solid #21262d;border-radius:6px;padding:.75rem 1rem}
+.deal-card-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.25rem}
+.deal-vendor{font-weight:600;color:#f0f6fc;font-size:.9rem}
+.deal-cat{display:inline-block;padding:.1rem .45rem;border-radius:8px;font-size:.65rem;font-weight:500;background:#21262d;color:#8b949e;border:1px solid #30363d}
+.deal-tier{font-size:.75rem;color:#58a6ff;margin-left:auto}
+.deal-desc{color:#8b949e;font-size:.83rem}
+.show-more{display:block;width:100%;padding:.5rem;margin-top:.75rem;background:transparent;border:1px solid #30363d;border-radius:6px;color:#58a6ff;font-size:.85rem;cursor:pointer;transition:border-color .15s}
+.show-more:hover{border-color:#58a6ff}
+.browse-status{color:#484f58;font-size:.8rem;margin-top:.5rem}
 @media(max-width:600px){.hero h1{font-size:1.75rem}.stats{gap:1rem}.stat .num{font-size:1.3rem}pre{font-size:.75rem}}
 </style>
 </head>
@@ -155,6 +173,17 @@ footer{text-align:center;color:#484f58;font-size:.8rem;padding:2rem 0 1rem;borde
 ${buildChangesHtml()}
   </section>
 
+  <section id="browse">
+    <h2>Browse Deals</h2>
+    <div class="browse-controls">
+      <input type="text" class="search-input" id="deal-search" placeholder="Search ${stats.offers}+ deals...">
+      <div class="category-pills" id="cat-pills"></div>
+    </div>
+    <div class="deal-cards" id="deal-cards"></div>
+    <button class="show-more" id="show-more" style="display:none">Show more</button>
+    <div class="browse-status" id="browse-status"></div>
+  </section>
+
   <section>
     <h2>Connect</h2>
     <p>Add AgentDeals to your MCP client. For Claude Desktop or Cursor, add this to your MCP config:</p>
@@ -179,6 +208,89 @@ ${buildChangesHtml()}
 
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
+<script>
+(function(){
+  var search=document.getElementById('deal-search');
+  var pillsEl=document.getElementById('cat-pills');
+  var cardsEl=document.getElementById('deal-cards');
+  var moreBtn=document.getElementById('show-more');
+  var statusEl=document.getElementById('browse-status');
+  var activeCat='';
+  var query='';
+  var offset=0;
+  var total=0;
+  var LIMIT=20;
+  var timer=null;
+
+  function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  function renderCards(offers,append){
+    var html='';
+    for(var i=0;i<offers.length;i++){
+      var o=offers[i];
+      var tierLabel=o.eligibility?o.eligibility.type:'free tier';
+      html+='<div class="deal-card"><div class="deal-card-header"><span class="deal-vendor">'+escHtml(o.vendor)+'</span><span class="deal-cat">'+escHtml(o.category)+'</span><span class="deal-tier">'+escHtml(tierLabel)+'</span></div><div class="deal-desc">'+escHtml(o.description)+'</div></div>';
+    }
+    if(append){cardsEl.innerHTML+=html;}else{cardsEl.innerHTML=html;}
+  }
+
+  function updateStatus(){
+    var shown=cardsEl.children.length;
+    statusEl.textContent=shown+' of '+total+' results';
+    moreBtn.style.display=shown<total?'block':'none';
+  }
+
+  function loadOffers(append){
+    var url='/api/offers?limit='+LIMIT+'&offset='+offset;
+    if(query)url+='&q='+encodeURIComponent(query);
+    if(activeCat)url+='&category='+encodeURIComponent(activeCat);
+    fetch(url).then(function(r){return r.json();}).then(function(data){
+      total=data.total;
+      renderCards(data.offers,append);
+      updateStatus();
+    });
+  }
+
+  function loadCategories(){
+    fetch('/api/categories').then(function(r){return r.json();}).then(function(data){
+      var html='<span class="cat-pill active" data-cat="">All</span>';
+      for(var i=0;i<data.categories.length;i++){
+        var c=data.categories[i];
+        html+='<span class="cat-pill" data-cat="'+escHtml(c.name)+'">'+escHtml(c.name)+' ('+c.count+')</span>';
+      }
+      pillsEl.innerHTML=html;
+    });
+  }
+
+  search.addEventListener('input',function(){
+    if(timer)clearTimeout(timer);
+    timer=setTimeout(function(){
+      query=search.value.trim();
+      offset=0;
+      loadOffers(false);
+    },300);
+  });
+
+  pillsEl.addEventListener('click',function(e){
+    var pill=e.target.closest('.cat-pill');
+    if(!pill)return;
+    var pills=pillsEl.querySelectorAll('.cat-pill');
+    for(var i=0;i<pills.length;i++)pills[i].classList.remove('active');
+    pill.classList.add('active');
+    activeCat=pill.getAttribute('data-cat')||'';
+    offset=0;
+    loadOffers(false);
+  });
+
+  moreBtn.addEventListener('click',function(){
+    offset+=LIMIT;
+    loadOffers(true);
+  });
+
+  loadCategories();
+  loadOffers(false);
+})();
+</script>
 </body>
 </html>`;
 }
@@ -282,6 +394,20 @@ const httpServer = createHttpServer(async (req, res) => {
         { "email": "rob.v.hunter@gmail.com" }
       ]
     }));
+  } else if (url.pathname === "/api/offers" && req.method === "GET") {
+    const q = url.searchParams.get("q") || undefined;
+    const category = url.searchParams.get("category") || undefined;
+    const limit = parseInt(url.searchParams.get("limit") ?? "20", 10);
+    const offset = parseInt(url.searchParams.get("offset") ?? "0", 10);
+    const results = searchOffers(q, category);
+    const total = results.length;
+    const paged = results.slice(offset, offset + limit);
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ offers: paged, total }));
+  } else if (url.pathname === "/api/categories" && req.method === "GET") {
+    const cats = getCategories();
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ categories: cats }));
   } else if (url.pathname === "/") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(landingPageHtml);
