@@ -299,6 +299,42 @@
       "source_url": "https://cloud.google.com/startup/ai",
       "category": "Cloud IaaS",
       "alternatives": ["AWS Activate", "Azure for Startups", "DigitalOcean Hatch"]
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-04",
+      "summary": "EC2 Capacity Blocks for ML GPU prices increased ~15% across regions. p5e.48xlarge went from $34.61 to $39.80/hr (US East) and $43.26 to $49.75/hr (US West N. California)",
+      "previous_state": "p5e.48xlarge at $34.61/hr (US East), $43.26/hr (US West N. California) for Capacity Blocks",
+      "current_state": "p5e.48xlarge at $39.80/hr (US East), $49.75/hr (US West N. California). ~15% increase across most GPU Capacity Block instances",
+      "impact": "medium",
+      "source_url": "https://www.theregister.com/2026/01/05/aws_price_increase/",
+      "category": "Cloud IaaS",
+      "alternatives": ["Google Cloud GPUs", "Azure GPU VMs", "Lambda Cloud"]
+    },
+    {
+      "vendor": "Google",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-27",
+      "summary": "Google Developer Program Premium merged into Google One AI Pro ($19.99/mo, includes $10 Cloud credits) and AI Ultra ($100 Cloud credits). Developer benefits now bundled into consumer AI subscriptions",
+      "previous_state": "Separate Developer Program Premium subscription ($299/year) with dev tools and perks",
+      "current_state": "Developer benefits folded into AI Pro ($19.99/mo, $10 Cloud credits for Vertex AI/Cloud Run/Gemini API) and AI Ultra ($100 Cloud credits). Developer Program Premium being phased out for @gmail.com accounts",
+      "impact": "medium",
+      "source_url": "https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/",
+      "category": "Developer Tools",
+      "alternatives": ["GitHub Copilot", "JetBrains AI"]
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "free_tier_removed",
+      "date": "2026-08-26",
+      "summary": "Assistants API deprecated, full shutdown August 26, 2026. Developers must migrate to Responses API + Conversations API",
+      "previous_state": "Assistants API available with code interpreter, file search, function calling, and Threads for conversation management",
+      "current_state": "Deprecated. Full shutdown Aug 26, 2026. Migration required: Assistants → Prompts + Responses API, Threads → Conversations API. No automated migration tool provided",
+      "impact": "high",
+      "source_url": "https://community.openai.com/t/assistants-api-beta-deprecation-august-26-2026-sunset/1354666",
+      "category": "AI/ML",
+      "alternatives": ["Anthropic Claude API", "Google Gemini API", "Cohere API"]
     }
   ]
 }
