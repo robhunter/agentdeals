@@ -1591,7 +1591,7 @@
     {
       "vendor": "AWS Activate",
       "category": "Cloud IaaS",
-      "description": "Up to $100,000 in AWS credits plus $10,000 in Business Support credits for startups backed by approved accelerators, VCs, or incubators. Must be pre-Series B",
+      "description": "Founders: $1,000 credits (self-funded startups). Portfolio: up to $100,000 credits (VC/accelerator-backed). Additional up to $300,000 in Trainium/Inferentia credits for AI startups building on AWS custom silicon (requires provider nomination). All credits usable on Bedrock models",
       "tier": "Portfolio",
       "url": "https://aws.amazon.com/activate/",
       "tags": [
@@ -1602,7 +1602,7 @@
         "accelerator",
         "aws"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-02-26",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -1852,7 +1852,7 @@
     {
       "vendor": "Google Cloud",
       "category": "Cloud IaaS",
-      "description": "Up to $200,000 in Google Cloud credits over 2 years for startups backed by approved accelerators, VCs, or incubators. Year 1: $100K (usage-matched). Year 2: $100K at 20% match. Includes technical training and support",
+      "description": "Scale: up to $200,000 over 2 years for equity-funded startups. Scale AI: up to $350,000 over 2 years ($250K Y1 + $100K Y2) for AI-first startups (pre-seed to Series A). Includes $10K Model Garden credits, $12K support credits, Google Workspace, and dedicated Startup Success Manager",
       "tier": "Startup Program",
       "url": "https://cloud.google.com/startup",
       "tags": [
@@ -1863,7 +1863,7 @@
         "google cloud",
         "accelerator"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-02-26",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2437,6 +2437,360 @@
         ],
         "program": "Atlassian for Startups"
       }
+    },
+    {
+      "vendor": "Pulumi",
+      "category": "Infrastructure",
+      "description": "Infrastructure as Code platform — free for individuals with 1 user, unlimited projects/stacks/updates, 500 deployment minutes/mo, 25 secrets, 10K secret API calls/mo",
+      "tier": "Individual",
+      "url": "https://www.pulumi.com/pricing/",
+      "tags": [
+        "infrastructure",
+        "iac",
+        "devops",
+        "cloud",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Spacelift",
+      "category": "Infrastructure",
+      "description": "IaC orchestration platform — 2 users, 1 API key, 1 public worker, OIDC integration, credential-less cloud provider integration, cost estimation",
+      "tier": "Free",
+      "url": "https://spacelift.io/pricing",
+      "tags": [
+        "infrastructure",
+        "iac",
+        "devops",
+        "terraform",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "HCP Terraform",
+      "category": "Infrastructure",
+      "description": "HashiCorp managed Terraform — 500 managed resources, unlimited users, SSO, policy as code (Sentinel + OPA), 1 concurrent run. Enhanced free tier replaces legacy plan (sunset March 2026)",
+      "tier": "Free",
+      "url": "https://www.hashicorp.com/products/terraform/pricing",
+      "tags": [
+        "infrastructure",
+        "iac",
+        "terraform",
+        "hashicorp",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Orama",
+      "category": "Search",
+      "description": "Full-text, vector, and hybrid search engine — 3 indexes, 100K documents/index, unlimited searches, 150 index updates/mo, 60-day analytics retention",
+      "tier": "Free",
+      "url": "https://orama.com/pricing",
+      "tags": [
+        "search",
+        "full-text",
+        "vector",
+        "hybrid",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Quay.io",
+      "category": "Container Registry",
+      "description": "Red Hat container registry — unlimited public repositories, 100 GB image layer storage soft cap, 1 TB egress soft cap. CI integration, robot accounts, teams, SSL/TLS",
+      "tier": "Free",
+      "url": "https://quay.io/plans/",
+      "tags": [
+        "containers",
+        "registry",
+        "docker",
+        "red hat",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "BrowserStack Percy",
+      "category": "Testing",
+      "description": "Visual regression testing — 5,000 screenshots/month, unlimited users and projects, 30-day build history. Note: BrowserStack browser testing is trial-only; only Percy visual testing has a permanent free tier",
+      "tier": "Free",
+      "url": "https://percy.io/pricing",
+      "tags": [
+        "testing",
+        "visual-testing",
+        "regression",
+        "screenshots",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Browserless",
+      "category": "Browser Automation",
+      "description": "Headless browser API — 1,000 units/mo (1 unit = 30 sec), 2 concurrent browsers, 1-minute max session with reconnects, automatic captcha solving, BrowserQL editor. Supports Chrome, WebKit, Firefox",
+      "tier": "Free",
+      "url": "https://www.browserless.io/pricing",
+      "tags": [
+        "browser",
+        "headless",
+        "automation",
+        "scraping",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Browserbase",
+      "category": "Browser Automation",
+      "description": "Headless browser infrastructure — 1 browser hour/mo, 1 concurrent browser, 15-minute max session, 7-day data retention, 1 project",
+      "tier": "Free",
+      "url": "https://www.browserbase.com/pricing",
+      "tags": [
+        "browser",
+        "headless",
+        "automation",
+        "ai-agent",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Discord API",
+      "category": "Communication",
+      "description": "Completely free API with no paid tiers. 50 req/sec global rate limit, per-route limits vary (e.g., 5 messages per 5 sec per channel). No charges ever",
+      "tier": "Free",
+      "url": "https://discord.com/developers/docs/topics/rate-limits",
+      "tags": [
+        "communication",
+        "api",
+        "chat",
+        "bots",
+        "free"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Slack API",
+      "category": "Communication",
+      "description": "Free workspace (90-day message history, 10 app integrations, 5 GB storage) + free API access with same rate limits as paid plans. Non-Marketplace apps created after May 2025 have stricter API rate limits",
+      "tier": "Free",
+      "url": "https://slack.com/pricing",
+      "tags": [
+        "communication",
+        "api",
+        "chat",
+        "integrations",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Bugsnag",
+      "category": "Error Tracking",
+      "description": "Error monitoring — approximately 5,000 events/month, 1 user, unlimited projects, 7-day data retention. Rebranded as SmartBear Insight Hub",
+      "tier": "Free",
+      "url": "https://www.bugsnag.com/pricing/",
+      "tags": [
+        "error-tracking",
+        "monitoring",
+        "debugging",
+        "crashes",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Rollbar",
+      "category": "Error Tracking",
+      "description": "Error tracking with 5,000 occurrences/month, 30-day data retention, 1,000 session replays. Processing stops at limit (no surprise charges)",
+      "tier": "Free",
+      "url": "https://rollbar.com/pricing",
+      "tags": [
+        "error-tracking",
+        "monitoring",
+        "debugging",
+        "session-replay",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Microsoft Founders Hub",
+      "category": "Cloud IaaS",
+      "description": "Up to $5,000 Azure credits (basic path, no investor required) or up to $150,000 (investor network path). Includes M365 Business Premium (50 seats), GitHub Enterprise (20 users), Visual Studio Enterprise (5 users), Power Apps (10 users)",
+      "tier": "Startup Program",
+      "url": "https://www.microsoft.com/en-us/startups",
+      "tags": [
+        "cloud",
+        "iaas",
+        "credits",
+        "startup credits",
+        "azure",
+        "accelerator"
+      ],
+      "verifiedDate": "2026-02-26",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": [
+          "Registered legal entity with a real product",
+          "Basic path: no investor required, up to $5K credits",
+          "Investor path: referral from participating investor/accelerator, pre-Series C"
+        ],
+        "program": "Microsoft for Startups Founders Hub"
+      }
+    },
+    {
+      "vendor": "Pipedream",
+      "category": "Workflow Automation",
+      "description": "Developer-focused workflow automation — 100 credits/month, 3 active workflows, 3 connected accounts. Building/testing workflows in the editor is free",
+      "tier": "Free",
+      "url": "https://pipedream.com/pricing",
+      "tags": [
+        "automation",
+        "workflows",
+        "integrations",
+        "api",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Make",
+      "category": "Workflow Automation",
+      "description": "Visual workflow automation (formerly Integromat) — 1,000 operations/month, 100 MB data transfer/mo, 2 active scenarios, 15-minute minimum interval",
+      "tier": "Free Forever",
+      "url": "https://www.make.com/en/pricing",
+      "tags": [
+        "automation",
+        "workflows",
+        "integrations",
+        "no-code",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Zapier",
+      "category": "Workflow Automation",
+      "description": "Workflow automation — 100 tasks/month, unlimited Zaps but limited to 2-step only (one trigger + one action), 2,500 table records, 10 form pages",
+      "tier": "Free",
+      "url": "https://zapier.com/pricing",
+      "tags": [
+        "automation",
+        "workflows",
+        "integrations",
+        "no-code",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "GlitchTip",
+      "category": "Error Tracking",
+      "description": "Open-source error tracking — 1,000 events/month, unlimited projects and team members, Sentry SDK-compatible. Also includes uptime monitoring. Self-hostable for unlimited",
+      "tier": "Free",
+      "url": "https://glitchtip.com/pricing/",
+      "tags": [
+        "error-tracking",
+        "monitoring",
+        "open-source",
+        "sentry-compatible",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "LogRocket",
+      "category": "Error Tracking",
+      "description": "Session replay and error tracking — 1,000 sessions/month, 1-month data retention, 3 seats. Includes session replay, console logs, stack traces, network request data",
+      "tier": "Free Forever",
+      "url": "https://logrocket.com/pricing",
+      "tags": [
+        "error-tracking",
+        "session-replay",
+        "debugging",
+        "frontend",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "LiveKit",
+      "category": "Communication",
+      "description": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "tier": "Build",
+      "url": "https://livekit.io/pricing",
+      "tags": [
+        "communication",
+        "webrtc",
+        "video",
+        "audio",
+        "ai-agents",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "ReadMe",
+      "category": "Documentation",
+      "description": "API documentation platform — 1 project, 1 API reference, 3 published versions, 5 admins, basic AI features, ReadMe branding. No custom domain",
+      "tier": "Free",
+      "url": "https://readme.com/pricing",
+      "tags": [
+        "documentation",
+        "api-docs",
+        "developer-portal",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "GitBook",
+      "category": "Documentation",
+      "description": "Documentation platform — 1 user, gitbook.io subdomain, unlimited traffic, public publishing. No custom domain or AI answers on free tier",
+      "tier": "Free",
+      "url": "https://www.gitbook.com/pricing",
+      "tags": [
+        "documentation",
+        "docs",
+        "knowledge-base",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Chromatic",
+      "category": "Testing",
+      "description": "Visual regression testing by the Storybook team — 5,000 snapshots/month, Chrome-only, unlimited projects and collaborators, Git and CI integrations, UI version tracking",
+      "tier": "Free",
+      "url": "https://www.chromatic.com/pricing",
+      "tags": [
+        "testing",
+        "visual-testing",
+        "storybook",
+        "regression",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Figma",
+      "category": "Design",
+      "description": "Collaborative design tool — 3 Figma design files, 3 FigJam files, unlimited drafts, unlimited viewers, 30-day version history, unlimited cloud storage",
+      "tier": "Starter",
+      "url": "https://www.figma.com/pricing/",
+      "tags": [
+        "design",
+        "ui",
+        "prototyping",
+        "collaboration",
+        "free tier"
+      ],
+      "verifiedDate": "2026-02-26"
     }
   ]
 }
