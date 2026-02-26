@@ -3236,6 +3236,716 @@
         "unified api"
       ],
       "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Atlassian Statuspage",
+      "category": "Status Pages",
+      "description": "Hosted status page with 100 subscribers, 25 components, 2 team members, 2 metrics. Email, Slack, and Microsoft Teams notifications. REST API access",
+      "tier": "Free",
+      "url": "https://www.atlassian.com/software/statuspage/pricing",
+      "tags": [
+        "status page",
+        "incident management",
+        "uptime",
+        "notifications"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "OpenStatus",
+      "category": "Status Pages",
+      "description": "Open-source status page and monitoring. Free plan: 1 monitor, 1 status page, 3 components, 10-minute check intervals, 6 global regions, 14-day data retention",
+      "tier": "Free",
+      "url": "https://www.openstatus.dev/",
+      "tags": [
+        "status page",
+        "monitoring",
+        "uptime",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Upptime",
+      "category": "Status Pages",
+      "description": "Free OSS (MIT). GitHub-powered uptime monitor and status page. Uses GitHub Actions for checks every 5 minutes, GitHub Issues for incidents, GitHub Pages for the status page. Zero server cost",
+      "tier": "Free OSS",
+      "url": "https://upptime.js.org",
+      "tags": [
+        "status page",
+        "monitoring",
+        "github",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Cachet",
+      "category": "Status Pages",
+      "description": "Free OSS (MIT). Self-hosted status page system with API, subscriber notifications, metrics, and multi-language support. PHP/Laravel-based with Docker support",
+      "tier": "Free OSS",
+      "url": "https://cachethq.io",
+      "tags": [
+        "status page",
+        "self-hosted",
+        "open source",
+        "incident management"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "cState",
+      "category": "Status Pages",
+      "description": "Free OSS (MIT). Static status page generator built on Hugo. Deploy to Netlify, GitHub Pages, or any static host. Fast, minimal, no server required",
+      "tier": "Free OSS",
+      "url": "https://cstate.netlify.app",
+      "tags": [
+        "status page",
+        "static site",
+        "hugo",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Daily.co",
+      "category": "Video",
+      "description": "Video calling API with 10,000 free participant-minutes/month. Up to 200 participants per room. No credit card required",
+      "tier": "Free",
+      "url": "https://www.daily.co/pricing",
+      "tags": [
+        "video",
+        "webrtc",
+        "api",
+        "conferencing"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Whereby",
+      "category": "Video",
+      "description": "Embeddable video conferencing API. Free Explore plan: 2,000 participant-minutes/month, up to 200 participants per room, 24 active video feeds",
+      "tier": "Free (Explore)",
+      "url": "https://whereby.com/information/embedded/pricing",
+      "tags": [
+        "video",
+        "webrtc",
+        "embedded",
+        "conferencing"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Docusaurus",
+      "category": "Documentation",
+      "description": "Free OSS (MIT). Meta-backed React/MDX documentation framework. Built-in search, versioning, i18n, and plugin system",
+      "tier": "Free OSS",
+      "url": "https://docusaurus.io/",
+      "tags": [
+        "documentation",
+        "react",
+        "static site",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Nextra",
+      "category": "Documentation",
+      "description": "Free OSS (MIT). Next.js-based documentation framework with MDX, full-text search, syntax highlighting, and dark mode. Simple file-system routing",
+      "tier": "Free OSS",
+      "url": "https://nextra.site/",
+      "tags": [
+        "documentation",
+        "nextjs",
+        "mdx",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "VitePress",
+      "category": "Documentation",
+      "description": "Free OSS (MIT). Vite and Vue-powered static site generator for documentation. Fast dev server, lightweight output, built-in search",
+      "tier": "Free OSS",
+      "url": "https://vitepress.dev/",
+      "tags": [
+        "documentation",
+        "vue",
+        "vite",
+        "static site",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Sphinx",
+      "category": "Documentation",
+      "description": "Free OSS (BSD). Python documentation generator. Extensive cross-referencing, automatic indices, code documentation from docstrings. Powers Python official docs and Read the Docs",
+      "tier": "Free OSS",
+      "url": "https://www.sphinx-doc.org/",
+      "tags": [
+        "documentation",
+        "python",
+        "open source",
+        "restructuredtext"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Formspree",
+      "category": "Forms",
+      "description": "Form backend as a service. Free plan: 50 submissions/month, unlimited forms, email notifications, spam filtering. No server-side code required",
+      "tier": "Free",
+      "url": "https://formspree.io/plans",
+      "tags": [
+        "forms",
+        "backend",
+        "email",
+        "no-code"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "JotForm",
+      "category": "Forms",
+      "description": "Online form builder. Free plan: 5 forms, 100 monthly submissions, 100 MB upload space, 1,000 form views/month. Drag-and-drop builder with 10,000+ templates",
+      "tier": "Free (Starter)",
+      "url": "https://www.jotform.com/pricing/",
+      "tags": [
+        "forms",
+        "no-code",
+        "templates",
+        "drag-and-drop"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "LocationIQ",
+      "category": "Maps/Geolocation",
+      "description": "Geocoding, reverse geocoding, and routing API. Free plan: 5,000 requests/day, commercial use allowed with attribution",
+      "tier": "Free",
+      "url": "https://locationiq.com/pricing",
+      "tags": [
+        "geocoding",
+        "maps",
+        "routing",
+        "api"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "ipinfo.io",
+      "category": "Maps/Geolocation",
+      "description": "IP geolocation and data API. Free plan: 50,000 requests/month, IP-to-geolocation, ASN, company, carrier, and privacy detection data",
+      "tier": "Free",
+      "url": "https://ipinfo.io/pricing",
+      "tags": [
+        "geolocation",
+        "ip",
+        "api",
+        "data"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Meilisearch",
+      "category": "Search",
+      "description": "Free OSS (MIT). Instant search engine with typo tolerance, faceted search, filtering, and sorting. Sub-50ms response times. REST API",
+      "tier": "Free OSS",
+      "url": "https://www.meilisearch.com/",
+      "tags": [
+        "search",
+        "full-text",
+        "api",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "ScraperAPI",
+      "category": "Web Scraping",
+      "description": "Web scraping API with proxy rotation and CAPTCHA handling. Free plan: 1,000 API credits/month, 5 concurrent connections. No credit card required",
+      "tier": "Free",
+      "url": "https://www.scraperapi.com/pricing/",
+      "tags": [
+        "scraping",
+        "proxy",
+        "api",
+        "data extraction"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Playwright",
+      "category": "Browser Automation",
+      "description": "Free OSS (Apache 2.0). Microsoft-backed end-to-end testing and browser automation for Chromium, Firefox, and WebKit. Auto-wait, network interception, mobile emulation",
+      "tier": "Free OSS",
+      "url": "https://playwright.dev/",
+      "tags": [
+        "testing",
+        "automation",
+        "browser",
+        "e2e",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Puppeteer",
+      "category": "Browser Automation",
+      "description": "Free OSS (Apache 2.0). Google-backed Chrome/Chromium automation library. Headless and headful modes, PDF generation, screenshots, network interception. Firefox support via WebDriver BiDi",
+      "tier": "Free OSS",
+      "url": "https://pptr.dev/",
+      "tags": [
+        "automation",
+        "browser",
+        "chrome",
+        "headless",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "UNPKG",
+      "category": "CDN",
+      "description": "Free CDN for all npm packages. Any file on npm available via URL. Runs on Cloudflare Workers. No signup required",
+      "tier": "Free",
+      "url": "https://unpkg.com",
+      "tags": [
+        "cdn",
+        "npm",
+        "javascript",
+        "static files"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "esm.sh",
+      "category": "CDN",
+      "description": "Free ESM-first CDN for npm packages. Serves ES modules with automatic dependency resolution, TypeScript support, and tree-shaking. Runs on Cloudflare",
+      "tier": "Free",
+      "url": "https://esm.sh",
+      "tags": [
+        "cdn",
+        "esm",
+        "npm",
+        "javascript",
+        "modules"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Excalidraw",
+      "category": "Design",
+      "description": "Free OSS (MIT). Virtual whiteboard for hand-drawn style diagrams. Real-time collaboration, end-to-end encryption, offline PWA. Also embeddable as React component",
+      "tier": "Free OSS",
+      "url": "https://excalidraw.com",
+      "tags": [
+        "whiteboard",
+        "diagrams",
+        "collaboration",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Lunacy",
+      "category": "Design",
+      "description": "Free desktop design tool by Icons8. Auto layout, components, prototyping, collaboration (up to 10 editors), 10 cloud docs. Built-in library: 1.4M icons, 70K illustrations. Windows/Mac/Linux",
+      "tier": "Free",
+      "url": "https://icons8.com/lunacy",
+      "tags": [
+        "design",
+        "ui",
+        "prototyping",
+        "figma alternative"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Pixlr",
+      "category": "Design",
+      "description": "Free online photo editor and design tool. Basic and advanced editing modes, 500K+ free graphics. Ad-supported, ~5 saves/day on free plan",
+      "tier": "Free",
+      "url": "https://pixlr.com",
+      "tags": [
+        "design",
+        "photo editing",
+        "online",
+        "graphics"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Harbor",
+      "category": "Container Registry",
+      "description": "Free OSS (Apache 2.0). CNCF graduated cloud-native container registry. RBAC, vulnerability scanning, image signing, replication, audit logging. Self-hosted",
+      "tier": "Free OSS",
+      "url": "https://goharbor.io",
+      "tags": [
+        "container",
+        "registry",
+        "cncf",
+        "security",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Amazon ECR Public",
+      "category": "Container Registry",
+      "description": "Public container registry. Always-free tier: 50 GB/month storage, 500 GB/month anonymous data transfer, 5 TB/month with AWS account",
+      "tier": "Always Free",
+      "url": "https://aws.amazon.com/ecr/pricing/",
+      "tags": [
+        "container",
+        "registry",
+        "aws",
+        "docker"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Exceptionless",
+      "category": "Error Tracking",
+      "description": "Real-time error, feature, and log reporting. Free plan: 3,000 events/month, 1 project, 1 user, 3-day retention. Also fully open source (Apache 2.0) for self-hosted unlimited use",
+      "tier": "Free",
+      "url": "https://exceptionless.com",
+      "tags": [
+        "error tracking",
+        "logging",
+        "monitoring",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Stream",
+      "category": "Communication",
+      "description": "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video. Hard limits, no surprise overages",
+      "tier": "Maker Account",
+      "url": "https://getstream.io/maker-account/",
+      "tags": [
+        "chat",
+        "messaging",
+        "video",
+        "activity feeds",
+        "api"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Descope",
+      "category": "Auth",
+      "description": "Authentication and user management. Free Forever plan: 7,500 MAU, 10 tenants, 3 SSO connections. All core auth methods: passwords, magic links, OTP, passkeys, social login, MFA",
+      "tier": "Free Forever",
+      "url": "https://www.descope.com/pricing",
+      "tags": [
+        "auth",
+        "sso",
+        "passkeys",
+        "mfa",
+        "identity"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Hanko",
+      "category": "Auth",
+      "description": "Passkey-first authentication. Cloud free tier: 10,000 MAU, 2 production projects. Also open source (AGPL v3) for unlimited self-hosted use. WebAuthn, OAuth, email/password",
+      "tier": "Free",
+      "url": "https://www.hanko.io/pricing",
+      "tags": [
+        "auth",
+        "passkeys",
+        "webauthn",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Keycloak",
+      "category": "Auth",
+      "description": "Free OSS (Apache 2.0). Red Hat-backed identity and access management. SSO, OIDC, SAML, LDAP, social login, MFA, fine-grained authorization. Self-hosted with no user limits",
+      "tier": "Free OSS",
+      "url": "https://www.keycloak.org/",
+      "tags": [
+        "auth",
+        "sso",
+        "oidc",
+        "saml",
+        "identity",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Cerebras",
+      "category": "AI / ML",
+      "description": "Ultra-fast LLM inference API. Free tier: 1M tokens/day, 30 requests/min. Models include Llama 3.1 8B/70B, Qwen3 32B/235B. Multi-thousand tokens/sec inference speed",
+      "tier": "Free",
+      "url": "https://cerebras.ai/",
+      "tags": [
+        "ai",
+        "llm",
+        "inference",
+        "api"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Cohere",
+      "category": "AI / ML",
+      "description": "AI model API. Trial key: 1,000 API calls/month across all endpoints (Chat, Embed, Rerank). Access to Command R+, Rerank 3.5, Embed 4. Non-commercial use only",
+      "tier": "Trial Key",
+      "url": "https://cohere.com/pricing",
+      "tags": [
+        "ai",
+        "llm",
+        "embeddings",
+        "reranking",
+        "api"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Coolify",
+      "category": "Infrastructure",
+      "description": "Free OSS (Apache 2.0). Self-hostable PaaS (Vercel/Heroku alternative). Deploy static sites, databases, full-stack apps, 280+ one-click services. Auto SSL, Git integration",
+      "tier": "Free OSS",
+      "url": "https://coolify.io/",
+      "tags": [
+        "paas",
+        "deployment",
+        "self-hosted",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Traefik",
+      "category": "Infrastructure",
+      "description": "Free OSS (MIT). Cloud-native reverse proxy and load balancer. Automatic HTTPS via Let's Encrypt, Docker/Kubernetes integration, middleware plugins, service discovery",
+      "tier": "Free OSS",
+      "url": "https://traefik.io/traefik/",
+      "tags": [
+        "reverse proxy",
+        "load balancer",
+        "kubernetes",
+        "docker",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Argo CD",
+      "category": "Infrastructure",
+      "description": "Free OSS (Apache 2.0). CNCF graduated GitOps continuous delivery tool for Kubernetes. Declarative, versioned, automated application deployments from Git",
+      "tier": "Free OSS",
+      "url": "https://argoproj.github.io/cd/",
+      "tags": [
+        "gitops",
+        "kubernetes",
+        "cd",
+        "deployment",
+        "cncf",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "BullMQ",
+      "category": "Background Jobs",
+      "description": "Free OSS (MIT). High-performance job queue for Node.js built on Redis. Delayed jobs, retries, priorities, concurrency, rate limiting, repeatable jobs",
+      "tier": "Free OSS",
+      "url": "https://bullmq.io/",
+      "tags": [
+        "queue",
+        "jobs",
+        "redis",
+        "nodejs",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Automatisch",
+      "category": "Workflow Automation",
+      "description": "Free OSS (AGPL-3.0). Self-hosted workflow automation (Zapier alternative). Connect services like Slack, GitHub, Google Sheets. No programming knowledge required",
+      "tier": "Free OSS",
+      "url": "https://automatisch.io/",
+      "tags": [
+        "automation",
+        "workflow",
+        "integrations",
+        "self-hosted",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Strapi",
+      "category": "Headless CMS",
+      "description": "Free OSS (MIT). Self-hosted headless CMS with REST and GraphQL APIs. Content types builder, RBAC, webhooks, i18n, media library. 200K+ active projects",
+      "tier": "Free OSS",
+      "url": "https://strapi.io/",
+      "tags": [
+        "cms",
+        "headless",
+        "api",
+        "content",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Payload CMS",
+      "category": "Headless CMS",
+      "description": "Free OSS (MIT). TypeScript-first headless CMS with code-based config. REST and GraphQL APIs, access control, hooks, live preview. Self-hosted or Payload Cloud",
+      "tier": "Free OSS",
+      "url": "https://payloadcms.com/",
+      "tags": [
+        "cms",
+        "headless",
+        "typescript",
+        "api",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Prometheus",
+      "category": "Monitoring",
+      "description": "Free OSS (Apache 2.0). CNCF graduated time-series monitoring and alerting. Pull-based metrics collection, PromQL query language, multi-dimensional data model",
+      "tier": "Free OSS",
+      "url": "https://prometheus.io/",
+      "tags": [
+        "monitoring",
+        "metrics",
+        "alerting",
+        "time-series",
+        "cncf",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Jaeger",
+      "category": "Monitoring",
+      "description": "Free OSS (Apache 2.0). CNCF graduated distributed tracing system. End-to-end request tracing, performance optimization, root cause analysis. OpenTelemetry compatible",
+      "tier": "Free OSS",
+      "url": "https://www.jaegertracing.io/",
+      "tags": [
+        "tracing",
+        "distributed",
+        "observability",
+        "opentelemetry",
+        "cncf",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Grafana Loki",
+      "category": "Logging",
+      "description": "Free OSS (AGPLv3). Horizontally-scalable log aggregation system by Grafana Labs. Label-based indexing (like Prometheus for logs), integrates with Grafana dashboards",
+      "tier": "Free OSS",
+      "url": "https://grafana.com/oss/loki/",
+      "tags": [
+        "logging",
+        "aggregation",
+        "grafana",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Plausible Analytics",
+      "category": "Analytics",
+      "description": "Free OSS (AGPLv3). Privacy-friendly web analytics. No cookies, GDPR/CCPA compliant, lightweight script (<1KB). Self-hosted with no limits. Cloud plans start at $9/mo",
+      "tier": "Free OSS",
+      "url": "https://plausible.io/",
+      "tags": [
+        "analytics",
+        "privacy",
+        "gdpr",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Umami",
+      "category": "Analytics",
+      "description": "Free OSS (MIT). Simple, privacy-focused web analytics. No cookies, GDPR compliant, real-time dashboard, event tracking. Self-hosted with no limits",
+      "tier": "Free OSS",
+      "url": "https://umami.is/",
+      "tags": [
+        "analytics",
+        "privacy",
+        "self-hosted",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Woodpecker CI",
+      "category": "CI/CD",
+      "description": "Free OSS (Apache 2.0). Community fork of Drone CI. Container-native CI/CD with YAML pipelines, multi-platform support, Gitea/Forgejo/GitHub/GitLab integration",
+      "tier": "Free OSS",
+      "url": "https://woodpecker-ci.org/",
+      "tags": [
+        "ci",
+        "cd",
+        "pipelines",
+        "containers",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Hoppscotch",
+      "category": "Developer Tools",
+      "description": "Free OSS (MIT). API development ecosystem — REST, GraphQL, WebSocket, SSE, Socket.IO, MQTT testing. Real-time collaboration, environments, collections. Web, desktop, and CLI",
+      "tier": "Free OSS",
+      "url": "https://hoppscotch.io/",
+      "tags": [
+        "api",
+        "testing",
+        "rest",
+        "graphql",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Gitea",
+      "category": "Developer Tools",
+      "description": "Free OSS (MIT). Lightweight self-hosted Git service. Repository hosting, issue tracking, pull requests, CI/CD (Gitea Actions), packages registry. Low resource usage",
+      "tier": "Free OSS",
+      "url": "https://about.gitea.com/",
+      "tags": [
+        "git",
+        "hosting",
+        "self-hosted",
+        "ci",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "Appsmith",
+      "category": "Developer Tools",
+      "description": "Free OSS (Apache 2.0). Low-code platform for building internal tools. Drag-and-drop UI builder, 45+ database/API integrations, JavaScript customization. Self-hosted or cloud",
+      "tier": "Free OSS",
+      "url": "https://www.appsmith.com/",
+      "tags": [
+        "low-code",
+        "internal tools",
+        "admin panel",
+        "open source"
+      ],
+      "verifiedDate": "2026-02-26"
     }
   ]
 }
