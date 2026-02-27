@@ -82,6 +82,16 @@ function buildLandingPage(): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AgentDeals — Developer Infrastructure Deals via MCP</title>
+<meta name="description" content="Free MCP server aggregating ${stats.offers}+ developer infrastructure deals — free tiers, startup credits, and pricing changes across ${stats.categories} categories. Search from any AI agent or browse directly.">
+<meta property="og:title" content="AgentDeals — Developer Infrastructure Deals via MCP">
+<meta property="og:description" content="Free tiers are disappearing. Track ${stats.offers}+ developer deals, startup credits, and pricing changes across ${stats.categories} categories. Browse directly or query via MCP.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app">
+<meta property="og:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AgentDeals — Developer Infrastructure Deals via MCP">
+<meta name="twitter:description" content="Track ${stats.offers}+ developer deals, free tiers, startup credits, and pricing changes. Browse directly or query via MCP.">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.6}
