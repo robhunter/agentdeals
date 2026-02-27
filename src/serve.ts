@@ -101,6 +101,10 @@ a:hover{text-decoration:underline}
 .hero{text-align:center;padding:3rem 0 2rem}
 .hero h1{font-size:2.5rem;color:#f0f6fc;margin-bottom:.5rem}
 .hero p{font-size:1.15rem;color:#8b949e;max-width:540px;margin:0 auto}
+.hero .hero-lead{font-size:1.4rem;color:#f85149;font-weight:600;margin-bottom:.4rem}
+.browse-btn{display:inline-block;margin-top:1.2rem;padding:.6rem 1.5rem;background:#1f6feb;color:#fff;border-radius:6px;font-size:1rem;font-weight:500;transition:background .15s}
+.browse-btn:hover{background:#388bfd;text-decoration:none}
+.browse-link{color:#58a6ff}
 .stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1.5rem 0;border-top:1px solid #21262d;border-bottom:1px solid #21262d;margin:1.5rem 0}
 .stat{text-align:center}
 .stat .num{font-size:1.75rem;font-weight:700;color:#f0f6fc}
@@ -151,7 +155,9 @@ footer{text-align:center;color:#484f58;font-size:.8rem;padding:2rem 0 1rem;borde
 <div class="container">
   <div class="hero">
     <h1>AgentDeals</h1>
-    <p>MCP server aggregating free tiers, startup credits, and developer infrastructure deals. Query from any MCP client.</p>
+    <p class="hero-lead">Free tiers are disappearing.</p>
+    <p>Track ${stats.offers}+ developer deals, startup credits, and pricing changes across ${stats.categories} categories. Query from any MCP client &mdash; or <a href="#browse" class="browse-link">browse below</a>.</p>
+    <a href="#browse" class="browse-btn">Browse Deals &darr;</a>
   </div>
 
   <div class="stats">
@@ -211,7 +217,7 @@ ${buildChangesHtml()}
     <h2>Links</h2>
     <div class="links">
       <a class="link-btn" href="https://github.com/robhunter/agentdeals">GitHub</a>
-      <a class="link-btn" href="https://modelcontextprotocol.io/servers/agentdeals">MCP Registry</a>
+      <a class="link-btn" href="https://registry.modelcontextprotocol.io/v0.1/servers/io.github.robhunter%2Fagentdeals/versions">MCP Registry</a>
       <a class="link-btn" href="https://glama.ai/mcp/connectors/io.github.robhunter/agentdeals">Glama Connector</a>
     </div>
   </section>
