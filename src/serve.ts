@@ -139,7 +139,10 @@ footer{text-align:center;color:#484f58;font-size:.8rem;padding:2rem 0 1rem;borde
 .cat-pill:hover{border-color:#58a6ff;color:#c9d1d9}
 .cat-pill.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
 .deal-cards{display:grid;gap:.75rem;margin-top:.75rem}
-.deal-card{background:#161b22;border:1px solid #21262d;border-radius:6px;padding:.75rem 1rem}
+.deal-card{background:#161b22;border:1px solid #21262d;border-radius:6px;padding:.75rem 1rem;cursor:pointer;transition:border-color .15s}
+.deal-card:hover{border-color:#58a6ff}
+.deal-card a.deal-link{display:flex;align-items:center;gap:.3rem;margin-top:.4rem;font-size:.8rem;color:#58a6ff;text-decoration:none}
+.deal-card a.deal-link:hover{text-decoration:underline}
 .deal-card-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.25rem}
 .deal-vendor{font-weight:600;color:#f0f6fc;font-size:.9rem}
 .deal-cat{display:inline-block;padding:.1rem .45rem;border-radius:8px;font-size:.65rem;font-weight:500;background:#21262d;color:#8b949e;border:1px solid #30363d}
@@ -245,7 +248,10 @@ ${buildChangesHtml()}
     for(var i=0;i<offers.length;i++){
       var o=offers[i];
       var tierLabel=o.eligibility?o.eligibility.type:'free tier';
-      html+='<div class="deal-card"><div class="deal-card-header"><span class="deal-vendor">'+escHtml(o.vendor)+'</span><span class="deal-cat">'+escHtml(o.category)+'</span><span class="deal-tier">'+escHtml(tierLabel)+'</span></div><div class="deal-desc">'+escHtml(o.description)+'</div></div>';
+      var dataUrl=o.url?' data-url="'+escHtml(o.url)+'"':'';
+      html+='<div class="deal-card"'+dataUrl+'><div class="deal-card-header"><span class="deal-vendor">'+escHtml(o.vendor)+'</span><span class="deal-cat">'+escHtml(o.category)+'</span><span class="deal-tier">'+escHtml(tierLabel)+'</span></div><div class="deal-desc">'+escHtml(o.description)+'</div>';
+      if(o.url){html+='<a class="deal-link" href="'+escHtml(o.url)+'" target="_blank" rel="noopener">View Deal &rarr;</a>';}
+      html+='</div>';
     }
     if(append){cardsEl.innerHTML+=html;}else{cardsEl.innerHTML=html;}
   }
@@ -301,6 +307,12 @@ ${buildChangesHtml()}
   moreBtn.addEventListener('click',function(){
     offset+=LIMIT;
     loadOffers(true);
+  });
+
+  cardsEl.addEventListener('click',function(e){
+    if(e.target.closest('.deal-link'))return;
+    var card=e.target.closest('.deal-card');
+    if(card&&card.dataset.url)window.open(card.dataset.url,'_blank','noopener');
   });
 
   loadCategories();
