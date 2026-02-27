@@ -1,10 +1,19 @@
 import { createServer as createHttpServer } from "node:http";
+import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
 import { loadOffers, getCategories, searchOffers, loadDealChanges } from "./data.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
+
+// Load favicon from logo PNG at startup
+const faviconBuffer = readFileSync(join(__dirname, "..", "assets", "logo-400.png"));
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
 const CLEANUP_INTERVAL_MS = 60 * 1000; // 60 seconds
 
@@ -92,6 +101,7 @@ function buildLandingPage(): string {
 <meta name="twitter:title" content="AgentDeals — Developer Infrastructure Deals via MCP">
 <meta name="twitter:description" content="Track ${stats.offers}+ developer deals, free tiers, startup credits, and pricing changes. Browse directly or query via MCP.">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
+<link rel="icon" type="image/png" href="/favicon.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.6}
@@ -411,6 +421,13 @@ const httpServer = createHttpServer(async (req, res) => {
       res.writeHead(405, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Method not allowed" }));
     }
+  } else if (url.pathname === "/favicon.png" || url.pathname === "/favicon.ico") {
+    res.writeHead(200, {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=86400",
+      "Content-Length": faviconBuffer.length,
+    });
+    res.end(faviconBuffer);
   } else if (url.pathname === "/health") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ status: "ok", sessions: sessions.size }));
