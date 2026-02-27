@@ -3,12 +3,12 @@
     {
       "vendor": "Brave Search API",
       "change_type": "free_tier_removed",
-      "date": "2026-02-12",
-      "summary": "Free tier replaced with $9/mo Starter plan with monthly credits",
-      "previous_state": "5,000 free queries/month, 3 QPS",
-      "current_state": "$9/mo for ~1,000 queries + credits, new attribution requirement",
+      "date": "2026-02-01",
+      "summary": "Free plan (5,000 queries/month) replaced with metered billing at $5/1,000 requests. $5 monthly credit provided as offset (~1,000 queries). Credit cards now actively charged with no spending cap",
+      "previous_state": "Free plan: 5,000 queries/month, 3 QPS, no credit card required",
+      "current_state": "Metered billing at $5/1,000 requests with $5 monthly credit (~1,000 free queries). No free plan. Credit card required, no spending cap",
       "impact": "high",
-      "source_url": "https://brave.com/blog/search-api-update",
+      "source_url": "https://www.implicator.ai/brave-drops-free-search-api-tier-puts-all-developers-on-metered-billing/",
       "category": "Search",
       "alternatives": ["SerpAPI", "Google Custom Search"]
     },
@@ -407,6 +407,54 @@
       "source_url": "https://www.odrive.com/pricing",
       "category": "Storage",
       "alternatives": ["rclone", "Cyberduck", "MultCloud"]
+    },
+    {
+      "vendor": "MinIO",
+      "change_type": "open_source_killed",
+      "date": "2026-02-12",
+      "summary": "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. Only case-by-case critical security fixes",
+      "previous_state": "Open-source S3-compatible object storage under AGPL-3.0. Active GitHub repo with community contributions, regular Docker image releases",
+      "current_state": "GitHub repository archived. Development moved to proprietary AIStor product. No new open-source releases. Critical security fixes only on case-by-case basis",
+      "impact": "high",
+      "source_url": "https://linuxiac.com/minio-ends-active-development/",
+      "category": "Storage",
+      "alternatives": ["Ceph", "SeaweedFS", "GarageHQ", "Apache Ozone"]
+    },
+    {
+      "vendor": "Microsoft Partner Developer Benefits",
+      "change_type": "pricing_restructured",
+      "date": "2026-02-13",
+      "summary": "Per-user monthly Azure credits eliminated, replaced with organization-level bulk Azure credits. Visual Studio license in all benefit tiers now exclusively VS Enterprise IDE",
+      "previous_state": "Per-user monthly Azure credits allocated individually. Mix of Visual Studio Professional and Enterprise licenses across tiers",
+      "current_state": "Organization-level bulk Azure credits (shared pool). All tiers include VS Enterprise IDE only. Per-user monthly credits discontinued",
+      "impact": "medium",
+      "source_url": "https://techcommunity.microsoft.com/discussions/partnerbenefitsforum/new-updates-to-developer-benefits-february-2026/4495536",
+      "category": "Cloud IaaS",
+      "alternatives": ["AWS Partner Network", "Google Cloud Partner Advantage"]
+    },
+    {
+      "vendor": "Cloudflare Startup Program",
+      "change_type": "startup_program_expanded",
+      "date": "2026-02-01",
+      "summary": "Startup program revamped to 4 tiers with up to $250,000 in credits (previously lower). Tiers: Bootstrapped $5K, Up-and-Coming $25K, Seed-Funded $100K, High Growth $250K. Credits expire within 1 year",
+      "previous_state": "Smaller startup program with fewer tiers and lower credit amounts",
+      "current_state": "4 tiers: $5K, $25K, $100K, $250K credits. Covers Workers, R2, Workers AI, Stream. Caps: $10K for R2/Cache Reserve, $50K for Workers AI. Credits expire within 1 year",
+      "impact": "high",
+      "source_url": "https://blog.cloudflare.com/startup-program-250k-credits/",
+      "category": "Cloud IaaS",
+      "alternatives": ["AWS Activate", "Google for Startups Cloud Program", "Azure for Startups"]
+    },
+    {
+      "vendor": "Google Gemini 2.0 Flash",
+      "change_type": "product_deprecated",
+      "date": "2026-03-03",
+      "summary": "Gemini 2.0 Flash and 2.0 Flash-Lite models deprecated, scheduled for retirement. Free tier continues with Gemini 2.5 models. Developers on 2.0 must migrate",
+      "previous_state": "Gemini 2.0 Flash and Flash-Lite available as free-tier models with standard rate limits",
+      "current_state": "2.0 Flash and Flash-Lite deprecated. Developers must migrate to Gemini 2.5 Flash or 2.5 Pro. Free tier preserved for 2.5 series",
+      "impact": "medium",
+      "source_url": "https://www.isumsoft.com/internet/gemini-2-flash-deprecation-migration-guide.html",
+      "category": "AI/ML",
+      "alternatives": ["Google Gemini 2.5 Flash", "Google Gemini 2.5 Pro", "OpenRouter", "Groq"]
     }
   ]
 }
