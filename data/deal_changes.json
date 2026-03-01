@@ -158,14 +158,14 @@
     },
     {
       "vendor": "Postman",
-      "change_type": "free_tier_removed",
+      "change_type": "downgrade",
       "date": "2026-03-01",
-      "summary": "Free team collaboration removed — free plan restricted to single user only",
-      "previous_state": "Free plan supported multiple users in shared workspaces with collection sharing",
-      "current_state": "Free plan = 1 user only. Teams require Basic ($14/user/mo) or higher",
+      "summary": "Free team collaboration removed — free plan restricted to single user only. No shared workspaces or collections on free tier",
+      "previous_state": "Free plan supported up to 3 users in shared workspaces with collection sharing and 25 monitoring calls/month",
+      "current_state": "Free plan = 1 user only. Teams require Basic ($14/user/mo) or higher. Solo plan available for individual paid features",
       "impact": "high",
       "source_url": "https://www.postman.com/pricing/",
-      "category": "Developer Tools",
+      "category": "Testing",
       "alternatives": ["Bruno", "Insomnia", "Hoppscotch", "Apidog"]
     },
     {
