@@ -2131,7 +2131,7 @@
     {
       "vendor": "Postman",
       "category": "Testing",
-      "description": "Free for individuals — unlimited collections, API testing, mock servers. Teams: up to 3 users, 25 monitoring calls/month",
+      "description": "Free for 1 user only — collections, API testing, mock servers. Team collaboration removed March 2026. Teams require Basic plan ($14/user/mo) or higher",
       "tier": "Free",
       "url": "https://www.postman.com/pricing/",
       "tags": [
@@ -2140,7 +2140,7 @@
         "api-development",
         "mock-servers"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-01"
     },
     {
       "vendor": "Directus",
