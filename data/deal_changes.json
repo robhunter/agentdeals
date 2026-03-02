@@ -662,6 +662,22 @@
         "Mistral API",
         "Groq"
       ]
+    },
+    {
+      "vendor": "Xero Developer API",
+      "change_type": "free_tier_removed",
+      "date": "2026-03-02",
+      "summary": "Xero retiring revenue-share model, moving to 5-tier connection+egress pricing. No more free API access for developers. Costs jumping from ~$0 to $17K+/year for some. Also banning API data use for AI/ML model training",
+      "previous_state": "Revenue-share model with effective free API access for developers building Xero integrations",
+      "current_state": "5-tier usage-based pricing: connection fees + data egress charges. No free tier. Explicit prohibition on using API data for AI/ML training",
+      "impact": "high",
+      "source_url": "https://developer.xero.com/pricing",
+      "category": "API Gateway",
+      "alternatives": [
+        "QuickBooks API",
+        "FreshBooks API",
+        "Wave API"
+      ]
     }
   ]
 }
