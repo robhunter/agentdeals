@@ -467,6 +467,18 @@
       "source_url": "https://www.isumsoft.com/internet/gemini-2-flash-deprecation-migration-guide.html",
       "category": "AI/ML",
       "alternatives": ["Google Gemini 2.5 Flash", "Google Gemini 2.5 Pro", "OpenRouter", "Groq"]
+    },
+    {
+      "vendor": "Logz.io",
+      "change_type": "free_tier_removed",
+      "date": "2026-03-02",
+      "summary": "Free Community plan (1 GB/day, 1-day retention, 10 alerts) removed. Only 14-day free trial remains. Consumption-based pricing starts at $0.92/ingested GB/day",
+      "previous_state": "Free Community plan: 1 GB/day ingestion, 1-day retention, 10 alerts, ML-powered anomaly detection",
+      "current_state": "14-day free trial only. Pay-as-go: $0.92/GB/day logs, $0.40/1K metrics/day, $0.16/1M spans/day. No permanent free tier",
+      "impact": "medium",
+      "source_url": "https://logz.io/pricing/",
+      "category": "Logging",
+      "alternatives": ["Grafana Cloud", "BetterStack", "Axiom", "New Relic"]
     }
   ]
 }
