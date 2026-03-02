@@ -4008,6 +4008,81 @@
         "social"
       ],
       "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Grafana k6 Cloud",
+      "category": "Testing",
+      "description": "Cloud load testing with 500 virtual user hours (VUh) per month free. 14-day test result retention. Integrates with Grafana Cloud dashboards. No credit card required",
+      "tier": "Free",
+      "url": "https://grafana.com/pricing/",
+      "tags": [
+        "testing",
+        "load-testing",
+        "performance",
+        "grafana",
+        "k6"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "FOSSA",
+      "category": "Security",
+      "description": "Open source license compliance and software composition analysis (SCA). Free tier: 5 projects, 10 contributing developers, 1 release group, 5 dependency levels, container scanning, SBOM export, API access",
+      "tier": "Free",
+      "url": "https://fossa.com/pricing",
+      "tags": [
+        "security",
+        "compliance",
+        "sca",
+        "open-source",
+        "sbom",
+        "licensing"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Twingate",
+      "category": "Security",
+      "description": "Zero trust network access \u2014 Starter plan free forever: 5 users, 10 remote networks. Replace traditional VPNs with identity-based access to internal resources",
+      "tier": "Free",
+      "url": "https://www.twingate.com/pricing",
+      "tags": [
+        "security",
+        "networking",
+        "zero-trust",
+        "vpn",
+        "access-control"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "PythonAnywhere",
+      "category": "Cloud Hosting",
+      "description": "Python web hosting \u2014 Beginner plan free forever: 1 web app (yourusername.pythonanywhere.com), 512 MB disk, 100 CPU-seconds/day, 2 consoles. No outbound internet access on free tier",
+      "tier": "Free",
+      "url": "https://www.pythonanywhere.com/pricing/",
+      "tags": [
+        "hosting",
+        "python",
+        "web-app",
+        "paas"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "GitHub Codespaces",
+      "category": "Developer Tools",
+      "description": "Cloud development environments \u2014 120 core hours/month (60 hours on 2-core machine) + 15 GB storage free for all GitHub users. Pre-configured dev containers with VS Code in browser",
+      "tier": "Free",
+      "url": "https://github.com/features/codespaces",
+      "tags": [
+        "developer-tools",
+        "ide",
+        "cloud-dev",
+        "github",
+        "containers"
+      ],
+      "verifiedDate": "2026-03-02"
     }
   ]
 }
