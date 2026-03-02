@@ -695,6 +695,23 @@
         "Mailgun",
         "Amazon SES"
       ]
+    },
+    {
+      "vendor": "Firebase",
+      "change_type": "limits_reduced",
+      "date": "2026-02-03",
+      "summary": "Cloud Storage removed from Spark (free) plan. Projects on Spark with default appspot.com buckets lose console access and API calls return 402/403 errors. Must upgrade to Blaze (pay-as-you-go) to use Cloud Storage",
+      "previous_state": "Spark plan included Cloud Storage: 5 GB storage, 1 GB/day download, 20K uploads/day, 50K downloads/day",
+      "current_state": "Cloud Storage requires Blaze plan. Blaze provides no-cost quota (1 GiB storage, 10 GB download/month) before charges begin, but credit card required. Other Spark limits unchanged (Firestore, Auth, Functions, Hosting)",
+      "impact": "high",
+      "source_url": "https://firebase.google.com/docs/storage/faqs-storage-changes-announced-sept-2024",
+      "category": "Cloud Storage",
+      "alternatives": [
+        "Supabase Storage",
+        "Cloudflare R2",
+        "AWS S3",
+        "Backblaze B2"
+      ]
     }
   ]
 }

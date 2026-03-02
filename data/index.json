@@ -4317,6 +4317,67 @@
         "self-hosted"
       ],
       "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Prisma Accelerate",
+      "category": "Databases",
+      "description": "Connection pooling and caching for any database — 60,000 operations/month, 10 connection pool limit, auto-scaling, 5 MB max response size. Queries stop at limit (not redirected). Also available: Prisma Postgres free tier with 100K ops/month and 500 MB storage",
+      "tier": "Free",
+      "url": "https://www.prisma.io/pricing",
+      "tags": [
+        "database",
+        "connection-pooling",
+        "caching",
+        "orm",
+        "serverless"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Unity DevOps",
+      "category": "CI/CD",
+      "description": "Version control + build automation — 25 GB storage, 100 GB egress, no seat charges. Build: 200 Windows + 100 Mac minutes/month. Includes Plastic SCM for version control. Expanded free tier as of March 2026",
+      "tier": "Free",
+      "url": "https://unity.com/products/unity-devops",
+      "tags": [
+        "ci",
+        "cd",
+        "version-control",
+        "build-automation",
+        "game-dev"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "SurrealDB Cloud",
+      "category": "Databases",
+      "description": "Multi-model cloud database — 1 GB storage, 0.25 vCPU, 1 GB memory free. Supports SQL-like queries, graph relations, document storage, real-time subscriptions. Includes team collaboration and RBAC",
+      "tier": "Free",
+      "url": "https://surrealdb.com/pricing",
+      "tags": [
+        "database",
+        "multi-model",
+        "graph",
+        "document",
+        "real-time",
+        "cloud"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Sematext",
+      "category": "Monitoring",
+      "description": "Observability platform — Logs: 500 MB/day ingestion, 7-day retention. Monitoring: 3 hosts, 3 containers/host, 30-min data retention, 1 alert rule. Volume-based pricing, no per-host charges on paid plans",
+      "tier": "Basic (Free)",
+      "url": "https://sematext.com/pricing",
+      "tags": [
+        "monitoring",
+        "logs",
+        "observability",
+        "apm",
+        "infrastructure"
+      ],
+      "verifiedDate": "2026-03-02"
     }
   ]
 }
