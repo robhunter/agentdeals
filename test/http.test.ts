@@ -295,13 +295,11 @@ describe("HTTP transport", () => {
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
     assert.ok(html.includes("AgentDeals"));
-    assert.ok(html.includes("search_offers"));
-    assert.ok(html.includes("list_categories"));
-    assert.ok(html.includes("get_offer_details"));
-    assert.ok(html.includes("get_deal_changes"));
-    assert.ok(html.includes("Browse Deals"), "Landing page should have Browse Deals section");
+    assert.ok(html.includes("Deals for"), "Landing page should have updated hero");
+    assert.ok(html.includes("Browse deals"), "Landing page should have Browse deals section");
     assert.ok(html.includes("deal-search"), "Landing page should have search input");
     assert.ok(html.includes("/api/offers"), "Landing page should fetch from /api/offers");
+    assert.ok(html.includes("DM Serif Display"), "Landing page should use serif display font");
   });
 
   it("GET /api/offers returns offers with pagination", async () => {
