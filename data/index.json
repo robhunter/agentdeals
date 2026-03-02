@@ -4227,6 +4227,96 @@
         "subscriptions"
       ],
       "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Airtable",
+      "category": "Developer Tools",
+      "description": "Low-code database and app platform \u2014 free tier: unlimited bases, 1,000 records per base, 1 GB attachment space per base, 100 automation runs/month, 5 editor+ collaborators, 500 AI credits/user/month, 14-day revision history",
+      "tier": "Free",
+      "url": "https://airtable.com/pricing",
+      "tags": [
+        "database",
+        "low-code",
+        "spreadsheet",
+        "automation",
+        "collaboration"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Deepgram",
+      "category": "AI / ML",
+      "description": "Speech-to-text and text-to-speech API \u2014 $200 free credits on signup (no credit card required), ~43K minutes transcription with Nova model, credits never expire. Access to all model endpoints",
+      "tier": "Free Credits",
+      "url": "https://deepgram.com/pricing",
+      "tags": [
+        "speech-to-text",
+        "transcription",
+        "voice",
+        "ai",
+        "nlp"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "OpenWeatherMap",
+      "category": "Maps/Geolocation",
+      "description": "Weather API \u2014 free tier: 1M API calls/month (60/min), current weather, 5-day forecast, air pollution, weather maps (15 layers), geocoding. Student plan includes historical data and extended forecasts at same limits",
+      "tier": "Free",
+      "url": "https://openweathermap.org/price",
+      "tags": [
+        "weather",
+        "api",
+        "geolocation",
+        "maps",
+        "forecast"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Semgrep",
+      "category": "Security",
+      "description": "Static analysis (SAST) and software composition analysis (SCA) \u2014 free tier: 10 contributors, 50 private repos (unlimited public), cross-file analysis with Pro rules, AI-powered triage and remediation, one-click CI/CD deployment",
+      "tier": "Free",
+      "url": "https://semgrep.dev/pricing",
+      "tags": [
+        "security",
+        "sast",
+        "sca",
+        "static-analysis",
+        "code-scanning"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Cronitor",
+      "category": "Monitoring",
+      "description": "Cron job and uptime monitoring \u2014 free Hacker plan: 5 monitors, 5-minute check frequency, email and Slack alerts, 1 status page (50 subscribers), 12-month data retention, single user",
+      "tier": "Hacker",
+      "url": "https://cronitor.io/pricing",
+      "tags": [
+        "monitoring",
+        "cron",
+        "uptime",
+        "status-page",
+        "alerts"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Semaphore CI",
+      "category": "CI/CD",
+      "description": "CI/CD platform \u2014 free Community Edition (self-hosted): unlimited users and concurrency, YAML pipelines, secrets management, multi-stage builds, artifacts, test and flaky tests dashboard. Cloud starts at $0.0075/min",
+      "tier": "Community (Self-hosted)",
+      "url": "https://semaphore.io/pricing",
+      "tags": [
+        "ci",
+        "cd",
+        "continuous-integration",
+        "pipelines",
+        "self-hosted"
+      ],
+      "verifiedDate": "2026-03-02"
     }
   ]
 }
