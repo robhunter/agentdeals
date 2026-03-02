@@ -6,4 +6,5 @@ dist/
 .DS_Store
 data/pricing-hashes.json
 data/free-for-dev-new.json
+data/startup-deals-new.json
 .cache/
