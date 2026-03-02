@@ -17578,6 +17578,3045 @@
         "free-for-dev"
       ],
       "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Snap Accelerate",
+      "category": "Developer Tools",
+      "description": "Snap Accelerate provides companies with the resources and support they need to scale their marketing and customer acquisition strategies with Snap.",
+      "tier": "Startup Program",
+      "url": "https://developers.snapchat.com/accelerate/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Snap Accelerate Startup Program"
+      }
+    },
+    {
+      "vendor": "Instabug for Startups",
+      "category": "Error Tracking",
+      "description": "Over 25,000 innovative mobile teams rely on Instabug's Real-Time Contextual Insights to build better apps and we want to support yours as well. Eligible startups can receive a discount on all our plans.",
+      "tier": "Startup Program",
+      "url": "https://instabug.com/startups",
+      "tags": [
+        "error-tracking",
+        "bug-tracking",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Instabug for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Freshworks for Startups",
+      "category": "Developer Tools",
+      "description": "The Freshworks platform enables developers, partners, and customers to customize, integrate, and automate business workflows for support, CRM, and IT use cases. Claim up to $10000 credits on their intuitive, scalable, and affordable software suite.",
+      "tier": "Startup Program",
+      "url": "https://www.freshworks.com/company/partners/startup-program/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Freshworks for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Startup with IBM",
+      "category": "Cloud IaaS",
+      "description": "With $120,000 in free IBM Cloud credits, Startup with IBM can put your business on the path to transformative growth. Disrupt your industry with IBM.",
+      "tier": "Startup Program",
+      "url": "https://developer.ibm.com/startups/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Startup with IBM Startup Program"
+      }
+    },
+    {
+      "vendor": "Microsoft for Startups",
+      "category": "Cloud IaaS",
+      "description": "Get access to a wide range of benefits—from technical resources and free Azure cloud, to selling alongside Microsoft salespeople and partner channel.",
+      "tier": "Startup Program",
+      "url": "https://startups.microsoft.com/en-us/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Microsoft for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Create@Alibaba Cloud",
+      "category": "Cloud IaaS",
+      "description": "Create@Alibaba Cloud is a global program focused on accelerating business success for startups.",
+      "tier": "Startup Program",
+      "url": "https://www.alibabacloud.com/startup",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Create@Alibaba Cloud Startup Program"
+      }
+    },
+    {
+      "vendor": "Clever Bootstrap Program",
+      "category": "Cloud IaaS",
+      "description": "Clever Cloud is an IT Automation platform. They manage all the ops work while you focus on your business value. The Clever Bootstrap Program provides startups with 90% off on the first three months. Then a 10% discount is applied on your first apps for an unlimited amount of time.",
+      "tier": "Startup Program",
+      "url": "https://www.clever-cloud.com/en/early-stage",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Clever Bootstrap Program Startup Program"
+      }
+    },
+    {
+      "vendor": "Heroku for Startups Program",
+      "category": "Cloud IaaS",
+      "description": "The Heroku for Startups Program provides teams with the resources they need to quickly get started on Heroku—including platform credits, technical support, and networking.",
+      "tier": "Startup Program",
+      "url": "https://www.heroku.com/accelerate",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Heroku for Startups Program Startup Program"
+      }
+    },
+    {
+      "vendor": "Scaleway Startup Program",
+      "category": "Cloud IaaS",
+      "description": "The Scaleway Startup Program is a time-limited cloud computing partnership program designed for startups. Benefits include access to public cloud infrastructure combined with technical assistance, resources, advisory and advertising.",
+      "tier": "Startup Program",
+      "url": "https://www.scaleway.com/en/startup-program/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Scaleway Startup Program Startup Program"
+      }
+    },
+    {
+      "vendor": "ScaleGrid Startup Program",
+      "category": "Databases",
+      "description": "Save up to $50,000 for a year with 50% off on ScaleGrid's fully managed hosting plans for MySQL, PostgreSQL, Redis and MongoDB.",
+      "tier": "Startup Program",
+      "url": "https://scalegrid.io/pricing/offers/startup-program.html",
+      "tags": [
+        "database",
+        "data",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "ScaleGrid Startup Program Startup Program"
+      }
+    },
+    {
+      "vendor": "Knowlarity for Startups",
+      "category": "Communication",
+      "description": "Unicorn dreams? Knowlarity is happy to offer free credits for its communications suite product—SuperReceptionist. Contact them for exclusive benefits.",
+      "tier": "Startup Program",
+      "url": "https://www.knowlarity.com/startups/",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Knowlarity for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Twilio Startups Program",
+      "category": "Communication",
+      "description": "The Twilio Startups team is on a mission to serve startup founders all over the world through education, mentoring, and introductions.",
+      "tier": "Startup Program",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSfcc7bGIqosjJ-vWdSi4iFW2oQ_lcCQh9JXNpREXPCkFBssRw/viewform",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Twilio Startups Program Startup Program"
+      }
+    },
+    {
+      "vendor": "The Intercom Early Stage Program",
+      "category": "Communication",
+      "description": "Intercom helps you build customer relationships through conversational, messenger-based experiences across the customer journey. Eligible startups get all of Intercom’s Pro products for a flat rate of $49/mo for up to one year.",
+      "tier": "Startup Program",
+      "url": "https://www.intercom.com/early-stage",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "The Intercom Early Stage Program Startup Program"
+      }
+    },
+    {
+      "vendor": "The GoSquared Early Stage Plan",
+      "category": "Communication",
+      "description": "GoSquared makes elegant software to help you grow your SaaS business. Get all GoSquared features for a fixed, low price for the first year of use.",
+      "tier": "Startup Program",
+      "url": "https://www.gosquared.com/early-stage/",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "The GoSquared Early Stage Plan Startup Program"
+      }
+    },
+    {
+      "vendor": "Zendesk for Startups",
+      "category": "Communication",
+      "description": "The program provides qualifying net new startup customers access to Zendesk's full family of products at a 100% discount for their first 6 months of subscription of product selection (up to 100 agent seats).",
+      "tier": "Startup Program",
+      "url": "https://www.zendesk.com/startups/",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Zendesk for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Help Scout for Startups",
+      "category": "Communication",
+      "description": "Help Scout has everything you need to start talking with customers and growing your business. For eligible startups, your first year with Help Scout is just $50/month.",
+      "tier": "Startup Program",
+      "url": "https://www.helpscout.com/startups/",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Help Scout for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Drift for Early Stage Startups",
+      "category": "Communication",
+      "description": "Using Drift will give you an edge and 10X your business by allowing you to speed up your sales cycles, increase your pipeline, and more. Get 93% off of the Essential Plan for 1 year.",
+      "tier": "Startup Program",
+      "url": "https://www.drift.com/startups/",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Drift for Early Stage Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "SendGrid Accelerate",
+      "category": "Email",
+      "description": "SendGrid Accelerate is a program to help startups succeed. Startups participating in the SendGrid Accelerate program receive 12 months of product credit, access to mentoring, and networking opportunities exclusive to program participants.",
+      "tier": "Startup Program",
+      "url": "https://sendgrid.com/accelerate/",
+      "tags": [
+        "email",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "SendGrid Accelerate Startup Program"
+      }
+    },
+    {
+      "vendor": "Autodesk Fusion 360 for Startups",
+      "category": "Developer Tools",
+      "description": "Fusion 360 for startups is eligible for venture-backed, angel-backed or bootstrap startups that are less than three years old, have 10 or fewer employees and generate less than $100,000 USD in gross annual revenue.",
+      "tier": "Startup Program",
+      "url": "https://www.autodesk.in/products/fusion-360/startups",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Autodesk Fusion 360 for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Chargebee Launch Programme",
+      "category": "Payments",
+      "description": "Chargebee makes managing subscription billing easier for you. With Chargebee’s Launch Plan, you get your first USD 50k in revenue for free.",
+      "tier": "Startup Program",
+      "url": "https://www.chargebee.com/launch/",
+      "tags": [
+        "payments",
+        "billing",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Chargebee Launch Programme Startup Program"
+      }
+    },
+    {
+      "vendor": "HubSpot for Startups",
+      "category": "Developer Tools",
+      "description": "Startups using the HubSpot Growth Platform acquire and retain more customers with HubSpot’s software, educational resources, and robust integrations. All at startup-friendly pricing up to 90% off.",
+      "tier": "Startup Program",
+      "url": "https://www.hubspot.com/startups",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "HubSpot for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Shotstack Startup Program",
+      "category": "Video",
+      "description": "Shotstack enables startups to build innovative video applications with their cloud-based video-editing API infrastructure. Eligible startups get $5,000 in Shotstack credits (valid for 12 months), technical support, and a community to support their growth.",
+      "tier": "Startup Program",
+      "url": "https://shotstack.io/solutions/startups/",
+      "tags": [
+        "video",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Shotstack Startup Program Startup Program"
+      }
+    },
+    {
+      "vendor": "Esri Startup Program",
+      "category": "Developer Tools",
+      "description": "The Esri Startup Program is a global three-year program that helps startups build mapping and location intelligence into their products and businesses.",
+      "tier": "Startup Program",
+      "url": "https://www.esri.com/en-us/about/esri-partner-network/our-partners/esri-startup-program",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Esri Startup Program Startup Program"
+      }
+    },
+    {
+      "vendor": "MATLAB and Simulink for Startups",
+      "category": "Developer Tools",
+      "description": "Eligible early stage technology startups can get MATLAB, Simulink, and more than 90 industry-specific toolboxes at a startup-friendly price along with other exclusive benefits.",
+      "tier": "Startup Program",
+      "url": "https://mathworks.com/products/startups.html",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "MATLAB and Simulink for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "FeedBear",
+      "category": "Developer Tools",
+      "description": "Affordable feedback management for early-stage startups. Eligible startups get all FeedBear features for just $29/mo for up to one year.",
+      "tier": "Startup Program",
+      "url": "https://www.feedbear.com/early-stage",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "FeedBear Startup Program"
+      }
+    },
+    {
+      "vendor": "Remote for Startups",
+      "category": "Developer Tools",
+      "description": "The Remote for Startups Program is designed to help you legally and compliantly employ global talent with world-class payroll, tax, benefits, and compliance solutions. Get access to the same powerful platform, HR experts, and localized legal support, at a fraction of the cost.",
+      "tier": "Startup Program",
+      "url": "https://remote.com/startups",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Remote for Startups Startup Program"
+      }
+    },
+    {
+      "vendor": "Pareto Security",
+      "category": "Developer Tools",
+      "description": "A suite of essential macOS security apps for small businesses. Non-invasive alternative to corporate MDM and RMM solutions for small businesses that care about security but know it doesn't have to be invasive for their team members. Use the coupon code `STARTUP` at checkout.",
+      "tier": "Startup Program",
+      "url": "https://paretosecurity.com/pricing",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "awesome-startup-credits"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Startup program — check vendor for eligibility details"
+        ],
+        "program": "Pareto Security Startup Program"
+      }
+    },
+    {
+      "vendor": "Achieved",
+      "category": "Developer Tools",
+      "description": "6 months free. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Achieved Startup Deal"
+      }
+    },
+    {
+      "vendor": "ActiveCampaign",
+      "category": "Developer Tools",
+      "description": "Get a free ActiveCampaign Professional Plan for 12-months. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "ActiveCampaign Startup Deal"
+      }
+    },
+    {
+      "vendor": "Adjust",
+      "category": "Developer Tools",
+      "description": "$2,000 off or 2-month free trial, with 1-year contract signed. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Adjust Startup Deal"
+      }
+    },
+    {
+      "vendor": "Aircall",
+      "category": "Developer Tools",
+      "description": "2 months free. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Aircall Startup Deal"
+      }
+    },
+    {
+      "vendor": "Amazon AWS",
+      "category": "Cloud IaaS",
+      "description": "$5,000 in credit over a year. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Amazon AWS Startup Deal"
+      }
+    },
+    {
+      "vendor": "Amazon Redshift",
+      "category": "Cloud IaaS",
+      "description": "$25k in free credits for AWS Redshift. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Amazon Redshift Startup Deal"
+      }
+    },
+    {
+      "vendor": "Apptimize",
+      "category": "Developer Tools",
+      "description": "$995/mo for Apptimize's Basic Plan with a 30 day free trial.. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Apptimize Startup Deal"
+      }
+    },
+    {
+      "vendor": "Attribution App",
+      "category": "Developer Tools",
+      "description": "90% off first year up to 500k MTU. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Attribution App Startup Deal"
+      }
+    },
+    {
+      "vendor": "Axonaut",
+      "category": "Developer Tools",
+      "description": "3 months free up to 50 users. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Axonaut Startup Deal"
+      }
+    },
+    {
+      "vendor": "Azameo",
+      "category": "Developer Tools",
+      "description": "€100 credit. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Azameo Startup Deal"
+      }
+    },
+    {
+      "vendor": "Batch",
+      "category": "Developer Tools",
+      "description": "12 months free on Developer plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Batch Startup Deal"
+      }
+    },
+    {
+      "vendor": "Bench",
+      "category": "Developer Tools",
+      "description": "20% off your first 6 months of bookkeeping with Bench. Access via: Free for Stripe users",
+      "tier": "Startup Program",
+      "url": "https://bench.co/integrations/stripe/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Stripe users"
+        ],
+        "program": "Bench Startup Deal"
+      }
+    },
+    {
+      "vendor": "Botnation",
+      "category": "Developer Tools",
+      "description": "6 months free on Expert plan, up to 1,000 users/month.. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Botnation Startup Deal"
+      }
+    },
+    {
+      "vendor": "Branch",
+      "category": "Developer Tools",
+      "description": "Access to the Startup Plan, which is $59/mo. up to 50k MAUs.. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Branch Startup Deal"
+      }
+    },
+    {
+      "vendor": "CaptainData",
+      "category": "Developer Tools",
+      "description": "6 months free on Mercury plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "CaptainData Startup Deal"
+      }
+    },
+    {
+      "vendor": "Carta",
+      "category": "Developer Tools",
+      "description": "20% discount on first year subscription and waived implementation fees. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Carta Startup Deal"
+      }
+    },
+    {
+      "vendor": "Caviar",
+      "category": "Developer Tools",
+      "description": "$35 off of 3 orders of $75 or more. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Caviar Startup Deal"
+      }
+    },
+    {
+      "vendor": "Chartio",
+      "category": "Developer Tools",
+      "description": "75% off the Startup and Growth plans for 1 year. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Chartio Startup Deal"
+      }
+    },
+    {
+      "vendor": "Clear Channel Outdoor",
+      "category": "Developer Tools",
+      "description": "10%+ discount on first advertising campaign. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Clear Channel Outdoor Startup Deal"
+      }
+    },
+    {
+      "vendor": "ClearBrain",
+      "category": "Developer Tools",
+      "description": "100,000 Monthly Tracked Users (MTUs) for Free, along with all the features included in the Growth plan, 10 custom goals, 10 audiences, and 12 month data history. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "ClearBrain Startup Deal"
+      }
+    },
+    {
+      "vendor": "CloudImage",
+      "category": "Cloud IaaS",
+      "description": "12 months free on Startup plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "CloudImage Startup Deal"
+      }
+    },
+    {
+      "vendor": "Cloudtalk",
+      "category": "Cloud IaaS",
+      "description": "6 months free on Expert plan for 5 users. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Cloudtalk Startup Deal"
+      }
+    },
+    {
+      "vendor": "Cloudways",
+      "category": "Cloud IaaS",
+      "description": "30% off for 3 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Cloudways Startup Deal"
+      }
+    },
+    {
+      "vendor": "ColdCRM",
+      "category": "Communication",
+      "description": "€40 discount on the €129/month plan for 6 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "ColdCRM Startup Deal"
+      }
+    },
+    {
+      "vendor": "Commando.io",
+      "category": "Developer Tools",
+      "description": "15% off any plan for life. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "Commando.io Startup Deal"
+      }
+    },
+    {
+      "vendor": "CrazyEgg",
+      "category": "Developer Tools",
+      "description": "Free account for life. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "CrazyEgg Startup Deal"
+      }
+    },
+    {
+      "vendor": "Crowdfire",
+      "category": "Developer Tools",
+      "description": "50% off on Premium plan lifetime deal. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Crowdfire Startup Deal"
+      }
+    },
+    {
+      "vendor": "Customer.io",
+      "category": "Communication",
+      "description": "Basic plan free for 12 months (up to 12k profiles), and 90% off 12 months of Customer.io Premium (up to 100k profiles).. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Customer.io Startup Deal"
+      }
+    },
+    {
+      "vendor": "Cyfe",
+      "category": "Developer Tools",
+      "description": "50% off for one year. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "Cyfe Startup Deal"
+      }
+    },
+    {
+      "vendor": "Dareboost",
+      "category": "Developer Tools",
+      "description": "6 months free on Business plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Dareboost Startup Deal"
+      }
+    },
+    {
+      "vendor": "Datananas",
+      "category": "Developer Tools",
+      "description": "50% for 6 months on Pro plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Datananas Startup Deal"
+      }
+    },
+    {
+      "vendor": "Docsend",
+      "category": "Developer Tools",
+      "description": "3 months free DocSend Advanced. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Docsend Startup Deal"
+      }
+    },
+    {
+      "vendor": "Drift",
+      "category": "Developer Tools",
+      "description": "Get the Drift Pro plan, bots and all, and 10 user seats for 93% off. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Drift Startup Deal"
+      }
+    },
+    {
+      "vendor": "E-Goi",
+      "category": "Developer Tools",
+      "description": "6 months free on Starter plan (5000 contacts max). Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "E-Goi Startup Deal"
+      }
+    },
+    {
+      "vendor": "Experian",
+      "category": "Monitoring",
+      "description": "50% discount on first year business credit monitoring subscription. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "monitoring",
+        "incident-management",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Experian Startup Deal"
+      }
+    },
+    {
+      "vendor": "findmassleads",
+      "category": "Developer Tools",
+      "description": "50% off on the annual Pro plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "findmassleads Startup Deal"
+      }
+    },
+    {
+      "vendor": "Forter",
+      "category": "Developer Tools",
+      "description": "50% off of your first two monthly invoices. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Forter Startup Deal"
+      }
+    },
+    {
+      "vendor": "Freebe",
+      "category": "Developer Tools",
+      "description": "6 months free. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Freebe Startup Deal"
+      }
+    },
+    {
+      "vendor": "Freshchat",
+      "category": "Developer Tools",
+      "description": "$250 credit. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Freshchat Startup Deal"
+      }
+    },
+    {
+      "vendor": "Freshdesk",
+      "category": "Developer Tools",
+      "description": "$250 credit. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Freshdesk Startup Deal"
+      }
+    },
+    {
+      "vendor": "Freshmarketer",
+      "category": "Developer Tools",
+      "description": "$250 credit. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Freshmarketer Startup Deal"
+      }
+    },
+    {
+      "vendor": "Freshsales",
+      "category": "Developer Tools",
+      "description": "$250 credit. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Freshsales Startup Deal"
+      }
+    },
+    {
+      "vendor": "Front",
+      "category": "Developer Tools",
+      "description": "75% off any Front plan for 12 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Front Startup Deal"
+      }
+    },
+    {
+      "vendor": "FullContact",
+      "category": "Developer Tools",
+      "description": "20% off for one year. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "FullContact Startup Deal"
+      }
+    },
+    {
+      "vendor": "Gem",
+      "category": "Developer Tools",
+      "description": "3 months free. Access via: Free for Stripe Corporate Credit card users",
+      "tier": "Startup Program",
+      "url": "https://stripe.com/en-de/corporate-card",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Stripe Corporate Credit card users"
+        ],
+        "program": "Gem Startup Deal"
+      }
+    },
+    {
+      "vendor": "GoCardLess",
+      "category": "Developer Tools",
+      "description": "50% off Plus Plan monthly fees for 12 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "GoCardLess Startup Deal"
+      }
+    },
+    {
+      "vendor": "GOOGLE ADS",
+      "category": "Developer Tools",
+      "description": "Up to $150 in Google Ads credit.. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "GOOGLE ADS Startup Deal"
+      }
+    },
+    {
+      "vendor": "Google BigQuery",
+      "category": "Developer Tools",
+      "description": "Once approved, you will receive an initial $20K in credits, good for 12 months. Once you consume 75% of those credits, another $80K will be deposited in your account (expiring within the same 12 months), for $100K total.. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Google BigQuery Startup Deal"
+      }
+    },
+    {
+      "vendor": "Gorgias",
+      "category": "Developer Tools",
+      "description": "$1,000 of Gorgias credits. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Gorgias Startup Deal"
+      }
+    },
+    {
+      "vendor": "Guideline",
+      "category": "Developer Tools",
+      "description": "Waived fees for 3 months. Access via: Free for Stripe Corporate Credit card users",
+      "tier": "Startup Program",
+      "url": "https://stripe.com/en-de/corporate-card",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Stripe Corporate Credit card users"
+        ],
+        "program": "Guideline Startup Deal"
+      }
+    },
+    {
+      "vendor": "Guideline 401(k)",
+      "category": "Developer Tools",
+      "description": "3 months free. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Guideline 401(k) Startup Deal"
+      }
+    },
+    {
+      "vendor": "Gusto",
+      "category": "Developer Tools",
+      "description": "3 months free. Access via: Free for Stripe Corporate Credit card users",
+      "tier": "Startup Program",
+      "url": "https://stripe.com/en-de/corporate-card",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Stripe Corporate Credit card users"
+        ],
+        "program": "Gusto Startup Deal"
+      }
+    },
+    {
+      "vendor": "Harvestr",
+      "category": "Developer Tools",
+      "description": "6 months free on Starter plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Harvestr Startup Deal"
+      }
+    },
+    {
+      "vendor": "Indicative",
+      "category": "Analytics",
+      "description": "3 months of Indicative Pro (the analytics platform is free for non-Pro plans). Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "analytics",
+        "statistics",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Indicative Startup Deal"
+      }
+    },
+    {
+      "vendor": "Instacart",
+      "category": "Developer Tools",
+      "description": "$35 off 3 orders of $75 or more. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Instacart Startup Deal"
+      }
+    },
+    {
+      "vendor": "Intercom",
+      "category": "Developer Tools",
+      "description": "Up to $100 off per month for 3 months. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Intercom Startup Deal"
+      }
+    },
+    {
+      "vendor": "InVision",
+      "category": "Developer Tools",
+      "description": "6 months free on Starter plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "InVision Startup Deal"
+      }
+    },
+    {
+      "vendor": "Kasa",
+      "category": "Developer Tools",
+      "description": "5% cash back up to $500 per month. Access via: Free for Stripe Corporate Credit card users",
+      "tier": "Startup Program",
+      "url": "https://stripe.com/en-de/corporate-card",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Stripe Corporate Credit card users"
+        ],
+        "program": "Kasa Startup Deal"
+      }
+    },
+    {
+      "vendor": "Kaspr",
+      "category": "Developer Tools",
+      "description": "50% off Basic plan for 12 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Kaspr Startup Deal"
+      }
+    },
+    {
+      "vendor": "Klaviyo",
+      "category": "Developer Tools",
+      "description": "15% off six months of your Klaviyo subscription. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Klaviyo Startup Deal"
+      }
+    },
+    {
+      "vendor": "Knotel",
+      "category": "Developer Tools",
+      "description": "1 million Brex rewards points bonus. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Knotel Startup Deal"
+      }
+    },
+    {
+      "vendor": "La Fabrique Juridique",
+      "category": "Developer Tools",
+      "description": "€200 credit. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "La Fabrique Juridique Startup Deal"
+      }
+    },
+    {
+      "vendor": "Legalstart",
+      "category": "Developer Tools",
+      "description": "25% discount. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Legalstart Startup Deal"
+      }
+    },
+    {
+      "vendor": "Lester Lee",
+      "category": "Developer Tools",
+      "description": "Free go-to-market consultation / advice on hiring early salespeople. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Lester Lee Startup Deal"
+      }
+    },
+    {
+      "vendor": "Libeo",
+      "category": "Developer Tools",
+      "description": "50% off for 6 months on any plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Libeo Startup Deal"
+      }
+    },
+    {
+      "vendor": "Looker",
+      "category": "Developer Tools",
+      "description": "60% off list price. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Looker Startup Deal"
+      }
+    },
+    {
+      "vendor": "Mention",
+      "category": "Developer Tools",
+      "description": "6 months free on Solo plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Mention Startup Deal"
+      }
+    },
+    {
+      "vendor": "Mode",
+      "category": "Developer Tools",
+      "description": "$12,000 credits for 12 months, free White Label Embeds, then 50% graduation discount in year one.. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Mode Startup Deal"
+      }
+    },
+    {
+      "vendor": "MoEngage",
+      "category": "Developer Tools",
+      "description": "90% off the premium plan for one year. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "MoEngage Startup Deal"
+      }
+    },
+    {
+      "vendor": "Monday",
+      "category": "Developer Tools",
+      "description": "15% discount on any plan. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "Monday Startup Deal"
+      }
+    },
+    {
+      "vendor": "MongoDB",
+      "category": "Databases",
+      "description": "$5,000 of Atlas credits for Brex startups. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "database",
+        "data",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "MongoDB Startup Deal"
+      }
+    },
+    {
+      "vendor": "Ninja Outreach",
+      "category": "Logging",
+      "description": "20% discount on Blogger plan for lifetime. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "Ninja Outreach Startup Deal"
+      }
+    },
+    {
+      "vendor": "noCRM",
+      "category": "Communication",
+      "description": "€250 credit. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "communication",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "noCRM Startup Deal"
+      }
+    },
+    {
+      "vendor": "PayFit",
+      "category": "Developer Tools",
+      "description": "50% off for 6 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "PayFit Startup Deal"
+      }
+    },
+    {
+      "vendor": "Payoneer",
+      "category": "Payments",
+      "description": "Extra 2% back on international payments through Payoneer. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "payments",
+        "billing",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Payoneer Startup Deal"
+      }
+    },
+    {
+      "vendor": "PersistIQ",
+      "category": "Developer Tools",
+      "description": "50% off a yearly pan (Pro or Starter) or 30% off a monthly plan (up to three months). Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "PersistIQ Startup Deal"
+      }
+    },
+    {
+      "vendor": "Phantom Buster",
+      "category": "Developer Tools",
+      "description": "30% off on any plans for 12 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Phantom Buster Startup Deal"
+      }
+    },
+    {
+      "vendor": "Pilot",
+      "category": "Developer Tools",
+      "description": "20% off Pilot Core for 6 months. Access via: Free for Stripe Corporate Credit card users",
+      "tier": "Startup Program",
+      "url": "https://stripe.com/en-de/corporate-card",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Stripe Corporate Credit card users"
+        ],
+        "program": "Pilot Startup Deal"
+      }
+    },
+    {
+      "vendor": "Pipedrive",
+      "category": "Developer Tools",
+      "description": "First month free, then 30% discount for 6 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Pipedrive Startup Deal"
+      }
+    },
+    {
+      "vendor": "PixelMe",
+      "category": "Developer Tools",
+      "description": "50% discount on any plan for 6 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "PixelMe Startup Deal"
+      }
+    },
+    {
+      "vendor": "Polymail",
+      "category": "Developer Tools",
+      "description": "1 month for free. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "Polymail Startup Deal"
+      }
+    },
+    {
+      "vendor": "Postscript",
+      "category": "Developer Tools",
+      "description": "25% off any plan for the first 4 months. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Postscript Startup Deal"
+      }
+    },
+    {
+      "vendor": "ProofHub",
+      "category": "Developer Tools",
+      "description": "41% off on Ultimate Control Plan for lifetime. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "ProofHub Startup Deal"
+      }
+    },
+    {
+      "vendor": "Prospect.io",
+      "category": "Email",
+      "description": "50% on Starter plan for 6 months + 1000 emails credits. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "email",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Prospect.io Startup Deal"
+      }
+    },
+    {
+      "vendor": "ProspectIn",
+      "category": "Developer Tools",
+      "description": "6 months free on Pro plan for 1 user. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "ProspectIn Startup Deal"
+      }
+    },
+    {
+      "vendor": "Publist",
+      "category": "Developer Tools",
+      "description": "Personal plan free forever. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Publist Startup Deal"
+      }
+    },
+    {
+      "vendor": "Qonto",
+      "category": "Developer Tools",
+      "description": "7 months free on Standard plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Qonto Startup Deal"
+      }
+    },
+    {
+      "vendor": "Quartzy",
+      "category": "Developer Tools",
+      "description": "Up to $10,000 in Quartzy credits. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Quartzy Startup Deal"
+      }
+    },
+    {
+      "vendor": "Quickbooks",
+      "category": "Developer Tools",
+      "description": "50% discount for 6 months on any subscription plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Quickbooks Startup Deal"
+      }
+    },
+    {
+      "vendor": "Salesforce",
+      "category": "Developer Tools",
+      "description": "25% subscription discount, up to $375. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Salesforce Startup Deal"
+      }
+    },
+    {
+      "vendor": "Scalingo",
+      "category": "Developer Tools",
+      "description": "€1,000 credit. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Scalingo Startup Deal"
+      }
+    },
+    {
+      "vendor": "Science Exchange",
+      "category": "Developer Tools",
+      "description": "15% discount on Enterprise License. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Science Exchange Startup Deal"
+      }
+    },
+    {
+      "vendor": "Scrapingbee",
+      "category": "Developer Tools",
+      "description": "30% off on any plan for 12 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Scrapingbee Startup Deal"
+      }
+    },
+    {
+      "vendor": "Seekwell",
+      "category": "Developer Tools",
+      "description": "3 months free, 90% off for next 9 months. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Seekwell Startup Deal"
+      }
+    },
+    {
+      "vendor": "Seeqle",
+      "category": "Developer Tools",
+      "description": "6 months free on Sprint plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Seeqle Startup Deal"
+      }
+    },
+    {
+      "vendor": "Sellsy",
+      "category": "Developer Tools",
+      "description": "3 months free. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Sellsy Startup Deal"
+      }
+    },
+    {
+      "vendor": "SendGrid",
+      "category": "Email",
+      "description": "$130/month off of new Pro 100K Plan. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "email",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "SendGrid Startup Deal"
+      }
+    },
+    {
+      "vendor": "Sendinblue",
+      "category": "Developer Tools",
+      "description": "12 months free on the Premium plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Sendinblue Startup Deal"
+      }
+    },
+    {
+      "vendor": "Shine",
+      "category": "Developer Tools",
+      "description": "6 months free on Premium plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Shine Startup Deal"
+      }
+    },
+    {
+      "vendor": "Shippo",
+      "category": "Developer Tools",
+      "description": "4 months free Shippo Pro Plan. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Shippo Startup Deal"
+      }
+    },
+    {
+      "vendor": "Shopify",
+      "category": "Developer Tools",
+      "description": "3 months free Basic Shopify subscription. Access via: Free for Stripe Corporate Credit card users",
+      "tier": "Startup Program",
+      "url": "https://stripe.com/en-de/corporate-card",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Stripe Corporate Credit card users"
+        ],
+        "program": "Shopify Startup Deal"
+      }
+    },
+    {
+      "vendor": "Slite",
+      "category": "Developer Tools",
+      "description": "6 months free up to 10 users. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Slite Startup Deal"
+      }
+    },
+    {
+      "vendor": "Snap",
+      "category": "Developer Tools",
+      "description": "$1,500 of Snapchat Ads credits. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Snap Startup Deal"
+      }
+    },
+    {
+      "vendor": "Snapcall",
+      "category": "Developer Tools",
+      "description": "6 months free on Growth plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Snapcall Startup Deal"
+      }
+    },
+    {
+      "vendor": "Social Champ",
+      "category": "Developer Tools",
+      "description": "50% off for 12 months. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Social Champ Startup Deal"
+      }
+    },
+    {
+      "vendor": "SocialBee",
+      "category": "Developer Tools",
+      "description": "6 months free on the Accelerate plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "SocialBee Startup Deal"
+      }
+    },
+    {
+      "vendor": "Solium",
+      "category": "Developer Tools",
+      "description": "$500 off first 409a valuation. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Solium Startup Deal"
+      }
+    },
+    {
+      "vendor": "Split",
+      "category": "Developer Tools",
+      "description": "12 month trial of the platform edition. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Split Startup Deal"
+      }
+    },
+    {
+      "vendor": "Squarespace",
+      "category": "Developer Tools",
+      "description": "20% off for 12 months on an annual Business Plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Squarespace Startup Deal"
+      }
+    },
+    {
+      "vendor": "Stitch Labs",
+      "category": "Developer Tools",
+      "description": "2 months free subscription. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Stitch Labs Startup Deal"
+      }
+    },
+    {
+      "vendor": "Themecloud",
+      "category": "Cloud IaaS",
+      "description": "6 months free on Pro1 plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "cloud",
+        "iaas",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Themecloud Startup Deal"
+      }
+    },
+    {
+      "vendor": "Twilio",
+      "category": "Developer Tools",
+      "description": "$500 in Twilio credits to be used over 1 year. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Twilio Startup Deal"
+      }
+    },
+    {
+      "vendor": "Userguiding",
+      "category": "Developer Tools",
+      "description": "50% off for 6 months on the Startup plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Userguiding Startup Deal"
+      }
+    },
+    {
+      "vendor": "Userlike",
+      "category": "Developer Tools",
+      "description": "95% discount for 12 months. Access via: Free",
+      "tier": "Startup Program",
+      "url": "https://www.userlike.com/en/blog/startup-deals",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free"
+        ],
+        "program": "Userlike Startup Deal"
+      }
+    },
+    {
+      "vendor": "Vero",
+      "category": "Developer Tools",
+      "description": "90% off for the first year up to 200,000 subscribers. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Vero Startup Deal"
+      }
+    },
+    {
+      "vendor": "Vervoe",
+      "category": "Developer Tools",
+      "description": "90% off the Growth plan for 12 months. Access via: Free for approved Segment users",
+      "tier": "Startup Program",
+      "url": "https://segment.com/industry/startups/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for approved Segment users"
+        ],
+        "program": "Vervoe Startup Deal"
+      }
+    },
+    {
+      "vendor": "Weglot",
+      "category": "Developer Tools",
+      "description": "12 months free on the Pro plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Weglot Startup Deal"
+      }
+    },
+    {
+      "vendor": "WEWORK",
+      "category": "Developer Tools",
+      "description": "Up to 15% off list price for 6 months for any new U.S. office space, subject to availability. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "WEWORK Startup Deal"
+      }
+    },
+    {
+      "vendor": "Wisepops",
+      "category": "Developer Tools",
+      "description": "6 months free on Basic plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Wisepops Startup Deal"
+      }
+    },
+    {
+      "vendor": "Wizishop",
+      "category": "Developer Tools",
+      "description": "3 months free on Pro plan. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Wizishop Startup Deal"
+      }
+    },
+    {
+      "vendor": "WP Engine",
+      "category": "Developer Tools",
+      "description": "3 months free on annual plans. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "WP Engine Startup Deal"
+      }
+    },
+    {
+      "vendor": "Yousign",
+      "category": "Developer Tools",
+      "description": "6 months free on Team plan for 1 user. Access via: First deal free, then 99€/year or invite friends",
+      "tier": "Startup Program",
+      "url": "https://www.joinsecret.com/offers",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "First deal free, then 99€/year or invite friends"
+        ],
+        "program": "Yousign Startup Deal"
+      }
+    },
+    {
+      "vendor": "Zentail",
+      "category": "Developer Tools",
+      "description": "$3,000 off annual Zentail contract. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Zentail Startup Deal"
+      }
+    },
+    {
+      "vendor": "Zoom",
+      "category": "Developer Tools",
+      "description": "20% discount on annual subscription. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-03-02",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Zoom Startup Deal"
+      }
     }
   ]
 }
