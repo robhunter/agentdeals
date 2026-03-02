@@ -6,6 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
 import { loadOffers, getCategories, searchOffers, loadDealChanges } from "./data.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats } from "./stats.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -42,6 +43,7 @@ setInterval(() => {
       console.error(`Cleaned up idle session ${sid} after ${idleMinutes}m`);
       entry.transport.close?.();
       sessions.delete(sid);
+      recordSessionDisconnect();
     }
   }
 }, CLEANUP_INTERVAL_MS).unref();
@@ -374,6 +376,7 @@ const httpServer = createHttpServer(async (req, res) => {
           sessionIdGenerator: () => randomUUID(),
           onsessioninitialized: (sid) => {
             sessions.set(sid, { transport, lastActivity: Date.now() });
+            recordSessionConnect();
           },
         });
 
@@ -381,6 +384,7 @@ const httpServer = createHttpServer(async (req, res) => {
           const sid = transport.sessionId;
           if (sid) {
             sessions.delete(sid);
+            recordSessionDisconnect();
           }
         };
 
@@ -413,6 +417,7 @@ const httpServer = createHttpServer(async (req, res) => {
         const { transport } = sessions.get(sessionId)!;
         await transport.handleRequest(req, res);
         sessions.delete(sessionId);
+        recordSessionDisconnect();
       } else {
         res.writeHead(404, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Session not found" }));
@@ -430,7 +435,7 @@ const httpServer = createHttpServer(async (req, res) => {
     res.end(faviconBuffer);
   } else if (url.pathname === "/health") {
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ status: "ok", sessions: sessions.size }));
+    res.end(JSON.stringify({ status: "ok", sessions: sessions.size, stats: getStats() }));
   } else if (url.pathname === "/.well-known/glama.json") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({
@@ -440,6 +445,7 @@ const httpServer = createHttpServer(async (req, res) => {
       ]
     }));
   } else if (url.pathname === "/api/offers" && req.method === "GET") {
+    recordApiHit("/api/offers");
     const q = url.searchParams.get("q") || undefined;
     const category = url.searchParams.get("category") || undefined;
     const limit = parseInt(url.searchParams.get("limit") ?? "20", 10);
@@ -450,10 +456,12 @@ const httpServer = createHttpServer(async (req, res) => {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ offers: paged, total }));
   } else if (url.pathname === "/api/categories" && req.method === "GET") {
+    recordApiHit("/api/categories");
     const cats = getCategories();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ categories: cats }));
   } else if (url.pathname === "/") {
+    recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(landingPageHtml);
   } else {
