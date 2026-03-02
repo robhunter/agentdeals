@@ -1214,17 +1214,17 @@
     {
       "vendor": "Logz.io",
       "category": "Logging",
-      "description": "ELK-based log management — 1 GB/day ingestion, 1-day retention, 10 alerts, ML-powered analytics",
-      "tier": "Community",
+      "description": "ELK-based log management — 14-day free trial only. No permanent free tier. Consumption-based pricing starts at $0.92/ingested GB/day. Community plan removed",
+      "tier": "Trial",
       "url": "https://logz.io/pricing/",
       "tags": [
         "logging",
         "elk",
         "observability",
         "analytics",
-        "free tier"
+        "trial"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-02"
     },
     {
       "vendor": "Papertrail",
