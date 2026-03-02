@@ -133,6 +133,18 @@
       "alternatives": ["GitLab CI", "CircleCI", "Buildkite"]
     },
     {
+      "vendor": "GitHub Actions",
+      "change_type": "pricing_postponed",
+      "date": "2025-12-17",
+      "summary": "Planned $0.002/min self-hosted runner charge postponed indefinitely after community backlash. Announced Dec 16, reversed Dec 17",
+      "previous_state": "Self-hosted runners free with no charges",
+      "current_state": "Self-hosted runners remain free. GitHub stated they need to 're-evaluate' the pricing approach",
+      "impact": "medium",
+      "source_url": "https://github.com/orgs/community/discussions/182186",
+      "category": "CI/CD",
+      "alternatives": ["GitLab CI", "CircleCI", "Buildkite"]
+    },
+    {
       "vendor": "Bright Data MCP",
       "change_type": "new_free_tier",
       "date": "2025-08-14",
