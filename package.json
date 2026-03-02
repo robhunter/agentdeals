@@ -34,7 +34,8 @@
     "test": "node --test --test-concurrency 1 test/**/*.test.ts",
     "lint": "tsc --noEmit",
     "check:staleness": "node scripts/check-staleness.js",
-    "check:pricing": "node scripts/check-pricing-changes.js"
+    "check:pricing": "node scripts/check-pricing-changes.js",
+    "ingest:free-for-dev": "node scripts/parse-free-for-dev.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0"
