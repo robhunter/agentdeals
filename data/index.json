@@ -74,7 +74,7 @@
     {
       "vendor": "Railway",
       "category": "Cloud Hosting",
-      "description": "$5/month Hobby plan with $5 resource credit included — 48 GB RAM, 48 vCPU, 5 GB volume storage",
+      "description": "$5/month Hobby plan with $5 resource credit included \u2014 48 GB RAM, 48 vCPU, 5 GB volume storage",
       "tier": "Hobby",
       "url": "https://railway.com/pricing",
       "tags": [
@@ -89,7 +89,7 @@
     {
       "vendor": "Fly.io",
       "category": "Cloud Hosting",
-      "description": "Global app hosting — free trial for new accounts (2 hours runtime OR 7 days, whichever comes first). Legacy free tier (3 shared VMs) for pre-2025 accounts",
+      "description": "Global app hosting \u2014 free trial for new accounts (2 hours runtime OR 7 days, whichever comes first). Legacy free tier (3 shared VMs) for pre-2025 accounts",
       "tier": "Trial",
       "url": "https://fly.io/pricing",
       "tags": [
@@ -104,7 +104,7 @@
     {
       "vendor": "Deno Deploy",
       "category": "Cloud Hosting",
-      "description": "Edge runtime — 1M requests/month, 100 GB egress, 1 GiB KV storage, 450K KV reads/month, 15 hours CPU time/month",
+      "description": "Edge runtime \u2014 1M requests/month, 100 GB egress, 1 GiB KV storage, 450K KV reads/month, 15 hours CPU time/month",
       "tier": "Free",
       "url": "https://deno.com/deploy/pricing",
       "tags": [
@@ -120,7 +120,7 @@
     {
       "vendor": "Val Town",
       "category": "Cloud Hosting",
-      "description": "Serverless scripting platform — 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
+      "description": "Serverless scripting platform \u2014 100K runs/day, 1 minute wall clock per run, unlimited public vals, MCP integration",
       "tier": "Free",
       "url": "https://www.val.town/pricing",
       "tags": [
@@ -227,7 +227,7 @@
     {
       "vendor": "Supabase",
       "category": "Databases",
-      "description": "Open source Firebase alternative with free tier — Postgres, Auth, Storage, Realtime",
+      "description": "Open source Firebase alternative with free tier \u2014 Postgres, Auth, Storage, Realtime",
       "tier": "Free",
       "url": "https://supabase.com/pricing",
       "tags": [
@@ -243,7 +243,7 @@
     {
       "vendor": "Neon",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 0.5 GB storage per project, up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero",
+      "description": "Serverless Postgres with branching \u2014 free tier includes 100 CU-hours/month per project, 0.5 GB storage per project, up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero",
       "tier": "Free",
       "url": "https://neon.com/pricing",
       "tags": [
@@ -272,7 +272,7 @@
     {
       "vendor": "CockroachDB",
       "category": "Databases",
-      "description": "Free serverless distributed SQL — 50M Request Units + 10 GiB storage/month, scales to zero",
+      "description": "Free serverless distributed SQL \u2014 50M Request Units + 10 GiB storage/month, scales to zero",
       "tier": "Basic",
       "url": "https://www.cockroachlabs.com/pricing/",
       "tags": [
@@ -287,7 +287,7 @@
     {
       "vendor": "Turso",
       "category": "Databases",
-      "description": "Edge SQLite — 100 databases, 5 GB storage, 500M rows read/month, 10M rows written/month free",
+      "description": "Edge SQLite \u2014 100 databases, 5 GB storage, 500M rows read/month, 10M rows written/month free",
       "tier": "Free",
       "url": "https://turso.tech/pricing",
       "tags": [
@@ -302,7 +302,7 @@
     {
       "vendor": "Upstash",
       "category": "Databases",
-      "description": "Serverless Redis — 500K commands/month (256MB data). QStash: 1,000 messages/day free",
+      "description": "Serverless Redis \u2014 500K commands/month (256MB data). QStash: 1,000 messages/day free",
       "tier": "Free",
       "url": "https://upstash.com/pricing",
       "tags": [
@@ -318,7 +318,7 @@
     {
       "vendor": "Firebase",
       "category": "Databases",
-      "description": "Full BaaS — Auth (50K MAU), Firestore (1 GiB storage, 50K reads/day), Cloud Functions (2M invocations/month), Hosting, Analytics, Crashlytics all free",
+      "description": "Full BaaS \u2014 Auth (50K MAU), Firestore (1 GiB storage, 50K reads/day), Cloud Functions (2M invocations/month), Hosting, Analytics, Crashlytics all free",
       "tier": "Spark",
       "url": "https://firebase.google.com/pricing",
       "tags": [
@@ -335,7 +335,7 @@
     {
       "vendor": "Convex",
       "category": "Databases",
-      "description": "Reactive backend — 1M function calls/month, 0.5 GB database + vector storage, 1 GB file storage, real-time sync",
+      "description": "Reactive backend \u2014 1M function calls/month, 0.5 GB database + vector storage, 1 GB file storage, real-time sync",
       "tier": "Free",
       "url": "https://www.convex.dev/plans",
       "tags": [
@@ -351,7 +351,7 @@
     {
       "vendor": "Appwrite Cloud",
       "category": "Databases",
-      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth. Projects pause after 1 week of inactivity",
+      "description": "Open-source BaaS \u2014 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth. Projects pause after 1 week of inactivity",
       "tier": "Free",
       "url": "https://appwrite.io/pricing",
       "tags": [
@@ -368,7 +368,7 @@
     {
       "vendor": "Aiven",
       "category": "Databases",
-      "description": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) — 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
+      "description": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) \u2014 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
       "tier": "Free",
       "url": "https://aiven.io/pricing",
       "tags": [
@@ -384,7 +384,7 @@
     {
       "vendor": "Xata",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — 15 GB storage, 75 req/s, 10 branches, daily backups. No cold starts or inactivity pausing",
+      "description": "Serverless Postgres with branching \u2014 15 GB storage, 75 req/s, 10 branches, daily backups. No cold starts or inactivity pausing",
       "tier": "Free",
       "url": "https://xata.io/pricing",
       "tags": [
@@ -399,7 +399,7 @@
     {
       "vendor": "Cloudflare D1",
       "category": "Databases",
-      "description": "SQLite at the edge — 5M rows read/day, 100K rows written/day, 5 GB total storage. Resets daily at midnight UTC",
+      "description": "SQLite at the edge \u2014 5M rows read/day, 100K rows written/day, 5 GB total storage. Resets daily at midnight UTC",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/d1/platform/pricing/",
       "tags": [
@@ -415,7 +415,7 @@
     {
       "vendor": "Nhost",
       "category": "Databases",
-      "description": "Open-source Firebase alternative with Postgres + Hasura GraphQL — 1 GB database, 5 GB storage, 5 GB bandwidth free",
+      "description": "Open-source Firebase alternative with Postgres + Hasura GraphQL \u2014 1 GB database, 5 GB storage, 5 GB bandwidth free",
       "tier": "Free",
       "url": "https://nhost.io/pricing",
       "tags": [
@@ -431,7 +431,7 @@
     {
       "vendor": "Hasura Cloud",
       "category": "Databases",
-      "description": "Instant GraphQL and REST APIs on your data — 1 GB data passthrough/month, 60 req/min free",
+      "description": "Instant GraphQL and REST APIs on your data \u2014 1 GB data passthrough/month, 60 req/min free",
       "tier": "Free",
       "url": "https://hasura.io/pricing",
       "tags": [
@@ -504,7 +504,7 @@
     {
       "vendor": "Bitbucket Pipelines",
       "category": "CI/CD",
-      "description": "CI/CD built into Bitbucket — 50 build minutes/month, 1 GB Git LFS, 5 users on free plan",
+      "description": "CI/CD built into Bitbucket \u2014 50 build minutes/month, 1 GB Git LFS, 5 users on free plan",
       "tier": "Free",
       "url": "https://bitbucket.org/product/features/pipelines",
       "tags": [
@@ -578,7 +578,7 @@
     {
       "vendor": "Axiom",
       "category": "Monitoring",
-      "description": "Observability platform — 500 GB ingest/month, 25 GB storage, 30-day retention, 2 datasets, 1 user",
+      "description": "Observability platform \u2014 500 GB ingest/month, 25 GB storage, 30-day retention, 2 datasets, 1 user",
       "tier": "Personal",
       "url": "https://axiom.co/pricing",
       "tags": [
@@ -593,7 +593,7 @@
     {
       "vendor": "Checkly",
       "category": "Testing",
-      "description": "Synthetic monitoring — 10 uptime monitors, 1K browser check runs, 10K API check runs/month, 4 locations",
+      "description": "Synthetic monitoring \u2014 10 uptime monitors, 1K browser check runs, 10K API check runs/month, 4 locations",
       "tier": "Hobby",
       "url": "https://www.checklyhq.com/pricing/",
       "tags": [
@@ -609,7 +609,7 @@
     {
       "vendor": "New Relic",
       "category": "Monitoring",
-      "description": "Full observability platform — 100 GB data ingest/month, 1 full platform user, unlimited basic users, 500 synthetic checks, 8+ days retention",
+      "description": "Full observability platform \u2014 100 GB data ingest/month, 1 full platform user, unlimited basic users, 500 synthetic checks, 8+ days retention",
       "tier": "Free",
       "url": "https://newrelic.com/pricing",
       "tags": [
@@ -654,7 +654,7 @@
     {
       "vendor": "Auth0",
       "category": "Auth",
-      "description": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login. No credit card required",
+      "description": "Identity platform \u2014 25K MAU (B2C), unlimited logins, social + database connections, Universal Login. No credit card required",
       "tier": "Free",
       "url": "https://auth0.com/pricing",
       "tags": [
@@ -686,7 +686,7 @@
     {
       "vendor": "WorkOS",
       "category": "Auth",
-      "description": "AuthKit with up to 1M MAU free for user management — email/password, social login, MFA. Enterprise SSO/SCIM priced separately",
+      "description": "AuthKit with up to 1M MAU free for user management \u2014 email/password, social login, MFA. Enterprise SSO/SCIM priced separately",
       "tier": "Free",
       "url": "https://workos.com/pricing",
       "tags": [
@@ -702,7 +702,7 @@
     {
       "vendor": "Resend",
       "category": "Email",
-      "description": "Developer-first email API — 3K emails/mo free",
+      "description": "Developer-first email API \u2014 3K emails/mo free",
       "tier": "Free",
       "url": "https://resend.com/pricing",
       "tags": [
@@ -715,7 +715,7 @@
     {
       "vendor": "Postmark",
       "category": "Email",
-      "description": "Transactional email API — 100 emails/month free, never expires, no credit card required",
+      "description": "Transactional email API \u2014 100 emails/month free, never expires, no credit card required",
       "tier": "Free",
       "url": "https://postmarkapp.com/pricing",
       "tags": [
@@ -729,7 +729,7 @@
     {
       "vendor": "Mailchimp",
       "category": "Email",
-      "description": "Email marketing — 250 contacts, 500 sends/month, marketing CRM, forms and landing pages included",
+      "description": "Email marketing \u2014 250 contacts, 500 sends/month, marketing CRM, forms and landing pages included",
       "tier": "Free",
       "url": "https://mailchimp.com/pricing/",
       "tags": [
@@ -744,7 +744,7 @@
     {
       "vendor": "Mailjet",
       "category": "Email",
-      "description": "Email API — 6,000 emails/month (200/day limit), 1,500 contacts, email editor and templates",
+      "description": "Email API \u2014 6,000 emails/month (200/day limit), 1,500 contacts, email editor and templates",
       "tier": "Free",
       "url": "https://www.mailjet.com/pricing/",
       "tags": [
@@ -774,7 +774,7 @@
     {
       "vendor": "Algolia",
       "category": "Search",
-      "description": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
+      "description": "Search-as-a-service \u2014 10K search requests/month, 1M records, AI recommendations included",
       "tier": "Build",
       "url": "https://www.algolia.com/pricing",
       "tags": [
@@ -789,7 +789,7 @@
     {
       "vendor": "Cloudflare R2",
       "category": "Storage",
-      "description": "Object storage with zero egress fees — 10 GB storage, 1M writes, 10M reads/month free",
+      "description": "Object storage with zero egress fees \u2014 10 GB storage, 1M writes, 10M reads/month free",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/r2/pricing/",
       "tags": [
@@ -804,7 +804,7 @@
     {
       "vendor": "Backblaze B2",
       "category": "Storage",
-      "description": "Object storage — first 10 GB always free, free egress via Cloudflare/CDN partners",
+      "description": "Object storage \u2014 first 10 GB always free, free egress via Cloudflare/CDN partners",
       "tier": "Free Allowance",
       "url": "https://www.backblaze.com/cloud-storage/pricing",
       "tags": [
@@ -819,7 +819,7 @@
     {
       "vendor": "Tigris",
       "category": "Storage",
-      "description": "S3-compatible object storage — 5 GB free, 10K writes + 100K reads/month, zero egress fees",
+      "description": "S3-compatible object storage \u2014 5 GB free, 10K writes + 100K reads/month, zero egress fees",
       "tier": "Free",
       "url": "https://www.tigrisdata.com/pricing/",
       "tags": [
@@ -834,7 +834,7 @@
     {
       "vendor": "Cloudinary",
       "category": "Storage",
-      "description": "Media management — 25 credits/month (1 credit = 1 GB storage OR 1 GB bandwidth OR 1K transformations), up to 3 users",
+      "description": "Media management \u2014 25 credits/month (1 credit = 1 GB storage OR 1 GB bandwidth OR 1K transformations), up to 3 users",
       "tier": "Free",
       "url": "https://cloudinary.com/pricing",
       "tags": [
@@ -850,7 +850,7 @@
     {
       "vendor": "Uploadthing",
       "category": "Storage",
-      "description": "File uploads for TypeScript apps — 2 GB storage, 2 GB bandwidth/month free",
+      "description": "File uploads for TypeScript apps \u2014 2 GB storage, 2 GB bandwidth/month free",
       "tier": "Free",
       "url": "https://uploadthing.com/pricing",
       "tags": [
@@ -865,7 +865,7 @@
     {
       "vendor": "CloudAMQP",
       "category": "Messaging",
-      "description": "Managed RabbitMQ — 1M messages/month, 20 connections, 100 queues free",
+      "description": "Managed RabbitMQ \u2014 1M messages/month, 20 connections, 100 queues free",
       "tier": "Little Lemur",
       "url": "https://www.cloudamqp.com/plans.html",
       "tags": [
@@ -880,7 +880,7 @@
     {
       "vendor": "Cloudflare Queues",
       "category": "Messaging",
-      "description": "Message queues on Workers — 10K operations/day free, 24-hour message retention",
+      "description": "Message queues on Workers \u2014 10K operations/day free, 24-hour message retention",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/queues/platform/pricing/",
       "tags": [
@@ -895,7 +895,7 @@
     {
       "vendor": "QStash",
       "category": "Messaging",
-      "description": "Serverless message queue by Upstash — 1,000 messages/day, 10 active schedules, 7-day max delay, retries free",
+      "description": "Serverless message queue by Upstash \u2014 1,000 messages/day, 10 active schedules, 7-day max delay, retries free",
       "tier": "Free",
       "url": "https://upstash.com/pricing/qstash",
       "tags": [
@@ -910,7 +910,7 @@
     {
       "vendor": "Pusher",
       "category": "Messaging",
-      "description": "Real-time messaging — 200K messages/day, 100 concurrent connections free",
+      "description": "Real-time messaging \u2014 200K messages/day, 100 concurrent connections free",
       "tier": "Sandbox",
       "url": "https://pusher.com/channels/pricing",
       "tags": [
@@ -925,7 +925,7 @@
     {
       "vendor": "Ably",
       "category": "Messaging",
-      "description": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "description": "Real-time infrastructure \u2014 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
       "tier": "Free",
       "url": "https://ably.com/pricing",
       "tags": [
@@ -941,7 +941,7 @@
     {
       "vendor": "Bright Data",
       "category": "Web Scraping",
-      "description": "Web MCP Server — 5K requests/month free for search and scrape-to-markdown via MCP",
+      "description": "Web MCP Server \u2014 5K requests/month free for search and scrape-to-markdown via MCP",
       "tier": "Free",
       "url": "https://brightdata.com/products/web-scraper",
       "tags": [
@@ -957,7 +957,7 @@
     {
       "vendor": "Firecrawl",
       "category": "Web Scraping",
-      "description": "Web scraping API — 500 credits (up to 500 pages), 2 concurrent requests, no credit card required",
+      "description": "Web scraping API \u2014 500 credits (up to 500 pages), 2 concurrent requests, no credit card required",
       "tier": "Free",
       "url": "https://www.firecrawl.dev/pricing",
       "tags": [
@@ -973,7 +973,7 @@
     {
       "vendor": "Apify",
       "category": "Web Scraping",
-      "description": "Web scraping and automation — $5 platform credits/month (renews), 3 concurrent Actor runs, 7-day data retention",
+      "description": "Web scraping and automation \u2014 $5 platform credits/month (renews), 3 concurrent Actor runs, 7-day data retention",
       "tier": "Free",
       "url": "https://apify.com/pricing",
       "tags": [
@@ -989,7 +989,7 @@
     {
       "vendor": "Windsurf",
       "category": "Developer Tools",
-      "description": "AI coding assistant (formerly Codeium) — 25 prompt credits/month, unlimited previews and deploys, all premium models",
+      "description": "AI coding assistant (formerly Codeium) \u2014 25 prompt credits/month, unlimited previews and deploys, all premium models",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -1004,7 +1004,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "Developer Tools",
-      "description": "AI code assistant — 2,000 completions/month, 50 chat messages/month, works in VS Code/JetBrains/GitHub.com. Students and OSS maintainers get Pro free",
+      "description": "AI code assistant \u2014 2,000 completions/month, 50 chat messages/month, works in VS Code/JetBrains/GitHub.com. Students and OSS maintainers get Pro free",
       "tier": "Free",
       "url": "https://github.com/features/copilot/plans",
       "tags": [
@@ -1019,7 +1019,7 @@
     {
       "vendor": "Cursor",
       "category": "Developer Tools",
-      "description": "AI-powered code editor — 2,000 completions/month, 50 slow premium requests/month, VS Code-based",
+      "description": "AI-powered code editor \u2014 2,000 completions/month, 50 slow premium requests/month, VS Code-based",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
@@ -1034,7 +1034,7 @@
     {
       "vendor": "Linear",
       "category": "Developer Tools",
-      "description": "Project management for dev teams — 250 active issues (unlimited archived), unlimited members, 2 teams, AI agents, API",
+      "description": "Project management for dev teams \u2014 250 active issues (unlimited archived), unlimited members, 2 teams, AI agents, API",
       "tier": "Free",
       "url": "https://linear.app/pricing",
       "tags": [
@@ -1049,7 +1049,7 @@
     {
       "vendor": "Snyk",
       "category": "Security",
-      "description": "Developer security — unlimited tests for open-source, 200 tests/month for private repos, code and dependency scanning",
+      "description": "Developer security \u2014 unlimited tests for open-source, 200 tests/month for private repos, code and dependency scanning",
       "tier": "Free",
       "url": "https://snyk.io/plans/",
       "tags": [
@@ -1064,7 +1064,7 @@
     {
       "vendor": "SonarCloud",
       "category": "Security",
-      "description": "Code quality and security analysis — free and unlimited for open-source projects, 15+ languages, CI/CD integration",
+      "description": "Code quality and security analysis \u2014 free and unlimited for open-source projects, 15+ languages, CI/CD integration",
       "tier": "Free",
       "url": "https://www.sonarsource.com/products/sonarcloud/pricing/",
       "tags": [
@@ -1079,7 +1079,7 @@
     {
       "vendor": "Hetzner",
       "category": "Infrastructure",
-      "description": "Budget cloud VMs from €3.49/month (2 vCPU, 4 GB RAM, 40 GB SSD). No free tier but exceptionally competitive pricing with 20 TB traffic included",
+      "description": "Budget cloud VMs from \u20ac3.49/month (2 vCPU, 4 GB RAM, 40 GB SSD). No free tier but exceptionally competitive pricing with 20 TB traffic included",
       "tier": "Budget",
       "url": "https://www.hetzner.com/cloud/",
       "tags": [
@@ -1095,7 +1095,7 @@
     {
       "vendor": "Cloudflare DNS",
       "category": "DNS & Domain Management",
-      "description": "Free authoritative DNS hosting — unlimited zones and queries, 1,000 records/zone, DDoS protection, free SSL/TLS",
+      "description": "Free authoritative DNS hosting \u2014 unlimited zones and queries, 1,000 records/zone, DDoS protection, free SSL/TLS",
       "tier": "Free",
       "url": "https://www.cloudflare.com/plans/free/",
       "tags": [
@@ -1110,7 +1110,7 @@
     {
       "vendor": "Hurricane Electric DNS",
       "category": "DNS & Domain Management",
-      "description": "Free DNS hosting — up to 50 domains, primary and secondary DNS, dynamic DNS, IPv6 support, geographically distributed nameservers",
+      "description": "Free DNS hosting \u2014 up to 50 domains, primary and secondary DNS, dynamic DNS, IPv6 support, geographically distributed nameservers",
       "tier": "Free",
       "url": "https://dns.he.net/",
       "tags": [
@@ -1125,7 +1125,7 @@
     {
       "vendor": "deSEC",
       "category": "DNS & Domain Management",
-      "description": "Open-source DNS with automatic DNSSEC — free forever, run by a non-profit. REST API, dynamic DNS, rate-limited to 300 changes/domain/day",
+      "description": "Open-source DNS with automatic DNSSEC \u2014 free forever, run by a non-profit. REST API, dynamic DNS, rate-limited to 300 changes/domain/day",
       "tier": "Free",
       "url": "https://desec.io/",
       "tags": [
@@ -1140,7 +1140,7 @@
     {
       "vendor": "Fastly",
       "category": "CDN",
-      "description": "Edge cloud — free developer account with 100 GB bandwidth, 1M requests/month, 5 GB object storage, image optimizer, WebSockets, DDoS protection",
+      "description": "Edge cloud \u2014 free developer account with 100 GB bandwidth, 1M requests/month, 5 GB object storage, image optimizer, WebSockets, DDoS protection",
       "tier": "Free Developer",
       "url": "https://www.fastly.com/pricing",
       "tags": [
@@ -1155,7 +1155,7 @@
     {
       "vendor": "jsDelivr",
       "category": "CDN",
-      "description": "Free CDN for open-source — unlimited bandwidth and requests, serves npm packages and GitHub repos, multi-provider redundancy",
+      "description": "Free CDN for open-source \u2014 unlimited bandwidth and requests, serves npm packages and GitHub repos, multi-provider redundancy",
       "tier": "Free",
       "url": "https://www.jsdelivr.com/",
       "tags": [
@@ -1170,7 +1170,7 @@
     {
       "vendor": "LaunchDarkly",
       "category": "Feature Flags",
-      "description": "Feature management — unlimited seats and flags, 1K client MAU, 1 project, 3 environments, A/B testing, 5K session replays/month",
+      "description": "Feature management \u2014 unlimited seats and flags, 1K client MAU, 1 project, 3 environments, A/B testing, 5K session replays/month",
       "tier": "Developer",
       "url": "https://launchdarkly.com/pricing/",
       "tags": [
@@ -1185,7 +1185,7 @@
     {
       "vendor": "Flagsmith",
       "category": "Feature Flags",
-      "description": "Feature flags and remote config — 50K API requests/month, unlimited flags/environments/identities, A/B testing, 1 user",
+      "description": "Feature flags and remote config \u2014 50K API requests/month, unlimited flags/environments/identities, A/B testing, 1 user",
       "tier": "Free",
       "url": "https://www.flagsmith.com/pricing",
       "tags": [
@@ -1199,7 +1199,7 @@
     {
       "vendor": "Harness Feature Flags",
       "category": "Feature Flags",
-      "description": "Feature flags (formerly Split.io) — 2 developers, 25K client MAU, unlimited flags and environments, CI/CD pipelines for rollout",
+      "description": "Feature flags (formerly Split.io) \u2014 2 developers, 25K client MAU, unlimited flags and environments, CI/CD pipelines for rollout",
       "tier": "Free",
       "url": "https://www.harness.io/pricing",
       "tags": [
@@ -1214,7 +1214,7 @@
     {
       "vendor": "Logz.io",
       "category": "Logging",
-      "description": "ELK-based log management — 14-day free trial only. No permanent free tier. Consumption-based pricing starts at $0.92/ingested GB/day. Community plan removed",
+      "description": "ELK-based log management \u2014 14-day free trial only. No permanent free tier. Consumption-based pricing starts at $0.92/ingested GB/day. Community plan removed",
       "tier": "Trial",
       "url": "https://logz.io/pricing/",
       "tags": [
@@ -1229,7 +1229,7 @@
     {
       "vendor": "Papertrail",
       "category": "Logging",
-      "description": "Cloud log management by SolarWinds — 100 MB/month, 48-hour searchable logs, 7-day archive, unlimited sources, real-time tail",
+      "description": "Cloud log management by SolarWinds \u2014 100 MB/month, 48-hour searchable logs, 7-day archive, unlimited sources, real-time tail",
       "tier": "Free",
       "url": "https://www.papertrail.com/plans/",
       "tags": [
@@ -1244,7 +1244,7 @@
     {
       "vendor": "Stripe",
       "category": "Payments",
-      "description": "Payment processing — no monthly fees, 2.9% + $0.30 per transaction. Full API, dashboard, and test mode free. Pay only when processing live payments",
+      "description": "Payment processing \u2014 no monthly fees, 2.9% + $0.30 per transaction. Full API, dashboard, and test mode free. Pay only when processing live payments",
       "tier": "Pay-as-you-go",
       "url": "https://stripe.com/pricing",
       "tags": [
@@ -1259,7 +1259,7 @@
     {
       "vendor": "LemonSqueezy",
       "category": "Payments",
-      "description": "Merchant of record — no monthly fees, 5% + $0.50 per transaction. Handles sales tax/VAT globally, license keys, fraud protection",
+      "description": "Merchant of record \u2014 no monthly fees, 5% + $0.50 per transaction. Handles sales tax/VAT globally, license keys, fraud protection",
       "tier": "Pay-as-you-go",
       "url": "https://www.lemonsqueezy.com/pricing",
       "tags": [
@@ -1274,7 +1274,7 @@
     {
       "vendor": "Contentful",
       "category": "Headless CMS",
-      "description": "Headless CMS — 10K records, 100K API calls/month, 10 users, 25 content types, 2 environments. Personal/non-commercial use",
+      "description": "Headless CMS \u2014 10K records, 100K API calls/month, 10 users, 25 content types, 2 environments. Personal/non-commercial use",
       "tier": "Free",
       "url": "https://www.contentful.com/pricing/",
       "tags": [
@@ -1289,7 +1289,7 @@
     {
       "vendor": "Sanity",
       "category": "Headless CMS",
-      "description": "Structured content platform — 10K documents, 1M CDN requests/month, 100 GB assets, 20 users, GROQ query language. No time limit",
+      "description": "Structured content platform \u2014 10K documents, 1M CDN requests/month, 100 GB assets, 20 users, GROQ query language. No time limit",
       "tier": "Free",
       "url": "https://www.sanity.io/pricing",
       "tags": [
@@ -1305,7 +1305,7 @@
     {
       "vendor": "Hygraph",
       "category": "Headless CMS",
-      "description": "GraphQL headless CMS — 1K content entries, 500K API calls/month, 3 seats, 20 models, unlimited asset storage",
+      "description": "GraphQL headless CMS \u2014 1K content entries, 500K API calls/month, 3 seats, 20 models, unlimited asset storage",
       "tier": "Hobby",
       "url": "https://hygraph.com/pricing",
       "tags": [
@@ -1320,7 +1320,7 @@
     {
       "vendor": "Hugging Face",
       "category": "AI / ML",
-      "description": "ML model hub — $0.10/month free inference credits, 200+ models via Inference Providers, unlimited model hosting on Hub",
+      "description": "ML model hub \u2014 $0.10/month free inference credits, 200+ models via Inference Providers, unlimited model hosting on Hub",
       "tier": "Free",
       "url": "https://huggingface.co/docs/inference-providers/pricing",
       "tags": [
@@ -1336,7 +1336,7 @@
     {
       "vendor": "Groq",
       "category": "AI / ML",
-      "description": "Ultra-fast LLM inference on LPU hardware — free tier with ~30 RPM, access to Llama 3.3 70B, Whisper, and more. No credit card required",
+      "description": "Ultra-fast LLM inference on LPU hardware \u2014 free tier with ~30 RPM, access to Llama 3.3 70B, Whisper, and more. No credit card required",
       "tier": "Free",
       "url": "https://groq.com/pricing",
       "tags": [
@@ -1368,7 +1368,7 @@
     {
       "vendor": "Mistral AI",
       "category": "AI / ML",
-      "description": "Access to all Mistral models including Large, Codestral, Pixtral — 2 RPM, 1B tokens/month. No credit card required",
+      "description": "Access to all Mistral models including Large, Codestral, Pixtral \u2014 2 RPM, 1B tokens/month. No credit card required",
       "tier": "Experiment",
       "url": "https://mistral.ai/pricing",
       "tags": [
@@ -1384,7 +1384,7 @@
     {
       "vendor": "OpenRouter",
       "category": "AI / ML",
-      "description": "AI model router — ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3), OpenAI-compatible API, ~20 RPM per model",
+      "description": "AI model router \u2014 ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3), OpenAI-compatible API, ~20 RPM per model",
       "tier": "Free",
       "url": "https://openrouter.ai/pricing",
       "tags": [
@@ -1400,7 +1400,7 @@
     {
       "vendor": "Cloudflare Workers AI",
       "category": "AI / ML",
-      "description": "AI inference at the edge — 10,000 neurons/day free across text generation, image classification, translation, speech-to-text models",
+      "description": "AI inference at the edge \u2014 10,000 neurons/day free across text generation, image classification, translation, speech-to-text models",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
       "tags": [
@@ -1416,7 +1416,7 @@
     {
       "vendor": "PostHog",
       "category": "Analytics",
-      "description": "Product analytics — 1M events/month, 5K session replays, 1M feature flag requests, 100K error events, A/B testing. No credit card required",
+      "description": "Product analytics \u2014 1M events/month, 5K session replays, 1M feature flag requests, 100K error events, A/B testing. No credit card required",
       "tier": "Free",
       "url": "https://posthog.com/pricing",
       "tags": [
@@ -1432,7 +1432,7 @@
     {
       "vendor": "Amplitude",
       "category": "Analytics",
-      "description": "Product analytics — 10K MTU, 10M events, 1K session replays/month, unlimited feature flags, 1-year retention, unlimited team members",
+      "description": "Product analytics \u2014 10K MTU, 10M events, 1K session replays/month, unlimited feature flags, 1-year retention, unlimited team members",
       "tier": "Starter",
       "url": "https://amplitude.com/pricing",
       "tags": [
@@ -1447,7 +1447,7 @@
     {
       "vendor": "Mixpanel",
       "category": "Analytics",
-      "description": "Product analytics — 1M events/month, 10K session replays, funnels/retention/flows, unlimited seats. Pauses tracking when limit reached",
+      "description": "Product analytics \u2014 1M events/month, 10K session replays, funnels/retention/flows, unlimited seats. Pauses tracking when limit reached",
       "tier": "Free",
       "url": "https://mixpanel.com/pricing/",
       "tags": [
@@ -1462,7 +1462,7 @@
     {
       "vendor": "Inngest",
       "category": "Background Jobs",
-      "description": "Serverless workflow orchestration — 50K function executions/month, 100K events, 5 concurrent steps, 3 users, unlimited environments",
+      "description": "Serverless workflow orchestration \u2014 50K function executions/month, 100K events, 5 concurrent steps, 3 users, unlimited environments",
       "tier": "Hobby",
       "url": "https://www.inngest.com/pricing",
       "tags": [
@@ -1477,7 +1477,7 @@
     {
       "vendor": "Trigger.dev",
       "category": "Background Jobs",
-      "description": "Background jobs platform — $5 free monthly compute, 20 concurrent runs, unlimited tasks, 5 team members, 10 schedules",
+      "description": "Background jobs platform \u2014 $5 free monthly compute, 20 concurrent runs, unlimited tasks, 5 team members, 10 schedules",
       "tier": "Free",
       "url": "https://trigger.dev/pricing",
       "tags": [
@@ -1492,7 +1492,7 @@
     {
       "vendor": "Momento",
       "category": "Databases",
-      "description": "Serverless cache and pub/sub — 5 GB data transfer/month free, sub-millisecond latency, no infrastructure to manage",
+      "description": "Serverless cache and pub/sub \u2014 5 GB data transfer/month free, sub-millisecond latency, no infrastructure to manage",
       "tier": "Free",
       "url": "https://www.gomomento.com/pricing",
       "tags": [
@@ -1507,7 +1507,7 @@
     {
       "vendor": "Doppler",
       "category": "Secrets Management",
-      "description": "Secrets management — up to 5 team members, unlimited secrets, projects, and environments. CLI, SDKs, and integrations included",
+      "description": "Secrets management \u2014 up to 5 team members, unlimited secrets, projects, and environments. CLI, SDKs, and integrations included",
       "tier": "Free",
       "url": "https://www.doppler.com/pricing",
       "tags": [
@@ -1522,7 +1522,7 @@
     {
       "vendor": "PostHog",
       "category": "Analytics",
-      "description": "$50,000/year in credits for Y Combinator companies — auto-renews annually. Covers product analytics, session replay, feature flags, and experimentation. Must have raised less than $25M",
+      "description": "$50,000/year in credits for Y Combinator companies \u2014 auto-renews annually. Covers product analytics, session replay, feature flags, and experimentation. Must have raised less than $25M",
       "tier": "YC Deal",
       "url": "https://posthog.com/startups",
       "tags": [
@@ -1569,7 +1569,7 @@
     {
       "vendor": "Amplitude",
       "category": "Analytics",
-      "description": "1 year free Growth plan — 200K MTUs or 100M events/month. All Growth features including Behavioral Cohorts, Pathfinder, experimentation, and predictive audiences. 96%+ approval rate",
+      "description": "1 year free Growth plan \u2014 200K MTUs or 100M events/month. All Growth features including Behavioral Cohorts, Pathfinder, experimentation, and predictive audiences. 96%+ approval rate",
       "tier": "Startup Scholarship",
       "url": "https://amplitude.com/startups",
       "tags": [
@@ -1664,7 +1664,7 @@
     {
       "vendor": "1Password",
       "category": "Developer Tools",
-      "description": "Free Teams account for open source projects — includes full platform access (Mac, Windows, iOS, Android, Linux, browser), SSH key management, Git commit signing, and secrets management. Non-expiring membership",
+      "description": "Free Teams account for open source projects \u2014 includes full platform access (Mac, Windows, iOS, Android, Linux, browser), SSH key management, Git commit signing, and secrets management. Non-expiring membership",
       "tier": "OSS Teams",
       "url": "https://github.com/1Password/1password-teams-open-source",
       "tags": [
@@ -1689,7 +1689,7 @@
     {
       "vendor": "Sentry",
       "category": "Monitoring",
-      "description": "Free sponsored plan with Business features — 5M errors, 1B spans, 5,000 GB logs, 100K replays, 500 cron monitors, 25 uptime monitors, 3K continuous profile hours. No term limit",
+      "description": "Free sponsored plan with Business features \u2014 5M errors, 1B spans, 5,000 GB logs, 100K replays, 500 cron monitors, 25 uptime monitors, 3K continuous profile hours. No term limit",
       "tier": "OSS Sponsored",
       "url": "https://sentry.io/for/open-source/",
       "tags": [
@@ -1712,7 +1712,7 @@
     {
       "vendor": "Brex",
       "category": "Startup Programs",
-      "description": "$350,000+ in aggregate partner perks for Brex cardholders — includes $5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud, 20 free GitHub Enterprise seats, 6mo free Notion, $500 Anthropic credits, and 30+ more partner discounts",
+      "description": "$350,000+ in aggregate partner perks for Brex cardholders \u2014 includes $5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud, 20 free GitHub Enterprise seats, 6mo free Notion, $500 Anthropic credits, and 30+ more partner discounts",
       "tier": "Partner Perks",
       "url": "https://www.brex.com/solutions/startups",
       "tags": [
@@ -1782,7 +1782,7 @@
     {
       "vendor": "Stripe Atlas",
       "category": "Startup Programs",
-      "description": "$50,000+ in founder perks — $5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, plus Notion, Slack, Zendesk, Intercom, and more",
+      "description": "$50,000+ in founder perks \u2014 $5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, plus Notion, Slack, Zendesk, Intercom, and more",
       "tier": "Founder Perks",
       "url": "https://stripe.com/atlas",
       "tags": [
@@ -1890,7 +1890,7 @@
     {
       "vendor": "Statically",
       "category": "CDN",
-      "description": "Free CDN for open source projects — serves files from GitHub, GitLab, Bitbucket repos and npm packages. ~20-30 MB file size limit",
+      "description": "Free CDN for open source projects \u2014 serves files from GitHub, GitLab, Bitbucket repos and npm packages. ~20-30 MB file size limit",
       "tier": "Free",
       "url": "https://statically.io/",
       "tags": [
@@ -1934,7 +1934,7 @@
     {
       "vendor": "Polar",
       "category": "Payments",
-      "description": "Merchant of record — no monthly fee, 4% + $0.40 per transaction (includes Stripe fees). +1.5% for international cards, +0.5% for subscriptions",
+      "description": "Merchant of record \u2014 no monthly fee, 4% + $0.40 per transaction (includes Stripe fees). +1.5% for international cards, +0.5% for subscriptions",
       "tier": "Pay-as-you-go",
       "url": "https://polar.sh/",
       "tags": [
@@ -1948,7 +1948,7 @@
     {
       "vendor": "Paddle",
       "category": "Payments",
-      "description": "Merchant of record — no monthly fee, 5% + $0.50 per transaction. All-in-one: payments, tax compliance, fraud protection, buyer support",
+      "description": "Merchant of record \u2014 no monthly fee, 5% + $0.50 per transaction. All-in-one: payments, tax compliance, fraud protection, buyer support",
       "tier": "Standard",
       "url": "https://www.paddle.com/pricing",
       "tags": [
@@ -2061,7 +2061,7 @@
     {
       "vendor": "Hookdeck",
       "category": "API Gateway",
-      "description": "Event gateway — 10K events/month, 100K discarded requests, 3-day retention, 5 events/sec throughput. SOC2 compliant",
+      "description": "Event gateway \u2014 10K events/month, 100K discarded requests, 3-day retention, 5 events/sec throughput. SOC2 compliant",
       "tier": "Developer",
       "url": "https://hookdeck.com/pricing",
       "tags": [
@@ -2075,7 +2075,7 @@
     {
       "vendor": "Unkey",
       "category": "API Gateway",
-      "description": "API key management — 1K keys, 150K verifications/month, 7-day logs, 30-day audit logs. Unlimited APIs. Ratelimiting included",
+      "description": "API key management \u2014 1K keys, 150K verifications/month, 7-day logs, 30-day audit logs. Unlimited APIs. Ratelimiting included",
       "tier": "Free",
       "url": "https://www.unkey.com/pricing",
       "tags": [
@@ -2131,7 +2131,7 @@
     {
       "vendor": "Postman",
       "category": "Testing",
-      "description": "Free for 1 user only — collections, API testing, mock servers. Team collaboration removed March 2026. Teams require Basic plan ($14/user/mo) or higher",
+      "description": "Free for 1 user only \u2014 collections, API testing, mock servers. Team collaboration removed March 2026. Teams require Basic plan ($14/user/mo) or higher",
       "tier": "Free",
       "url": "https://www.postman.com/pricing/",
       "tags": [
@@ -2145,7 +2145,7 @@
     {
       "vendor": "Directus",
       "category": "Headless CMS",
-      "description": "Self-hosted free (BSL license, free for <$5M revenue). Cloud free tier discontinued Nov 2025 — Cloud starts at $15/mo",
+      "description": "Self-hosted free (BSL license, free for <$5M revenue). Cloud free tier discontinued Nov 2025 \u2014 Cloud starts at $15/mo",
       "tier": "Self-Hosted",
       "url": "https://directus.io/pricing",
       "tags": [
@@ -2187,7 +2187,7 @@
     {
       "vendor": "Tinybird",
       "category": "Analytics",
-      "description": "Real-time analytics data platform — 10 GB storage, 10 QPS max, 0.25 vCPUs compute. Shared infrastructure, community support",
+      "description": "Real-time analytics data platform \u2014 10 GB storage, 10 QPS max, 0.25 vCPUs compute. Shared infrastructure, community support",
       "tier": "Free",
       "url": "https://www.tinybird.co/pricing",
       "tags": [
@@ -2202,7 +2202,7 @@
     {
       "vendor": "Novu",
       "category": "Messaging",
-      "description": "Notification infrastructure — 10K workflow runs/month, 20 workflows, 2 environments, 3 team members. All channels: email, in-app, SMS, chat, push",
+      "description": "Notification infrastructure \u2014 10K workflow runs/month, 20 workflows, 2 environments, 3 team members. All channels: email, in-app, SMS, chat, push",
       "tier": "Free",
       "url": "https://novu.co/pricing",
       "tags": [
@@ -2216,7 +2216,7 @@
     {
       "vendor": "Svix",
       "category": "Messaging",
-      "description": "Webhook delivery — 50K messages/month, 50 msg/sec throughput, 30-day payload retention, 3 team members. 99.9% SLA",
+      "description": "Webhook delivery \u2014 50K messages/month, 50 msg/sec throughput, 30-day payload retention, 3 team members. 99.9% SLA",
       "tier": "Free",
       "url": "https://www.svix.com/pricing/",
       "tags": [
@@ -2230,7 +2230,7 @@
     {
       "vendor": "Crisp",
       "category": "Messaging",
-      "description": "Customer messaging platform — 2 seats, 100 contacts, unlimited conversations. Website chat widget, shared inbox, desktop/mobile apps",
+      "description": "Customer messaging platform \u2014 2 seats, 100 contacts, unlimited conversations. Website chat widget, shared inbox, desktop/mobile apps",
       "tier": "Free",
       "url": "https://crisp.chat/en/pricing/",
       "tags": [
@@ -2244,7 +2244,7 @@
     {
       "vendor": "Mintlify",
       "category": "Developer Tools",
-      "description": "Developer documentation platform — custom domain, web editor, API playground, custom components, LLM optimizations. For individuals",
+      "description": "Developer documentation platform \u2014 custom domain, web editor, API playground, custom components, LLM optimizations. For individuals",
       "tier": "Hobby",
       "url": "https://mintlify.com/pricing",
       "tags": [
@@ -2258,7 +2258,7 @@
     {
       "vendor": "GitHub Pages",
       "category": "Cloud Hosting",
-      "description": "Static site hosting — 1 GB published site size, 100 GB bandwidth/month, 10 builds/hour. Included with all GitHub accounts",
+      "description": "Static site hosting \u2014 1 GB published site size, 100 GB bandwidth/month, 10 builds/hour. Included with all GitHub accounts",
       "tier": "Free",
       "url": "https://docs.github.com/en/pages",
       "tags": [
@@ -2272,7 +2272,7 @@
     {
       "vendor": "Pulsetic",
       "category": "Monitoring",
-      "description": "Uptime monitoring — 10 monitors (HTTP/heartbeat/API), 5-minute check interval, 3 regions, 3-month history, 3 status pages",
+      "description": "Uptime monitoring \u2014 10 monitors (HTTP/heartbeat/API), 5-minute check interval, 3 regions, 3-month history, 3 status pages",
       "tier": "Free",
       "url": "https://pulsetic.com/pricing/",
       "tags": [
@@ -2286,7 +2286,7 @@
     {
       "vendor": "Nile",
       "category": "Databases",
-      "description": "Postgres for multi-tenant apps — 1 GB storage, 50M serverless query tokens, 500 max connections. Unlimited databases and tenant DBs. Always-on (no cold starts)",
+      "description": "Postgres for multi-tenant apps \u2014 1 GB storage, 50M serverless query tokens, 500 max connections. Unlimited databases and tenant DBs. Always-on (no cold starts)",
       "tier": "Free",
       "url": "https://www.thenile.dev/pricing",
       "tags": [
@@ -2300,7 +2300,7 @@
     {
       "vendor": "Cron-job.org",
       "category": "Background Jobs",
-      "description": "Free cron job scheduling — unlimited jobs (fair use), 60-second minimum interval, 30-second execution timeout. Auto-disables after 25+ consecutive failures",
+      "description": "Free cron job scheduling \u2014 unlimited jobs (fair use), 60-second minimum interval, 30-second execution timeout. Auto-disables after 25+ consecutive failures",
       "tier": "Free",
       "url": "https://cron-job.org/en/",
       "tags": [
@@ -2314,7 +2314,7 @@
     {
       "vendor": "OneSignal",
       "category": "Messaging",
-      "description": "Push notification platform — unlimited mobile push, up to 10K web push subscribers, 100 emails/day. Multi-platform: iOS, Android, web",
+      "description": "Push notification platform \u2014 unlimited mobile push, up to 10K web push subscribers, 100 emails/day. Multi-platform: iOS, Android, web",
       "tier": "Free",
       "url": "https://onesignal.com/pricing",
       "tags": [
@@ -2328,7 +2328,7 @@
     {
       "vendor": "n8n",
       "category": "Background Jobs",
-      "description": "Workflow automation — self-hosted free (Sustainable Use License). 400+ integrations, visual workflow builder. Cloud starts at paid tier",
+      "description": "Workflow automation \u2014 self-hosted free (Sustainable Use License). 400+ integrations, visual workflow builder. Cloud starts at paid tier",
       "tier": "Self-Hosted",
       "url": "https://n8n.io/pricing/",
       "tags": [
@@ -2342,7 +2342,7 @@
     {
       "vendor": "Retool",
       "category": "Developer Tools",
-      "description": "Internal tools builder — free for up to 5 users, unlimited apps. Drag-and-drop UI, 100+ integrations, custom components",
+      "description": "Internal tools builder \u2014 free for up to 5 users, unlimited apps. Drag-and-drop UI, 100+ integrations, custom components",
       "tier": "Free",
       "url": "https://retool.com/pricing",
       "tags": [
@@ -2356,7 +2356,7 @@
     {
       "vendor": "MinIO",
       "category": "Storage",
-      "description": "S3-compatible object storage — self-hosted free (GNU AGPL v3). High performance, Kubernetes-native. No usage limits when self-hosted",
+      "description": "S3-compatible object storage \u2014 self-hosted free (GNU AGPL v3). High performance, Kubernetes-native. No usage limits when self-hosted",
       "tier": "Open Source",
       "url": "https://min.io/pricing",
       "tags": [
@@ -2370,7 +2370,7 @@
     {
       "vendor": "Backblaze",
       "category": "Storage",
-      "description": "Flamethrower Startup Program — up to $100K in B2 Cloud Storage credits. For founders and small teams building data-heavy products (AI/ML, media, gaming, SaaS). Launched Feb 2026",
+      "description": "Flamethrower Startup Program \u2014 up to $100K in B2 Cloud Storage credits. For founders and small teams building data-heavy products (AI/ML, media, gaming, SaaS). Launched Feb 2026",
       "tier": "Flamethrower",
       "url": "https://www.backblaze.com/contact-sales/startup",
       "tags": [
@@ -2392,7 +2392,7 @@
     {
       "vendor": "DigitalOcean",
       "category": "Cloud IaaS",
-      "description": "Hatch startup program — up to $100K compute credits over 12 months + 3 months free GPU access. 15 months Standard support. Partner perks from Cloudflare, Stripe, Retool, HubSpot",
+      "description": "Hatch startup program \u2014 up to $100K compute credits over 12 months + 3 months free GPU access. 15 months Standard support. Partner perks from Cloudflare, Stripe, Retool, HubSpot",
       "tier": "Hatch",
       "url": "https://www.digitalocean.com/startups",
       "tags": [
@@ -2417,7 +2417,7 @@
     {
       "vendor": "Atlassian",
       "category": "Developer Tools",
-      "description": "50 seats free for 12 months — Jira Premium, Confluence Premium, Loom Business + AI, Jira Product Discovery, Compass, Bitbucket Premium. Dedicated CSM and onboarding",
+      "description": "50 seats free for 12 months \u2014 Jira Premium, Confluence Premium, Loom Business + AI, Jira Product Discovery, Compass, Bitbucket Premium. Dedicated CSM and onboarding",
       "tier": "Startup Program",
       "url": "https://www.atlassian.com/software/startups",
       "tags": [
@@ -2441,7 +2441,7 @@
     {
       "vendor": "Pulumi",
       "category": "Infrastructure",
-      "description": "Infrastructure as Code platform — free for individuals with 1 user, unlimited projects/stacks/updates, 500 deployment minutes/mo, 25 secrets, 10K secret API calls/mo",
+      "description": "Infrastructure as Code platform \u2014 free for individuals with 1 user, unlimited projects/stacks/updates, 500 deployment minutes/mo, 25 secrets, 10K secret API calls/mo",
       "tier": "Individual",
       "url": "https://www.pulumi.com/pricing/",
       "tags": [
@@ -2456,7 +2456,7 @@
     {
       "vendor": "Spacelift",
       "category": "Infrastructure",
-      "description": "IaC orchestration platform — 2 users, 1 API key, 1 public worker, OIDC integration, credential-less cloud provider integration, cost estimation",
+      "description": "IaC orchestration platform \u2014 2 users, 1 API key, 1 public worker, OIDC integration, credential-less cloud provider integration, cost estimation",
       "tier": "Free",
       "url": "https://spacelift.io/pricing",
       "tags": [
@@ -2471,7 +2471,7 @@
     {
       "vendor": "HCP Terraform",
       "category": "Infrastructure",
-      "description": "HashiCorp managed Terraform — 500 managed resources, unlimited users, SSO, policy as code (Sentinel + OPA), 1 concurrent run. Enhanced free tier replaces legacy plan (sunset March 2026)",
+      "description": "HashiCorp managed Terraform \u2014 500 managed resources, unlimited users, SSO, policy as code (Sentinel + OPA), 1 concurrent run. Enhanced free tier replaces legacy plan (sunset March 2026)",
       "tier": "Free",
       "url": "https://www.hashicorp.com/products/terraform/pricing",
       "tags": [
@@ -2486,7 +2486,7 @@
     {
       "vendor": "Orama",
       "category": "Search",
-      "description": "Full-text, vector, and hybrid search engine — 3 indexes, 100K documents/index, unlimited searches, 150 index updates/mo, 60-day analytics retention",
+      "description": "Full-text, vector, and hybrid search engine \u2014 3 indexes, 100K documents/index, unlimited searches, 150 index updates/mo, 60-day analytics retention",
       "tier": "Free",
       "url": "https://orama.com/pricing",
       "tags": [
@@ -2501,7 +2501,7 @@
     {
       "vendor": "Quay.io",
       "category": "Container Registry",
-      "description": "Red Hat container registry — unlimited public repositories, 100 GB image layer storage soft cap, 1 TB egress soft cap. CI integration, robot accounts, teams, SSL/TLS",
+      "description": "Red Hat container registry \u2014 unlimited public repositories, 100 GB image layer storage soft cap, 1 TB egress soft cap. CI integration, robot accounts, teams, SSL/TLS",
       "tier": "Free",
       "url": "https://quay.io/plans/",
       "tags": [
@@ -2516,7 +2516,7 @@
     {
       "vendor": "BrowserStack Percy",
       "category": "Testing",
-      "description": "Visual regression testing — 5,000 screenshots/month, unlimited users and projects, 30-day build history. Note: BrowserStack browser testing is trial-only; only Percy visual testing has a permanent free tier",
+      "description": "Visual regression testing \u2014 5,000 screenshots/month, unlimited users and projects, 30-day build history. Note: BrowserStack browser testing is trial-only; only Percy visual testing has a permanent free tier",
       "tier": "Free",
       "url": "https://percy.io/pricing",
       "tags": [
@@ -2531,7 +2531,7 @@
     {
       "vendor": "Browserless",
       "category": "Browser Automation",
-      "description": "Headless browser API — 1,000 units/mo (1 unit = 30 sec), 2 concurrent browsers, 1-minute max session with reconnects, automatic captcha solving, BrowserQL editor. Supports Chrome, WebKit, Firefox",
+      "description": "Headless browser API \u2014 1,000 units/mo (1 unit = 30 sec), 2 concurrent browsers, 1-minute max session with reconnects, automatic captcha solving, BrowserQL editor. Supports Chrome, WebKit, Firefox",
       "tier": "Free",
       "url": "https://www.browserless.io/pricing",
       "tags": [
@@ -2546,7 +2546,7 @@
     {
       "vendor": "Browserbase",
       "category": "Browser Automation",
-      "description": "Headless browser infrastructure — 1 browser hour/mo, 1 concurrent browser, 15-minute max session, 7-day data retention, 1 project",
+      "description": "Headless browser infrastructure \u2014 1 browser hour/mo, 1 concurrent browser, 15-minute max session, 7-day data retention, 1 project",
       "tier": "Free",
       "url": "https://www.browserbase.com/pricing",
       "tags": [
@@ -2591,7 +2591,7 @@
     {
       "vendor": "Bugsnag",
       "category": "Error Tracking",
-      "description": "Error monitoring — approximately 5,000 events/month, 1 user, unlimited projects, 7-day data retention. Rebranded as SmartBear Insight Hub",
+      "description": "Error monitoring \u2014 7,500 events/month and 1M spans/month on free plan, 1 user, unlimited projects, 7-day data retention. 14-day free trial of paid features available. Rebranded as SmartBear Insight Hub",
       "tier": "Free",
       "url": "https://www.bugsnag.com/pricing/",
       "tags": [
@@ -2601,7 +2601,7 @@
         "crashes",
         "free tier"
       ],
-      "verifiedDate": "2026-02-26"
+      "verifiedDate": "2026-03-02"
     },
     {
       "vendor": "Rollbar",
@@ -2646,7 +2646,7 @@
     {
       "vendor": "Pipedream",
       "category": "Workflow Automation",
-      "description": "Developer-focused workflow automation — 100 credits/month, 3 active workflows, 3 connected accounts. Building/testing workflows in the editor is free",
+      "description": "Developer-focused workflow automation \u2014 100 credits/month, 3 active workflows, 3 connected accounts. Building/testing workflows in the editor is free",
       "tier": "Free",
       "url": "https://pipedream.com/pricing",
       "tags": [
@@ -2661,7 +2661,7 @@
     {
       "vendor": "Make",
       "category": "Workflow Automation",
-      "description": "Visual workflow automation (formerly Integromat) — 1,000 operations/month, 100 MB data transfer/mo, 2 active scenarios, 15-minute minimum interval",
+      "description": "Visual workflow automation (formerly Integromat) \u2014 1,000 operations/month, 100 MB data transfer/mo, 2 active scenarios, 15-minute minimum interval",
       "tier": "Free Forever",
       "url": "https://www.make.com/en/pricing",
       "tags": [
@@ -2676,7 +2676,7 @@
     {
       "vendor": "Zapier",
       "category": "Workflow Automation",
-      "description": "Workflow automation — 100 tasks/month, unlimited Zaps but limited to 2-step only (one trigger + one action), 2,500 table records, 10 form pages",
+      "description": "Workflow automation \u2014 100 tasks/month, unlimited Zaps but limited to 2-step only (one trigger + one action), 2,500 table records, 10 form pages",
       "tier": "Free",
       "url": "https://zapier.com/pricing",
       "tags": [
@@ -2691,7 +2691,7 @@
     {
       "vendor": "GlitchTip",
       "category": "Error Tracking",
-      "description": "Open-source error tracking — 1,000 events/month, unlimited projects and team members, Sentry SDK-compatible. Also includes uptime monitoring. Self-hostable for unlimited",
+      "description": "Open-source error tracking \u2014 1,000 events/month, unlimited projects and team members, Sentry SDK-compatible. Also includes uptime monitoring. Self-hostable for unlimited",
       "tier": "Free",
       "url": "https://glitchtip.com/pricing/",
       "tags": [
@@ -2706,7 +2706,7 @@
     {
       "vendor": "LogRocket",
       "category": "Error Tracking",
-      "description": "Session replay and error tracking — 1,000 sessions/month, 1-month data retention, 3 seats. Includes session replay, console logs, stack traces, network request data",
+      "description": "Session replay and error tracking \u2014 1,000 sessions/month, 1-month data retention, 3 seats. Includes session replay, console logs, stack traces, network request data",
       "tier": "Free Forever",
       "url": "https://logrocket.com/pricing",
       "tags": [
@@ -2721,7 +2721,7 @@
     {
       "vendor": "LiveKit",
       "category": "Communication",
-      "description": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "description": "Real-time audio/video and AI agent infrastructure \u2014 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
       "tier": "Build",
       "url": "https://livekit.io/pricing",
       "tags": [
@@ -2737,7 +2737,7 @@
     {
       "vendor": "ReadMe",
       "category": "Documentation",
-      "description": "API documentation platform — 1 project, 1 API reference, 3 published versions, 5 admins, basic AI features, ReadMe branding. No custom domain",
+      "description": "API documentation platform \u2014 1 project, 1 API reference, 3 published versions, 5 admins, basic AI features, ReadMe branding. No custom domain",
       "tier": "Free",
       "url": "https://readme.com/pricing",
       "tags": [
@@ -2751,7 +2751,7 @@
     {
       "vendor": "GitBook",
       "category": "Documentation",
-      "description": "Documentation platform — 1 user, gitbook.io subdomain, unlimited traffic, public publishing. No custom domain or AI answers on free tier",
+      "description": "Documentation platform \u2014 1 user, gitbook.io subdomain, unlimited traffic, public publishing. No custom domain or AI answers on free tier",
       "tier": "Free",
       "url": "https://www.gitbook.com/pricing",
       "tags": [
@@ -2765,7 +2765,7 @@
     {
       "vendor": "Chromatic",
       "category": "Testing",
-      "description": "Visual regression testing by the Storybook team — 5,000 snapshots/month, Chrome-only, unlimited projects and collaborators, Git and CI integrations, UI version tracking",
+      "description": "Visual regression testing by the Storybook team \u2014 5,000 snapshots/month, Chrome-only, unlimited projects and collaborators, Git and CI integrations, UI version tracking",
       "tier": "Free",
       "url": "https://www.chromatic.com/pricing",
       "tags": [
@@ -2780,7 +2780,7 @@
     {
       "vendor": "Figma",
       "category": "Design",
-      "description": "Collaborative design tool — 3 Figma design files, 3 FigJam files, unlimited drafts, unlimited viewers, 30-day version history, unlimited cloud storage",
+      "description": "Collaborative design tool \u2014 3 Figma design files, 3 FigJam files, unlimited drafts, unlimited viewers, 30-day version history, unlimited cloud storage",
       "tier": "Starter",
       "url": "https://www.figma.com/pricing/",
       "tags": [
@@ -2810,7 +2810,7 @@
     {
       "vendor": "Penpot",
       "category": "Design",
-      "description": "Open-source design platform — unlimited teams, unlimited designers/developers, unlimited design files, team libraries. Self-hostable (MPL 2.0). Cloud-hosted free tier has ~10 GB storage",
+      "description": "Open-source design platform \u2014 unlimited teams, unlimited designers/developers, unlimited design files, team libraries. Self-hostable (MPL 2.0). Cloud-hosted free tier has ~10 GB storage",
       "tier": "Professional",
       "url": "https://penpot.app/pricing",
       "tags": [
@@ -2826,7 +2826,7 @@
     {
       "vendor": "GitGuardian",
       "category": "Security",
-      "description": "Secrets detection for up to 25 developers — 420+ secret types, unlimited real-time scanning, 500 historical scan detections, CLI (ggshield) for pre-commit hooks, VSCode extension, 10K API calls/month",
+      "description": "Secrets detection for up to 25 developers \u2014 420+ secret types, unlimited real-time scanning, 500 historical scan detections, CLI (ggshield) for pre-commit hooks, VSCode extension, 10K API calls/month",
       "tier": "Free",
       "url": "https://www.gitguardian.com/pricing",
       "tags": [
@@ -2841,7 +2841,7 @@
     {
       "vendor": "Sendbird",
       "category": "Communication",
-      "description": "Chat SDK — Developer plan: 1,000 MAU, 20 peak concurrent connections, unlimited messages/month, unlimited storage (6-month retention). All Pro features included (typing indicators, read receipts, push notifications)",
+      "description": "Chat SDK \u2014 Developer plan: 1,000 MAU, 20 peak concurrent connections, unlimited messages/month, unlimited storage (6-month retention). All Pro features included (typing indicators, read receipts, push notifications)",
       "tier": "Developer",
       "url": "https://sendbird.com/pricing/chat",
       "tags": [
@@ -2856,7 +2856,7 @@
     {
       "vendor": "Knock",
       "category": "Messaging",
-      "description": "Notification infrastructure — 10,000 notifications/month, 500 guide active users, unlimited workflows/broadcasts/channels/team members. All delivery channels included",
+      "description": "Notification infrastructure \u2014 10,000 notifications/month, 500 guide active users, unlimited workflows/broadcasts/channels/team members. All delivery channels included",
       "tier": "Developer",
       "url": "https://knock.app/pricing",
       "tags": [
@@ -2934,7 +2934,7 @@
     {
       "vendor": "Formbricks",
       "category": "Forms",
-      "description": "Open-source survey platform — Community Edition (self-hosted): unlimited seats, unlimited surveys, unlimited responses, all question types, advanced logic, custom styling, API access, all SDKs and integrations (MPL 2.0)",
+      "description": "Open-source survey platform \u2014 Community Edition (self-hosted): unlimited seats, unlimited surveys, unlimited responses, all question types, advanced logic, custom styling, API access, all SDKs and integrations (MPL 2.0)",
       "tier": "Community",
       "url": "https://formbricks.com/pricing",
       "tags": [
@@ -2966,7 +2966,7 @@
     {
       "vendor": "Lokalise",
       "category": "Developer Tools",
-      "description": "Localization platform — 1 project, 2 target languages, 500K hosted words, 500 translation keys, 10K processed words/year, 2 advanced seats, 1 integration, 1 automation, 1 GB OTA calls",
+      "description": "Localization platform \u2014 1 project, 2 target languages, 500K hosted words, 500 translation keys, 10K processed words/year, 2 advanced seats, 1 integration, 1 automation, 1 GB OTA calls",
       "tier": "Free",
       "url": "https://lokalise.com/pricing/",
       "tags": [
@@ -2981,7 +2981,7 @@
     {
       "vendor": "Cal.com",
       "category": "Developer Tools",
-      "description": "Open-source scheduling — unlimited event types, unlimited bookings, unlimited calendar connections, routing forms, workflow automation, payment processing, Cal Video conferencing. 1 user",
+      "description": "Open-source scheduling \u2014 unlimited event types, unlimited bookings, unlimited calendar connections, routing forms, workflow automation, payment processing, Cal Video conferencing. 1 user",
       "tier": "Free",
       "url": "https://cal.com/pricing",
       "tags": [
@@ -2996,7 +2996,7 @@
     {
       "vendor": "Tawk.to",
       "category": "Communication",
-      "description": "100% free live chat software — unlimited agents, unlimited concurrent chats, unlimited message history, unlimited sites, 45+ languages, CRM, ticketing, knowledge base, video/voice chat, screen sharing",
+      "description": "100% free live chat software \u2014 unlimited agents, unlimited concurrent chats, unlimited message history, unlimited sites, 45+ languages, CRM, ticketing, knowledge base, video/voice chat, screen sharing",
       "tier": "Free",
       "url": "https://www.tawk.to/pricing/",
       "tags": [
@@ -3012,7 +3012,7 @@
     {
       "vendor": "Uploadcare",
       "category": "Storage",
-      "description": "File uploading API and image CDN — free tier for small-scale projects with file upload widget, image transformations, adaptive delivery. 100 MB file size limit. Usage resets monthly",
+      "description": "File uploading API and image CDN \u2014 free tier for small-scale projects with file upload widget, image transformations, adaptive delivery. 100 MB file size limit. Usage resets monthly",
       "tier": "Free",
       "url": "https://uploadcare.com/pricing/",
       "tags": [
@@ -3081,7 +3081,7 @@
     {
       "vendor": "Healthchecks.io",
       "category": "Monitoring",
-      "description": "Cron job and scheduled task monitoring — 20 monitors, 100 log entries per job, email/webhook/Slack/Telegram alerts, API access. Also free for open-source projects (Business plan)",
+      "description": "Cron job and scheduled task monitoring \u2014 20 monitors, 100 log entries per job, email/webhook/Slack/Telegram alerts, API access. Also free for open-source projects (Business plan)",
       "tier": "Free",
       "url": "https://healthchecks.io/pricing/",
       "tags": [
@@ -3097,7 +3097,7 @@
     {
       "vendor": "ImageKit",
       "category": "Storage",
-      "description": "Real-time image and video optimization with CDN — 20 GB bandwidth/month, 20 GB media storage, unlimited image transformations, 1,000 video processing units. No credit card required",
+      "description": "Real-time image and video optimization with CDN \u2014 20 GB bandwidth/month, 20 GB media storage, unlimited image transformations, 1,000 video processing units. No credit card required",
       "tier": "Free",
       "url": "https://imagekit.io/plans/",
       "tags": [
@@ -3113,7 +3113,7 @@
     {
       "vendor": "Expo",
       "category": "Developer Tools",
-      "description": "React Native build and deployment platform — 30 builds/month (up to 15 iOS), 1,000 MAU for EAS Update, 100,000 hosting requests, 1M CPU-ms, 1 GB hosting storage. No credit card required",
+      "description": "React Native build and deployment platform \u2014 30 builds/month (up to 15 iOS), 1,000 MAU for EAS Update, 100,000 hosting requests, 1M CPU-ms, 1 GB hosting storage. No credit card required",
       "tier": "Free",
       "url": "https://expo.dev/pricing",
       "tags": [
@@ -3130,7 +3130,7 @@
     {
       "vendor": "Crowdin",
       "category": "Developer Tools",
-      "description": "Localization management — free forever for open-source (unlimited projects/translators). Private: 1 project, 60K hosted words, 1 integration, Crowdin AI access. CLI, GitHub integration, REST API",
+      "description": "Localization management \u2014 free forever for open-source (unlimited projects/translators). Private: 1 project, 60K hosted words, 1 integration, Crowdin AI access. CLI, GitHub integration, REST API",
       "tier": "Free",
       "url": "https://crowdin.com/pricing",
       "tags": [
@@ -3145,7 +3145,7 @@
     {
       "vendor": "Permit.io",
       "category": "Auth",
-      "description": "Authorization-as-a-service — 1,000 MAU, all authorization models (RBAC/ABAC/ReBAC), unlimited PDPs, no-code UI, GitOps workflows, GitHub/Terraform integration, SDKs and APIs",
+      "description": "Authorization-as-a-service \u2014 1,000 MAU, all authorization models (RBAC/ABAC/ReBAC), unlimited PDPs, no-code UI, GitOps workflows, GitHub/Terraform integration, SDKs and APIs",
       "tier": "Free",
       "url": "https://www.permit.io/pricing",
       "tags": [
@@ -3161,7 +3161,7 @@
     {
       "vendor": "Codecov",
       "category": "Testing",
-      "description": "Code coverage reporting and analytics — free for up to 5 users with unlimited public and private repos. Always free for open-source. Integrates with GitHub, GitLab, Bitbucket CI/CD",
+      "description": "Code coverage reporting and analytics \u2014 free for up to 5 users with unlimited public and private repos. Always free for open-source. Integrates with GitHub, GitLab, Bitbucket CI/CD",
       "tier": "Developer",
       "url": "https://about.codecov.io/pricing/",
       "tags": [
@@ -3176,7 +3176,7 @@
     {
       "vendor": "Dub.co",
       "category": "Developer Tools",
-      "description": "Open-source link management — 1,000 links, 1,000 tracked clicks/month, up to 3 custom domains, API with native SDKs, analytics. No credit card required",
+      "description": "Open-source link management \u2014 1,000 links, 1,000 tracked clicks/month, up to 3 custom domains, API with native SDKs, analytics. No credit card required",
       "tier": "Free",
       "url": "https://dub.co/pricing",
       "tags": [
@@ -3191,7 +3191,7 @@
     {
       "vendor": "Stytch",
       "category": "Auth",
-      "description": "Authentication and fraud prevention — 10,000 MAU, passwordless login, OAuth, MFA, session management, device fingerprinting, 5 SSO/SCIM connections, 1,000 M2M tokens, password breach detection",
+      "description": "Authentication and fraud prevention \u2014 10,000 MAU, passwordless login, OAuth, MFA, session management, device fingerprinting, 5 SSO/SCIM connections, 1,000 M2M tokens, password breach detection",
       "tier": "Free",
       "url": "https://stytch.com/pricing",
       "tags": [
@@ -3208,7 +3208,7 @@
     {
       "vendor": "Liveblocks",
       "category": "Developer Tools",
-      "description": "Real-time collaboration infrastructure — 100 MAU, 500 monthly active rooms, 8 GB storage. Presence, cursors, comments, notifications, text editor components",
+      "description": "Real-time collaboration infrastructure \u2014 100 MAU, 500 monthly active rooms, 8 GB storage. Presence, cursors, comments, notifications, text editor components",
       "tier": "Free",
       "url": "https://liveblocks.io/pricing",
       "tags": [
@@ -3224,7 +3224,7 @@
     {
       "vendor": "Nango",
       "category": "Developer Tools",
-      "description": "Integration infrastructure for 600+ APIs — 10 connections, unified auth/data syncing/webhook handling, unlimited development/testing time. All API integrations accessible",
+      "description": "Integration infrastructure for 600+ APIs \u2014 10 connections, unified auth/data syncing/webhook handling, unlimited development/testing time. All API integrations accessible",
       "tier": "Free",
       "url": "https://nango.dev/pricing",
       "tags": [
@@ -3906,7 +3906,7 @@
     {
       "vendor": "Hoppscotch",
       "category": "Developer Tools",
-      "description": "Free OSS (MIT). API development ecosystem — REST, GraphQL, WebSocket, SSE, Socket.IO, MQTT testing. Real-time collaboration, environments, collections. Web, desktop, and CLI",
+      "description": "Free OSS (MIT). API development ecosystem \u2014 REST, GraphQL, WebSocket, SSE, Socket.IO, MQTT testing. Real-time collaboration, environments, collections. Web, desktop, and CLI",
       "tier": "Free OSS",
       "url": "https://hoppscotch.io/",
       "tags": [
@@ -3974,6 +3974,38 @@
         "web-search",
         "ai-grounding",
         "llm"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "OpenAI",
+      "category": "AI / ML",
+      "description": "AI API platform \u2014 free tier limited to GPT-3.5 Turbo model only, 3 requests/minute rate limit. No free trial credits for new accounts (discontinued mid-2025). Paid tiers use token-based pricing: GPT-4o from $2.50/1M input tokens. Batch processing at 50% discount available",
+      "tier": "Free",
+      "url": "https://openai.com/api/pricing/",
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "gpt",
+        "api",
+        "nlp",
+        "generative-ai"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "X (Twitter)",
+      "category": "API Gateway",
+      "description": "Social media API \u2014 Free tier extremely limited: ~500 posts/month read, 1,500 tweets/month write, no search functionality, ~1 request per 15 minutes for reading. Basic tier starts at $200/month. Pay-per-use model introduced February 2026 alongside fixed tiers",
+      "tier": "Free",
+      "url": "https://developer.x.com/en/portal/products",
+      "tags": [
+        "social-media",
+        "api",
+        "twitter",
+        "data",
+        "social"
       ],
       "verifiedDate": "2026-03-02"
     }
