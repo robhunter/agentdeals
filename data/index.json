@@ -4083,6 +4083,150 @@
         "containers"
       ],
       "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "ngrok",
+      "category": "Infrastructure",
+      "description": "Tunneling and ingress platform \u2014 3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests/month, 1 dev domain, 5K TCP/TLS connections. Includes $5 one-time usage credit",
+      "tier": "Free",
+      "url": "https://ngrok.com/pricing",
+      "tags": [
+        "infrastructure",
+        "tunneling",
+        "ingress",
+        "developer-tools"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Tailscale",
+      "category": "Security",
+      "description": "Mesh VPN with WireGuard \u2014 3 users, 100 devices, MagicDNS, exit nodes, subnet routers, ACLs, split tunneling. Requires personal email domain",
+      "tier": "Personal",
+      "url": "https://tailscale.com/pricing",
+      "tags": [
+        "security",
+        "vpn",
+        "networking",
+        "zero-trust",
+        "wireguard"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Redis Cloud",
+      "category": "Databases",
+      "description": "Managed Redis \u2014 30 MB memory, single database, shared deployment. Best-effort SLA, community support",
+      "tier": "Free",
+      "url": "https://redis.io/pricing",
+      "tags": [
+        "database",
+        "redis",
+        "cache",
+        "key-value",
+        "free tier"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Pinecone",
+      "category": "AI / ML",
+      "description": "Vector database \u2014 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 5M embedding tokens/month. Pinecone Assistant: 100 docs / 1 GB",
+      "tier": "Starter",
+      "url": "https://pinecone.io/pricing",
+      "tags": [
+        "ai",
+        "ml",
+        "vector-database",
+        "embeddings",
+        "search"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Qdrant",
+      "category": "AI / ML",
+      "description": "Vector database \u2014 1 GB free forever cluster, fully managed on AWS/GCP/Azure. Unlimited users, backups included. No credit card required",
+      "tier": "Free Forever",
+      "url": "https://qdrant.tech/pricing/",
+      "tags": [
+        "ai",
+        "ml",
+        "vector-database",
+        "embeddings",
+        "search"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "SuperTokens",
+      "category": "Auth",
+      "description": "Open source authentication \u2014 cloud: 5K MAUs free. Self-hosted: unlimited. Email/password, social login, passwordless, RBAC, user management dashboard",
+      "tier": "Free",
+      "url": "https://supertokens.com/pricing",
+      "tags": [
+        "auth",
+        "authentication",
+        "open-source",
+        "identity"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "StatusCake",
+      "category": "Monitoring",
+      "description": "Uptime monitoring \u2014 10 monitors, 5-min intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor, 75 free SMS credits/month, 15+ alert integrations",
+      "tier": "Free",
+      "url": "https://www.statuscake.com/pricing/",
+      "tags": [
+        "monitoring",
+        "uptime",
+        "status",
+        "alerts"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "PagerDuty",
+      "category": "Monitoring",
+      "description": "Incident management \u2014 5 users, 1 on-call schedule, 1 escalation policy, 100 intl phone/SMS notifications/month, 700+ integrations, API access",
+      "tier": "Free",
+      "url": "https://www.pagerduty.com/pricing/",
+      "tags": [
+        "monitoring",
+        "incident-management",
+        "on-call",
+        "alerts"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "imgix",
+      "category": "CDN",
+      "description": "Image CDN and optimization \u2014 1,000 origin images, unlimited transformations, full rendering API, Asset Manager included",
+      "tier": "Free",
+      "url": "https://www.imgix.com/pricing",
+      "tags": [
+        "cdn",
+        "images",
+        "media",
+        "optimization"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Lemon Squeezy",
+      "category": "Payments",
+      "description": "Merchant of record for digital products \u2014 $0/month, all features included (payments, subscriptions, tax compliance, fraud protection). Revenue: 5% + 50c/transaction. Email marketing: 500 subscribers free",
+      "tier": "Free",
+      "url": "https://www.lemonsqueezy.com/pricing",
+      "tags": [
+        "payments",
+        "merchant-of-record",
+        "ecommerce",
+        "subscriptions"
+      ],
+      "verifiedDate": "2026-03-02"
     }
   ]
 }

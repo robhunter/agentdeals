@@ -678,6 +678,23 @@
         "FreshBooks API",
         "Wave API"
       ]
+    },
+    {
+      "vendor": "SendGrid",
+      "change_type": "free_tier_removed",
+      "date": "2025-05-27",
+      "summary": "Perpetual free tier (100 emails/day) eliminated. Replaced with 60-day trial only. Paid plans start at $19.95/month",
+      "previous_state": "Free plan: 100 emails/day forever, no credit card required",
+      "current_state": "60-day trial only (100 emails/day, 100 contacts). Paid plans from $19.95/month after trial",
+      "impact": "high",
+      "source_url": "https://sendgrid.com/en-us/pricing",
+      "category": "Email",
+      "alternatives": [
+        "Resend",
+        "Postmark",
+        "Mailgun",
+        "Amazon SES"
+      ]
     }
   ]
 }
