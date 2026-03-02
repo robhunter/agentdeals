@@ -278,10 +278,10 @@
     {
       "vendor": "GitHub Actions (Self-Hosted)",
       "change_type": "pricing_restructured",
-      "date": "2026-01-16",
-      "summary": "Control plane fee announced for self-hosted runners in private repos ($0.002/min), then postponed",
+      "date": "2026-03-01",
+      "summary": "Control plane fee now active for self-hosted runners in private repos ($0.002/min) as of March 1, 2026",
       "previous_state": "Self-hosted runners incurred no GitHub fees — users paid only for own infrastructure",
-      "current_state": "Fee announced for March 2026 but postponed. $0.002/min planned for job orchestration on self-hosted runners in private/internal repos. Public repos exempt",
+      "current_state": "$0.002/min orchestration fee active since March 1, 2026 for self-hosted runners in private/internal repos. Covers job queuing, routing, logging, secrets. Public repos exempt. Hosted runner prices reduced up to 39% (Jan 2026)",
       "impact": "medium",
       "source_url": "https://github.blog/changelog/2025-12-16-coming-soon-simpler-pricing-and-a-better-experience-for-github-actions/",
       "category": "CI/CD",
