@@ -446,16 +446,16 @@
     {
       "vendor": "GitHub Actions",
       "category": "CI/CD",
-      "description": "Free CI/CD for public repos, 2000 min/mo for private repos",
+      "description": "Free CI/CD for public repos. Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners free (announced charge postponed Dec 2025). Hosted runner prices reduced 39% Jan 2026",
       "tier": "Free",
-      "url": "https://github.com/pricing",
+      "url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
       "tags": [
         "ci",
         "cd",
         "automation",
         "github"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-02"
     },
     {
       "vendor": "GitLab CI",
@@ -3946,6 +3946,36 @@
         "open source"
       ],
       "verifiedDate": "2026-02-26"
+    },
+    {
+      "vendor": "LocalStack",
+      "category": "Testing",
+      "description": "Free plan: 30+ emulated AWS services (S3, Lambda, DynamoDB, EC2, SQS, SNS, CloudFormation). Individual/recreational use only. Requires account authentication. Community Edition (open-source Docker image) discontinued March 23, 2026. No CI credits, cloud pods, or ephemeral instances on free plan",
+      "tier": "Free",
+      "url": "https://www.localstack.cloud/pricing",
+      "tags": [
+        "aws",
+        "local-dev",
+        "testing",
+        "emulation",
+        "serverless"
+      ],
+      "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "Brave Search API",
+      "category": "Search",
+      "description": "$5/month credit (~1,000 queries/mo at $5/1,000 requests). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required to keep credit. Credit card required, overages billed with no spending cap. Free tier (5,000 queries/mo) removed Feb 2026",
+      "tier": "Credit",
+      "url": "https://brave.com/search/api/",
+      "tags": [
+        "search",
+        "api",
+        "web-search",
+        "ai-grounding",
+        "llm"
+      ],
+      "verifiedDate": "2026-03-02"
     }
   ]
 }
