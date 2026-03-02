@@ -374,6 +374,14 @@ describe("HTTP transport", () => {
     const body0 = await health0.json() as any;
     assert.strictEqual(body0.status, "ok");
     assert.strictEqual(body0.sessions, 0);
+    assert.ok(body0.stats);
+    assert.ok(typeof body0.stats.uptime_seconds === "number");
+    assert.ok(typeof body0.stats.total_tool_calls === "number");
+    assert.ok(typeof body0.stats.total_api_hits === "number");
+    assert.ok(typeof body0.stats.total_sessions === "number");
+    assert.ok(typeof body0.stats.landing_page_views === "number");
+    assert.ok(body0.stats.tool_calls);
+    assert.ok(body0.stats.api_hits);
 
     // Create a session
     await mcpRequest("/mcp", {
@@ -408,5 +416,38 @@ describe("HTTP transport", () => {
     const health2 = await fetch(`http://localhost:${PORT}/health`);
     const body2 = await health2.json() as any;
     assert.strictEqual(body2.sessions, 2);
+
+    // Stats should show 2 sessions connected
+    assert.ok(body2.stats.total_sessions >= 2);
+  });
+
+  it("tracks API hit and landing page stats", async () => {
+    proc = await startHttpServer();
+
+    // Record initial stats
+    const h0 = await fetch(`http://localhost:${PORT}/health`);
+    const s0 = (await h0.json() as any).stats;
+    const initialApiOffers = s0.api_hits["/api/offers"];
+    const initialApiCats = s0.api_hits["/api/categories"];
+    const initialPageViews = s0.landing_page_views;
+
+    // Hit /api/offers twice
+    await fetch(`http://localhost:${PORT}/api/offers?limit=1`);
+    await fetch(`http://localhost:${PORT}/api/offers?q=test&limit=1`);
+
+    // Hit /api/categories once
+    await fetch(`http://localhost:${PORT}/api/categories`);
+
+    // Hit landing page once
+    await fetch(`http://localhost:${PORT}/`);
+
+    // Check stats incremented
+    const h1 = await fetch(`http://localhost:${PORT}/health`);
+    const s1 = (await h1.json() as any).stats;
+
+    assert.strictEqual(s1.api_hits["/api/offers"], initialApiOffers + 2);
+    assert.strictEqual(s1.api_hits["/api/categories"], initialApiCats + 1);
+    assert.strictEqual(s1.landing_page_views, initialPageViews + 1);
+    assert.strictEqual(s1.total_api_hits, s0.total_api_hits + 3);
   });
 });
