@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getCategories, getDealChanges, getOfferDetails, searchOffers } from "./data.js";
+import { recordToolCall } from "./stats.js";
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -16,6 +17,7 @@ export function createServer(): McpServer {
     },
     async () => {
       try {
+        recordToolCall("list_categories");
         const categories = getCategories();
         return {
           content: [
@@ -56,6 +58,7 @@ export function createServer(): McpServer {
     },
     async ({ query, category, eligibility_type, sort, limit, offset }) => {
       try {
+        recordToolCall("search_offers");
         const allResults = searchOffers(query, category, eligibility_type, sort);
         const total = allResults.length;
         const usePagination = limit !== undefined || offset !== undefined;
@@ -96,6 +99,7 @@ export function createServer(): McpServer {
     },
     async ({ vendor }) => {
       try {
+        recordToolCall("get_offer_details");
         const result = getOfferDetails(vendor);
         if ("error" in result) {
           const msg = result.suggestions.length > 0
@@ -142,6 +146,7 @@ export function createServer(): McpServer {
     },
     async ({ since, change_type, vendor }) => {
       try {
+        recordToolCall("get_deal_changes");
         const result = getDealChanges(since, change_type, vendor);
         return {
           content: [
