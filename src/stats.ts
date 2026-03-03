@@ -2,6 +2,7 @@
 // No PII collected — only aggregate counts and tool-level metrics.
 
 const startedAt = Date.now();
+const serverStartedISO = new Date(startedAt).toISOString();
 
 const toolCalls: Record<string, number> = {
   search_offers: 0,
@@ -18,6 +19,8 @@ const apiHits: Record<string, number> = {
 let totalSessions = 0;
 let totalDisconnects = 0;
 let landingPageViews = 0;
+let sessionsToday = 0;
+let sessionsTodayDate = new Date().toISOString().slice(0, 10);
 
 export function recordToolCall(tool: string): void {
   if (tool in toolCalls) {
@@ -33,6 +36,12 @@ export function recordApiHit(endpoint: string): void {
 
 export function recordSessionConnect(): void {
   totalSessions++;
+  const today = new Date().toISOString().slice(0, 10);
+  if (today !== sessionsTodayDate) {
+    sessionsToday = 0;
+    sessionsTodayDate = today;
+  }
+  sessionsToday++;
 }
 
 export function recordSessionDisconnect(): void {
@@ -64,5 +73,24 @@ export function getStats(): {
     total_sessions: totalSessions,
     total_disconnects: totalDisconnects,
     landing_page_views: landingPageViews,
+  };
+}
+
+export function getConnectionStats(activeSessions: number): {
+  activeSessions: number;
+  totalSessionsAllTime: number;
+  sessionsToday: number;
+  serverStarted: string;
+} {
+  const today = new Date().toISOString().slice(0, 10);
+  if (today !== sessionsTodayDate) {
+    sessionsToday = 0;
+    sessionsTodayDate = today;
+  }
+  return {
+    activeSessions,
+    totalSessionsAllTime: totalSessions,
+    sessionsToday,
+    serverStarted: serverStartedISO,
   };
 }

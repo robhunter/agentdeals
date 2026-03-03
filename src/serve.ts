@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
 import { loadOffers, getCategories, searchOffers, loadDealChanges } from "./data.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats } from "./stats.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,10 +21,19 @@ const CLEANUP_INTERVAL_MS = 60 * 1000; // 60 seconds
 interface SessionEntry {
   transport: StreamableHTTPServerTransport;
   lastActivity: number;
+  createdAt: number;
 }
 
 // Map of session ID → transport + last activity for multi-session support
 const sessions = new Map<string, SessionEntry>();
+
+function getClientIp(req: import("node:http").IncomingMessage): string {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (forwarded) {
+    return String(forwarded).split(",")[0].trim();
+  }
+  return req.socket.remoteAddress ?? "unknown";
+}
 
 function touchSession(sessionId: string): void {
   const entry = sessions.get(sessionId);
@@ -39,8 +48,13 @@ setInterval(() => {
   for (const [sid, entry] of sessions) {
     const idleMs = now - entry.lastActivity;
     if (idleMs > SESSION_IDLE_TIMEOUT_MS) {
-      const idleMinutes = Math.round(idleMs / 60000);
-      console.error(`Cleaned up idle session ${sid} after ${idleMinutes}m`);
+      console.log(JSON.stringify({
+        event: "session_close",
+        ts: new Date(now).toISOString(),
+        sessionId: sid,
+        durationMs: now - entry.createdAt,
+        reason: "idle_timeout",
+      }));
       entry.transport.close?.();
       sessions.delete(sid);
       recordSessionDisconnect();
@@ -467,17 +481,36 @@ const httpServer = createHttpServer(async (req, res) => {
         await transport.handleRequest(req, res, parsedBody);
       } else if (!sessionId && isInitializeRequest(parsedBody)) {
         // New session — create transport + server
+        const ip = getClientIp(req);
+        const userAgent = req.headers["user-agent"] ?? "unknown";
         const transport = new StreamableHTTPServerTransport({
           sessionIdGenerator: () => randomUUID(),
           onsessioninitialized: (sid) => {
-            sessions.set(sid, { transport, lastActivity: Date.now() });
+            const now = Date.now();
+            sessions.set(sid, { transport, lastActivity: now, createdAt: now });
             recordSessionConnect();
+            console.log(JSON.stringify({
+              event: "session_open",
+              ts: new Date(now).toISOString(),
+              sessionId: sid,
+              ip,
+              userAgent,
+            }));
           },
         });
 
         transport.onclose = () => {
           const sid = transport.sessionId;
-          if (sid) {
+          if (sid && sessions.has(sid)) {
+            const entry = sessions.get(sid)!;
+            const now = Date.now();
+            console.log(JSON.stringify({
+              event: "session_close",
+              ts: new Date(now).toISOString(),
+              sessionId: sid,
+              durationMs: now - entry.createdAt,
+              reason: "client_disconnect",
+            }));
             sessions.delete(sid);
             recordSessionDisconnect();
           }
@@ -509,8 +542,16 @@ const httpServer = createHttpServer(async (req, res) => {
       // Session termination
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
       if (sessionId && sessions.has(sessionId)) {
-        const { transport } = sessions.get(sessionId)!;
-        await transport.handleRequest(req, res);
+        const entry = sessions.get(sessionId)!;
+        await entry.transport.handleRequest(req, res);
+        const now = Date.now();
+        console.log(JSON.stringify({
+          event: "session_close",
+          ts: new Date(now).toISOString(),
+          sessionId,
+          durationMs: now - entry.createdAt,
+          reason: "client_disconnect",
+        }));
         sessions.delete(sessionId);
         recordSessionDisconnect();
       } else {
@@ -539,6 +580,9 @@ const httpServer = createHttpServer(async (req, res) => {
         { "email": "rob.v.hunter@gmail.com" }
       ]
     }));
+  } else if (url.pathname === "/api/stats" && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(getConnectionStats(sessions.size)));
   } else if (url.pathname === "/api/offers" && req.method === "GET") {
     recordApiHit("/api/offers");
     const q = url.searchParams.get("q") || undefined;
