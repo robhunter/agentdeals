@@ -5,6 +5,7 @@ dist/
 *.log
 .DS_Store
 data/pricing-hashes.json
+data/pricing-changes.jsonl
 data/free-for-dev-new.json
 data/startup-deals-new.json
 .cache/

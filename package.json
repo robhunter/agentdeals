@@ -35,6 +35,7 @@
     "lint": "tsc --noEmit",
     "check:staleness": "node scripts/check-staleness.js",
     "check:pricing": "node scripts/check-pricing-changes.js",
+    "monitor:pricing": "node scripts/monitor-pricing.js",
     "ingest:free-for-dev": "node scripts/parse-free-for-dev.ts",
     "ingest:startup-deals": "node scripts/ingest-startup-deals.ts"
   },
