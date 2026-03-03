@@ -21030,6 +21030,30 @@
         "free"
       ],
       "verifiedDate": "2026-03-03"
+    },
+    {
+      "vendor": "Vast.ai",
+      "category": "AI / ML",
+      "description": "GPU marketplace — startup program offers $2,500 in free GPU credits. Access to A100s, H200s, and consumer cards. Up to 81% savings vs. major cloud GPU providers. 24/7 priority support during credit period. No long-term contracts",
+      "tier": "Startup Program",
+      "url": "https://vast.ai/startup",
+      "tags": [
+        "gpu",
+        "ai",
+        "ml",
+        "compute",
+        "startup credits",
+        "infrastructure"
+      ],
+      "verifiedDate": "2026-03-03",
+      "eligibility": {
+        "type": "accelerator",
+        "conditions": [
+          "Early-stage startup",
+          "Application required"
+        ],
+        "program": "Vast.ai Startup Program"
+      }
     }
   ]
 }
