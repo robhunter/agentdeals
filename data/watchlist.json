@@ -1,0 +1,25 @@
+{
+  "description": "Vendors monitored for pricing page changes. interval: daily (high-churn) or weekly (stable).",
+  "vendors": [
+    { "vendor": "Vercel", "url": "https://vercel.com/pricing", "interval": "daily" },
+    { "vendor": "Render", "url": "https://render.com/pricing", "interval": "daily" },
+    { "vendor": "Supabase", "url": "https://supabase.com/pricing", "interval": "daily" },
+    { "vendor": "Neon", "url": "https://neon.com/pricing", "interval": "daily" },
+    { "vendor": "Railway", "url": "https://railway.com/pricing", "interval": "daily" },
+    { "vendor": "Netlify", "url": "https://www.netlify.com/pricing/", "interval": "daily" },
+    { "vendor": "Cloudflare Workers", "url": "https://developers.cloudflare.com/workers/platform/pricing/", "interval": "daily" },
+    { "vendor": "DigitalOcean", "url": "https://www.digitalocean.com/pricing", "interval": "daily" },
+    { "vendor": "MongoDB Atlas", "url": "https://www.mongodb.com/pricing", "interval": "daily" },
+    { "vendor": "Firebase", "url": "https://firebase.google.com/pricing", "interval": "daily" },
+    { "vendor": "GitHub Actions", "url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions", "interval": "weekly" },
+    { "vendor": "Auth0", "url": "https://auth0.com/pricing", "interval": "daily" },
+    { "vendor": "Postman", "url": "https://www.postman.com/pricing/", "interval": "weekly" },
+    { "vendor": "AWS", "url": "https://aws.amazon.com/free/", "interval": "weekly" },
+    { "vendor": "HCP Terraform", "url": "https://www.hashicorp.com/products/terraform/pricing", "interval": "weekly" },
+    { "vendor": "Sentry", "url": "https://sentry.io/pricing/", "interval": "daily" },
+    { "vendor": "Heroku", "url": "https://www.heroku.com/pricing", "interval": "weekly" },
+    { "vendor": "Cloudflare R2", "url": "https://developers.cloudflare.com/r2/pricing/", "interval": "weekly" },
+    { "vendor": "Twilio SendGrid", "url": "https://sendgrid.com/en-us/pricing", "interval": "weekly" },
+    { "vendor": "Algolia", "url": "https://www.algolia.com/pricing/", "interval": "weekly" }
+  ]
+}
