@@ -1,5 +1,6 @@
-// In-memory telemetry counters with file-based persistence.
-// Cumulative stats survive deploys via data/telemetry.json.
+// In-memory telemetry counters with persistent storage.
+// Cumulative stats survive deploys via Upstash Redis (preferred) or data/telemetry.json (fallback).
+// Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN env vars to enable Redis persistence.
 // No PII collected — only aggregate counts and tool-level metrics.
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -26,7 +27,7 @@ let landingPageViews = 0;
 let sessionsToday = 0;
 let sessionsTodayDate = new Date().toISOString().slice(0, 10);
 
-// Cumulative stats loaded from disk
+// Cumulative stats loaded from external storage
 let cumulative = {
   sessions: 0,
   tool_calls: 0,
@@ -38,29 +39,76 @@ let cumulative = {
 
 let telemetryPath = "";
 
-export function loadTelemetry(filePath: string): void {
-  telemetryPath = filePath;
-  try {
-    const raw = readFileSync(filePath, "utf-8");
-    const data = JSON.parse(raw);
-    cumulative.sessions = data.cumulative_sessions ?? 0;
-    cumulative.tool_calls = data.cumulative_tool_calls ?? 0;
-    cumulative.api_hits = data.cumulative_api_hits ?? 0;
-    cumulative.landing_views = data.cumulative_landing_views ?? 0;
-    cumulative.first_session_at = data.first_session_at ?? "";
-    cumulative.last_deploy_at = data.last_deploy_at ?? "";
-  } catch {
-    // No file yet or corrupt — start fresh
-  }
-  // Record this deploy
-  cumulative.last_deploy_at = serverStartedISO;
+// Upstash Redis REST API support (zero dependencies)
+const REDIS_KEY = "agentdeals:telemetry";
+
+export function useRedis(): boolean {
+  return !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
 }
 
-export function flushTelemetry(): void {
-  if (!telemetryPath) return;
+interface TelemetryData {
+  cumulative_sessions: number;
+  cumulative_tool_calls: number;
+  cumulative_api_hits: number;
+  cumulative_landing_views: number;
+  first_session_at: string;
+  last_deploy_at: string;
+}
+
+async function redisGet(): Promise<TelemetryData | null> {
+  const url = process.env.UPSTASH_REDIS_REST_URL!;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(["GET", REDIS_KEY]),
+    });
+    const json = (await res.json()) as { result?: string | null };
+    if (json.result) {
+      return JSON.parse(json.result) as TelemetryData;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function redisSet(data: TelemetryData): Promise<boolean> {
+  const url = process.env.UPSTASH_REDIS_REST_URL!;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(["SET", REDIS_KEY, JSON.stringify(data)]),
+    });
+    const json = (await res.json()) as { result?: string };
+    return json.result === "OK";
+  } catch {
+    return false;
+  }
+}
+
+function parseTelemetryData(data: Record<string, unknown>): void {
+  cumulative.sessions = (data.cumulative_sessions as number) ?? 0;
+  cumulative.tool_calls = (data.cumulative_tool_calls as number) ?? 0;
+  cumulative.api_hits = (data.cumulative_api_hits as number) ?? 0;
+  cumulative.landing_views = (data.cumulative_landing_views as number) ?? 0;
+  cumulative.first_session_at = (data.first_session_at as string) ?? "";
+  cumulative.last_deploy_at = (data.last_deploy_at as string) ?? "";
+}
+
+function buildTelemetryData(): TelemetryData {
   const totalToolCalls = Object.values(toolCalls).reduce((a, b) => a + b, 0);
   const totalApiHits = Object.values(apiHits).reduce((a, b) => a + b, 0);
-  const data = {
+  return {
     cumulative_sessions: cumulative.sessions + totalSessions,
     cumulative_tool_calls: cumulative.tool_calls + totalToolCalls,
     cumulative_api_hits: cumulative.api_hits + totalApiHits,
@@ -68,12 +116,63 @@ export function flushTelemetry(): void {
     first_session_at: cumulative.first_session_at || (totalSessions > 0 ? serverStartedISO : ""),
     last_deploy_at: cumulative.last_deploy_at,
   };
+}
+
+export async function loadTelemetry(filePath: string): Promise<void> {
+  telemetryPath = filePath;
+
+  // Try Redis first if configured
+  if (useRedis()) {
+    const data = await redisGet();
+    if (data) {
+      parseTelemetryData(data as unknown as Record<string, unknown>);
+      cumulative.last_deploy_at = serverStartedISO;
+      return;
+    }
+  }
+
+  // Fall back to file
+  try {
+    const raw = readFileSync(filePath, "utf-8");
+    const data = JSON.parse(raw);
+    parseTelemetryData(data);
+  } catch {
+    // No file yet or corrupt — start fresh
+  }
+  cumulative.last_deploy_at = serverStartedISO;
+}
+
+export async function flushTelemetry(): Promise<void> {
+  if (!telemetryPath) return;
+  const data = buildTelemetryData();
+
+  // Write to Redis if configured
+  if (useRedis()) {
+    await redisSet(data);
+  }
+
+  // Always write to file as backup
   try {
     mkdirSync(dirname(telemetryPath), { recursive: true });
     writeFileSync(telemetryPath, JSON.stringify(data, null, 2) + "\n");
   } catch {
     // Best effort — don't crash the server
   }
+}
+
+export function resetCounters(): void {
+  totalSessions = 0;
+  totalDisconnects = 0;
+  landingPageViews = 0;
+  sessionsToday = 0;
+  for (const key of Object.keys(toolCalls)) toolCalls[key] = 0;
+  for (const key of Object.keys(apiHits)) apiHits[key] = 0;
+  cumulative.sessions = 0;
+  cumulative.tool_calls = 0;
+  cumulative.api_hits = 0;
+  cumulative.landing_views = 0;
+  cumulative.first_session_at = "";
+  cumulative.last_deploy_at = "";
 }
 
 export function recordToolCall(tool: string): void {
