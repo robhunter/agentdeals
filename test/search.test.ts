@@ -434,7 +434,7 @@ describe("eligibility filtering", () => {
           method: "tools/call",
           params: {
             name: "search_offers",
-            arguments: { eligibility_type: "accelerator", category: "Analytics" },
+            arguments: { eligibility_type: "accelerator", category: "Startup Programs" },
           },
         },
       ])) as any[];
@@ -446,7 +446,7 @@ describe("eligibility filtering", () => {
       assert.ok(offers.length >= 3);
       for (const offer of offers) {
         assert.strictEqual(offer.eligibility.type, "accelerator");
-        assert.strictEqual(offer.category, "Analytics");
+        assert.strictEqual(offer.category, "Startup Programs");
       }
     } finally {
       proc.kill();
