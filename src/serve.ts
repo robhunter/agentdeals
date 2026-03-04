@@ -62,9 +62,9 @@ setInterval(() => {
   }
 }, CLEANUP_INTERVAL_MS).unref();
 
-// Load cumulative telemetry from disk (survives deploys)
+// Load cumulative telemetry from Redis or disk (survives deploys)
 const telemetryFile = join(__dirname, "..", "data", "telemetry.json");
-loadTelemetry(telemetryFile);
+await loadTelemetry(telemetryFile);
 
 // Build landing page HTML at startup with real stats
 const offers = loadOffers();
@@ -617,14 +617,14 @@ httpServer.listen(PORT, () => {
   console.error(`agentdeals MCP server running on http://localhost:${PORT}/mcp`);
 });
 
-// Flush telemetry to disk every 5 minutes
+// Flush telemetry every 5 minutes
 const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
 setInterval(() => flushTelemetry(), FLUSH_INTERVAL_MS).unref();
 
 // Flush on graceful shutdown
-function onShutdown() {
-  flushTelemetry();
+async function onShutdown() {
+  await flushTelemetry();
   process.exit(0);
 }
-process.on("SIGTERM", onShutdown);
-process.on("SIGINT", onShutdown);
+process.on("SIGTERM", () => onShutdown());
+process.on("SIGINT", () => onShutdown());
