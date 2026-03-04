@@ -5475,6 +5475,21 @@
       "verifiedDate": "2026-03-02"
     },
     {
+      "vendor": "Terragrunt Scale",
+      "category": "Infrastructure",
+      "description": "IaC orchestration platform by Gruntwork — free tier with GitOps from GitHub/GitLab, dependency-ordered plan/apply, drift detection, and module update automation. Limits match or exceed HCP Terraform free tier (500+ managed resources). Positioned as HCP Terraform alternative",
+      "tier": "Free",
+      "url": "https://terragrunt.com/terragrunt-scale",
+      "tags": [
+        "iac",
+        "terraform",
+        "gitops",
+        "infrastructure",
+        "devops"
+      ],
+      "verifiedDate": "2026-03-04"
+    },
+    {
       "vendor": "Codeberg",
       "category": "Source Control",
       "description": "Unlimited public and private Git repos for free and open-source projects (with unlimited collaborators). Powered by [Forgejo](https://forgejo.org/). Static website hosting with [Codeberg Pages](https://codeberg.page/). CI/CD hosting with [Codeberg's CI](https://docs.codeberg.org/ci/). Translating hosting with [Codeberg Translate](https://translate.codeberg.org/). Includes Package and Container hosting, Project management, and Issue Tracking",
@@ -14303,6 +14318,20 @@
         "free-for-dev"
       ],
       "verifiedDate": "2026-03-02"
+    },
+    {
+      "vendor": "odrive",
+      "category": "Storage",
+      "description": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. Free tier being discontinued March 31, 2026",
+      "tier": "Free",
+      "url": "https://www.odrive.com/",
+      "tags": [
+        "storage",
+        "sync",
+        "cloud-storage",
+        "file-management"
+      ],
+      "verifiedDate": "2026-03-04"
     },
     {
       "vendor": "AllTheFreeStock",
