@@ -38,7 +38,8 @@
     "monitor:pricing": "node scripts/monitor-pricing.js",
     "ingest:free-for-dev": "node scripts/parse-free-for-dev.ts",
     "ingest:startup-deals": "node scripts/ingest-startup-deals.ts",
-    "recategorize": "node scripts/recategorize.ts"
+    "recategorize": "node scripts/recategorize.ts",
+    "validate": "node scripts/validate-data.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0"
