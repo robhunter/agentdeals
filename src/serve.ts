@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
 import { loadOffers, getCategories, searchOffers, loadDealChanges } from "./data.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry } from "./stats.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -61,6 +61,10 @@ setInterval(() => {
     }
   }
 }, CLEANUP_INTERVAL_MS).unref();
+
+// Load cumulative telemetry from disk (survives deploys)
+const telemetryFile = join(__dirname, "..", "data", "telemetry.json");
+loadTelemetry(telemetryFile);
 
 // Build landing page HTML at startup with real stats
 const offers = loadOffers();
@@ -612,3 +616,15 @@ const httpServer = createHttpServer(async (req, res) => {
 httpServer.listen(PORT, () => {
   console.error(`agentdeals MCP server running on http://localhost:${PORT}/mcp`);
 });
+
+// Flush telemetry to disk every 5 minutes
+const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
+setInterval(() => flushTelemetry(), FLUSH_INTERVAL_MS).unref();
+
+// Flush on graceful shutdown
+function onShutdown() {
+  flushTelemetry();
+  process.exit(0);
+}
+process.on("SIGTERM", onShutdown);
+process.on("SIGINT", onShutdown);
