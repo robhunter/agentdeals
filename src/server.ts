@@ -7,13 +7,14 @@ export function createServer(): McpServer {
   const server = new McpServer({
     name: "agentdeals",
     version: "0.1.0",
+    description: "Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. 1,500+ verified offers across 52 categories with pricing change tracking.",
   });
 
   server.registerTool(
     "list_categories",
     {
       description:
-        "List available categories of developer tool offers (cloud hosting, databases, CI/CD, etc.)",
+        "Browse 52 categories of developer infrastructure deals (databases, cloud hosting, CI/CD, monitoring, auth, search, and more). Call this first to see what's available before searching.",
     },
     async () => {
       try {
@@ -46,7 +47,7 @@ export function createServer(): McpServer {
     "search_offers",
     {
       description:
-        "Search developer tool offers by keyword, category, or vendor name. Returns matching deals with details and URLs. Supports pagination via limit/offset.",
+        "Find free tiers, credits, and discounts for developer tools. Use when choosing infrastructure for a new project, comparing vendor pricing, or finding cost savings. Covers 1,500+ offers from vendors like AWS, Vercel, Supabase, Cloudflare, and more. Supports filtering by category, eligibility (public, startup, OSS, student), and sorting by recency.",
       inputSchema: {
         query: z.string().optional().describe("Keyword to search for in vendor names, descriptions, and tags"),
         category: z.string().optional().describe("Filter results to a specific category (e.g. 'Databases', 'Cloud Hosting')"),
@@ -92,7 +93,7 @@ export function createServer(): McpServer {
     "get_offer_details",
     {
       description:
-        "Get full details for a vendor's deals. Use `include_alternatives: true` to compare with similar vendors in the same category — useful when recommending or evaluating developer tools.",
+        "Get full pricing details for a specific vendor's free tier or deal. Use include_alternatives to compare up to 5 similar vendors in the same category — ideal for recommending alternatives or evaluating options.",
       inputSchema: {
         vendor: z.string().describe("Vendor name (case-insensitive match)"),
         include_alternatives: z.boolean().optional().describe("When true, includes full deal objects for up to 5 alternative vendors in the same category"),
@@ -138,7 +139,7 @@ export function createServer(): McpServer {
     "get_deal_changes",
     {
       description:
-        "Get recent pricing and free tier changes for developer tools. Tracks free tier removals, limit reductions/increases, new free tiers, and pricing restructures.",
+        "Check which developer tools recently changed their pricing or free tiers. Tracks removals, limit reductions, limit increases, new free tiers, and restructures. Use when advising on vendor lock-in risk or staying current on pricing shifts.",
       inputSchema: {
         since: z.string().optional().describe("ISO date string (YYYY-MM-DD). Only return changes on or after this date. Default: 30 days ago"),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "limits_increased", "new_free_tier", "pricing_restructured"]).optional().describe("Filter by type of change"),
