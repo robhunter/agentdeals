@@ -66,18 +66,23 @@ export function getCategories(): { name: string; count: number }[] {
 }
 
 export function getOfferDetails(
-  vendorName: string
-): { offer: Offer & { relatedVendors: string[] } } | { error: string; suggestions: string[] } {
+  vendorName: string,
+  includeAlternatives: boolean = false
+): { offer: Offer & { relatedVendors: string[]; alternatives?: Offer[] } } | { error: string; suggestions: string[] } {
   const offers = loadOffers();
   const lowerName = vendorName.toLowerCase();
   const match = offers.find((o) => o.vendor.toLowerCase() === lowerName);
 
   if (match) {
-    const relatedVendors = offers
+    const sameCategoryOffers = offers
       .filter((o) => o.category === match.category && o.vendor !== match.vendor)
-      .slice(0, 5)
-      .map((o) => o.vendor);
-    return { offer: { ...match, relatedVendors } };
+      .slice(0, 5);
+    const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
+    const result: Offer & { relatedVendors: string[]; alternatives?: Offer[] } = { ...match, relatedVendors };
+    if (includeAlternatives) {
+      result.alternatives = sameCategoryOffers;
+    }
+    return { offer: result };
   }
 
   // No exact match — suggest similar vendors

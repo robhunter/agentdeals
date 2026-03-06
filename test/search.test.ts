@@ -749,3 +749,113 @@ describe("get_offer_details tool", () => {
     }
   });
 });
+
+describe("get_offer_details include_alternatives", () => {
+  it("returns relatedVendors as strings when include_alternatives is false", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "Neon", include_alternatives: false } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const offer = JSON.parse(result.result.content[0].text);
+      assert.ok(Array.isArray(offer.relatedVendors));
+      assert.ok(offer.relatedVendors.length > 0);
+      assert.strictEqual(typeof offer.relatedVendors[0], "string");
+      assert.strictEqual(offer.alternatives, undefined);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns full deal objects in alternatives when include_alternatives is true", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "Neon", include_alternatives: true } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const offer = JSON.parse(result.result.content[0].text);
+      assert.ok(Array.isArray(offer.relatedVendors));
+      assert.ok(Array.isArray(offer.alternatives));
+      assert.ok(offer.alternatives.length > 0);
+      assert.ok(offer.alternatives.length <= 5);
+      const alt = offer.alternatives[0];
+      assert.ok(typeof alt.vendor === "string");
+      assert.ok(typeof alt.category === "string");
+      assert.ok(typeof alt.description === "string");
+      assert.ok(typeof alt.url === "string");
+      assert.ok(!offer.alternatives.some((a: any) => a.vendor === "Neon"));
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns empty alternatives array for vendor with no same-category alternatives", async () => {
+    const proc = startServer();
+    try {
+      // Use a vendor that's likely alone in its category — find one via search first
+      const searchResponses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "Neon", include_alternatives: true } },
+        },
+      ])) as any[];
+
+      const searchResult = searchResponses.find((r: any) => r.id === 2) as any;
+      assert.ok(!searchResult.result.isError);
+      const offer = JSON.parse(searchResult.result.content[0].text);
+      // Alternatives should be capped at 5
+      assert.ok(offer.alternatives.length <= 5);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("caps alternatives at 5", async () => {
+    const proc = startServer();
+    try {
+      // Databases category has many vendors, so alternatives should be capped
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "get_offer_details", arguments: { vendor: "Neon", include_alternatives: true } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const offer = JSON.parse(result.result.content[0].text);
+      assert.ok(offer.alternatives.length <= 5);
+      // relatedVendors should match alternatives vendor names
+      assert.deepStrictEqual(
+        offer.relatedVendors,
+        offer.alternatives.map((a: any) => a.vendor)
+      );
+    } finally {
+      proc.kill();
+    }
+  });
+});

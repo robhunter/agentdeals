@@ -92,15 +92,16 @@ export function createServer(): McpServer {
     "get_offer_details",
     {
       description:
-        "Get full details for a specific vendor by name, including related vendors in the same category.",
+        "Get full details for a vendor's deals. Use `include_alternatives: true` to compare with similar vendors in the same category — useful when recommending or evaluating developer tools.",
       inputSchema: {
         vendor: z.string().describe("Vendor name (case-insensitive match)"),
+        include_alternatives: z.boolean().optional().describe("When true, includes full deal objects for up to 5 alternative vendors in the same category"),
       },
     },
-    async ({ vendor }) => {
+    async ({ vendor, include_alternatives }) => {
       try {
         recordToolCall("get_offer_details");
-        const result = getOfferDetails(vendor);
+        const result = getOfferDetails(vendor, include_alternatives ?? false);
         if ("error" in result) {
           const msg = result.suggestions.length > 0
             ? `${result.error} Did you mean: ${result.suggestions.join(", ")}?`
