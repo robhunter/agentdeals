@@ -284,7 +284,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(body["$schema"], "https://glama.ai/mcp/schemas/connector.json");
     assert.ok(Array.isArray(body.maintainers));
     assert.strictEqual(body.maintainers.length, 1);
-    assert.strictEqual(body.maintainers[0].email, "rob.v.hunter@gmail.com");
+    assert.strictEqual(body.maintainers[0].email, "robvhunter@gmail.com");
   });
 
   it("serves landing page at root URL", async () => {

@@ -581,7 +581,7 @@ const httpServer = createHttpServer(async (req, res) => {
     res.end(JSON.stringify({
       "$schema": "https://glama.ai/mcp/schemas/connector.json",
       "maintainers": [
-        { "email": "rob.v.hunter@gmail.com" }
+        { "email": "robvhunter@gmail.com" }
       ]
     }));
   } else if (url.pathname === "/api/stats" && req.method === "GET") {
