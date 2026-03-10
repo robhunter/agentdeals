@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails } from "./data.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry } from "./stats.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -289,8 +289,12 @@ footer a{color:var(--text-muted)}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically with search, filtering, and pagination.</p>
-        <pre><code>GET /api/offers?q=database</code></pre>
+        <p>Query deals programmatically. 5 endpoints with search, filtering, and pagination.</p>
+        <pre><code>GET /api/offers?q=database
+GET /api/categories
+GET /api/new?days=7
+GET /api/changes?since=2025-01-01
+GET /api/details/Supabase</code></pre>
       </div>
       <div class="how-card">
         <div class="how-card-icon">03</div>
@@ -609,6 +613,37 @@ const httpServer = createHttpServer(async (req, res) => {
     const cats = getCategories();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ categories: cats }));
+  } else if (url.pathname === "/api/changes" && req.method === "GET") {
+    recordApiHit("/api/changes");
+    const since = url.searchParams.get("since") || undefined;
+    const type = url.searchParams.get("type") || undefined;
+    const vendorFilter = url.searchParams.get("vendor") || undefined;
+    // Validate since is a valid date if provided
+    if (since && !/^\d{4}-\d{2}-\d{2}/.test(since)) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid 'since' parameter. Expected ISO date string (YYYY-MM-DD)." }));
+      return;
+    }
+    const result = getDealChanges(since, type, vendorFilter);
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(result));
+  } else if (url.pathname.startsWith("/api/details/") && req.method === "GET") {
+    recordApiHit("/api/details");
+    const vendorParam = decodeURIComponent(url.pathname.slice("/api/details/".length));
+    if (!vendorParam) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Vendor name is required." }));
+      return;
+    }
+    const includeAlternatives = url.searchParams.get("alternatives") === "true";
+    const detailResult = getOfferDetails(vendorParam, includeAlternatives);
+    if ("error" in detailResult) {
+      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: detailResult.error, suggestions: detailResult.suggestions }));
+      return;
+    }
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ offer: detailResult.offer, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}) }));
   } else if (url.pathname === "/") {
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });

@@ -522,6 +522,108 @@ describe("HTTP transport", () => {
     assert.strictEqual(body.sessions, 1);
   });
 
+  it("GET /api/changes returns deal changes", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/changes`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.changes));
+    assert.ok(typeof body.total === "number");
+    assert.strictEqual(body.changes.length, body.total);
+  });
+
+  it("GET /api/changes filters by since, type, and vendor", async () => {
+    proc = await startHttpServer();
+
+    // Get all changes (use a very old date to get everything)
+    const allResp = await fetch(`http://localhost:${PORT}/api/changes?since=2020-01-01`);
+    const allBody = await allResp.json() as any;
+    assert.ok(allBody.total > 0, "Should have deal changes with since=2020-01-01");
+
+    // Filter by type
+    const typeResp = await fetch(`http://localhost:${PORT}/api/changes?since=2020-01-01&type=free_tier_removed`);
+    const typeBody = await typeResp.json() as any;
+    for (const c of typeBody.changes) {
+      assert.strictEqual(c.change_type, "free_tier_removed");
+    }
+
+    // Filter by vendor
+    const vendorResp = await fetch(`http://localhost:${PORT}/api/changes?since=2020-01-01&vendor=Google`);
+    const vendorBody = await vendorResp.json() as any;
+    for (const c of vendorBody.changes) {
+      assert.ok(c.vendor.toLowerCase().includes("google"));
+    }
+  });
+
+  it("GET /api/changes returns 400 for invalid since param", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/changes?since=not-a-date`);
+    assert.strictEqual(response.status, 400);
+    const body = await response.json() as any;
+    assert.ok(body.error.includes("Invalid"));
+  });
+
+  it("GET /api/details/:vendor returns offer details", async () => {
+    proc = await startHttpServer();
+
+    // Get a known vendor from /api/offers
+    const offersResp = await fetch(`http://localhost:${PORT}/api/offers?limit=1`);
+    const offersBody = await offersResp.json() as any;
+    const vendorName = offersBody.offers[0].vendor;
+
+    const response = await fetch(`http://localhost:${PORT}/api/details/${encodeURIComponent(vendorName)}`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.offer);
+    assert.strictEqual(body.offer.vendor, vendorName);
+    assert.ok(!body.alternatives, "Should not include alternatives by default");
+  });
+
+  it("GET /api/details/:vendor?alternatives=true includes alternatives", async () => {
+    proc = await startHttpServer();
+
+    // Get a known vendor
+    const offersResp = await fetch(`http://localhost:${PORT}/api/offers?limit=1`);
+    const offersBody = await offersResp.json() as any;
+    const vendorName = offersBody.offers[0].vendor;
+
+    const response = await fetch(`http://localhost:${PORT}/api/details/${encodeURIComponent(vendorName)}?alternatives=true`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.offer);
+    assert.ok(Array.isArray(body.alternatives));
+    assert.ok(body.alternatives.length <= 5);
+  });
+
+  it("GET /api/details/:vendor returns 404 for unknown vendor", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/details/${encodeURIComponent("NonExistentVendor12345")}`);
+    assert.strictEqual(response.status, 404);
+    const body = await response.json() as any;
+    assert.ok(body.error.includes("not found"));
+  });
+
+  it("GET /api/details/:vendor is case-insensitive", async () => {
+    proc = await startHttpServer();
+
+    // Get a known vendor
+    const offersResp = await fetch(`http://localhost:${PORT}/api/offers?limit=1`);
+    const offersBody = await offersResp.json() as any;
+    const vendorName = offersBody.offers[0].vendor;
+
+    // Request with different casing
+    const lowerName = vendorName.toLowerCase();
+    const response = await fetch(`http://localhost:${PORT}/api/details/${encodeURIComponent(lowerName)}`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.offer);
+    assert.strictEqual(body.offer.vendor, vendorName);
+  });
+
   it("logs session_close on explicit DELETE", async () => {
     proc = await startHttpServer();
 
