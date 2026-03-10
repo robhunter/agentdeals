@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
+import { getStackRecommendation } from "./stacks.js";
 
 export function createServer(getSessionId?: () => string | undefined): McpServer {
   const server = new McpServer({
@@ -208,6 +209,44 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             {
               type: "text" as const,
               text: `Error getting deal changes: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_stack_recommendation",
+    {
+      description:
+        "Get a complete free-tier infrastructure stack recommendation for your project. Instead of searching category by category, describe what you're building and get a curated stack with hosting, database, auth, and more — all free tier. Covers SaaS apps, API backends, static sites, mobile apps, AI/ML projects, e-commerce, and DevOps.",
+      inputSchema: {
+        use_case: z.string().describe("What you're building (e.g., 'Next.js SaaS app', 'Python API backend', 'static blog', 'mobile app', 'AI chatbot')"),
+        requirements: z.array(z.string()).optional().describe("Specific infrastructure needs to include (e.g., ['database', 'auth', 'email', 'monitoring']). Overrides template defaults when provided."),
+      },
+    },
+    async ({ use_case, requirements }) => {
+      try {
+        recordToolCall("get_stack_recommendation");
+        const result = getStackRecommendation(use_case, requirements);
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_stack_recommendation", params: { use_case, requirements }, result_count: result.stack.length, session_id: getSessionId?.() });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("get_stack_recommendation error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error getting stack recommendation: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };

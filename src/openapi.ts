@@ -202,6 +202,55 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/stack": {
+      get: {
+        summary: "Get free-tier stack recommendation",
+        description: "Returns a curated infrastructure stack recommendation based on your project type. Covers hosting, database, auth, and more — all free tier.",
+        parameters: [
+          { name: "use_case", in: "query", required: true, description: "What you're building (e.g., 'Next.js SaaS app', 'API backend', 'static blog')", schema: { type: "string" }, example: "Next.js SaaS app" },
+          { name: "requirements", in: "query", description: "Comma-separated infrastructure needs (e.g., 'database,auth,email')", schema: { type: "string" }, example: "database,auth,email" }
+        ],
+        responses: {
+          "200": {
+            description: "Stack recommendation",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    use_case: { type: "string" },
+                    stack: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          role: { type: "string" },
+                          vendor: { type: "string" },
+                          tier: { type: "string" },
+                          description: { type: "string" },
+                          url: { type: "string", format: "uri" }
+                        }
+                      }
+                    },
+                    total_monthly_cost: { type: "string" },
+                    limitations: { type: "array", items: { type: "string" } },
+                    upgrade_path: { type: "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            description: "Missing use_case parameter",
+            content: {
+              "application/json": {
+                schema: { type: "object", properties: { error: { type: "string" } } }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/query-log": {
       get: {
         summary: "Recent request log",
