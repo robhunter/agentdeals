@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getOfferDetails, searchOffers } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers } from "./data.js";
 import { recordToolCall } from "./stats.js";
 
 export function createServer(): McpServer {
@@ -128,6 +128,42 @@ export function createServer(): McpServer {
             {
               type: "text" as const,
               text: `Error getting offer details: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_new_offers",
+    {
+      description:
+        "Check what developer tool deals were recently added or updated. Returns offers verified within the last N days, sorted newest first. Use for periodic checks to stay current on new free tiers and credits.",
+      inputSchema: {
+        days: z.number().optional().describe("Number of days to look back (default: 7, max: 30)"),
+      },
+    },
+    async ({ days }) => {
+      try {
+        recordToolCall("get_new_offers");
+        const result = getNewOffers(days ?? 7);
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("get_new_offers error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error getting new offers: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };

@@ -149,6 +149,18 @@ export function searchOffers(
   return results;
 }
 
+export function getNewOffers(days: number = 7): { offers: Offer[]; total: number } {
+  const clampedDays = Math.min(Math.max(days, 1), 30);
+  const cutoff = new Date(Date.now() - clampedDays * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+  const offers = loadOffers();
+  const results = offers
+    .filter((o) => o.verifiedDate >= cutoff)
+    .sort((a, b) => b.verifiedDate.localeCompare(a.verifiedDate));
+  return { offers: results, total: results.length };
+}
+
 export function loadDealChanges(): DealChange[] {
   if (cachedChanges) return cachedChanges;
 

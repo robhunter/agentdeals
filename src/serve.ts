@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
-import { loadOffers, getCategories, searchOffers, loadDealChanges } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges } from "./data.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry } from "./stats.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -598,6 +598,12 @@ const httpServer = createHttpServer(async (req, res) => {
     const paged = results.slice(offset, offset + limit);
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ offers: paged, total }));
+  } else if (url.pathname === "/api/new" && req.method === "GET") {
+    recordApiHit("/api/new");
+    const days = parseInt(url.searchParams.get("days") ?? "7", 10);
+    const result = getNewOffers(days);
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(result));
   } else if (url.pathname === "/api/categories" && req.method === "GET") {
     recordApiHit("/api/categories");
     const cats = getCategories();
