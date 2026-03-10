@@ -795,6 +795,23 @@
         "env0",
         "Scalr"
       ]
+    },
+    {
+      "vendor": "HCP Terraform",
+      "change_type": "pricing_restructured",
+      "date": "2026-03-31",
+      "summary": "HashiCorp legacy free plan for HCP Terraform ends March 31, 2026. All legacy free plan users auto-migrated to enhanced free tier with different limits: 500 managed resources (previously unlimited for small teams), unlimited users, 1 concurrent run, SSO, and policy as code (Sentinel + OPA)",
+      "previous_state": "Legacy free plan with basic Terraform Cloud features",
+      "current_state": "Enhanced free tier: 500 managed resources, unlimited users, 1 concurrent run, SSO, policy as code (Sentinel + OPA). Auto-migration from legacy plan",
+      "impact": "high",
+      "source_url": "https://www.hashicorp.com/products/terraform/pricing",
+      "category": "Infrastructure",
+      "alternatives": [
+        "Spacelift",
+        "env0",
+        "Scalr",
+        "Terragrunt Scale"
+      ]
     }
   ]
 }
