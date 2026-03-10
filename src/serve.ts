@@ -6,6 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails } from "./data.js";
+import { getStackRecommendation } from "./stacks.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 
@@ -290,12 +291,13 @@ footer a{color:var(--text-muted)}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically. 7 endpoints with search, filtering, and pagination.</p>
+        <p>Query deals programmatically. 8 endpoints with search, filtering, and stack recommendations.</p>
         <pre><code>GET /api/offers?q=database
 GET /api/categories
 GET /api/new?days=7
 GET /api/changes?since=2025-01-01
 GET /api/details/Supabase
+GET /api/stack?use_case=SaaS+app
 GET /api/query-log?limit=50
 GET /api/openapi.json</code></pre>
       </div>
@@ -591,6 +593,20 @@ const httpServer = createHttpServer(async (req, res) => {
         { "email": "robvhunter@gmail.com" }
       ]
     }));
+  } else if (url.pathname === "/api/stack" && req.method === "GET") {
+    recordApiHit("/api/stack");
+    const useCase = url.searchParams.get("use_case") || url.searchParams.get("q") || "";
+    if (!useCase) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "use_case parameter is required (e.g., ?use_case=Next.js+SaaS+app)" }));
+      return;
+    }
+    const requirementsParam = url.searchParams.get("requirements");
+    const requirements = requirementsParam ? requirementsParam.split(",").map(r => r.trim()).filter(Boolean) : undefined;
+    const result = getStackRecommendation(useCase, requirements);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/stack", params: { use_case: useCase, requirements }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.stack.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(result));
   } else if (url.pathname === "/api/query-log" && req.method === "GET") {
     const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") ?? "50", 10) || 50, 1), 200);
     const entries = await getRequestLog(limit);

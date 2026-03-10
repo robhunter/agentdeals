@@ -15,11 +15,13 @@ const toolCalls: Record<string, number> = {
   get_offer_details: 0,
   get_deal_changes: 0,
   get_new_offers: 0,
+  get_stack_recommendation: 0,
 };
 
 const apiHits: Record<string, number> = {
   "/api/offers": 0,
   "/api/categories": 0,
+  "/api/stack": 0,
 };
 
 let totalSessions = 0;
