@@ -21119,6 +21119,66 @@
         "api"
       ],
       "verifiedDate": "2026-03-04"
+    },
+    {
+      "vendor": "Devin",
+      "category": "AI Coding",
+      "description": "Autonomous AI software engineer by Cognition Labs — handles code migrations, framework upgrades, prototypes, integrations, bug fixes. Core plan is pay-as-you-go at $2.25/ACU starting from $20. Team plan $500/mo (250 credits). Devin Review (PR review) is free during early release. Open-source maintainers with 100+ forks can apply for $500 in free credits.",
+      "tier": "Free Credits",
+      "url": "https://devin.ai/pricing",
+      "tags": [
+        "ai",
+        "coding",
+        "autonomous",
+        "code generation",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-10"
+    },
+    {
+      "vendor": "Bolt.new",
+      "category": "AI Coding",
+      "description": "AI app builder by StackBlitz — generates frontend, backend, and database code in a live runtime environment. Free tier: 1M tokens/month (300K daily cap), unlimited databases, public + private projects, native hosting with Bolt branding, 10MB file upload limit. Paid plans from $20/mo for higher token limits.",
+      "tier": "Free",
+      "url": "https://bolt.new/pricing",
+      "tags": [
+        "ai",
+        "coding",
+        "app builder",
+        "full-stack",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-10"
+    },
+    {
+      "vendor": "Lovable",
+      "category": "AI Coding",
+      "description": "AI app builder (formerly GPT Engineer) — generates full-stack apps from natural language. Free tier: 5 daily credits (up to 30/month), public and private projects, cloud hosting on lovable.app, Lovable branding badge. Pro $25/mo (100 credits + 5 daily). Business $50/mo.",
+      "tier": "Free",
+      "url": "https://lovable.dev/pricing",
+      "tags": [
+        "ai",
+        "coding",
+        "app builder",
+        "no-code",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-10"
+    },
+    {
+      "vendor": "Claude",
+      "category": "AI Coding",
+      "description": "AI assistant by Anthropic for coding, analysis, and writing. Free tier: Claude.ai access with Projects (up to 5), Artifacts, and limited Sonnet usage — no API key required. Claude Code CLI available for Pro subscribers. Pro $20/mo, Team $25/seat/month, Max $125/mo.",
+      "tier": "Free",
+      "url": "https://claude.ai",
+      "tags": [
+        "ai",
+        "coding",
+        "llm",
+        "code generation",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-10"
     }
   ]
 }

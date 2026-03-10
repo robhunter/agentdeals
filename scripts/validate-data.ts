@@ -9,6 +9,7 @@ const ROOT = resolve(__dirname, "..");
 
 const VALID_CATEGORIES = [
   "AI / ML",
+  "AI Coding",
   "API Development",
   "API Gateway",
   "Analytics",
