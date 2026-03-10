@@ -686,4 +686,27 @@ describe("HTTP transport", () => {
     const body = await health.json() as any;
     assert.strictEqual(body.sessions, 0);
   });
+
+  it("GET /api/openapi.json returns valid OpenAPI 3.0 spec", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/openapi.json`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const body = await response.json() as any;
+    assert.strictEqual(body.openapi, "3.0.3");
+    assert.strictEqual(body.info.title, "AgentDeals API");
+    assert.ok(body.info.description.includes("No authentication required"));
+    assert.ok(body.paths["/api/offers"]);
+    assert.ok(body.paths["/api/categories"]);
+    assert.ok(body.paths["/api/new"]);
+    assert.ok(body.paths["/api/changes"]);
+    assert.ok(body.paths["/api/details/{vendor}"]);
+    assert.ok(body.paths["/api/stats"]);
+    assert.strictEqual(Object.keys(body.paths).length, 6);
+    assert.ok(body.components.schemas.Offer);
+    assert.ok(body.components.schemas.DealChange);
+    assert.ok(body.components.schemas.Eligibility);
+  });
 });

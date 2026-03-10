@@ -7,6 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails } from "./data.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry } from "./stats.js";
+import { openapiSpec } from "./openapi.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -289,12 +290,13 @@ footer a{color:var(--text-muted)}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically. 5 endpoints with search, filtering, and pagination.</p>
+        <p>Query deals programmatically. 6 endpoints with search, filtering, and pagination.</p>
         <pre><code>GET /api/offers?q=database
 GET /api/categories
 GET /api/new?days=7
 GET /api/changes?since=2025-01-01
-GET /api/details/Supabase</code></pre>
+GET /api/details/Supabase
+GET /api/openapi.json</code></pre>
       </div>
       <div class="how-card">
         <div class="how-card-icon">03</div>
@@ -588,6 +590,10 @@ const httpServer = createHttpServer(async (req, res) => {
         { "email": "robvhunter@gmail.com" }
       ]
     }));
+  } else if (url.pathname === "/api/openapi.json" && req.method === "GET") {
+    recordApiHit("/api/openapi.json");
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(openapiSpec));
   } else if (url.pathname === "/api/stats" && req.method === "GET") {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(getConnectionStats(sessions.size)));
