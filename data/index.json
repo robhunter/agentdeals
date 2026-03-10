@@ -453,9 +453,10 @@
         "ci",
         "cd",
         "automation",
-        "github"
+        "github",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-10"
     },
     {
       "vendor": "GitLab CI",
@@ -2140,9 +2141,10 @@
         "testing",
         "api-testing",
         "api-development",
-        "mock-servers"
+        "mock-servers",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-01"
+      "verifiedDate": "2026-03-10"
     },
     {
       "vendor": "Directus",
