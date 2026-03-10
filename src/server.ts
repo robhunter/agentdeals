@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers } from "./data.js";
-import { recordToolCall } from "./stats.js";
+import { recordToolCall, logRequest } from "./stats.js";
 
-export function createServer(): McpServer {
+export function createServer(getSessionId?: () => string | undefined): McpServer {
   const server = new McpServer({
     name: "agentdeals",
     version: "0.1.0",
@@ -20,6 +20,7 @@ export function createServer(): McpServer {
       try {
         recordToolCall("list_categories");
         const categories = getCategories();
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "list_categories", params: {}, result_count: categories.length, session_id: getSessionId?.() });
         return {
           content: [
             {
@@ -66,6 +67,7 @@ export function createServer(): McpServer {
         const effectiveOffset = offset ?? 0;
         const effectiveLimit = limit ?? (usePagination ? 20 : total);
         const results = allResults.slice(effectiveOffset, effectiveOffset + effectiveLimit);
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_offers", params: { query, category, eligibility_type, sort, limit: effectiveLimit, offset: effectiveOffset }, result_count: results.length, session_id: getSessionId?.() });
         return {
           content: [
             {
@@ -107,11 +109,13 @@ export function createServer(): McpServer {
           const msg = result.suggestions.length > 0
             ? `${result.error} Did you mean: ${result.suggestions.join(", ")}?`
             : `${result.error} No similar vendors found.`;
+          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_offer_details", params: { vendor, include_alternatives }, result_count: 0, session_id: getSessionId?.() });
           return {
             isError: true,
             content: [{ type: "text" as const, text: msg }],
           };
         }
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_offer_details", params: { vendor, include_alternatives }, result_count: 1, session_id: getSessionId?.() });
         return {
           content: [
             {
@@ -148,6 +152,7 @@ export function createServer(): McpServer {
       try {
         recordToolCall("get_new_offers");
         const result = getNewOffers(days ?? 7);
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_new_offers", params: { days: days ?? 7 }, result_count: result.offers.length, session_id: getSessionId?.() });
         return {
           content: [
             {
@@ -186,6 +191,7 @@ export function createServer(): McpServer {
       try {
         recordToolCall("get_deal_changes");
         const result = getDealChanges(since, change_type, vendor);
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_deal_changes", params: { since, change_type, vendor }, result_count: result.changes.length, session_id: getSessionId?.() });
         return {
           content: [
             {

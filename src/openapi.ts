@@ -202,6 +202,45 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/query-log": {
+      get: {
+        summary: "Recent request log",
+        description: "Returns recent request-level log entries for both MCP tool calls and REST API hits. Stored in Redis, capped at 1000 entries.",
+        parameters: [
+          { name: "limit", in: "query", description: "Number of entries to return (1-200)", schema: { type: "integer", default: 50 } }
+        ],
+        responses: {
+          "200": {
+            description: "Recent request log entries",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    entries: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          ts: { type: "string", format: "date-time" },
+                          type: { type: "string", enum: ["mcp", "api"] },
+                          endpoint: { type: "string" },
+                          params: { type: "object" },
+                          user_agent: { type: "string" },
+                          result_count: { type: "integer" },
+                          session_id: { type: "string" }
+                        }
+                      }
+                    },
+                    count: { type: "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stats": {
       get: {
         summary: "Service statistics",

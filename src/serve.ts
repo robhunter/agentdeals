@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails } from "./data.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -290,12 +290,13 @@ footer a{color:var(--text-muted)}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically. 6 endpoints with search, filtering, and pagination.</p>
+        <p>Query deals programmatically. 7 endpoints with search, filtering, and pagination.</p>
         <pre><code>GET /api/offers?q=database
 GET /api/categories
 GET /api/new?days=7
 GET /api/changes?since=2025-01-01
 GET /api/details/Supabase
+GET /api/query-log?limit=50
 GET /api/openapi.json</code></pre>
       </div>
       <div class="how-card">
@@ -526,7 +527,7 @@ const httpServer = createHttpServer(async (req, res) => {
           }
         };
 
-        const mcpServer = createServer();
+        const mcpServer = createServer(() => transport.sessionId);
         await mcpServer.connect(transport);
         await transport.handleRequest(req, res, parsedBody);
       } else {
@@ -590,8 +591,14 @@ const httpServer = createHttpServer(async (req, res) => {
         { "email": "robvhunter@gmail.com" }
       ]
     }));
+  } else if (url.pathname === "/api/query-log" && req.method === "GET") {
+    const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") ?? "50", 10) || 50, 1), 200);
+    const entries = await getRequestLog(limit);
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ entries, count: entries.length }));
   } else if (url.pathname === "/api/openapi.json" && req.method === "GET") {
     recordApiHit("/api/openapi.json");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/openapi.json", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(openapiSpec));
   } else if (url.pathname === "/api/stats" && req.method === "GET") {
@@ -606,17 +613,20 @@ const httpServer = createHttpServer(async (req, res) => {
     const results = searchOffers(q, category);
     const total = results.length;
     const paged = results.slice(offset, offset + limit);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ offers: paged, total }));
   } else if (url.pathname === "/api/new" && req.method === "GET") {
     recordApiHit("/api/new");
     const days = parseInt(url.searchParams.get("days") ?? "7", 10);
     const result = getNewOffers(days);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/new", params: { days }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.offers.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
   } else if (url.pathname === "/api/categories" && req.method === "GET") {
     recordApiHit("/api/categories");
     const cats = getCategories();
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/categories", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: cats.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ categories: cats }));
   } else if (url.pathname === "/api/changes" && req.method === "GET") {
@@ -631,6 +641,7 @@ const httpServer = createHttpServer(async (req, res) => {
       return;
     }
     const result = getDealChanges(since, type, vendorFilter);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
   } else if (url.pathname.startsWith("/api/details/") && req.method === "GET") {
@@ -644,10 +655,12 @@ const httpServer = createHttpServer(async (req, res) => {
     const includeAlternatives = url.searchParams.get("alternatives") === "true";
     const detailResult = getOfferDetails(vendorParam, includeAlternatives);
     if ("error" in detailResult) {
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
       res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: detailResult.error, suggestions: detailResult.suggestions }));
       return;
     }
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ offer: detailResult.offer, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}) }));
   } else if (url.pathname === "/") {
