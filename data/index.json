@@ -939,9 +939,9 @@
       "verifiedDate": "2026-02-24"
     },
     {
-      "vendor": "Bright Data",
+      "vendor": "Bright Data MCP Server",
       "category": "Web Scraping",
-      "description": "Web MCP Server — 5K requests/month free for search and scrape-to-markdown via MCP",
+      "description": "MCP-native web scraping infrastructure — 5,000 requests/month free tier. Search, scrape-to-markdown, and structured data extraction via MCP protocol. Notable as an early MCP-native developer tool with a free tier",
       "tier": "Free",
       "url": "https://brightdata.com/products/web-scraper",
       "tags": [
@@ -950,9 +950,10 @@
         "data",
         "web",
         "api",
-        "free tier"
+        "free tier",
+        "mcp-server"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-10"
     },
     {
       "vendor": "Firecrawl",
@@ -1352,8 +1353,8 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free access to Gemini 2.5 Pro (5 RPM, ~25 RPD), Flash (10 RPM), Flash-Lite (15 RPM). 1M token context. Rate limits reduced 50-80% in Dec 2025. Gemini 2.0 models retiring March 3, 2026",
-      "tier": "Free",
+      "description": "Free tier significantly curtailed in late 2025. Pro model free tier removed entirely. Flash free tier rate limits reduced 50-80% (from ~250 RPD to 20-50 RPD). Current free limits: Flash (10 RPM), Flash-Lite (15 RPM). 1M token context. Google PM admitted generous limits 'were only supposed to be available for a single weekend'",
+      "tier": "Free (Reduced)",
       "url": "https://ai.google.dev/gemini-api/docs/pricing",
       "tags": [
         "ai",
@@ -1364,7 +1365,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-10"
     },
     {
       "vendor": "Mistral AI",
@@ -4000,17 +4001,18 @@
     {
       "vendor": "X (Twitter)",
       "category": "API Gateway",
-      "description": "Social media API — Free tier extremely limited: ~500 posts/month read, 1,500 tweets/month write, no search functionality, ~1 request per 15 minutes for reading. Basic tier starts at $200/month. Pay-per-use model introduced February 2026 alongside fixed tiers",
-      "tier": "Free",
+      "description": "Social media API — free tier eliminated February 2026, replaced with pay-per-use credit model. Active free-tier users receive $0 voucher. 'For-good' utility apps remain free. Basic fixed tier starts at $200/month. Pay-per-use credits available as alternative to fixed tiers",
+      "tier": "Pay-per-use (no free tier)",
       "url": "https://developer.x.com/en/portal/products",
       "tags": [
         "social-media",
         "api",
         "twitter",
         "data",
-        "social"
+        "social",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-10"
     },
     {
       "vendor": "Grafana k6 Cloud",
