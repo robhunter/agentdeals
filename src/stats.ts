@@ -14,6 +14,7 @@ const toolCalls: Record<string, number> = {
   list_categories: 0,
   get_offer_details: 0,
   get_deal_changes: 0,
+  get_new_offers: 0,
 };
 
 const apiHits: Record<string, number> = {
@@ -94,6 +95,86 @@ async function redisSet(data: TelemetryData): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+// Request-level logging to Upstash Redis
+const REQUEST_LOG_KEY = "agentdeals:request_log";
+const REQUEST_LOG_MAX = 1000;
+
+export interface RequestLogEntry {
+  ts: string;
+  type: "mcp" | "api";
+  endpoint: string;
+  params: Record<string, unknown>;
+  user_agent?: string;
+  result_count: number;
+  session_id?: string;
+}
+
+async function redisLpush(key: string, value: string): Promise<boolean> {
+  if (!useRedis()) return false;
+  const url = process.env.UPSTASH_REDIS_REST_URL!;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(["LPUSH", key, value]),
+    });
+    const json = (await res.json()) as { result?: number };
+    return typeof json.result === "number";
+  } catch {
+    return false;
+  }
+}
+
+async function redisLtrim(key: string, start: number, stop: number): Promise<boolean> {
+  if (!useRedis()) return false;
+  const url = process.env.UPSTASH_REDIS_REST_URL!;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(["LTRIM", key, start, stop]),
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function redisLrange(key: string, start: number, stop: number): Promise<string[]> {
+  if (!useRedis()) return [];
+  const url = process.env.UPSTASH_REDIS_REST_URL!;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(["LRANGE", key, start, stop]),
+    });
+    const json = (await res.json()) as { result?: string[] };
+    return json.result ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function logRequest(entry: RequestLogEntry): Promise<void> {
+  const pushed = await redisLpush(REQUEST_LOG_KEY, JSON.stringify(entry));
+  if (pushed) {
+    // Cap list at REQUEST_LOG_MAX entries
+    await redisLtrim(REQUEST_LOG_KEY, 0, REQUEST_LOG_MAX - 1);
+  }
+}
+
+export async function getRequestLog(limit = 50): Promise<RequestLogEntry[]> {
+  const raw = await redisLrange(REQUEST_LOG_KEY, 0, limit - 1);
+  return raw.map((s) => {
+    try { return JSON.parse(s) as RequestLogEntry; }
+    catch { return null; }
+  }).filter((e): e is RequestLogEntry => e !== null);
 }
 
 function parseTelemetryData(data: Record<string, unknown>): void {
