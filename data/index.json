@@ -5422,6 +5422,21 @@
       "verifiedDate": "2026-03-02"
     },
     {
+      "vendor": "DBOS",
+      "category": "Workflow Automation",
+      "description": "Durable workflow orchestration platform — free tier includes 1 Firecracker microVM per app (512 MB RAM, 1 vCPU), scale to zero, 1M service calls/month, 3-day system data retention, Amazon RDS Postgres backend. Open-source DBOS Transact library free forever for TypeScript, Python, Go, Java, Kotlin",
+      "tier": "Free",
+      "url": "https://www.dbos.dev/pricing",
+      "tags": [
+        "workflows",
+        "orchestration",
+        "serverless",
+        "durable-execution",
+        "postgres"
+      ],
+      "verifiedDate": "2026-03-10"
+    },
+    {
       "vendor": "Brainboard",
       "category": "Infrastructure",
       "description": "Collaborative solution to visually build and manage cloud infrastructures from end-to-end.",
