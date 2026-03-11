@@ -277,3 +277,61 @@ export function getDealChanges(
 
   return { changes: results, total: results.length };
 }
+
+function findVendor(offers: Offer[], name: string): { offer: Offer | null; suggestions: string[] } {
+  const lower = name.toLowerCase();
+  const exact = offers.find((o) => o.vendor.toLowerCase() === lower);
+  if (exact) return { offer: exact, suggestions: [] };
+
+  // Fuzzy: substring match
+  const fuzzy = offers.filter(
+    (o) => o.vendor.toLowerCase().includes(lower) || lower.includes(o.vendor.toLowerCase())
+  );
+  if (fuzzy.length === 1) return { offer: fuzzy[0], suggestions: [] };
+
+  return { offer: null, suggestions: fuzzy.slice(0, 5).map((o) => o.vendor) };
+}
+
+export interface ComparisonResult {
+  vendor_a: Offer & { deal_changes: DealChange[] };
+  vendor_b: Offer & { deal_changes: DealChange[] };
+  shared_categories: boolean;
+  category_overlap: string[];
+}
+
+export function compareServices(
+  vendorA: string,
+  vendorB: string
+): { comparison: ComparisonResult } | { error: string; suggestions_a?: string[]; suggestions_b?: string[] } {
+  const offers = loadOffers();
+
+  const matchA = findVendor(offers, vendorA);
+  const matchB = findVendor(offers, vendorB);
+
+  if (!matchA.offer || !matchB.offer) {
+    return {
+      error: [
+        !matchA.offer ? `Vendor "${vendorA}" not found.${matchA.suggestions.length > 0 ? ` Did you mean: ${matchA.suggestions.join(", ")}?` : ""}` : null,
+        !matchB.offer ? `Vendor "${vendorB}" not found.${matchB.suggestions.length > 0 ? ` Did you mean: ${matchB.suggestions.join(", ")}?` : ""}` : null,
+      ].filter(Boolean).join(" "),
+      ...(matchA.suggestions.length > 0 ? { suggestions_a: matchA.suggestions } : {}),
+      ...(matchB.suggestions.length > 0 ? { suggestions_b: matchB.suggestions } : {}),
+    };
+  }
+
+  const changes = loadDealChanges();
+  const changesA = changes.filter((c) => c.vendor.toLowerCase() === matchA.offer!.vendor.toLowerCase());
+  const changesB = changes.filter((c) => c.vendor.toLowerCase() === matchB.offer!.vendor.toLowerCase());
+
+  const sharedCategories = matchA.offer.category === matchB.offer.category;
+  const categoryOverlap = sharedCategories ? [matchA.offer.category] : [];
+
+  return {
+    comparison: {
+      vendor_a: { ...matchA.offer, deal_changes: changesA },
+      vendor_b: { ...matchB.offer, deal_changes: changesB },
+      shared_categories: sharedCategories,
+      category_overlap: categoryOverlap,
+    },
+  };
+}
