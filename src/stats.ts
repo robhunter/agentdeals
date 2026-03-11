@@ -330,6 +330,8 @@ export function getStats(): {
 export function getConnectionStats(activeSessions: number): {
   activeSessions: number;
   totalSessionsAllTime: number;
+  totalApiHitsAllTime: number;
+  totalToolCallsAllTime: number;
   sessionsToday: number;
   serverStarted: string;
 } {
@@ -338,9 +340,13 @@ export function getConnectionStats(activeSessions: number): {
     sessionsToday = 0;
     sessionsTodayDate = today;
   }
+  const totalToolCalls = Object.values(toolCalls).reduce((a, b) => a + b, 0);
+  const totalApiHits = Object.values(apiHits).reduce((a, b) => a + b, 0);
   return {
     activeSessions,
-    totalSessionsAllTime: totalSessions,
+    totalSessionsAllTime: cumulative.sessions + totalSessions,
+    totalApiHitsAllTime: cumulative.api_hits + totalApiHits,
+    totalToolCallsAllTime: cumulative.tool_calls + totalToolCalls,
     sessionsToday,
     serverStarted: serverStartedISO,
   };
