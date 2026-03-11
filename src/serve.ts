@@ -7,6 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
+import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 
@@ -634,6 +635,25 @@ const httpServer = createHttpServer(async (req, res) => {
     const requirements = requirementsParam ? requirementsParam.split(",").map(r => r.trim()).filter(Boolean) : undefined;
     const result = getStackRecommendation(useCase, requirements);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/stack", params: { use_case: useCase, requirements }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.stack.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(result));
+  } else if (url.pathname === "/api/costs" && req.method === "GET") {
+    recordApiHit("/api/costs");
+    const servicesParam = url.searchParams.get("services");
+    if (!servicesParam) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "services parameter is required (e.g., ?services=Vercel,Supabase,Clerk)" }));
+      return;
+    }
+    const services = servicesParam.split(",").map(s => s.trim()).filter(Boolean);
+    const scale = (url.searchParams.get("scale") ?? "hobby") as "hobby" | "startup" | "growth";
+    if (!["hobby", "startup", "growth"].includes(scale)) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid scale. Must be: hobby, startup, or growth" }));
+      return;
+    }
+    const result = estimateCosts(services, scale);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/costs", params: { services, scale }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.services.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
   } else if (url.pathname === "/api/query-log" && req.method === "GET") {
