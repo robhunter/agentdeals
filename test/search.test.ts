@@ -975,3 +975,153 @@ describe("get_offer_details include_alternatives", () => {
     }
   });
 });
+
+describe("compare_services tool", () => {
+  it("compares two vendors in the same category", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "compare_services", arguments: { vendor_a: "Supabase", vendor_b: "Neon" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const comparison = JSON.parse(result.result.content[0].text);
+
+      assert.strictEqual(comparison.vendor_a.vendor, "Supabase");
+      assert.strictEqual(comparison.vendor_b.vendor, "Neon");
+      assert.strictEqual(comparison.shared_categories, true);
+      assert.deepStrictEqual(comparison.category_overlap, ["Databases"]);
+      assert.ok(typeof comparison.vendor_a.description === "string");
+      assert.ok(typeof comparison.vendor_b.description === "string");
+      assert.ok(Array.isArray(comparison.vendor_a.deal_changes));
+      assert.ok(Array.isArray(comparison.vendor_b.deal_changes));
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("compares two vendors in different categories", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "compare_services", arguments: { vendor_a: "Vercel", vendor_b: "Supabase" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const comparison = JSON.parse(result.result.content[0].text);
+
+      assert.strictEqual(comparison.shared_categories, false);
+      assert.deepStrictEqual(comparison.category_overlap, []);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("handles fuzzy vendor name matching", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "compare_services", arguments: { vendor_a: "supabase", vendor_b: "neon" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const comparison = JSON.parse(result.result.content[0].text);
+      assert.strictEqual(comparison.vendor_a.vendor, "Supabase");
+      assert.strictEqual(comparison.vendor_b.vendor, "Neon");
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns error with suggestions when vendor not found", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "compare_services", arguments: { vendor_a: "cloud", vendor_b: "Neon" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(result.result.isError);
+      const text = result.result.content[0].text;
+      assert.ok(text.includes("not found"));
+      assert.ok(text.includes("Did you mean"));
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns error when both vendors not found", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "compare_services", arguments: { vendor_a: "zzzzz", vendor_b: "yyyyy" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(result.result.isError);
+      const text = result.result.content[0].text;
+      // Both should be mentioned as not found
+      assert.ok(text.includes("zzzzz"));
+      assert.ok(text.includes("yyyyy"));
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("works when comparing same vendor", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "compare_services", arguments: { vendor_a: "Vercel", vendor_b: "Vercel" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const comparison = JSON.parse(result.result.content[0].text);
+      assert.strictEqual(comparison.vendor_a.vendor, "Vercel");
+      assert.strictEqual(comparison.vendor_b.vendor, "Vercel");
+      assert.strictEqual(comparison.shared_categories, true);
+    } finally {
+      proc.kill();
+    }
+  });
+});
