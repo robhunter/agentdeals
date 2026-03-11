@@ -6,11 +6,26 @@ AgentDeals indexes real, verified pricing data from 1,500+ developer infrastruct
 
 **Live:** [agentdeals-production.up.railway.app](https://agentdeals-production.up.railway.app)
 
-## Quick Start
+## Install
 
-### 1. Connect your MCP client
+### Option A: npx (local stdio — recommended)
 
-Add AgentDeals to your client config (see [Client Configuration](#client-configuration) for all clients):
+No server needed. Runs locally via stdin/stdout:
+
+```json
+{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}
+```
+
+### Option B: Remote HTTP
+
+Connect to the hosted instance — no install required:
 
 ```json
 {
@@ -21,6 +36,8 @@ Add AgentDeals to your client config (see [Client Configuration](#client-configu
   }
 }
 ```
+
+## Quick Start
 
 ### 2. Try these example queries
 
@@ -51,10 +68,25 @@ Returns AWS Activate, Google Cloud for Startups, Microsoft Founders Hub, Stripe 
 
 ## Client Configuration
 
+Each client supports both **local stdio** (via npx) and **remote HTTP**. Stdio is recommended for reliability and speed.
+
 ### Claude Desktop
 
 Add to `claude_desktop_config.json`:
 
+**Stdio (recommended):**
+```json
+{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}
+```
+
+**Remote HTTP:**
 ```json
 {
   "mcpServers": {
@@ -71,8 +103,21 @@ Config location:
 
 ### Cursor
 
-Add to Cursor MCP settings (`.cursor/mcp.json` in your project or global config):
+Add to `.cursor/mcp.json` in your project or global config:
 
+**Stdio (recommended):**
+```json
+{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}
+```
+
+**Remote HTTP:**
 ```json
 {
   "mcpServers": {
@@ -87,6 +132,20 @@ Add to Cursor MCP settings (`.cursor/mcp.json` in your project or global config)
 
 Add to `.vscode/mcp.json` in your workspace:
 
+**Stdio (recommended):**
+```json
+{
+  "servers": {
+    "agentdeals": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}
+```
+
+**Remote HTTP:**
 ```json
 {
   "servers": {
@@ -102,6 +161,19 @@ Add to `.vscode/mcp.json` in your workspace:
 
 Add to `.mcp.json` in your project root:
 
+**Stdio (recommended):**
+```json
+{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}
+```
+
+**Remote HTTP:**
 ```json
 {
   "mcpServers": {
@@ -112,15 +184,6 @@ Add to `.mcp.json` in your project root:
   }
 }
 ```
-
-### Any MCP Client
-
-Point your client to:
-```
-https://agentdeals-production.up.railway.app/mcp
-```
-
-Transport: Streamable HTTP (POST/GET/DELETE on `/mcp`).
 
 ## REST API
 
@@ -278,11 +341,11 @@ npm run serve
 
 ## Stats
 
-- **1,502** vendor offers across **38** categories
-- **48** tracked pricing changes
-- **4** MCP tools + **2** REST API endpoints + `/api/stats`
-- **66** passing tests
-- Data verified as of 2026-03-03
+- **1,511** vendor offers across **53** categories
+- **52** tracked pricing changes
+- **6** MCP tools + **4** prompt templates + **8** REST API endpoints
+- **111** passing tests
+- Data verified as of 2026-03-11
 
 ## Registries
 

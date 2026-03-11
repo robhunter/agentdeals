@@ -24,9 +24,11 @@
   "mcpName": "io.github.robhunter/agentdeals",
   "files": [
     "dist",
-    "data"
+    "data/index.json",
+    "data/deal_changes.json"
   ],
   "scripts": {
+    "prepublishOnly": "npm run build && npm test",
     "build": "tsc",
     "start": "node dist/index.js",
     "serve": "node dist/serve.js",
