@@ -486,6 +486,57 @@ describe("HTTP transport", () => {
     assert.strictEqual(stats1.activeSessions, 1);
     assert.strictEqual(stats1.totalSessionsAllTime, initialAllTime + 1);
     assert.strictEqual(stats1.sessionsToday, initialToday + 1);
+    // Should include clients breakdown with the client name from initialize
+    assert.ok(typeof stats1.clients === "object");
+    assert.ok(stats1.clients["stats-test"] >= 1, "clients should include stats-test");
+  });
+
+  it("GET /api/stats tracks client info from MCP initialize", async () => {
+    proc = await startHttpServer();
+
+    // Get initial client counts
+    const resp0 = await fetch(`http://localhost:${PORT}/api/stats`);
+    const stats0 = await resp0.json() as any;
+    const initialClaude = stats0.clients?.["claude-desktop"] ?? 0;
+    const initialCursor = stats0.clients?.["cursor"] ?? 0;
+
+    // Create two sessions with different clients
+    await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "claude-desktop", version: "1.2.0" },
+      },
+    });
+    await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "cursor", version: "0.45.0" },
+      },
+    });
+    await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "claude-desktop", version: "1.2.0" },
+      },
+    });
+
+    const resp = await fetch(`http://localhost:${PORT}/api/stats`);
+    const stats = await resp.json() as any;
+    assert.ok(typeof stats.clients === "object");
+    assert.strictEqual(stats.clients["claude-desktop"], initialClaude + 2);
+    assert.strictEqual(stats.clients["cursor"], initialCursor + 1);
   });
 
   it("logs session_open to stdout on session creation", async () => {

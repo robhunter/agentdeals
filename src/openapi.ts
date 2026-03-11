@@ -307,7 +307,8 @@ export const openapiSpec = {
                     totalApiHitsAllTime: { type: "integer", description: "Cumulative REST API hits across all deploys (persisted in Redis)" },
                     totalToolCallsAllTime: { type: "integer", description: "Cumulative MCP tool calls across all deploys (persisted in Redis)" },
                     sessionsToday: { type: "integer", description: "Sessions since midnight UTC (resets daily)" },
-                    serverStarted: { type: "string", format: "date-time", description: "ISO timestamp of current server start" }
+                    serverStarted: { type: "string", format: "date-time", description: "ISO timestamp of current server start" },
+                    clients: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative session counts per MCP client name (e.g. claude-desktop, cursor)" }
                   }
                 }
               }

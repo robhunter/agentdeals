@@ -20,10 +20,16 @@ const faviconBuffer = readFileSync(join(__dirname, "..", "assets", "logo-400.png
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
 const CLEANUP_INTERVAL_MS = 60 * 1000; // 60 seconds
 
+interface ClientInfo {
+  name: string;
+  version: string;
+}
+
 interface SessionEntry {
   transport: StreamableHTTPServerTransport;
   lastActivity: number;
   createdAt: number;
+  clientInfo?: ClientInfo;
 }
 
 // Map of session ID → transport + last activity for multi-session support
@@ -466,6 +472,18 @@ function isInitializeRequest(body: unknown): boolean {
   return (body as { method?: string })?.method === "initialize";
 }
 
+function extractClientInfo(body: unknown): ClientInfo | undefined {
+  const msg = Array.isArray(body)
+    ? body.find((m) => m?.method === "initialize")
+    : body;
+  const params = (msg as { params?: { clientInfo?: { name?: string; version?: string } } })?.params;
+  const info = params?.clientInfo;
+  if (info?.name) {
+    return { name: info.name, version: info.version ?? "unknown" };
+  }
+  return undefined;
+}
+
 const httpServer = createHttpServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://localhost:${PORT}`);
 
@@ -496,19 +514,30 @@ const httpServer = createHttpServer(async (req, res) => {
         // New session — create transport + server
         const ip = getClientIp(req);
         const userAgent = req.headers["user-agent"] ?? "unknown";
+        const clientInfo = extractClientInfo(parsedBody);
         const transport = new StreamableHTTPServerTransport({
           sessionIdGenerator: () => randomUUID(),
           onsessioninitialized: (sid) => {
             const now = Date.now();
-            sessions.set(sid, { transport, lastActivity: now, createdAt: now });
-            recordSessionConnect();
+            sessions.set(sid, { transport, lastActivity: now, createdAt: now, clientInfo });
+            recordSessionConnect(clientInfo?.name);
             console.log(JSON.stringify({
               event: "session_open",
               ts: new Date(now).toISOString(),
               sessionId: sid,
               ip,
               userAgent,
+              clientInfo,
             }));
+            logRequest({
+              ts: new Date(now).toISOString(),
+              type: "session_connect",
+              endpoint: "initialize",
+              params: {},
+              result_count: 0,
+              session_id: sid,
+              client_info: clientInfo,
+            });
           },
         });
 
