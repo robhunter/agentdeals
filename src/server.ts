@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
+import { estimateCosts } from "./costs.js";
 
 export function createServer(getSessionId?: () => string | undefined): McpServer {
   const server = new McpServer({
@@ -247,6 +248,44 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             {
               type: "text" as const,
               text: `Error getting stack recommendation: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "estimate_costs",
+    {
+      description:
+        "Estimate infrastructure costs for your current stack at different scales. Pass the vendor names you're using (e.g. Vercel, Supabase, Clerk) and a scale (hobby/startup/growth) to get per-service cost analysis, free tier limits, free alternatives, and warnings about recent pricing changes. Use during project planning, code reviews, or deployment setup.",
+      inputSchema: {
+        services: z.array(z.string()).describe("Vendor names to analyze (e.g. ['Vercel', 'Supabase', 'Clerk'])"),
+        scale: z.enum(["hobby", "startup", "growth"]).optional().describe("Scale: hobby (free tiers), startup (some paid), growth (mostly paid). Default: hobby"),
+      },
+    },
+    async ({ services, scale }) => {
+      try {
+        recordToolCall("estimate_costs");
+        const result = estimateCosts(services, scale ?? "hobby");
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "estimate_costs", params: { services, scale: scale ?? "hobby" }, result_count: result.services.length, session_id: getSessionId?.() });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("estimate_costs error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error estimating costs: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
