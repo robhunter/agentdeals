@@ -38,6 +38,7 @@ let cumulative = {
   landing_views: 0,
   first_session_at: "",
   last_deploy_at: "",
+  clients: {} as Record<string, number>,
 };
 
 let telemetryPath = "";
@@ -56,6 +57,7 @@ interface TelemetryData {
   cumulative_landing_views: number;
   first_session_at: string;
   last_deploy_at: string;
+  cumulative_clients?: Record<string, number>;
 }
 
 async function redisGet(): Promise<TelemetryData | null> {
@@ -105,12 +107,13 @@ const REQUEST_LOG_MAX = 1000;
 
 export interface RequestLogEntry {
   ts: string;
-  type: "mcp" | "api";
+  type: "mcp" | "api" | "session_connect";
   endpoint: string;
   params: Record<string, unknown>;
   user_agent?: string;
   result_count: number;
   session_id?: string;
+  client_info?: { name: string; version: string };
 }
 
 async function redisLpush(key: string, value: string): Promise<boolean> {
@@ -186,11 +189,20 @@ function parseTelemetryData(data: Record<string, unknown>): void {
   cumulative.landing_views = (data.cumulative_landing_views as number) ?? 0;
   cumulative.first_session_at = (data.first_session_at as string) ?? "";
   cumulative.last_deploy_at = (data.last_deploy_at as string) ?? "";
+  cumulative.clients = (data.cumulative_clients as Record<string, number>) ?? {};
 }
+
+// In-memory client counts for this deployment
+const sessionClients: Record<string, number> = {};
 
 function buildTelemetryData(): TelemetryData {
   const totalToolCalls = Object.values(toolCalls).reduce((a, b) => a + b, 0);
   const totalApiHits = Object.values(apiHits).reduce((a, b) => a + b, 0);
+  // Merge cumulative + current deployment client counts
+  const mergedClients: Record<string, number> = { ...cumulative.clients };
+  for (const [name, count] of Object.entries(sessionClients)) {
+    mergedClients[name] = (mergedClients[name] ?? 0) + count;
+  }
   return {
     cumulative_sessions: cumulative.sessions + totalSessions,
     cumulative_tool_calls: cumulative.tool_calls + totalToolCalls,
@@ -198,6 +210,7 @@ function buildTelemetryData(): TelemetryData {
     cumulative_landing_views: cumulative.landing_views + landingPageViews,
     first_session_at: cumulative.first_session_at || (totalSessions > 0 ? serverStartedISO : ""),
     last_deploy_at: cumulative.last_deploy_at,
+    cumulative_clients: mergedClients,
   };
 }
 
@@ -250,12 +263,14 @@ export function resetCounters(): void {
   sessionsToday = 0;
   for (const key of Object.keys(toolCalls)) toolCalls[key] = 0;
   for (const key of Object.keys(apiHits)) apiHits[key] = 0;
+  for (const key of Object.keys(sessionClients)) delete sessionClients[key];
   cumulative.sessions = 0;
   cumulative.tool_calls = 0;
   cumulative.api_hits = 0;
   cumulative.landing_views = 0;
   cumulative.first_session_at = "";
   cumulative.last_deploy_at = "";
+  cumulative.clients = {};
 }
 
 export function recordToolCall(tool: string): void {
@@ -270,7 +285,7 @@ export function recordApiHit(endpoint: string): void {
   }
 }
 
-export function recordSessionConnect(): void {
+export function recordSessionConnect(clientName?: string): void {
   totalSessions++;
   if (!cumulative.first_session_at) {
     cumulative.first_session_at = new Date().toISOString();
@@ -281,6 +296,8 @@ export function recordSessionConnect(): void {
     sessionsTodayDate = today;
   }
   sessionsToday++;
+  const name = clientName || "unknown";
+  sessionClients[name] = (sessionClients[name] ?? 0) + 1;
 }
 
 export function recordSessionDisconnect(): void {
@@ -334,6 +351,7 @@ export function getConnectionStats(activeSessions: number): {
   totalToolCallsAllTime: number;
   sessionsToday: number;
   serverStarted: string;
+  clients: Record<string, number>;
 } {
   const today = new Date().toISOString().slice(0, 10);
   if (today !== sessionsTodayDate) {
@@ -342,6 +360,11 @@ export function getConnectionStats(activeSessions: number): {
   }
   const totalToolCalls = Object.values(toolCalls).reduce((a, b) => a + b, 0);
   const totalApiHits = Object.values(apiHits).reduce((a, b) => a + b, 0);
+  // Merge cumulative + current deployment client counts
+  const mergedClients: Record<string, number> = { ...cumulative.clients };
+  for (const [name, count] of Object.entries(sessionClients)) {
+    mergedClients[name] = (mergedClients[name] ?? 0) + count;
+  }
   return {
     activeSessions,
     totalSessionsAllTime: cumulative.sessions + totalSessions,
@@ -349,5 +372,6 @@ export function getConnectionStats(activeSessions: number): {
     totalToolCallsAllTime: cumulative.tool_calls + totalToolCalls,
     sessionsToday,
     serverStarted: serverStartedISO,
+    clients: mergedClients,
   };
 }
