@@ -213,7 +213,7 @@
     },
     {
       "vendor": "Postman",
-      "change_type": "downgrade",
+      "change_type": "limits_reduced",
       "date": "2026-03-01",
       "summary": "Free team collaboration removed — free plan restricted to single user only. No shared workspaces or collections on free tier",
       "previous_state": "Free plan supported up to 3 users in shared workspaces with collection sharing and 25 monitoring calls/month",
@@ -648,7 +648,7 @@
     },
     {
       "vendor": "OpenAI",
-      "change_type": "free_tier_reduced",
+      "change_type": "limits_reduced",
       "date": "2025-06-01",
       "summary": "Free trial credits ($5-$18 for new accounts) completely discontinued. Free tier now limited to GPT-3.5 Turbo at 3 RPM with no credits. All advanced models (GPT-4, DALL-E, Whisper) require paid access",
       "previous_state": "$5-$18 in free trial credits for new accounts, 3-month expiry, access to all models",
@@ -732,7 +732,7 @@
     },
     {
       "vendor": "Fauna",
-      "change_type": "removed",
+      "change_type": "product_deprecated",
       "date": "2025-05-30",
       "summary": "Fauna shut down entirely on May 30, 2025. The serverless document database ceased all operations. Over 80,000 development teams affected",
       "previous_state": "Free tier: 100K read ops/day, 50K write ops/day, 500K compute ops/day, 5 GB storage. Consumption-based pricing above free limits",
@@ -765,7 +765,7 @@
     },
     {
       "vendor": "Google",
-      "change_type": "pricing_restructure",
+      "change_type": "pricing_restructured",
       "date": "2026-03-30",
       "summary": "Google Developer Program annual subscription ending March 30. Replaced by Google AI Pro ($10/mo) and AI Ultra ($100/mo) tiers with bundled cloud credits and AI model access.",
       "previous_state": "Google Developer Program: annual subscription with standalone cloud credits, developer tools access, and learning resources",
