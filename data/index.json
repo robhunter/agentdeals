@@ -26,7 +26,7 @@
         "deployment",
         "docker"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Cloudflare Workers",
@@ -40,7 +40,7 @@
         "hosting",
         "workers"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Netlify",
@@ -55,7 +55,7 @@
         "deployment",
         "jamstack"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Cloudflare Pages",
@@ -69,7 +69,7 @@
         "edge",
         "deployment"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Railway",
@@ -84,7 +84,7 @@
         "docker",
         "low-cost"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Fly.io",
@@ -99,7 +99,7 @@
         "docker",
         "global"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Deno Deploy",
@@ -115,7 +115,7 @@
         "kv",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Val Town",
@@ -130,7 +130,7 @@
         "functions",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Koyeb",
@@ -145,7 +145,7 @@
         "scale-to-zero",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "AWS",
@@ -238,7 +238,7 @@
         "realtime",
         "baas"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Neon",
@@ -267,7 +267,7 @@
         "document",
         "free tier"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "CockroachDB",
@@ -282,7 +282,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Turso",
@@ -297,7 +297,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Upstash",
@@ -313,7 +313,7 @@
         "messaging",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Firebase",
@@ -330,7 +330,7 @@
         "analytics",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Convex",
@@ -346,7 +346,7 @@
         "vector",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Appwrite Cloud",
@@ -363,7 +363,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Aiven",
@@ -379,7 +379,7 @@
         "managed",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Xata",
@@ -394,7 +394,7 @@
         "branching",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Cloudflare D1",
@@ -410,7 +410,7 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Nhost",
@@ -426,7 +426,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Hasura Cloud",
@@ -441,7 +441,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "GitHub Actions",
@@ -471,7 +471,7 @@
         "gitlab",
         "free tier"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "CircleCI",
@@ -485,7 +485,7 @@
         "automation",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Buildkite",
@@ -500,7 +500,7 @@
         "self-hosted",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Bitbucket Pipelines",
@@ -515,7 +515,7 @@
         "bitbucket",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Sentry",
@@ -650,7 +650,7 @@
         "identity",
         "users"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Auth0",
@@ -666,7 +666,7 @@
         "sso",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Kinde",
@@ -682,7 +682,7 @@
         "saml",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "WorkOS",
@@ -698,7 +698,7 @@
         "enterprise",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Resend",
@@ -1152,7 +1152,7 @@
         "compute",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "jsDelivr",
@@ -1167,7 +1167,7 @@
         "github",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "LaunchDarkly",
@@ -1333,7 +1333,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Groq",
@@ -1349,7 +1349,7 @@
         "fast",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Google Gemini API",
@@ -1382,7 +1382,7 @@
         "code",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "OpenRouter",
@@ -1398,7 +1398,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Cloudflare Workers AI",
@@ -1414,7 +1414,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "PostHog",
@@ -1430,7 +1430,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Amplitude",
@@ -1445,7 +1445,7 @@
         "session replay",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Mixpanel",
@@ -1460,7 +1460,7 @@
         "retention",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Inngest",
@@ -1505,7 +1505,7 @@
         "pubsub",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Doppler",
@@ -1559,7 +1559,7 @@
         "startup credits",
         "data pipeline"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-11",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -1902,7 +1902,7 @@
         "static",
         "github"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Highlight.io",
@@ -2201,7 +2201,7 @@
         "sql",
         "api"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Novu",
@@ -2257,7 +2257,7 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "GitHub Pages",
@@ -2271,7 +2271,7 @@
         "github",
         "jekyll"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Pulsetic",
@@ -2299,7 +2299,7 @@
         "multi-tenant",
         "serverless"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-11"
     },
     {
       "vendor": "Cron-job.org",
