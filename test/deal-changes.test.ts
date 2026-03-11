@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 import { spawn } from "node:child_process";
 import path from "node:path";
+import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -295,6 +296,26 @@ describe("get_deal_changes tool", () => {
       }
     } finally {
       proc.kill();
+    }
+  });
+
+  it("every change_type in data matches the tool enum", async () => {
+    const VALID_CHANGE_TYPES = new Set([
+      "free_tier_removed", "limits_reduced", "limits_increased",
+      "new_free_tier", "pricing_restructured", "open_source_killed",
+      "pricing_model_change", "startup_program_expanded",
+      "pricing_postponed", "product_deprecated",
+    ]);
+
+    const dataPath = path.join(__dirname, "..", "data", "deal_changes.json");
+    const data = JSON.parse(fs.readFileSync(dataPath, "utf8"));
+    const dataTypes = new Set(data.changes.map((c: any) => c.change_type));
+
+    for (const type of dataTypes) {
+      assert.ok(
+        VALID_CHANGE_TYPES.has(type as string),
+        `Data contains change_type "${type}" not in tool enum. Valid: ${[...VALID_CHANGE_TYPES].join(", ")}`
+      );
     }
   });
 });
