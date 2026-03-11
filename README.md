@@ -186,7 +186,9 @@ Response:
 ```json
 {
   "activeSessions": 1,
-  "totalSessionsAllTime": 47,
+  "totalSessionsAllTime": 628,
+  "totalApiHitsAllTime": 516,
+  "totalToolCallsAllTime": 281,
   "sessionsToday": 3,
   "serverStarted": "2026-03-01T00:00:00.000Z"
 }

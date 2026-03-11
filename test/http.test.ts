@@ -459,6 +459,8 @@ describe("HTTP transport", () => {
     const stats0 = await resp0.json() as any;
     assert.strictEqual(stats0.activeSessions, 0);
     assert.ok(typeof stats0.totalSessionsAllTime === "number");
+    assert.ok(typeof stats0.totalApiHitsAllTime === "number");
+    assert.ok(typeof stats0.totalToolCallsAllTime === "number");
     assert.ok(typeof stats0.sessionsToday === "number");
     assert.ok(typeof stats0.serverStarted === "string");
     // serverStarted should be a valid ISO timestamp

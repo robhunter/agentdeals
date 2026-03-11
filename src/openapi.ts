@@ -293,7 +293,7 @@ export const openapiSpec = {
     "/api/stats": {
       get: {
         summary: "Service statistics",
-        description: "Returns aggregate service statistics including uptime, total offers, categories, and usage counts.",
+        description: "Returns connection and usage statistics. Session and usage counts persist across deploys via Redis.",
         responses: {
           "200": {
             description: "Service statistics",
@@ -302,14 +302,12 @@ export const openapiSpec = {
                 schema: {
                   type: "object",
                   properties: {
-                    uptime_seconds: { type: "number" },
-                    total_offers: { type: "integer" },
-                    total_categories: { type: "integer" },
-                    total_deal_changes: { type: "integer" },
-                    sessions: { type: "integer" },
-                    tool_calls: { type: "object" },
-                    api_hits: { type: "object" },
-                    landing_page_views: { type: "integer" }
+                    activeSessions: { type: "integer", description: "Currently connected MCP sessions" },
+                    totalSessionsAllTime: { type: "integer", description: "Cumulative sessions across all deploys (persisted in Redis)" },
+                    totalApiHitsAllTime: { type: "integer", description: "Cumulative REST API hits across all deploys (persisted in Redis)" },
+                    totalToolCallsAllTime: { type: "integer", description: "Cumulative MCP tool calls across all deploys (persisted in Redis)" },
+                    sessionsToday: { type: "integer", description: "Sessions since midnight UTC (resets daily)" },
+                    serverStarted: { type: "string", format: "date-time", description: "ISO timestamp of current server start" }
                   }
                 }
               }
