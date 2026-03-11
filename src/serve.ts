@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
@@ -681,6 +681,25 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ offers: paged, total }));
+  } else if (url.pathname === "/api/compare" && req.method === "GET") {
+    recordApiHit("/api/compare");
+    const a = url.searchParams.get("a") || "";
+    const b = url.searchParams.get("b") || "";
+    if (!a || !b) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Both 'a' and 'b' query parameters are required." }));
+      return;
+    }
+    const result = compareServices(a, b);
+    if ("error" in result) {
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/compare", params: { a, b }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(result));
+      return;
+    }
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/compare", params: { a, b }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 2 });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(result.comparison));
   } else if (url.pathname === "/api/new" && req.method === "GET") {
     recordApiHit("/api/new");
     const days = parseInt(url.searchParams.get("days") ?? "7", 10);

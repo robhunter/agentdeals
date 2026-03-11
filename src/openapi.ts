@@ -202,6 +202,57 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/compare": {
+      get: {
+        summary: "Compare two vendors side by side",
+        description: "Returns a structured comparison of two developer tool vendors including free tier details, pricing, and recent deal changes.",
+        parameters: [
+          { name: "a", in: "query", required: true, description: "First vendor name (case-insensitive, fuzzy match supported)", schema: { type: "string" }, example: "Supabase" },
+          { name: "b", in: "query", required: true, description: "Second vendor name (case-insensitive, fuzzy match supported)", schema: { type: "string" }, example: "Neon" }
+        ],
+        responses: {
+          "200": {
+            description: "Side-by-side vendor comparison",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    vendor_a: { $ref: "#/components/schemas/Offer" },
+                    vendor_b: { $ref: "#/components/schemas/Offer" },
+                    shared_categories: { type: "boolean" },
+                    category_overlap: { type: "array", items: { type: "string" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            description: "Missing required parameters",
+            content: {
+              "application/json": {
+                schema: { type: "object", properties: { error: { type: "string" } } }
+              }
+            }
+          },
+          "404": {
+            description: "One or both vendors not found",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    error: { type: "string" },
+                    suggestions_a: { type: "array", items: { type: "string" } },
+                    suggestions_b: { type: "array", items: { type: "string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stack": {
       get: {
         summary: "Get free-tier stack recommendation",

@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers, compareServices } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -286,6 +286,51 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             {
               type: "text" as const,
               text: `Error estimating costs: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "compare_services",
+    {
+      description:
+        "Compare two developer tool vendors side by side. Returns free tier limits, pricing tiers, key differentiators, and recent deal changes for both. Use when deciding between two options (e.g., Supabase vs Neon, Vercel vs Netlify).",
+      inputSchema: {
+        vendor_a: z.string().describe("First vendor name (case-insensitive, fuzzy match supported)"),
+        vendor_b: z.string().describe("Second vendor name (case-insensitive, fuzzy match supported)"),
+      },
+    },
+    async ({ vendor_a, vendor_b }) => {
+      try {
+        recordToolCall("compare_services");
+        const result = compareServices(vendor_a, vendor_b);
+        if ("error" in result) {
+          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_services", params: { vendor_a, vendor_b }, result_count: 0, session_id: getSessionId?.() });
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: result.error }],
+          };
+        }
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_services", params: { vendor_a, vendor_b }, result_count: 2, session_id: getSessionId?.() });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result.comparison, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("compare_services error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error comparing services: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
