@@ -764,4 +764,107 @@ describe("HTTP transport", () => {
     assert.ok(body.components.schemas.DealChange);
     assert.ok(body.components.schemas.Eligibility);
   });
+
+  it("prompts/list returns all 4 prompt templates", async () => {
+    proc = await startHttpServer();
+
+    // Initialize session
+    const initResp = await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "prompt-test", version: "1.0.0" },
+      },
+    });
+    const sessionId = initResp.headers.get("mcp-session-id");
+    assert.ok(sessionId);
+
+    // Send initialized notification
+    await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      method: "notifications/initialized",
+    }, sessionId);
+
+    // List prompts
+    const listResp = await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 2,
+      method: "prompts/list",
+    }, sessionId);
+
+    const data = parseSSEData(listResp.text);
+    const result = data.find((d: any) => d.id === 2);
+    assert.ok(result, "Should get prompts/list response");
+    const prompts = result.result.prompts;
+    assert.strictEqual(prompts.length, 4);
+
+    const names = prompts.map((p: any) => p.name).sort();
+    assert.deepStrictEqual(names, [
+      "check-pricing-changes",
+      "find-free-alternative",
+      "recommend-stack",
+      "search-deals",
+    ]);
+
+    // Each prompt should have a description
+    for (const p of prompts) {
+      assert.ok(p.description, `Prompt ${p.name} should have a description`);
+    }
+
+    // find-free-alternative should have vendor argument
+    const findAlt = prompts.find((p: any) => p.name === "find-free-alternative");
+    assert.ok(findAlt.arguments?.some((a: any) => a.name === "vendor"));
+
+    // check-pricing-changes should have no required arguments
+    const checkChanges = prompts.find((p: any) => p.name === "check-pricing-changes");
+    assert.ok(!checkChanges.arguments || checkChanges.arguments.length === 0);
+  });
+
+  it("prompts/get returns structured message for find-free-alternative", async () => {
+    proc = await startHttpServer();
+
+    // Initialize session
+    const initResp = await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2024-11-05",
+        capabilities: {},
+        clientInfo: { name: "prompt-test", version: "1.0.0" },
+      },
+    });
+    const sessionId = initResp.headers.get("mcp-session-id");
+    assert.ok(sessionId);
+
+    // Send initialized notification
+    await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      method: "notifications/initialized",
+    }, sessionId);
+
+    // Get prompt
+    const getResp = await mcpRequest("/mcp", {
+      jsonrpc: "2.0",
+      id: 3,
+      method: "prompts/get",
+      params: {
+        name: "find-free-alternative",
+        arguments: { vendor: "Heroku" },
+      },
+    }, sessionId);
+
+    const data = parseSSEData(getResp.text);
+    const result = data.find((d: any) => d.id === 3);
+    assert.ok(result, "Should get prompts/get response");
+    assert.ok(result.result.messages);
+    assert.strictEqual(result.result.messages.length, 1);
+    const msg = result.result.messages[0];
+    assert.strictEqual(msg.role, "user");
+    assert.ok(msg.content.text.includes("Heroku"));
+    assert.ok(msg.content.text.includes("get_offer_details"));
+  });
 });

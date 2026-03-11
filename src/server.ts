@@ -254,5 +254,88 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     }
   );
 
+  // --- Prompt Templates ---
+
+  server.registerPrompt(
+    "find-free-alternative",
+    {
+      description: "Find free alternatives to a specific vendor. Returns the vendor's current deal plus up to 5 alternatives in the same category.",
+      argsSchema: {
+        vendor: z.string().describe("The vendor name to find alternatives for (e.g. 'Heroku', 'Firebase', 'Auth0')"),
+      },
+    },
+    async ({ vendor }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: `Find free alternatives to ${vendor}. Use the get_offer_details tool with vendor="${vendor}" and include_alternatives=true to get the vendor's current deal and up to 5 alternatives in the same category.`,
+          },
+        },
+      ],
+    })
+  );
+
+  server.registerPrompt(
+    "recommend-stack",
+    {
+      description: "Get a recommended free-tier infrastructure stack for a project. Returns hosting, database, auth, and more — all free tier.",
+      argsSchema: {
+        project_description: z.string().describe("What you're building (e.g. 'Next.js SaaS app', 'Python API backend', 'mobile app')"),
+      },
+    },
+    async ({ project_description }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: `Recommend a free infrastructure stack for: ${project_description}. Use the get_stack_recommendation tool with use_case="${project_description}" to get a curated stack of free-tier services covering hosting, database, auth, and more.`,
+          },
+        },
+      ],
+    })
+  );
+
+  server.registerPrompt(
+    "check-pricing-changes",
+    {
+      description: "Check what developer tool pricing has changed recently. Shows free tier removals, limit changes, and new free tiers.",
+    },
+    async () => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: "What developer tool pricing has changed recently? Use the get_deal_changes tool to see recent free tier removals, limit reductions, limit increases, new free tiers, and pricing restructures.",
+          },
+        },
+      ],
+    })
+  );
+
+  server.registerPrompt(
+    "search-deals",
+    {
+      description: "Search for free tiers and deals in a specific category. Browse database, hosting, auth, CI/CD, and 48 more categories.",
+      argsSchema: {
+        category: z.string().describe("Category to search (e.g. 'Databases', 'Cloud Hosting', 'Auth', 'CI/CD', 'Monitoring')"),
+      },
+    },
+    async ({ category }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: `Find free tiers for ${category}. Use the search_offers tool with category="${category}" to see all available free tiers, credits, and discounts in this category.`,
+          },
+        },
+      ],
+    })
+  );
+
   return server;
 }
