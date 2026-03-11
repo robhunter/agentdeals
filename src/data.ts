@@ -97,6 +97,44 @@ export function getOfferDetails(
   };
 }
 
+function scoreOffer(offer: Offer, terms: string[]): number {
+  let score = 0;
+  const vendorLower = offer.vendor.toLowerCase();
+  const categoryLower = offer.category.toLowerCase();
+  const tagsLower = offer.tags.map((t) => t.toLowerCase());
+  const descLower = offer.description.toLowerCase();
+
+  for (const term of terms) {
+    // Vendor name match (highest weight)
+    if (vendorLower === term) {
+      score += 100; // exact vendor name match
+    } else if (vendorLower.includes(term)) {
+      score += 50; // partial vendor name match
+    }
+
+    // Category name match (high weight)
+    if (categoryLower === term) {
+      score += 80;
+    } else if (categoryLower.includes(term)) {
+      score += 40;
+    }
+
+    // Tag match (medium weight)
+    if (tagsLower.some((tag) => tag === term)) {
+      score += 30; // exact tag match
+    } else if (tagsLower.some((tag) => tag.includes(term))) {
+      score += 15; // partial tag match
+    }
+
+    // Description match (lowest weight)
+    if (descLower.includes(term)) {
+      score += 5;
+    }
+  }
+
+  return score;
+}
+
 export function searchOffers(
   query?: string,
   category?: string,
@@ -132,6 +170,15 @@ export function searchOffers(
         .toLowerCase();
       return terms.every((term) => searchable.includes(term));
     });
+
+    // Rank by relevance when no explicit sort requested
+    if (!sort) {
+      const scores = new Map<Offer, number>();
+      for (const offer of results) {
+        scores.set(offer, scoreOffer(offer, terms));
+      }
+      results = [...results].sort((a, b) => scores.get(b)! - scores.get(a)!);
+    }
   }
 
   if (sort === "vendor") {

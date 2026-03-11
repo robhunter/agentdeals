@@ -620,6 +620,122 @@ describe("search sorting", () => {
   });
 });
 
+describe("search relevance ranking", () => {
+  it("ranks database-category vendors first when searching 'database'", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "search_offers", arguments: { query: "database" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const top5 = body.results.slice(0, 5);
+
+      // All top 5 should be in the Databases category
+      for (const offer of top5) {
+        assert.strictEqual(
+          offer.category,
+          "Databases",
+          `Expected ${offer.vendor} to be in Databases, got ${offer.category}`
+        );
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("ranks Cloud Hosting vendors first when searching 'hosting'", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "search_offers", arguments: { query: "hosting" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const top5 = body.results.slice(0, 5);
+
+      for (const offer of top5) {
+        assert.strictEqual(
+          offer.category,
+          "Cloud Hosting",
+          `Expected ${offer.vendor} to be in Cloud Hosting, got ${offer.category}`
+        );
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("ranks vendor name match first when searching by vendor name", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "search_offers", arguments: { query: "supabase" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+
+      assert.ok(body.results.length >= 1);
+      assert.strictEqual(body.results[0].vendor, "Supabase");
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("explicit sort overrides relevance ranking", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_offers",
+            arguments: { query: "database", sort: "vendor" },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      const vendors = body.results.map((o: any) => o.vendor);
+
+      // Should be sorted alphabetically, not by relevance
+      for (let i = 1; i < vendors.length; i++) {
+        assert.ok(
+          vendors[i - 1].localeCompare(vendors[i]) <= 0,
+          `${vendors[i - 1]} should come before ${vendors[i]}`
+        );
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+});
+
 describe("get_offer_details with eligibility", () => {
   it("includes eligibility in response for conditional deals", async () => {
     const proc = startServer();
