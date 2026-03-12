@@ -1,52 +1,44 @@
-import { describe, it, afterEach } from "node:test";
+import { describe, it, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 3459; // Unique port to avoid conflicts
+const PORT = 13592; // Unique port to avoid conflicts
 
-function startHttpServer(): Promise<ChildProcess> {
-  return new Promise((resolve, reject) => {
-    const serverPath = path.join(__dirname, "..", "dist", "serve.js");
-    const proc = spawn("node", [serverPath], {
-      stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: String(PORT) },
-    });
+// Start a single HTTP server for all query-log tests
+const serverPath = path.join(__dirname, "..", "dist", "serve.js");
+const proc: ChildProcess = spawn("node", [serverPath], {
+  stdio: ["pipe", "pipe", "pipe"],
+  env: { ...process.env, PORT: String(PORT) },
+});
 
-    const timeout = setTimeout(() => {
-      proc.kill();
-      reject(new Error("Server startup timeout"));
-    }, 5000);
+await new Promise<void>((resolve, reject) => {
+  const timeout = setTimeout(() => {
+    proc.kill();
+    reject(new Error("Server startup timeout"));
+  }, 5000);
 
-    proc.stderr!.on("data", (data: Buffer) => {
-      if (data.toString().includes("running on http")) {
-        clearTimeout(timeout);
-        resolve(proc);
-      }
-    });
-
-    proc.on("error", (err) => {
+  proc.stderr!.on("data", (data: Buffer) => {
+    if (data.toString().includes("running on")) {
       clearTimeout(timeout);
-      reject(err);
-    });
-  });
-}
-
-describe("query-log endpoint", () => {
-  let proc: ChildProcess | null = null;
-
-  afterEach(() => {
-    if (proc) {
-      proc.kill();
-      proc = null;
+      resolve();
     }
   });
 
-  it("GET /api/query-log returns entries array and count", async () => {
-    proc = await startHttpServer();
+  proc.on("error", (err) => {
+    clearTimeout(timeout);
+    reject(err);
+  });
+});
 
+after(() => {
+  proc.kill();
+});
+
+describe("query-log endpoint", () => {
+  it("GET /api/query-log returns entries array and count", async () => {
     const response = await fetch(`http://localhost:${PORT}/api/query-log`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
@@ -58,8 +50,6 @@ describe("query-log endpoint", () => {
   });
 
   it("GET /api/query-log accepts limit parameter", async () => {
-    proc = await startHttpServer();
-
     const response = await fetch(`http://localhost:${PORT}/api/query-log?limit=5`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
@@ -69,8 +59,6 @@ describe("query-log endpoint", () => {
   });
 
   it("GET /api/query-log clamps limit to 1-200 range", async () => {
-    proc = await startHttpServer();
-
     // Negative limit should be clamped to 1
     const resp1 = await fetch(`http://localhost:${PORT}/api/query-log?limit=-10`);
     assert.strictEqual(resp1.status, 200);

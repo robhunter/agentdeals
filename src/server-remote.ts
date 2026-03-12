@@ -69,12 +69,12 @@ export function createServer(): McpServer {
         offset: z.number().optional().describe("Number of results to skip (default: 0)"),
       },
     },
-    async ({ query, category, limit, offset }) => {
+    async ({ query, category, eligibility_type, sort, limit, offset }) => {
       try {
         const usePagination = limit !== undefined || offset !== undefined;
         const effectiveOffset = offset ?? 0;
         const effectiveLimit = limit ?? (usePagination ? 20 : 10000);
-        const data = await fetchOffers({ q: query, category, limit: effectiveLimit, offset: effectiveOffset }) as { offers: unknown[]; total: number };
+        const data = await fetchOffers({ q: query, category, eligibility_type, sort, limit: effectiveLimit, offset: effectiveOffset }) as { offers: unknown[]; total: number };
         return mcpText({ results: data.offers, total: data.total, limit: effectiveLimit, offset: effectiveOffset });
       } catch (err) {
         return mcpError(`Error searching offers: ${err instanceof Error ? err.message : String(err)}`);

@@ -673,9 +673,11 @@ const httpServer = createHttpServer(async (req, res) => {
     recordApiHit("/api/offers");
     const q = url.searchParams.get("q") || undefined;
     const category = url.searchParams.get("category") || undefined;
+    const eligibilityType = url.searchParams.get("eligibility_type") || undefined;
+    const sort = url.searchParams.get("sort") || undefined;
     const limit = parseInt(url.searchParams.get("limit") ?? "20", 10);
     const offset = parseInt(url.searchParams.get("offset") ?? "0", 10);
-    const results = searchOffers(q, category);
+    const results = searchOffers(q, category, eligibilityType, sort);
     const total = results.length;
     const paged = results.slice(offset, offset + limit);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
