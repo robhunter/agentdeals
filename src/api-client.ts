@@ -48,12 +48,16 @@ export async function fetchCategories(): Promise<unknown> {
 export async function fetchOffers(params: {
   q?: string;
   category?: string;
+  eligibility_type?: string;
+  sort?: string;
   limit?: number;
   offset?: number;
 }): Promise<unknown> {
   const p: Record<string, string> = {};
   if (params.q) p.q = params.q;
   if (params.category) p.category = params.category;
+  if (params.eligibility_type) p.eligibility_type = params.eligibility_type;
+  if (params.sort) p.sort = params.sort;
   if (params.limit !== undefined) p.limit = String(params.limit);
   if (params.offset !== undefined) p.offset = String(params.offset);
   return apiFetch("/api/offers", p);

@@ -1,20 +1,17 @@
-import { describe, it, beforeEach, afterEach } from "node:test";
+import { describe, it } from "node:test";
 import assert from "node:assert";
-import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
-const BACKUP_PATH = path.join(__dirname, "..", "data", "index.json.bak");
 
 function sendMcpMessages(
   serverProcess: ReturnType<typeof spawn>,
   messages: object[]
 ): Promise<object[]> {
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error("Timeout")), 5000);
+    const timeout = setTimeout(() => reject(new Error("Timeout")), 10000);
     const responses: object[] = [];
     let buffer = "";
     const expectedResponses = messages.filter(
@@ -62,35 +59,23 @@ const INIT_MESSAGES = [
   { jsonrpc: "2.0", method: "notifications/initialized" },
 ];
 
-function startServer() {
+function startServerWithBadApi() {
   const serverPath = path.join(__dirname, "..", "dist", "index.js");
   return spawn("node", [serverPath], {
     stdio: ["pipe", "pipe", "pipe"],
+    env: {
+      ...process.env,
+      AGENTDEALS_API_URL: "http://127.0.0.1:19999",
+    },
   });
 }
 
-// These tests modify the data index file. Each test backs up the file,
-// modifies it, starts a fresh server, tests, then restores the backup.
-// Tests within this describe block run serially (Node test runner default
-// for tests within a single describe) and each test manages its own
-// backup/restore to avoid interfering with concurrent test files.
+// These tests verify the stdio server handles API errors gracefully
+// by pointing it at a non-existent API endpoint.
 
 describe("error handling", () => {
-  beforeEach(() => {
-    // Back up the original index
-    fs.copyFileSync(INDEX_PATH, BACKUP_PATH);
-  });
-
-  afterEach(() => {
-    // Restore the original index
-    fs.copyFileSync(BACKUP_PATH, INDEX_PATH);
-    fs.unlinkSync(BACKUP_PATH);
-  });
-
-  it("handles malformed JSON in index file gracefully", async () => {
-    fs.writeFileSync(INDEX_PATH, "{ not valid json !!!", "utf-8");
-
-    const proc = startServer();
+  it("returns error for list_categories when API is unreachable", async () => {
+    const proc = startServerWithBadApi();
     try {
       const responses = (await sendMcpMessages(proc, [
         ...INIT_MESSAGES,
@@ -104,18 +89,16 @@ describe("error handling", () => {
 
       const result = responses.find((r: any) => r.id === 2) as any;
       assert.ok(result.result, "Should return a result, not crash");
-      const categories = JSON.parse(result.result.content[0].text);
-      assert.ok(Array.isArray(categories));
-      assert.strictEqual(categories.length, 0, "Should return empty categories for malformed JSON");
+      assert.strictEqual(result.result.isError, true, "Should indicate an error");
+      const text = result.result.content[0].text;
+      assert.ok(text.includes("unreachable") || text.includes("Error"), "Error message should mention API issue");
     } finally {
       proc.kill();
     }
   });
 
-  it("handles missing offers array in index file gracefully", async () => {
-    fs.writeFileSync(INDEX_PATH, JSON.stringify({ notOffers: [] }), "utf-8");
-
-    const proc = startServer();
+  it("returns error for search_offers when API is unreachable", async () => {
+    const proc = startServerWithBadApi();
     try {
       const responses = (await sendMcpMessages(proc, [
         ...INIT_MESSAGES,
@@ -129,19 +112,16 @@ describe("error handling", () => {
 
       const result = responses.find((r: any) => r.id === 2) as any;
       assert.ok(result.result, "Should return a result, not crash");
-      const body = JSON.parse(result.result.content[0].text);
-      assert.ok(Array.isArray(body.results));
-      assert.strictEqual(body.results.length, 0, "Should return empty offers for missing offers array");
-      assert.strictEqual(body.total, 0);
+      assert.strictEqual(result.result.isError, true, "Should indicate an error");
+      const text = result.result.content[0].text;
+      assert.ok(text.includes("unreachable") || text.includes("Error"), "Error message should mention API issue");
     } finally {
       proc.kill();
     }
   });
 
-  it("list_categories returns empty array when index has no offers", async () => {
-    fs.writeFileSync(INDEX_PATH, JSON.stringify({ offers: [] }), "utf-8");
-
-    const proc = startServer();
+  it("returns error for get_offer_details when API is unreachable", async () => {
+    const proc = startServerWithBadApi();
     try {
       const responses = (await sendMcpMessages(proc, [
         ...INIT_MESSAGES,
@@ -149,15 +129,15 @@ describe("error handling", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "list_categories", arguments: {} },
+          params: { name: "get_offer_details", arguments: { vendor: "Vercel" } },
         },
       ])) as any[];
 
       const result = responses.find((r: any) => r.id === 2) as any;
       assert.ok(result.result, "Should return a result, not crash");
-      const categories = JSON.parse(result.result.content[0].text);
-      assert.ok(Array.isArray(categories));
-      assert.strictEqual(categories.length, 0, "Should return empty categories for empty offers");
+      assert.strictEqual(result.result.isError, true, "Should indicate an error");
+      const text = result.result.content[0].text;
+      assert.ok(text.includes("unreachable") || text.includes("Error"), "Error message should mention API issue");
     } finally {
       proc.kill();
     }
