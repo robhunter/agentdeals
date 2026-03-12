@@ -1,10 +1,38 @@
-import { describe, it } from "node:test";
+import { describe, it, after } from "node:test";
 import assert from "node:assert";
-import { spawn } from "node:child_process";
+import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Start a local HTTP server so stdio MCP tests hit local data (not production API)
+const LOCAL_API_PORT = 13590;
+const LOCAL_API_URL = `http://localhost:${LOCAL_API_PORT}`;
+
+const httpServerPath = path.join(__dirname, "..", "dist", "serve.js");
+const httpServer: ChildProcess = spawn("node", [httpServerPath], {
+  env: { ...process.env, PORT: String(LOCAL_API_PORT) },
+  stdio: ["pipe", "pipe", "pipe"],
+});
+
+await new Promise<void>((resolve, reject) => {
+  const timeout = setTimeout(() => reject(new Error("HTTP server start timeout")), 5000);
+  httpServer.stderr!.on("data", (chunk: Buffer) => {
+    if (chunk.toString().includes("running on")) {
+      clearTimeout(timeout);
+      resolve();
+    }
+  });
+  httpServer.on("error", (err) => {
+    clearTimeout(timeout);
+    reject(err);
+  });
+});
+
+after(() => {
+  httpServer.kill();
+});
 
 function sendMcpMessages(
   serverProcess: ReturnType<typeof spawn>,
@@ -63,6 +91,7 @@ function startServer() {
   const serverPath = path.join(__dirname, "..", "dist", "index.js");
   return spawn("node", [serverPath], {
     stdio: ["pipe", "pipe", "pipe"],
+    env: { ...process.env, AGENTDEALS_API_URL: LOCAL_API_URL },
   });
 }
 
