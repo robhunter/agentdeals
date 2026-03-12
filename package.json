@@ -23,9 +23,7 @@
   "author": "Rob Hunter",
   "mcpName": "io.github.robhunter/agentdeals",
   "files": [
-    "dist",
-    "data/index.json",
-    "data/deal_changes.json"
+    "dist"
   ],
   "scripts": {
     "prepublishOnly": "npm run build && npm test",

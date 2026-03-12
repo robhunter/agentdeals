@@ -1,0 +1,318 @@
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import {
+  fetchCategories,
+  fetchOffers,
+  fetchOfferDetails,
+  fetchNewOffers,
+  fetchDealChanges,
+  fetchStackRecommendation,
+  fetchCosts,
+  fetchCompare,
+} from "./api-client.js";
+
+function mcpError(msg: string) {
+  return {
+    isError: true as const,
+    content: [{ type: "text" as const, text: msg }],
+  };
+}
+
+function mcpText(data: unknown) {
+  return {
+    content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+  };
+}
+
+function tryParseJson(text: string): unknown | null {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
+export function createServer(): McpServer {
+  const server = new McpServer({
+    name: "agentdeals",
+    version: "0.1.0",
+    description: "Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. 1,500+ verified offers across 52 categories with pricing change tracking.",
+  });
+
+  server.registerTool(
+    "list_categories",
+    {
+      description:
+        "Browse 52 categories of developer infrastructure deals (databases, cloud hosting, CI/CD, monitoring, auth, search, and more). Call this first to see what's available before searching.",
+    },
+    async () => {
+      try {
+        const categories = await fetchCategories();
+        return mcpText(categories);
+      } catch (err) {
+        return mcpError(`Error listing categories: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "search_offers",
+    {
+      description:
+        "Find free tiers, credits, and discounts for developer tools. Use when choosing infrastructure for a new project, comparing vendor pricing, or finding cost savings. Covers 1,500+ offers from vendors like AWS, Vercel, Supabase, Cloudflare, and more. Supports filtering by category, eligibility (public, startup, OSS, student), and sorting by recency.",
+      inputSchema: {
+        query: z.string().optional().describe("Keyword to search for in vendor names, descriptions, and tags"),
+        category: z.string().optional().describe("Filter results to a specific category (e.g. 'Databases', 'Cloud Hosting')"),
+        eligibility_type: z.enum(["public", "accelerator", "oss", "student", "fintech", "geographic", "enterprise"]).optional().describe("Filter by eligibility type: public, accelerator, oss, student, fintech, geographic, enterprise"),
+        sort: z.enum(["vendor", "category", "newest"]).optional().describe("Sort results: vendor (alphabetical by vendor name), category (by category then vendor), newest (most recently verified first)"),
+        limit: z.number().optional().describe("Maximum results to return (default: all results, or 20 when offset is provided)"),
+        offset: z.number().optional().describe("Number of results to skip (default: 0)"),
+      },
+    },
+    async ({ query, category, limit, offset }) => {
+      try {
+        const usePagination = limit !== undefined || offset !== undefined;
+        const effectiveOffset = offset ?? 0;
+        const effectiveLimit = limit ?? (usePagination ? 20 : 10000);
+        const data = await fetchOffers({ q: query, category, limit: effectiveLimit, offset: effectiveOffset }) as { offers: unknown[]; total: number };
+        return mcpText({ results: data.offers, total: data.total, limit: effectiveLimit, offset: effectiveOffset });
+      } catch (err) {
+        return mcpError(`Error searching offers: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_offer_details",
+    {
+      description:
+        "Get full pricing details for a specific vendor's free tier or deal. Use include_alternatives to compare up to 5 similar vendors in the same category — ideal for recommending alternatives or evaluating options.",
+      inputSchema: {
+        vendor: z.string().describe("Vendor name (case-insensitive match)"),
+        include_alternatives: z.boolean().optional().describe("When true, includes full deal objects for up to 5 alternative vendors in the same category"),
+      },
+    },
+    async ({ vendor, include_alternatives }) => {
+      try {
+        const data = await fetchOfferDetails(vendor, include_alternatives) as { offer: Record<string, unknown>; alternatives?: unknown[] };
+        // Return the offer object directly (matching server.ts output format)
+        // The REST API returns alternatives both on the offer and as a sibling
+        // Ensure alternatives are on the offer object when requested
+        if (include_alternatives && data.alternatives && !data.offer.alternatives) {
+          data.offer.alternatives = data.alternatives;
+        }
+        return mcpText(data.offer);
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        // Parse API 404 errors to provide the same format as server.ts
+        const match = errMsg.match(/API error \(404\): (.+)/);
+        if (match) {
+          const parsed = tryParseJson(match[1]);
+          if (parsed && typeof parsed === "object" && parsed !== null && "error" in parsed) {
+            const apiError = parsed as { error: string; suggestions?: string[] };
+            const suggestions = apiError.suggestions ?? [];
+            const msg = suggestions.length > 0
+              ? `${apiError.error} Did you mean: ${suggestions.join(", ")}?`
+              : `${apiError.error} No similar vendors found.`;
+            return mcpError(msg);
+          }
+        }
+        return mcpError(`Error getting offer details: ${errMsg}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_new_offers",
+    {
+      description:
+        "Check what developer tool deals were recently added or updated. Returns offers verified within the last N days, sorted newest first. Use for periodic checks to stay current on new free tiers and credits.",
+      inputSchema: {
+        days: z.number().optional().describe("Number of days to look back (default: 7, max: 30)"),
+      },
+    },
+    async ({ days }) => {
+      try {
+        const data = await fetchNewOffers(days);
+        return mcpText(data);
+      } catch (err) {
+        return mcpError(`Error getting new offers: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_deal_changes",
+    {
+      description:
+        "Check which developer tools recently changed their pricing or free tiers. Tracks removals, limit reductions, limit increases, new free tiers, and restructures. Use when advising on vendor lock-in risk or staying current on pricing shifts.",
+      inputSchema: {
+        since: z.string().optional().describe("ISO date string (YYYY-MM-DD). Only return changes on or after this date. Default: 30 days ago"),
+        change_type: z.enum(["free_tier_removed", "limits_reduced", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),
+        vendor: z.string().optional().describe("Filter by vendor name (case-insensitive partial match)"),
+      },
+    },
+    async ({ since, change_type, vendor }) => {
+      try {
+        const data = await fetchDealChanges({ since, type: change_type, vendor });
+        return mcpText(data);
+      } catch (err) {
+        return mcpError(`Error getting deal changes: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_stack_recommendation",
+    {
+      description:
+        "Get a complete free-tier infrastructure stack recommendation for your project. Instead of searching category by category, describe what you're building and get a curated stack with hosting, database, auth, and more — all free tier. Covers SaaS apps, API backends, static sites, mobile apps, AI/ML projects, e-commerce, and DevOps.",
+      inputSchema: {
+        use_case: z.string().describe("What you're building (e.g., 'Next.js SaaS app', 'Python API backend', 'static blog', 'mobile app', 'AI chatbot')"),
+        requirements: z.array(z.string()).optional().describe("Specific infrastructure needs to include (e.g., ['database', 'auth', 'email', 'monitoring']). Overrides template defaults when provided."),
+      },
+    },
+    async ({ use_case, requirements }) => {
+      try {
+        const data = await fetchStackRecommendation(use_case, requirements);
+        return mcpText(data);
+      } catch (err) {
+        return mcpError(`Error getting stack recommendation: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "estimate_costs",
+    {
+      description:
+        "Estimate infrastructure costs for your current stack at different scales. Pass the vendor names you're using (e.g. Vercel, Supabase, Clerk) and a scale (hobby/startup/growth) to get per-service cost analysis, free tier limits, free alternatives, and warnings about recent pricing changes. Use during project planning, code reviews, or deployment setup.",
+      inputSchema: {
+        services: z.array(z.string()).describe("Vendor names to analyze (e.g. ['Vercel', 'Supabase', 'Clerk'])"),
+        scale: z.enum(["hobby", "startup", "growth"]).optional().describe("Scale: hobby (free tiers), startup (some paid), growth (mostly paid). Default: hobby"),
+      },
+    },
+    async ({ services, scale }) => {
+      try {
+        const data = await fetchCosts(services, scale);
+        return mcpText(data);
+      } catch (err) {
+        return mcpError(`Error estimating costs: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "compare_services",
+    {
+      description:
+        "Compare two developer tool vendors side by side. Returns free tier limits, pricing tiers, key differentiators, and recent deal changes for both. Use when deciding between two options (e.g., Supabase vs Neon, Vercel vs Netlify).",
+      inputSchema: {
+        vendor_a: z.string().describe("First vendor name (case-insensitive, fuzzy match supported)"),
+        vendor_b: z.string().describe("Second vendor name (case-insensitive, fuzzy match supported)"),
+      },
+    },
+    async ({ vendor_a, vendor_b }) => {
+      try {
+        const data = await fetchCompare(vendor_a, vendor_b);
+        return mcpText(data);
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        // Parse API 404 errors to provide the same format as server.ts
+        const match = errMsg.match(/API error \(404\): (.+)/);
+        if (match) {
+          const parsed = tryParseJson(match[1]);
+          if (parsed && typeof parsed === "object" && parsed !== null && "error" in parsed) {
+            return mcpError((parsed as { error: string }).error);
+          }
+        }
+        return mcpError(`Error comparing services: ${errMsg}`);
+      }
+    }
+  );
+
+  // --- Prompt Templates ---
+
+  server.registerPrompt(
+    "find-free-alternative",
+    {
+      description: "Find free alternatives to a specific vendor. Returns the vendor's current deal plus up to 5 alternatives in the same category.",
+      argsSchema: {
+        vendor: z.string().describe("The vendor name to find alternatives for (e.g. 'Heroku', 'Firebase', 'Auth0')"),
+      },
+    },
+    async ({ vendor }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: `Find free alternatives to ${vendor}. Use the get_offer_details tool with vendor="${vendor}" and include_alternatives=true to get the vendor's current deal and up to 5 alternatives in the same category.`,
+          },
+        },
+      ],
+    })
+  );
+
+  server.registerPrompt(
+    "recommend-stack",
+    {
+      description: "Get a recommended free-tier infrastructure stack for a project. Returns hosting, database, auth, and more — all free tier.",
+      argsSchema: {
+        project_description: z.string().describe("What you're building (e.g. 'Next.js SaaS app', 'Python API backend', 'mobile app')"),
+      },
+    },
+    async ({ project_description }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: `Recommend a free infrastructure stack for: ${project_description}. Use the get_stack_recommendation tool with use_case="${project_description}" to get a curated stack of free-tier services covering hosting, database, auth, and more.`,
+          },
+        },
+      ],
+    })
+  );
+
+  server.registerPrompt(
+    "check-pricing-changes",
+    {
+      description: "Check what developer tool pricing has changed recently. Shows free tier removals, limit changes, and new free tiers.",
+    },
+    async () => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: "What developer tool pricing has changed recently? Use the get_deal_changes tool to see recent free tier removals, limit reductions, limit increases, new free tiers, and pricing restructures.",
+          },
+        },
+      ],
+    })
+  );
+
+  server.registerPrompt(
+    "search-deals",
+    {
+      description: "Search for free tiers and deals in a specific category. Browse database, hosting, auth, CI/CD, and 48 more categories.",
+      argsSchema: {
+        category: z.string().describe("Category to search (e.g. 'Databases', 'Cloud Hosting', 'Auth', 'CI/CD', 'Monitoring')"),
+      },
+    },
+    async ({ category }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: `Find free tiers for ${category}. Use the search_offers tool with category="${category}" to see all available free tiers, credits, and discounts in this category.`,
+          },
+        },
+      ],
+    })
+  );
+
+  return server;
+}
