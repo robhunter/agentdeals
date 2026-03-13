@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
@@ -730,6 +730,24 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
+  } else if (url.pathname.startsWith("/api/vendor-risk/") && req.method === "GET") {
+    recordApiHit("/api/vendor-risk");
+    const vendorParam = decodeURIComponent(url.pathname.slice("/api/vendor-risk/".length));
+    if (!vendorParam) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Vendor name is required." }));
+      return;
+    }
+    const riskResult = checkVendorRisk(vendorParam);
+    if ("error" in riskResult) {
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/vendor-risk", params: { vendor: vendorParam }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: riskResult.error, ...(riskResult.suggestions ? { suggestions: riskResult.suggestions } : {}) }));
+      return;
+    }
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/vendor-risk", params: { vendor: vendorParam }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(riskResult.result));
   } else if (url.pathname.startsWith("/api/details/") && req.method === "GET") {
     recordApiHit("/api/details");
     const vendorParam = decodeURIComponent(url.pathname.slice("/api/details/".length));

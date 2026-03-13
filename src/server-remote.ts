@@ -9,6 +9,7 @@ import {
   fetchStackRecommendation,
   fetchCosts,
   fetchCompare,
+  fetchVendorRisk,
 } from "./api-client.js";
 
 function mcpError(msg: string) {
@@ -227,6 +228,33 @@ export function createServer(): McpServer {
           }
         }
         return mcpError(`Error comparing services: ${errMsg}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "check_vendor_risk",
+    {
+      description:
+        "Before depending on a vendor's free tier, check if their pricing is stable. Returns risk level (stable/caution/risky), pricing change history, free tier longevity, and more-stable alternatives. We track 52+ real pricing changes — use this to avoid vendors that have broken trust.",
+      inputSchema: {
+        vendor: z.string().describe("Vendor name to check (case-insensitive, fuzzy match supported)"),
+      },
+    },
+    async ({ vendor }) => {
+      try {
+        const data = await fetchVendorRisk(vendor);
+        return mcpText(data);
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        const match = errMsg.match(/API error \(404\): (.+)/);
+        if (match) {
+          const parsed = tryParseJson(match[1]);
+          if (parsed && typeof parsed === "object" && parsed !== null && "error" in parsed) {
+            return mcpError((parsed as { error: string }).error);
+          }
+        }
+        return mcpError(`Error checking vendor risk: ${errMsg}`);
       }
     }
   );
