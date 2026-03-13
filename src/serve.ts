@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
@@ -730,6 +730,24 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
+  } else if (url.pathname === "/api/audit-stack" && req.method === "GET") {
+    recordApiHit("/api/audit-stack");
+    const servicesParam = url.searchParams.get("services");
+    if (!servicesParam) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Missing required 'services' parameter. Provide comma-separated vendor names." }));
+      return;
+    }
+    const servicesList = servicesParam.split(",").map((s) => s.trim()).filter(Boolean);
+    if (servicesList.length === 0) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "At least one service name is required." }));
+      return;
+    }
+    const auditResult = auditStack(servicesList);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/audit-stack", params: { services: servicesList }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: auditResult.services_analyzed });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(auditResult));
   } else if (url.pathname.startsWith("/api/vendor-risk/") && req.method === "GET") {
     recordApiHit("/api/vendor-risk");
     const vendorParam = decodeURIComponent(url.pathname.slice("/api/vendor-risk/".length));
