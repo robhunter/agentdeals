@@ -253,6 +253,43 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/audit-stack": {
+      get: {
+        summary: "Audit your infrastructure stack",
+        description: "Analyze your current services for pricing risks, cost savings, and missing capabilities. Returns per-service risk assessment, cheaper alternatives, and gap analysis.",
+        parameters: [
+          { name: "services", in: "query", required: true, description: "Comma-separated vendor names (e.g. 'Vercel,Supabase,Clerk')", schema: { type: "string" }, example: "Vercel,Supabase,Clerk" }
+        ],
+        responses: {
+          "200": {
+            description: "Stack audit results",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    services_analyzed: { type: "number" },
+                    risks_found: { type: "number" },
+                    savings_opportunities: { type: "number" },
+                    gaps: { type: "array", items: { type: "object" } },
+                    services: { type: "array", items: { type: "object" } },
+                    recommendations: { type: "array", items: { type: "string" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            description: "Missing services parameter",
+            content: {
+              "application/json": {
+                schema: { type: "object", properties: { error: { type: "string" } } }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/vendor-risk/{vendor}": {
       get: {
         summary: "Check vendor pricing stability and risk",

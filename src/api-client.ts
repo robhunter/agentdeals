@@ -106,3 +106,7 @@ export async function fetchCompare(vendorA: string, vendorB: string): Promise<un
 export async function fetchVendorRisk(vendor: string): Promise<unknown> {
   return apiFetch(`/api/vendor-risk/${encodeURIComponent(vendor)}`);
 }
+
+export async function fetchAuditStack(services: string[]): Promise<unknown> {
+  return apiFetch("/api/audit-stack", { services: services.join(",") });
+}

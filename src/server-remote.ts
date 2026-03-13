@@ -10,6 +10,7 @@ import {
   fetchCosts,
   fetchCompare,
   fetchVendorRisk,
+  fetchAuditStack,
 } from "./api-client.js";
 
 function mcpError(msg: string) {
@@ -255,6 +256,25 @@ export function createServer(): McpServer {
           }
         }
         return mcpError(`Error checking vendor risk: ${errMsg}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "audit_stack",
+    {
+      description:
+        "Audit your current infrastructure stack for cost savings, pricing risks, and missing capabilities. Pass the services you use today. Returns per-service risk assessment, cheaper alternatives, gap analysis for common categories (databases, hosting, CI/CD, auth, monitoring, logging, email, search, feature flags), and actionable recommendations.",
+      inputSchema: {
+        services: z.array(z.string()).describe("Vendor/service names you currently use (e.g. ['Vercel', 'Supabase', 'Clerk', 'Datadog'])"),
+      },
+    },
+    async ({ services }) => {
+      try {
+        const data = await fetchAuditStack(services);
+        return mcpText(data);
+      } catch (err) {
+        return mcpError(`Error auditing stack: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
   );
