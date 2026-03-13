@@ -299,6 +299,120 @@ export interface ComparisonResult {
   category_overlap: string[];
 }
 
+export interface VendorRiskResult {
+  vendor: string;
+  category: string;
+  risk_level: "stable" | "caution" | "risky";
+  free_tier_longevity_days: number;
+  changes: DealChange[];
+  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky" }>;
+  summary: string;
+}
+
+const NEGATIVE_CHANGE_TYPES = new Set([
+  "free_tier_removed",
+  "open_source_killed",
+  "limits_reduced",
+  "pricing_restructured",
+  "product_deprecated",
+]);
+
+const RISKY_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed"]);
+
+function vendorRiskLevel(vendorChanges: DealChange[]): "stable" | "caution" | "risky" {
+  const twelveMonthsAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+
+  for (const c of vendorChanges) {
+    if (RISKY_CHANGE_TYPES.has(c.change_type) && c.date >= twelveMonthsAgo) {
+      return "risky";
+    }
+  }
+
+  for (const c of vendorChanges) {
+    if (c.change_type === "limits_reduced" || c.change_type === "pricing_restructured") {
+      return "caution";
+    }
+  }
+
+  return "stable";
+}
+
+export function checkVendorRisk(
+  vendorName: string
+): { result: VendorRiskResult } | { error: string; suggestions?: string[] } {
+  const offers = loadOffers();
+  const match = findVendor(offers, vendorName);
+
+  if (!match.offer) {
+    return {
+      error: `Vendor "${vendorName}" not found.${match.suggestions.length > 0 ? ` Did you mean: ${match.suggestions.join(", ")}?` : ""}`,
+      ...(match.suggestions.length > 0 ? { suggestions: match.suggestions } : {}),
+    };
+  }
+
+  const offer = match.offer;
+  const allChanges = loadDealChanges();
+  const vendorChanges = allChanges
+    .filter((c) => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const riskLevel = vendorRiskLevel(vendorChanges);
+
+  // Free tier longevity: days since verifiedDate with no negative changes after it
+  const verifiedDate = new Date(offer.verifiedDate);
+  const lastNegativeChange = vendorChanges.find((c) => NEGATIVE_CHANGE_TYPES.has(c.change_type));
+  const longevityStart = lastNegativeChange
+    ? new Date(Math.max(new Date(lastNegativeChange.date).getTime(), verifiedDate.getTime()))
+    : verifiedDate;
+  const longevityDays = Math.max(
+    0,
+    Math.floor((Date.now() - longevityStart.getTime()) / (24 * 60 * 60 * 1000))
+  );
+
+  // Find up to 3 more-stable alternatives in same category
+  const sameCategoryOffers = offers.filter(
+    (o) => o.category === offer.category && o.vendor !== offer.vendor
+  );
+  const alternativesWithRisk = sameCategoryOffers.map((o) => {
+    const oChanges = allChanges.filter((c) => c.vendor.toLowerCase() === o.vendor.toLowerCase());
+    return {
+      vendor: o.vendor,
+      category: o.category,
+      tier: o.tier,
+      risk_level: vendorRiskLevel(oChanges),
+    };
+  });
+  // Prefer stable > caution > risky, then alphabetical
+  const riskOrder = { stable: 0, caution: 1, risky: 2 };
+  const alternatives = alternativesWithRisk
+    .sort((a, b) => riskOrder[a.risk_level] - riskOrder[b.risk_level] || a.vendor.localeCompare(b.vendor))
+    .slice(0, 3);
+
+  // Build summary
+  let summary: string;
+  if (riskLevel === "risky") {
+    summary = `${offer.vendor} is high risk — has had a free tier removal or open source license change in the last 12 months. Consider alternatives.`;
+  } else if (riskLevel === "caution") {
+    summary = `${offer.vendor} has had pricing changes (limit reductions or restructuring). Monitor for further changes.`;
+  } else {
+    summary = `${offer.vendor} has a stable pricing history with no negative changes recorded. Free tier verified for ${longevityDays} days.`;
+  }
+
+  return {
+    result: {
+      vendor: offer.vendor,
+      category: offer.category,
+      risk_level: riskLevel,
+      free_tier_longevity_days: longevityDays,
+      changes: vendorChanges,
+      alternatives,
+      summary,
+    },
+  };
+}
+
 export function compareServices(
   vendorA: string,
   vendorB: string
