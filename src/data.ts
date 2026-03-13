@@ -413,6 +413,137 @@ export function checkVendorRisk(
   };
 }
 
+// Common infrastructure categories for gap detection
+const CORE_CATEGORIES = [
+  "Databases", "Cloud Hosting", "Monitoring", "Logging", "CI/CD",
+  "Auth", "Email", "Search", "Feature Flags",
+];
+
+export interface AuditServiceResult {
+  vendor: string;
+  status: "found" | "not_found";
+  category?: string;
+  tier?: string;
+  risk_level?: "stable" | "caution" | "risky";
+  recent_changes?: DealChange[];
+  cheaper_alternative?: { vendor: string; tier: string; category: string };
+  suggestions?: string[];
+}
+
+export interface AuditGap {
+  category: string;
+  recommendation: { vendor: string; tier: string; description: string };
+}
+
+export interface AuditResult {
+  services_analyzed: number;
+  risks_found: number;
+  savings_opportunities: number;
+  gaps: AuditGap[];
+  services: AuditServiceResult[];
+  recommendations: string[];
+}
+
+export function auditStack(serviceNames: string[]): AuditResult {
+  const offers = loadOffers();
+  const allChanges = loadDealChanges();
+  const services: AuditServiceResult[] = [];
+  const coveredCategories = new Set<string>();
+  let risksFound = 0;
+  let savingsOpportunities = 0;
+  const recommendations: string[] = [];
+
+  for (const name of serviceNames) {
+    const match = findVendor(offers, name);
+
+    if (!match.offer) {
+      services.push({
+        vendor: name,
+        status: "not_found",
+        ...(match.suggestions.length > 0 ? { suggestions: match.suggestions } : {}),
+      });
+      continue;
+    }
+
+    const offer = match.offer;
+    coveredCategories.add(offer.category);
+
+    const vendorChanges = allChanges
+      .filter((c) => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
+      .sort((a, b) => b.date.localeCompare(a.date));
+
+    const riskLevel = vendorRiskLevel(vendorChanges);
+    if (riskLevel !== "stable") risksFound++;
+
+    // Find a cheaper/free alternative in same category
+    let cheaperAlternative: AuditServiceResult["cheaper_alternative"];
+    const sameCat = offers.filter(
+      (o) => o.category === offer.category && o.vendor !== offer.vendor && o.tier.toLowerCase().includes("free")
+    );
+    if (sameCat.length > 0) {
+      // Pick one with stable risk
+      const stableAlt = sameCat.find((o) => {
+        const oChanges = allChanges.filter((c) => c.vendor.toLowerCase() === o.vendor.toLowerCase());
+        return vendorRiskLevel(oChanges) === "stable";
+      });
+      const alt = stableAlt || sameCat[0];
+      cheaperAlternative = { vendor: alt.vendor, tier: alt.tier, category: alt.category };
+      savingsOpportunities++;
+    }
+
+    const svc: AuditServiceResult = {
+      vendor: offer.vendor,
+      status: "found",
+      category: offer.category,
+      tier: offer.tier,
+      risk_level: riskLevel,
+      ...(vendorChanges.length > 0 ? { recent_changes: vendorChanges } : {}),
+      ...(cheaperAlternative ? { cheaper_alternative: cheaperAlternative } : {}),
+    };
+
+    if (riskLevel === "risky") {
+      recommendations.push(`⚠️ ${offer.vendor} is high risk — consider switching to ${cheaperAlternative?.vendor || "an alternative"}.`);
+    } else if (riskLevel === "caution") {
+      recommendations.push(`Monitor ${offer.vendor} — recent pricing changes detected.`);
+    }
+
+    services.push(svc);
+  }
+
+  // Gap detection
+  const gaps: AuditGap[] = [];
+  for (const cat of CORE_CATEGORIES) {
+    if (!coveredCategories.has(cat)) {
+      const topFree = offers
+        .filter((o) => o.category === cat && o.tier.toLowerCase().includes("free"))
+        .slice(0, 1);
+      if (topFree.length > 0) {
+        gaps.push({
+          category: cat,
+          recommendation: {
+            vendor: topFree[0].vendor,
+            tier: topFree[0].tier,
+            description: topFree[0].description,
+          },
+        });
+      }
+    }
+  }
+
+  if (gaps.length > 0) {
+    recommendations.push(`Missing coverage in ${gaps.length} common categories: ${gaps.map((g) => g.category).join(", ")}.`);
+  }
+
+  return {
+    services_analyzed: serviceNames.length,
+    risks_found: risksFound,
+    savings_opportunities: savingsOpportunities,
+    gaps,
+    services,
+    recommendations,
+  };
+}
+
 export function compareServices(
   vendorA: string,
   vendorB: string

@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers, compareServices, checkVendorRisk } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers, compareServices, checkVendorRisk, auditStack } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -375,6 +375,43 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             {
               type: "text" as const,
               text: `Error checking vendor risk: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "audit_stack",
+    {
+      description:
+        "Audit your current infrastructure stack for cost savings, pricing risks, and missing capabilities. Pass the services you use today. Returns per-service risk assessment, cheaper alternatives, gap analysis for common categories (databases, hosting, CI/CD, auth, monitoring, logging, email, search, feature flags), and actionable recommendations.",
+      inputSchema: {
+        services: z.array(z.string()).describe("Vendor/service names you currently use (e.g. ['Vercel', 'Supabase', 'Clerk', 'Datadog'])"),
+      },
+    },
+    async ({ services }) => {
+      try {
+        recordToolCall("audit_stack");
+        const result = auditStack(services);
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "audit_stack", params: { services }, result_count: result.services_analyzed, session_id: getSessionId?.() });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("audit_stack error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error auditing stack: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
