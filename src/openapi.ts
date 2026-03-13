@@ -253,6 +253,61 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/vendor-risk/{vendor}": {
+      get: {
+        summary: "Check vendor pricing stability and risk",
+        description: "Before depending on a vendor's free tier, check if their pricing is stable. Returns risk level (stable/caution/risky), pricing change history, free tier longevity, and more-stable alternatives.",
+        parameters: [
+          { name: "vendor", in: "path", required: true, description: "Vendor name (case-insensitive, fuzzy match supported)", schema: { type: "string" }, example: "Vercel" }
+        ],
+        responses: {
+          "200": {
+            description: "Vendor risk assessment",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    vendor: { type: "string" },
+                    category: { type: "string" },
+                    risk_level: { type: "string", enum: ["stable", "caution", "risky"] },
+                    free_tier_longevity_days: { type: "number" },
+                    changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
+                    alternatives: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          vendor: { type: "string" },
+                          category: { type: "string" },
+                          tier: { type: "string" },
+                          risk_level: { type: "string", enum: ["stable", "caution", "risky"] }
+                        }
+                      }
+                    },
+                    summary: { type: "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            description: "Vendor not found",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    error: { type: "string" },
+                    suggestions: { type: "array", items: { type: "string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stack": {
       get: {
         summary: "Get free-tier stack recommendation",

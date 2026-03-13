@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers, compareServices } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers, compareServices, checkVendorRisk } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -331,6 +331,50 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             {
               type: "text" as const,
               text: `Error comparing services: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "check_vendor_risk",
+    {
+      description:
+        "Before depending on a vendor's free tier, check if their pricing is stable. Returns risk level (stable/caution/risky), pricing change history, free tier longevity, and more-stable alternatives. We track 52+ real pricing changes — use this to avoid vendors that have broken trust.",
+      inputSchema: {
+        vendor: z.string().describe("Vendor name to check (case-insensitive, fuzzy match supported)"),
+      },
+    },
+    async ({ vendor }) => {
+      try {
+        recordToolCall("check_vendor_risk");
+        const result = checkVendorRisk(vendor);
+        if ("error" in result) {
+          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "check_vendor_risk", params: { vendor }, result_count: 0, session_id: getSessionId?.() });
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: result.error }],
+          };
+        }
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "check_vendor_risk", params: { vendor }, result_count: 1, session_id: getSessionId?.() });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result.result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("check_vendor_risk error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error checking vendor risk: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
