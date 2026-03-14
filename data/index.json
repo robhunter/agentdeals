@@ -2146,7 +2146,7 @@
     {
       "vendor": "Postman",
       "category": "Testing",
-      "description": "Free for 1 user only — collections, API testing, mock servers. Team collaboration removed March 2026. Teams require Basic plan ($14/user/mo) or higher",
+      "description": "Free for 1 user only — collections, API testing, mock servers. Team collaboration removed March 2026. Teams require Team plan ($19/user/mo) or higher. Postman-alternative tag: see Bruno, Hoppscotch, Insomnia",
       "tier": "Free",
       "url": "https://www.postman.com/pricing/",
       "tags": [
@@ -2154,9 +2154,10 @@
         "api-testing",
         "api-development",
         "mock-servers",
-        "deal-change"
+        "deal-change",
+        "postman-alternative"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-03-14"
     },
     {
       "vendor": "Directus",
@@ -3937,7 +3938,8 @@
         "testing",
         "rest",
         "graphql",
-        "open source"
+        "open-source",
+        "postman-alternative"
       ],
       "verifiedDate": "2026-02-26"
     },
@@ -4899,6 +4901,37 @@
         "developer-tools"
       ],
       "verifiedDate": "2026-03-01"
+    },
+    {
+      "vendor": "Bruno",
+      "category": "API Development",
+      "description": "Free OSS (MIT). Git-based offline API client — REST, GraphQL, collections stored as files in your repo. No cloud, no accounts, no sync. Desktop app for Mac/Linux/Windows. The #1 open-source Postman alternative",
+      "tier": "Free OSS",
+      "url": "https://www.usebruno.com",
+      "tags": [
+        "api",
+        "rest",
+        "graphql",
+        "testing",
+        "open-source",
+        "postman-alternative"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Thunder Client",
+      "category": "API Development",
+      "description": "Lightweight REST API client for VS Code. Free tier includes collections, environments, local storage, and request history. No account required for local use. Premium ($10/yr) adds cloud sync and team collaboration",
+      "tier": "Free",
+      "url": "https://www.thunderclient.com",
+      "tags": [
+        "api",
+        "rest",
+        "vscode",
+        "testing",
+        "postman-alternative"
+      ],
+      "verifiedDate": "2026-03-14"
     },
     {
       "vendor": "Gel",
@@ -6209,14 +6242,18 @@
     {
       "vendor": "Insomnia",
       "category": "API Development",
-      "description": "Open-source API client for designing and testing APIs, it supports REST and GraphQL",
+      "description": "Open-source API client (MIT) for designing and testing REST and GraphQL APIs. Local-first with optional cloud sync. Desktop app for Mac/Linux/Windows",
       "tier": "Free",
       "url": "https://insomnia.rest",
       "tags": [
-        "developer-tools",
-        "free-for-dev"
+        "api",
+        "testing",
+        "rest",
+        "graphql",
+        "open-source",
+        "postman-alternative"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-14"
     },
     {
       "vendor": "Invantive Cloud",
