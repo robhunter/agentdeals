@@ -185,6 +185,148 @@ function buildDeadlinesHtml(): string {
   }).join("\n");
 }
 
+function toSlug(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+// Build category slug → name lookup
+const categorySlugMap = new Map<string, string>();
+for (const cat of categories) {
+  categorySlugMap.set(toSlug(cat.name), cat.name);
+}
+
+function escHtmlServer(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function buildCategoryPage(slug: string): string | null {
+  const categoryName = categorySlugMap.get(slug);
+  if (!categoryName) return null;
+
+  const catOffers = offers.filter((o) => o.category === categoryName);
+  const catCount = catOffers.length;
+  const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
+  const metaDesc = `Compare ${catCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals. Verified pricing for ${catOffers.slice(0, 5).map(o => o.vendor).join(", ")}${catCount > 5 ? " and more" : ""}.`;
+
+  const offersHtml = catOffers.map((o) => `        <tr>
+          <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="${escHtmlServer(o.url)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+          <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
+          <td style="color:var(--text-muted)">${escHtmlServer(o.description)}</td>
+          <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(o.verifiedDate)}</td>
+        </tr>`).join("\n");
+
+  // Adjacent categories for navigation
+  const sortedCats = categories.map(c => c.name).sort();
+  const catIdx = sortedCats.indexOf(categoryName);
+  const prevCat = catIdx > 0 ? sortedCats[catIdx - 1] : null;
+  const nextCat = catIdx < sortedCats.length - 1 ? sortedCats[catIdx + 1] : null;
+
+  const navLinks = [
+    prevCat ? `<a href="/category/${toSlug(prevCat)}" style="color:var(--accent)">&larr; ${escHtmlServer(prevCat)}</a>` : "<span></span>",
+    `<a href="/" style="color:var(--accent)">Home</a>`,
+    nextCat ? `<a href="/category/${toSlug(nextCat)}" style="color:var(--accent)">${escHtmlServer(nextCat)} &rarr;</a>` : "<span></span>",
+  ].join("");
+
+  // All categories list for internal linking
+  const allCatLinks = categories.map((c) =>
+    c.name === categoryName
+      ? `<span style="display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;font-weight:600;background:var(--accent);color:var(--bg)">${escHtmlServer(c.name)} (${c.count})</span>`
+      : `<a href="/category/${toSlug(c.name)}" style="display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;color:var(--text-muted);border:1px solid var(--border);text-decoration:none;transition:all .2s">${escHtmlServer(c.name)} (${c.count})</a>`
+  ).join("\n        ");
+
+  // JSON-LD structured data
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `Free ${categoryName} Tools`,
+    description: metaDesc,
+    numberOfItems: catCount,
+    itemListElement: catOffers.slice(0, 50).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        applicationCategory: categoryName,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/category/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/category/${slug}">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.cat-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.offers-table{width:100%;border-collapse:collapse;margin-bottom:2rem}
+.offers-table th{text-align:left;padding:.6rem .75rem;font-size:.7rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid var(--border);font-family:var(--mono)}
+.offers-table td{padding:.6rem .75rem;border-bottom:1px solid rgba(42,39,32,0.6);font-size:.85rem;vertical-align:top}
+.offers-table tr:hover{background:var(--accent-glow)}
+.cat-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 0;border-top:1px solid var(--border);margin-top:1rem}
+.all-cats{margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)}
+.all-cats h2{font-family:var(--serif);font-size:1.25rem;color:var(--text);margin-bottom:1rem}
+.all-cats-grid{display:flex;flex-wrap:wrap;gap:.4rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.offers-table{font-size:.75rem}.offers-table th,.offers-table td{padding:.4rem .5rem}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
+  <h1>Free ${escHtmlServer(categoryName)} Tools</h1>
+  <p class="cat-meta">${catCount} verified free tiers and developer deals. Last updated ${new Date().toISOString().split("T")[0]}.</p>
+
+  <table class="offers-table">
+    <thead>
+      <tr>
+        <th>Vendor</th>
+        <th>Tier</th>
+        <th>Description</th>
+        <th>Verified</th>
+      </tr>
+    </thead>
+    <tbody>
+${offersHtml}
+    </tbody>
+  </table>
+
+  <div class="cat-nav">${navLinks}</div>
+
+  <div class="all-cats">
+    <h2>All Categories</h2>
+    <div class="all-cats-grid">
+        ${allCatLinks}
+    </div>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 function buildLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1253,6 +1395,12 @@ ${items}
     res.end(robotsTxt);
   } else if (url.pathname === "/sitemap.xml" && req.method === "GET") {
     const now = new Date().toISOString().split("T")[0];
+    const categoryUrls = categories.map((c) => `  <url>
+    <loc>https://agentdeals-production.up.railway.app/category/${toSlug(c.name)}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join("\n");
     const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -1273,6 +1421,7 @@ ${items}
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+${categoryUrls}
 </urlset>`;
     res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(sitemapXml);
@@ -1280,6 +1429,18 @@ ${items}
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(landingPageHtml);
+  } else if (url.pathname.startsWith("/category/") && req.method === "GET") {
+    const slug = url.pathname.slice("/category/".length).replace(/\/$/, "");
+    const html = buildCategoryPage(slug);
+    if (html) {
+      recordApiHit("/category/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/category/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Category not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/">Browse all ${stats.categories} categories on AgentDeals</a></p></div></body></html>`);
+    }
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));

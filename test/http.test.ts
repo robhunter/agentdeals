@@ -910,4 +910,43 @@ describe("HTTP transport", () => {
     assert.ok(msg.content.text.includes("Heroku"));
     assert.ok(msg.content.text.includes("get_offer_details"));
   });
+
+  it("GET /category/:slug returns server-rendered category page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/category/databases`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Free Databases Tools"), "Should have category-specific title");
+    assert.ok(html.includes('name="description"'), "Should have meta description");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD structured data");
+    assert.ok(html.includes("ItemList"), "JSON-LD should use ItemList schema");
+    assert.ok(html.includes("All Categories"), "Should have all-categories navigation");
+    assert.ok(html.includes("/category/"), "Should link to other categories");
+    assert.ok(html.includes('canonical'), "Should have canonical link");
+  });
+
+  it("GET /category/:slug returns 404 for unknown category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/category/nonexistent-category`);
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("404"), "Should show 404 message");
+    assert.ok(html.includes("nonexistent-category"), "Should show the invalid slug");
+  });
+
+  it("sitemap.xml includes category pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    assert.strictEqual(response.status, 200);
+    const xml = await response.text();
+    assert.ok(xml.includes("/category/databases"), "Sitemap should include databases category");
+    assert.ok(xml.includes("/category/ai-coding"), "Sitemap should include ai-coding category");
+    // Should have many category entries (54 categories)
+    const categoryCount = (xml.match(/\/category\//g) || []).length;
+    assert.ok(categoryCount >= 50, `Expected 50+ category URLs in sitemap, got ${categoryCount}`);
+  });
 });
