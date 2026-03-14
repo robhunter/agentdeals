@@ -111,6 +111,18 @@ export async function fetchAuditStack(services: string[]): Promise<unknown> {
   return apiFetch("/api/audit-stack", { services: services.join(",") });
 }
 
+export async function fetchNewestDeals(params: {
+  since?: string;
+  limit?: number;
+  category?: string;
+}): Promise<unknown> {
+  const p: Record<string, string> = {};
+  if (params.since) p.since = params.since;
+  if (params.limit !== undefined) p.limit = String(params.limit);
+  if (params.category) p.category = params.category;
+  return apiFetch("/api/newest", p);
+}
+
 export async function fetchExpiringDeals(withinDays?: number): Promise<unknown> {
   const p: Record<string, string> = {};
   if (withinDays !== undefined) p.within_days = String(withinDays);

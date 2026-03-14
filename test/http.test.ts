@@ -763,7 +763,8 @@ describe("HTTP transport", () => {
     assert.ok(body.paths["/api/vendor-risk/{vendor}"]);
     assert.ok(body.paths["/api/audit-stack"]);
     assert.ok(body.paths["/api/expiring"]);
-    assert.strictEqual(Object.keys(body.paths).length, 12);
+    assert.ok(body.paths["/api/newest"]);
+    assert.strictEqual(Object.keys(body.paths).length, 13);
     assert.ok(body.components.schemas.Offer);
     assert.ok(body.components.schemas.DealChange);
     assert.ok(body.components.schemas.Eligibility);

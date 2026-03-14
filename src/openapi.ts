@@ -115,6 +115,33 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/newest": {
+      get: {
+        summary: "Newest deals",
+        description: "Returns deals sorted by verified date (newest first) with days_since_update. Use for periodic 'what's new' checks.",
+        parameters: [
+          { name: "since", in: "query", description: "ISO date (YYYY-MM-DD). Only return deals verified after this date. Default: 30 days ago", schema: { type: "string", format: "date" } },
+          { name: "limit", in: "query", description: "Max results (default: 20, max: 50)", schema: { type: "integer", default: 20 } },
+          { name: "category", in: "query", description: "Filter by category name", schema: { type: "string" } }
+        ],
+        responses: {
+          "200": {
+            description: "List of newest deals with days_since_update",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    deals: { type: "array", items: { allOf: [{ $ref: "#/components/schemas/Offer" }, { type: "object", properties: { days_since_update: { type: "integer" } } }] } },
+                    total: { type: "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/changes": {
       get: {
         summary: "Deal and pricing changes",
