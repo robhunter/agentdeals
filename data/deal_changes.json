@@ -706,7 +706,7 @@
       "summary": "Google Developer Program annual subscription ending March 30. Replaced by Google AI Pro ($10/mo) and AI Ultra ($100/mo) tiers with bundled cloud credits and AI model access.",
       "previous_state": "Google Developer Program: annual subscription with standalone cloud credits, developer tools access, and learning resources",
       "current_state": "Google AI Pro ($10/mo) and AI Ultra ($100/mo) tiers bundle cloud credits with AI model access (Gemini, etc). Developer benefits folded into AI-centric subscriptions",
-      "impact": "Developers on the annual plan must transition to new AI-bundled tiers by March 30. Cloud credits now tied to AI subscriptions rather than standalone developer program.",
+      "impact": "high",
       "source_url": "https://developers.google.com/profile/help/benefits",
       "category": "Cloud IaaS",
       "alternatives": [
