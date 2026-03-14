@@ -149,7 +149,8 @@ export const openapiSpec = {
         parameters: [
           { name: "since", in: "query", description: "Filter changes after this date (YYYY-MM-DD)", schema: { type: "string", format: "date" }, example: "2025-01-01" },
           { name: "type", in: "query", description: "Filter by change type", schema: { type: "string", enum: ["free_tier_removed", "limits_reduced", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"] } },
-          { name: "vendor", in: "query", description: "Filter by vendor name", schema: { type: "string" } }
+          { name: "vendor", in: "query", description: "Filter by vendor name", schema: { type: "string" } },
+          { name: "vendors", in: "query", description: "Comma-separated vendor names to filter by (e.g. 'Vercel,Supabase,Clerk')", schema: { type: "string" }, example: "Vercel,Supabase" }
         ],
         responses: {
           "200": {

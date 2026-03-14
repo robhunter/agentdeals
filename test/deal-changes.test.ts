@@ -299,6 +299,46 @@ describe("get_deal_changes tool", () => {
     }
   });
 
+  it("getDealChanges filters by vendors (comma-separated)", async () => {
+    // Direct function test — avoids stdio remote API proxy
+    const { getDealChanges } = await import("../dist/data.js");
+
+    // Single vendor
+    const single = getDealChanges("2024-01-01", undefined, undefined, "Netlify");
+    assert.strictEqual(single.total, 1);
+    assert.strictEqual(single.changes[0].vendor, "Netlify");
+
+    // Multiple vendors
+    const multi = getDealChanges("2024-01-01", undefined, undefined, "Netlify,OpenAI");
+    assert.ok(multi.total >= 2, `Expected at least 2 changes for Netlify+OpenAI, got ${multi.total}`);
+    for (const change of multi.changes) {
+      const lower = change.vendor.toLowerCase();
+      assert.ok(
+        lower.includes("netlify") || lower.includes("openai"),
+        `Unexpected vendor: ${change.vendor}`
+      );
+    }
+
+    // Nonexistent vendors
+    const none = getDealChanges("2024-01-01", undefined, undefined, "nonexistent-xyz,also-fake");
+    assert.strictEqual(none.total, 0);
+    assert.deepStrictEqual(none.changes, []);
+
+    // Combined with since date
+    const combined = getDealChanges("2026-01-01", undefined, undefined, "Netlify,OpenAI");
+    for (const change of combined.changes) {
+      assert.ok(change.date >= "2026-01-01");
+    }
+  });
+
+  it("vendors takes precedence over vendor when both provided", async () => {
+    const { getDealChanges } = await import("../dist/data.js");
+    // When vendors is set, vendor should be ignored
+    const result = getDealChanges("2024-01-01", undefined, "OpenAI", "Netlify");
+    assert.strictEqual(result.total, 1);
+    assert.strictEqual(result.changes[0].vendor, "Netlify");
+  });
+
   it("every change_type in data matches the tool enum", async () => {
     const VALID_CHANGE_TYPES = new Set([
       "free_tier_removed", "limits_reduced", "limits_increased",

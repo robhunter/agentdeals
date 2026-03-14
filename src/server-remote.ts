@@ -175,11 +175,12 @@ export function createServer(): McpServer {
         since: z.string().optional().describe("ISO date string (YYYY-MM-DD). Only return changes on or after this date. Default: 30 days ago"),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),
         vendor: z.string().optional().describe("Filter by vendor name (case-insensitive partial match)"),
+        vendors: z.string().optional().describe("Comma-separated vendor names to filter by (case-insensitive partial match). Use to track changes affecting your specific stack, e.g. 'Vercel,Supabase,Clerk'"),
       },
     },
-    async ({ since, change_type, vendor }) => {
+    async ({ since, change_type, vendor, vendors }) => {
       try {
-        const data = await fetchDealChanges({ since, type: change_type, vendor });
+        const data = await fetchDealChanges({ since, type: change_type, vendor, vendors });
         return mcpText(data);
       } catch (err) {
         return mcpError(`Error getting deal changes: ${err instanceof Error ? err.message : String(err)}`);

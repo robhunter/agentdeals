@@ -619,6 +619,22 @@ describe("HTTP transport", () => {
     assert.ok(body.error.includes("Invalid"));
   });
 
+  it("GET /api/changes filters by vendors (comma-separated)", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/changes?since=2020-01-01&vendors=Netlify,OpenAI`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.total >= 2, `Expected at least 2 changes for Netlify+OpenAI, got ${body.total}`);
+    for (const change of body.changes) {
+      const vendorLower = change.vendor.toLowerCase();
+      assert.ok(
+        vendorLower.includes("netlify") || vendorLower.includes("openai"),
+        `Unexpected vendor: ${change.vendor}`
+      );
+    }
+  });
+
   it("GET /api/details/:vendor returns offer details", async () => {
     proc = await startHttpServer();
 
