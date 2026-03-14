@@ -227,13 +227,14 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         since: z.string().optional().describe("ISO date string (YYYY-MM-DD). Only return changes on or after this date. Default: 30 days ago"),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),
         vendor: z.string().optional().describe("Filter by vendor name (case-insensitive partial match)"),
+        vendors: z.string().optional().describe("Comma-separated vendor names to filter by (case-insensitive partial match). Use to track changes affecting your specific stack, e.g. 'Vercel,Supabase,Clerk'"),
       },
     },
-    async ({ since, change_type, vendor }) => {
+    async ({ since, change_type, vendor, vendors }) => {
       try {
         recordToolCall("get_deal_changes");
-        const result = getDealChanges(since, change_type, vendor);
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_deal_changes", params: { since, change_type, vendor }, result_count: result.changes.length, session_id: getSessionId?.() });
+        const result = getDealChanges(since, change_type, vendor, vendors);
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_deal_changes", params: { since, change_type, vendor, vendors }, result_count: result.changes.length, session_id: getSessionId?.() });
         return {
           content: [
             {
