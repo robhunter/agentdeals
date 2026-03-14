@@ -203,7 +203,46 @@ function buildLandingPage(): string {
 <meta name="twitter:description" content="Your AI recommends tools from memory. Memory doesn't include pricing. ${stats.offers}+ deals across ${stats.categories} categories.">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/">
 <link rel="alternate" type="application/rss+xml" title="AgentDeals — Pricing Changes" href="/api/feed">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "AgentDeals",
+      "url": "https://agentdeals-production.up.railway.app",
+      "description": "${stats.offers}+ developer infrastructure deals across ${stats.categories} categories. Pricing context for AI agents.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://agentdeals-production.up.railway.app/api/offers?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "name": "Developer Tool Deals",
+      "description": "Free tiers, credits, and discounts from developer infrastructure companies",
+      "numberOfItems": ${stats.offers},
+      "itemListElement": ${JSON.stringify([...categories].sort((a, b) => b.count - a.count).slice(0, 10).map((c, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": c.name,
+        "description": c.count + " deals in " + c.name
+      })))}
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "AgentDeals MCP Server",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://agentdeals-production.up.railway.app/mcp",
+      "description": "Model Context Protocol server providing AI agents with real-time developer tool pricing data"
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1026,6 +1065,35 @@ ${items}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/feed", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: allChanges.length });
     res.writeHead(200, { "Content-Type": "application/rss+xml; charset=utf-8", "Access-Control-Allow-Origin": "*" });
     res.end(rss);
+  } else if (url.pathname === "/robots.txt" && req.method === "GET") {
+    const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: https://agentdeals-production.up.railway.app/sitemap.xml\n`;
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
+    res.end(robotsTxt);
+  } else if (url.pathname === "/sitemap.xml" && req.method === "GET") {
+    const now = new Date().toISOString().split("T")[0];
+    const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://agentdeals-production.up.railway.app/</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://agentdeals-production.up.railway.app/api/feed</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://agentdeals-production.up.railway.app/api/docs</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>`;
+    res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(sitemapXml);
   } else if (url.pathname === "/") {
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
