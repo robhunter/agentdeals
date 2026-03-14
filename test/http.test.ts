@@ -769,7 +769,7 @@ describe("HTTP transport", () => {
     assert.ok(body.components.schemas.Eligibility);
   });
 
-  it("prompts/list returns all 4 prompt templates", async () => {
+  it("prompts/list returns all 5 prompt templates", async () => {
     proc = await startHttpServer();
 
     // Initialize session
@@ -803,12 +803,13 @@ describe("HTTP transport", () => {
     const result = data.find((d: any) => d.id === 2);
     assert.ok(result, "Should get prompts/list response");
     const prompts = result.result.prompts;
-    assert.strictEqual(prompts.length, 4);
+    assert.strictEqual(prompts.length, 5);
 
     const names = prompts.map((p: any) => p.name).sort();
     assert.deepStrictEqual(names, [
       "check-pricing-changes",
       "find-free-alternative",
+      "monitor-vendor-changes",
       "recommend-stack",
       "search-deals",
     ]);
@@ -825,6 +826,10 @@ describe("HTTP transport", () => {
     // check-pricing-changes should have no required arguments
     const checkChanges = prompts.find((p: any) => p.name === "check-pricing-changes");
     assert.ok(!checkChanges.arguments || checkChanges.arguments.length === 0);
+
+    // monitor-vendor-changes should have vendors argument
+    const monitorVendors = prompts.find((p: any) => p.name === "monitor-vendor-changes");
+    assert.ok(monitorVendors.arguments?.some((a: any) => a.name === "vendors"));
   });
 
   it("prompts/get returns structured message for find-free-alternative", async () => {
