@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, searchOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
@@ -763,6 +763,20 @@ const httpServer = createHttpServer(async (req, res) => {
     const days = parseInt(url.searchParams.get("days") ?? "7", 10);
     const result = getNewOffers(days);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/new", params: { days }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.offers.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(result));
+  } else if (url.pathname === "/api/newest" && req.method === "GET") {
+    recordApiHit("/api/newest");
+    const since = url.searchParams.get("since") || undefined;
+    const limit = parseInt(url.searchParams.get("limit") ?? "20", 10) || 20;
+    const category = url.searchParams.get("category") || undefined;
+    if (since && !/^\d{4}-\d{2}-\d{2}/.test(since)) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid 'since' parameter. Expected ISO date string (YYYY-MM-DD)." }));
+      return;
+    }
+    const result = getNewestDeals({ since, limit, category });
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/newest", params: { since, limit, category }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
   } else if (url.pathname === "/api/categories" && req.method === "GET") {

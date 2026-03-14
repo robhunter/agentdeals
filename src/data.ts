@@ -581,6 +581,37 @@ export function compareServices(
   };
 }
 
+export function getNewestDeals(params: {
+  since?: string;
+  limit?: number;
+  category?: string;
+}): { deals: Array<Offer & { days_since_update: number }>; total: number } {
+  const now = new Date();
+  const defaultSince = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+  const sinceDate = params.since || defaultSince;
+  const limit = Math.min(Math.max(params.limit ?? 20, 1), 50);
+
+  let results = loadOffers().filter((o) => o.verifiedDate >= sinceDate);
+
+  if (params.category) {
+    const lowerCat = params.category.toLowerCase();
+    results = results.filter((o) => o.category.toLowerCase() === lowerCat);
+  }
+
+  results.sort((a, b) => b.verifiedDate.localeCompare(a.verifiedDate));
+
+  const deals = results.slice(0, limit).map((o) => ({
+    ...o,
+    days_since_update: Math.floor(
+      (now.getTime() - new Date(o.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
+    ),
+  }));
+
+  return { deals, total: deals.length };
+}
+
 export function getExpiringDeals(withinDays: number = 30): { deals: Array<Offer & { days_until_expiry: number }>, total: number } {
   const offers = loadOffers();
   const now = new Date();
