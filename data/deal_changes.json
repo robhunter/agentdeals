@@ -74,22 +74,6 @@
       ]
     },
     {
-      "vendor": "LocalStack",
-      "change_type": "free_tier_removed",
-      "date": "2026-03-23",
-      "summary": "Community Edition (open-source) shutting down entirely on March 23, 2026",
-      "previous_state": "Free open-source Community Edition with core AWS service emulation",
-      "current_state": "Paid-only (Starter at $35/mo). CE no longer maintained after March 23",
-      "impact": "high",
-      "source_url": "https://localstack.cloud/",
-      "category": "Testing",
-      "alternatives": [
-        "Testcontainers",
-        "MinIO",
-        "ElasticMQ"
-      ]
-    },
-    {
       "vendor": "Google Gemini",
       "change_type": "limits_reduced",
       "date": "2025-12-15",
@@ -468,23 +452,6 @@
       ]
     },
     {
-      "vendor": "HashiCorp Terraform Cloud",
-      "change_type": "pricing_restructured",
-      "date": "2026-03-31",
-      "summary": "Legacy HCP Terraform Free plan discontinued March 31, 2026. Users auto-migrated to enhanced usage-based free tier (available since 2023): 500 managed resources, unlimited users, VCS integration",
-      "previous_state": "Legacy Free plan with ~5 workspaces, limited state management, user-count-based model",
-      "current_state": "Enhanced free tier: 500 managed resources, unlimited users, VCS-driven workflows, remote state management, SSO, policy enforcement. Legacy plan EOL March 31. Paid tiers start at $0.00015/managed resource/hour",
-      "impact": "medium",
-      "source_url": "https://www.hashicorp.com/en/blog/continuing-hcp-terraform-s-enhanced-free-tier-experience",
-      "category": "IaC",
-      "alternatives": [
-        "Spacelift",
-        "Scalr",
-        "env0",
-        "OpenTofu"
-      ]
-    },
-    {
       "vendor": "Google Programmable Search Engine",
       "change_type": "limits_reduced",
       "date": "2026-01-22",
@@ -634,7 +601,7 @@
     },
     {
       "vendor": "Xero Developer API",
-      "change_type": "free_tier_removed",
+      "change_type": "pricing_model_change",
       "date": "2026-03-02",
       "summary": "Xero retiring revenue-share model, moving to 5-tier connection+egress pricing. No more free API access for developers. Costs jumping from ~$0 to $17K+/year for some. Also banning API data use for AI/ML model training",
       "previous_state": "Revenue-share model with effective free API access for developers building Xero integrations",
@@ -832,6 +799,21 @@
       "source_url": "https://www.augmentcode.com/pricing",
       "category": "AI Coding",
       "alternatives": ["GitHub Copilot", "Cursor"]
+    },
+    {
+      "vendor": "Google Tenor API",
+      "change_type": "product_deprecated",
+      "date": "2026-06-30",
+      "summary": "Google Tenor public API shutting down June 30, 2026. New API key signups halted January 13, 2026. Only the public GIF search API is affected — Tenor website and app continue operating. Developers must migrate to alternative GIF APIs",
+      "previous_state": "Free public API for GIF search, trending GIFs, and autocomplete. No rate limits for reasonable use. Used by messaging apps and social platforms",
+      "current_state": "API shutdown June 30, 2026. No new API keys issued since Jan 13, 2026. Existing keys work until shutdown date. No replacement API from Google",
+      "impact": "high",
+      "source_url": "https://developers.google.com/tenor/guides/api-shutdown",
+      "category": "Media",
+      "alternatives": [
+        "Giphy API",
+        "Imgur API"
+      ]
     },
     {
       "vendor": "Testcontainers Cloud",

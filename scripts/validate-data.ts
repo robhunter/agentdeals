@@ -40,6 +40,7 @@ const VALID_CATEGORIES = [
   "Logging",
   "Low-Code Platforms",
   "Maps/Geolocation",
+  "Media",
   "Messaging",
   "Mobile Development",
   "Monitoring",
