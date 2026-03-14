@@ -827,6 +827,42 @@
         "Bluesky AT Protocol",
         "Mastodon API"
       ]
+    },
+    {
+      "vendor": "Cognition Devin",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-15",
+      "summary": "Launched $20/month Core plan with pay-as-you-go ACU pricing, down from previous $500/month-only Team plan",
+      "previous_state": "Team plan only at $500/month (250 credits)",
+      "current_state": "Core plan $20/month (pay-as-you-go at $2.25/ACU), Team plan $500/month remains",
+      "impact": "high",
+      "source_url": "https://devin.ai/pricing",
+      "category": "AI Coding",
+      "alternatives": ["GitHub Copilot", "Cline", "Aider"]
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "pricing_restructured",
+      "date": "2025-06-01",
+      "summary": "Moved from flat monthly subscription to credit-based pricing model with new $200/month Ultra tier",
+      "previous_state": "Pro plan $20/month with 500 fast requests",
+      "current_state": "Pro plan $20/month (credit-based), Business $40/seat/month, Ultra $200/month (higher credit limits)",
+      "impact": "medium",
+      "source_url": "https://www.cursor.com/pricing",
+      "category": "AI Coding",
+      "alternatives": ["Windsurf", "GitHub Copilot"]
+    },
+    {
+      "vendor": "Augment Code",
+      "change_type": "pricing_restructured",
+      "date": "2025-10-01",
+      "summary": "Shifted from per-seat subscription to credit-based consumption model",
+      "previous_state": "Per-seat monthly subscription",
+      "current_state": "Credit-based consumption model with usage tiers",
+      "impact": "medium",
+      "source_url": "https://www.augmentcode.com/pricing",
+      "category": "AI Coding",
+      "alternatives": ["GitHub Copilot", "Cursor"]
     }
   ]
 }
