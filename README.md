@@ -11,7 +11,17 @@ AgentDeals indexes real, verified pricing data from 1,500+ developer infrastruct
 
 ## Install
 
-### Option A: npx (local stdio — recommended)
+### Option A: Claude Desktop Extension (one-click)
+
+Install AgentDeals directly in Claude Desktop — no configuration needed:
+
+1. Download the latest `agentdeals.mcpb` from [Releases](https://github.com/robhunter/agentdeals/releases)
+2. Double-click the file to install in Claude Desktop
+3. All 12 tools and 5 prompt templates are immediately available
+
+Or browse for AgentDeals in Claude Desktop under **Settings > Extensions**.
+
+### Option B: npx (local stdio)
 
 No server needed. Runs locally via stdin/stdout:
 
@@ -26,7 +36,7 @@ No server needed. Runs locally via stdin/stdout:
 }
 ```
 
-### Option B: Remote HTTP
+### Option C: Remote HTTP
 
 Connect to the hosted instance — no install required:
 

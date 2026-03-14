@@ -10,3 +10,4 @@ data/free-for-dev-new.json
 data/startup-deals-new.json
 .cache/
 data/telemetry.json
+*.mcpb
