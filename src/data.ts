@@ -580,3 +580,23 @@ export function compareServices(
     },
   };
 }
+
+export function getExpiringDeals(withinDays: number = 30): { deals: Array<Offer & { days_until_expiry: number }>, total: number } {
+  const offers = loadOffers();
+  const now = new Date();
+  const cutoff = new Date(now.getTime() + withinDays * 24 * 60 * 60 * 1000);
+
+  const expiring = offers
+    .filter((o) => {
+      if (!o.expires_date) return false;
+      const expires = new Date(o.expires_date);
+      return expires >= now && expires <= cutoff;
+    })
+    .map((o) => ({
+      ...o,
+      days_until_expiry: Math.ceil((new Date(o.expires_date!).getTime() - now.getTime()) / (24 * 60 * 60 * 1000)),
+    }))
+    .sort((a, b) => a.days_until_expiry - b.days_until_expiry);
+
+  return { deals: expiring, total: expiring.length };
+}
