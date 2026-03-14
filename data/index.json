@@ -176,7 +176,8 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-02-23",
+      "expires_date": "2027-03-31"
     },
     {
       "vendor": "Azure",
@@ -206,7 +207,8 @@
         "startup",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-02-24",
+      "expires_date": "2026-06-30"
     },
     {
       "vendor": "Oracle Cloud",
@@ -1430,7 +1432,8 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-11",
+      "expires_date": "2027-01-31"
     },
     {
       "vendor": "Amplitude",
@@ -1544,7 +1547,8 @@
           "Raised less than $25M"
         ],
         "program": "PostHog for Y Combinator"
-      }
+      },
+      "expires_date": "2027-01-31"
     },
     {
       "vendor": "Segment",
@@ -1567,7 +1571,8 @@
           "Raised no more than $5M in total funding"
         ],
         "program": "Segment Startup Program"
-      }
+      },
+      "expires_date": "2026-12-31"
     },
     {
       "vendor": "Amplitude",
@@ -1615,7 +1620,8 @@
           "Founded within last 10 years"
         ],
         "program": "AWS Activate Portfolio"
-      }
+      },
+      "expires_date": "2026-12-31"
     },
     {
       "vendor": "Notion",
@@ -1734,7 +1740,8 @@
           "US-registered corporation or LLC"
         ],
         "program": "Brex Partner Perks"
-      }
+      },
+      "expires_date": "2026-05-31"
     },
     {
       "vendor": "Mercury",
@@ -1758,7 +1765,8 @@
           "New to Datadog (for Datadog perk)"
         ],
         "program": "Mercury Perks"
-      }
+      },
+      "expires_date": "2026-04-15"
     },
     {
       "vendor": "Ramp",
@@ -1780,7 +1788,8 @@
           "Ramp cardholder"
         ],
         "program": "Ramp Partner Rewards"
-      }
+      },
+      "expires_date": "2026-07-15"
     },
     {
       "vendor": "Stripe Atlas",
@@ -1803,7 +1812,8 @@
           "Incorporated through Stripe Atlas ($500 one-time fee)"
         ],
         "program": "Stripe Atlas Founder Perks"
-      }
+      },
+      "expires_date": "2026-06-30"
     },
     {
       "vendor": "SVB (Silicon Valley Bank)",
@@ -1826,7 +1836,8 @@
           "SVB startup banking customer"
         ],
         "program": "SVB Startup Banking Offers"
-      }
+      },
+      "expires_date": "2026-08-31"
     },
     {
       "vendor": "GitHub",
@@ -1874,7 +1885,8 @@
           "Applied through approved referral partner (e.g. SVB, Stripe)"
         ],
         "program": "Google for Startups Cloud Program"
-      }
+      },
+      "expires_date": "2027-03-31"
     },
     {
       "vendor": "Typesense Cloud",
@@ -2391,7 +2403,8 @@
           "Application reviewed case-by-case"
         ],
         "program": "Backblaze Flamethrower"
-      }
+      },
+      "expires_date": "2026-05-31"
     },
     {
       "vendor": "DigitalOcean",
@@ -2416,7 +2429,8 @@
           "Product startup (not service-based)"
         ],
         "program": "DigitalOcean Hatch"
-      }
+      },
+      "expires_date": "2026-06-30"
     },
     {
       "vendor": "Atlassian",
@@ -2646,7 +2660,8 @@
           "Investor path: referral from participating investor/accelerator, pre-Series C"
         ],
         "program": "Microsoft for Startups Founders Hub"
-      }
+      },
+      "expires_date": "2026-09-30"
     },
     {
       "vendor": "Pipedream",
@@ -3081,7 +3096,8 @@
           "High Growth: Tier 1 VC/accelerator, or mission-critical AI app, or Workers Launchpad participant"
         ],
         "program": "Cloudflare for Startups"
-      }
+      },
+      "expires_date": "2026-08-31"
     },
     {
       "vendor": "Healthchecks.io",
@@ -17648,7 +17664,8 @@
           "Startup program — check vendor for eligibility details"
         ],
         "program": "Snap Accelerate Startup Program"
-      }
+      },
+      "expires_date": "2026-06-15"
     },
     {
       "vendor": "Instabug for Startups",
@@ -17689,7 +17706,8 @@
           "Startup program — check vendor for eligibility details"
         ],
         "program": "Freshworks for Startups Startup Program"
-      }
+      },
+      "expires_date": "2026-09-30"
     },
     {
       "vendor": "Startup with IBM",
@@ -17710,7 +17728,8 @@
           "Startup program — check vendor for eligibility details"
         ],
         "program": "Startup with IBM Startup Program"
-      }
+      },
+      "expires_date": "2026-07-31"
     },
     {
       "vendor": "Microsoft for Startups",
@@ -17794,7 +17813,8 @@
           "Startup program — check vendor for eligibility details"
         ],
         "program": "Heroku for Startups Program Startup Program"
-      }
+      },
+      "expires_date": "2026-04-30"
     },
     {
       "vendor": "Scaleway Startup Program",
@@ -17996,7 +18016,8 @@
           "Startup program — check vendor for eligibility details"
         ],
         "program": "SendGrid Accelerate Startup Program"
-      }
+      },
+      "expires_date": "2026-05-15"
     },
     {
       "vendor": "Autodesk Fusion 360 for Startups",
@@ -18057,7 +18078,8 @@
           "Startup program — check vendor for eligibility details"
         ],
         "program": "HubSpot for Startups Startup Program"
-      }
+      },
+      "expires_date": "2026-12-31"
     },
     {
       "vendor": "Shotstack Startup Program",
@@ -18077,7 +18099,8 @@
           "Startup program — check vendor for eligibility details"
         ],
         "program": "Shotstack Startup Program Startup Program"
-      }
+      },
+      "expires_date": "2026-07-31"
     },
     {
       "vendor": "Esri Startup Program",

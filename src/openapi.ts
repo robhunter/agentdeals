@@ -345,6 +345,45 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/expiring": {
+      get: {
+        summary: "Get expiring deals",
+        description: "Check which developer tool deals, free tiers, or credits are expiring soon. Returns deals sorted by expiration date (soonest first).",
+        parameters: [
+          { name: "within_days", in: "query", description: "Number of days to look ahead (default: 30, max: 365)", schema: { type: "integer", default: 30, minimum: 1, maximum: 365 } }
+        ],
+        responses: {
+          "200": {
+            description: "Expiring deals",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    deals: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          vendor: { type: "string" },
+                          category: { type: "string" },
+                          description: { type: "string" },
+                          tier: { type: "string" },
+                          url: { type: "string", format: "uri" },
+                          expires_date: { type: "string", format: "date" },
+                          days_until_expiry: { type: "integer" }
+                        }
+                      }
+                    },
+                    total: { type: "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stack": {
       get: {
         summary: "Get free-tier stack recommendation",

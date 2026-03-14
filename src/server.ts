@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers, compareServices, checkVendorRisk, auditStack } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -412,6 +412,44 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             {
               type: "text" as const,
               text: `Error auditing stack: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_expiring_deals",
+    {
+      description:
+        "Check which developer tool deals, free tiers, or credits are expiring soon. Use to avoid service disruptions and find replacements before deadlines.",
+      inputSchema: {
+        within_days: z.number().optional().describe("Number of days to look ahead (default: 30, max: 365)"),
+      },
+    },
+    async ({ within_days }) => {
+      try {
+        recordToolCall("get_expiring_deals");
+        const days = Math.min(Math.max(within_days ?? 30, 1), 365);
+        const result = getExpiringDeals(days);
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_expiring_deals", params: { within_days: days }, result_count: result.total, session_id: getSessionId?.() });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("get_expiring_deals error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error getting expiring deals: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
