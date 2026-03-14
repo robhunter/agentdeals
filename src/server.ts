@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getOfferDetails, searchOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -171,6 +171,45 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             {
               type: "text" as const,
               text: `Error getting new offers: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_newest_deals",
+    {
+      description:
+        "See what's new in the AgentDeals index. Returns deals sorted by verified date (newest first), with days_since_update for each result. Use for periodic 'what's new' checks — pairs with monitor-vendor-changes prompt for a complete recurring usage loop.",
+      inputSchema: {
+        since: z.string().optional().describe("ISO date string (YYYY-MM-DD). Only return deals verified/added after this date. Default: 30 days ago"),
+        limit: z.number().optional().describe("Max results to return (default: 20, max: 50)"),
+        category: z.string().optional().describe("Filter by category name"),
+      },
+    },
+    async ({ since, limit, category }) => {
+      try {
+        recordToolCall("get_newest_deals");
+        const result = getNewestDeals({ since, limit, category });
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_newest_deals", params: { since, limit, category }, result_count: result.total, session_id: getSessionId?.() });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("get_newest_deals error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error getting newest deals: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
