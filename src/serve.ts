@@ -929,14 +929,15 @@ const httpServer = createHttpServer(async (req, res) => {
     const since = url.searchParams.get("since") || undefined;
     const type = url.searchParams.get("type") || undefined;
     const vendorFilter = url.searchParams.get("vendor") || undefined;
+    const vendorsFilter = url.searchParams.get("vendors") || undefined;
     // Validate since is a valid date if provided
     if (since && !/^\d{4}-\d{2}-\d{2}/.test(since)) {
       res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: "Invalid 'since' parameter. Expected ISO date string (YYYY-MM-DD)." }));
       return;
     }
-    const result = getDealChanges(since, type, vendorFilter);
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
+    const result = getDealChanges(since, type, vendorFilter, vendorsFilter);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
   } else if (url.pathname === "/api/audit-stack" && req.method === "GET") {

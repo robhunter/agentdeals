@@ -79,11 +79,13 @@ export async function fetchDealChanges(params: {
   since?: string;
   type?: string;
   vendor?: string;
+  vendors?: string;
 }): Promise<unknown> {
   const p: Record<string, string> = {};
   if (params.since) p.since = params.since;
   if (params.type) p.type = params.type;
   if (params.vendor) p.vendor = params.vendor;
+  if (params.vendors) p.vendors = params.vendors;
   return apiFetch("/api/changes", p);
 }
 

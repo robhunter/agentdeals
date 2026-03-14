@@ -306,7 +306,8 @@ export function loadDealChanges(): DealChange[] {
 export function getDealChanges(
   since?: string,
   changeType?: string,
-  vendor?: string
+  vendor?: string,
+  vendors?: string
 ): { changes: DealChange[]; total: number } {
   let results = loadDealChanges();
 
@@ -325,7 +326,14 @@ export function getDealChanges(
     results = results.filter((c) => c.change_type === lowerType);
   }
 
-  if (vendor) {
+  // vendors (comma-separated) takes precedence over vendor (single)
+  if (vendors) {
+    const vendorList = vendors.split(",").map((v) => v.trim().toLowerCase()).filter(Boolean);
+    results = results.filter((c) => {
+      const lowerVendor = c.vendor.toLowerCase();
+      return vendorList.some((v) => lowerVendor.includes(v));
+    });
+  } else if (vendor) {
     const lowerVendor = vendor.toLowerCase();
     results = results.filter((c) => c.vendor.toLowerCase().includes(lowerVendor));
   }
