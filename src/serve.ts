@@ -203,6 +203,7 @@ function buildLandingPage(): string {
 <meta name="twitter:description" content="Your AI recommends tools from memory. Memory doesn't include pricing. ${stats.offers}+ deals across ${stats.categories} categories.">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/rss+xml" title="AgentDeals — Pricing Changes" href="/api/feed">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -983,6 +984,48 @@ const httpServer = createHttpServer(async (req, res) => {
     const content = readFileSync(filePath);
     res.writeHead(200, { "Content-Type": contentType, "Cache-Control": "public, max-age=86400" });
     res.end(content);
+  } else if (url.pathname === "/api/feed" && req.method === "GET") {
+    recordApiHit("/api/feed");
+    const allChanges = [...dealChanges].sort((a, b) => b.date.localeCompare(a.date));
+    const escXml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+    const changeLabel: Record<string, string> = {
+      free_tier_removed: "Free Tier Removed",
+      limits_reduced: "Limits Reduced",
+      limits_increased: "Limits Increased",
+      new_free_tier: "New Free Tier",
+      pricing_restructured: "Pricing Restructured",
+      open_source_killed: "Open Source Killed",
+      pricing_model_change: "Pricing Model Change",
+      startup_program_expanded: "Startup Program Expanded",
+      pricing_postponed: "Pricing Postponed",
+      product_deprecated: "Product Deprecated",
+    };
+    const items = allChanges.map((c) => {
+      const label = changeLabel[c.change_type] ?? c.change_type;
+      return `    <item>
+      <title>${escXml(c.vendor)}: ${escXml(label)}</title>
+      <description>${escXml(c.summary)}</description>
+      <pubDate>${new Date(c.date + "T00:00:00Z").toUTCString()}</pubDate>
+      <link>${escXml(c.source_url)}</link>
+      <category>${escXml(c.change_type)}</category>
+      <guid isPermaLink="false">agentdeals-${escXml(c.vendor.toLowerCase().replace(/\s+/g, "-"))}-${c.date}</guid>
+    </item>`;
+    }).join("\n");
+    const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AgentDeals — Developer Tool Pricing Changes</title>
+    <description>Track pricing changes, free tier removals, and deal updates across developer infrastructure tools.</description>
+    <link>https://agentdeals-production.up.railway.app</link>
+    <atom:link href="https://agentdeals-production.up.railway.app/api/feed" rel="self" type="application/rss+xml"/>
+    <language>en-us</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+${items}
+  </channel>
+</rss>`;
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/feed", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: allChanges.length });
+    res.writeHead(200, { "Content-Type": "application/rss+xml; charset=utf-8", "Access-Control-Allow-Origin": "*" });
+    res.end(rss);
   } else if (url.pathname === "/") {
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
