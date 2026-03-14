@@ -11,6 +11,7 @@ import {
   fetchCompare,
   fetchVendorRisk,
   fetchAuditStack,
+  fetchExpiringDeals,
 } from "./api-client.js";
 
 function mcpError(msg: string) {
@@ -275,6 +276,25 @@ export function createServer(): McpServer {
         return mcpText(data);
       } catch (err) {
         return mcpError(`Error auditing stack: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_expiring_deals",
+    {
+      description:
+        "Check which developer tool deals, free tiers, or credits are expiring soon. Use to avoid service disruptions and find replacements before deadlines.",
+      inputSchema: {
+        within_days: z.number().optional().describe("Number of days to look ahead (default: 30, max: 365)"),
+      },
+    },
+    async ({ within_days }) => {
+      try {
+        const data = await fetchExpiringDeals(within_days);
+        return mcpText(data);
+      } catch (err) {
+        return mcpError(`Error getting expiring deals: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
   );

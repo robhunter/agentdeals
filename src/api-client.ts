@@ -110,3 +110,9 @@ export async function fetchVendorRisk(vendor: string): Promise<unknown> {
 export async function fetchAuditStack(services: string[]): Promise<unknown> {
   return apiFetch("/api/audit-stack", { services: services.join(",") });
 }
+
+export async function fetchExpiringDeals(withinDays?: number): Promise<unknown> {
+  const p: Record<string, string> = {};
+  if (withinDays !== undefined) p.within_days = String(withinDays);
+  return apiFetch("/api/expiring", p);
+}

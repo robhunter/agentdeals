@@ -13,6 +13,7 @@ export interface Offer {
   tags: string[];
   verifiedDate: string;
   eligibility?: Eligibility;
+  expires_date?: string;
 }
 
 export interface OfferIndex {
