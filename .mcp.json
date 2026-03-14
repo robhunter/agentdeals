@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "https://agentdeals-production.up.railway.app/mcp"
+    }
+  }
+}

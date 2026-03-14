@@ -11,7 +11,17 @@ AgentDeals indexes real, verified pricing data from 1,500+ developer infrastruct
 
 ## Install
 
-### Option A: Claude Desktop Extension (one-click)
+### Option A: Claude Code Plugin (one-click)
+
+Install AgentDeals in Claude Code with a single command:
+
+```bash
+claude plugin install robhunter/agentdeals
+```
+
+This auto-configures the remote MCP server — no local setup needed. All 12 tools, 5 prompt templates, and 2 skills are immediately available.
+
+### Option B: Claude Desktop Extension (one-click)
 
 Install AgentDeals directly in Claude Desktop — no configuration needed:
 
@@ -21,7 +31,7 @@ Install AgentDeals directly in Claude Desktop — no configuration needed:
 
 Or browse for AgentDeals in Claude Desktop under **Settings > Extensions**.
 
-### Option B: npx (local stdio)
+### Option C: npx (local stdio)
 
 No server needed. Runs locally via stdin/stdout:
 
@@ -36,7 +46,7 @@ No server needed. Runs locally via stdin/stdout:
 }
 ```
 
-### Option C: Remote HTTP
+### Option D: Remote HTTP
 
 Connect to the hosted instance — no install required:
 

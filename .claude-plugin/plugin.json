@@ -1,0 +1,11 @@
+{
+  "name": "agentdeals",
+  "description": "Search and compare free tiers, credits, and pricing changes across 1,500+ developer tools. Find deals for databases, hosting, CI/CD, monitoring, and 50+ categories.",
+  "version": "0.2.0",
+  "author": {
+    "name": "Rob Hunter"
+  },
+  "homepage": "https://github.com/robhunter/agentdeals",
+  "repository": "https://github.com/robhunter/agentdeals",
+  "license": "MIT"
+}
