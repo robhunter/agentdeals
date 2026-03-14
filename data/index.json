@@ -1022,8 +1022,8 @@
     },
     {
       "vendor": "Cursor",
-      "category": "IDE & Code Editors",
-      "description": "AI-powered code editor — 2,000 completions/month, 50 slow premium requests/month, VS Code-based",
+      "category": "AI Coding",
+      "description": "AI-powered code editor built on VS Code. Free tier: 2,000 completions/month, 50 slow premium requests/month. Pro $20/month (unlimited completions, 500 fast premium requests). Business $40/seat/month. Ultra $200/month (launched June 2025 — highest credit limits for power users). Credit-based model since mid-2025.",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
@@ -1033,7 +1033,7 @@
         "ide",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-14"
     },
     {
       "vendor": "Linear",
@@ -21259,19 +21259,20 @@
       "verifiedDate": "2026-03-10"
     },
     {
-      "vendor": "Claude",
+      "vendor": "Claude Code",
       "category": "AI Coding",
-      "description": "AI assistant by Anthropic for coding, analysis, and writing. Free tier: Claude.ai access with Projects (up to 5), Artifacts, and limited Sonnet usage — no API key required. Claude Code CLI available for Pro subscribers. Pro $20/mo, Team $25/seat/month, Max $125/mo.",
-      "tier": "Free",
-      "url": "https://claude.ai",
+      "description": "Agentic coding tool by Anthropic — terminal-based AI coding agent that reads/writes files, runs commands, and manages git workflows. Available to Claude Pro ($20/mo), Team ($25/seat/mo), and Max ($100-200/mo) subscribers. Uses Claude Sonnet/Opus models. Also available via Anthropic API with usage-based pricing. Free tier via Claude.ai (limited Sonnet usage, Projects, Artifacts).",
+      "tier": "Paid",
+      "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
       "tags": [
         "ai",
         "coding",
-        "llm",
+        "cli",
+        "autonomous",
         "code generation",
         "developer tools"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-03-14"
     },
     {
       "vendor": "GitHub Copilot",
@@ -21345,6 +21346,21 @@
         "coding",
         "ide",
         "code completion",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Augment Code",
+      "category": "AI Coding",
+      "description": "AI coding assistant with deep codebase understanding. Free tier: individual developers with limited usage. Professional plan with credit-based consumption model ($20-60/month range depending on usage). Enterprise with custom pricing. Shifted from flat per-seat to credit-based model in October 2025. Supports VS Code, JetBrains, and CLI.",
+      "tier": "Free",
+      "url": "https://www.augmentcode.com/pricing",
+      "tags": [
+        "ai",
+        "coding",
+        "code completion",
+        "codebase understanding",
         "developer tools"
       ],
       "verifiedDate": "2026-03-14"
