@@ -16,6 +16,12 @@ export interface Offer {
   expires_date?: string;
 }
 
+export interface EnrichedOffer extends Offer {
+  recent_change: string | null;
+  expires_soon: string | null;
+  risk_level: "stable" | "caution" | "risky" | null;
+}
+
 export interface OfferIndex {
   offers: Offer[];
 }
