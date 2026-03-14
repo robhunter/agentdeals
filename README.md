@@ -1,8 +1,11 @@
 # AgentDeals
 
+[![npm version](https://img.shields.io/npm/v/agentdeals.svg)](https://www.npmjs.com/package/agentdeals)
+[![npm downloads](https://img.shields.io/npm/dm/agentdeals.svg)](https://www.npmjs.com/package/agentdeals)
+
 An MCP server that aggregates free tiers, startup credits, and developer tool deals — so your AI agent (or you) can find the best infrastructure offers without leaving the workflow.
 
-AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 38 categories. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
+AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 53 categories. Available on [npm](https://www.npmjs.com/package/agentdeals) for local use or as a hosted remote server. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
 
 **Live:** [agentdeals-production.up.railway.app](https://agentdeals-production.up.railway.app)
 
@@ -239,22 +242,38 @@ Response:
 }
 ```
 
-### Server stats
+### More endpoints
 
 ```bash
-curl "https://agentdeals-production.up.railway.app/api/stats"
-```
+# Recently added offers
+curl "https://agentdeals-production.up.railway.app/api/new?days=7"
 
-Response:
-```json
-{
-  "activeSessions": 1,
-  "totalSessionsAllTime": 628,
-  "totalApiHitsAllTime": 516,
-  "totalToolCallsAllTime": 281,
-  "sessionsToday": 3,
-  "serverStarted": "2026-03-01T00:00:00.000Z"
-}
+# Pricing changes
+curl "https://agentdeals-production.up.railway.app/api/changes?since=2025-01-01"
+
+# Vendor details
+curl "https://agentdeals-production.up.railway.app/api/details/Supabase?alternatives=true"
+
+# Stack recommendation
+curl "https://agentdeals-production.up.railway.app/api/stack?use_case=saas"
+
+# Cost estimation
+curl "https://agentdeals-production.up.railway.app/api/costs?services=Vercel,Supabase&scale=startup"
+
+# Compare vendors
+curl "https://agentdeals-production.up.railway.app/api/compare?a=Supabase&b=Neon"
+
+# Vendor risk check
+curl "https://agentdeals-production.up.railway.app/api/vendor-risk/Heroku"
+
+# Stack audit
+curl "https://agentdeals-production.up.railway.app/api/audit-stack?services=Vercel,Supabase,Clerk"
+
+# Server stats
+curl "https://agentdeals-production.up.railway.app/api/stats"
+
+# OpenAPI spec
+curl "https://agentdeals-production.up.railway.app/api/openapi.json"
 ```
 
 ## Available Tools
@@ -264,7 +283,13 @@ Response:
 | `search_offers` | Search deals by keyword, category, eligibility, or vendor name. Supports pagination and sorting. |
 | `list_categories` | List all available deal categories with offer counts. |
 | `get_offer_details` | Get full details for a specific vendor, including related vendors in the same category. |
+| `get_new_offers` | Check recently added or updated deals, sorted newest first. |
 | `get_deal_changes` | Get recent pricing and free tier changes — removals, reductions, increases, restructures. |
+| `get_stack_recommendation` | Get a curated free-tier infrastructure stack for your project type (SaaS, API backend, static site, etc.). |
+| `estimate_costs` | Estimate infrastructure costs for your stack at hobby, startup, or growth scale. |
+| `compare_services` | Side-by-side comparison of two vendor free tiers, pricing, and differentiators. |
+| `check_vendor_risk` | Check if a vendor's free tier pricing is stable — risk level, change history, and safer alternatives. |
+| `audit_stack` | Audit your infrastructure stack for cost savings, pricing risks, and coverage gaps. |
 
 ### search_offers
 
@@ -285,12 +310,45 @@ No parameters. Returns all categories with offer counts.
 **Parameters:**
 - `vendor` (string, required) — Vendor name (case-insensitive match)
 
+### get_new_offers
+
+**Parameters:**
+- `days` (number, optional) — Number of days to look back. Default: 7
+
 ### get_deal_changes
 
 **Parameters:**
 - `since` (string, optional) — ISO date (YYYY-MM-DD). Only return changes on or after this date. Default: 30 days ago
 - `change_type` (string, optional) — Filter: `free_tier_removed`, `limits_reduced`, `limits_increased`, `new_free_tier`, `pricing_restructured`
 - `vendor` (string, optional) — Filter by vendor name (case-insensitive partial match)
+
+### get_stack_recommendation
+
+**Parameters:**
+- `use_case` (string, required) — Project type: `saas`, `api`, `static`, `mobile`, `ai_ml`, `ecommerce`, `devops`
+- `requirements` (string, optional) — Additional requirements or preferences
+
+### estimate_costs
+
+**Parameters:**
+- `services` (string, required) — Comma-separated list of vendor names (e.g. "Vercel,Supabase,Clerk")
+- `scale` (string, optional) — Scale tier: `hobby`, `startup`, `growth`. Default: `hobby`
+
+### compare_services
+
+**Parameters:**
+- `vendor_a` (string, required) — First vendor name
+- `vendor_b` (string, required) — Second vendor name
+
+### check_vendor_risk
+
+**Parameters:**
+- `vendor` (string, required) — Vendor name to check
+
+### audit_stack
+
+**Parameters:**
+- `services` (string, required) — Comma-separated list of vendor names currently in use
 
 ## Use Cases
 
@@ -312,14 +370,14 @@ Track pricing shifts that affect your stack:
 
 ## Categories
 
-AI / ML, Analytics, API Gateway, Auth, Background Jobs, Browser Automation, CDN, CI/CD, Cloud Hosting, Cloud IaaS, Communication, Container Registry, DNS & Domain Management, Databases, Design, Developer Tools, Documentation, Email, Error Tracking, Feature Flags, Forms, Headless CMS, Infrastructure, Logging, Maps/Geolocation, Messaging, Monitoring, Payments, Search, Secrets Management, Security, Status Pages, Storage, Startup Programs, Testing, Video, Web Scraping, Workflow Automation
+AI / ML, AI Coding, API Development, API Gateway, Analytics, Auth, Background Jobs, Browser Automation, CDN, CI/CD, Cloud Hosting, Cloud IaaS, Code Quality, Communication, Container Registry, DNS & Domain Management, Databases, Design, Dev Utilities, Diagramming, Documentation, Email, Error Tracking, Feature Flags, Forms, Headless CMS, IDE & Code Editors, Infrastructure, Localization, Logging, Low-Code Platforms, Maps/Geolocation, Messaging, Mobile Development, Monitoring, Notebooks & Data Science, Payments, Project Management, Search, Secrets Management, Security, Server Management, Source Control, Startup Perks, Startup Programs, Status Pages, Storage, Team Collaboration, Testing, Tunneling & Networking, Video, Web Scraping, Workflow Automation
 
 ## Development
 
 ```bash
 npm install          # Install dependencies
 npm run build        # Compile TypeScript
-npm test             # Run tests (66 passing)
+npm test             # Run tests (159 passing)
 npm run serve        # Run HTTP server (port 3000)
 npm start            # Run stdio server
 ```
@@ -343,9 +401,9 @@ npm run serve
 
 - **1,511** vendor offers across **53** categories
 - **52** tracked pricing changes
-- **6** MCP tools + **4** prompt templates + **8** REST API endpoints
-- **111** passing tests
-- Data verified as of 2026-03-11
+- **10** MCP tools + **4** prompt templates + **12** REST API endpoints
+- **159** passing tests
+- Data verified as of 2026-03-14
 
 ## Registries
 
