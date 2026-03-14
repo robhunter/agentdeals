@@ -164,7 +164,7 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .btn-secondary:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
 
 /* Stats bar */
-.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0 auto 4rem;max-width:640px;background:var(--bg-card);backdrop-filter:blur(12px)}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0 auto 4rem;max-width:640px;background:var(--bg-card);backdrop-filter:blur(12px)}
 .stat-item{text-align:center;padding:1.25rem 1rem;position:relative}
 .stat-item+.stat-item::before{content:'';position:absolute;left:0;top:20%;height:60%;width:1px;background:var(--border)}
 .stat-num{font-family:var(--mono);font-size:1.75rem;font-weight:500;color:var(--text);letter-spacing:-.02em}
@@ -247,7 +247,7 @@ footer a{color:var(--text-muted)}
   .hero{padding:3rem 0 2rem}
   .hero h1{font-size:2.25rem}
   .hero-sub{font-size:1rem}
-  .stats-bar{grid-template-columns:repeat(3,1fr);max-width:100%}
+  .stats-bar{grid-template-columns:repeat(2,1fr);max-width:100%}
   .stat-num{font-size:1.3rem}
   .how-grid{grid-template-columns:1fr}
   .section{padding:2.5rem 0}
@@ -273,6 +273,7 @@ footer a{color:var(--text-muted)}
   <div class="stats-bar">
     <div class="stat-item"><div class="stat-num">${stats.offers.toLocaleString()}</div><div class="stat-label">Deals</div></div>
     <div class="stat-item"><div class="stat-num">${stats.categories}</div><div class="stat-label">Categories</div></div>
+    <div class="stat-item"><div class="stat-num">10</div><div class="stat-label">MCP Tools</div></div>
     <div class="stat-item"><div class="stat-num">${stats.dealChanges}</div><div class="stat-label">Changes Tracked</div></div>
   </div>
 
@@ -298,21 +299,29 @@ footer a{color:var(--text-muted)}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically. 8 endpoints with search, filtering, and stack recommendations.</p>
+        <p>Query deals programmatically. 12 endpoints with search, filtering, risk analysis, and stack recommendations.</p>
         <pre><code>GET /api/offers?q=database
 GET /api/categories
 GET /api/new?days=7
 GET /api/changes?since=2025-01-01
 GET /api/details/Supabase
 GET /api/stack?use_case=SaaS+app
-GET /api/query-log?limit=50
+GET /api/costs?services=Vercel,Supabase
+GET /api/compare?a=Supabase&amp;b=Neon
+GET /api/vendor-risk/Heroku
+GET /api/audit-stack?services=Vercel,Supabase
+GET /api/stats
 GET /api/openapi.json</code></pre>
       </div>
       <div class="how-card">
         <div class="how-card-icon">03</div>
         <h3>MCP</h3>
-        <p>Connect any MCP client. One line of config.</p>
-        <pre><code>"url": "https://agentdeals-production.up.railway.app/mcp"</code></pre>
+        <p>Connect any MCP client. Local via npx or remote HTTP.</p>
+        <pre><code>// Local (recommended)
+"command": "npx", "args": ["-y", "agentdeals"]
+
+// Remote
+"url": "https://agentdeals-production.up.railway.app/mcp"</code></pre>
       </div>
     </div>
   </div>
@@ -345,8 +354,24 @@ ${buildChangesHtml()}
   <div class="section" id="connect">
     <div class="section-label">Get Started</div>
     <h2>Connect your agent</h2>
-    <p>Add AgentDeals to Claude Desktop, Cursor, or any MCP client:</p>
+    <p>Add AgentDeals to Claude Desktop, Cursor, VS Code, Claude Code, or any MCP client.</p>
+
     <div class="connect-block">
+      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Option A: npx (recommended)</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">Runs locally via stdin/stdout. No server dependency.</p>
+      <pre><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}</code></pre>
+    </div>
+
+    <div class="connect-block">
+      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Option B: Remote HTTP</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">No install required. Connect to the hosted instance.</p>
       <pre><code>{
   "mcpServers": {
     "agentdeals": {
@@ -355,7 +380,38 @@ ${buildChangesHtml()}
   }
 }</code></pre>
     </div>
+
+    <div class="connect-block">
+      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Claude Desktop</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">Add to <code>claude_desktop_config.json</code> (macOS: <code>~/Library/Application Support/Claude/</code>)</p>
+      <pre><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}</code></pre>
+    </div>
+
+    <div class="connect-block" style="margin-top:1.5rem">
+      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem">10 MCP Tools</h3>
+      <div style="display:grid;gap:.5rem">
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">search_offers</code> <span style="color:var(--text-muted)">&mdash; Find free tiers, credits, and discounts. Filter by category, eligibility, or keyword.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">list_categories</code> <span style="color:var(--text-muted)">&mdash; Browse all ${stats.categories} categories with offer counts.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_offer_details</code> <span style="color:var(--text-muted)">&mdash; Full pricing details for a vendor, with alternatives in the same category.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_new_offers</code> <span style="color:var(--text-muted)">&mdash; Recently added or updated deals, sorted newest first.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_deal_changes</code> <span style="color:var(--text-muted)">&mdash; Track pricing shifts: removals, reductions, increases, restructures.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_stack_recommendation</code> <span style="color:var(--text-muted)">&mdash; Get a curated free-tier stack for your project type.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">estimate_costs</code> <span style="color:var(--text-muted)">&mdash; Estimate infrastructure costs at hobby, startup, or growth scale.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">compare_services</code> <span style="color:var(--text-muted)">&mdash; Side-by-side comparison of two vendors.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">check_vendor_risk</code> <span style="color:var(--text-muted)">&mdash; Check if a vendor's free tier pricing is stable before depending on it.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">audit_stack</code> <span style="color:var(--text-muted)">&mdash; Audit your stack for cost savings, pricing risks, and missing capabilities.</span></div>
+      </div>
+    </div>
+
     <div class="badges">
+      <a class="badge" href="https://www.npmjs.com/package/agentdeals"><span class="badge-dot"></span>npm</a>
       <a class="badge" href="https://github.com/robhunter/agentdeals"><span class="badge-dot"></span>GitHub</a>
       <a class="badge" href="https://registry.modelcontextprotocol.io/v0.1/servers/io.github.robhunter%2Fagentdeals/versions"><span class="badge-dot"></span>MCP Registry</a>
       <a class="badge" href="https://glama.ai/mcp/connectors/io.github.robhunter/agentdeals"><span class="badge-dot"></span>Glama</a>
