@@ -540,5 +540,45 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     })
   );
 
+  server.registerPrompt(
+    "monitor-vendor-changes",
+    {
+      description: "Monitor pricing changes for vendors you depend on. Checks risk levels and recent changes for your watchlist, with a suggested weekly cadence.",
+      argsSchema: {
+        vendors: z.string().describe("Comma-separated list of vendor names to monitor (e.g. 'Vercel,Supabase,Clerk,Neon')"),
+      },
+    },
+    async ({ vendors }) => {
+      const vendorList = vendors.split(",").map((v) => v.trim()).filter(Boolean);
+      const vendorChecks = vendorList.map((v) => `- Use check_vendor_risk with vendor="${v}" to get its risk level, pricing change history, and more-stable alternatives`).join("\n");
+      const vendorFilter = vendorList.map((v) => `- Use get_deal_changes with vendor="${v}" to check for any recent pricing changes`).join("\n");
+      return {
+        messages: [
+          {
+            role: "user" as const,
+            content: {
+              type: "text" as const,
+              text: `Monitor pricing changes for my vendor watchlist: ${vendorList.join(", ")}.
+
+For each vendor, check its pricing stability and recent changes:
+
+${vendorChecks}
+
+${vendorFilter}
+
+After checking all vendors, provide a summary:
+1. **Risk overview**: List each vendor with its risk level (stable/caution/risky)
+2. **Recent changes**: Any pricing changes in the last 30 days
+3. **Action items**: Vendors that need attention — risky vendors, recent negative changes, or expiring deals
+4. **Alternatives**: For any risky vendor, suggest more-stable alternatives
+
+Suggested monitoring cadence: run this check weekly to catch pricing changes early.`,
+            },
+          },
+        ],
+      };
+    }
+  );
+
   return server;
 }
