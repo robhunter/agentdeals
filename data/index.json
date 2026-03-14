@@ -2372,16 +2372,18 @@
     {
       "vendor": "MinIO",
       "category": "Storage",
-      "description": "S3-compatible object storage — self-hosted free (GNU AGPL v3). High performance, Kubernetes-native. No usage limits when self-hosted",
+      "description": "S3-compatible object storage — self-hosted free (GNU AGPL v3). High performance, Kubernetes-native. No usage limits when self-hosted. Primary alternative for LocalStack S3 emulation",
       "tier": "Open Source",
       "url": "https://min.io/pricing",
       "tags": [
         "storage",
         "s3-compatible",
         "object-storage",
-        "self-hosted"
+        "self-hosted",
+        "local-dev",
+        "localstack-alternative"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-14"
     },
     {
       "vendor": "Backblaze",
@@ -3971,7 +3973,7 @@
     {
       "vendor": "LocalStack",
       "category": "Testing",
-      "description": "CHANGING MARCH 23: Community Edition being discontinued. New non-commercial free tier requires registration/auth token. Commercial use starts at $39/month. Previously: open-source 30+ emulated AWS services free",
+      "description": "AWS cloud emulator for local development. Free non-commercial tier: 30+ services (S3, Lambda, DynamoDB, SQS, SNS, etc.), requires registration and auth token. Community Edition discontinued March 23, 2026. Commercial use starts at $39/month (Starter, 55+ services). Ultimate $89/month (110+ services). 45-day trial for paid plans",
       "tier": "Free",
       "url": "https://www.localstack.cloud/pricing",
       "tags": [
@@ -3982,7 +3984,38 @@
         "serverless",
         "deal-change"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Testcontainers",
+      "category": "Testing",
+      "description": "Open-source libraries for spinning up throwaway Docker containers in integration tests. Supports 50+ modules (databases, message brokers, AWS via LocalStack module). MIT license. Java, Go, .NET, Node.js, Python, Rust. Testcontainers Cloud bundled with Docker subscriptions (100 min/month on Docker Pro)",
+      "tier": "Open Source",
+      "url": "https://testcontainers.com",
+      "tags": [
+        "testing",
+        "docker",
+        "integration-tests",
+        "local-dev",
+        "localstack-alternative"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Moto",
+      "category": "Testing",
+      "description": "Open-source Python library that mocks AWS services for testing. Covers 100+ AWS APIs including S3, DynamoDB, Lambda, SQS, SNS, IAM, EC2. Apache-2.0 license. No cloud component, no auth required. Drop-in replacement for boto3 calls in tests",
+      "tier": "Open Source",
+      "url": "https://github.com/getmoto/moto",
+      "tags": [
+        "aws",
+        "testing",
+        "mocking",
+        "python",
+        "local-dev",
+        "localstack-alternative"
+      ],
+      "verifiedDate": "2026-03-14"
     },
     {
       "vendor": "Brave Search API",

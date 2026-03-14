@@ -863,6 +863,18 @@
       "source_url": "https://www.augmentcode.com/pricing",
       "category": "AI Coding",
       "alternatives": ["GitHub Copilot", "Cursor"]
+    },
+    {
+      "vendor": "Testcontainers Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2024-06-01",
+      "summary": "Docker acquired AtomicJar (creators of Testcontainers Cloud). Standalone Testcontainers Cloud free tier retired — now bundled into Docker subscriptions. Docker Pro gets 100 min/month, Team 500 min/month, Business 1,500 min/month",
+      "previous_state": "Standalone Testcontainers Cloud with independent free tier (100 min/month)",
+      "current_state": "Bundled with Docker subscriptions. No standalone free tier. Open-source Testcontainers libraries remain MIT-licensed and fully free",
+      "impact": "medium",
+      "source_url": "https://testcontainers.com/cloud/",
+      "category": "Testing",
+      "alternatives": ["Testcontainers (open-source)", "Docker Desktop", "Podman"]
     }
   ]
 }
