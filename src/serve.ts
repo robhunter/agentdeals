@@ -355,8 +355,23 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 
 /* Connect */
 .connect-block{background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:1.5rem}
-.connect-block pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-size:.8rem;color:var(--text-muted);line-height:1.5;margin-top:.75rem}
+.connect-block pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-size:.8rem;color:var(--text-muted);line-height:1.5;margin-top:.75rem;position:relative}
 .connect-block code{font-family:var(--mono)}
+.client-tabs{display:flex;gap:.25rem;flex-wrap:wrap;margin-top:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0}
+.client-tab{padding:.5rem 1rem;font-size:.8rem;font-weight:500;font-family:var(--sans);color:var(--text-muted);background:transparent;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;cursor:pointer;transition:all .2s;white-space:nowrap}
+.client-tab:hover{color:var(--text);background:var(--accent-glow)}
+.client-tab.active{color:var(--accent);background:var(--bg-card);border-color:var(--border);border-bottom:1px solid var(--bg-card);margin-bottom:-1px;position:relative;z-index:1}
+.client-panel{display:none}
+.client-panel.active{display:block}
+.copy-btn{position:absolute;top:.5rem;right:.5rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:.25rem .5rem;font-size:.65rem;font-family:var(--mono);color:var(--text-muted);cursor:pointer;transition:all .2s}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+.copy-btn.copied{color:#4ade80;border-color:#4ade80}
+.transport-toggle{display:flex;gap:.5rem;margin-top:.75rem}
+.transport-btn{padding:.3rem .75rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .2s}
+.transport-btn:hover{color:var(--text);border-color:var(--accent)}
+.transport-btn.active{color:var(--accent);background:var(--accent-glow);border-color:var(--accent)}
+.transport-content{display:none}
+.transport-content.active{display:block}
 
 /* Badges row */
 .badges{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem}
@@ -493,12 +508,27 @@ ${buildChangesHtml()}
   <div class="section" id="connect">
     <div class="section-label">Get Started</div>
     <h2>Connect your agent</h2>
-    <p>Add AgentDeals to Claude Desktop, Cursor, VS Code, Claude Code, or any MCP client.</p>
+    <p>Copy-paste config for your MCP client. Each supports local (npx) or remote (HTTP) transport.</p>
 
-    <div class="connect-block">
-      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Option A: npx (recommended)</h3>
-      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">Runs locally via stdin/stdout. No server dependency.</p>
-      <pre><code>{
+    <div class="client-tabs" id="client-tabs">
+      <button class="client-tab active" data-client="claude-desktop">Claude Desktop</button>
+      <button class="client-tab" data-client="claude-code">Claude Code</button>
+      <button class="client-tab" data-client="cursor">Cursor</button>
+      <button class="client-tab" data-client="cline">Cline</button>
+      <button class="client-tab" data-client="windsurf">Windsurf</button>
+    </div>
+
+    <div class="client-panel active" id="panel-claude-desktop">
+      <div class="connect-block">
+        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Claude Desktop</h3>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Add to <code>claude_desktop_config.json</code></p>
+        <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:.5rem">macOS: <code>~/Library/Application Support/Claude/</code> &nbsp;|&nbsp; Windows: <code>%APPDATA%\\Claude\\</code></p>
+        <div class="transport-toggle">
+          <button class="transport-btn active" data-transport="local">npx (local)</button>
+          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
+        </div>
+        <div class="transport-content active" data-transport="local">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
       "command": "npx",
@@ -506,24 +536,31 @@ ${buildChangesHtml()}
     }
   }
 }</code></pre>
-    </div>
-
-    <div class="connect-block">
-      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Option B: Remote HTTP</h3>
-      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">No install required. Connect to the hosted instance.</p>
-      <pre><code>{
+        </div>
+        <div class="transport-content" data-transport="remote">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
       "url": "https://agentdeals-production.up.railway.app/mcp"
     }
   }
 }</code></pre>
+        </div>
+      </div>
     </div>
 
-    <div class="connect-block">
-      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Claude Desktop</h3>
-      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">Add to <code>claude_desktop_config.json</code> (macOS: <code>~/Library/Application Support/Claude/</code>)</p>
-      <pre><code>{
+    <div class="client-panel" id="panel-claude-code">
+      <div class="connect-block">
+        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Claude Code</h3>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Run in your terminal, or add to <code>.mcp.json</code> in your project root</p>
+        <div class="transport-toggle">
+          <button class="transport-btn active" data-transport="local">npx (local)</button>
+          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
+        </div>
+        <div class="transport-content active" data-transport="local">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>claude mcp add agentdeals -- npx -y agentdeals</code></pre>
+          <p style="font-size:.75rem;color:var(--text-dim);margin-top:.5rem">Or add to <code>.mcp.json</code>:</p>
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
       "command": "npx",
@@ -531,16 +568,125 @@ ${buildChangesHtml()}
     }
   }
 }</code></pre>
+        </div>
+        <div class="transport-content" data-transport="remote">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>claude mcp add agentdeals --transport http https://agentdeals-production.up.railway.app/mcp</code></pre>
+          <p style="font-size:.75rem;color:var(--text-dim);margin-top:.5rem">Or add to <code>.mcp.json</code>:</p>
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "type": "url",
+      "url": "https://agentdeals-production.up.railway.app/mcp"
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="client-panel" id="panel-cursor">
+      <div class="connect-block">
+        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Cursor</h3>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Add to <code>.cursor/mcp.json</code> in your project root</p>
+        <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:.5rem">Or global: <code>~/.cursor/mcp.json</code></p>
+        <div class="transport-toggle">
+          <button class="transport-btn active" data-transport="local">npx (local)</button>
+          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
+        </div>
+        <div class="transport-content active" data-transport="local">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}</code></pre>
+        </div>
+        <div class="transport-content" data-transport="remote">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "https://agentdeals-production.up.railway.app/mcp"
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="client-panel" id="panel-cline">
+      <div class="connect-block">
+        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Cline (VS Code)</h3>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Add to <code>cline_mcp_settings.json</code></p>
+        <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:.5rem">Cline sidebar &rarr; MCP Servers &rarr; Configure &nbsp;|&nbsp; Or: <code>~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/</code></p>
+        <div class="transport-toggle">
+          <button class="transport-btn active" data-transport="local">npx (local)</button>
+          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
+        </div>
+        <div class="transport-content active" data-transport="local">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}</code></pre>
+        </div>
+        <div class="transport-content" data-transport="remote">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "https://agentdeals-production.up.railway.app/mcp",
+      "transportType": "streamable-http"
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="client-panel" id="panel-windsurf">
+      <div class="connect-block">
+        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Windsurf</h3>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Add to <code>~/.codeium/windsurf/mcp_config.json</code></p>
+        <div class="transport-toggle">
+          <button class="transport-btn active" data-transport="local">npx (local)</button>
+          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
+        </div>
+        <div class="transport-content active" data-transport="local">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}</code></pre>
+        </div>
+        <div class="transport-content" data-transport="remote">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "https://agentdeals-production.up.railway.app/mcp"
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
     </div>
 
     <div class="connect-block" style="margin-top:1.5rem">
-      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem">10 MCP Tools</h3>
+      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem">12 MCP Tools</h3>
       <div style="display:grid;gap:.5rem">
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">search_offers</code> <span style="color:var(--text-muted)">&mdash; Find free tiers, credits, and discounts. Filter by category, eligibility, or keyword.</span></div>
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">list_categories</code> <span style="color:var(--text-muted)">&mdash; Browse all ${stats.categories} categories with offer counts.</span></div>
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_offer_details</code> <span style="color:var(--text-muted)">&mdash; Full pricing details for a vendor, with alternatives in the same category.</span></div>
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_new_offers</code> <span style="color:var(--text-muted)">&mdash; Recently added or updated deals, sorted newest first.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_newest_deals</code> <span style="color:var(--text-muted)">&mdash; Most recently added deals with optional date and category filters.</span></div>
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_deal_changes</code> <span style="color:var(--text-muted)">&mdash; Track pricing shifts: removals, reductions, increases, restructures.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_expiring_deals</code> <span style="color:var(--text-muted)">&mdash; Find deals with upcoming expiration dates or deadlines.</span></div>
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_stack_recommendation</code> <span style="color:var(--text-muted)">&mdash; Get a curated free-tier stack for your project type.</span></div>
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">estimate_costs</code> <span style="color:var(--text-muted)">&mdash; Estimate infrastructure costs at hobby, startup, or growth scale.</span></div>
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">compare_services</code> <span style="color:var(--text-muted)">&mdash; Side-by-side comparison of two vendors.</span></div>
@@ -560,6 +706,41 @@ ${buildChangesHtml()}
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
 <script>
+/* Client tab switching */
+(function(){
+  var tabs=document.querySelectorAll('.client-tab');
+  var panels=document.querySelectorAll('.client-panel');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click',function(){
+      tabs.forEach(function(t){t.classList.remove('active')});
+      panels.forEach(function(p){p.classList.remove('active')});
+      tab.classList.add('active');
+      var panel=document.getElementById('panel-'+tab.getAttribute('data-client'));
+      if(panel)panel.classList.add('active');
+    });
+  });
+  /* Transport toggle within each panel */
+  document.querySelectorAll('.transport-toggle').forEach(function(toggle){
+    var block=toggle.closest('.connect-block');
+    toggle.querySelectorAll('.transport-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        toggle.querySelectorAll('.transport-btn').forEach(function(b){b.classList.remove('active')});
+        block.querySelectorAll('.transport-content').forEach(function(c){c.classList.remove('active')});
+        btn.classList.add('active');
+        block.querySelectorAll('.transport-content[data-transport="'+btn.getAttribute('data-transport')+'"]').forEach(function(c){c.classList.add('active')});
+      });
+    });
+  });
+})();
+/* Copy config button */
+function copyConfig(btn){
+  var code=btn.parentElement.querySelector('code');
+  if(!code)return;
+  navigator.clipboard.writeText(code.textContent).then(function(){
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},2000);
+  });
+}
 (function(){
   var search=document.getElementById('deal-search');
   var pillsEl=document.getElementById('cat-pills');
