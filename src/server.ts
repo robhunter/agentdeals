@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -68,7 +68,8 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         const usePagination = limit !== undefined || offset !== undefined;
         const effectiveOffset = offset ?? 0;
         const effectiveLimit = limit ?? (usePagination ? 20 : total);
-        const results = allResults.slice(effectiveOffset, effectiveOffset + effectiveLimit);
+        const paged = allResults.slice(effectiveOffset, effectiveOffset + effectiveLimit);
+        const results = enrichOffers(paged);
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_offers", params: { query, category, eligibility_type, sort, limit: effectiveLimit, offset: effectiveOffset }, result_count: results.length, session_id: getSessionId?.() });
         return {
           content: [

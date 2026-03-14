@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, OfferIndex, DealChange, DealChangesIndex } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
@@ -194,6 +194,64 @@ export function searchOffers(
   }
 
   return results;
+}
+
+export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
+  const changes = loadDealChanges();
+  const now = new Date();
+  const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000;
+  const cutoffDate = new Date(now.getTime() - ninetyDaysMs).toISOString().slice(0, 10);
+
+  // Build vendor → changes map (only recent changes within 90 days)
+  const vendorChanges = new Map<string, DealChange[]>();
+  for (const c of changes) {
+    if (c.date >= cutoffDate) {
+      const key = c.vendor.toLowerCase();
+      if (!vendorChanges.has(key)) vendorChanges.set(key, []);
+      vendorChanges.get(key)!.push(c);
+    }
+  }
+
+  // Build vendor → all-time change count for risk_level
+  const vendorAllChanges = new Map<string, number>();
+  for (const c of changes) {
+    const key = c.vendor.toLowerCase();
+    vendorAllChanges.set(key, (vendorAllChanges.get(key) ?? 0) + 1);
+  }
+
+  return offers.map((offer) => {
+    const key = offer.vendor.toLowerCase();
+
+    // recent_change: most recent change within 90 days
+    const recentChanges = vendorChanges.get(key);
+    let recent_change: string | null = null;
+    if (recentChanges && recentChanges.length > 0) {
+      const mostRecent = recentChanges.sort((a, b) => b.date.localeCompare(a.date))[0];
+      recent_change = `${mostRecent.date}: ${mostRecent.summary}`;
+    }
+
+    // expires_soon: flag if expires within 90 days
+    let expires_soon: string | null = null;
+    if (offer.expires_date) {
+      const expiresMs = new Date(offer.expires_date).getTime() - now.getTime();
+      if (expiresMs > 0 && expiresMs <= ninetyDaysMs) {
+        expires_soon = `Expires: ${offer.expires_date}`;
+      }
+    }
+
+    // risk_level: 0 changes = stable, 1 = caution, 2+ = risky
+    const changeCount = vendorAllChanges.get(key) ?? 0;
+    let risk_level: "stable" | "caution" | "risky" | null = null;
+    if (changeCount >= 2) {
+      risk_level = "risky";
+    } else if (changeCount === 1) {
+      risk_level = "caution";
+    } else {
+      risk_level = "stable";
+    }
+
+    return { ...offer, recent_change, expires_soon, risk_level };
+  });
 }
 
 export function getNewOffers(days: number = 7): { offers: Offer[]; total: number } {
