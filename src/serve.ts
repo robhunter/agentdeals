@@ -1,5 +1,5 @@
 import { createServer as createHttpServer } from "node:http";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -18,6 +18,45 @@ const PORT = parseInt(process.env.PORT ?? "3000", 10);
 
 // Load favicon from logo PNG at startup
 const faviconBuffer = readFileSync(join(__dirname, "..", "assets", "logo-400.png"));
+
+// Swagger UI dist path
+const swaggerUiDistPath = join(__dirname, "..", "node_modules", "swagger-ui-dist");
+
+const swaggerDocsHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AgentDeals API Documentation</title>
+  <link rel="stylesheet" href="/api/docs/swagger-ui.css">
+  <style>
+    html { box-sizing: border-box; }
+    *, *:before, *:after { box-sizing: inherit; }
+    body { margin: 0; background: #fafafa; }
+    .topbar { display: none; }
+  </style>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="/api/docs/swagger-ui-bundle.js"></script>
+  <script src="/api/docs/swagger-ui-standalone-preset.js"></script>
+  <script>
+    SwaggerUIBundle({
+      url: '/api/openapi.json',
+      dom_id: '#swagger-ui',
+      presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+      layout: 'StandaloneLayout'
+    });
+  </script>
+</body>
+</html>`;
+
+const SWAGGER_MIME_TYPES: Record<string, string> = {
+  ".js": "application/javascript",
+  ".css": "text/css",
+  ".html": "text/html",
+  ".png": "image/png",
+  ".map": "application/json",
+};
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
 const CLEANUP_INTERVAL_MS = 60 * 1000; // 60 seconds
 
@@ -299,7 +338,7 @@ footer a{color:var(--text-muted)}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically. 12 endpoints with search, filtering, risk analysis, and stack recommendations.</p>
+        <p>Query deals programmatically. 14 endpoints with search, filtering, risk analysis, and stack recommendations. <a href="/api/docs" style="color:var(--accent);text-decoration:underline">Interactive API Docs</a></p>
         <pre><code>GET /api/offers?q=database
 GET /api/categories
 GET /api/new?days=7
@@ -310,8 +349,10 @@ GET /api/costs?services=Vercel,Supabase
 GET /api/compare?a=Supabase&amp;b=Neon
 GET /api/vendor-risk/Heroku
 GET /api/audit-stack?services=Vercel,Supabase
+GET /api/expiring?within_days=30
 GET /api/stats
-GET /api/openapi.json</code></pre>
+GET /api/openapi.json
+GET /api/docs</code></pre>
       </div>
       <div class="how-card">
         <div class="how-card-icon">03</div>
@@ -862,6 +903,28 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/expiring", params: { within_days: withinDays }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
+  } else if (url.pathname === "/api/docs" && req.method === "GET") {
+    recordApiHit("/api/docs");
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(swaggerDocsHtml);
+  } else if (url.pathname.startsWith("/api/docs/") && req.method === "GET") {
+    const filename = url.pathname.slice("/api/docs/".length);
+    if (filename.includes("..") || filename.includes("/")) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Invalid path" }));
+      return;
+    }
+    const filePath = join(swaggerUiDistPath, filename);
+    if (!existsSync(filePath)) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+      return;
+    }
+    const ext = filename.substring(filename.lastIndexOf("."));
+    const contentType = SWAGGER_MIME_TYPES[ext] || "application/octet-stream";
+    const content = readFileSync(filePath);
+    res.writeHead(200, { "Content-Type": contentType, "Cache-Control": "public, max-age=86400" });
+    res.end(content);
   } else if (url.pathname === "/") {
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
