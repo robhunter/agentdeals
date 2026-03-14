@@ -770,6 +770,23 @@ describe("HTTP transport", () => {
     assert.ok(body.components.schemas.Eligibility);
   });
 
+  it("GET /api/feed returns valid RSS 2.0 XML", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/feed`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("application/rss+xml"));
+    const body = await response.text();
+    assert.ok(body.startsWith("<?xml"));
+    assert.ok(body.includes("<rss version=\"2.0\""));
+    assert.ok(body.includes("<channel>"));
+    assert.ok(body.includes("<title>AgentDeals"));
+    assert.ok(body.includes("<item>"));
+    assert.ok(body.includes("<pubDate>"));
+    assert.ok(body.includes("<guid"));
+    assert.ok(body.includes("<category>"));
+  });
+
   it("prompts/list returns all 5 prompt templates", async () => {
     proc = await startHttpServer();
 
