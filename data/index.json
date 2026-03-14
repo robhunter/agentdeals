@@ -21146,7 +21146,7 @@
     {
       "vendor": "Devin",
       "category": "AI Coding",
-      "description": "Autonomous AI software engineer by Cognition Labs — handles code migrations, framework upgrades, prototypes, integrations, bug fixes. Core plan is pay-as-you-go at $2.25/ACU starting from $20. Team plan $500/mo (250 credits). Devin Review (PR review) is free during early release. Open-source maintainers with 100+ forks can apply for $500 in free credits.",
+      "description": "Autonomous AI software engineer by Cognition Labs. Core plan $20/month (pay-as-you-go ACUs at $2.25 each). Team plan $500/mo (250 credits). Devin Review (PR review) is free during early release. Open-source maintainers with 100+ forks can apply for $500 in free credits. Previously $500-only pricing before January 2026 restructuring.",
       "tier": "Free Credits",
       "url": "https://devin.ai/pricing",
       "tags": [
@@ -21156,7 +21156,7 @@
         "code generation",
         "developer tools"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-03-14"
     },
     {
       "vendor": "Bolt.new",
@@ -21202,6 +21202,82 @@
         "developer tools"
       ],
       "verifiedDate": "2026-03-10"
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "category": "AI Coding",
+      "description": "AI coding assistant by GitHub/Microsoft. Free tier: 2,000 code completions/month, 50 chat messages/month (Copilot Chat), access to Claude 3.5 Sonnet and GPT-4o models. Works in VS Code, JetBrains, Neovim, Xcode. Pro plan $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo. Business $19/seat/mo.",
+      "tier": "Free",
+      "url": "https://github.com/features/copilot",
+      "tags": [
+        "ai",
+        "coding",
+        "code completion",
+        "ide",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Amazon Q Developer",
+      "category": "AI Coding",
+      "description": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, code transformation, 50 agent invocations/month, /doc and /test commands. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, organizational customization).",
+      "tier": "Free",
+      "url": "https://aws.amazon.com/q/developer/pricing/",
+      "tags": [
+        "ai",
+        "coding",
+        "aws",
+        "code generation",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Cline",
+      "category": "AI Coding",
+      "description": "Open-source autonomous AI coding agent for VS Code. Fully free — users provide their own API keys (OpenRouter, Anthropic, OpenAI, etc.). Supports file editing, terminal commands, browser interaction. No usage limits beyond API provider costs. MIT licensed.",
+      "tier": "Open Source",
+      "url": "https://github.com/cline/cline",
+      "tags": [
+        "ai",
+        "coding",
+        "autonomous",
+        "open source",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Aider",
+      "category": "AI Coding",
+      "description": "Open-source AI pair programming CLI tool. Fully free — users provide their own LLM API keys (supports GPT-4o, Claude, Gemini, DeepSeek, Ollama local models). Git-aware editing, multi-file changes, voice coding, in-chat image support. Apache 2.0 licensed.",
+      "tier": "Open Source",
+      "url": "https://aider.chat",
+      "tags": [
+        "ai",
+        "coding",
+        "cli",
+        "pair programming",
+        "open source",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Windsurf",
+      "category": "AI Coding",
+      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: basic Cascade AI flow access, limited premium action credits, code completions, AI chat. Pro plan $15/mo (unlimited flows, more credits). Team and Enterprise tiers available.",
+      "tier": "Free",
+      "url": "https://windsurf.com/pricing",
+      "tags": [
+        "ai",
+        "coding",
+        "ide",
+        "code completion",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
     }
   ]
 }
