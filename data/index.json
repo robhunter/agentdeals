@@ -21366,6 +21366,55 @@
       "verifiedDate": "2026-03-14"
     },
     {
+      "vendor": "Google Antigravity",
+      "category": "AI Coding",
+      "description": "Agent-first IDE by Google, powered by Gemini 3. 100% free during public preview — no paid tiers yet. Built-in browser automation, multi-agent orchestration, cross-platform (Mac/Windows/Linux). Announced November 2025.",
+      "tier": "Free",
+      "url": "https://antigravity.google",
+      "tags": [
+        "ai",
+        "coding",
+        "ide",
+        "agent",
+        "google",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "Gemini CLI",
+      "category": "AI Coding",
+      "description": "Open-source terminal AI coding agent by Google. Free tier with personal Google account: 60 requests/minute, 1,000 requests/day, 1M token context window. Powered by Gemini 2.5 Pro. Supports MCP tools, shell commands, file editing. Apache 2.0 licensed.",
+      "tier": "Free",
+      "url": "https://github.com/google-gemini/gemini-cli",
+      "tags": [
+        "ai",
+        "coding",
+        "cli",
+        "open source",
+        "google",
+        "terminal",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
+      "vendor": "OpenAI Codex",
+      "category": "AI Coding",
+      "description": "Cloud-native coding agent by OpenAI. Included in ChatGPT Plus ($20/mo), Pro ($200/mo), and Business ($30/user/mo). Limited access on free ChatGPT plan. Runs in sandboxed cloud environments, can execute code, run tests, and create PRs. API via codex-mini model at $1.50/1M input tokens, $6/1M output tokens.",
+      "tier": "Freemium",
+      "url": "https://openai.com/index/introducing-codex/",
+      "tags": [
+        "ai",
+        "coding",
+        "cloud",
+        "agent",
+        "openai",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-03-14"
+    },
+    {
       "vendor": "Google Tenor API",
       "category": "Media",
       "description": "Free GIF search API. Public API shutting down June 30, 2026 — no new API keys since Jan 13, 2026. Existing keys work until shutdown. Provided GIF search, trending GIFs, autocomplete, and categories endpoints. No replacement from Google",
