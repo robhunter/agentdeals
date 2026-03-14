@@ -130,6 +130,13 @@ const recentChanges = [...dealChanges]
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, 5);
 
+// Prepare upcoming deadlines (future dates, soonest first, max 5)
+const today = new Date().toISOString().slice(0, 10);
+const upcomingDeadlines = [...dealChanges]
+  .filter((c) => c.date > today)
+  .sort((a, b) => a.date.localeCompare(b.date))
+  .slice(0, 5);
+
 const changeTypeBadge: Record<string, { label: string; color: string }> = {
   free_tier_removed: { label: "removed", color: "#f85149" },
   limits_reduced: { label: "reduced", color: "#d29922" },
@@ -148,6 +155,32 @@ function buildChangesHtml(): string {
           <span class="change-date">${c.date}</span>
         </div>
         <div class="change-summary">${c.summary}</div>
+      </div>`;
+  }).join("\n");
+}
+
+function buildDeadlinesHtml(): string {
+  if (upcomingDeadlines.length === 0) return "";
+  return upcomingDeadlines.map((c) => {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const deadlineDate = new Date(c.date + "T00:00:00Z");
+    const todayDate = new Date(today + "T00:00:00Z");
+    const daysLeft = Math.ceil((deadlineDate.getTime() - todayDate.getTime()) / 86400000);
+    const urgentClass = daysLeft <= 14 ? " deadline-urgent" : "";
+    const daysLabel = daysLeft === 1 ? "1 day" : `${daysLeft} days`;
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    return `      <div class="deadline-item${urgentClass}">
+        <div class="deadline-left">
+          <div class="deadline-countdown" style="border-color:${impactColor}"><span class="deadline-days">${daysLeft}</span><span class="deadline-unit">${daysLeft === 1 ? "day" : "days"}</span></div>
+        </div>
+        <div class="deadline-right">
+          <div class="deadline-header">
+            <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
+            <span class="change-vendor">${c.vendor}</span>
+            <span class="deadline-date">${c.date}</span>
+          </div>
+          <div class="change-summary">${c.summary}</div>
+        </div>
       </div>`;
   }).join("\n");
 }
@@ -243,6 +276,20 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .change-date{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
 .change-summary{color:var(--text-muted);font-size:.85rem}
 
+/* Deadlines */
+.deadlines-section{background:linear-gradient(180deg,rgba(248,81,73,0.04) 0%,transparent 100%);border:1px solid rgba(248,81,73,0.15);border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.deadline-item{display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid rgba(42,39,32,0.6);align-items:flex-start}
+.deadline-item:last-child{border-bottom:none}
+.deadline-item.deadline-urgent .deadline-countdown{animation:pulse-urgent 2s ease-in-out infinite}
+@keyframes pulse-urgent{0%,100%{opacity:1}50%{opacity:.7}}
+.deadline-left{flex-shrink:0}
+.deadline-countdown{width:52px;text-align:center;border:2px solid;border-radius:8px;padding:.3rem .25rem;background:var(--bg)}
+.deadline-days{display:block;font-family:var(--mono);font-size:1.25rem;font-weight:600;color:var(--text);line-height:1}
+.deadline-unit{display:block;font-size:.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-top:.1rem}
+.deadline-right{flex:1;min-width:0}
+.deadline-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
+.deadline-date{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
+
 /* Browse */
 .browse-controls{margin-bottom:1.25rem}
 .search-input{width:100%;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--sans);font-size:.9rem;outline:none;transition:border-color .2s}
@@ -318,6 +365,17 @@ footer a{color:var(--text-muted)}
 
   <div class="wavy-divider"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0,20 Q150,0 300,20 T600,20 T900,20 T1200,20 V40 H0 Z" fill="none" stroke="rgba(42,39,32,0.8)" stroke-width="1"/></svg></div>
 
+${upcomingDeadlines.length > 0 ? `  <div class="section">
+    <div class="section-label">Act Now</div>
+    <h2>Pricing changes coming soon</h2>
+    <p>Free tiers disappearing, prices increasing, products shutting down. Don't get caught off guard.</p>
+    <div class="deadlines-section">
+${buildDeadlinesHtml()}
+    </div>
+  </div>
+
+  <div class="divider"></div>
+` : ""}
   <div class="section">
     <div class="section-label">The Problem</div>
     <p class="problem-text">When Claude Code recommends Railway, it doesn't know <strong>Render has a better free tier</strong>. When it suggests Supabase, it doesn't know <strong>your YC batch gets $100K in AWS credits</strong>.</p>
