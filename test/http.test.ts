@@ -1005,4 +1005,71 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("404"), "Should show 404");
     assert.ok(html.includes("/compare"), "Should link to comparisons index");
   });
+
+  it("GET /digest redirects to current week", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/digest`, { redirect: "manual" });
+    assert.strictEqual(response.status, 302);
+    const location = response.headers.get("location") ?? "";
+    assert.ok(location.match(/\/digest\/\d{4}-w\d{2}/), `Should redirect to week URL, got: ${location}`);
+  });
+
+  it("GET /digest/archive lists weeks with changes", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/digest/archive`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Pricing Change Digest Archive"), "Should have archive title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("CollectionPage"), "JSON-LD should use CollectionPage");
+    assert.ok(html.includes("/digest/"), "Should link to weekly digests");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/api/feed"), "Should link to RSS feed");
+  });
+
+  it("GET /digest/:week renders digest page with changes", async () => {
+    proc = await startHttpServer();
+
+    // Use 2026-w11 which has deal changes (March 2026)
+    const response = await fetch(`http://localhost:${PORT}/digest/2026-w11`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Developer Tool Pricing Changes"), "Should have week title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/api/feed"), "Should have RSS link");
+  });
+
+  it("GET /digest/:week shows empty state for weeks with no changes", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/digest/2026-w50`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("No pricing changes tracked this week"), "Should show empty message");
+    assert.ok(html.includes("/digest/archive"), "Should link to archive");
+  });
+
+  it("GET /digest/:week returns 404 for invalid format", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/digest/invalid-format`);
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("404"), "Should show 404");
+  });
+
+  it("sitemap.xml includes digest pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/digest/archive"), "Sitemap should include digest archive");
+    const digestCount = (xml.match(/\/digest\//g) || []).length;
+    assert.ok(digestCount >= 3, `Expected at least 3 digest URLs in sitemap, got ${digestCount}`);
+  });
 });
