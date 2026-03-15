@@ -799,28 +799,37 @@ describe("HTTP transport", () => {
     assert.ok(body.paths["/api/expiring"]);
     assert.ok(body.paths["/api/newest"]);
     assert.ok(body.paths["/api/costs"]);
-    assert.ok(body.paths["/api/feed"]);
+    assert.ok(body.paths["/feed.xml"]);
     assert.strictEqual(Object.keys(body.paths).length, 15);
     assert.ok(body.components.schemas.Offer);
     assert.ok(body.components.schemas.DealChange);
     assert.ok(body.components.schemas.Eligibility);
   });
 
-  it("GET /api/feed returns valid RSS 2.0 XML", async () => {
+  it("GET /feed.xml returns valid Atom XML", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/feed.xml`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("application/atom+xml"));
+    const body = await response.text();
+    assert.ok(body.startsWith("<?xml"));
+    assert.ok(body.includes("<feed xmlns="));
+    assert.ok(body.includes("<title>AgentDeals"));
+    assert.ok(body.includes("<entry>"));
+    assert.ok(body.includes("<updated>"));
+    assert.ok(body.includes("/vendor/"));
+    assert.ok(body.includes("<category"));
+  });
+
+  it("GET /api/feed also serves Atom feed", async () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${PORT}/api/feed`);
     assert.strictEqual(response.status, 200);
-    assert.ok(response.headers.get("content-type")?.includes("application/rss+xml"));
+    assert.ok(response.headers.get("content-type")?.includes("application/atom+xml"));
     const body = await response.text();
-    assert.ok(body.startsWith("<?xml"));
-    assert.ok(body.includes("<rss version=\"2.0\""));
-    assert.ok(body.includes("<channel>"));
-    assert.ok(body.includes("<title>AgentDeals"));
-    assert.ok(body.includes("<item>"));
-    assert.ok(body.includes("<pubDate>"));
-    assert.ok(body.includes("<guid"));
-    assert.ok(body.includes("<category>"));
+    assert.ok(body.includes("<feed xmlns="));
   });
 
   it("prompts/list returns all 5 prompt templates", async () => {
@@ -1045,7 +1054,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("CollectionPage"), "JSON-LD should use CollectionPage");
     assert.ok(html.includes("/digest/"), "Should link to weekly digests");
     assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("/api/feed"), "Should link to RSS feed");
+    assert.ok(html.includes("/feed.xml"), "Should link to RSS feed");
   });
 
   it("GET /digest/:week renders digest page with changes", async () => {
@@ -1059,7 +1068,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("<title>Developer Tool Pricing Changes"), "Should have week title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("/api/feed"), "Should have RSS link");
+    assert.ok(html.includes("/feed.xml"), "Should have RSS link");
   });
 
   it("GET /digest/:week shows empty state for weeks with no changes", async () => {
