@@ -12,7 +12,7 @@ function startHttpServer(): Promise<ChildProcess> {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: String(PORT) },
+      env: { ...process.env, PORT: String(PORT), BASE_URL: `http://localhost:${PORT}` },
     });
 
     const timeout = setTimeout(() => {
@@ -1396,5 +1396,97 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("faq-item"), "Should have visible FAQ items");
     assert.ok(html.includes("best free alternatives to Vercel"), "Should have alternatives FAQ question");
     assert.ok(html.includes("How many free alternatives"), "Should have count FAQ question");
+  });
+});
+
+const REDIRECT_PORT = 3458;
+
+function startRedirectServer(): Promise<ChildProcess> {
+  return new Promise((resolve, reject) => {
+    const serverPath = path.join(__dirname, "..", "dist", "serve.js");
+    const proc = spawn("node", [serverPath], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PORT: String(REDIRECT_PORT), BASE_URL: "https://agentdeals.dev" },
+    });
+
+    const timeout = setTimeout(() => {
+      proc.kill();
+      reject(new Error("Server startup timeout"));
+    }, 5000);
+
+    proc.stderr!.on("data", (data: Buffer) => {
+      if (data.toString().includes("running on http")) {
+        clearTimeout(timeout);
+        resolve(proc);
+      }
+    });
+
+    proc.on("error", (err) => {
+      clearTimeout(timeout);
+      reject(err);
+    });
+  });
+}
+
+describe("301 canonical hostname redirect", () => {
+  let proc: ChildProcess | null = null;
+
+  afterEach(() => {
+    if (proc) {
+      proc.kill();
+      proc = null;
+    }
+  });
+
+  it("redirects HTML pages to canonical domain with 301", async () => {
+    proc = await startRedirectServer();
+    const response = await fetch(`http://localhost:${REDIRECT_PORT}/vendor/supabase?ref=foo`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "https://agentdeals.dev/vendor/supabase?ref=foo");
+  });
+
+  it("redirects landing page to canonical domain", async () => {
+    proc = await startRedirectServer();
+    const response = await fetch(`http://localhost:${REDIRECT_PORT}/`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "https://agentdeals.dev/");
+  });
+
+  it("does NOT redirect /api/* endpoints", async () => {
+    proc = await startRedirectServer();
+    const response = await fetch(`http://localhost:${REDIRECT_PORT}/api/stats`, { redirect: "manual" });
+    assert.strictEqual(response.status, 200);
+  });
+
+  it("does NOT redirect /mcp endpoint", async () => {
+    proc = await startRedirectServer();
+    // GET /mcp without session returns 400, but should NOT be 301
+    const response = await fetch(`http://localhost:${REDIRECT_PORT}/mcp`, { redirect: "manual" });
+    assert.notStrictEqual(response.status, 301, "MCP should not redirect");
+  });
+
+  it("does NOT redirect /health endpoint", async () => {
+    proc = await startRedirectServer();
+    const response = await fetch(`http://localhost:${REDIRECT_PORT}/health`, { redirect: "manual" });
+    assert.strictEqual(response.status, 200);
+  });
+
+  it("does NOT redirect /.well-known/* endpoints", async () => {
+    proc = await startRedirectServer();
+    const response = await fetch(`http://localhost:${REDIRECT_PORT}/.well-known/glama.json`, { redirect: "manual" });
+    assert.notStrictEqual(response.status, 301, ".well-known should not redirect");
+  });
+
+  it("does NOT redirect favicon", async () => {
+    proc = await startRedirectServer();
+    const response = await fetch(`http://localhost:${REDIRECT_PORT}/favicon.png`, { redirect: "manual" });
+    assert.strictEqual(response.status, 200);
+  });
+
+  it("no redirect when BASE_URL matches request host", async () => {
+    // Default server has BASE_URL matching localhost (or not set to external domain)
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/`, { redirect: "manual" });
+    assert.strictEqual(response.status, 200);
   });
 });
