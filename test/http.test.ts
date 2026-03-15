@@ -1254,6 +1254,24 @@ describe("HTTP transport", () => {
     assert.ok(altCount >= 100, `Expected 100+ alternative-to URLs in sitemap, got ${altCount}`);
   });
 
+  // --- Expiring page ---
+
+  it("GET /expiring renders expiring deals timeline page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/expiring`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Upcoming Free Tier Changes"), "Should have expiring title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("ItemList"), "JSON-LD should use ItemList");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/expiring"), "Should reference /expiring");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Recently Changed"), "Should have recently changed section");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {
