@@ -417,6 +417,14 @@ npm run serve
 # Landing page: http://localhost:3000/
 ```
 
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | HTTP server port | `3000` |
+| `BASE_URL` | Base URL for canonical links, OG tags, sitemaps, and feeds | `https://agentdeals-production.up.railway.app` |
+| `GOOGLE_SITE_VERIFICATION` | Google Search Console verification code | _(none)_ |
+
 ## Stats
 
 - **1,511** vendor offers across **53** categories
