@@ -3192,12 +3192,7 @@ const httpServer = createHttpServer(async (req, res) => {
     res.end(JSON.stringify({ status: "ok", sessions: sessions.size, stats: getStats() }));
   } else if (url.pathname === "/.well-known/glama.json") {
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({
-      "$schema": "https://glama.ai/mcp/schemas/connector.json",
-      "maintainers": [
-        { "email": "robvhunter@gmail.com" }
-      ]
-    }));
+    res.end(readFileSync(join(__dirname, "..", "glama.json"), "utf-8"));
   } else if (url.pathname === "/api/stack" && req.method === "GET") {
     recordApiHit("/api/stack");
     const useCase = url.searchParams.get("use_case") || url.searchParams.get("q") || "";
