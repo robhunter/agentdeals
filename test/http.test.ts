@@ -1132,4 +1132,51 @@ describe("HTTP transport", () => {
     const html = await response.text();
     assert.ok(html.includes('href="/vendor/'), "Category page should link vendors to profile pages");
   });
+
+  it("GET /trends returns trends index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/trends`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Pricing Trends by Category"), "Should have trends index title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("CollectionPage"), "JSON-LD should use CollectionPage");
+    assert.ok(html.includes("/trends/"), "Should link to category trends");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+  });
+
+  it("GET /trends/:slug renders category trends page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/trends/cloud-hosting`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Cloud Hosting Pricing Trends"), "Should have category-specific title");
+    assert.ok(html.includes("Pricing Change Timeline"), "Should show timeline section");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+  });
+
+  it("GET /trends/:slug returns 404 for unknown category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/trends/nonexistent-category`);
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("404"), "Should show 404");
+    assert.ok(html.includes("/trends"), "Should link to trends index");
+  });
+
+  it("sitemap.xml includes trends pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/trends/cloud-hosting"), "Sitemap should include trends pages");
+    const trendsCount = (xml.match(/\/trends\//g) || []).length;
+    assert.ok(trendsCount >= 50, `Expected 50+ trends URLs in sitemap, got ${trendsCount}`);
+  });
 });
