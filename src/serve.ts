@@ -1304,6 +1304,334 @@ ${comparisonsHtml}
 </html>`;
 }
 
+// --- Pricing trends pages ---
+
+// Negative change types that indicate prices rising / free tiers shrinking
+const NEGATIVE_TYPES = new Set(["free_tier_removed", "limits_reduced", "open_source_killed", "product_deprecated"]);
+const POSITIVE_TYPES = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+
+function getTrendDirection(changes: Array<{ change_type: string }>): "rising" | "stable" | "declining" {
+  let neg = 0, pos = 0;
+  for (const c of changes) {
+    if (NEGATIVE_TYPES.has(c.change_type)) neg++;
+    if (POSITIVE_TYPES.has(c.change_type)) pos++;
+  }
+  if (neg === 0 && pos === 0) return "stable";
+  if (neg > pos) return "rising"; // prices rising = bad
+  if (pos > neg) return "declining"; // prices declining = good
+  return "stable";
+}
+
+const trendEmoji: Record<string, { icon: string; color: string; label: string }> = {
+  rising: { icon: "&#x2191;", color: "#f85149", label: "Prices rising" },
+  stable: { icon: "&#x2194;", color: "#8b949e", label: "Stable" },
+  declining: { icon: "&#x2193;", color: "#3fb950", label: "Prices declining" },
+};
+
+function buildTrendsIndexPage(): string {
+  const allChanges = loadDealChanges();
+
+  // Group changes by category
+  const byCat = new Map<string, typeof allChanges>();
+  for (const c of allChanges) {
+    if (!byCat.has(c.category)) byCat.set(c.category, []);
+    byCat.get(c.category)!.push(c);
+  }
+
+  // Sort categories by change count (most volatile first)
+  const sorted = Array.from(byCat.entries()).sort((a, b) => b[1].length - a[1].length);
+
+  // Also include categories with zero changes
+  const allCatNames = new Set(categories.map(c => c.name));
+  const categoriesWithChanges = new Set(byCat.keys());
+  const zeroCats = [...allCatNames].filter(c => !categoriesWithChanges.has(c)).sort();
+
+  const totalCategories = allCatNames.size;
+  const title = `Pricing Trends by Category — AgentDeals`;
+  const metaDesc = `Pricing trends across ${totalCategories} developer tool categories. See which categories have rising prices, free tier removals, and new deals.`;
+
+  const catRows = sorted.map(([cat, changes]) => {
+    const dir = getTrendDirection(changes);
+    const t = trendEmoji[dir];
+    const negCount = changes.filter(c => NEGATIVE_TYPES.has(c.change_type)).length;
+    const posCount = changes.filter(c => POSITIVE_TYPES.has(c.change_type)).length;
+    return `      <a href="/trends/${toSlug(cat)}" class="trend-row">
+        <span class="trend-cat">${escHtmlServer(cat)}</span>
+        <span class="trend-dir" style="color:${t.color}">${t.icon} ${t.label}</span>
+        <span class="trend-stats">${changes.length} change${changes.length !== 1 ? "s" : ""} ${negCount > 0 ? `<span style="color:#f85149">${negCount} neg</span>` : ""} ${posCount > 0 ? `<span style="color:#3fb950">${posCount} pos</span>` : ""}</span>
+      </a>`;
+  }).join("\n");
+
+  const zeroCatRows = zeroCats.map(cat => `      <a href="/trends/${toSlug(cat)}" class="trend-row">
+        <span class="trend-cat">${escHtmlServer(cat)}</span>
+        <span class="trend-dir" style="color:#8b949e">&#x2194; Stable</span>
+        <span class="trend-stats">0 changes</span>
+      </a>`).join("\n");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Pricing Trends by Category",
+    description: metaDesc,
+    numberOfItems: totalCategories,
+    url: "https://agentdeals-production.up.railway.app/trends",
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/trends">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/trends">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.trend-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:2rem}
+.trend-row{display:grid;grid-template-columns:1fr auto auto;gap:1rem;align-items:center;padding:.6rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:all .2s;text-decoration:none}
+.trend-row:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.trend-cat{color:var(--text);font-weight:600;font-size:.9rem}
+.trend-dir{font-family:var(--mono);font-size:.8rem;white-space:nowrap}
+.trend-stats{font-size:.8rem;color:var(--text-dim);font-family:var(--mono);text-align:right;white-space:nowrap}
+.section-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .5rem;padding-bottom:.25rem;border-bottom:1px solid var(--border)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.trend-row{grid-template-columns:1fr;gap:.25rem}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Pricing Trends</div>
+  <h1>Pricing Trends by Category</h1>
+  <p class="page-meta">${allChanges.length} tracked pricing changes across ${totalCategories} categories. Ranked by volatility.</p>
+  <div class="section-label">Categories with pricing changes</div>
+  <div class="trend-list">
+${catRows}
+  </div>
+${zeroCats.length > 0 ? `  <div class="section-label">Stable categories (no tracked changes)</div>
+  <div class="trend-list">
+${zeroCatRows}
+  </div>` : ""}
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+function buildTrendsPage(slug: string): string | null {
+  const categoryName = categorySlugMap.get(slug);
+  if (!categoryName) return null;
+
+  const allChanges = loadDealChanges();
+  const catChanges = allChanges.filter(c => c.category === categoryName).sort((a, b) => b.date.localeCompare(a.date));
+  const catOffers = offers.filter(o => o.category === categoryName);
+  const enriched = enrichOffers(catOffers);
+
+  const direction = getTrendDirection(catChanges);
+  const t = trendEmoji[direction];
+
+  // Change type breakdown
+  const typeBreakdown = new Map<string, number>();
+  for (const c of catChanges) {
+    typeBreakdown.set(c.change_type, (typeBreakdown.get(c.change_type) ?? 0) + 1);
+  }
+
+  // At-risk vendors (risky or caution)
+  const atRisk = enriched.filter(o => o.risk_level === "risky" || o.risk_level === "caution")
+    .sort((a, b) => (a.risk_level === "risky" ? 0 : 1) - (b.risk_level === "risky" ? 0 : 1));
+
+  // Stable picks (stable risk, no recent changes)
+  const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change).slice(0, 12);
+
+  // Overall stats
+  const totalAll = allChanges.length;
+  const categoryPct = totalAll > 0 ? Math.round((catChanges.length / totalAll) * 100) : 0;
+
+  const title = `${categoryName} Pricing Trends — AgentDeals`;
+  const metaDesc = `Pricing trends for ${categoryName}: ${catChanges.length} tracked changes across ${catOffers.length} vendors. Direction: ${t.label.toLowerCase()}.`;
+
+  // Timeline HTML
+  const timelineHtml = catChanges.length > 0 ? catChanges.map(c => {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    return `      <div class="timeline-item" style="border-left-color:${badge.color}">
+        <div class="timeline-head">
+          <span class="badge" style="background:${badge.color}">${badge.label}</span>
+          <a href="/vendor/${toSlug(c.vendor)}" class="timeline-vendor">${escHtmlServer(c.vendor)}</a>
+          <span class="timeline-date">${c.date}</span>
+          <span class="impact impact-${c.impact}">${c.impact}</span>
+        </div>
+        <div class="timeline-summary">${escHtmlServer(c.summary)}</div>
+      </div>`;
+  }).join("\n") : `<p class="no-data">No pricing changes tracked for ${escHtmlServer(categoryName)}. All vendors in this category have stable pricing.</p>`;
+
+  // Breakdown HTML
+  const breakdownHtml = Array.from(typeBreakdown.entries()).sort((a, b) => b[1] - a[1]).map(([type, count]) => {
+    const badge = changeTypeBadge[type] ?? { label: type, color: "#8b949e" };
+    return `<span class="breakdown-item"><span class="badge" style="background:${badge.color}">${badge.label}</span> ${count}</span>`;
+  }).join(" ");
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // At-risk HTML
+  const atRiskHtml = atRisk.length > 0 ? `
+  <div class="section">
+    <h2>At-Risk Vendors</h2>
+    <div class="vendor-list">
+${atRisk.map(o => {
+    const rc = riskColors[o.risk_level ?? ""] ?? "#8b949e";
+    return `      <a href="/vendor/${toSlug(o.vendor)}" class="vendor-item">
+        <span class="vi-name">${escHtmlServer(o.vendor)}</span>
+        <span class="vi-risk" style="color:${rc}">${o.risk_level}</span>
+        ${o.recent_change ? `<span class="vi-change">${escHtmlServer(o.recent_change)}</span>` : ""}
+      </a>`;
+  }).join("\n")}
+    </div>
+  </div>` : "";
+
+  // Stable picks HTML
+  const stableHtml = stablePicks.length > 0 ? `
+  <div class="section">
+    <h2>Stable Picks</h2>
+    <p class="section-desc">Vendors with no recent pricing changes and low risk scores.</p>
+    <div class="stable-grid">
+${stablePicks.map(o => `      <a href="/vendor/${toSlug(o.vendor)}" class="stable-card">
+        <span class="stable-name">${escHtmlServer(o.vendor)}</span>
+        <span class="stable-tier">${escHtmlServer(o.tier)}</span>
+      </a>`).join("\n")}
+    </div>
+  </div>` : "";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description: metaDesc,
+    url: `https://agentdeals-production.up.railway.app/trends/${slug}`,
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/trends/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/trends/${slug}">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-meta{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem}
+.stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.stat-card{flex:1;min-width:120px;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-align:center}
+.stat-value{font-family:var(--serif);font-size:1.5rem;color:var(--text)}
+.stat-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.breakdown{margin-bottom:2rem;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.breakdown-item{display:inline-flex;align-items:center;gap:.3rem;font-size:.8rem;color:var(--text-muted)}
+.section{margin-bottom:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.section h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem}
+.section-desc{color:var(--text-dim);font-size:.85rem;margin-bottom:.75rem}
+.badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.timeline-item{margin-bottom:.75rem;padding:.6rem .75rem .6rem 1rem;border-left:3px solid var(--border);background:var(--bg-card);border-radius:0 8px 8px 0}
+.timeline-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
+.timeline-vendor{color:var(--text);font-weight:600;font-size:.85rem}
+.timeline-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
+.impact{font-size:.7rem}.impact-high{color:#f85149}.impact-medium{color:#d29922}.impact-low{color:#8b949e}
+.timeline-summary{font-size:.85rem;color:var(--text-muted)}
+.no-data{color:var(--text-dim);font-size:.9rem;font-style:italic}
+.vendor-list{display:flex;flex-direction:column;gap:.4rem}
+.vendor-item{display:grid;grid-template-columns:1fr auto auto;gap:.75rem;align-items:center;padding:.5rem .75rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:all .2s;text-decoration:none}
+.vendor-item:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.vi-name{color:var(--text);font-weight:600;font-size:.85rem}
+.vi-risk{font-family:var(--mono);font-size:.75rem;font-weight:600}
+.vi-change{font-size:.75rem;color:var(--text-dim);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stable-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem}
+.stable-card{display:block;padding:.5rem .75rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:all .2s;text-decoration:none}
+.stable-card:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.stable-name{display:block;color:var(--text);font-weight:600;font-size:.85rem}
+.stable-tier{display:block;color:var(--text-dim);font-family:var(--mono);font-size:.7rem;margin-top:.1rem}
+.nav-links{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+.nav-link{display:inline-block;padding:.25rem .6rem;border:1px solid var(--border);border-radius:20px;font-size:.75rem;color:var(--text-muted);transition:all .2s}
+.nav-link:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.vendor-item{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/trends">Trends</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
+  <h1>${escHtmlServer(categoryName)} Pricing Trends</h1>
+  <p class="page-meta">Pricing direction: <span style="color:${t.color};font-weight:600">${t.icon} ${t.label}</span></p>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value">${catOffers.length}</div>
+      <div class="stat-label">Vendors</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${catChanges.length}</div>
+      <div class="stat-label">Changes Tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${categoryPct}%</div>
+      <div class="stat-label">of All Changes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${atRisk.length}</div>
+      <div class="stat-label">At-Risk Vendors</div>
+    </div>
+  </div>
+
+  ${breakdownHtml ? `<div class="breakdown">${breakdownHtml}</div>` : ""}
+
+  <div class="section">
+    <h2>Pricing Change Timeline</h2>
+    <div class="timeline">
+${timelineHtml}
+    </div>
+  </div>
+${atRiskHtml}
+${stableHtml}
+  <div class="section">
+    <h2>Related</h2>
+    <div class="nav-links">
+      <a href="/category/${slug}" class="nav-link">Browse ${escHtmlServer(categoryName)} deals</a>
+      <a href="/trends" class="nav-link">All category trends</a>
+    </div>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 function buildLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -2439,6 +2767,18 @@ ${getRecentWeekKeys(4).map(wk => `  <url>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>`).join("\n")}
+  <url>
+    <loc>https://agentdeals-production.up.railway.app/trends</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+${categories.map(c => `  <url>
+    <loc>https://agentdeals-production.up.railway.app/trends/${toSlug(c.name)}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>`).join("\n")}
 </urlset>`;
     res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(sitemapXml);
@@ -2525,6 +2865,23 @@ ${getRecentWeekKeys(4).map(wk => `  <url>
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
+    }
+  } else if (url.pathname === "/trends" && req.method === "GET") {
+    recordApiHit("/trends");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/trends", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: categories.length });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildTrendsIndexPage());
+  } else if (url.pathname.startsWith("/trends/") && req.method === "GET") {
+    const slug = url.pathname.slice("/trends/".length).replace(/\/$/, "");
+    const html = buildTrendsPage(slug);
+    if (html) {
+      recordApiHit("/trends/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/trends/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trends not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/trends">Browse all category trends</a></p></div></body></html>`);
     }
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
