@@ -20,6 +20,7 @@ RUN npm ci --omit=dev
 COPY --from=build /app/dist/ dist/
 COPY data/ data/
 COPY assets/ assets/
+COPY glama.json ./
 
 EXPOSE 3000
 
