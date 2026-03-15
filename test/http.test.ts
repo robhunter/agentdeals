@@ -1072,4 +1072,64 @@ describe("HTTP transport", () => {
     const digestCount = (xml.match(/\/digest\//g) || []).length;
     assert.ok(digestCount >= 3, `Expected at least 3 digest URLs in sitemap, got ${digestCount}`);
   });
+
+  it("GET /vendor returns vendor index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/vendor`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>All Vendors"), "Should have vendor index title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("CollectionPage"), "JSON-LD should use CollectionPage");
+    assert.ok(html.includes("/vendor/"), "Should link to vendor pages");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+  });
+
+  it("GET /vendor/:slug renders vendor profile page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Vercel Free Tier"), "Should have vendor-specific title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("SoftwareApplication"), "JSON-LD should use SoftwareApplication");
+    assert.ok(html.includes("Pricing Change History"), "Should show pricing history section");
+    assert.ok(html.includes("Query via MCP"), "Should show MCP snippet");
+    assert.ok(html.includes("Alternatives in"), "Should show alternatives");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("risk-badge"), "Should show risk badge");
+  });
+
+  it("GET /vendor/:slug returns 404 for unknown vendor", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/vendor/nonexistent-vendor`);
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("404"), "Should show 404");
+    assert.ok(html.includes("nonexistent-vendor"), "Should show the invalid slug");
+    assert.ok(html.includes("/vendor"), "Should link to vendor index");
+  });
+
+  it("sitemap.xml includes vendor pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/vendor/vercel"), "Sitemap should include vendor pages");
+    const vendorCount = (xml.match(/\/vendor\//g) || []).length;
+    assert.ok(vendorCount >= 100, `Expected 100+ vendor URLs in sitemap, got ${vendorCount}`);
+  });
+
+  it("category page links vendors to profile pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/category/cloud-hosting`);
+    const html = await response.text();
+    assert.ok(html.includes('href="/vendor/'), "Category page should link vendors to profile pages");
+  });
 });
