@@ -388,6 +388,312 @@ ${offersHtml}
 </html>`;
 }
 
+// --- Comparison pages ---
+
+// Define comparison pairs: [vendorA, vendorB] — canonical order is alphabetical
+const COMPARISON_PAIRS: [string, string][] = [
+  // Cloud Hosting
+  ["Netlify", "Vercel"],
+  ["Railway", "Render"],
+  ["Cloudflare Pages", "Vercel"],
+  ["Netlify", "Render"],
+  ["Cloudflare Pages", "Netlify"],
+  // Databases
+  ["Firebase", "Supabase"],
+  ["Neon", "Supabase"],
+  ["CockroachDB", "Neon"],
+  ["MongoDB", "Supabase"],
+  ["CockroachDB", "MongoDB"],
+  // Monitoring
+  ["Datadog", "Grafana Cloud"],
+  ["Bugsnag", "Sentry"],
+  ["Grafana Cloud", "Sentry"],
+  // CI/CD
+  ["GitHub Actions", "GitLab CI"],
+  ["CircleCI", "GitHub Actions"],
+  ["CircleCI", "GitLab CI"],
+  // Auth
+  ["Auth0", "Clerk"],
+  // Cross-category high-interest
+  ["Firebase", "Vercel"],
+  ["Railway", "Supabase"],
+  ["Netlify", "Railway"],
+  ["Render", "Vercel"],
+  ["Cloudflare Pages", "Render"],
+];
+
+// Build slug for a comparison pair (canonical: alphabetical)
+function comparisonSlug(a: string, b: string): string {
+  return `${toSlug(a)}-vs-${toSlug(b)}`;
+}
+
+// Build lookup maps for comparison pages
+const comparisonMap = new Map<string, [string, string]>();
+for (const [a, b] of COMPARISON_PAIRS) {
+  // Both vendors must exist
+  const offerA = offers.find(o => o.vendor === a);
+  const offerB = offers.find(o => o.vendor === b);
+  if (offerA && offerB) {
+    comparisonMap.set(comparisonSlug(a, b), [a, b]);
+  }
+}
+
+// Group comparisons by category for the index page
+function getComparisonsByCategory(): Map<string, Array<{ slug: string; a: string; b: string }>> {
+  const byCat = new Map<string, Array<{ slug: string; a: string; b: string }>>();
+  for (const [slug, [a, b]] of comparisonMap) {
+    const offerA = offers.find(o => o.vendor === a);
+    const offerB = offers.find(o => o.vendor === b);
+    const cat = offerA && offerB && offerA.category === offerB.category ? offerA.category : "Cross-Category";
+    if (!byCat.has(cat)) byCat.set(cat, []);
+    byCat.get(cat)!.push({ slug, a, b });
+  }
+  return byCat;
+}
+
+function buildCompareIndexPage(): string {
+  const byCat = getComparisonsByCategory();
+  const totalComparisons = comparisonMap.size;
+  const title = `Free Tier Comparisons (${totalComparisons} vendor matchups) — AgentDeals`;
+  const metaDesc = `Side-by-side free tier comparisons for developer tools. Compare pricing, limits, and stability for ${totalComparisons} vendor pairs across hosting, databases, monitoring, CI/CD, and auth.`;
+
+  const categorySections = Array.from(byCat.entries()).sort((a, b) => {
+    if (a[0] === "Cross-Category") return 1;
+    if (b[0] === "Cross-Category") return -1;
+    return a[0].localeCompare(b[0]);
+  }).map(([cat, pairs]) => `
+      <div class="compare-category">
+        <h2>${escHtmlServer(cat)}</h2>
+        <div class="compare-grid">
+${pairs.map(p => `          <a href="/compare/${p.slug}" class="compare-card">
+            <span class="compare-vs"><span class="compare-name">${escHtmlServer(p.a)}</span> <span class="vs">vs</span> <span class="compare-name">${escHtmlServer(p.b)}</span></span>
+          </a>`).join("\n")}
+        </div>
+      </div>`).join("\n");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Free Tier Vendor Comparisons",
+    description: metaDesc,
+    numberOfItems: totalComparisons,
+    url: "https://agentdeals-production.up.railway.app/compare",
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/compare">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/compare">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.compare-category{margin-bottom:2.5rem}
+.compare-category h2{font-family:var(--serif);font-size:1.25rem;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.compare-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem}
+.compare-card{display:block;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);backdrop-filter:blur(10px);transition:all .2s;text-decoration:none}
+.compare-card:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.compare-vs{display:flex;align-items:center;gap:.5rem;font-size:.9rem}
+.compare-name{color:var(--text);font-weight:600}
+.vs{color:var(--text-dim);font-family:var(--mono);font-size:.75rem;text-transform:uppercase}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Comparisons</div>
+  <h1>Free Tier Comparisons</h1>
+  <p class="page-meta">${totalComparisons} side-by-side vendor comparisons. Verified pricing, change history, and risk indicators.</p>
+${categorySections}
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+function buildComparisonPage(slug: string): string | null {
+  const pair = comparisonMap.get(slug);
+  if (!pair) return null;
+
+  const [vendorA, vendorB] = pair;
+  const result = compareServices(vendorA, vendorB);
+  if ("error" in result) return null;
+
+  const { vendor_a: a, vendor_b: b } = result.comparison;
+  const title = `${a.vendor} vs ${b.vendor} Free Tier Comparison — AgentDeals`;
+  const metaDesc = `Compare ${a.vendor} and ${b.vendor} free tiers side by side. Pricing, limits, change history, and risk assessment for developers.`;
+
+  // Risk levels from enriched data
+  const riskA = enrichOffers([offers.find(o => o.vendor === a.vendor)!])[0];
+  const riskB = enrichOffers([offers.find(o => o.vendor === b.vendor)!])[0];
+
+  const riskBadge = (level: string | null) => {
+    const colors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+    const color = colors[level ?? ""] ?? "#8b949e";
+    return `<span style="display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:600;background:${color}20;color:${color};border:1px solid ${color}40">${level ?? "unknown"}</span>`;
+  };
+
+  const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
+    if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
+    return changes.sort((x, y) => y.date.localeCompare(x.date)).slice(0, 5).map(c => {
+      const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+      return `<div style="margin-bottom:.75rem;padding:.6rem .75rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 6px 6px 0">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
+          <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
+          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${c.date}</span>
+          <span style="font-size:.7rem;color:${c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e"}">${c.impact} impact</span>
+        </div>
+        <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
+      </div>`;
+    }).join("\n");
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description: metaDesc,
+    url: `https://agentdeals-production.up.railway.app/compare/${slug}`,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: 2,
+      itemListElement: [a, b].map((v, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "SoftwareApplication",
+          name: v.vendor,
+          description: v.description,
+          applicationCategory: v.category,
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: v.tier },
+          url: v.url,
+        },
+      })),
+    },
+  };
+
+  // Related comparisons (share a vendor with this pair)
+  const relatedComparisons = Array.from(comparisonMap.entries())
+    .filter(([s, [ra, rb]]) => s !== slug && (ra === vendorA || ra === vendorB || rb === vendorA || rb === vendorB))
+    .slice(0, 6);
+
+  const relatedHtml = relatedComparisons.length > 0 ? `
+  <div class="related">
+    <h2>Related Comparisons</h2>
+    <div class="related-grid">
+${relatedComparisons.map(([s, [ra, rb]]) => `      <a href="/compare/${s}" class="related-card">${escHtmlServer(ra)} vs ${escHtmlServer(rb)}</a>`).join("\n")}
+    </div>
+  </div>` : "";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/compare/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/compare/${slug}">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+.vendor-col{border:1px solid var(--border);border-radius:12px;padding:1.25rem;background:var(--bg-card);backdrop-filter:blur(10px)}
+.vendor-col h2{font-family:var(--serif);font-size:1.25rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.vendor-col h2 a{color:var(--text)}
+.detail-row{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(42,39,32,0.4);font-size:.85rem}
+.detail-label{color:var(--text-dim);font-family:var(--mono);font-size:.75rem;text-transform:uppercase}
+.detail-value{color:var(--text);text-align:right;max-width:60%}
+.desc-block{margin-top:.75rem;padding:.75rem;background:var(--bg-elevated);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.changes-section{margin-top:2rem}
+.changes-section h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:1rem}
+.changes-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.changes-col h3{font-size:.85rem;color:var(--accent);font-family:var(--mono);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.related{margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)}
+.related h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem}
+.related-grid{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-card{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
+.related-card:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-grid,.changes-cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/compare">Comparisons</a> &rsaquo; ${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</div>
+  <h1>${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</h1>
+  <p class="page-meta">Side-by-side free tier comparison. Last updated ${new Date().toISOString().split("T")[0]}.</p>
+
+  <div class="compare-grid">
+    <div class="vendor-col">
+      <h2><a href="${escHtmlServer(a.url)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA.risk_level)}</h2>
+      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
+      <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
+      <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
+      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
+      <div class="desc-block">${escHtmlServer(a.description)}</div>
+    </div>
+    <div class="vendor-col">
+      <h2><a href="${escHtmlServer(b.url)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB.risk_level)}</h2>
+      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
+      <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
+      <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
+      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
+      <div class="desc-block">${escHtmlServer(b.description)}</div>
+    </div>
+  </div>
+
+  <div class="changes-section">
+    <h2>Pricing Change History</h2>
+    <div class="changes-cols">
+      <div class="changes-col">
+        <h3>${escHtmlServer(a.vendor)}</h3>
+        ${changesHtml(a.deal_changes, a.vendor)}
+      </div>
+      <div class="changes-col">
+        <h3>${escHtmlServer(b.vendor)}</h3>
+        ${changesHtml(b.deal_changes, b.vendor)}
+      </div>
+    </div>
+  </div>
+${relatedHtml}
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 function buildLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1486,7 +1792,19 @@ ${items}
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://agentdeals-production.up.railway.app/compare</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 ${categoryUrls}
+${Array.from(comparisonMap.keys()).map(s => `  <url>
+    <loc>https://agentdeals-production.up.railway.app/compare/${s}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`).join("\n")}
 </urlset>`;
     res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(sitemapXml);
@@ -1505,6 +1823,35 @@ ${categoryUrls}
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Category not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/">Browse all ${stats.categories} categories on AgentDeals</a></p></div></body></html>`);
+    }
+  } else if (url.pathname === "/compare" && req.method === "GET") {
+    recordApiHit("/compare");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/compare", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: comparisonMap.size });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildCompareIndexPage());
+  } else if (url.pathname.startsWith("/compare/") && req.method === "GET") {
+    const slug = url.pathname.slice("/compare/".length).replace(/\/$/, "");
+    // Check for reverse URL (e.g., netlify-vs-vercel → vercel-vs-netlify)
+    if (!comparisonMap.has(slug) && slug.includes("-vs-")) {
+      const parts = slug.split("-vs-");
+      if (parts.length === 2) {
+        const reversed = `${parts[1]}-vs-${parts[0]}`;
+        if (comparisonMap.has(reversed)) {
+          res.writeHead(301, { Location: `/compare/${reversed}` });
+          res.end();
+          return;
+        }
+      }
+    }
+    const html = buildComparisonPage(slug);
+    if (html) {
+      recordApiHit("/compare/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/compare/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparison not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Comparison not found.</p><p style="margin-top:1rem"><a href="/compare">Browse all comparisons</a></p></div></body></html>`);
     }
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
