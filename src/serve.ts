@@ -27,6 +27,17 @@ openapiSpec.servers[0].url = BASE_URL;
 // Load favicon from logo PNG at startup
 const faviconBuffer = readFileSync(join(__dirname, "..", "assets", "logo-400.png"));
 
+// Load OG image at startup
+const ogImageBuffer = readFileSync(join(__dirname, "..", "assets", "og-image.png"));
+
+// OG image meta tags shared across all pages
+const OG_IMAGE_META = `<meta property="og:image" content="${BASE_URL}/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${BASE_URL}/og-image.png">
+`;
+
 // Swagger UI dist path
 const swaggerUiDistPath = join(__dirname, "..", "node_modules", "swagger-ui-dist");
 
@@ -424,7 +435,7 @@ function buildCategoryPage(slug: string): string | null {
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/category/${slug}">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -518,7 +529,7 @@ function buildCategoryIndexPage(): string {
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/category">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -661,7 +672,7 @@ ${pairs.map(p => `          <a href="/compare/${p.slug}" class="compare-card">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/compare">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -786,7 +797,7 @@ ${relatedComparisons.map(([s, [ra, rb]]) => `      <a href="/compare/${s}" class
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/compare/${slug}">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -1066,7 +1077,7 @@ function buildDigestPage(weekKey: string): string | null {
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="article">
 <meta property="og:url" content="${BASE_URL}/digest/${weekKey}">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -1127,7 +1138,7 @@ function buildDigestArchivePage(): string {
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/digest/archive">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -1222,7 +1233,7 @@ ${vendors.map(v => `          <a href="/vendor/${v.slug}" class="vendor-card">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/vendor">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -1415,7 +1426,7 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/vendor/${slug}">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
@@ -1732,7 +1743,7 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/alternative-to/${slug}">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(altFaqJsonLd)}</script>
@@ -1885,7 +1896,7 @@ function buildAlternativesIndexPage(): string {
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/alternative-to">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -2180,7 +2191,7 @@ footer{text-align:center;color:var(--text-dim);font-size:.75rem;margin-top:3rem;
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${baseUrl}/setup">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>${css}</style>
@@ -2380,7 +2391,7 @@ ${entriesHtml}
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/expiring">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -2582,7 +2593,7 @@ function buildSearchPage(query: string, categoryFilter: string, page: number): s
 <meta property="og:description" content="${escHtmlServer(metaDescText)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/search">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -2741,7 +2752,7 @@ function buildTrendsIndexPage(): string {
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/trends">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -2889,7 +2900,7 @@ ${stablePicks.map(o => `      <a href="/vendor/${toSlug(o.vendor)}" class="stabl
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/trends/${slug}">
-${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
@@ -3000,11 +3011,8 @@ function buildLandingPage(): string {
 <meta property="og:description" content="Your AI recommends tools from memory. Memory doesn't include pricing. ${stats.offers}+ deals across ${stats.categories} categories.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}">
-<meta property="og:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AgentDeals — Pricing Context for AI Agents">
+${OG_IMAGE_META}<meta name="twitter:title" content="AgentDeals — Pricing Context for AI Agents">
 <meta name="twitter:description" content="Your AI recommends tools from memory. Memory doesn't include pricing. ${stats.offers}+ deals across ${stats.categories} categories.">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
 ${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="canonical" href="${BASE_URL}/">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
@@ -3834,6 +3842,13 @@ const httpServer = createHttpServer(async (req, res) => {
       "Content-Length": faviconBuffer.length,
     });
     res.end(faviconBuffer);
+  } else if (url.pathname === "/og-image.png") {
+    res.writeHead(200, {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=86400",
+      "Content-Length": ogImageBuffer.length,
+    });
+    res.end(ogImageBuffer);
   } else if (url.pathname === "/health") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ status: "ok", sessions: sessions.size, stats: getStats() }));

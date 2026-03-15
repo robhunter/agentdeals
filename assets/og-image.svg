@@ -1,0 +1,70 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Accent bar at top -->
+  <rect width="1200" height="6" fill="url(#accent)"/>
+
+  <!-- Grid pattern (subtle) -->
+  <g opacity="0.04">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="white" stroke-width="1"/>
+    <line x1="200" y1="0" x2="200" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="400" y1="0" x2="400" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="800" y1="0" x2="800" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="1000" y1="0" x2="1000" y2="630" stroke="white" stroke-width="1"/>
+  </g>
+
+  <!-- Deal tag icon -->
+  <g transform="translate(80, 160)">
+    <path d="M0 30 L30 0 L80 0 L80 50 L50 80 Z" fill="none" stroke="#3b82f6" stroke-width="3" opacity="0.6"/>
+    <circle cx="62" cy="18" r="6" fill="#3b82f6" opacity="0.6"/>
+  </g>
+
+  <!-- Title -->
+  <text x="80" y="300" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="72" font-weight="700" fill="white" letter-spacing="-1">AgentDeals</text>
+
+  <!-- Tagline -->
+  <text x="80" y="370" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="30" fill="#94a3b8" font-weight="400">Pricing context for AI agents</text>
+
+  <!-- Stats row -->
+  <g transform="translate(80, 440)">
+    <rect width="200" height="80" rx="12" fill="white" fill-opacity="0.06"/>
+    <text x="100" y="35" font-family="system-ui, sans-serif" font-size="28" fill="#3b82f6" font-weight="700" text-anchor="middle">1,500+</text>
+    <text x="100" y="62" font-family="system-ui, sans-serif" font-size="16" fill="#64748b" text-anchor="middle">deals tracked</text>
+
+    <rect x="220" width="200" height="80" rx="12" fill="white" fill-opacity="0.06"/>
+    <text x="320" y="35" font-family="system-ui, sans-serif" font-size="28" fill="#8b5cf6" font-weight="700" text-anchor="middle">54</text>
+    <text x="320" y="62" font-family="system-ui, sans-serif" font-size="16" fill="#64748b" text-anchor="middle">categories</text>
+
+    <rect x="440" width="200" height="80" rx="12" fill="white" fill-opacity="0.06"/>
+    <text x="540" y="35" font-family="system-ui, sans-serif" font-size="28" fill="#06b6d4" font-weight="700" text-anchor="middle">12</text>
+    <text x="540" y="62" font-family="system-ui, sans-serif" font-size="16" fill="#64748b" text-anchor="middle">MCP tools</text>
+  </g>
+
+  <!-- URL -->
+  <text x="80" y="590" font-family="system-ui, sans-serif" font-size="22" fill="#475569">agentdeals.dev</text>
+
+  <!-- Decorative dots on right side -->
+  <g opacity="0.08">
+    <circle cx="950" cy="150" r="80" fill="#3b82f6"/>
+    <circle cx="1050" cy="250" r="60" fill="#8b5cf6"/>
+    <circle cx="980" cy="380" r="40" fill="#06b6d4"/>
+    <circle cx="1100" cy="450" r="90" fill="#3b82f6"/>
+  </g>
+</svg>

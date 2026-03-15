@@ -1409,6 +1409,64 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('href="/expiring"'), "Should link to /expiring");
     assert.ok(html.includes('"Recent Pricing Changes"'), "Should have ItemList JSON-LD");
   });
+
+  it("serves og-image.png at /og-image.png", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/og-image.png`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "image/png");
+    assert.ok(response.headers.get("cache-control")?.includes("public"));
+    const buffer = Buffer.from(await response.arrayBuffer());
+    // PNG magic bytes
+    assert.strictEqual(buffer[0], 0x89);
+    assert.strictEqual(buffer[1], 0x50); // P
+    assert.strictEqual(buffer[2], 0x4e); // N
+    assert.strictEqual(buffer[3], 0x47); // G
+    // Verify 1200x630 dimensions from PNG header
+    const width = buffer.readUInt32BE(16);
+    const height = buffer.readUInt32BE(20);
+    assert.strictEqual(width, 1200, "OG image should be 1200px wide");
+    assert.strictEqual(height, 630, "OG image should be 630px tall");
+  });
+
+  it("landing page has OG image and Twitter card meta tags", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/`);
+    const html = await response.text();
+    assert.ok(html.includes('property="og:image"'), "Should have og:image tag");
+    assert.ok(html.includes("/og-image.png"), "og:image should point to /og-image.png");
+    assert.ok(html.includes('property="og:image:width" content="1200"'), "Should have og:image:width");
+    assert.ok(html.includes('property="og:image:height" content="630"'), "Should have og:image:height");
+    assert.ok(html.includes('name="twitter:card" content="summary_large_image"'), "Should have twitter:card summary_large_image");
+    assert.ok(html.includes('name="twitter:image"'), "Should have twitter:image");
+  });
+
+  it("category page has OG image meta tags", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/category/databases`);
+    const html = await response.text();
+    assert.ok(html.includes('property="og:image"'), "Should have og:image tag");
+    assert.ok(html.includes("/og-image.png"), "og:image should point to /og-image.png");
+    assert.ok(html.includes('name="twitter:card" content="summary_large_image"'), "Should have twitter:card");
+  });
+
+  it("vendor page has OG image meta tags", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const html = await response.text();
+    assert.ok(html.includes('property="og:image"'), "Should have og:image tag");
+    assert.ok(html.includes("/og-image.png"), "og:image should point to /og-image.png");
+    assert.ok(html.includes('name="twitter:card" content="summary_large_image"'), "Should have twitter:card");
+  });
+
+  it("expiring page has OG image meta tags", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/expiring`);
+    const html = await response.text();
+    assert.ok(html.includes('property="og:image"'), "Should have og:image tag");
+    assert.ok(html.includes("/og-image.png"), "og:image should point to /og-image.png");
+    assert.ok(html.includes('name="twitter:card" content="summary_large_image"'), "Should have twitter:card");
+  });
 });
 
 const REDIRECT_PORT = 3458;
