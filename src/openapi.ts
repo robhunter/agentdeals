@@ -539,15 +539,15 @@ export const openapiSpec = {
         }
       }
     },
-    "/api/feed": {
+    "/feed.xml": {
       get: {
-        summary: "RSS feed of pricing changes",
-        description: "RSS 2.0 feed of developer tool pricing changes. Subscribe in any RSS reader to stay updated on free tier removals, limit changes, and new deals.",
+        summary: "Atom feed of pricing changes",
+        description: "Atom feed of developer tool pricing changes. Subscribe in any feed reader to stay updated on free tier removals, limit changes, and new deals. Also available at /api/feed.",
         responses: {
           "200": {
-            description: "RSS 2.0 XML feed",
+            description: "Atom XML feed",
             content: {
-              "application/rss+xml": {
+              "application/atom+xml": {
                 schema: { type: "string", format: "binary" }
               }
             }
