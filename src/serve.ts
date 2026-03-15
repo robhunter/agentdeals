@@ -694,6 +694,303 @@ ${relatedHtml}
 </html>`;
 }
 
+// --- Weekly digest pages ---
+
+// ISO 8601 week number calculation
+function getISOWeek(date: Date): { year: number; week: number } {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const week = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return { year: d.getUTCFullYear(), week };
+}
+
+// Get Monday of a given ISO week
+function getWeekStart(year: number, week: number): Date {
+  const jan4 = new Date(Date.UTC(year, 0, 4));
+  const dayOfWeek = jan4.getUTCDay() || 7;
+  const firstMonday = new Date(jan4.getTime() - (dayOfWeek - 1) * 86400000);
+  return new Date(firstMonday.getTime() + (week - 1) * 7 * 86400000);
+}
+
+function formatWeekKey(year: number, week: number): string {
+  return `${year}-w${String(week).padStart(2, "0")}`;
+}
+
+function parseWeekKey(key: string): { year: number; week: number } | null {
+  const m = key.match(/^(\d{4})-w(\d{2})$/);
+  if (!m) return null;
+  return { year: parseInt(m[1], 10), week: parseInt(m[2], 10) };
+}
+
+// Group deal changes by ISO week
+function getChangesByWeek(): Map<string, typeof dealChanges> {
+  const byWeek = new Map<string, typeof dealChanges>();
+  for (const c of dealChanges) {
+    const d = new Date(c.date + "T00:00:00Z");
+    const { year, week } = getISOWeek(d);
+    const key = formatWeekKey(year, week);
+    if (!byWeek.has(key)) byWeek.set(key, []);
+    byWeek.get(key)!.push(c);
+  }
+  return byWeek;
+}
+
+function formatDateRange(year: number, week: number): string {
+  const start = getWeekStart(year, week);
+  const end = new Date(start.getTime() + 6 * 86400000);
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const startMonth = months[start.getUTCMonth()];
+  const endMonth = months[end.getUTCMonth()];
+  if (startMonth === endMonth) {
+    return `${startMonth} ${start.getUTCDate()}\u2013${end.getUTCDate()}, ${year}`;
+  }
+  return `${startMonth} ${start.getUTCDate()} \u2013 ${endMonth} ${end.getUTCDate()}, ${year}`;
+}
+
+const digestCss = `*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.stats-bar{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem}
+.stat-pill{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted)}
+.stat-pill strong{color:var(--text);font-family:var(--mono)}
+.impact-section{margin-bottom:2rem}
+.impact-section h2{font-family:var(--serif);font-size:1.15rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
+.impact-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.change-entry{margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid var(--border);background:var(--bg-card);border-radius:0 8px 8px 0;backdrop-filter:blur(10px)}
+.change-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
+.change-badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.change-vendor{font-weight:600;font-size:.9rem}
+.change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
+.change-cat{font-size:.7rem;color:var(--text-dim);font-family:var(--mono)}
+.change-summary{font-size:.85rem;color:var(--text-muted)}
+.rss-cta{margin:2rem 0;padding:1.25rem;border:1px solid var(--accent);border-radius:12px;background:var(--accent-glow);text-align:center}
+.rss-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.rss-cta a{font-weight:600;font-size:.95rem}
+.trending{margin-bottom:2rem}
+.trending h2{font-family:var(--serif);font-size:1.15rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.trending-list{display:flex;flex-wrap:wrap;gap:.4rem}
+.trending-pill{display:inline-block;padding:.25rem .6rem;border-radius:16px;font-size:.75rem;border:1px solid var(--border);color:var(--text-muted)}
+.week-nav{display:flex;justify-content:space-between;padding:1.5rem 0;border-top:1px solid var(--border);margin-top:1rem}
+.archive-list{list-style:none}
+.archive-list li{padding:.6rem 0;border-bottom:1px solid rgba(42,39,32,0.4)}
+.archive-list a{display:flex;justify-content:space-between;align-items:center;text-decoration:none}
+.archive-list .week-label{color:var(--text);font-weight:500}
+.archive-list .week-count{font-family:var(--mono);color:var(--text-dim);font-size:.85rem}
+.empty-msg{text-align:center;padding:3rem;color:var(--text-dim)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}}`;
+
+function buildDigestPage(weekKey: string): string | null {
+  const parsed = parseWeekKey(weekKey);
+  if (!parsed) return null;
+  const { year, week } = parsed;
+
+  const byWeek = getChangesByWeek();
+  const changes = byWeek.get(weekKey) ?? [];
+  const dateRange = formatDateRange(year, week);
+  const title = `Developer Tool Pricing Changes: ${dateRange} — AgentDeals`;
+  const metaDesc = changes.length > 0
+    ? `${changes.length} pricing changes tracked for developer tools during ${dateRange}. ${changes.filter(c => c.impact === "high").length} high-impact changes.`
+    : `No pricing changes tracked for developer tools during ${dateRange}.`;
+
+  // Stats
+  const byType = new Map<string, number>();
+  for (const c of changes) {
+    byType.set(c.change_type, (byType.get(c.change_type) ?? 0) + 1);
+  }
+
+  const statsHtml = changes.length > 0 ? `
+  <div class="stats-bar">
+    <div class="stat-pill"><strong>${changes.length}</strong> changes</div>
+    ${Array.from(byType.entries()).map(([type, count]) => {
+      const badge = changeTypeBadge[type] ?? { label: type, color: "#8b949e" };
+      return `<div class="stat-pill"><span style="width:8px;height:8px;border-radius:50%;background:${badge.color};display:inline-block"></span> <strong>${count}</strong> ${badge.label}</div>`;
+    }).join("\n    ")}
+  </div>` : "";
+
+  // Group by impact
+  const byImpact: Record<string, typeof changes> = { high: [], medium: [], low: [] };
+  for (const c of changes) {
+    (byImpact[c.impact] ?? byImpact.low).push(c);
+  }
+
+  const impactColors = { high: "#f85149", medium: "#d29922", low: "#8b949e" };
+  const impactLabels = { high: "High Impact", medium: "Medium Impact", low: "Low Impact" };
+
+  const changesHtml = changes.length > 0
+    ? (["high", "medium", "low"] as const).filter(level => byImpact[level].length > 0).map(level => `
+  <div class="impact-section">
+    <h2><span class="impact-dot" style="background:${impactColors[level]}"></span> ${impactLabels[level]} (${byImpact[level].length})</h2>
+    ${byImpact[level].sort((a, b) => b.date.localeCompare(a.date)).map(c => {
+      const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+      return `<div class="change-entry" style="border-left-color:${impactColors[level]}">
+      <div class="change-header">
+        <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
+        <span class="change-vendor">${escHtmlServer(c.vendor)}</span>
+        <span class="change-date">${c.date}</span>
+        <span class="change-cat">${escHtmlServer(c.category)}</span>
+      </div>
+      <div class="change-summary">${escHtmlServer(c.summary)}</div>
+    </div>`;
+    }).join("\n    ")}
+  </div>`).join("\n")
+    : `<div class="empty-msg"><p>No pricing changes tracked this week.</p><p style="margin-top:.5rem"><a href="/digest/archive">Browse the archive</a> or <a href="/api/feed">subscribe via RSS</a>.</p></div>`;
+
+  // Trending categories
+  const catCounts = new Map<string, number>();
+  for (const c of changes) {
+    catCounts.set(c.category, (catCounts.get(c.category) ?? 0) + 1);
+  }
+  const trendingHtml = catCounts.size > 0 ? `
+  <div class="trending">
+    <h2>Trending Categories</h2>
+    <div class="trending-list">
+      ${Array.from(catCounts.entries()).sort((a, b) => b[1] - a[1]).map(([cat, n]) =>
+        `<span class="trending-pill"><a href="/category/${toSlug(cat)}" style="color:inherit;text-decoration:none">${escHtmlServer(cat)}</a> (${n})</span>`
+      ).join("\n      ")}
+    </div>
+  </div>` : "";
+
+  // Navigation to prev/next week
+  const allWeeks = Array.from(byWeek.keys()).sort();
+  const idx = allWeeks.indexOf(weekKey);
+  const prevWeek = idx > 0 ? allWeeks[idx - 1] : null;
+  const nextWeek = idx < allWeeks.length - 1 ? allWeeks[idx + 1] : null;
+  // For weeks not in allWeeks, navigate to nearest
+  const navHtml = `
+  <div class="week-nav">
+    ${prevWeek ? `<a href="/digest/${prevWeek}">&larr; ${prevWeek}</a>` : "<span></span>"}
+    <a href="/digest/archive">Archive</a>
+    ${nextWeek ? `<a href="/digest/${nextWeek}">${nextWeek} &rarr;</a>` : "<span></span>"}
+  </div>`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description: metaDesc,
+    url: `https://agentdeals-production.up.railway.app/digest/${weekKey}`,
+    datePublished: getWeekStart(year, week).toISOString().split("T")[0],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/digest/${weekKey}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/digest/${weekKey}">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/rss+xml" title="AgentDeals — Pricing Changes" href="/api/feed">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>${digestCss}</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/digest/archive">Digest</a> &rsaquo; ${weekKey}</div>
+  <h1>Pricing Changes: ${dateRange}</h1>
+  <p class="page-meta">Week ${week}, ${year}. ${changes.length} change${changes.length !== 1 ? "s" : ""} tracked.</p>
+${statsHtml}
+${changesHtml}
+${trendingHtml}
+
+  <div class="rss-cta">
+    <p>Get pricing changes delivered automatically</p>
+    <a href="/api/feed">Subscribe via RSS &rarr;</a>
+  </div>
+${navHtml}
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+function buildDigestArchivePage(): string {
+  const byWeek = getChangesByWeek();
+  const weeks = Array.from(byWeek.entries())
+    .sort((a, b) => b[0].localeCompare(a[0])); // newest first
+  const title = "Pricing Change Digest Archive — AgentDeals";
+  const metaDesc = `Browse ${weeks.length} weeks of developer tool pricing changes. Free tier removals, limit changes, and new deals tracked weekly.`;
+
+  const listHtml = weeks.map(([key, changes]) => {
+    const parsed = parseWeekKey(key)!;
+    const dateRange = formatDateRange(parsed.year, parsed.week);
+    return `<li><a href="/digest/${key}"><span class="week-label">${dateRange}</span><span class="week-count">${changes.length} change${changes.length !== 1 ? "s" : ""}</span></a></li>`;
+  }).join("\n    ");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Pricing Change Digest Archive",
+    description: metaDesc,
+    url: "https://agentdeals-production.up.railway.app/digest/archive",
+    numberOfItems: weeks.length,
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/digest/archive">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/digest/archive">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/rss+xml" title="AgentDeals — Pricing Changes" href="/api/feed">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>${digestCss}</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Digest Archive</div>
+  <h1>Pricing Change Archive</h1>
+  <p class="page-meta">${weeks.length} weeks of developer tool pricing changes tracked.</p>
+  <ul class="archive-list">
+    ${listHtml}
+  </ul>
+
+  <div class="rss-cta">
+    <p>Get pricing changes delivered automatically</p>
+    <a href="/api/feed">Subscribe via RSS &rarr;</a>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+// Get current week key
+function getCurrentWeekKey(): string {
+  const now = new Date();
+  const { year, week } = getISOWeek(now);
+  return formatWeekKey(year, week);
+}
+
+// Get last N week keys for sitemap
+function getRecentWeekKeys(n: number): string[] {
+  const byWeek = getChangesByWeek();
+  return Array.from(byWeek.keys()).sort().reverse().slice(0, n);
+}
+
 function buildLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1805,6 +2102,18 @@ ${Array.from(comparisonMap.keys()).map(s => `  <url>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`).join("\n")}
+  <url>
+    <loc>https://agentdeals-production.up.railway.app/digest/archive</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+${getRecentWeekKeys(4).map(wk => `  <url>
+    <loc>https://agentdeals-production.up.railway.app/digest/${wk}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>`).join("\n")}
 </urlset>`;
     res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(sitemapXml);
@@ -1852,6 +2161,28 @@ ${Array.from(comparisonMap.keys()).map(s => `  <url>
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparison not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Comparison not found.</p><p style="margin-top:1rem"><a href="/compare">Browse all comparisons</a></p></div></body></html>`);
+    }
+  } else if (url.pathname === "/digest" && req.method === "GET") {
+    // Redirect to current week's digest
+    const currentWeek = getCurrentWeekKey();
+    res.writeHead(302, { Location: `/digest/${currentWeek}` });
+    res.end();
+  } else if (url.pathname === "/digest/archive" && req.method === "GET") {
+    recordApiHit("/digest/archive");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digest/archive", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDigestArchivePage());
+  } else if (url.pathname.startsWith("/digest/") && req.method === "GET") {
+    const weekKey = url.pathname.slice("/digest/".length).replace(/\/$/, "");
+    const html = buildDigestPage(weekKey);
+    if (html) {
+      recordApiHit("/digest/:week");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digest/" + weekKey, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Digest not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Invalid week format. Use YYYY-wNN (e.g., 2026-w11).</p><p style="margin-top:1rem"><a href="/digest/archive">Browse the digest archive</a></p></div></body></html>`);
     }
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
