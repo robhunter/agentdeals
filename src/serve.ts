@@ -31,11 +31,64 @@ const swaggerDocsHtml = `<!DOCTYPE html>
   <style>
     html { box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
-    body { margin: 0; background: #fafafa; }
+    body { margin: 0; background: #14120b; color: #e8e0d0; }
     .topbar { display: none; }
+    /* Dark theme overrides matching landing page */
+    .swagger-ui { background: #14120b; }
+    .swagger-ui .opblock-tag { color: #e8e0d0; border-bottom-color: #2a2520; }
+    .swagger-ui .opblock-tag:hover { background: rgba(200,164,78,0.05); }
+    .swagger-ui .opblock-tag small { color: #a09880; }
+    .swagger-ui .opblock .opblock-summary { border-color: #2a2520; }
+    .swagger-ui .opblock.opblock-get { background: rgba(97,175,254,0.05); border-color: rgba(97,175,254,0.3); }
+    .swagger-ui .opblock.opblock-get .opblock-summary { border-color: rgba(97,175,254,0.3); }
+    .swagger-ui .opblock.opblock-post { background: rgba(73,204,144,0.05); border-color: rgba(73,204,144,0.3); }
+    .swagger-ui .opblock.opblock-post .opblock-summary { border-color: rgba(73,204,144,0.3); }
+    .swagger-ui .opblock .opblock-summary-description { color: #a09880; }
+    .swagger-ui .opblock-body { background: #1a1710; }
+    .swagger-ui .opblock-description-wrapper p,
+    .swagger-ui .opblock-external-docs-wrapper p { color: #c0b8a0; }
+    .swagger-ui table thead tr th { color: #c8a44e; border-bottom-color: #2a2520; }
+    .swagger-ui table tbody tr td { color: #e8e0d0; border-bottom-color: #2a2520; }
+    .swagger-ui .parameter__name { color: #e8e0d0; }
+    .swagger-ui .parameter__type { color: #a09880; }
+    .swagger-ui .parameter__in { color: #a09880; }
+    .swagger-ui .response-col_status { color: #c8a44e; }
+    .swagger-ui .response-col_description { color: #c0b8a0; }
+    .swagger-ui .responses-inner { background: #14120b; }
+    .swagger-ui .model-box { background: #1a1710; }
+    .swagger-ui .model { color: #e8e0d0; }
+    .swagger-ui .model-title { color: #c8a44e; }
+    .swagger-ui section.models { border-color: #2a2520; }
+    .swagger-ui section.models h4 { color: #e8e0d0; border-bottom-color: #2a2520; }
+    .swagger-ui .model-container { background: #1a1710; }
+    .swagger-ui .prop-type { color: #c8a44e; }
+    .swagger-ui .prop-format { color: #a09880; }
+    .swagger-ui .info .title { color: #e8e0d0; }
+    .swagger-ui .info .title small { background: #c8a44e; color: #14120b; }
+    .swagger-ui .info p, .swagger-ui .info li { color: #c0b8a0; }
+    .swagger-ui .info a { color: #c8a44e; }
+    .swagger-ui .scheme-container { background: #1a1710; border-bottom-color: #2a2520; box-shadow: none; }
+    .swagger-ui .scheme-container .schemes > label { color: #a09880; }
+    .swagger-ui select { background: #1a1710; color: #e8e0d0; border-color: #2a2520; }
+    .swagger-ui input[type=text], .swagger-ui textarea { background: #1a1710; color: #e8e0d0; border-color: #2a2520; }
+    .swagger-ui .btn { color: #e8e0d0; border-color: #2a2520; }
+    .swagger-ui .btn.execute { background: #c8a44e; color: #14120b; border-color: #c8a44e; }
+    .swagger-ui .btn.authorize { color: #c8a44e; border-color: #c8a44e; }
+    .swagger-ui .highlight-code { background: #1a1710; }
+    .swagger-ui .highlight-code .microlight { color: #e8e0d0; background: #1a1710; }
+    .swagger-ui .copy-to-clipboard { background: #1a1710; }
+    .swagger-ui .download-contents { color: #c8a44e; }
+    .swagger-ui .opblock-body pre.microlight { background: #1a1710 !important; color: #e8e0d0; border: 1px solid #2a2520; }
+    .swagger-ui .response-control-media-type__accept-message { color: #c8a44e; }
+    .swagger-ui .loading-container .loading::after { color: #c8a44e; }
+    /* Back link */
+    .back-link { display: block; padding: 12px 20px; background: #1a1710; border-bottom: 1px solid #2a2520; font-family: 'Inter', sans-serif; font-size: 14px; }
+    .back-link a { color: #c8a44e; text-decoration: none; }
+    .back-link a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
+  <div class="back-link"><a href="/">&larr; Back to AgentDeals</a></div>
   <div id="swagger-ui"></div>
   <script src="/api/docs/swagger-ui-bundle.js"></script>
   <script src="/api/docs/swagger-ui-standalone-preset.js"></script>
@@ -44,7 +97,10 @@ const swaggerDocsHtml = `<!DOCTYPE html>
       url: '/api/openapi.json',
       dom_id: '#swagger-ui',
       presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
-      layout: 'StandaloneLayout'
+      layout: 'StandaloneLayout',
+      deepLinking: true,
+      defaultModelsExpandDepth: 1,
+      syntaxHighlight: { theme: 'monokai' }
     });
   </script>
 </body>

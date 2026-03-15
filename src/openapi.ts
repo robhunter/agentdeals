@@ -500,6 +500,61 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/costs": {
+      get: {
+        summary: "Estimate infrastructure costs",
+        description: "Estimate monthly costs for a stack of services at different scales. Shows free tier limits, when you'd exceed them, and projected costs.",
+        parameters: [
+          { name: "services", in: "query", required: true, description: "Comma-separated list of vendor names", schema: { type: "string" }, example: "Vercel,Supabase,Clerk" },
+          { name: "scale", in: "query", description: "Usage scale tier", schema: { type: "string", enum: ["hobby", "startup", "growth"], default: "hobby" } }
+        ],
+        responses: {
+          "200": {
+            description: "Cost estimates per service and total",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    scale: { type: "string", description: "Scale tier used for estimation" },
+                    services: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          vendor: { type: "string" },
+                          free_tier: { type: "string" },
+                          estimated_monthly: { type: "string" },
+                          notes: { type: "string" }
+                        }
+                      }
+                    },
+                    total_estimated_monthly: { type: "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { description: "Missing services parameter or invalid scale" }
+        }
+      }
+    },
+    "/api/feed": {
+      get: {
+        summary: "RSS feed of pricing changes",
+        description: "RSS 2.0 feed of developer tool pricing changes. Subscribe in any RSS reader to stay updated on free tier removals, limit changes, and new deals.",
+        responses: {
+          "200": {
+            description: "RSS 2.0 XML feed",
+            content: {
+              "application/rss+xml": {
+                schema: { type: "string", format: "binary" }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stats": {
       get: {
         summary: "Service statistics",
