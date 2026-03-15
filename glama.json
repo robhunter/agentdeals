@@ -5,7 +5,7 @@
   "repository": "https://github.com/robhunter/agentdeals",
   "license": "MIT",
   "tools": 12,
-  "prompts": 5,
+  "prompts": 6,
   "transport": ["http", "stdio"],
   "runtime": "node",
   "maintainers": ["robhunter"]
