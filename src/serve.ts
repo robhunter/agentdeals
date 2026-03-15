@@ -1306,6 +1306,45 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
     },
   };
 
+  // FAQ data for vendor pages
+  const faqFreeAnswer = `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${primary.description.slice(0, 200)}${primary.description.length > 200 ? "..." : ""}`;
+  const faqTierAnswer = `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`;
+  const faqReliableAnswer = riskLevel === "stable"
+    ? `${vendorName}'s free tier is considered stable. ${vendorChanges.length === 0 ? "There are no recorded pricing changes." : `There ${vendorChanges.length === 1 ? "has been 1 recorded pricing change" : `have been ${vendorChanges.length} recorded pricing changes`}, but the free tier remains available.`}`
+    : riskLevel === "caution"
+    ? `${vendorName}'s free tier requires caution. There ${vendorChanges.length === 1 ? "has been 1 recorded pricing change" : `have been ${vendorChanges.length} recorded pricing changes`}. ${vendorChanges[0] ? `Most recently: ${vendorChanges[0].summary}` : ""}`
+    : `${vendorName}'s free tier is considered risky. There ${vendorChanges.length === 1 ? "has been 1 significant pricing change" : `have been ${vendorChanges.length} significant pricing changes`}. ${vendorChanges[0] ? `Most recently: ${vendorChanges[0].summary}` : ""} Consider alternatives.`;
+  const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
+
+  const vendorFaqItems = [
+    { q: `Is ${vendorName} free?`, a: faqFreeAnswer },
+    { q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer },
+    { q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer },
+    { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: vendorFaqItems.map(item => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+
+  const faqHtml = `
+  <div class="section faq-section">
+    <h2>Frequently Asked Questions</h2>
+    ${vendorFaqItems.map(item => `<details class="faq-item">
+      <summary class="faq-q">${escHtmlServer(item.q)}</summary>
+      <div class="faq-a">${escHtmlServer(item.a)}</div>
+    </details>`).join("\n    ")}
+  </div>`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1321,6 +1360,7 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -1361,6 +1401,12 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .mcp-section code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
 .cat-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.25rem}
 .cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(200,164,78,0.2)}
+.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;overflow:hidden}
+.faq-q{padding:.75rem 1rem;font-weight:600;font-size:.9rem;color:var(--text);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem}
+.faq-q::before{content:'▸';color:var(--accent);font-size:.8rem;transition:transform .2s}
+details[open] .faq-q::before{transform:rotate(90deg)}
+.faq-q:hover{color:var(--accent)}
+.faq-a{padding:0 1rem .75rem 1.75rem;font-size:.85rem;color:var(--text-muted);line-height:1.7}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.detail-grid{grid-template-columns:1fr}.alt-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
 ${globalNavCss()}
@@ -1410,7 +1456,7 @@ ${comparisonsHtml}
     <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.75rem">Look up ${escHtmlServer(vendorName)} programmatically with the AgentDeals MCP server:</p>
     <code>${escHtmlServer(mcpSnippet)}</code>
   </div>
-
+${faqHtml}
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
 </body>
@@ -1572,6 +1618,50 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
     })),
   };
 
+  // FAQ data for alternative-to pages
+  const topStableAlts = enrichedAlts.filter(a => (a.risk_level ?? "stable") === "stable").slice(0, 5);
+  const faqBestAltsAnswer = topStableAlts.length > 0
+    ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}. All have stable pricing with no recent changes.`
+    : `There are ${enrichedAlts.length} free alternatives to ${vendorName} available. ${enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ")} are among the options.`;
+  const faqFreeTierAnswer = riskLevel === "stable"
+    ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : `However, there ${vendorChanges.length === 1 ? "has been 1 pricing change" : `have been ${vendorChanges.length} pricing changes`} on record.`}`
+    : riskLevel === "caution"
+    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" due to ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. ${vendorChanges[0] ? vendorChanges[0].summary : ""}`
+    : `${vendorName}'s free tier (${primary.tier}) is considered risky. ${vendorChanges[0] ? vendorChanges[0].summary : ""} Consider migrating to a more stable alternative.`;
+  const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${vendorCategories.join(", ")} categor${vendorCategories.length > 1 ? "ies" : "y"}.`;
+  const faqChangesAnswer = vendorChanges.length > 0
+    ? `Yes, ${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was on ${vendorChanges[0].date}: ${vendorChanges[0].summary}`
+    : `No, ${vendorName} has no recorded pricing changes on AgentDeals. This indicates stable pricing.`;
+
+  const altFaqItems = [
+    { q: `What are the best free alternatives to ${vendorName}?`, a: faqBestAltsAnswer },
+    { q: `Is ${vendorName}'s free tier still available?`, a: faqFreeTierAnswer },
+    { q: `How many free alternatives to ${vendorName} exist?`, a: faqCountAnswer },
+    { q: `Has ${vendorName} changed their pricing recently?`, a: faqChangesAnswer },
+  ];
+
+  const altFaqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: altFaqItems.map(item => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+
+  const altFaqHtml = `
+  <div class="section faq-section">
+    <h2>Frequently Asked Questions</h2>
+    ${altFaqItems.map(item => `<details class="faq-item">
+      <summary class="faq-q">${escHtmlServer(item.q)}</summary>
+      <div class="faq-a">${escHtmlServer(item.a)}</div>
+    </details>`).join("\n    ")}
+  </div>`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1587,6 +1677,7 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(altFaqJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -1631,6 +1722,12 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .action-pill{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
 .action-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 .no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
+.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;overflow:hidden}
+.faq-q{padding:.75rem 1rem;font-weight:600;font-size:.9rem;color:var(--text);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem}
+.faq-q::before{content:'▸';color:var(--accent);font-size:.8rem;transition:transform .2s}
+details[open] .faq-q::before{transform:rotate(90deg)}
+.faq-q:hover{color:var(--accent)}
+.faq-a{padding:0 1rem .75rem 1.75rem;font-size:.85rem;color:var(--text-muted);line-height:1.7}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.risk-row{flex-direction:column;align-items:flex-start;gap:.25rem}.alt-meta{flex-direction:column;gap:.25rem}}
 ${globalNavCss()}
@@ -1654,7 +1751,7 @@ ${allAltsHtml}
     <p class="section-note">See the broader pricing landscape for ${vendorCategories.length > 1 ? "these categories" : "this category"}.</p>
     ${trendsHtml}
   </div>
-
+${altFaqHtml}
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
 </body>
