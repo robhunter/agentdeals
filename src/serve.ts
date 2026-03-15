@@ -1889,21 +1889,24 @@ function buildSetupPage(): string {
     ]
   };
 
-  const toolExamples: { tool: string; question: string }[] = [
-    { tool: "search_offers", question: "What free databases are available for a startup?" },
-    { tool: "compare_services", question: "Compare Vercel and Netlify free tiers" },
-    { tool: "check_vendor_risk", question: "Is Heroku's free tier stable?" },
-    { tool: "get_stack_recommendation", question: "Recommend a free stack for a Next.js SaaS app" },
-    { tool: "estimate_costs", question: "How much would hosting cost at 10K users?" },
-    { tool: "get_deal_changes", question: "What pricing changes happened this month?" },
-    { tool: "get_expiring_deals", question: "Any startup credits expiring soon?" },
-    { tool: "audit_stack", question: "Audit my stack: Vercel, PlanetScale, Clerk, Resend" },
+  const toolExamples: { tool: string; question: string; desc: string }[] = [
+    { tool: "search_offers", question: "Find free database hosting", desc: "Search 1,500+ deals by category, pricing, or keyword" },
+    { tool: "compare_services", question: "Compare Supabase vs Neon vs PlanetScale", desc: "Side-by-side comparison of free tiers and limits" },
+    { tool: "get_deal_changes", question: "What pricing changes happened this month?", desc: "Track free tier removals, limit changes, and new deals" },
+    { tool: "estimate_costs", question: "Estimate costs for a SaaS backend", desc: "Project costs across hosting, database, auth, and more" },
+    { tool: "check_vendor_risk", question: "Is Heroku's free tier at risk?", desc: "Risk scoring based on pricing history and signals" },
+    { tool: "search_offers", question: "Show me startup credit programs", desc: "Filter by eligibility type: startup, student, or open-source" },
+    { tool: "get_stack_recommendation", question: "What are alternatives to Vercel?", desc: "Find similar services and compare their free tiers" },
+    { tool: "audit_stack", question: "Audit my current stack: Vercel, Supabase, Clerk", desc: "Risk assessment, cost projection, and gap analysis for your stack" },
+    { tool: "get_expiring_deals", question: "Any deals expiring soon?", desc: "Upcoming expirations and deadlines across tracked vendors" },
+    { tool: "get_newest_deals", question: "What's new this week?", desc: "Recently added deals and pricing updates" },
   ];
 
   const toolExamplesHtml = toolExamples.map(t =>
     `<div class="example-card">
+      <div class="example-prompt">&gt; ${escHtmlServer(t.question)}</div>
+      <p class="example-desc">${escHtmlServer(t.desc)}</p>
       <code class="example-tool">${escHtmlServer(t.tool)}</code>
-      <p class="example-q">&ldquo;${escHtmlServer(t.question)}&rdquo;</p>
     </div>`
   ).join("\n        ");
 
@@ -2098,8 +2101,9 @@ h2:first-of-type{border-top:none;padding-top:0;margin-top:1.5rem}
 .examples-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:.75rem;margin-top:.75rem}
 .example-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;transition:border-color .15s}
 .example-card:hover{border-color:var(--accent)}
-.example-tool{font-size:.8rem;color:var(--accent);margin-bottom:.25rem;display:inline-block}
-.example-q{font-size:.85rem;color:var(--text-muted);font-style:italic;margin:0}
+.example-prompt{font-family:var(--mono);font-size:.85rem;color:var(--text);margin-bottom:.35rem}
+.example-desc{font-size:.8rem;color:var(--text-muted);margin:0 0 .35rem 0}
+.example-tool{font-size:.7rem;color:var(--text-dim);background:none;padding:0}
 .troubleshoot{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-top:.75rem}
 .troubleshoot dt{font-size:.85rem;color:var(--text);font-weight:600;margin-top:.75rem}
 .troubleshoot dt:first-child{margin-top:0}
@@ -2148,8 +2152,8 @@ footer{text-align:center;color:var(--text-dim);font-size:.75rem;margin-top:3rem;
 
     ${panelsHtml}
 
-  <h2>What You Can Do</h2>
-  <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">Once connected, ask your AI assistant questions like these &mdash; it will use the right AgentDeals tool automatically.</p>
+  <h2>What Can You Ask?</h2>
+  <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">Once connected, try these prompts in your AI assistant &mdash; it picks the right AgentDeals tool automatically.</p>
   <div class="examples-grid">
         ${toolExamplesHtml}
   </div>
