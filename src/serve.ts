@@ -15,6 +15,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
+const BASE_URL = (process.env.BASE_URL ?? "https://agentdeals-production.up.railway.app").replace(/\/+$/, "");
+
+// Patch OpenAPI spec with BASE_URL
+openapiSpec.info.contact.url = BASE_URL;
+openapiSpec.servers[0].url = BASE_URL;
 
 // Load favicon from logo PNG at startup
 const faviconBuffer = readFileSync(join(__dirname, "..", "assets", "logo-400.png"));
@@ -363,11 +368,11 @@ function buildCategoryPage(slug: string): string | null {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/category/${slug}">
+<link rel="canonical" href="${BASE_URL}/category/${slug}">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/category/${slug}">
+<meta property="og:url" content="${BASE_URL}/category/${slug}">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -447,7 +452,7 @@ function buildCategoryIndexPage(): string {
     name: "All Categories",
     description: metaDesc,
     numberOfItems: stats.categories,
-    url: "https://agentdeals-production.up.railway.app/category",
+    url: "${BASE_URL}/category",
   };
 
   return `<!DOCTYPE html>
@@ -457,11 +462,11 @@ function buildCategoryIndexPage(): string {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/category">
+<link rel="canonical" href="${BASE_URL}/category">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/category">
+<meta property="og:url" content="${BASE_URL}/category">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -590,7 +595,7 @@ ${pairs.map(p => `          <a href="/compare/${p.slug}" class="compare-card">
     name: "Free Tier Vendor Comparisons",
     description: metaDesc,
     numberOfItems: totalComparisons,
-    url: "https://agentdeals-production.up.railway.app/compare",
+    url: "${BASE_URL}/compare",
   };
 
   return `<!DOCTYPE html>
@@ -600,11 +605,11 @@ ${pairs.map(p => `          <a href="/compare/${p.slug}" class="compare-card">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/compare">
+<link rel="canonical" href="${BASE_URL}/compare">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/compare">
+<meta property="og:url" content="${BASE_URL}/compare">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -686,7 +691,7 @@ function buildComparisonPage(slug: string): string | null {
     "@type": "WebPage",
     name: title,
     description: metaDesc,
-    url: `https://agentdeals-production.up.railway.app/compare/${slug}`,
+    url: `${BASE_URL}/compare/${slug}`,
     mainEntity: {
       "@type": "ItemList",
       numberOfItems: 2,
@@ -725,11 +730,11 @@ ${relatedComparisons.map(([s, [ra, rb]]) => `      <a href="/compare/${s}" class
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/compare/${slug}">
+<link rel="canonical" href="${BASE_URL}/compare/${slug}">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/compare/${slug}">
+<meta property="og:url" content="${BASE_URL}/compare/${slug}">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -994,7 +999,7 @@ function buildDigestPage(weekKey: string): string | null {
     "@type": "WebPage",
     name: title,
     description: metaDesc,
-    url: `https://agentdeals-production.up.railway.app/digest/${weekKey}`,
+    url: `${BASE_URL}/digest/${weekKey}`,
     datePublished: getWeekStart(year, week).toISOString().split("T")[0],
   };
 
@@ -1005,11 +1010,11 @@ function buildDigestPage(weekKey: string): string | null {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/digest/${weekKey}">
+<link rel="canonical" href="${BASE_URL}/digest/${weekKey}">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/digest/${weekKey}">
+<meta property="og:url" content="${BASE_URL}/digest/${weekKey}">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1055,7 +1060,7 @@ function buildDigestArchivePage(): string {
     "@type": "CollectionPage",
     name: "Pricing Change Digest Archive",
     description: metaDesc,
-    url: "https://agentdeals-production.up.railway.app/digest/archive",
+    url: "${BASE_URL}/digest/archive",
     numberOfItems: weeks.length,
   };
 
@@ -1066,11 +1071,11 @@ function buildDigestArchivePage(): string {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/digest/archive">
+<link rel="canonical" href="${BASE_URL}/digest/archive">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/digest/archive">
+<meta property="og:url" content="${BASE_URL}/digest/archive">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1151,7 +1156,7 @@ ${vendors.map(v => `          <a href="/vendor/${v.slug}" class="vendor-card">
     name: "All Vendors",
     description: metaDesc,
     numberOfItems: totalVendors,
-    url: "https://agentdeals-production.up.railway.app/vendor",
+    url: "${BASE_URL}/vendor",
   };
 
   return `<!DOCTYPE html>
@@ -1161,11 +1166,11 @@ ${vendors.map(v => `          <a href="/vendor/${v.slug}" class="vendor-card">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/vendor">
+<link rel="canonical" href="${BASE_URL}/vendor">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/vendor">
+<meta property="og:url" content="${BASE_URL}/vendor">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -1292,7 +1297,7 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
     "@type": "WebPage",
     name: title,
     description: metaDesc,
-    url: `https://agentdeals-production.up.railway.app/vendor/${slug}`,
+    url: `${BASE_URL}/vendor/${slug}`,
     mainEntity: {
       "@type": "SoftwareApplication",
       name: vendorName,
@@ -1354,11 +1359,11 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/vendor/${slug}">
+<link rel="canonical" href="${BASE_URL}/vendor/${slug}">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/vendor/${slug}">
+<meta property="og:url" content="${BASE_URL}/vendor/${slug}">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -1604,7 +1609,7 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
     "@type": "ItemList",
     name: title,
     description: metaDesc,
-    url: `https://agentdeals-production.up.railway.app/alternative-to/${slug}`,
+    url: `${BASE_URL}/alternative-to/${slug}`,
     numberOfItems: enrichedAlts.length,
     itemListElement: enrichedAlts.slice(0, 50).map((a, i) => ({
       "@type": "ListItem",
@@ -1671,11 +1676,11 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/alternative-to/${slug}">
+<link rel="canonical" href="${BASE_URL}/alternative-to/${slug}">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/alternative-to/${slug}">
+<meta property="og:url" content="${BASE_URL}/alternative-to/${slug}">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -1813,7 +1818,7 @@ function buildAlternativesIndexPage(): string {
     "@type": "CollectionPage",
     name: title,
     description: metaDesc,
-    url: "https://agentdeals-production.up.railway.app/alternative-to",
+    url: "${BASE_URL}/alternative-to",
     numberOfItems: scored.length,
   };
 
@@ -1824,11 +1829,11 @@ function buildAlternativesIndexPage(): string {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/alternative-to">
+<link rel="canonical" href="${BASE_URL}/alternative-to">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/alternative-to">
+<meta property="og:url" content="${BASE_URL}/alternative-to">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -1874,7 +1879,7 @@ ${vendorListHtml}
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
-  const baseUrl = "https://agentdeals-production.up.railway.app";
+  const baseUrl = BASE_URL;
   const title = "Setup Guide — AgentDeals MCP Server";
   const metaDesc = "Step-by-step instructions to add AgentDeals as an MCP server in Claude Desktop, Claude Code, Cursor, Cline, and Windsurf. Search 1,500+ developer deals from your AI assistant.";
 
@@ -2298,7 +2303,7 @@ ${entriesHtml}
     name: title,
     description: metaDesc,
     numberOfItems: totalUpcoming + recent.length,
-    url: "https://agentdeals-production.up.railway.app/expiring",
+    url: "${BASE_URL}/expiring",
     itemListElement: upcoming.slice(0, 50).map((c, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -2307,7 +2312,7 @@ ${entriesHtml}
         name: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
         startDate: c.date,
-        location: { "@type": "VirtualLocation", url: `https://agentdeals-production.up.railway.app/vendor/${toSlug(c.vendor)}` },
+        location: { "@type": "VirtualLocation", url: `${BASE_URL}/vendor/${toSlug(c.vendor)}` },
       },
     })),
   };
@@ -2319,11 +2324,11 @@ ${entriesHtml}
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/expiring">
+<link rel="canonical" href="${BASE_URL}/expiring">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/expiring">
+<meta property="og:url" content="${BASE_URL}/expiring">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -2511,7 +2516,7 @@ function buildSearchPage(query: string, categoryFilter: string, page: number): s
     "@type": "SearchResultsPage",
     name: hasQuery ? `"${query}" — Search Free Developer Tools — AgentDeals` : "Search Free Developer Tools — AgentDeals",
     description: metaDescText,
-    url: `https://agentdeals-production.up.railway.app/search${hasQuery ? "?q=" + encodeURIComponent(query) : ""}`,
+    url: `${BASE_URL}/search${hasQuery ? "?q=" + encodeURIComponent(query) : ""}`,
   };
 
   return `<!DOCTYPE html>
@@ -2521,11 +2526,11 @@ function buildSearchPage(query: string, categoryFilter: string, page: number): s
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${titleText}</title>
 <meta name="description" content="${escHtmlServer(metaDescText)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/search">
+<link rel="canonical" href="${BASE_URL}/search">
 <meta property="og:title" content="${titleText}">
 <meta property="og:description" content="${escHtmlServer(metaDescText)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/search">
+<meta property="og:url" content="${BASE_URL}/search">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -2670,7 +2675,7 @@ function buildTrendsIndexPage(): string {
     name: "Pricing Trends by Category",
     description: metaDesc,
     numberOfItems: totalCategories,
-    url: "https://agentdeals-production.up.railway.app/trends",
+    url: "${BASE_URL}/trends",
   };
 
   return `<!DOCTYPE html>
@@ -2680,11 +2685,11 @@ function buildTrendsIndexPage(): string {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/trends">
+<link rel="canonical" href="${BASE_URL}/trends">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/trends">
+<meta property="og:url" content="${BASE_URL}/trends">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -2818,7 +2823,7 @@ ${stablePicks.map(o => `      <a href="/vendor/${toSlug(o.vendor)}" class="stabl
     "@type": "WebPage",
     name: title,
     description: metaDesc,
-    url: `https://agentdeals-production.up.railway.app/trends/${slug}`,
+    url: `${BASE_URL}/trends/${slug}`,
   };
 
   return `<!DOCTYPE html>
@@ -2828,11 +2833,11 @@ ${stablePicks.map(o => `      <a href="/vendor/${toSlug(o.vendor)}" class="stabl
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/trends/${slug}">
+<link rel="canonical" href="${BASE_URL}/trends/${slug}">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app/trends/${slug}">
+<meta property="og:url" content="${BASE_URL}/trends/${slug}">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -2943,14 +2948,14 @@ function buildLandingPage(): string {
 <meta property="og:title" content="AgentDeals — Pricing Context for AI Agents">
 <meta property="og:description" content="Your AI recommends tools from memory. Memory doesn't include pricing. ${stats.offers}+ deals across ${stats.categories} categories.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://agentdeals-production.up.railway.app">
+<meta property="og:url" content="${BASE_URL}">
 <meta property="og:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AgentDeals — Pricing Context for AI Agents">
 <meta name="twitter:description" content="Your AI recommends tools from memory. Memory doesn't include pricing. ${stats.offers}+ deals across ${stats.categories} categories.">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/robhunter/agentdeals/main/assets/logo-400.png">
 <link rel="icon" type="image/png" href="/favicon.png">
-<link rel="canonical" href="https://agentdeals-production.up.railway.app/">
+<link rel="canonical" href="${BASE_URL}/">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
 <script type="application/ld+json">
 {
@@ -2959,11 +2964,11 @@ function buildLandingPage(): string {
     {
       "@type": "WebSite",
       "name": "AgentDeals",
-      "url": "https://agentdeals-production.up.railway.app",
+      "url": "${BASE_URL}",
       "description": "${stats.offers}+ developer infrastructure deals across ${stats.categories} categories. Pricing context for AI agents.",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://agentdeals-production.up.railway.app/api/offers?q={search_term_string}",
+        "target": "${BASE_URL}/api/offers?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     },
@@ -2984,7 +2989,7 @@ function buildLandingPage(): string {
       "name": "AgentDeals MCP Server",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Any",
-      "url": "https://agentdeals-production.up.railway.app/mcp",
+      "url": "${BASE_URL}/mcp",
       "description": "Model Context Protocol server providing AI agents with real-time developer tool pricing data"
     }
   ]
@@ -3238,7 +3243,7 @@ GET /api/docs</code></pre>
 "command": "npx", "args": ["-y", "agentdeals"]
 
 // Remote
-"url": "https://agentdeals-production.up.railway.app/mcp"</code></pre>
+"url": "${BASE_URL}/mcp"</code></pre>
       </div>
     </div>
   </div>
@@ -3295,7 +3300,7 @@ GET /api/docs</code></pre>
           <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "${BASE_URL}/mcp"
     }
   }
 }</code></pre>
@@ -3324,13 +3329,13 @@ GET /api/docs</code></pre>
 }</code></pre>
         </div>
         <div class="transport-content" data-transport="remote">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>claude mcp add agentdeals --transport http https://agentdeals-production.up.railway.app/mcp</code></pre>
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>claude mcp add agentdeals --transport http ${BASE_URL}/mcp</code></pre>
           <p style="font-size:.75rem;color:var(--text-dim);margin-top:.5rem">Or add to <code>.mcp.json</code>:</p>
           <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
       "type": "url",
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "${BASE_URL}/mcp"
     }
   }
 }</code></pre>
@@ -3361,7 +3366,7 @@ GET /api/docs</code></pre>
           <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "${BASE_URL}/mcp"
     }
   }
 }</code></pre>
@@ -3392,7 +3397,7 @@ GET /api/docs</code></pre>
           <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
-      "url": "https://agentdeals-production.up.railway.app/mcp",
+      "url": "${BASE_URL}/mcp",
       "transportType": "streamable-http"
     }
   }
@@ -3423,7 +3428,7 @@ GET /api/docs</code></pre>
           <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "${BASE_URL}/mcp"
     }
   }
 }</code></pre>
@@ -3957,7 +3962,7 @@ const httpServer = createHttpServer(async (req, res) => {
   } else if ((url.pathname === "/feed.xml" || url.pathname === "/api/feed") && req.method === "GET") {
     const feedPath = url.pathname === "/feed.xml" ? "/feed.xml" : "/api/feed";
     recordApiHit(feedPath);
-    const baseUrl = "https://agentdeals-production.up.railway.app";
+    const baseUrl = BASE_URL;
     const allChanges = [...dealChanges].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 50);
     const escXml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
     const changeLabel: Record<string, string> = {
@@ -4000,13 +4005,13 @@ ${entries}
     res.writeHead(200, { "Content-Type": "application/atom+xml; charset=utf-8", "Cache-Control": "public, max-age=3600", "Access-Control-Allow-Origin": "*" });
     res.end(atom);
   } else if (url.pathname === "/robots.txt" && req.method === "GET") {
-    const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: https://agentdeals-production.up.railway.app/sitemap.xml\n`;
+    const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
     res.end(robotsTxt);
   } else if (url.pathname === "/sitemap.xml" && req.method === "GET") {
     const now = new Date().toISOString().split("T")[0];
     const categoryUrls = categories.map((c) => `  <url>
-    <loc>https://agentdeals-production.up.railway.app/category/${toSlug(c.name)}</loc>
+    <loc>${BASE_URL}/category/${toSlug(c.name)}</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -4014,98 +4019,98 @@ ${entries}
     const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://agentdeals-production.up.railway.app/</loc>
+    <loc>${BASE_URL}/</loc>
     <lastmod>${now}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://agentdeals-production.up.railway.app/feed.xml</loc>
+    <loc>${BASE_URL}/feed.xml</loc>
     <lastmod>${now}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://agentdeals-production.up.railway.app/api/docs</loc>
+    <loc>${BASE_URL}/api/docs</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://agentdeals-production.up.railway.app/setup</loc>
+    <loc>${BASE_URL}/setup</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://agentdeals-production.up.railway.app/expiring</loc>
+    <loc>${BASE_URL}/expiring</loc>
     <lastmod>${now}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://agentdeals-production.up.railway.app/category</loc>
+    <loc>${BASE_URL}/category</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://agentdeals-production.up.railway.app/compare</loc>
+    <loc>${BASE_URL}/compare</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 ${categoryUrls}
 ${Array.from(comparisonMap.keys()).map(s => `  <url>
-    <loc>https://agentdeals-production.up.railway.app/compare/${s}</loc>
+    <loc>${BASE_URL}/compare/${s}</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`).join("\n")}
   <url>
-    <loc>https://agentdeals-production.up.railway.app/vendor</loc>
+    <loc>${BASE_URL}/vendor</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
-    <loc>https://agentdeals-production.up.railway.app/vendor/${s}</loc>
+    <loc>${BASE_URL}/vendor/${s}</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>`).join("\n")}
   <url>
-    <loc>https://agentdeals-production.up.railway.app/digest/archive</loc>
+    <loc>${BASE_URL}/digest/archive</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 ${getRecentWeekKeys(4).map(wk => `  <url>
-    <loc>https://agentdeals-production.up.railway.app/digest/${wk}</loc>
+    <loc>${BASE_URL}/digest/${wk}</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>`).join("\n")}
   <url>
-    <loc>https://agentdeals-production.up.railway.app/trends</loc>
+    <loc>${BASE_URL}/trends</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 ${categories.map(c => `  <url>
-    <loc>https://agentdeals-production.up.railway.app/trends/${toSlug(c.name)}</loc>
+    <loc>${BASE_URL}/trends/${toSlug(c.name)}</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>`).join("\n")}
   <url>
-    <loc>https://agentdeals-production.up.railway.app/alternative-to</loc>
+    <loc>${BASE_URL}/alternative-to</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
-    <loc>https://agentdeals-production.up.railway.app/alternative-to/${s}</loc>
+    <loc>${BASE_URL}/alternative-to/${s}</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
