@@ -288,6 +288,23 @@ describe("HTTP transport", () => {
     assert.ok(Array.isArray(body.transport));
   });
 
+  it("serves /setup page with client configs and HowTo schema", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/setup`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Setup Guide"));
+    assert.ok(html.includes("claude-desktop"));
+    assert.ok(html.includes("claude-code"));
+    assert.ok(html.includes("cursor"));
+    assert.ok(html.includes("npx -y agentdeals"));
+    assert.ok(html.includes("/mcp"));
+    assert.ok(html.includes("HowTo"), "Should have HowTo JSON-LD structured data");
+    assert.ok(html.includes("search_offers"), "Should list tool examples");
+  });
+
   it("serves landing page at root URL", async () => {
     proc = await startHttpServer();
 
