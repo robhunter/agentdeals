@@ -939,7 +939,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("nonexistent-category"), "Should show the invalid slug");
   });
 
-  it("sitemap.xml includes category pages", async () => {
+  it("sitemap.xml includes category pages and comparison pages", async () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
@@ -950,5 +950,59 @@ describe("HTTP transport", () => {
     // Should have many category entries (54 categories)
     const categoryCount = (xml.match(/\/category\//g) || []).length;
     assert.ok(categoryCount >= 50, `Expected 50+ category URLs in sitemap, got ${categoryCount}`);
+    // Should include comparison pages
+    assert.ok(xml.includes("/compare/netlify-vs-vercel"), "Sitemap should include comparison pages");
+    const compareCount = (xml.match(/\/compare\//g) || []).length;
+    assert.ok(compareCount >= 20, `Expected 20+ comparison URLs in sitemap, got ${compareCount}`);
+  });
+
+  it("GET /compare returns comparison index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/compare`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Free Tier Comparisons"), "Should have index title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("CollectionPage"), "JSON-LD should use CollectionPage schema");
+    assert.ok(html.includes("/compare/netlify-vs-vercel"), "Should link to comparison pages");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+  });
+
+  it("GET /compare/:slug renders comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/compare/netlify-vs-vercel`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Netlify"), "Should show vendor A name");
+    assert.ok(html.includes("Vercel"), "Should show vendor B name");
+    assert.ok(html.includes("<title>"), "Should have a title");
+    assert.ok(html.includes("vs"), "Title should contain vs");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("Pricing Change History"), "Should show change history section");
+    assert.ok(html.includes("Category"), "Should show category detail");
+    assert.ok(html.includes("Tier"), "Should show tier detail");
+  });
+
+  it("GET /compare/:slug redirects reversed URLs", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/compare/vercel-vs-netlify`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/compare/netlify-vs-vercel"), "Should redirect to canonical URL");
+  });
+
+  it("GET /compare/:slug returns 404 for invalid pairs", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/compare/nonexistent-vs-also-nonexistent`);
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("404"), "Should show 404");
+    assert.ok(html.includes("/compare"), "Should link to comparisons index");
   });
 });
