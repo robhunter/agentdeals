@@ -1304,6 +1304,357 @@ ${comparisonsHtml}
 </html>`;
 }
 
+// --- "Free alternative to X" pages ---
+
+function buildAlternativesPage(slug: string): string | null {
+  const vendorName = vendorSlugMap.get(slug);
+  if (!vendorName) return null;
+
+  const vendorOffers = offers.filter(o => o.vendor === vendorName);
+  if (vendorOffers.length === 0) return null;
+
+  const primary = vendorOffers[0];
+  const enriched = enrichOffers([primary])[0];
+  const allChanges = loadDealChanges();
+  const vendorChanges = allChanges
+    .filter(c => c.vendor.toLowerCase() === vendorName.toLowerCase())
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+  const riskLevel = enriched.risk_level ?? "stable";
+  const riskColor = riskColors[riskLevel] ?? "#8b949e";
+
+  // Get all categories this vendor belongs to
+  const vendorCategories = [...new Set(vendorOffers.map(o => o.category))];
+
+  // Find alternatives across all vendor categories, sorted by stability
+  const allAlternatives = offers
+    .filter(o => vendorCategories.includes(o.category) && o.vendor !== vendorName);
+  // Dedupe by vendor name (some vendors appear in multiple categories)
+  const seen = new Set<string>();
+  const dedupedAlts: typeof allAlternatives = [];
+  for (const a of allAlternatives) {
+    if (!seen.has(a.vendor)) {
+      seen.add(a.vendor);
+      dedupedAlts.push(a);
+    }
+  }
+  // Enrich and sort by stability (stable first, then caution, then risky)
+  const enrichedAlts = enrichOffers(dedupedAlts);
+  const riskOrder: Record<string, number> = { stable: 0, caution: 1, risky: 2 };
+  enrichedAlts.sort((a, b) => (riskOrder[a.risk_level ?? "stable"] ?? 3) - (riskOrder[b.risk_level ?? "stable"] ?? 3));
+
+  // Deal-change-driven alternatives (editorially curated)
+  const curatedAltNames = new Set<string>();
+  for (const c of vendorChanges) {
+    if (c.alternatives && c.alternatives.length > 0) {
+      for (const alt of c.alternatives) curatedAltNames.add(alt);
+    }
+  }
+  const curatedAlts = curatedAltNames.size > 0
+    ? enrichedAlts.filter(a => curatedAltNames.has(a.vendor))
+    : [];
+
+  // Title and meta
+  const title = `Free Alternatives to ${vendorName} — AgentDeals`;
+  const metaDesc = `Compare ${enrichedAlts.length} free alternatives to ${vendorName}. ${vendorChanges.length > 0 ? `${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. ` : ""}Find stable, verified free-tier tools.`;
+
+  // Situation section: why look for alternatives
+  const situationHtml = (() => {
+    const parts: string[] = [];
+    parts.push(`<div class="risk-row"><span class="risk-label">Risk Level:</span> <span class="risk-badge-inline" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></div>`);
+    parts.push(`<div class="risk-row"><span class="risk-label">Category:</span> ${vendorCategories.map(c => `<a href="/category/${toSlug(c)}" class="cat-pill">${escHtmlServer(c)}</a>`).join(" ")}</div>`);
+    parts.push(`<div class="risk-row"><span class="risk-label">Pricing Page:</span> <a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">${escHtmlServer(primary.url.replace(/^https?:\/\//, "").slice(0, 50))}${primary.url.replace(/^https?:\/\//, "").length > 50 ? "..." : ""}</a></div>`);
+    if (vendorChanges.length > 0) {
+      parts.push(`<div class="changes-summary"><h3>Recent Pricing Changes (${vendorChanges.length})</h3>`);
+      parts.push(vendorChanges.slice(0, 5).map(c => {
+        const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+        return `<div class="change-item">
+          <div class="change-head">
+            <span class="badge" style="background:${badge.color}">${badge.label}</span>
+            <span class="change-date">${c.date}</span>
+            <span class="impact impact-${c.impact}">${c.impact} impact</span>
+          </div>
+          <div class="change-summary">${escHtmlServer(c.summary)}</div>
+        </div>`;
+      }).join("\n"));
+      if (vendorChanges.length > 5) {
+        parts.push(`<p class="more-link"><a href="/vendor/${slug}">See all ${vendorChanges.length} changes &rarr;</a></p>`);
+      }
+      parts.push("</div>");
+    }
+    return parts.join("\n");
+  })();
+
+  // Build alternative cards
+  const vName = vendorName; // narrowed for closure
+  function altCard(a: typeof enrichedAlts[0], curated: boolean): string {
+    const aRisk = a.risk_level ?? "stable";
+    const aRiskColor = riskColors[aRisk] ?? "#8b949e";
+    const aSlug = toSlug(a.vendor);
+    const compSlug = comparisonSlug(vName < a.vendor ? vName : a.vendor, vName < a.vendor ? a.vendor : vName);
+    const hasComparison = comparisonMap.has(compSlug);
+    return `<div class="alt-row${curated ? " curated" : ""}">
+        <div class="alt-info">
+          <a href="/vendor/${aSlug}" class="alt-vendor-name">${escHtmlServer(a.vendor)}</a>
+          <span class="risk-badge-sm" style="background:${aRiskColor}20;color:${aRiskColor};border:1px solid ${aRiskColor}40">${aRisk}</span>
+          ${curated ? '<span class="curated-badge">recommended</span>' : ""}
+        </div>
+        <div class="alt-tier">${escHtmlServer(a.tier)}</div>
+        <div class="alt-meta">
+          <span class="alt-category">${escHtmlServer(a.category)}</span>
+          <span class="alt-date">Verified ${a.verifiedDate}</span>
+        </div>
+        <div class="alt-actions">
+          <a href="/vendor/${aSlug}" class="action-link">Profile</a>
+          ${hasComparison ? `<a href="/compare/${compSlug}" class="action-link">Compare</a>` : ""}
+        </div>
+      </div>`;
+  }
+
+  // Curated alternatives section
+  const curatedHtml = curatedAlts.length > 0 ? `
+  <div class="section">
+    <h2>Recommended Migration Targets</h2>
+    <p class="section-note">These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.</p>
+    <div class="alt-list">
+${curatedAlts.map(a => altCard(a, true)).join("\n")}
+    </div>
+  </div>` : "";
+
+  // All alternatives section
+  const allAltsHtml = enrichedAlts.length > 0 ? `
+  <div class="section">
+    <h2>All Free Alternatives (${enrichedAlts.length})</h2>
+    <p class="section-note">Sorted by stability &mdash; most stable first.</p>
+    <div class="alt-list">
+${enrichedAlts.map(a => altCard(a, false)).join("\n")}
+    </div>
+  </div>` : `<div class="section"><p class="no-changes">No alternatives found for ${escHtmlServer(vendorName)}.</p></div>`;
+
+  // Category trends link
+  const trendsHtml = vendorCategories.map(c =>
+    `<a href="/trends/${toSlug(c)}" class="action-pill">&#x2191; ${escHtmlServer(c)} Pricing Trends</a>`
+  ).join(" ");
+
+  // JSON-LD structured data
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    url: `https://agentdeals-production.up.railway.app/alternative-to/${slug}`,
+    numberOfItems: enrichedAlts.length,
+    itemListElement: enrichedAlts.slice(0, 50).map((a, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: a.vendor,
+        description: a.description,
+        applicationCategory: a.category,
+        url: a.url,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: a.tier },
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/alternative-to/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/alternative-to/${slug}">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:1rem}
+h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.situation-box{margin-bottom:2rem;padding:1.25rem;background:var(--bg-elevated);border-radius:12px;border-left:3px solid ${riskColor}}
+.risk-row{margin-bottom:.5rem;font-size:.9rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.risk-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;min-width:100px}
+.risk-badge-inline{display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.7rem;font-weight:600}
+.cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(200,164,78,0.2)}
+.changes-summary{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.change-item{margin-bottom:.5rem;padding:.5rem .75rem;border-left:3px solid var(--border);background:var(--bg-card);border-radius:0 8px 8px 0}
+.change-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem;flex-wrap:wrap}
+.badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
+.impact{font-size:.7rem}.impact-high{color:#f85149}.impact-medium{color:#d29922}.impact-low{color:#8b949e}
+.change-summary{font-size:.85rem;color:var(--text-muted)}
+.more-link{font-size:.85rem;margin-top:.5rem}
+.section{margin-bottom:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.section-note{color:var(--text-dim);font-size:.85rem;margin-bottom:1rem}
+.alt-list{display:flex;flex-direction:column;gap:.5rem}
+.alt-row{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s}
+.alt-row:hover{border-color:var(--accent)}
+.alt-row.curated{border-left:3px solid #3fb950}
+.alt-info{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.25rem}
+.alt-vendor-name{font-weight:600;font-size:.95rem;color:var(--text)}
+.alt-vendor-name:hover{color:var(--accent-hover);text-decoration:none}
+.risk-badge-sm{display:inline-block;padding:.05rem .35rem;border-radius:8px;font-size:.6rem;font-weight:600}
+.curated-badge{display:inline-block;padding:.05rem .4rem;border-radius:8px;font-size:.6rem;font-weight:600;background:rgba(63,185,80,0.15);color:#3fb950;border:1px solid rgba(63,185,80,0.3)}
+.alt-tier{font-family:var(--mono);font-size:.8rem;color:var(--text-muted);margin-bottom:.25rem}
+.alt-meta{display:flex;gap:1rem;font-size:.75rem;color:var(--text-dim);margin-bottom:.25rem}
+.alt-actions{display:flex;gap:.5rem}
+.action-link{display:inline-block;padding:.2rem .5rem;border:1px solid var(--border);border-radius:6px;font-size:.75rem;color:var(--text-muted);transition:all .2s}
+.action-link:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.action-pill{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
+.action-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.risk-row{flex-direction:column;align-items:flex-start;gap:.25rem}.alt-meta{flex-direction:column;gap:.25rem}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternative-to">Alternatives</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
+  <h1>Free Alternatives to ${escHtmlServer(vendorName)}</h1>
+  <p class="page-meta">${enrichedAlts.length} free alternative${enrichedAlts.length !== 1 ? "s" : ""} available. Sorted by pricing stability.</p>
+
+  <div class="situation-box">
+    <h2>Current ${escHtmlServer(vendorName)} Situation</h2>
+    ${situationHtml}
+  </div>
+${curatedHtml}
+${allAltsHtml}
+  <div class="section">
+    <h2>Category Trends</h2>
+    <p class="section-note">See the broader pricing landscape for ${vendorCategories.length > 1 ? "these categories" : "this category"}.</p>
+    ${trendsHtml}
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+function buildAlternativesIndexPage(): string {
+  const allChanges = loadDealChanges();
+
+  // Identify vendors with strongest "look elsewhere" signals
+  // Priority: vendors with deal changes indicating negative trends, or risky ratings
+  const vendorSignals = new Map<string, { changes: number; negative: number; riskLevel: string; categories: string[] }>();
+
+  for (const o of offers) {
+    if (!vendorSignals.has(o.vendor)) {
+      const enriched = enrichOffers([o])[0];
+      vendorSignals.set(o.vendor, { changes: 0, negative: 0, riskLevel: enriched.risk_level ?? "stable", categories: [] });
+    }
+    const sig = vendorSignals.get(o.vendor)!;
+    if (!sig.categories.includes(o.category)) sig.categories.push(o.category);
+  }
+
+  for (const c of allChanges) {
+    const sig = vendorSignals.get(c.vendor);
+    if (sig) {
+      sig.changes++;
+      if (["free_tier_removed", "limits_reduced", "open_source_killed", "product_deprecated"].includes(c.change_type)) {
+        sig.negative++;
+      }
+    }
+  }
+
+  // Score: risky=3, caution=2, stable=0, +2 per negative change, +1 per other change
+  const scored = Array.from(vendorSignals.entries()).map(([vendor, sig]) => {
+    const riskScore = sig.riskLevel === "risky" ? 3 : sig.riskLevel === "caution" ? 2 : 0;
+    const score = riskScore + sig.negative * 2 + (sig.changes - sig.negative);
+    return { vendor, score, ...sig };
+  }).filter(v => v.score > 0).sort((a, b) => b.score - a.score);
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  const title = "Free Alternatives to Popular Tools — AgentDeals";
+  const metaDesc = `Browse free alternatives to ${scored.length} developer tools. Find stable replacements when vendors raise prices, remove free tiers, or reduce limits.`;
+
+  const vendorListHtml = scored.map(v => {
+    const rc = riskColors[v.riskLevel] ?? "#8b949e";
+    return `<a href="/alternative-to/${toSlug(v.vendor)}" class="idx-row">
+        <span class="idx-vendor">${escHtmlServer(v.vendor)}</span>
+        <span class="risk-badge-sm" style="background:${rc}20;color:${rc};border:1px solid ${rc}40">${v.riskLevel}</span>
+        <span class="idx-changes">${v.changes} change${v.changes !== 1 ? "s" : ""}</span>
+        <span class="idx-cats">${v.categories.slice(0, 2).map(c => escHtmlServer(c)).join(", ")}${v.categories.length > 2 ? "..." : ""}</span>
+      </a>`;
+  }).join("\n");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: title,
+    description: metaDesc,
+    url: "https://agentdeals-production.up.railway.app/alternative-to",
+    numberOfItems: scored.length,
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/alternative-to">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/alternative-to">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.idx-list{display:flex;flex-direction:column;gap:.4rem}
+.idx-row{display:flex;align-items:center;gap:.75rem;padding:.6rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s;text-decoration:none;flex-wrap:wrap}
+.idx-row:hover{border-color:var(--accent);text-decoration:none}
+.idx-vendor{font-weight:600;color:var(--text);min-width:160px}
+.risk-badge-sm{display:inline-block;padding:.05rem .35rem;border-radius:8px;font-size:.6rem;font-weight:600}
+.idx-changes{font-family:var(--mono);font-size:.75rem;color:var(--text-dim);min-width:80px}
+.idx-cats{font-size:.75rem;color:var(--text-dim)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.idx-row{flex-direction:column;align-items:flex-start;gap:.25rem}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Alternatives</div>
+  <h1>Free Alternatives to Popular Tools</h1>
+  <p class="page-meta">${scored.length} vendors with pricing changes or elevated risk. Click any vendor to see free alternatives.</p>
+
+  <div class="idx-list">
+${vendorListHtml}
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 // --- Pricing trends pages ---
 
 // Negative change types that indicate prices rising / free tiers shrinking
@@ -2779,6 +3130,18 @@ ${categories.map(c => `  <url>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>`).join("\n")}
+  <url>
+    <loc>https://agentdeals-production.up.railway.app/alternative-to</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+${Array.from(vendorSlugMap.keys()).map(s => `  <url>
+    <loc>https://agentdeals-production.up.railway.app/alternative-to/${s}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>`).join("\n")}
 </urlset>`;
     res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(sitemapXml);
@@ -2865,6 +3228,23 @@ ${categories.map(c => `  <url>
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
+    }
+  } else if (url.pathname === "/alternative-to" && req.method === "GET") {
+    recordApiHit("/alternative-to");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternative-to", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAlternativesIndexPage());
+  } else if (url.pathname.startsWith("/alternative-to/") && req.method === "GET") {
+    const slug = url.pathname.slice("/alternative-to/".length).replace(/\/$/, "");
+    const html = buildAlternativesPage(slug);
+    if (html) {
+      recordApiHit("/alternative-to/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternative-to/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/alternative-to">Browse all alternatives</a></p></div></body></html>`);
     }
   } else if (url.pathname === "/trends" && req.method === "GET") {
     recordApiHit("/trends");

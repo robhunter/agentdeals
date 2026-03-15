@@ -1179,4 +1179,51 @@ describe("HTTP transport", () => {
     const trendsCount = (xml.match(/\/trends\//g) || []).length;
     assert.ok(trendsCount >= 50, `Expected 50+ trends URLs in sitemap, got ${trendsCount}`);
   });
+
+  // --- Alternative-to pages ---
+
+  it("GET /alternative-to returns alternatives index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/alternative-to`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("<title>Free Alternatives to Popular Tools"), "Should have alternatives index title");
+    assert.ok(html.includes("/alternative-to/"), "Should link to individual alternative pages");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+  });
+
+  it("GET /alternative-to/:slug renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/alternative-to/vercel`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Free Alternatives to Vercel"), "Should have vendor-specific title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("/vendor/"), "Should link to vendor profiles");
+    assert.ok(html.includes("Current Vercel Situation"), "Should show vendor situation");
+    assert.ok(html.includes("/trends/"), "Should link to category trends");
+  });
+
+  it("GET /alternative-to/:slug returns 404 for unknown vendor", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/alternative-to/nonexistent-vendor`);
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("nonexistent-vendor"), "Should show the invalid slug");
+    assert.ok(html.includes("/alternative-to"), "Should link to alternatives index");
+  });
+
+  it("sitemap.xml includes alternative-to pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/alternative-to"), "Sitemap should include alternatives index");
+    assert.ok(xml.includes("/alternative-to/vercel"), "Sitemap should include vendor alternatives");
+    const altCount = (xml.match(/\/alternative-to\//g) || []).length;
+    assert.ok(altCount >= 100, `Expected 100+ alternative-to URLs in sitemap, got ${altCount}`);
+  });
 });
