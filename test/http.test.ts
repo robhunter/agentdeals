@@ -1327,4 +1327,28 @@ describe("HTTP transport", () => {
       assert.ok(html.includes("global-nav-home"), `${page} should have AgentDeals home link`);
     }
   });
+
+  // --- FAQ structured data ---
+
+  it("vendor page has FAQ structured data and visible FAQ section", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const html = await response.text();
+    assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
+    assert.ok(html.includes("faq-item"), "Should have visible FAQ items");
+    assert.ok(html.includes("Is Vercel free"), "Should have vendor-specific FAQ question");
+    assert.ok(html.includes("free tier"), "FAQ answer should mention free tier");
+  });
+
+  it("alternative-to page has FAQ structured data and visible FAQ section", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/alternative-to/vercel`);
+    const html = await response.text();
+    assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
+    assert.ok(html.includes("faq-item"), "Should have visible FAQ items");
+    assert.ok(html.includes("best free alternatives to Vercel"), "Should have alternatives FAQ question");
+    assert.ok(html.includes("How many free alternatives"), "Should have count FAQ question");
+  });
 });
