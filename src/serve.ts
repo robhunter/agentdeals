@@ -1655,6 +1655,181 @@ ${vendorListHtml}
 </html>`;
 }
 
+// --- Web search page ---
+
+function buildSearchPage(query: string, categoryFilter: string, page: number): string {
+  const PAGE_SIZE = 50;
+  const hasQuery = query.length > 0;
+
+  // Search results
+  let results: ReturnType<typeof enrichOffers> = [];
+  let totalResults = 0;
+  if (hasQuery || categoryFilter) {
+    const raw = searchOffers(query || undefined, categoryFilter || undefined);
+    totalResults = raw.length;
+    const start = (page - 1) * PAGE_SIZE;
+    results = enrichOffers(raw.slice(start, start + PAGE_SIZE));
+  }
+
+  const totalPages = Math.ceil(totalResults / PAGE_SIZE);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Category pills
+  const catPillsHtml = categories.map(c => {
+    const isActive = categoryFilter.toLowerCase() === c.name.toLowerCase();
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (!isActive) params.set("category", c.name);
+    const href = `/search${params.toString() ? "?" + params.toString() : ""}`;
+    return `<a href="${escHtmlServer(href)}" class="cat-filter${isActive ? " active" : ""}">${escHtmlServer(c.name)} <span class="cat-count">${c.count}</span></a>`;
+  }).join("\n");
+
+  // Results HTML
+  const resultsHtml = results.map(r => {
+    const risk = r.risk_level ?? "stable";
+    const rc = riskColors[risk] ?? "#8b949e";
+    return `<a href="/vendor/${toSlug(r.vendor)}" class="result-card">
+        <div class="result-header">
+          <span class="result-vendor">${escHtmlServer(r.vendor)}</span>
+          <span class="risk-badge-sm" style="background:${rc}20;color:${rc};border:1px solid ${rc}40">${risk}</span>
+          <span class="result-cat">${escHtmlServer(r.category)}</span>
+        </div>
+        <div class="result-tier">${escHtmlServer(r.tier)}</div>
+        <div class="result-meta">Verified ${r.verifiedDate}${r.recent_change ? ` · <span style="color:#d29922">${escHtmlServer(r.recent_change)}</span>` : ""}${r.expires_soon ? ` · <span style="color:#f85149">${escHtmlServer(r.expires_soon)}</span>` : ""}</div>
+      </a>`;
+  }).join("\n");
+
+  // Empty state / suggested searches
+  const suggestedSearches = ["database", "hosting", "auth", "monitoring", "CI/CD", "email", "search", "storage"];
+  const emptyStateHtml = hasQuery || categoryFilter ? `
+    <div class="empty-state">
+      <p>No results found${hasQuery ? ` for &ldquo;<strong>${escHtmlServer(query)}</strong>&rdquo;` : ""}${categoryFilter ? ` in ${escHtmlServer(categoryFilter)}` : ""}.</p>
+      <p>Try a different search or browse categories above.</p>
+      <div class="suggested">${suggestedSearches.map(s => `<a href="/search?q=${encodeURIComponent(s)}" class="suggest-pill">${escHtmlServer(s)}</a>`).join(" ")}</div>
+    </div>` : `
+    <div class="empty-state">
+      <p>Search ${offers.length.toLocaleString()} free developer tools and services.</p>
+      <p class="suggested-label">Popular searches:</p>
+      <div class="suggested">${suggestedSearches.map(s => `<a href="/search?q=${encodeURIComponent(s)}" class="suggest-pill">${escHtmlServer(s)}</a>`).join(" ")}</div>
+    </div>`;
+
+  // Pagination
+  const paginationHtml = totalPages > 1 ? (() => {
+    const links: string[] = [];
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (categoryFilter) params.set("category", categoryFilter);
+    if (page > 1) {
+      const p = new URLSearchParams(params);
+      p.set("page", String(page - 1));
+      links.push(`<a href="/search?${p.toString()}" class="page-link">&larr; Prev</a>`);
+    }
+    links.push(`<span class="page-info">Page ${page} of ${totalPages} (${totalResults} results)</span>`);
+    if (page < totalPages) {
+      const p = new URLSearchParams(params);
+      p.set("page", String(page + 1));
+      links.push(`<a href="/search?${p.toString()}" class="page-link">Next &rarr;</a>`);
+    }
+    return `<div class="pagination">${links.join("")}</div>`;
+  })() : totalResults > 0 ? `<div class="pagination"><span class="page-info">${totalResults} result${totalResults !== 1 ? "s" : ""}</span></div>` : "";
+
+  const titleText = hasQuery ? `&ldquo;${escHtmlServer(query)}&rdquo; — Search Free Developer Tools — AgentDeals` : "Search Free Developer Tools — AgentDeals";
+  const metaDescText = hasQuery
+    ? `${totalResults} free developer tools matching "${query}". Compare free tiers, pricing stability, and alternatives.`
+    : `Search ${offers.length.toLocaleString()} free developer tools and services. Compare free tiers, pricing changes, and risk levels.`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SearchResultsPage",
+    name: hasQuery ? `"${query}" — Search Free Developer Tools — AgentDeals` : "Search Free Developer Tools — AgentDeals",
+    description: metaDescText,
+    url: `https://agentdeals-production.up.railway.app/search${hasQuery ? "?q=" + encodeURIComponent(query) : ""}`,
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${titleText}</title>
+<meta name="description" content="${escHtmlServer(metaDescText)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/search">
+<meta property="og:title" content="${titleText}">
+<meta property="og:description" content="${escHtmlServer(metaDescText)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/search">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 1.5rem;letter-spacing:-.02em}
+.search-box{margin-bottom:1.5rem}
+.search-form{display:flex;gap:.5rem}
+.search-input{flex:1;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:1rem;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--text-dim)}
+.search-btn{padding:.75rem 1.5rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--sans);font-size:.95rem;transition:background .2s}
+.search-btn:hover{background:var(--accent-hover)}
+.cat-filters{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:1.5rem;max-height:120px;overflow-y:auto;padding:.25rem 0}
+.cat-filter{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .6rem;border:1px solid var(--border);border-radius:16px;font-size:.75rem;color:var(--text-muted);transition:all .2s;text-decoration:none}
+.cat-filter:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.cat-filter.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}
+.cat-count{font-family:var(--mono);font-size:.65rem;color:var(--text-dim)}
+.results{display:flex;flex-direction:column;gap:.5rem}
+.result-card{display:block;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s;text-decoration:none}
+.result-card:hover{border-color:var(--accent);text-decoration:none}
+.result-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
+.result-vendor{font-weight:600;color:var(--text);font-size:.95rem}
+.risk-badge-sm{display:inline-block;padding:.05rem .35rem;border-radius:8px;font-size:.6rem;font-weight:600}
+.result-cat{font-size:.7rem;color:var(--text-dim);margin-left:auto}
+.result-tier{font-family:var(--mono);font-size:.8rem;color:var(--text-muted);margin-bottom:.2rem}
+.result-meta{font-size:.75rem;color:var(--text-dim)}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-muted)}
+.empty-state p{margin-bottom:.75rem}
+.suggested-label{font-size:.85rem;color:var(--text-dim);margin-bottom:.5rem}
+.suggested{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.5rem}
+.suggest-pill{display:inline-block;padding:.3rem .7rem;border:1px solid var(--border);border-radius:16px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
+.suggest-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.pagination{display:flex;align-items:center;justify-content:center;gap:1rem;padding:1.5rem 0;color:var(--text-dim);font-size:.85rem}
+.page-link{padding:.4rem .8rem;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);transition:all .2s}
+.page-link:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.page-info{font-family:var(--mono);font-size:.8rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.search-form{flex-direction:column}.result-cat{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Search</div>
+  <h1>Search Free Developer Tools</h1>
+
+  <div class="search-box">
+    <form class="search-form" action="/search" method="get">
+      <input type="text" name="q" class="search-input" placeholder="Search ${offers.length.toLocaleString()} free tools..." value="${escHtmlServer(query)}" autofocus>
+      ${categoryFilter ? `<input type="hidden" name="category" value="${escHtmlServer(categoryFilter)}">` : ""}
+      <button type="submit" class="search-btn">Search</button>
+    </form>
+  </div>
+
+  <div class="cat-filters">
+${catPillsHtml}
+  </div>
+
+  ${totalResults > 0 ? `<div class="results">\n${resultsHtml}\n  </div>\n  ${paginationHtml}` : emptyStateHtml}
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 // --- Pricing trends pages ---
 
 // Negative change types that indicate prices rising / free tiers shrinking
@@ -3229,6 +3404,14 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
     }
+  } else if (url.pathname === "/search" && req.method === "GET") {
+    const query = url.searchParams.get("q") ?? "";
+    const categoryFilter = url.searchParams.get("category") ?? "";
+    const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10) || 1);
+    recordApiHit("/search");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/search", params: { q: query, category: categoryFilter, page: String(page) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" });
+    res.end(buildSearchPage(query, categoryFilter, page));
   } else if (url.pathname === "/alternative-to" && req.method === "GET") {
     recordApiHit("/alternative-to");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternative-to", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

@@ -1226,4 +1226,59 @@ describe("HTTP transport", () => {
     const altCount = (xml.match(/\/alternative-to\//g) || []).length;
     assert.ok(altCount >= 100, `Expected 100+ alternative-to URLs in sitemap, got ${altCount}`);
   });
+
+  // --- Search page ---
+
+  it("GET /search renders search page with search box", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/search`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("<title>Search Free Developer Tools"), "Should have search title");
+    assert.ok(html.includes("search-input"), "Should have search input");
+    assert.ok(html.includes("Popular searches"), "Should show suggested searches when no query");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+  });
+
+  it("GET /search?q=database returns server-rendered results", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/search?q=database`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("database"), "Should contain search query");
+    assert.ok(html.includes("result-card"), "Should have result cards");
+    assert.ok(html.includes("/vendor/"), "Should link to vendor profiles");
+  });
+
+  it("GET /search?q=database&category=Databases filters by category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/search?q=database&category=Databases`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("result-card"), "Should have result cards");
+    assert.ok(html.includes("cat-filter active"), "Should highlight active category filter");
+  });
+
+  it("GET /search?q=xyznonexistent shows empty state", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/search?q=xyznonexistent`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("No results found"), "Should show empty state");
+    assert.ok(html.includes("suggest-pill"), "Should show suggested searches");
+  });
+
+  it("GET /search has category filter pills", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/search`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("cat-filter"), "Should have category filter pills");
+    assert.ok(html.includes("Databases"), "Should include Databases category");
+  });
 });
