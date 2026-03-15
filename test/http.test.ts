@@ -866,15 +866,16 @@ describe("HTTP transport", () => {
     const result = data.find((d: any) => d.id === 2);
     assert.ok(result, "Should get prompts/list response");
     const prompts = result.result.prompts;
-    assert.strictEqual(prompts.length, 5);
+    assert.strictEqual(prompts.length, 6);
 
     const names = prompts.map((p: any) => p.name).sort();
     assert.deepStrictEqual(names, [
       "check-pricing-changes",
-      "find-free-alternative",
+      "compare-options",
+      "cost-audit",
+      "find-startup-credits",
       "monitor-vendor-changes",
-      "recommend-stack",
-      "search-deals",
+      "new-project-setup",
     ]);
 
     // Each prompt should have a description
@@ -882,9 +883,9 @@ describe("HTTP transport", () => {
       assert.ok(p.description, `Prompt ${p.name} should have a description`);
     }
 
-    // find-free-alternative should have vendor argument
-    const findAlt = prompts.find((p: any) => p.name === "find-free-alternative");
-    assert.ok(findAlt.arguments?.some((a: any) => a.name === "vendor"));
+    // compare-options should have services argument
+    const compareOpts = prompts.find((p: any) => p.name === "compare-options");
+    assert.ok(compareOpts.arguments?.some((a: any) => a.name === "services"));
 
     // check-pricing-changes should have no required arguments
     const checkChanges = prompts.find((p: any) => p.name === "check-pricing-changes");
@@ -895,7 +896,7 @@ describe("HTTP transport", () => {
     assert.ok(monitorVendors.arguments?.some((a: any) => a.name === "vendors"));
   });
 
-  it("prompts/get returns structured message for find-free-alternative", async () => {
+  it("prompts/get returns structured message for compare-options", async () => {
     proc = await startHttpServer();
 
     // Initialize session
@@ -924,8 +925,8 @@ describe("HTTP transport", () => {
       id: 3,
       method: "prompts/get",
       params: {
-        name: "find-free-alternative",
-        arguments: { vendor: "Heroku" },
+        name: "compare-options",
+        arguments: { services: "Supabase,Neon" },
       },
     }, sessionId);
 
@@ -936,8 +937,8 @@ describe("HTTP transport", () => {
     assert.strictEqual(result.result.messages.length, 1);
     const msg = result.result.messages[0];
     assert.strictEqual(msg.role, "user");
-    assert.ok(msg.content.text.includes("Heroku"));
-    assert.ok(msg.content.text.includes("get_offer_details"));
+    assert.ok(msg.content.text.includes("Supabase"));
+    assert.ok(msg.content.text.includes("compare_services"));
   });
 
   it("GET /category/:slug returns server-rendered category page", async () => {
