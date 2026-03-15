@@ -254,6 +254,54 @@ function buildDeadlinesHtml(): string {
   }).join("\n");
 }
 
+function buildRecentChangesSection(): string {
+  if (recentChanges.length === 0) return "";
+  const entries = recentChanges.map((c) => {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    return `      <div class="rc-entry">
+        <div class="rc-head">
+          <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
+          <a href="/vendor/${vendorSlug}" class="rc-vendor">${c.vendor}</a>
+          <span class="rc-date">${c.date}</span>
+        </div>
+        <div class="rc-summary">${c.summary}</div>
+      </div>`;
+  }).join("\n");
+  const jsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Recent Pricing Changes",
+    description: "Latest developer tool pricing changes tracked by AgentDeals",
+    numberOfItems: recentChanges.length,
+    url: `${BASE_URL}/expiring`,
+    itemListElement: recentChanges.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Event",
+        name: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+        description: c.summary,
+        startDate: c.date,
+        location: { "@type": "VirtualLocation", url: `${BASE_URL}/vendor/${c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}` },
+      },
+    })),
+  });
+  return `
+  <div class="divider"></div>
+
+  <div class="section" id="recent-changes">
+    <script type="application/ld+json">${jsonLd}</script>
+    <div class="section-label">Fresh Intel</div>
+    <h2>Recent pricing changes</h2>
+    <p>The latest shifts in developer tool pricing \u2014 tracked automatically.</p>
+    <div class="rc-list">
+${entries}
+    </div>
+    <a href="/expiring" class="see-all-link">View all changes \u2192</a>
+  </div>`;
+}
+
 function toSlug(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
@@ -3073,6 +3121,16 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .see-all-link{display:inline-flex;align-items:center;gap:.3rem;margin-top:1rem;font-size:.85rem;font-family:var(--mono);color:var(--accent);text-decoration:none;padding:.5rem 0}
 .see-all-link:hover{color:var(--accent-hover);text-decoration:underline}
 
+/* Recent Changes Section */
+.rc-list{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
+.rc-entry{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s}
+.rc-entry:hover{border-color:var(--accent)}
+.rc-head{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.25rem}
+.rc-vendor{font-weight:600;color:var(--text);font-size:.9rem;text-decoration:none}
+.rc-vendor:hover{color:var(--accent)}
+.rc-date{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
+.rc-summary{color:var(--text-muted);font-size:.85rem}
+
 /* Deadlines */
 .deadlines-section{background:linear-gradient(180deg,rgba(248,81,73,0.04) 0%,transparent 100%);border:1px solid rgba(248,81,73,0.15);border-radius:12px;padding:1.5rem;margin-bottom:2rem}
 .deadline-item{display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid rgba(42,39,32,0.6);align-items:flex-start}
@@ -3264,6 +3322,7 @@ GET /api/docs</code></pre>
     <button class="show-more" id="show-more" style="display:none">Show more</button>
     <div class="browse-status" id="browse-status"></div>
   </div>
+${buildRecentChangesSection()}
 
   <div class="divider"></div>
 
