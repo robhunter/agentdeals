@@ -1281,4 +1281,50 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("cat-filter"), "Should have category filter pills");
     assert.ok(html.includes("Databases"), "Should include Databases category");
   });
+
+  // --- Global navigation ---
+
+  it("landing page has global navigation with all section links", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/`);
+    const html = await response.text();
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes('href="/search"'), "Nav should link to Search");
+    assert.ok(html.includes('href="/category"'), "Nav should link to Categories");
+    assert.ok(html.includes('href="/trends"'), "Nav should link to Trends");
+    assert.ok(html.includes('href="/alternative-to"'), "Nav should link to Alternatives");
+    assert.ok(html.includes('href="/compare"'), "Nav should link to Compare");
+    assert.ok(html.includes('href="/digest"'), "Nav should link to Digest");
+    assert.ok(html.includes('href="/api/docs"'), "Nav should link to API");
+  });
+
+  it("category page nav highlights Categories as active", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/category/databases`);
+    const html = await response.text();
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes('class="nav-link active">Categories'), "Categories should be active");
+  });
+
+  it("search page nav highlights Search as active", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/search`);
+    const html = await response.text();
+    assert.ok(html.includes('class="nav-link active">Search'), "Search should be active");
+  });
+
+  it("global nav appears on all page types", async () => {
+    proc = await startHttpServer();
+
+    const pages = ["/", "/category/databases", "/search", "/trends", "/compare", "/alternative-to", "/digest/archive"];
+    for (const page of pages) {
+      const response = await fetch(`http://localhost:${PORT}${page}`);
+      const html = await response.text();
+      assert.ok(html.includes("global-nav"), `${page} should have global nav`);
+      assert.ok(html.includes("global-nav-home"), `${page} should have AgentDeals home link`);
+    }
+  });
 });

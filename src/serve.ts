@@ -269,6 +269,35 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+type NavSection = "search" | "categories" | "trends" | "alternatives" | "compare" | "digest" | "api" | "home";
+
+function globalNavCss(): string {
+  return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.global-nav::-webkit-scrollbar{display:none}
+.global-nav-home{font-family:var(--serif);font-size:1rem;color:var(--text);font-weight:700;margin-right:.5rem;text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+.global-nav-home:hover{color:var(--accent);text-decoration:none}
+.nav-link{font-size:.8rem;color:var(--text-muted);padding:.3rem .6rem;border-radius:6px;text-decoration:none;transition:all .15s;flex-shrink:0}
+.nav-link:hover{color:var(--text);background:var(--accent-glow);text-decoration:none}
+.nav-link.active{color:var(--accent);background:var(--accent-glow);font-weight:600}
+@media(max-width:768px){.global-nav{gap:.15rem;padding:.6rem 0}.nav-link{font-size:.75rem;padding:.25rem .45rem}}`;
+}
+
+function buildGlobalNav(active: NavSection): string {
+  const links: { href: string; label: string; section: NavSection }[] = [
+    { href: "/search", label: "Search", section: "search" },
+    { href: "/category", label: "Categories", section: "categories" },
+    { href: "/trends", label: "Trends", section: "trends" },
+    { href: "/alternative-to", label: "Alternatives", section: "alternatives" },
+    { href: "/compare", label: "Compare", section: "compare" },
+    { href: "/digest", label: "Digest", section: "digest" },
+    { href: "/api/docs", label: "API", section: "api" },
+  ];
+  const navLinks = links.map(l =>
+    `<a href="${l.href}" class="nav-link${l.section === active ? " active" : ""}">${l.label}</a>`
+  ).join("");
+  return `<nav class="global-nav"><a href="/" class="global-nav-home">AgentDeals</a>${navLinks}</nav>`;
+}
+
 function buildCategoryPage(slug: string): string | null {
   const categoryName = categorySlugMap.get(slug);
   if (!categoryName) return null;
@@ -360,10 +389,12 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .all-cats-grid{display:flex;flex-wrap:wrap;gap:.4rem}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.offers-table{font-size:.75rem}.offers-table th,.offers-table td{padding:.4rem .5rem}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>Free ${escHtmlServer(categoryName)} Tools</h1>
   <p class="cat-meta">${catCount} verified free tiers and developer deals. Last updated ${new Date().toISOString().split("T")[0]}.</p>
@@ -389,6 +420,77 @@ ${offersHtml}
     <div class="all-cats-grid">
         ${allCatLinks}
     </div>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+function buildCategoryIndexPage(): string {
+  const title = `All Categories (${stats.categories}) — AgentDeals`;
+  const metaDesc = `Browse ${stats.categories} categories of free developer tools. ${stats.offers}+ verified free tiers across databases, hosting, monitoring, CI/CD, auth, and more.`;
+
+  const sortedCats = [...categories].sort((a, b) => b.count - a.count);
+  const catCardsHtml = sortedCats.map(c => `
+      <a href="/category/${toSlug(c.name)}" class="cat-index-card">
+        <span class="cat-index-name">${escHtmlServer(c.name)}</span>
+        <span class="cat-index-count">${c.count} deals</span>
+      </a>`).join("");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "All Categories",
+    description: metaDesc,
+    numberOfItems: stats.categories,
+    url: "https://agentdeals-production.up.railway.app/category",
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/category">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/category">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.cat-index-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
+.cat-index-card{display:flex;flex-direction:column;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);backdrop-filter:blur(10px);transition:all .2s;text-decoration:none}
+.cat-index-card:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.cat-index-name{color:var(--text);font-weight:600;font-size:.95rem}
+.cat-index-count{color:var(--text-dim);font-family:var(--mono);font-size:.8rem;margin-top:.25rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.cat-index-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("categories")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Categories</div>
+  <h1>All Categories</h1>
+  <p class="page-meta">${stats.categories} categories covering ${stats.offers.toLocaleString()}+ free developer tool deals.</p>
+
+  <div class="cat-index-grid">${catCardsHtml}
   </div>
 
   <footer>AgentDeals &mdash; open source, built for agents</footer>
@@ -524,10 +626,12 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .vs{color:var(--text-dim);font-family:var(--mono);font-size:.75rem;text-transform:uppercase}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.compare-grid{grid-template-columns:1fr}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("compare")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Comparisons</div>
   <h1>Free Tier Comparisons</h1>
   <p class="page-meta">${totalComparisons} side-by-side vendor comparisons. Verified pricing, change history, and risk indicators.</p>
@@ -656,10 +760,12 @@ h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem
 .related-card:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.compare-grid,.changes-cols{grid-template-columns:1fr}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("compare")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/compare">Comparisons</a> &rsaquo; ${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</div>
   <h1>${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</h1>
   <p class="page-meta">Side-by-side free tier comparison. Last updated ${new Date().toISOString().split("T")[0]}.</p>
@@ -794,7 +900,8 @@ h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem
 .archive-list .week-count{font-family:var(--mono);color:var(--text-dim);font-size:.85rem}
 .empty-msg{text-align:center;padding:3rem;color:var(--text-dim)}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}}`;
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}}
+${globalNavCss()}`;
 
 function buildDigestPage(weekKey: string): string | null {
   const parsed = parseWeekKey(weekKey);
@@ -909,6 +1016,7 @@ function buildDigestPage(weekKey: string): string | null {
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("digest")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/digest/archive">Digest</a> &rsaquo; ${weekKey}</div>
   <h1>Pricing Changes: ${dateRange}</h1>
   <p class="page-meta">Week ${week}, ${year}. ${changes.length} change${changes.length !== 1 ? "s" : ""} tracked.</p>
@@ -969,6 +1077,7 @@ function buildDigestArchivePage(): string {
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("digest")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Digest Archive</div>
   <h1>Pricing Change Archive</h1>
   <p class="page-meta">${weeks.length} weeks of developer tool pricing changes tracked.</p>
@@ -1079,10 +1188,12 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .vendor-tier{display:block;color:var(--text-dim);font-family:var(--mono);font-size:.7rem;margin-top:.1rem}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.vendor-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Vendors</div>
   <h1>All Vendors</h1>
   <p class="page-meta">${totalVendors} developer tools with free tiers, organized by category.</p>
@@ -1252,10 +1363,12 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(200,164,78,0.2)}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.detail-grid{grid-template-columns:1fr}.alt-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>${escHtmlServer(vendorName)} <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></h1>
   <p class="page-meta">Free tier details, pricing history, and alternatives. Last updated ${primary.verifiedDate}.</p>
@@ -1520,10 +1633,12 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.risk-row{flex-direction:column;align-items:flex-start;gap:.25rem}.alt-meta{flex-direction:column;gap:.25rem}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternative-to">Alternatives</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>Free Alternatives to ${escHtmlServer(vendorName)}</h1>
   <p class="page-meta">${enrichedAlts.length} free alternative${enrichedAlts.length !== 1 ? "s" : ""} available. Sorted by pricing stability.</p>
@@ -1637,10 +1752,12 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .idx-cats{font-size:.75rem;color:var(--text-dim)}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.idx-row{flex-direction:column;align-items:flex-start;gap:.25rem}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Alternatives</div>
   <h1>Free Alternatives to Popular Tools</h1>
   <p class="page-meta">${scored.length} vendors with pricing changes or elevated risk. Click any vendor to see free alternatives.</p>
@@ -1803,10 +1920,12 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 1.
 .page-info{font-family:var(--mono);font-size:.8rem}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.search-form{flex-direction:column}.result-cat{margin-left:0}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("search")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Search</div>
   <h1>Search Free Developer Tools</h1>
 
@@ -1937,10 +2056,12 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .section-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .5rem;padding-bottom:.25rem;border-bottom:1px solid var(--border)}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.trend-row{grid-template-columns:1fr;gap:.25rem}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("trends")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Pricing Trends</div>
   <h1>Pricing Trends by Category</h1>
   <p class="page-meta">${allChanges.length} tracked pricing changes across ${totalCategories} categories. Ranked by volatility.</p>
@@ -2107,10 +2228,12 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .nav-link:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.vendor-item{grid-template-columns:1fr}}
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("trends")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/trends">Trends</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>${escHtmlServer(categoryName)} Pricing Trends</h1>
   <p class="page-meta">Pricing direction: <span style="color:${t.color};font-weight:600">${t.icon} ${t.label}</span></p>
@@ -2371,10 +2494,12 @@ footer a{color:var(--text-muted)}
   .problem-text{font-size:1.1rem}
   .connect-block pre{font-size:.7rem}
 }
+${globalNavCss()}
 </style>
 </head>
 <body>
 <div class="container">
+  ${buildGlobalNav("home")}
 
   <div class="hero">
     <div class="hero-label">MCP Server</div>
@@ -3257,6 +3382,12 @@ ${items}
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://agentdeals-production.up.railway.app/category</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://agentdeals-production.up.railway.app/compare</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -3324,6 +3455,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(landingPageHtml);
+  } else if ((url.pathname === "/category" || url.pathname === "/category/") && req.method === "GET") {
+    recordApiHit("/category");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/category", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: stats.categories });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildCategoryIndexPage());
   } else if (url.pathname.startsWith("/category/") && req.method === "GET") {
     const slug = url.pathname.slice("/category/".length).replace(/\/$/, "");
     const html = buildCategoryPage(slug);
