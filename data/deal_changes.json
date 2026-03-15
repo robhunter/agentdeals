@@ -150,6 +150,22 @@
       ]
     },
     {
+      "vendor": "GitHub Actions",
+      "change_type": "pricing_restructured",
+      "date": "2026-03-01",
+      "summary": "Self-hosted runners in private repos now incur $0.002/min cloud platform charge and consume free quota minutes. Previously postponed fee is now active. Hosted runner prices dropped up to 39% (effective Jan 2026). Public repos remain completely free",
+      "previous_state": "Self-hosted runners free in all repos. Hosted runners at previous per-minute pricing",
+      "current_state": "Self-hosted runners $0.002/min in private repos, consume free quota. Hosted runners 39% cheaper. Public repos still free for both runner types",
+      "impact": "high",
+      "source_url": "https://resources.github.com/actions/2026-pricing-changes-for-github-actions/",
+      "category": "CI/CD",
+      "alternatives": [
+        "GitLab CI",
+        "CircleCI",
+        "Buildkite"
+      ]
+    },
+    {
       "vendor": "Bright Data MCP",
       "change_type": "new_free_tier",
       "date": "2025-08-14",
