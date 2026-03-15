@@ -269,7 +269,7 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-type NavSection = "search" | "categories" | "trends" | "alternatives" | "compare" | "digest" | "api" | "home";
+type NavSection = "search" | "categories" | "trends" | "alternatives" | "compare" | "digest" | "api" | "setup" | "home";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -291,6 +291,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/compare", label: "Compare", section: "compare" },
     { href: "/digest", label: "Digest", section: "digest" },
     { href: "/api/docs", label: "API", section: "api" },
+    { href: "/setup", label: "Setup", section: "setup" },
   ];
   const navLinks = links.map(l =>
     `<a href="${l.href}" class="nav-link${l.section === active ? " active" : ""}">${l.label}</a>`
@@ -1869,6 +1870,344 @@ ${vendorListHtml}
 </html>`;
 }
 
+// --- Setup guide page ---
+
+function buildSetupPage(): string {
+  const baseUrl = "https://agentdeals-production.up.railway.app";
+  const title = "Setup Guide — AgentDeals MCP Server";
+  const metaDesc = "Step-by-step instructions to add AgentDeals as an MCP server in Claude Desktop, Claude Code, Cursor, Cline, and Windsurf. Search 1,500+ developer deals from your AI assistant.";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Set Up AgentDeals MCP Server",
+    "description": metaDesc,
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Choose your client", "text": "Pick your MCP client: Claude Desktop, Claude Code, Cursor, Cline, or Windsurf." },
+      { "@type": "HowToStep", "position": 2, "name": "Add the server config", "text": "Copy the JSON config snippet into your client's MCP configuration file." },
+      { "@type": "HowToStep", "position": 3, "name": "Start using tools", "text": "Ask your AI assistant questions like 'What free databases are available?' and it will use AgentDeals tools automatically." }
+    ]
+  };
+
+  const toolExamples: { tool: string; question: string }[] = [
+    { tool: "search_offers", question: "What free databases are available for a startup?" },
+    { tool: "compare_services", question: "Compare Vercel and Netlify free tiers" },
+    { tool: "check_vendor_risk", question: "Is Heroku's free tier stable?" },
+    { tool: "get_stack_recommendation", question: "Recommend a free stack for a Next.js SaaS app" },
+    { tool: "estimate_costs", question: "How much would hosting cost at 10K users?" },
+    { tool: "get_deal_changes", question: "What pricing changes happened this month?" },
+    { tool: "get_expiring_deals", question: "Any startup credits expiring soon?" },
+    { tool: "audit_stack", question: "Audit my stack: Vercel, PlanetScale, Clerk, Resend" },
+  ];
+
+  const toolExamplesHtml = toolExamples.map(t =>
+    `<div class="example-card">
+      <code class="example-tool">${escHtmlServer(t.tool)}</code>
+      <p class="example-q">&ldquo;${escHtmlServer(t.question)}&rdquo;</p>
+    </div>`
+  ).join("\n        ");
+
+  const clientConfigs = [
+    {
+      id: "claude-desktop", name: "Claude Desktop",
+      desc: `Add to <code>claude_desktop_config.json</code>`,
+      hint: `macOS: <code>~/Library/Application Support/Claude/</code> &nbsp;|&nbsp; Windows: <code>%APPDATA%\\Claude\\</code>`,
+      localConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}`,
+      remoteConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "${baseUrl}/mcp"
+    }
+  }
+}`,
+    },
+    {
+      id: "claude-code", name: "Claude Code",
+      desc: `Run in your terminal, or add to <code>.mcp.json</code> in your project root`,
+      hint: "",
+      localConfig: `claude mcp add agentdeals -- npx -y agentdeals`,
+      localExtra: `<p class="config-hint">Or add to <code>.mcp.json</code>:</p>
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}</code></pre>`,
+      remoteConfig: `claude mcp add agentdeals --transport http ${baseUrl}/mcp`,
+      remoteExtra: `<p class="config-hint">Or add to <code>.mcp.json</code>:</p>
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+  "mcpServers": {
+    "agentdeals": {
+      "type": "url",
+      "url": "${baseUrl}/mcp"
+    }
+  }
+}</code></pre>`,
+    },
+    {
+      id: "cursor", name: "Cursor",
+      desc: `Add to <code>.cursor/mcp.json</code> in your project root`,
+      hint: `Or global: <code>~/.cursor/mcp.json</code>`,
+      localConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}`,
+      remoteConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "${baseUrl}/mcp"
+    }
+  }
+}`,
+    },
+    {
+      id: "cline", name: "Cline (VS Code)",
+      desc: `Add to <code>cline_mcp_settings.json</code>`,
+      hint: `Cline sidebar &rarr; MCP Servers &rarr; Configure`,
+      localConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}`,
+      remoteConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "${baseUrl}/mcp",
+      "transportType": "streamable-http"
+    }
+  }
+}`,
+    },
+    {
+      id: "windsurf", name: "Windsurf",
+      desc: `Add to <code>~/.codeium/windsurf/mcp_config.json</code>`,
+      hint: "",
+      localConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}`,
+      remoteConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "${baseUrl}/mcp"
+    }
+  }
+}`,
+    },
+    {
+      id: "other", name: "Other Clients",
+      desc: `Any MCP client that supports streamable-http transport`,
+      hint: "",
+      localConfig: `{
+  "mcpServers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}`,
+      remoteConfig: `Endpoint: ${baseUrl}/mcp
+Transport: streamable-http
+Session: Mcp-Session-Id header (auto-managed)`,
+    },
+  ];
+
+  const tabsHtml = clientConfigs.map((c, i) =>
+    `<button class="client-tab${i === 0 ? " active" : ""}" data-client="${c.id}">${escHtmlServer(c.name)}</button>`
+  ).join("\n      ");
+
+  const panelsHtml = clientConfigs.map((c, i) => {
+    const hintLine = c.hint ? `\n        <p class="config-hint">${c.hint}</p>` : "";
+    const localExtraHtml = (c as any).localExtra ? `\n          ${(c as any).localExtra}` : "";
+    const remoteExtraHtml = (c as any).remoteExtra ? `\n          ${(c as any).remoteExtra}` : "";
+    return `<div class="client-panel${i === 0 ? " active" : ""}" id="panel-${c.id}">
+      <div class="connect-block">
+        <h3 class="config-title">${escHtmlServer(c.name)}</h3>
+        <p class="config-desc">${c.desc}</p>${hintLine}
+        <div class="transport-toggle">
+          <button class="transport-btn active" data-transport="local">npx (local)</button>
+          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
+        </div>
+        <div class="transport-content active" data-transport="local">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>${escHtmlServer(c.localConfig)}</code></pre>${localExtraHtml}
+        </div>
+        <div class="transport-content" data-transport="remote">
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>${escHtmlServer(c.remoteConfig)}</code></pre>${remoteExtraHtml}
+        </div>
+      </div>
+    </div>`;
+  }).join("\n    ");
+
+  const css = `${globalNavCss()}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-glow:rgba(200,164,78,0.08);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.85em;background:rgba(200,164,78,0.08);padding:.15em .35em;border-radius:4px}
+pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;position:relative;margin:.5rem 0}
+pre code{background:none;padding:0;font-size:.8rem;color:var(--text)}
+.container{max-width:800px;margin:0 auto;padding:1.5rem 1rem}
+.breadcrumb{font-size:.8rem;color:var(--text-dim);margin-bottom:1.5rem}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:1.8rem;color:var(--text);margin-bottom:.5rem;letter-spacing:-.02em}
+.page-sub{font-size:.95rem;color:var(--text-muted);margin-bottom:2rem;max-width:600px}
+h2{font-family:var(--serif);font-size:1.3rem;color:var(--text);margin-top:2.5rem;margin-bottom:.75rem;letter-spacing:-.01em;padding-top:1.5rem;border-top:1px solid var(--border)}
+h2:first-of-type{border-top:none;padding-top:0;margin-top:1.5rem}
+.quick-start{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:2rem}
+.quick-start h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem}
+.quick-cmd{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.quick-cmd code{flex:1;font-size:.8rem;color:var(--accent)}
+.quick-cmd span{font-size:.75rem;color:var(--text-dim);flex-shrink:0}
+.client-tabs{display:flex;gap:.25rem;flex-wrap:wrap;margin-bottom:1rem}
+.client-tab{background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:.4rem .8rem;border-radius:6px;cursor:pointer;font-size:.8rem;font-family:var(--sans);transition:all .15s}
+.client-tab:hover{color:var(--text);border-color:var(--text-dim)}
+.client-tab.active{color:var(--accent);border-color:var(--accent);background:var(--accent-glow)}
+.client-panel{display:none}.client-panel.active{display:block}
+.connect-block{margin-bottom:1rem}
+.config-title{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem}
+.config-desc{font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem}
+.config-hint{font-size:.75rem;color:var(--text-dim);margin-bottom:.5rem;margin-top:.5rem}
+.transport-toggle{display:flex;gap:.25rem;margin:.5rem 0}
+.transport-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:.3rem .6rem;border-radius:5px;cursor:pointer;font-size:.75rem;font-family:var(--sans);transition:all .15s}
+.transport-btn:hover{color:var(--text);border-color:var(--text-dim)}
+.transport-btn.active{color:var(--accent);border-color:var(--accent);background:var(--accent-glow)}
+.transport-content{display:none}.transport-content.active{display:block}
+.copy-btn{position:absolute;top:.5rem;right:.5rem;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted);padding:.2rem .5rem;border-radius:4px;cursor:pointer;font-size:.7rem;font-family:var(--sans);transition:all .15s}
+.copy-btn:hover{color:var(--text);border-color:var(--text-dim)}
+.copy-btn.copied{color:var(--accent);border-color:var(--accent)}
+.examples-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:.75rem;margin-top:.75rem}
+.example-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;transition:border-color .15s}
+.example-card:hover{border-color:var(--accent)}
+.example-tool{font-size:.8rem;color:var(--accent);margin-bottom:.25rem;display:inline-block}
+.example-q{font-size:.85rem;color:var(--text-muted);font-style:italic;margin:0}
+.troubleshoot{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-top:.75rem}
+.troubleshoot dt{font-size:.85rem;color:var(--text);font-weight:600;margin-top:.75rem}
+.troubleshoot dt:first-child{margin-top:0}
+.troubleshoot dd{font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem 0}
+footer{text-align:center;color:var(--text-dim);font-size:.75rem;margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--border)}
+@media(max-width:600px){h1{font-size:1.4rem}.examples-grid{grid-template-columns:1fr}}`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="${baseUrl}/setup">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${baseUrl}/setup">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>${css}</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("setup")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Setup</div>
+
+  <h1>Setup Guide</h1>
+  <p class="page-sub">Add AgentDeals to your AI coding assistant. 12 MCP tools for searching deals, comparing vendors, estimating costs, and auditing your stack.</p>
+
+  <div class="quick-start">
+    <h3>Quick start</h3>
+    <div class="quick-cmd"><span>Claude Code:</span> <code>claude mcp add agentdeals -- npx -y agentdeals</code></div>
+    <div class="quick-cmd"><span>npx (any client):</span> <code>npx -y agentdeals</code></div>
+    <div class="quick-cmd"><span>Remote endpoint:</span> <code>${baseUrl}/mcp</code></div>
+  </div>
+
+  <h2>Client Setup</h2>
+  <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:1rem">Choose your MCP client. Each supports local (npx) or remote (HTTP) transport.</p>
+
+  <div class="client-tabs">
+      ${tabsHtml}
+  </div>
+
+    ${panelsHtml}
+
+  <h2>What You Can Do</h2>
+  <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">Once connected, ask your AI assistant questions like these &mdash; it will use the right AgentDeals tool automatically.</p>
+  <div class="examples-grid">
+        ${toolExamplesHtml}
+  </div>
+
+  <h2>Troubleshooting</h2>
+  <div class="troubleshoot">
+    <dl>
+      <dt>Server not found / connection refused</dt>
+      <dd>For local (npx): ensure Node.js 18+ is installed. For remote: the endpoint is <code>${baseUrl}/mcp</code> &mdash; include the <code>/mcp</code> path.</dd>
+      <dt>Session timeout</dt>
+      <dd>Remote sessions expire after 30 minutes of inactivity. Your client will automatically reconnect on the next request.</dd>
+      <dt>Tools not appearing</dt>
+      <dd>After adding the config, restart your MCP client. Tools appear after the MCP initialization handshake completes.</dd>
+      <dt>CORS errors (browser-based clients)</dt>
+      <dd>The server sends <code>Access-Control-Allow-Origin: *</code> headers. If you see CORS errors, check that you're using the correct endpoint URL.</dd>
+    </dl>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+<script>
+(function(){
+  var tabs=document.querySelectorAll('.client-tab');
+  var panels=document.querySelectorAll('.client-panel');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click',function(){
+      tabs.forEach(function(t){t.classList.remove('active')});
+      panels.forEach(function(p){p.classList.remove('active')});
+      tab.classList.add('active');
+      var panel=document.getElementById('panel-'+tab.getAttribute('data-client'));
+      if(panel)panel.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.transport-toggle').forEach(function(toggle){
+    var block=toggle.closest('.connect-block');
+    toggle.querySelectorAll('.transport-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        toggle.querySelectorAll('.transport-btn').forEach(function(b){b.classList.remove('active')});
+        block.querySelectorAll('.transport-content').forEach(function(c){c.classList.remove('active')});
+        btn.classList.add('active');
+        block.querySelectorAll('.transport-content[data-transport="'+btn.getAttribute('data-transport')+'"]').forEach(function(c){c.classList.add('active')});
+      });
+    });
+  });
+})();
+function copyConfig(btn){
+  var code=btn.parentElement.querySelector('code');
+  if(!code)return;
+  navigator.clipboard.writeText(code.textContent).then(function(){
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},2000);
+  });
+}
+</script>
+</body>
+</html>`;
+}
+
 // --- Web search page ---
 
 function buildSearchPage(query: string, categoryFilter: string, page: number): string {
@@ -2604,7 +2943,7 @@ ${globalNavCss()}
     <p class="hero-sub">Your AI recommends tools from memory. Memory doesn't include pricing. AgentDeals gives agents the context to make better infrastructure recommendations.</p>
     <div class="hero-actions">
       <a href="#browse" class="btn-primary">Browse ${stats.offers.toLocaleString()}+ deals</a>
-      <a href="#connect" class="btn-secondary">Connect via MCP</a>
+      <a href="/setup" class="btn-secondary">Connect via MCP</a>
     </div>
   </div>
 
@@ -3474,6 +3813,12 @@ ${items}
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://agentdeals-production.up.railway.app/setup</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://agentdeals-production.up.railway.app/category</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -3632,6 +3977,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
     }
+  } else if (url.pathname === "/setup" && req.method === "GET") {
+    recordApiHit("/setup");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildSetupPage());
   } else if (url.pathname === "/search" && req.method === "GET") {
     const query = url.searchParams.get("q") ?? "";
     const categoryFilter = url.searchParams.get("category") ?? "";
