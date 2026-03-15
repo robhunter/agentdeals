@@ -269,7 +269,7 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-type NavSection = "search" | "categories" | "trends" | "alternatives" | "compare" | "digest" | "api" | "setup" | "home";
+type NavSection = "search" | "categories" | "trends" | "alternatives" | "compare" | "digest" | "expiring" | "api" | "setup" | "home";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -290,6 +290,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/alternative-to", label: "Alternatives", section: "alternatives" },
     { href: "/compare", label: "Compare", section: "compare" },
     { href: "/digest", label: "Digest", section: "digest" },
+    { href: "/expiring", label: "Expiring", section: "expiring" },
     { href: "/api/docs", label: "API", section: "api" },
     { href: "/setup", label: "Setup", section: "setup" },
   ];
@@ -2212,6 +2213,216 @@ function copyConfig(btn){
 </html>`;
 }
 
+// --- Expiring deals timeline page ---
+
+function buildExpiringPage(): string {
+  const allChanges = loadDealChanges();
+  const today = new Date().toISOString().slice(0, 10);
+  const todayMs = new Date(today + "T00:00:00Z").getTime();
+
+  // Split into upcoming (future) and recent (past 30 days)
+  const thirtyDaysAgo = new Date(todayMs - 30 * 86400000).toISOString().slice(0, 10);
+  const upcoming = allChanges.filter(c => c.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  const recent = allChanges.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
+
+  // Group upcoming by month
+  const upcomingByMonth = new Map<string, typeof upcoming>();
+  for (const c of upcoming) {
+    const monthKey = c.date.slice(0, 7); // YYYY-MM
+    if (!upcomingByMonth.has(monthKey)) upcomingByMonth.set(monthKey, []);
+    upcomingByMonth.get(monthKey)!.push(c);
+  }
+
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  function formatMonth(key: string): string {
+    const [y, m] = key.split("-");
+    return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
+  }
+
+  function countdownLabel(dateStr: string): { text: string; urgent: boolean } {
+    const d = new Date(dateStr + "T00:00:00Z").getTime();
+    const diff = Math.ceil((d - todayMs) / 86400000);
+    if (diff === 0) return { text: "today", urgent: true };
+    if (diff === 1) return { text: "tomorrow", urgent: true };
+    if (diff < 0) return { text: `${Math.abs(diff)} days ago`, urgent: false };
+    if (diff <= 14) return { text: `in ${diff} days`, urgent: true };
+    return { text: `in ${diff} days`, urgent: false };
+  }
+
+  function buildEntry(c: typeof allChanges[0], showCountdown: boolean): string {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    const vendorSlug = toSlug(c.vendor);
+    const countdown = showCountdown ? countdownLabel(c.date) : null;
+    const urgentClass = countdown?.urgent ? " entry-urgent" : "";
+    return `      <div class="exp-entry${urgentClass}">
+        <div class="exp-left">
+          ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
+          <div class="exp-date">${c.date}</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-head">
+            <span class="badge" style="background:${badge.color}">${badge.label}</span>
+            <a href="/vendor/${vendorSlug}" class="exp-vendor">${escHtmlServer(c.vendor)}</a>
+            <span class="exp-impact" style="color:${impactColor}">${c.impact}</span>
+          </div>
+          <div class="exp-summary">${escHtmlServer(c.summary)}</div>
+        </div>
+      </div>`;
+  }
+
+  // Build upcoming months HTML
+  const upcomingHtml = Array.from(upcomingByMonth.entries()).map(([month, changes]) => {
+    const entriesHtml = changes.map(c => buildEntry(c, true)).join("\n");
+    return `    <div class="month-group">
+      <h2 class="month-heading">${formatMonth(month)}</h2>
+${entriesHtml}
+    </div>`;
+  }).join("\n");
+
+  // Build recently changed HTML
+  const recentHtml = recent.length > 0 ? recent.map(c => buildEntry(c, false)).join("\n") : "";
+
+  const totalUpcoming = upcoming.length;
+  const urgentCount = upcoming.filter(c => {
+    const diff = Math.ceil((new Date(c.date + "T00:00:00Z").getTime() - todayMs) / 86400000);
+    return diff <= 14;
+  }).length;
+
+  const title = "Upcoming Free Tier Changes \u2014 AgentDeals";
+  const metaDesc = `${totalUpcoming} upcoming pricing changes tracked. Free tiers disappearing, prices increasing, products shutting down. Don't get caught off guard.`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: totalUpcoming + recent.length,
+    url: "https://agentdeals-production.up.railway.app/expiring",
+    itemListElement: upcoming.slice(0, 50).map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Event",
+        name: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+        description: c.summary,
+        startDate: c.date,
+        location: { "@type": "VirtualLocation", url: `https://agentdeals-production.up.railway.app/vendor/${toSlug(c.vendor)}` },
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="https://agentdeals-production.up.railway.app/expiring">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://agentdeals-production.up.railway.app/expiring">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.5rem}
+.stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.stat-card{flex:1;min-width:120px;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-align:center}
+.stat-value{font-family:var(--serif);font-size:1.5rem;color:var(--text)}
+.stat-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.stat-urgent .stat-value{color:#f85149}
+.month-group{margin-bottom:2rem}
+.month-heading{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.exp-entry{display:flex;gap:1rem;padding:.75rem;margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s}
+.exp-entry:hover{border-color:var(--accent)}
+.entry-urgent{border-color:rgba(248,81,73,0.3)}
+.exp-left{flex-shrink:0;min-width:100px;text-align:right}
+.exp-countdown{font-family:var(--mono);font-size:.8rem;color:var(--text-muted);font-weight:600}
+.exp-countdown-urgent{color:#f85149}
+.exp-date{font-family:var(--mono);font-size:.7rem;color:var(--text-dim)}
+.exp-right{flex:1;min-width:0}
+.exp-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
+.exp-vendor{color:var(--text);font-weight:600;font-size:.85rem}
+.exp-vendor:hover{color:var(--accent)}
+.exp-impact{font-family:var(--mono);font-size:.7rem}
+.exp-summary{font-size:.85rem;color:var(--text-muted)}
+.badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.recent-section{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.recent-section h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.5rem}
+.recent-desc{color:var(--text-dim);font-size:.85rem;margin-bottom:1rem}
+.recent-toggle{background:none;border:1px solid var(--border);color:var(--accent);padding:.4rem .8rem;border-radius:6px;cursor:pointer;font-size:.8rem;font-family:var(--sans);margin-bottom:.75rem}
+.recent-toggle:hover{border-color:var(--accent);background:var(--accent-glow)}
+.recent-entries{display:none}
+.recent-entries.show{display:block}
+.no-upcoming{color:var(--text-dim);font-style:italic;padding:2rem;text-align:center;border:1px dashed var(--border);border-radius:8px}
+.mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
+.mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.mcp-cta a{font-weight:600}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.exp-entry{flex-direction:column;gap:.25rem}.exp-left{text-align:left;min-width:auto;display:flex;gap:.75rem;align-items:center}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("expiring")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Expiring</div>
+  <h1>Upcoming Free Tier Changes</h1>
+  <p class="page-intro">Free tiers disappearing, prices increasing, products shutting down. Don\u2019t get caught off guard.</p>
+
+  <div class="stats-bar">
+    <div class="stat-card${urgentCount > 0 ? " stat-urgent" : ""}">
+      <div class="stat-value">${urgentCount}</div>
+      <div class="stat-label">Within 14 Days</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${totalUpcoming}</div>
+      <div class="stat-label">Upcoming</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${recent.length}</div>
+      <div class="stat-label">Recently Changed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${allChanges.length}</div>
+      <div class="stat-label">Total Tracked</div>
+    </div>
+  </div>
+
+${totalUpcoming > 0 ? upcomingHtml : `  <div class="no-upcoming">No upcoming pricing changes in the next 30 days. Check back soon or <a href="/feed.xml">subscribe via RSS</a>.</div>`}
+
+${recent.length > 0 ? `  <div class="recent-section">
+    <h2>Recently Changed</h2>
+    <p class="recent-desc">${recent.length} pricing changes in the last 30 days.</p>
+    <button class="recent-toggle" onclick="document.querySelector('.recent-entries').classList.toggle('show');this.textContent=this.textContent==='Show recent changes'?'Hide recent changes':'Show recent changes'">Show recent changes</button>
+    <div class="recent-entries">
+${recent.map(c => buildEntry(c, false)).join("\n")}
+    </div>
+  </div>` : ""}
+
+  <div class="mcp-cta">
+    <p>Want real-time alerts when free tiers change?</p>
+    <a href="/setup">Connect via MCP &rarr;</a>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 // --- Web search page ---
 
 function buildSearchPage(query: string, categoryFilter: string, page: number): string {
@@ -2977,6 +3188,7 @@ ${upcomingDeadlines.length > 0 ? `  <div class="section">
     <div class="deadlines-section">
 ${buildDeadlinesHtml()}
     </div>
+    <p style="margin-top:.75rem;font-size:.9rem"><a href="/expiring">See what\u2019s expiring soon &rarr;</a></p>
   </div>
 
   <div class="divider"></div>
@@ -3826,6 +4038,12 @@ ${entries}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://agentdeals-production.up.railway.app/expiring</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://agentdeals-production.up.railway.app/category</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -3984,6 +4202,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
     }
+  } else if (url.pathname === "/expiring" && req.method === "GET") {
+    recordApiHit("/expiring");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/expiring", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildExpiringPage());
   } else if (url.pathname === "/setup" && req.method === "GET") {
     recordApiHit("/setup");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
