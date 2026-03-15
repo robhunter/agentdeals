@@ -448,7 +448,7 @@
     {
       "vendor": "GitHub Actions",
       "category": "CI/CD",
-      "description": "Free CI/CD for public repos. Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free (planned $0.002/min fee postponed indefinitely). Hosted runner prices reduced 39% Jan 2026",
+      "description": "Free CI/CD for public repos. Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners now $0.002/min in private repos and consume free quota (March 2026). Hosted runner prices reduced 39% (Jan 2026). Public repos free for all runner types",
       "tier": "Free",
       "url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
       "tags": [
@@ -458,7 +458,7 @@
         "github",
         "deal-change"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-15"
     },
     {
       "vendor": "GitLab CI",
