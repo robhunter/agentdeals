@@ -325,32 +325,11 @@ export function createServer(): McpServer {
   // --- Prompt Templates ---
 
   server.registerPrompt(
-    "find-free-alternative",
+    "new-project-setup",
     {
-      description: "Find free alternatives to a specific vendor. Returns the vendor's current deal plus up to 5 alternatives in the same category.",
+      description: "Find free tiers for a new project's entire stack — hosting, database, auth, and more. Multi-step: recommends a stack, then fetches details and checks risk for each vendor.",
       argsSchema: {
-        vendor: z.string().describe("The vendor name to find alternatives for (e.g. 'Heroku', 'Firebase', 'Auth0')"),
-      },
-    },
-    async ({ vendor }) => ({
-      messages: [
-        {
-          role: "user" as const,
-          content: {
-            type: "text" as const,
-            text: `Find free alternatives to ${vendor}. Use the get_offer_details tool with vendor="${vendor}" and include_alternatives=true to get the vendor's current deal and up to 5 alternatives in the same category.`,
-          },
-        },
-      ],
-    })
-  );
-
-  server.registerPrompt(
-    "recommend-stack",
-    {
-      description: "Get a recommended free-tier infrastructure stack for a project. Returns hosting, database, auth, and more — all free tier.",
-      argsSchema: {
-        project_description: z.string().describe("What you're building (e.g. 'Next.js SaaS app', 'Python API backend', 'mobile app')"),
+        project_description: z.string().describe("What you're building (e.g. 'Next.js SaaS app', 'Python API backend', 'React Native mobile app')"),
       },
     },
     async ({ project_description }) => ({
@@ -359,11 +338,60 @@ export function createServer(): McpServer {
           role: "user" as const,
           content: {
             type: "text" as const,
-            text: `Recommend a free infrastructure stack for: ${project_description}. Use the get_stack_recommendation tool with use_case="${project_description}" to get a curated stack of free-tier services covering hosting, database, auth, and more.`,
+            text: `I'm starting a new project: ${project_description}. Help me find free-tier infrastructure for the entire stack.
+
+Step 1: Use get_stack_recommendation with use_case="${project_description}" to get a recommended stack.
+Step 2: For each recommended vendor, use get_offer_details with include_alternatives=true to see the full deal details and alternatives.
+Step 3: For the top picks, use check_vendor_risk to verify pricing stability.
+
+Provide a final summary with:
+- **Recommended stack**: vendor, free tier limits, and why it's a good fit
+- **Risk assessment**: any vendors with pricing instability
+- **Total estimated cost**: should be $0 on free tiers
+- **Upgrade paths**: what happens when you outgrow the free tier`,
           },
         },
       ],
     })
+  );
+
+  server.registerPrompt(
+    "cost-audit",
+    {
+      description: "Audit an existing stack for cost savings. Reviews your current vendors, finds cheaper or free alternatives, and identifies risk.",
+      argsSchema: {
+        stack: z.string().describe("Comma-separated list of services you currently use (e.g. 'Vercel,Supabase,Clerk,Resend')"),
+      },
+    },
+    async ({ stack }) => {
+      const vendors = stack.split(",").map((v) => v.trim()).filter(Boolean);
+      const auditSteps = vendors.map((v) => `- Use get_offer_details with vendor="${v}" and include_alternatives=true`).join("\n");
+      const riskSteps = vendors.map((v) => `- Use check_vendor_risk with vendor="${v}"`).join("\n");
+      return {
+        messages: [
+          {
+            role: "user" as const,
+            content: {
+              type: "text" as const,
+              text: `Audit my current stack for cost savings: ${vendors.join(", ")}.
+
+Step 1: Use audit_stack with vendors="${vendors.join(",")}" for an overview.
+Step 2: Get detailed alternatives for each vendor:
+${auditSteps}
+Step 3: Check risk for each vendor:
+${riskSteps}
+Step 4: Use estimate_costs with services="${vendors.join(",")}" to project costs.
+
+Provide a final report:
+- **Current stack**: what you're using and its free tier limits
+- **Savings opportunities**: cheaper or free alternatives for each vendor
+- **Risk flags**: vendors with recent negative pricing changes
+- **Recommended switches**: specific vendor swaps that save money or reduce risk`,
+            },
+          },
+        ],
+      };
+    }
   );
 
   server.registerPrompt(
@@ -377,7 +405,17 @@ export function createServer(): McpServer {
           role: "user" as const,
           content: {
             type: "text" as const,
-            text: "What developer tool pricing has changed recently? Use the get_deal_changes tool to see recent free tier removals, limit reductions, limit increases, new free tiers, and pricing restructures.",
+            text: `What developer tool pricing has changed recently?
+
+Step 1: Use get_deal_changes to see all recent changes (free tier removals, limit reductions, limit increases, new free tiers, pricing restructures).
+Step 2: Use get_expiring_deals to check for upcoming pricing deadlines.
+Step 3: For any concerning changes, use check_vendor_risk on those vendors for context.
+
+Provide a summary:
+- **Breaking changes**: free tier removals or major limit reductions — action needed
+- **Good news**: new free tiers or limit increases
+- **Upcoming deadlines**: deals or pricing changes with imminent dates
+- **Impact assessment**: which changes affect popular services`,
           },
         },
       ],
@@ -385,24 +423,71 @@ export function createServer(): McpServer {
   );
 
   server.registerPrompt(
-    "search-deals",
+    "compare-options",
     {
-      description: "Search for free tiers and deals in a specific category. Browse database, hosting, auth, CI/CD, and 48 more categories.",
+      description: "Compare two or more services side-by-side. Shows free tier details, pricing stability, and a recommendation.",
       argsSchema: {
-        category: z.string().describe("Category to search (e.g. 'Databases', 'Cloud Hosting', 'Auth', 'CI/CD', 'Monitoring')"),
+        services: z.string().describe("Comma-separated vendor names to compare (e.g. 'Supabase,Neon,PlanetScale')"),
       },
     },
-    async ({ category }) => ({
-      messages: [
-        {
-          role: "user" as const,
-          content: {
-            type: "text" as const,
-            text: `Find free tiers for ${category}. Use the search_offers tool with category="${category}" to see all available free tiers, credits, and discounts in this category.`,
+    async ({ services }) => {
+      const vendors = services.split(",").map((v) => v.trim()).filter(Boolean);
+      return {
+        messages: [
+          {
+            role: "user" as const,
+            content: {
+              type: "text" as const,
+              text: `Compare these services: ${vendors.join(" vs ")}.
+
+Step 1: Use compare_services with vendors="${vendors.join(",")}" for a side-by-side comparison.
+Step 2: For each vendor, use check_vendor_risk to assess pricing stability.
+Step 3: Use get_deal_changes for each vendor to see recent pricing history.
+
+Provide a recommendation:
+- **Feature comparison**: free tier limits side-by-side
+- **Risk comparison**: which vendor has the most stable pricing
+- **Recent changes**: any recent pricing moves (positive or negative)
+- **Verdict**: which service to pick and why`,
+            },
           },
-        },
-      ],
-    })
+        ],
+      };
+    }
+  );
+
+  server.registerPrompt(
+    "find-startup-credits",
+    {
+      description: "Find startup credit programs, accelerator deals, and special eligibility offers. Covers cloud credits, SaaS discounts, and student programs.",
+      argsSchema: {
+        eligibility: z.string().optional().describe("Your eligibility type: 'startup', 'student', 'opensource', or leave blank for all"),
+      },
+    },
+    async ({ eligibility }) => {
+      const eligFilter = eligibility ? ` with eligibility_type="${eligibility}"` : "";
+      const eligDesc = eligibility || "startup, student, and open-source";
+      return {
+        messages: [
+          {
+            role: "user" as const,
+            content: {
+              type: "text" as const,
+              text: `Find ${eligDesc} credit programs and special deals.
+
+Step 1: Use search_offers${eligFilter} with sort="value" to find the highest-value conditional deals.
+Step 2: For the top results, use get_offer_details with include_alternatives=true to see full details and eligibility requirements.
+
+Provide a summary:
+- **Cloud credits**: AWS, GCP, Azure, and other cloud credit programs
+- **SaaS discounts**: developer tool discounts for ${eligDesc}
+- **How to apply**: eligibility requirements and application links for each program
+- **Total potential value**: estimated combined value of all applicable credits`,
+            },
+          },
+        ],
+      };
+    }
   );
 
   server.registerPrompt(
