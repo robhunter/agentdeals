@@ -3623,8 +3623,33 @@ function extractClientInfo(body: unknown): ClientInfo | undefined {
   return undefined;
 }
 
+// Parse canonical hostname from BASE_URL for redirect logic
+const canonicalHost = (() => {
+  try { return new URL(BASE_URL).hostname; } catch { return undefined; }
+})();
+
 const httpServer = createHttpServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://localhost:${PORT}`);
+
+  // 301 redirect non-canonical hostnames to BASE_URL (SEO canonical domain)
+  if (canonicalHost) {
+    const requestHost = (req.headers.host ?? "").split(":")[0];
+    if (requestHost && requestHost !== canonicalHost) {
+      const skip =
+        url.pathname === "/mcp" ||
+        url.pathname === "/health" ||
+        url.pathname.startsWith("/api/") ||
+        url.pathname.startsWith("/.well-known/") ||
+        url.pathname === "/favicon.png" ||
+        url.pathname === "/favicon.ico";
+      if (!skip) {
+        const target = `${BASE_URL}${url.pathname}${url.search}`;
+        res.writeHead(301, { Location: target });
+        res.end();
+        return;
+      }
+    }
+  }
 
   if (url.pathname === "/mcp") {
     if (req.method === "POST") {
