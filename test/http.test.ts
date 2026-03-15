@@ -1397,6 +1397,18 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("best free alternatives to Vercel"), "Should have alternatives FAQ question");
     assert.ok(html.includes("How many free alternatives"), "Should have count FAQ question");
   });
+
+  it("landing page has recent pricing changes section", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/`);
+    const html = await response.text();
+    assert.ok(html.includes('id="recent-changes"'), "Should have recent-changes section");
+    assert.ok(html.includes("rc-entry"), "Should have change entries");
+    assert.ok(html.includes("rc-vendor"), "Should have vendor links");
+    assert.ok(html.includes('href="/expiring"'), "Should link to /expiring");
+    assert.ok(html.includes('"Recent Pricing Changes"'), "Should have ItemList JSON-LD");
+  });
 });
 
 const REDIRECT_PORT = 3458;
