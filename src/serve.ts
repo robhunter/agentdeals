@@ -199,6 +199,11 @@ const changeTypeBadge: Record<string, { label: string; color: string }> = {
   limits_increased: { label: "increased", color: "#3fb950" },
   new_free_tier: { label: "new", color: "#58a6ff" },
   pricing_restructured: { label: "restructured", color: "#bc8cff" },
+  open_source_killed: { label: "oss killed", color: "#f85149" },
+  pricing_model_change: { label: "model change", color: "#d29922" },
+  startup_program_expanded: { label: "expanded", color: "#3fb950" },
+  pricing_postponed: { label: "postponed", color: "#58a6ff" },
+  product_deprecated: { label: "deprecated", color: "#f85149" },
 };
 
 function buildChangesHtml(): string {
@@ -513,6 +518,8 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .change-vendor{font-weight:600;color:var(--text);font-size:.9rem}
 .change-date{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
 .change-summary{color:var(--text-muted);font-size:.85rem}
+.see-all-link{display:inline-flex;align-items:center;gap:.3rem;margin-top:1rem;font-size:.85rem;font-family:var(--mono);color:var(--accent);text-decoration:none;padding:.5rem 0}
+.see-all-link:hover{color:var(--accent-hover);text-decoration:underline}
 
 /* Deadlines */
 .deadlines-section{background:linear-gradient(180deg,rgba(248,81,73,0.04) 0%,transparent 100%);border:1px solid rgba(248,81,73,0.15);border-radius:12px;padding:1.5rem;margin-bottom:2rem}
@@ -612,11 +619,21 @@ footer a{color:var(--text-muted)}
   <div class="stats-bar">
     <div class="stat-item"><div class="stat-num">${stats.offers.toLocaleString()}</div><div class="stat-label">Deals</div></div>
     <div class="stat-item"><div class="stat-num">${stats.categories}</div><div class="stat-label">Categories</div></div>
-    <div class="stat-item"><div class="stat-num">10</div><div class="stat-label">MCP Tools</div></div>
+    <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">MCP Tools</div></div>
     <div class="stat-item"><div class="stat-num">${stats.dealChanges}</div><div class="stat-label">Changes Tracked</div></div>
   </div>
 
   <div class="wavy-divider"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0,20 Q150,0 300,20 T600,20 T900,20 T1200,20 V40 H0 Z" fill="none" stroke="rgba(42,39,32,0.8)" stroke-width="1"/></svg></div>
+
+  <div class="section" id="whats-changed">
+    <div class="section-label">What&rsquo;s Changed</div>
+    <h2>Recent pricing changes</h2>
+    <p>Free tiers get removed. Limits change. We track it so your agent doesn't recommend dead deals.</p>
+${buildChangesHtml()}
+    <a href="/api/changes" class="see-all-link">See all ${stats.dealChanges} tracked changes &rarr;</a>
+  </div>
+
+  <div class="divider"></div>
 
 ${upcomingDeadlines.length > 0 ? `  <div class="section">
     <div class="section-label">Act Now</div>
@@ -649,7 +666,7 @@ ${buildDeadlinesHtml()}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically. 14 endpoints with search, filtering, risk analysis, and stack recommendations. <a href="/api/docs" style="color:var(--accent);text-decoration:underline">Interactive API Docs</a></p>
+        <p>Query deals programmatically. 15 endpoints with search, filtering, risk analysis, and stack recommendations. <a href="/api/docs" style="color:var(--accent);text-decoration:underline">Interactive API Docs</a></p>
         <pre><code>GET /api/offers?q=database
 GET /api/categories
 GET /api/new?days=7
@@ -661,6 +678,7 @@ GET /api/compare?a=Supabase&amp;b=Neon
 GET /api/vendor-risk/Heroku
 GET /api/audit-stack?services=Vercel,Supabase
 GET /api/expiring?within_days=30
+GET /api/feed
 GET /api/stats
 GET /api/openapi.json
 GET /api/docs</code></pre>
@@ -676,15 +694,6 @@ GET /api/docs</code></pre>
 "url": "https://agentdeals-production.up.railway.app/mcp"</code></pre>
       </div>
     </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="section">
-    <div class="section-label">Deal Tracker</div>
-    <h2>Recent pricing changes</h2>
-    <p>Free tiers get removed. Limits change. We track it so your agent doesn't recommend dead deals.</p>
-${buildChangesHtml()}
   </div>
 
   <div class="divider"></div>
