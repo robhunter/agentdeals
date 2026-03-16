@@ -13,6 +13,7 @@ import {
   fetchAuditStack,
   fetchExpiringDeals,
   fetchNewestDeals,
+  fetchWeeklyDigest,
 } from "./api-client.js";
 
 function mcpError(msg: string) {
@@ -318,6 +319,23 @@ export function createServer(): McpServer {
         return mcpText(data);
       } catch (err) {
         return mcpError(`Error getting expiring deals: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_weekly_digest",
+    {
+      description:
+        "Get a curated weekly summary of developer tool pricing changes, new offers, and upcoming deadlines. Use for regular check-ins on what's changed in developer pricing. Falls back to 30-day window if fewer than 3 changes in the past week.",
+      inputSchema: {},
+    },
+    async () => {
+      try {
+        const data = await fetchWeeklyDigest();
+        return mcpText(data);
+      } catch (err) {
+        return mcpError(`Error getting weekly digest: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
   );

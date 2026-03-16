@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
@@ -3299,6 +3299,7 @@ GET /api/compare?a=Supabase&amp;b=Neon
 GET /api/vendor-risk/Heroku
 GET /api/audit-stack?services=Vercel,Supabase
 GET /api/expiring?within_days=30
+GET /api/digest
 GET /api/feed
 GET /api/stats
 GET /api/openapi.json
@@ -4039,6 +4040,12 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/expiring", params: { within_days: withinDays }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
+  } else if (url.pathname === "/api/digest" && req.method === "GET") {
+    recordApiHit("/api/digest");
+    const digest = getWeeklyDigest();
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/digest", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: digest.deal_changes.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(digest));
   } else if (url.pathname === "/api/docs" && req.method === "GET") {
     recordApiHit("/api/docs");
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
