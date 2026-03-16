@@ -614,6 +614,48 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/pageviews": {
+      get: {
+        summary: "Page view analytics",
+        description: "Returns server-side page view counts for today, yesterday, all-time top pages, and referrer breakdown. Bot traffic is excluded.",
+        responses: {
+          "200": {
+            description: "Page view data",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    today: {
+                      type: "object",
+                      properties: {
+                        total: { type: "integer" },
+                        top_pages: { type: "array", items: { type: "object", properties: { path: { type: "string" }, views: { type: "integer" } } } }
+                      }
+                    },
+                    yesterday: {
+                      type: "object",
+                      properties: {
+                        total: { type: "integer" },
+                        top_pages: { type: "array", items: { type: "object", properties: { path: { type: "string" }, views: { type: "integer" } } } }
+                      }
+                    },
+                    all_time: {
+                      type: "object",
+                      properties: {
+                        total: { type: "integer" },
+                        top_pages: { type: "array", items: { type: "object", properties: { path: { type: "string" }, views: { type: "integer" } } } }
+                      }
+                    },
+                    referrers_today: { type: "object", additionalProperties: { type: "integer" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stats": {
       get: {
         summary: "Service statistics",
