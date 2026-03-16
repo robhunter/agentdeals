@@ -130,3 +130,7 @@ export async function fetchExpiringDeals(withinDays?: number): Promise<unknown> 
   if (withinDays !== undefined) p.within_days = String(withinDays);
   return apiFetch("/api/expiring", p);
 }
+
+export async function fetchWeeklyDigest(): Promise<unknown> {
+  return apiFetch("/api/digest");
+}

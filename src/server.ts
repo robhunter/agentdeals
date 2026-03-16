@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -491,6 +491,41 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             {
               type: "text" as const,
               text: `Error getting expiring deals: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_weekly_digest",
+    {
+      description:
+        "Get a curated weekly summary of developer tool pricing changes, new offers, and upcoming deadlines. Use for regular check-ins on what's changed in developer pricing. Falls back to 30-day window if fewer than 3 changes in the past week.",
+      inputSchema: {},
+    },
+    async () => {
+      try {
+        recordToolCall("get_weekly_digest");
+        const digest = getWeeklyDigest();
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_weekly_digest", params: {}, result_count: digest.deal_changes.length, session_id: getSessionId?.() });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(digest, null, 2),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("get_weekly_digest error:", err);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Error getting weekly digest: ${err instanceof Error ? err.message : String(err)}`,
             },
           ],
         };
