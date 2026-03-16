@@ -336,7 +336,7 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-type NavSection = "search" | "categories" | "trends" | "alternatives" | "compare" | "digest" | "expiring" | "api" | "setup" | "home";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "compare" | "digest" | "expiring" | "api" | "setup" | "home";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -353,6 +353,7 @@ function buildGlobalNav(active: NavSection): string {
   const links: { href: string; label: string; section: NavSection }[] = [
     { href: "/search", label: "Search", section: "search" },
     { href: "/category", label: "Categories", section: "categories" },
+    { href: "/best", label: "Best Of", section: "best" },
     { href: "/trends", label: "Trends", section: "trends" },
     { href: "/alternative-to", label: "Alternatives", section: "alternatives" },
     { href: "/compare", label: "Compare", section: "compare" },
@@ -560,6 +561,310 @@ ${globalNavCss()}
   <p class="page-meta">${stats.categories} categories covering ${stats.offers.toLocaleString()}+ free developer tool deals.</p>
 
   <div class="cat-index-grid">${catCardsHtml}
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+// --- Best-of pages ---
+
+// Minimum category size to generate a best-of page
+const BEST_OF_MIN_VENDORS = 5;
+const BEST_OF_PICK_COUNT = 8;
+
+// Score vendors for curation: higher = better pick for a "best free" list
+function scoreBestOfVendor(offer: ReturnType<typeof enrichOffers>[number]): number {
+  let score = 0;
+  // Stable pricing (no negative changes) is the strongest signal
+  if (offer.risk_level === "stable") score += 2;
+  else if (offer.risk_level === "caution") score += 1;
+  // Richer description = more useful free tier info
+  if (offer.description.length > 80) score += 1;
+  else if (offer.description.length > 40) score += 0.5;
+  // Recently verified = trustworthy data
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  if (offer.verifiedDate >= thirtyDaysAgo) score += 1;
+  // Not expiring soon
+  if (!offer.expires_soon) score += 0.5;
+  return score;
+}
+
+// Build best-of slug map at startup
+const bestOfSlugMap = new Map<string, { categoryName: string; picks: ReturnType<typeof enrichOffers> }>();
+for (const cat of categories) {
+  const catOffers = offers.filter((o) => o.category === cat.name && !o.eligibility);
+  if (catOffers.length < BEST_OF_MIN_VENDORS) continue;
+  const enriched = enrichOffers(catOffers);
+  const scored = enriched
+    .map((o) => ({ offer: o, score: scoreBestOfVendor(o) }))
+    .sort((a, b) => b.score - a.score || a.offer.vendor.localeCompare(b.offer.vendor))
+    .slice(0, BEST_OF_PICK_COUNT)
+    .map((s) => s.offer);
+  const slug = `free-${toSlug(cat.name)}`;
+  bestOfSlugMap.set(slug, { categoryName: cat.name, picks: scored });
+}
+
+function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): string {
+  const bestFor: string[] = [];
+  const desc = offer.description.toLowerCase();
+  if (desc.includes("hobby") || desc.includes("personal")) bestFor.push("personal projects");
+  if (desc.includes("startup") || desc.includes("small team")) bestFor.push("startups");
+  if (desc.includes("open source") || desc.includes("oss")) bestFor.push("open source projects");
+  if (desc.includes("student") || desc.includes("education")) bestFor.push("students");
+  if (desc.includes("unlimited") || desc.includes("no limit")) bestFor.push("unlimited usage needs");
+  const bestForText = bestFor.length > 0 ? ` Best for ${bestFor.join(" and ")}.` : "";
+  const caveat = offer.risk_level === "caution" ? " Note: pricing has changed in the past." : offer.risk_level === "risky" ? " Caution: pricing has changed multiple times." : "";
+  return `${escHtmlServer(offer.description)}${bestForText}${caveat}`;
+}
+
+function buildBestOfPage(slug: string): string | null {
+  const entry = bestOfSlugMap.get(slug);
+  if (!entry) return null;
+  const { categoryName, picks } = entry;
+  const year = new Date().getFullYear();
+  const pickCount = picks.length;
+  const title = `${pickCount} Best Free ${categoryName} Tools (${year}) — AgentDeals`;
+  const metaDesc = `Curated list of the ${pickCount} best free ${categoryName.toLowerCase()} tools for developers in ${year}. Featuring ${picks.slice(0, 3).map(o => o.vendor).join(", ")}${pickCount > 3 ? " and more" : ""}. Verified pricing, stability ratings, and side-by-side comparison.`;
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Mini-review cards
+  const reviewsHtml = picks.map((o, i) => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const review = buildBestOfMiniReview(o);
+    const relatedCompareLinks = Array.from(comparisonMap.entries())
+      .filter(([, [a, b]]) => a === o.vendor || b === o.vendor)
+      .slice(0, 2)
+      .map(([cs]) => `<a href="/compare/${cs}" style="font-size:.75rem;color:var(--accent)">Compare</a>`)
+      .join(" ");
+    return `      <div class="best-pick">
+        <div class="best-pick-rank">${i + 1}</div>
+        <div class="best-pick-content">
+          <div class="best-pick-header">
+            <a href="/vendor/${toSlug(o.vendor)}" class="best-pick-name">${escHtmlServer(o.vendor)}</a>
+            ${riskBadge}
+          </div>
+          <div class="best-pick-tier">${escHtmlServer(o.tier)}</div>
+          <p class="best-pick-review">${review}</p>
+          <div class="best-pick-links">
+            <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+            <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+            ${relatedCompareLinks}
+            <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing page &nearr;</a>
+          </div>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Comparison table
+  const tableRows = picks.map((o) => `        <tr>
+          <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+          <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
+          <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(o.description.slice(0, 120))}${o.description.length > 120 ? "..." : ""}</td>
+          <td><span style="color:${riskColors[o.risk_level ?? "stable"]}">${o.risk_level ?? "stable"}</span></td>
+          <td style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(o.verifiedDate)}</td>
+        </tr>`).join("\n");
+
+  // JSON-LD structured data (ItemList)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `Best Free ${categoryName} Tools`,
+    description: metaDesc,
+    numberOfItems: pickCount,
+    itemListElement: picks.map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        applicationCategory: categoryName,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  // Other best-of pages for cross-linking
+  const otherBestOf = Array.from(bestOfSlugMap.entries())
+    .filter(([s]) => s !== slug)
+    .sort((a, b) => b[1].picks.length - a[1].picks.length)
+    .slice(0, 10)
+    .map(([s, v]) => `<a href="/best/${s}" style="display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;color:var(--text-muted);border:1px solid var(--border);text-decoration:none;transition:all .2s">${escHtmlServer(v.categoryName)}</a>`)
+    .join("\n        ");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/best/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/best/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.page-meta{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem}
+.trust-note{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-bottom:2rem;font-size:.85rem;color:var(--text-muted)}
+.trust-note strong{color:var(--text)}
+.best-pick{display:flex;gap:1rem;padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.best-pick:hover{border-color:var(--accent)}
+.best-pick-rank{font-family:var(--serif);font-size:1.5rem;color:var(--accent);min-width:2rem;text-align:center;padding-top:.15rem}
+.best-pick-content{flex:1;min-width:0}
+.best-pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
+.best-pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.best-pick-name:hover{color:var(--accent)}
+.best-pick-tier{font-family:var(--mono);color:var(--accent);font-size:.85rem;margin:.25rem 0}
+.best-pick-review{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.best-pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.best-pick-links a{color:var(--accent);text-decoration:none}
+.best-pick-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.other-best{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 2rem}
+.other-best a:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.best-pick{flex-direction:column;gap:.5rem}.best-pick-rank{text-align:left}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("best")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/best">Best Of</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
+  <h1>${pickCount} Best Free ${escHtmlServer(categoryName)} Tools</h1>
+  <p class="page-meta">Curated from ${offers.filter(o => o.category === categoryName).length} verified free tiers. Updated ${new Date().toISOString().split("T")[0]}.</p>
+
+  <div class="trust-note">
+    <strong>Why trust this data?</strong> Every free tier is verified against the vendor's pricing page with dates tracked. We monitor ${dealChanges.length} pricing changes and flag vendors that have reduced or removed free tiers. <a href="/category/${toSlug(categoryName)}">See all ${offers.filter(o => o.category === categoryName).length} ${categoryName.toLowerCase()} offers &rarr;</a>
+  </div>
+
+${reviewsHtml}
+
+  <h2>Quick Comparison</h2>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Vendor</th>
+        <th>Free Tier</th>
+        <th>Key Limits</th>
+        <th>Stability</th>
+        <th>Verified</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+
+  <h2>More Best-Of Lists</h2>
+  <div class="other-best">
+    ${otherBestOf}
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
+function buildBestOfIndexPage(): string {
+  const year = new Date().getFullYear();
+  const bestOfCount = bestOfSlugMap.size;
+  const title = `Best Free Developer Tools (${year}) — AgentDeals`;
+  const metaDesc = `Curated "best of" lists for ${bestOfCount} developer tool categories. Top free tiers ranked by generosity, pricing stability, and data quality.`;
+
+  const sortedEntries = Array.from(bestOfSlugMap.entries())
+    .sort((a, b) => {
+      const countA = offers.filter(o => o.category === a[1].categoryName).length;
+      const countB = offers.filter(o => o.category === b[1].categoryName).length;
+      return countB - countA;
+    });
+
+  const cardsHtml = sortedEntries.map(([slug, entry]) => {
+    const totalInCat = offers.filter(o => o.category === entry.categoryName).length;
+    const topVendors = entry.picks.slice(0, 3).map(o => o.vendor).join(", ");
+    return `
+      <a href="/best/${slug}" class="best-index-card">
+        <span class="best-index-name">${escHtmlServer(entry.categoryName)}</span>
+        <span class="best-index-picks">${entry.picks.length} top picks from ${totalInCat}</span>
+        <span class="best-index-vendors">${escHtmlServer(topVendors)}</span>
+      </a>`;
+  }).join("");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `Best Free Developer Tools ${year}`,
+    description: metaDesc,
+    numberOfItems: bestOfCount,
+    url: `${BASE_URL}/best`,
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/best">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/best">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.best-index-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.75rem}
+.best-index-card{display:flex;flex-direction:column;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);backdrop-filter:blur(10px);transition:all .2s;text-decoration:none}
+.best-index-card:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.best-index-name{color:var(--text);font-weight:600;font-size:.95rem}
+.best-index-picks{color:var(--accent);font-family:var(--mono);font-size:.8rem;margin-top:.25rem}
+.best-index-vendors{color:var(--text-dim);font-size:.75rem;margin-top:.25rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.best-index-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("best")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Best Of</div>
+  <h1>Best Free Developer Tools</h1>
+  <p class="page-meta">${bestOfCount} curated "best of" lists. Top free tiers ranked by generosity, pricing stability, and verified data.</p>
+
+  <div class="best-index-grid">${cardsHtml}
   </div>
 
   <footer>AgentDeals &mdash; open source, built for agents</footer>
@@ -4301,6 +4606,18 @@ ${entries}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/best</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+${Array.from(bestOfSlugMap.keys()).map(s => `  <url>
+    <loc>${BASE_URL}/best/${s}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join("\n")}
+  <url>
     <loc>${BASE_URL}/compare</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -4368,6 +4685,23 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(landingPageHtml);
+  } else if ((url.pathname === "/best" || url.pathname === "/best/") && req.method === "GET") {
+    recordApiHit("/best");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/best", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: bestOfSlugMap.size });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildBestOfIndexPage());
+  } else if (url.pathname.startsWith("/best/") && req.method === "GET") {
+    const slug = url.pathname.slice("/best/".length).replace(/\/$/, "");
+    const html = buildBestOfPage(slug);
+    if (html) {
+      recordApiHit("/best/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/best/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Best-of list not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Best-of list "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/best">Browse all best-of lists</a></p></div></body></html>`);
+    }
   } else if ((url.pathname === "/category" || url.pathname === "/category/") && req.method === "GET") {
     recordApiHit("/category");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/category", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: stats.categories });
