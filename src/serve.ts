@@ -3213,6 +3213,40 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .badge:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
 
+/* Stack builder */
+.sb-form{display:flex;gap:.75rem;margin-top:1.5rem}
+.sb-input{flex:1;padding:.75rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.95rem;font-family:var(--sans);outline:none;transition:border-color .2s}
+.sb-input:focus{border-color:var(--accent)}
+.sb-input::placeholder{color:var(--text-dim)}
+.sb-btn{padding:.75rem 1.5rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-size:.9rem;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .2s;white-space:nowrap}
+.sb-btn:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.sb-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.sb-examples{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem}
+.sb-example{padding:.25rem .6rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .2s;background:transparent}
+.sb-example:hover{border-color:var(--accent);color:var(--accent)}
+.sb-loading{text-align:center;padding:2rem;color:var(--text-muted);font-family:var(--mono);font-size:.85rem}
+.sb-results{margin-top:1.5rem;display:none}
+.sb-stack{display:grid;gap:.75rem}
+.sb-item{background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:1rem;transition:border-color .2s}
+.sb-item:hover{border-color:var(--accent)}
+.sb-role{font-family:var(--mono);font-size:.7rem;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;background:var(--accent-glow);padding:.2rem .5rem;border-radius:5px;border:1px solid rgba(200,164,78,0.2);white-space:nowrap;flex-shrink:0;margin-top:.1rem}
+.sb-detail{flex:1;min-width:0}
+.sb-vendor{font-weight:600;color:var(--text);font-size:.95rem}
+.sb-vendor a{color:var(--text);text-decoration:none}
+.sb-vendor a:hover{color:var(--accent)}
+.sb-desc{color:var(--text-muted);font-size:.85rem;margin-top:.2rem;line-height:1.5}
+.sb-meta{margin-top:1rem;padding:1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px}
+.sb-meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.sb-meta-row:last-child{margin-bottom:0}
+.sb-meta-label{font-family:var(--mono);font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em}
+.sb-meta-value{font-family:var(--mono);font-size:.85rem;color:var(--accent);font-weight:600}
+.sb-limits{margin-top:.5rem;padding:0;list-style:none}
+.sb-limits li{font-size:.8rem;color:var(--text-muted);padding:.15rem 0}
+.sb-limits li::before{content:'\\26A0  ';color:var(--accent)}
+.sb-cta{margin-top:1.5rem;text-align:center;padding:1rem;border:1px dashed var(--border);border-radius:10px}
+.sb-cta p{max-width:none;margin:0 auto .5rem;text-align:center;font-size:.9rem;color:var(--text-muted)}
+.sb-cta a{font-family:var(--mono);font-size:.85rem}
+
 /* Footer */
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 footer a{color:var(--text-muted)}
@@ -3229,6 +3263,8 @@ footer a{color:var(--text-muted)}
   .section h2{font-size:1.5rem}
   .problem-text{font-size:1.1rem}
   .connect-block pre{font-size:.7rem}
+  .sb-form{flex-direction:column}
+  .sb-btn{width:100%}
 }
 ${globalNavCss()}
 </style>
@@ -3255,6 +3291,27 @@ ${globalNavCss()}
   </div>
 
   <div class="wavy-divider"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0,20 Q150,0 300,20 T600,20 T900,20 T1200,20 V40 H0 Z" fill="none" stroke="rgba(42,39,32,0.8)" stroke-width="1"/></svg></div>
+
+  <div class="section" id="try-it">
+    <div class="section-label">Try It</div>
+    <h2>What are you building?</h2>
+    <p>Describe your project and get personalized free tier recommendations in seconds.</p>
+    <div class="sb-form">
+      <input type="text" class="sb-input" id="sb-input" placeholder="Next.js SaaS app with auth and payments">
+      <button class="sb-btn" id="sb-btn">Find my stack deals</button>
+    </div>
+    <div class="sb-examples" id="sb-examples">
+      <span class="sb-example">Django API</span>
+      <span class="sb-example">React + Firebase app</span>
+      <span class="sb-example">AI chatbot</span>
+      <span class="sb-example">E-commerce store</span>
+      <span class="sb-example">Mobile app backend</span>
+    </div>
+    <div id="sb-loading" class="sb-loading" style="display:none">Finding the best free tiers for your stack&hellip;</div>
+    <div id="sb-results" class="sb-results"></div>
+  </div>
+
+  <div class="divider"></div>
 
   <div class="section" id="whats-changed">
     <div class="section-label">What&rsquo;s Changed</div>
@@ -3675,6 +3732,75 @@ function copyConfig(btn){
 
   loadCategories();
   loadOffers(false);
+})();
+</script>
+<script>
+(function(){
+  var input=document.getElementById('sb-input');
+  var btn=document.getElementById('sb-btn');
+  var loading=document.getElementById('sb-loading');
+  var results=document.getElementById('sb-results');
+  var examples=document.getElementById('sb-examples');
+
+  function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  function doSearch(){
+    var q=input.value.trim();
+    if(!q)return;
+    btn.disabled=true;
+    loading.style.display='block';
+    results.style.display='none';
+    fetch('/api/stack?use_case='+encodeURIComponent(q))
+      .then(function(r){return r.json();})
+      .then(function(data){
+        loading.style.display='none';
+        results.style.display='block';
+        btn.disabled=false;
+        if(!data.stack||data.stack.length===0){
+          results.innerHTML='<p style="color:var(--text-muted);font-size:.9rem">No matching stack recommendations found. Try a different description.</p>';
+          return;
+        }
+        var html='<div class="sb-stack">';
+        for(var i=0;i<data.stack.length;i++){
+          var s=data.stack[i];
+          var vendorSlug=s.vendor.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+          html+='<div class="sb-item">'
+            +'<span class="sb-role">'+escHtml(s.role)+'</span>'
+            +'<div class="sb-detail">'
+            +'<div class="sb-vendor"><a href="/vendor/'+escHtml(vendorSlug)+'">'+escHtml(s.vendor)+'</a> <span style="color:var(--text-dim);font-size:.8rem">'+escHtml(s.tier)+'</span></div>'
+            +'<div class="sb-desc">'+escHtml(s.description)+'</div>'
+            +'</div></div>';
+        }
+        html+='</div>';
+        if(data.limitations&&data.limitations.length>0){
+          html+='<div class="sb-meta"><div class="sb-meta-row"><span class="sb-meta-label">Monthly cost</span><span class="sb-meta-value">'+escHtml(data.total_monthly_cost)+'</span></div>';
+          html+='<ul class="sb-limits">';
+          for(var j=0;j<data.limitations.length;j++){
+            html+='<li>'+escHtml(data.limitations[j])+'</li>';
+          }
+          html+='</ul></div>';
+        }else{
+          html+='<div class="sb-meta"><div class="sb-meta-row"><span class="sb-meta-label">Monthly cost</span><span class="sb-meta-value">'+escHtml(data.total_monthly_cost)+'</span></div></div>';
+        }
+        html+='<div class="sb-cta"><p>Want this in your AI agent? Get live recommendations as you code.</p><a href="/setup">Connect via MCP &rarr;</a></div>';
+        results.innerHTML=html;
+      })
+      .catch(function(){
+        loading.style.display='none';
+        btn.disabled=false;
+        results.style.display='block';
+        results.innerHTML='<p style="color:var(--text-muted);font-size:.9rem">Something went wrong. Please try again.</p>';
+      });
+  }
+
+  btn.addEventListener('click',doSearch);
+  input.addEventListener('keydown',function(e){if(e.key==='Enter')doSearch();});
+  examples.addEventListener('click',function(e){
+    var ex=e.target.closest('.sb-example');
+    if(!ex)return;
+    input.value=ex.textContent;
+    doSearch();
+  });
 })();
 </script>
 </body>
