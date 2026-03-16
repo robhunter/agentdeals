@@ -368,6 +368,35 @@ function buildGlobalNav(active: NavSection): string {
   return `<nav class="global-nav"><a href="/" class="global-nav-home">AgentDeals</a>${navLinks}</nav>`;
 }
 
+// --- Shared MCP install CTA banner ---
+
+function mcpCtaCss(): string {
+  return `.mcp-cta{margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated)}
+.mcp-cta h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:0 0 .5rem}
+.mcp-cta .cta-value{color:var(--text-muted);font-size:.85rem;margin:0 0 1rem;line-height:1.5}
+.mcp-cta .cta-install{position:relative;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;margin-bottom:.75rem;font-family:var(--mono);font-size:.85rem;color:var(--accent);overflow-x:auto;white-space:nowrap}
+.mcp-cta .cta-install .copy-btn{position:absolute;top:.5rem;right:.5rem;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted);padding:.2rem .5rem;border-radius:4px;cursor:pointer;font-size:.7rem;font-family:var(--sans);transition:all .15s}
+.mcp-cta .cta-install .copy-btn:hover{color:var(--text);border-color:var(--text-dim)}
+.mcp-cta .cta-install .copy-btn.copied{color:var(--accent);border-color:var(--accent)}
+.mcp-cta .cta-links{font-size:.8rem;color:var(--text-muted)}
+.mcp-cta .cta-links a{color:var(--accent);text-decoration:none}
+.mcp-cta .cta-links a:hover{text-decoration:underline}
+@media(max-width:768px){.mcp-cta{padding:1rem}.mcp-cta .cta-install{font-size:.75rem}}`;
+}
+
+function buildMcpCta(context: string): string {
+  return `<div class="mcp-cta">
+    <h3>Get this data in your AI editor</h3>
+    <p class="cta-value">${context}</p>
+    <div class="cta-install"><button class="copy-btn" onclick="copyCta(this)">Copy</button><code>claude mcp add agentdeals -- npx -y agentdeals</code></div>
+    <p class="cta-links">Works with Claude Desktop, Cursor, Cline, Windsurf &rarr; <a href="/setup">Full setup guide</a></p>
+  </div>`;
+}
+
+function mcpCtaScript(): string {
+  return `function copyCta(btn){var code=btn.parentElement.querySelector('code');if(!code)return;navigator.clipboard.writeText(code.textContent).then(function(){btn.textContent='Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},2000)})}`;
+}
+
 function buildCategoryPage(slug: string): string | null {
   const categoryName = categorySlugMap.get(slug);
   if (!categoryName) return null;
@@ -460,6 +489,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.offers-table{font-size:.75rem}.offers-table th,.offers-table td{padding:.4rem .5rem}}
 ${globalNavCss()}
+${mcpCtaCss()}
 </style>
 </head>
 <body>
@@ -492,8 +522,10 @@ ${offersHtml}
     </div>
   </div>
 
+  ${buildMcpCta("Browse this category from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
+<script>${mcpCtaScript()}</script>
 </body>
 </html>`;
 }
@@ -746,6 +778,7 @@ h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.best-pick{flex-direction:column;gap:.5rem}.best-pick-rank{text-align:left}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
 ${globalNavCss()}
+${mcpCtaCss()}
 </style>
 </head>
 <body>
@@ -782,8 +815,10 @@ ${tableRows}
     ${otherBestOf}
   </div>
 
+  ${buildMcpCta("Get personalized recommendations from your AI. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
+<script>${mcpCtaScript()}</script>
 </body>
 </html>`;
 }
@@ -1145,6 +1180,7 @@ h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem
 .related-card:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.compare-grid,.changes-cols{grid-template-columns:1fr}}
+${mcpCtaCss()}
 ${globalNavCss()}
 </style>
 </head>
@@ -1188,8 +1224,10 @@ ${globalNavCss()}
     </div>
   </div>
 ${relatedHtml}
+  ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
+<script>${mcpCtaScript()}</script>
 </body>
 </html>`;
 }
@@ -1795,6 +1833,7 @@ details[open] .faq-q::before{transform:rotate(90deg)}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.detail-grid{grid-template-columns:1fr}.alt-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
 ${globalNavCss()}
+${mcpCtaCss()}
 </style>
 </head>
 <body>
@@ -1842,8 +1881,10 @@ ${comparisonsHtml}
     <code>${escHtmlServer(mcpSnippet)}</code>
   </div>
 ${faqHtml}
+  ${buildMcpCta("Want to compare this vendor in your AI? Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
+<script>${mcpCtaScript()}</script>
 </body>
 </html>`;
 }
@@ -2116,6 +2157,7 @@ details[open] .faq-q::before{transform:rotate(90deg)}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.risk-row{flex-direction:column;align-items:flex-start;gap:.25rem}.alt-meta{flex-direction:column;gap:.25rem}}
 ${globalNavCss()}
+${mcpCtaCss()}
 </style>
 </head>
 <body>
@@ -2137,8 +2179,10 @@ ${allAltsHtml}
     ${trendsHtml}
   </div>
 ${altFaqHtml}
+  ${buildMcpCta("Find alternatives from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents</footer>
 </div>
+<script>${mcpCtaScript()}</script>
 </body>
 </html>`;
 }
