@@ -834,6 +834,16 @@ describe("HTTP transport", () => {
     assert.ok(body.includes("<feed xmlns="));
   });
 
+  it("GET /rss, /feed, /atom redirect 301 to /feed.xml", async () => {
+    proc = await startHttpServer();
+
+    for (const path of ["/rss", "/feed", "/atom"]) {
+      const response = await fetch(`http://localhost:${PORT}${path}`, { redirect: "manual" });
+      assert.strictEqual(response.status, 301, `${path} should 301`);
+      assert.strictEqual(response.headers.get("location"), "/feed.xml", `${path} should redirect to /feed.xml`);
+    }
+  });
+
   it("prompts/list returns all 5 prompt templates", async () => {
     proc = await startHttpServer();
 

@@ -4205,6 +4205,13 @@ const httpServer = createHttpServer(async (req, res) => {
     }
   }
 
+  // Feed URL aliases — redirect common feed paths to canonical /feed.xml
+  if ((url.pathname === "/rss" || url.pathname === "/feed" || url.pathname === "/atom") && req.method === "GET") {
+    res.writeHead(301, { Location: "/feed.xml" });
+    res.end();
+    return;
+  }
+
   // Server-side page view tracking (fire-and-forget, no latency impact)
   // Track HTML page requests only — exclude API, MCP, static assets, health
   const isPagePath = req.method === "GET" && !url.pathname.startsWith("/api/") &&
