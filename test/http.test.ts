@@ -1339,6 +1339,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes('href="/search"'), "Nav should link to Search");
     assert.ok(html.includes('href="/category"'), "Nav should link to Categories");
+    assert.ok(html.includes('href="/best"'), "Nav should link to Best Of");
     assert.ok(html.includes('href="/trends"'), "Nav should link to Trends");
     assert.ok(html.includes('href="/alternative-to"'), "Nav should link to Alternatives");
     assert.ok(html.includes('href="/compare"'), "Nav should link to Compare");
@@ -1366,7 +1367,7 @@ describe("HTTP transport", () => {
   it("global nav appears on all page types", async () => {
     proc = await startHttpServer();
 
-    const pages = ["/", "/category/databases", "/search", "/trends", "/compare", "/alternative-to", "/digest/archive"];
+    const pages = ["/", "/category/databases", "/best", "/search", "/trends", "/compare", "/alternative-to", "/digest/archive"];
     for (const page of pages) {
       const response = await fetch(`http://localhost:${PORT}${page}`);
       const html = await response.text();
@@ -1498,6 +1499,80 @@ function startRedirectServer(): Promise<ChildProcess> {
     });
   });
 }
+
+describe("best-of pages", () => {
+  let proc: ChildProcess | null = null;
+
+  afterEach(() => {
+    if (proc) {
+      proc.kill();
+      proc = null;
+    }
+  });
+
+  it("GET /best returns best-of index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/best`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>"), "Should have a title");
+    assert.ok(html.includes("Best Free Developer Tools"), "Should have page heading");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD structured data");
+    assert.ok(html.includes('href="/best/free-'), "Should link to best-of detail pages");
+    assert.ok(html.includes("best-index-card"), "Should have card grid");
+    assert.ok(html.includes('canonical'), "Should have canonical link");
+  });
+
+  it("GET /best/free-databases returns best-of detail page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/best/free-databases`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Databases"), "Should have category-specific title");
+    assert.ok(html.includes('name="description"'), "Should have meta description");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD structured data");
+    assert.ok(html.includes("ItemList"), "JSON-LD should use ItemList schema");
+    assert.ok(html.includes("best-pick"), "Should have curated pick cards");
+    assert.ok(html.includes("compare-table"), "Should have comparison table");
+    assert.ok(html.includes("Why trust this data"), "Should have trust note");
+    assert.ok(html.includes('canonical'), "Should have canonical link");
+    assert.ok(html.includes('href="/best"'), "Should link back to best-of index");
+    assert.ok(html.includes('href="/category/databases"'), "Should link to full category page");
+  });
+
+  it("GET /best/free-nonexistent returns 404", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/best/free-nonexistent`);
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("404"), "Should show 404 message");
+  });
+
+  it("sitemap.xml includes best-of pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/best"), "Sitemap should include best-of index");
+    assert.ok(xml.includes("/best/free-databases"), "Sitemap should include best-of detail pages");
+    const bestCount = (xml.match(/\/best\//g) || []).length;
+    assert.ok(bestCount >= 8, `Expected 8+ best-of URLs in sitemap, got ${bestCount}`);
+  });
+
+  it("best-of page nav highlights Best Of as active", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/best/free-databases`);
+    const html = await response.text();
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes('class="nav-link active">Best Of'), "Best Of should be active");
+  });
+});
 
 describe("301 canonical hostname redirect", () => {
   let proc: ChildProcess | null = null;
