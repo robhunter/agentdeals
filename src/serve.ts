@@ -8,7 +8,7 @@ import { createServer } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -4205,6 +4205,18 @@ const httpServer = createHttpServer(async (req, res) => {
     }
   }
 
+  // Server-side page view tracking (fire-and-forget, no latency impact)
+  // Track HTML page requests only — exclude API, MCP, static assets, health
+  const isPagePath = req.method === "GET" && !url.pathname.startsWith("/api/") &&
+    url.pathname !== "/mcp" && url.pathname !== "/health" &&
+    url.pathname !== "/favicon.png" && url.pathname !== "/favicon.ico" &&
+    url.pathname !== "/og-image.png" && url.pathname !== "/robots.txt" &&
+    url.pathname !== "/sitemap.xml" && !url.pathname.startsWith("/.well-known/") &&
+    url.pathname !== "/feed.xml";
+  if (isPagePath) {
+    recordPageView(url.pathname, req.headers["user-agent"] ?? "", req.headers["referer"]);
+  }
+
   if (url.pathname === "/mcp") {
     if (req.method === "POST") {
       let body = "";
@@ -4388,6 +4400,10 @@ const httpServer = createHttpServer(async (req, res) => {
   } else if (url.pathname === "/api/stats" && req.method === "GET") {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(getConnectionStats(sessions.size)));
+  } else if (url.pathname === "/api/pageviews" && req.method === "GET") {
+    const data = await getPageViews();
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(data));
   } else if (url.pathname === "/api/offers" && req.method === "GET") {
     recordApiHit("/api/offers");
     const q = url.searchParams.get("q") || undefined;
