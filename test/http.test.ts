@@ -1574,6 +1574,73 @@ describe("best-of pages", () => {
   });
 });
 
+describe("MCP install CTA banner", () => {
+  let proc: ChildProcess | null = null;
+
+  afterEach(() => {
+    if (proc) {
+      proc.kill();
+      proc = null;
+    }
+  });
+
+  it("CTA appears on category page", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/category/databases`);
+    const html = await response.text();
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
+    assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
+    assert.ok(html.includes('href="/setup"'), "Should link to setup guide");
+  });
+
+  it("CTA appears on vendor page", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const html = await response.text();
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
+    assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
+  });
+
+  it("CTA appears on comparison page", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/compare/netlify-vs-vercel`);
+    const html = await response.text();
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
+    assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
+  });
+
+  it("CTA appears on best-of page", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/best/free-databases`);
+    const html = await response.text();
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
+    assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
+  });
+
+  it("CTA appears on alternative-to page", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/alternative-to/vercel`);
+    const html = await response.text();
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
+    assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
+  });
+
+  it("CTA does NOT appear on landing page", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/`);
+    const html = await response.text();
+    assert.ok(!html.includes("mcp-cta"), "Landing page should NOT have MCP CTA banner");
+  });
+
+  it("CTA includes copy button", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const html = await response.text();
+    assert.ok(html.includes("copyCta"), "Should have copy button handler");
+    assert.ok(html.includes("copy-btn"), "Should have copy button");
+  });
+});
+
 describe("301 canonical hostname redirect", () => {
   let proc: ChildProcess | null = null;
 
