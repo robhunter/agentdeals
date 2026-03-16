@@ -697,3 +697,67 @@ export function getExpiringDeals(withinDays: number = 30): { deals: Array<Offer 
 
   return { deals: expiring, total: expiring.length };
 }
+
+export function getWeeklyDigest(): {
+  week: string;
+  date_range: string;
+  deal_changes: DealChange[];
+  new_offers: { vendor: string; category: string; description: string }[];
+  upcoming_deadlines: { vendor: string; expires_date: string; days_until_expiry: number }[];
+  summary: string;
+} {
+  const now = new Date();
+
+  // Get deal changes — 7-day window, fallback to 30 if <3 changes
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  let changes = getDealChanges(sevenDaysAgo).changes;
+  const usedFallback = changes.length < 3;
+  if (usedFallback) {
+    changes = getDealChanges(thirtyDaysAgo).changes;
+  }
+
+  // New offers added in last 7 days
+  const newOffers = getNewOffers(7).offers.slice(0, 10).map((o) => ({
+    vendor: o.vendor,
+    category: o.category,
+    description: o.description,
+  }));
+
+  // Upcoming deadlines (next 30 days)
+  const deadlines = getExpiringDeals(30).deals.slice(0, 10).map((d) => ({
+    vendor: d.vendor,
+    expires_date: d.expires_date!,
+    days_until_expiry: d.days_until_expiry,
+  }));
+
+  // Week label
+  const weekStart = new Date(now.getTime() - now.getUTCDay() * 86400000 + 86400000); // Monday
+  const weekEnd = new Date(weekStart.getTime() + 6 * 86400000);
+  const fmt = (d: Date) => d.toISOString().slice(0, 10);
+  const week = `${fmt(weekStart)} to ${fmt(weekEnd)}`;
+
+  // Build summary
+  const parts: string[] = [];
+  if (changes.length > 0) {
+    const negative = changes.filter((c) => ["free_tier_removed", "limits_reduced", "open_source_killed", "product_deprecated"].includes(c.change_type));
+    const positive = changes.filter((c) => ["new_free_tier", "limits_increased", "startup_program_expanded"].includes(c.change_type));
+    parts.push(`${changes.length} pricing change${changes.length !== 1 ? "s" : ""} tracked${usedFallback ? " in the past 30 days" : " this week"}`);
+    if (negative.length > 0) parts.push(`${negative.length} negative (${negative.map((c) => c.vendor).join(", ")})`);
+    if (positive.length > 0) parts.push(`${positive.length} positive (${positive.map((c) => c.vendor).join(", ")})`);
+  } else {
+    parts.push("No pricing changes this week");
+  }
+  if (newOffers.length > 0) parts.push(`${newOffers.length} new offer${newOffers.length !== 1 ? "s" : ""} added`);
+  if (deadlines.length > 0) parts.push(`${deadlines.length} deal${deadlines.length !== 1 ? "s" : ""} expiring in the next 30 days`);
+  const summary = parts.join(". ") + ".";
+
+  return {
+    week,
+    date_range: `${fmt(weekStart)} to ${fmt(weekEnd)}`,
+    deal_changes: changes,
+    new_offers: newOffers,
+    upcoming_deadlines: deadlines,
+    summary,
+  };
+}

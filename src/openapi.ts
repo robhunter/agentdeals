@@ -412,6 +412,65 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/digest": {
+      get: {
+        summary: "Get weekly pricing digest",
+        description: "Curated weekly summary of developer tool pricing changes, new offers, and upcoming deadlines. Falls back to 30-day window if fewer than 3 changes in the past week.",
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Weekly digest",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    week: { type: "string", description: "Week date range" },
+                    date_range: { type: "string", description: "ISO date range" },
+                    deal_changes: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          vendor: { type: "string" },
+                          change_type: { type: "string" },
+                          date: { type: "string", format: "date" },
+                          summary: { type: "string" },
+                          impact: { type: "string", enum: ["high", "medium", "low"] }
+                        }
+                      }
+                    },
+                    new_offers: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          vendor: { type: "string" },
+                          category: { type: "string" },
+                          description: { type: "string" }
+                        }
+                      }
+                    },
+                    upcoming_deadlines: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          vendor: { type: "string" },
+                          expires_date: { type: "string", format: "date" },
+                          days_until_expiry: { type: "integer" }
+                        }
+                      }
+                    },
+                    summary: { type: "string", description: "One-paragraph summary of the week" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stack": {
       get: {
         summary: "Get free-tier stack recommendation",
