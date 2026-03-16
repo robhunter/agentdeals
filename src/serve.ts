@@ -594,6 +594,17 @@ const COMPARISON_PAIRS: [string, string][] = [
   ["CircleCI", "GitLab CI"],
   // Auth
   ["Auth0", "Clerk"],
+  // AI Coding
+  ["Cursor", "GitHub Copilot"],
+  ["Cursor", "Windsurf"],
+  ["Amazon Q Developer", "GitHub Copilot"],
+  ["Cline", "Aider"],
+  ["Claude Code", "Cursor"],
+  ["Cursor", "Devin"],
+  ["GitHub Copilot", "Windsurf"],
+  ["Augment Code", "Cursor"],
+  ["Bolt.new", "Lovable"],
+  ["Claude Code", "OpenAI Codex"],
   // Cross-category high-interest
   ["Firebase", "Vercel"],
   ["Railway", "Supabase"],
