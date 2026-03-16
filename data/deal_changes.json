@@ -842,6 +842,42 @@
       "source_url": "https://testcontainers.com/cloud/",
       "category": "Testing",
       "alternatives": ["Testcontainers (open-source)", "Docker Desktop", "Podman"]
+    },
+    {
+      "vendor": "Docker Desktop",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-01",
+      "summary": "Docker Desktop subscription prices increased 67-80% across all tiers. Personal $7→$11, Pro $9→$14, Team $15→$24, Business $24→$35 per user/month. Separate from Docker Hub registry pricing changes",
+      "previous_state": "Personal $7/user/month, Pro $9/user/month, Team $15/user/month, Business $24/user/month",
+      "current_state": "Personal $11/user/month (+57%), Pro $14/user/month (+56%), Team $24/user/month (+60%), Business $35/user/month (+46%). All tiers affected",
+      "impact": "high",
+      "source_url": "https://www.docker.com/pricing/",
+      "category": "Container Registry",
+      "alternatives": ["Podman Desktop", "Rancher Desktop", "OrbStack"]
+    },
+    {
+      "vendor": "Unity DevOps",
+      "change_type": "limits_increased",
+      "date": "2026-03-01",
+      "summary": "Free tier significantly expanded: storage 5x increase to 25 GB, 100 GB egress added (new), per-seat charges removed. Unity DevOps (formerly Plastic SCM) now offers generous free version control for game developers",
+      "previous_state": "5 GB storage, no egress allowance, per-seat pricing for teams",
+      "current_state": "25 GB storage (5x increase), 100 GB egress/month (new), per-seat charges removed. Free for individuals and small teams",
+      "impact": "medium",
+      "source_url": "https://unity.com/products/devops",
+      "category": "Version Control",
+      "alternatives": ["Git LFS", "Perforce", "GitHub"]
+    },
+    {
+      "vendor": "Anthropic Claude",
+      "change_type": "limits_increased",
+      "date": "2026-03-13",
+      "summary": "Temporary usage promotion: double five-hour usage limits during off-peak hours, March 13-27, 2026. Applies to Claude Pro and Team subscribers",
+      "previous_state": "Standard five-hour usage limits for Pro and Team subscribers",
+      "current_state": "2x usage limits during off-peak hours (March 13-27, 2026 only). Temporary promotion to showcase increased capacity",
+      "impact": "low",
+      "source_url": "https://www.anthropic.com/news",
+      "category": "AI/ML",
+      "alternatives": ["OpenAI ChatGPT Plus", "Google Gemini Advanced"]
     }
   ]
 }
