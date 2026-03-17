@@ -41,7 +41,7 @@
     "recategorize": "node scripts/recategorize.ts",
     "reverify": "node scripts/reverify.js",
     "validate": "node scripts/validate-data.ts",
-    "build:mcpb": "npm run build && npx mcpb pack ."
+    "build:mcpb": "npm run build && npx @anthropic-ai/mcpb pack ."
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
