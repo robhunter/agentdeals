@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
-const BASE_URL = (process.env.BASE_URL ?? "https://agentdeals-production.up.railway.app").replace(/\/+$/, "");
+const BASE_URL = (process.env.BASE_URL ?? "https://agentdeals.dev").replace(/\/+$/, "");
 
 const GOOGLE_VERIFICATION_META = process.env.GOOGLE_SITE_VERIFICATION
   ? `<meta name="google-site-verification" content="${process.env.GOOGLE_SITE_VERIFICATION}">\n` : "";
