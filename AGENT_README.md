@@ -6,7 +6,7 @@ A remote MCP server that aggregates publicly available discounts, free tiers, st
 
 ## Success Criteria
 
-- Working MCP server responding to `search_offers`, `list_categories`, and `get_offer_details` tools
+- Working MCP server responding to `search_deals`, `plan_stack`, `compare_vendors`, and `track_changes` tools
 - Index of real vendor offers with verified data
 - Deployed and accessible (ngrok for dev, hosted service for launch)
 - Registered on MCP registries
@@ -63,4 +63,4 @@ Endpoints:
 
 ## Current Status
 
-MCP server is functional with stdio and HTTP transports. 4 tools (search_offers with pagination/sorting/eligibility filtering, list_categories, get_offer_details, get_deal_changes). 1,506 offers across 52 categories with eligibility schema (accelerator, oss, fintech, student types). 50 tracked pricing changes. 3 REST API endpoints (/api/offers, /api/categories, /api/stats). HTML landing page with interactive deal browser and OG meta tags. 75 passing tests. Multi-session HTTP support with idle timeout cleanup and structured connection logging. Deployed on Railway. Listed on Official MCP Registry and Glama. Registry manifests in place (server.json, glama.json, smithery.yaml). Staleness detection, pricing change monitor, bulk ingestion scripts, and category recategorization script available.
+MCP server is functional with stdio and HTTP transports. 4 intent-based tools (search_deals, plan_stack, compare_vendors, track_changes). 1,511 offers across 53 categories with eligibility schema (accelerator, oss, fintech, student types). 52 tracked pricing changes. 12 REST API endpoints. HTML landing page with interactive deal browser and OG meta tags. 159 passing tests. Multi-session HTTP support with idle timeout cleanup and structured connection logging. Deployed on Railway. Listed on Official MCP Registry and Glama. Registry manifests in place (server.json, glama.json, smithery.yaml). Staleness detection, pricing change monitor, bulk ingestion scripts, and category recategorization script available.

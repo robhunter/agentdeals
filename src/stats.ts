@@ -10,12 +10,10 @@ const startedAt = Date.now();
 const serverStartedISO = new Date(startedAt).toISOString();
 
 const toolCalls: Record<string, number> = {
-  search_offers: 0,
-  list_categories: 0,
-  get_offer_details: 0,
-  get_deal_changes: 0,
-  get_new_offers: 0,
-  get_stack_recommendation: 0,
+  search_deals: 0,
+  plan_stack: 0,
+  compare_vendors: 0,
+  track_changes: 0,
 };
 
 const apiHits: Record<string, number> = {

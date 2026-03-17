@@ -125,7 +125,7 @@ describe("HTTP transport", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "list_categories", arguments: {} },
+          params: { name: "search_deals", arguments: { category: "list" } },
         },
       ],
       sessionId
@@ -141,7 +141,7 @@ describe("HTTP transport", () => {
     assert.ok(categories.length > 0);
   });
 
-  it("search_offers works over HTTP", async () => {
+  it("search_deals works over HTTP", async () => {
     proc = await startHttpServer();
 
     // Initialize
@@ -168,7 +168,7 @@ describe("HTTP transport", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "search_offers", arguments: { query: "postgres" } },
+          params: { name: "search_deals", arguments: { query: "postgres" } },
         },
       ],
       sessionId
@@ -237,7 +237,7 @@ describe("HTTP transport", () => {
             jsonrpc: "2.0",
             id: 2,
             method: "tools/call",
-            params: { name: "list_categories", arguments: {} },
+            params: { name: "search_deals", arguments: { category: "list" } },
           },
         ],
         sessionA
@@ -250,7 +250,7 @@ describe("HTTP transport", () => {
             jsonrpc: "2.0",
             id: 2,
             method: "tools/call",
-            params: { name: "search_offers", arguments: { query: "redis" } },
+            params: { name: "search_deals", arguments: { query: "redis" } },
           },
         ],
         sessionB
@@ -262,13 +262,13 @@ describe("HTTP transport", () => {
 
     const dataA = parseSSEData(toolRespA.text);
     const resultA = dataA.find((d: any) => d.id === 2);
-    assert.ok(resultA, "Client A should get list_categories result");
+    assert.ok(resultA, "Client A should get search_deals category list result");
     const categories = JSON.parse(resultA.result.content[0].text);
     assert.ok(Array.isArray(categories));
 
     const dataB = parseSSEData(toolRespB.text);
     const resultB = dataB.find((d: any) => d.id === 2);
-    assert.ok(resultB, "Client B should get search_offers result");
+    assert.ok(resultB, "Client B should get search_deals result");
     const searchBody = JSON.parse(resultB.result.content[0].text);
     assert.ok(Array.isArray(searchBody.results));
     assert.ok(searchBody.results.length > 0);
@@ -284,7 +284,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(body["$schema"], "https://glama.ai/mcp/schemas/server.json");
     assert.strictEqual(body.name, "agentdeals");
     assert.strictEqual(body.license, "MIT");
-    assert.strictEqual(body.tools, 12);
+    assert.strictEqual(body.tools, 4);
     assert.ok(Array.isArray(body.transport));
   });
 
@@ -302,7 +302,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("npx -y agentdeals"));
     assert.ok(html.includes("/mcp"));
     assert.ok(html.includes("HowTo"), "Should have HowTo JSON-LD structured data");
-    assert.ok(html.includes("search_offers"), "Should list tool examples");
+    assert.ok(html.includes("search_deals"), "Should list tool examples");
   });
 
   it("serves landing page at root URL", async () => {
@@ -950,7 +950,7 @@ describe("HTTP transport", () => {
     const msg = result.result.messages[0];
     assert.strictEqual(msg.role, "user");
     assert.ok(msg.content.text.includes("Supabase"));
-    assert.ok(msg.content.text.includes("compare_services"));
+    assert.ok(msg.content.text.includes("compare_vendors"));
   });
 
   it("GET /category/:slug returns server-rendered category page", async () => {
