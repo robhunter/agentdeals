@@ -49,9 +49,9 @@ describe("telemetry persistence", () => {
     // Simulate activity
     recordSessionConnect();
     recordSessionConnect();
-    recordToolCall("search_offers");
-    recordToolCall("search_offers");
-    recordToolCall("list_categories");
+    recordToolCall("search_deals");
+    recordToolCall("search_deals");
+    recordToolCall("search_deals");
     recordApiHit("/api/offers");
     recordLandingPageView();
 

@@ -126,10 +126,10 @@ describe("audit_stack MCP tool via stdio", () => {
     const parsed = JSON.parse(response);
     assert.strictEqual(parsed.id, 2);
     const tools = parsed.result.tools;
-    const auditTool = tools.find((t: any) => t.name === "audit_stack");
-    assert.ok(auditTool, "audit_stack should be in tools list");
-    assert.ok(auditTool.description.includes("Audit"), "Description should mention Audit");
-    assert.ok(auditTool.inputSchema.properties.services, "Should have services input parameter");
+    const planTool = tools.find((t: any) => t.name === "plan_stack");
+    assert.ok(planTool, "plan_stack should be in tools list");
+    assert.ok(planTool.description.includes("audit") || planTool.description.includes("stack"), "Description should mention audit or stack");
+    assert.ok(planTool.inputSchema.properties.mode, "Should have mode input parameter");
   });
 });
 

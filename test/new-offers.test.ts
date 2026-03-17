@@ -60,7 +60,7 @@ const INIT_MESSAGES = [
   { jsonrpc: "2.0", method: "notifications/initialized" },
 ];
 
-describe("get_new_offers MCP tool", () => {
+describe("search_deals with since param (new offers)", () => {
   let proc: ReturnType<typeof spawn> | null = null;
 
   afterEach(() => {
@@ -70,50 +70,15 @@ describe("get_new_offers MCP tool", () => {
     }
   });
 
-  it("returns offers with default 7-day window", async () => {
+  it("returns deals verified since a given date", async () => {
     const serverPath = path.join(__dirname, "..", "dist", "index.js");
     proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
     });
 
-    const responses = await sendMcpMessages(proc, [
-      ...INIT_MESSAGES,
-      {
-        jsonrpc: "2.0",
-        id: 2,
-        method: "tools/call",
-        params: { name: "get_new_offers", arguments: {} },
-      },
-    ]);
-
-    const toolResponse = responses.find((r: any) => r.id === 2) as any;
-    assert.ok(toolResponse);
-    assert.ok(toolResponse.result);
-    const body = JSON.parse(toolResponse.result.content[0].text);
-    assert.ok(Array.isArray(body.offers));
-    assert.strictEqual(typeof body.total, "number");
-    assert.strictEqual(body.total, body.offers.length);
-
-    // All offers should have verifiedDate within last 7 days
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
       .toISOString()
       .slice(0, 10);
-    for (const offer of body.offers) {
-      assert.ok(offer.verifiedDate >= sevenDaysAgo, `${offer.vendor} verifiedDate ${offer.verifiedDate} should be >= ${sevenDaysAgo}`);
-    }
-
-    // Should be sorted by verifiedDate descending
-    for (let i = 1; i < body.offers.length; i++) {
-      assert.ok(body.offers[i - 1].verifiedDate >= body.offers[i].verifiedDate,
-        "Offers should be sorted newest first");
-    }
-  });
-
-  it("accepts custom days parameter", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    proc = spawn("node", [serverPath], {
-      stdio: ["pipe", "pipe", "pipe"],
-    });
 
     const responses = await sendMcpMessages(proc, [
       ...INIT_MESSAGES,
@@ -121,48 +86,76 @@ describe("get_new_offers MCP tool", () => {
         jsonrpc: "2.0",
         id: 2,
         method: "tools/call",
-        params: { name: "get_new_offers", arguments: { days: 30 } },
-      },
-    ]);
-
-    const toolResponse = responses.find((r: any) => r.id === 2) as any;
-    assert.ok(toolResponse);
-    const body = JSON.parse(toolResponse.result.content[0].text);
-    assert.ok(Array.isArray(body.offers));
-
-    // 30-day window should return >= 7-day window results
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .slice(0, 10);
-    for (const offer of body.offers) {
-      assert.ok(offer.verifiedDate >= thirtyDaysAgo);
-    }
-  });
-
-  it("returns empty array when no offers match", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    proc = spawn("node", [serverPath], {
-      stdio: ["pipe", "pipe", "pipe"],
-    });
-
-    // Use days=1 which may return empty if no offers verified today
-    const responses = await sendMcpMessages(proc, [
-      ...INIT_MESSAGES,
-      {
-        jsonrpc: "2.0",
-        id: 2,
-        method: "tools/call",
-        params: { name: "get_new_offers", arguments: { days: 1 } },
+        params: { name: "search_deals", arguments: { since: sevenDaysAgo } },
       },
     ]);
 
     const toolResponse = responses.find((r: any) => r.id === 2) as any;
     assert.ok(toolResponse);
     assert.ok(toolResponse.result);
-    // Should not be an error even if empty
+    const body = JSON.parse(toolResponse.result.content[0].text);
+    assert.ok(Array.isArray(body.deals));
+    assert.strictEqual(typeof body.total, "number");
+
+    // All deals should have verifiedDate on or after since
+    for (const deal of body.deals) {
+      assert.ok(deal.verifiedDate >= sevenDaysAgo, `${deal.vendor} verifiedDate ${deal.verifiedDate} should be >= ${sevenDaysAgo}`);
+    }
+  });
+
+  it("returns deals within 30-day window", async () => {
+    const serverPath = path.join(__dirname, "..", "dist", "index.js");
+    proc = spawn("node", [serverPath], {
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
+
+    const responses = await sendMcpMessages(proc, [
+      ...INIT_MESSAGES,
+      {
+        jsonrpc: "2.0",
+        id: 2,
+        method: "tools/call",
+        params: { name: "search_deals", arguments: { since: thirtyDaysAgo } },
+      },
+    ]);
+
+    const toolResponse = responses.find((r: any) => r.id === 2) as any;
+    assert.ok(toolResponse);
+    const body = JSON.parse(toolResponse.result.content[0].text);
+    assert.ok(Array.isArray(body.deals));
+
+    for (const deal of body.deals) {
+      assert.ok(deal.verifiedDate >= thirtyDaysAgo);
+    }
+  });
+
+  it("returns empty array when no deals match", async () => {
+    const serverPath = path.join(__dirname, "..", "dist", "index.js");
+    proc = spawn("node", [serverPath], {
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    // Use a future date which should return nothing
+    const responses = await sendMcpMessages(proc, [
+      ...INIT_MESSAGES,
+      {
+        jsonrpc: "2.0",
+        id: 2,
+        method: "tools/call",
+        params: { name: "search_deals", arguments: { since: "2099-01-01" } },
+      },
+    ]);
+
+    const toolResponse = responses.find((r: any) => r.id === 2) as any;
+    assert.ok(toolResponse);
+    assert.ok(toolResponse.result);
     assert.ok(!toolResponse.result.isError);
     const body = JSON.parse(toolResponse.result.content[0].text);
-    assert.ok(Array.isArray(body.offers));
+    assert.ok(Array.isArray(body.deals));
     assert.strictEqual(typeof body.total, "number");
   });
 });

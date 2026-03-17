@@ -94,13 +94,13 @@ describe("request log entry format", () => {
   });
 });
 
-describe("get_new_offers counter fix", () => {
-  it("toolCalls includes get_new_offers counter", async () => {
+describe("search_deals counter", () => {
+  it("toolCalls includes search_deals counter", async () => {
     const { getStats, recordToolCall } = await import("../dist/stats.js");
 
-    recordToolCall("get_new_offers");
+    recordToolCall("search_deals");
     const stats = getStats();
-    assert.ok("get_new_offers" in stats.tool_calls, "toolCalls should include get_new_offers");
-    assert.ok(stats.tool_calls.get_new_offers >= 1, "get_new_offers counter should increment");
+    assert.ok("search_deals" in stats.tool_calls, "toolCalls should include search_deals");
+    assert.ok(stats.tool_calls.search_deals >= 1, "search_deals counter should increment");
   });
 });

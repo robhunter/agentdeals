@@ -109,9 +109,9 @@ describe("get_newest_deals MCP tool via stdio", () => {
     assert.strictEqual(parsed.id, 2);
     const tools = parsed.result.tools;
     assert.ok(Array.isArray(tools));
-    const newestTool = tools.find((t: any) => t.name === "get_newest_deals");
-    assert.ok(newestTool, "get_newest_deals should be in tools list");
-    assert.ok(newestTool.description.includes("newest") || newestTool.description.includes("new"), "Description should mention newest/new");
+    const searchTool = tools.find((t: any) => t.name === "search_deals");
+    assert.ok(searchTool, "search_deals should be in tools list");
+    assert.ok(searchTool.description.includes("deals") || searchTool.description.includes("Find"), "Description should mention deals or find");
   });
 });
 

@@ -109,9 +109,9 @@ describe("get_expiring_deals MCP tool via stdio", () => {
     assert.strictEqual(parsed.id, 2);
     const tools = parsed.result.tools;
     assert.ok(Array.isArray(tools));
-    const expiringTool = tools.find((t: any) => t.name === "get_expiring_deals");
-    assert.ok(expiringTool, "get_expiring_deals should be in tools list");
-    assert.ok(expiringTool.description.includes("expiring"), "Description should mention expiring");
+    const trackTool = tools.find((t: any) => t.name === "track_changes");
+    assert.ok(trackTool, "track_changes should be in tools list");
+    assert.ok(trackTool.description.includes("expir") || trackTool.description.includes("changes"), "Description should mention expiring or changes");
   });
 });
 

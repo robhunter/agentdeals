@@ -67,7 +67,7 @@ function startServer() {
   });
 }
 
-describe("get_deal_changes tool", () => {
+describe("track_changes tool", () => {
   it("returns all changes when no filters (with broad since)", async () => {
     // Use direct function import to verify local data count
     // (the remote MCP server proxies to the deployed API which may lag behind local data)
@@ -89,8 +89,8 @@ describe("get_deal_changes tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "get_deal_changes",
-            arguments: { since: "2026-02-01" },
+            name: "track_changes",
+            arguments: { include_expiring: false, since: "2026-02-01" },
           },
         },
       ])) as any[];
@@ -117,8 +117,8 @@ describe("get_deal_changes tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "get_deal_changes",
-            arguments: { since: "2025-01-01", change_type: "free_tier_removed" },
+            name: "track_changes",
+            arguments: { include_expiring: false, since: "2025-01-01", change_type: "free_tier_removed" },
           },
         },
       ])) as any[];
@@ -145,8 +145,8 @@ describe("get_deal_changes tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "get_deal_changes",
-            arguments: { since: "2025-01-01", vendor: "netlify" },
+            name: "track_changes",
+            arguments: { include_expiring: false, since: "2025-01-01", vendor: "netlify" },
           },
         },
       ])) as any[];
@@ -171,8 +171,8 @@ describe("get_deal_changes tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "get_deal_changes",
-            arguments: { since: "2025-01-01", change_type: "limits_reduced", vendor: "gemini" },
+            name: "track_changes",
+            arguments: { include_expiring: false, since: "2025-01-01", change_type: "limits_reduced", vendor: "gemini" },
           },
         },
       ])) as any[];
@@ -198,8 +198,8 @@ describe("get_deal_changes tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "get_deal_changes",
-            arguments: { since: "2025-01-01", vendor: "nonexistent-xyz-999" },
+            name: "track_changes",
+            arguments: { include_expiring: false, since: "2025-01-01", vendor: "nonexistent-xyz-999" },
           },
         },
       ])) as any[];
@@ -224,8 +224,8 @@ describe("get_deal_changes tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "get_deal_changes",
-            arguments: { since: "2025-01-01" },
+            name: "track_changes",
+            arguments: { include_expiring: false, since: "2025-01-01" },
           },
         },
       ])) as any[];
@@ -255,8 +255,8 @@ describe("get_deal_changes tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "get_deal_changes",
-            arguments: { since: "2025-01-01" },
+            name: "track_changes",
+            arguments: { include_expiring: false, since: "2025-01-01" },
           },
         },
       ])) as any[];
