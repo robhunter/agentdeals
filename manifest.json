@@ -41,52 +41,20 @@
   },
   "tools": [
     {
-      "name": "list_categories",
-      "description": "Browse 53 categories of developer infrastructure deals (databases, cloud hosting, CI/CD, monitoring, auth, search, and more)."
+      "name": "search_deals",
+      "description": "Find free tiers, credits, and discounts for 1,500+ developer tools. Search by keyword, browse categories, or get full vendor details with alternatives."
     },
     {
-      "name": "search_offers",
-      "description": "Find free tiers, credits, and discounts for developer tools. Covers 1,500+ offers from vendors like AWS, Vercel, Supabase, Cloudflare, and more."
+      "name": "plan_stack",
+      "description": "Get stack recommendations, cost estimates, or a full infrastructure audit for your project."
     },
     {
-      "name": "get_offer_details",
-      "description": "Get full pricing details for a specific vendor's free tier or deal, with optional alternatives comparison."
+      "name": "compare_vendors",
+      "description": "Compare 2 vendors side-by-side or check a single vendor's pricing risk. Returns free tier limits, risk levels, and alternatives."
     },
     {
-      "name": "get_new_offers",
-      "description": "Check what developer tool deals were recently added or updated within the last N days."
-    },
-    {
-      "name": "get_newest_deals",
-      "description": "See what's new in the AgentDeals index, sorted by verified date with days_since_update for each result."
-    },
-    {
-      "name": "get_deal_changes",
-      "description": "Check which developer tools recently changed their pricing or free tiers. Tracks removals, reductions, increases, and restructures."
-    },
-    {
-      "name": "get_stack_recommendation",
-      "description": "Get a complete free-tier infrastructure stack recommendation for your project based on use case."
-    },
-    {
-      "name": "estimate_costs",
-      "description": "Estimate infrastructure costs for your current stack at different scales (hobby/startup/growth)."
-    },
-    {
-      "name": "compare_services",
-      "description": "Compare two developer tool vendors side by side — free tier limits, pricing tiers, differentiators, and recent changes."
-    },
-    {
-      "name": "check_vendor_risk",
-      "description": "Check if a vendor's pricing is stable before depending on their free tier. Returns risk level, change history, and alternatives."
-    },
-    {
-      "name": "audit_stack",
-      "description": "Audit your infrastructure stack for cost savings, pricing risks, and missing capabilities."
-    },
-    {
-      "name": "get_expiring_deals",
-      "description": "Check which developer tool deals, free tiers, or credits are expiring soon."
+      "name": "track_changes",
+      "description": "Track developer tool pricing changes, upcoming expirations, and new deals. Weekly digest with no params."
     }
   ],
   "prompts_generated": true

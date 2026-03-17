@@ -1700,7 +1700,7 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
 
   // MCP snippet
   const mcpSnippet = `{
-  "tool": "search_offers",
+  "tool": "search_deals",
   "arguments": {
     "query": "${vendorName.replace(/"/g, '\\"')}",
     "limit": 5
@@ -2318,16 +2318,16 @@ function buildSetupPage(): string {
   };
 
   const toolExamples: { tool: string; question: string; desc: string }[] = [
-    { tool: "search_offers", question: "Find free database hosting", desc: "Search 1,500+ deals by category, pricing, or keyword" },
-    { tool: "compare_services", question: "Compare Supabase vs Neon vs PlanetScale", desc: "Side-by-side comparison of free tiers and limits" },
-    { tool: "get_deal_changes", question: "What pricing changes happened this month?", desc: "Track free tier removals, limit changes, and new deals" },
-    { tool: "estimate_costs", question: "Estimate costs for a SaaS backend", desc: "Project costs across hosting, database, auth, and more" },
-    { tool: "check_vendor_risk", question: "Is Heroku's free tier at risk?", desc: "Risk scoring based on pricing history and signals" },
-    { tool: "search_offers", question: "Show me startup credit programs", desc: "Filter by eligibility type: startup, student, or open-source" },
-    { tool: "get_stack_recommendation", question: "What are alternatives to Vercel?", desc: "Find similar services and compare their free tiers" },
-    { tool: "audit_stack", question: "Audit my current stack: Vercel, Supabase, Clerk", desc: "Risk assessment, cost projection, and gap analysis for your stack" },
-    { tool: "get_expiring_deals", question: "Any deals expiring soon?", desc: "Upcoming expirations and deadlines across tracked vendors" },
-    { tool: "get_newest_deals", question: "What's new this week?", desc: "Recently added deals and pricing updates" },
+    { tool: "search_deals", question: "Find free database hosting", desc: "Search 1,500+ deals by category, pricing, or keyword" },
+    { tool: "compare_vendors", question: "Compare Supabase vs Neon", desc: "Side-by-side comparison of free tiers, risk levels, and limits" },
+    { tool: "track_changes", question: "What pricing changes happened this month?", desc: "Track free tier removals, limit changes, and new deals" },
+    { tool: "plan_stack", question: "Estimate costs for a SaaS backend", desc: "Stack recommendations, cost estimates, and infrastructure audits" },
+    { tool: "compare_vendors", question: "Is Heroku's free tier at risk?", desc: "Risk scoring based on pricing history and signals" },
+    { tool: "search_deals", question: "Show me startup credit programs", desc: "Filter by eligibility type: startup, student, or open-source" },
+    { tool: "search_deals", question: "What are alternatives to Vercel?", desc: "Vendor details with alternatives in the same category" },
+    { tool: "plan_stack", question: "Audit my current stack: Vercel, Supabase, Clerk", desc: "Risk assessment, cost projection, and gap analysis for your stack" },
+    { tool: "track_changes", question: "Any deals expiring soon?", desc: "Upcoming expirations and deadlines across tracked vendors" },
+    { tool: "search_deals", question: "What's new this week?", desc: "Recently added deals and pricing updates" },
   ];
 
   const toolExamplesHtml = toolExamples.map(t =>
@@ -3927,18 +3927,10 @@ ${buildRecentChangesSection()}
     <div class="connect-block" style="margin-top:1.5rem">
       <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem">12 MCP Tools</h3>
       <div style="display:grid;gap:.5rem">
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">search_offers</code> <span style="color:var(--text-muted)">&mdash; Find free tiers, credits, and discounts. Filter by category, eligibility, or keyword.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">list_categories</code> <span style="color:var(--text-muted)">&mdash; Browse all ${stats.categories} categories with offer counts.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_offer_details</code> <span style="color:var(--text-muted)">&mdash; Full pricing details for a vendor, with alternatives in the same category.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_new_offers</code> <span style="color:var(--text-muted)">&mdash; Recently added or updated deals, sorted newest first.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_newest_deals</code> <span style="color:var(--text-muted)">&mdash; Most recently added deals with optional date and category filters.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_deal_changes</code> <span style="color:var(--text-muted)">&mdash; Track pricing shifts: removals, reductions, increases, restructures.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_expiring_deals</code> <span style="color:var(--text-muted)">&mdash; Find deals with upcoming expiration dates or deadlines.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">get_stack_recommendation</code> <span style="color:var(--text-muted)">&mdash; Get a curated free-tier stack for your project type.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">estimate_costs</code> <span style="color:var(--text-muted)">&mdash; Estimate infrastructure costs at hobby, startup, or growth scale.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">compare_services</code> <span style="color:var(--text-muted)">&mdash; Side-by-side comparison of two vendors.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">check_vendor_risk</code> <span style="color:var(--text-muted)">&mdash; Check if a vendor's free tier pricing is stable before depending on it.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">audit_stack</code> <span style="color:var(--text-muted)">&mdash; Audit your stack for cost savings, pricing risks, and missing capabilities.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">search_deals</code> <span style="color:var(--text-muted)">&mdash; Find free tiers, browse categories, get vendor details with alternatives. Filter by category, eligibility, or keyword.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">plan_stack</code> <span style="color:var(--text-muted)">&mdash; Get stack recommendations, cost estimates, or a full infrastructure audit for your project.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">compare_vendors</code> <span style="color:var(--text-muted)">&mdash; Compare 2 vendors side-by-side or check a single vendor's pricing risk.</span></div>
+        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">track_changes</code> <span style="color:var(--text-muted)">&mdash; Track pricing changes, upcoming expirations, and new deals. Weekly digest with no params.</span></div>
       </div>
     </div>
 

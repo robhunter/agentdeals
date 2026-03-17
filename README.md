@@ -66,7 +66,7 @@ Connect to the hosted instance — no install required:
 
 **Find free database hosting:**
 ```
-Use the search_offers tool to find database deals:
+Use the search_deals tool:
   query: "database"
   category: "Databases"
 ```
@@ -75,7 +75,7 @@ Returns Neon (0.5 GiB free Postgres), Supabase (500 MB), MongoDB Atlas (512 MB s
 
 **What pricing changes happened recently?**
 ```
-Use the get_deal_changes tool:
+Use the track_changes tool (no params for weekly digest, or filter):
   since: "2025-01-01"
 ```
 
@@ -83,8 +83,8 @@ Returns tracked changes like PlanetScale free tier removal, Heroku free dynos su
 
 **Show deals I qualify for as a YC company:**
 ```
-Use the search_offers tool:
-  eligibility_type: "accelerator"
+Use the search_deals tool:
+  eligibility: "accelerator"
 ```
 
 Returns AWS Activate, Google Cloud for Startups, Microsoft Founders Hub, Stripe Atlas credits, and 150+ other startup program deals.
@@ -300,75 +300,47 @@ curl "https://agentdeals.dev/api/openapi.json"
 
 | Tool | Description |
 |------|-------------|
-| `search_offers` | Search deals by keyword, category, eligibility, or vendor name. Supports pagination and sorting. |
-| `list_categories` | List all available deal categories with offer counts. |
-| `get_offer_details` | Get full details for a specific vendor, including related vendors in the same category. |
-| `get_new_offers` | Check recently added or updated deals, sorted newest first. |
-| `get_deal_changes` | Get recent pricing and free tier changes — removals, reductions, increases, restructures. |
-| `get_stack_recommendation` | Get a curated free-tier infrastructure stack for your project type (SaaS, API backend, static site, etc.). |
-| `estimate_costs` | Estimate infrastructure costs for your stack at hobby, startup, or growth scale. |
-| `compare_services` | Side-by-side comparison of two vendor free tiers, pricing, and differentiators. |
-| `check_vendor_risk` | Check if a vendor's free tier pricing is stable — risk level, change history, and safer alternatives. |
-| `audit_stack` | Audit your infrastructure stack for cost savings, pricing risks, and coverage gaps. |
+| `search_deals` | Find free tiers, browse categories, get vendor details with alternatives. Search by keyword, category, eligibility, or vendor name. |
+| `plan_stack` | Get stack recommendations, cost estimates, or a full infrastructure audit for your project. |
+| `compare_vendors` | Compare 2 vendors side-by-side or check a single vendor's pricing risk. |
+| `track_changes` | Track pricing changes, upcoming expirations, and new deals. Weekly digest with no params. |
 
-### search_offers
+### search_deals
 
 **Parameters:**
-- `query` (string, optional) — Keyword to search vendor names, descriptions, and tags
-- `category` (string, optional) — Filter to a specific category (e.g. "Databases", "Cloud Hosting")
-- `eligibility_type` (string, optional) — Filter by type: `public`, `accelerator`, `oss`, `student`, `fintech`, `geographic`, `enterprise`
-- `sort` (string, optional) — Sort results: `vendor` (alphabetical), `category` (by category then vendor), `newest` (most recently verified)
-- `limit` (number, optional) — Maximum results to return
-- `offset` (number, optional) — Number of results to skip
+- `query` (string, optional) — Keyword search (vendor names, descriptions, tags)
+- `category` (string, optional) — Filter by category. Pass `"list"` to get all categories with counts.
+- `vendor` (string, optional) — Get full details for a specific vendor (fuzzy match). Returns alternatives.
+- `eligibility` (string, optional) — Filter: `public`, `accelerator`, `oss`, `student`, `fintech`, `geographic`, `enterprise`
+- `sort` (string, optional) — Sort: `vendor` (A-Z), `category`, `newest` (recently verified first)
+- `since` (string, optional) — ISO date. Only return deals verified/added after this date.
+- `limit` (number, optional) — Max results (default: 20)
+- `offset` (number, optional) — Pagination offset
 
-### list_categories
-
-No parameters. Returns all categories with offer counts.
-
-### get_offer_details
+### plan_stack
 
 **Parameters:**
-- `vendor` (string, required) — Vendor name (case-insensitive match)
+- `mode` (string, required) — `recommend`, `estimate`, or `audit`
+- `use_case` (string, optional) — What you're building (for recommend mode)
+- `services` (array, optional) — Current vendor names (for estimate/audit mode)
+- `scale` (string, optional) — `hobby`, `startup`, `growth` (for estimate mode, default: hobby)
+- `requirements` (array, optional) — Specific infra needs (for recommend mode)
 
-### get_new_offers
-
-**Parameters:**
-- `days` (number, optional) — Number of days to look back. Default: 7
-
-### get_deal_changes
-
-**Parameters:**
-- `since` (string, optional) — ISO date (YYYY-MM-DD). Only return changes on or after this date. Default: 30 days ago
-- `change_type` (string, optional) — Filter: `free_tier_removed`, `limits_reduced`, `limits_increased`, `new_free_tier`, `pricing_restructured`
-- `vendor` (string, optional) — Filter by vendor name (case-insensitive partial match)
-
-### get_stack_recommendation
+### compare_vendors
 
 **Parameters:**
-- `use_case` (string, required) — Project type: `saas`, `api`, `static`, `mobile`, `ai_ml`, `ecommerce`, `devops`
-- `requirements` (string, optional) — Additional requirements or preferences
+- `vendors` (array, required) — 1 or 2 vendor names. 1 = risk check, 2 = side-by-side comparison.
+- `include_risk` (boolean, optional) — Include risk assessment (default: true)
 
-### estimate_costs
-
-**Parameters:**
-- `services` (string, required) — Comma-separated list of vendor names (e.g. "Vercel,Supabase,Clerk")
-- `scale` (string, optional) — Scale tier: `hobby`, `startup`, `growth`. Default: `hobby`
-
-### compare_services
+### track_changes
 
 **Parameters:**
-- `vendor_a` (string, required) — First vendor name
-- `vendor_b` (string, required) — Second vendor name
-
-### check_vendor_risk
-
-**Parameters:**
-- `vendor` (string, required) — Vendor name to check
-
-### audit_stack
-
-**Parameters:**
-- `services` (string, required) — Comma-separated list of vendor names currently in use
+- `since` (string, optional) — ISO date. Default: 7 days ago.
+- `change_type` (string, optional) — Filter: `free_tier_removed`, `limits_reduced`, `limits_increased`, `new_free_tier`, `pricing_restructured`, etc.
+- `vendor` (string, optional) — Filter to one vendor
+- `vendors` (string, optional) — Comma-separated vendor names to filter
+- `include_expiring` (boolean, optional) — Include upcoming expirations (default: true)
+- `lookahead_days` (number, optional) — Days to look ahead for expirations (default: 30)
 
 ## Use Cases
 
@@ -376,17 +348,17 @@ No parameters. Returns all categories with offer counts.
 
 When your AI agent recommends infrastructure, it's usually working from training data — not current pricing. By connecting AgentDeals, the agent can:
 
-1. **Compare free tiers**: "I'm evaluating Supabase vs Neon vs PlanetScale for a side project" — the agent searches each vendor and compares current limits
-2. **Check eligibility**: "We're a YC W24 company, what credits can we get?" — the agent filters by `eligibility_type: accelerator` and returns applicable startup programs
-3. **Verify before recommending**: Before suggesting a vendor, the agent checks `get_deal_changes` to ensure the free tier hasn't been removed or reduced
+1. **Compare free tiers**: "I'm evaluating Supabase vs Neon for a side project" — use `compare_vendors` with both names
+2. **Check eligibility**: "We're a YC W24 company, what credits can we get?" — use `search_deals` with `eligibility: "accelerator"`
+3. **Verify before recommending**: Use `track_changes` to ensure the free tier hasn't been removed or reduced
 
 ### Monitoring deal changes
 
 Track pricing shifts that affect your stack:
 
-1. **Check for changes**: Call `get_deal_changes` with `since: "2025-01-01"` to see all tracked changes in the past year
-2. **Filter by vendor**: Call `get_deal_changes` with `vendor: "Vercel"` to see if Vercel's pricing has changed
-3. **Filter by type**: Call `get_deal_changes` with `change_type: "free_tier_removed"` to see which vendors have eliminated free tiers
+1. **Weekly digest**: Call `track_changes` with no params for a curated summary
+2. **Filter by vendor**: Call `track_changes` with `vendor: "Vercel"` to see if Vercel's pricing has changed
+3. **Filter by type**: Call `track_changes` with `change_type: "free_tier_removed"` to see which vendors have eliminated free tiers
 
 ## Categories
 

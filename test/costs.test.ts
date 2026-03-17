@@ -102,8 +102,8 @@ describe("estimate_costs MCP tool via stdio", () => {
       id: 2,
       method: "tools/call",
       params: {
-        name: "estimate_costs",
-        arguments: { services: ["Vercel", "Supabase"], scale: "startup" },
+        name: "plan_stack",
+        arguments: { mode: "estimate", services: ["Vercel", "Supabase"], scale: "startup" },
       },
     });
 

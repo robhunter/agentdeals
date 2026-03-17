@@ -95,7 +95,7 @@ function startServer() {
   });
 }
 
-describe("search_offers tool", () => {
+describe("search_deals tool", () => {
   it("returns results matching a keyword query", async () => {
     const proc = startServer();
     try {
@@ -105,7 +105,7 @@ describe("search_offers tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "search_offers", arguments: { query: "postgres" } },
+          params: { name: "search_deals", arguments: { query: "postgres" } },
         },
       ])) as any[];
 
@@ -137,7 +137,7 @@ describe("search_offers tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { category: "Databases" },
           },
         },
@@ -149,7 +149,7 @@ describe("search_offers tool", () => {
 
       assert.ok(Array.isArray(offers));
       assert.ok(offers.length >= 2);
-      assert.strictEqual(body.total, offers.length);
+      assert.ok(body.total >= offers.length, "total should be >= returned results (may be paginated)");
       for (const offer of offers) {
         assert.strictEqual(offer.category, "Databases");
       }
@@ -168,7 +168,7 @@ describe("search_offers tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { query: "nonexistent-xyz-123" },
           },
         },
@@ -195,7 +195,7 @@ describe("search_offers tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { limit: 5, offset: 0 },
           },
         },
@@ -223,7 +223,7 @@ describe("search_offers tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { limit: 10, offset: 99999 },
           },
         },
@@ -250,7 +250,7 @@ describe("search_offers tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { category: "Databases", limit: 2, offset: 0 },
           },
         },
@@ -269,7 +269,7 @@ describe("search_offers tool", () => {
     }
   });
 
-  it("returns all results when no limit/offset provided", async () => {
+  it("returns paginated results with default limit of 20", async () => {
     const proc = startServer();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -279,7 +279,7 @@ describe("search_offers tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: {},
           },
         },
@@ -288,8 +288,9 @@ describe("search_offers tool", () => {
       const result = responses.find((r: any) => r.id === 2) as any;
       const body = JSON.parse(result.result.content[0].text);
 
-      assert.strictEqual(body.results.length, body.total);
-      assert.ok(body.total >= 100);
+      assert.strictEqual(body.results.length, 20, "Default limit should be 20");
+      assert.ok(body.total >= 100, "Total should reflect all matching offers");
+      assert.strictEqual(body.limit, 20);
       assert.strictEqual(body.offset, 0);
     } finally {
       proc.kill();
@@ -306,7 +307,7 @@ describe("search_offers tool", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { query: "free" },
           },
         },
@@ -341,8 +342,8 @@ describe("eligibility filtering", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
-            arguments: { eligibility_type: "accelerator" },
+            name: "search_deals",
+            arguments: { eligibility: "accelerator" },
           },
         },
       ])) as any[];
@@ -371,8 +372,8 @@ describe("eligibility filtering", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
-            arguments: { eligibility_type: "oss" },
+            name: "search_deals",
+            arguments: { eligibility: "oss" },
           },
         },
       ])) as any[];
@@ -403,8 +404,8 @@ describe("eligibility filtering", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
-            arguments: { eligibility_type: "fintech" },
+            name: "search_deals",
+            arguments: { eligibility: "fintech" },
           },
         },
       ])) as any[];
@@ -423,7 +424,7 @@ describe("eligibility filtering", () => {
     }
   });
 
-  it("returns all offers when eligibility_type is omitted (backwards compatible)", async () => {
+  it("returns mixed eligibility offers when eligibility is omitted", async () => {
     const proc = startServer();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -433,8 +434,8 @@ describe("eligibility filtering", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
-            arguments: {},
+            name: "search_deals",
+            arguments: { limit: 200 },
           },
         },
       ])) as any[];
@@ -462,8 +463,8 @@ describe("eligibility filtering", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
-            arguments: { eligibility_type: "accelerator", category: "Startup Programs" },
+            name: "search_deals",
+            arguments: { eligibility: "accelerator", category: "Startup Programs" },
           },
         },
       ])) as any[];
@@ -494,7 +495,7 @@ describe("search sorting", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { sort: "vendor", limit: 10 },
           },
         },
@@ -525,7 +526,7 @@ describe("search sorting", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { sort: "category", limit: 20 },
           },
         },
@@ -561,7 +562,7 @@ describe("search sorting", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { sort: "newest", limit: 10 },
           },
         },
@@ -592,7 +593,7 @@ describe("search sorting", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { limit: 3 },
           },
         },
@@ -618,7 +619,7 @@ describe("search sorting", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { sort: "vendor", limit: 5, offset: 0 },
           },
         },
@@ -627,7 +628,7 @@ describe("search sorting", () => {
           id: 3,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { sort: "vendor", limit: 5, offset: 5 },
           },
         },
@@ -659,7 +660,7 @@ describe("search relevance ranking", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "search_offers", arguments: { query: "database" } },
+          params: { name: "search_deals", arguments: { query: "database" } },
         },
       ])) as any[];
 
@@ -689,7 +690,7 @@ describe("search relevance ranking", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "search_offers", arguments: { query: "hosting" } },
+          params: { name: "search_deals", arguments: { query: "hosting" } },
         },
       ])) as any[];
 
@@ -718,7 +719,7 @@ describe("search relevance ranking", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "search_offers", arguments: { query: "supabase" } },
+          params: { name: "search_deals", arguments: { query: "supabase" } },
         },
       ])) as any[];
 
@@ -742,7 +743,7 @@ describe("search relevance ranking", () => {
           id: 2,
           method: "tools/call",
           params: {
-            name: "search_offers",
+            name: "search_deals",
             arguments: { query: "database", sort: "vendor" },
           },
         },
@@ -765,7 +766,7 @@ describe("search relevance ranking", () => {
   });
 });
 
-describe("get_offer_details with eligibility", () => {
+describe("search_deals vendor details with eligibility", () => {
   it("includes eligibility in response for conditional deals", async () => {
     const proc = startServer();
     try {
@@ -775,7 +776,7 @@ describe("get_offer_details with eligibility", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "JetBrains" } },
+          params: { name: "search_deals", arguments: { vendor: "JetBrains" } },
         },
       ])) as any[];
 
@@ -795,7 +796,7 @@ describe("get_offer_details with eligibility", () => {
   });
 });
 
-describe("get_offer_details tool", () => {
+describe("search_deals vendor details", () => {
   it("returns full details for exact vendor match", async () => {
     const proc = startServer();
     try {
@@ -805,7 +806,7 @@ describe("get_offer_details tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "Neon" } },
+          params: { name: "search_deals", arguments: { vendor: "Neon" } },
         },
       ])) as any[];
 
@@ -835,7 +836,7 @@ describe("get_offer_details tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "nEoN" } },
+          params: { name: "search_deals", arguments: { vendor: "nEoN" } },
         },
       ])) as any[];
 
@@ -857,7 +858,7 @@ describe("get_offer_details tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "Cloud" } },
+          params: { name: "search_deals", arguments: { vendor: "Cloud" } },
         },
       ])) as any[];
 
@@ -880,7 +881,7 @@ describe("get_offer_details tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "zzzznonexistent99999" } },
+          params: { name: "search_deals", arguments: { vendor: "zzzznonexistent99999" } },
         },
       ])) as any[];
 
@@ -895,8 +896,8 @@ describe("get_offer_details tool", () => {
   });
 });
 
-describe("get_offer_details include_alternatives", () => {
-  it("returns relatedVendors as strings when include_alternatives is false", async () => {
+describe("search_deals vendor alternatives", () => {
+  it("returns alternatives for vendor details", async () => {
     const proc = startServer();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -905,7 +906,7 @@ describe("get_offer_details include_alternatives", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "Neon", include_alternatives: false } },
+          params: { name: "search_deals", arguments: { vendor: "Neon" } },
         },
       ])) as any[];
 
@@ -914,14 +915,14 @@ describe("get_offer_details include_alternatives", () => {
       const offer = JSON.parse(result.result.content[0].text);
       assert.ok(Array.isArray(offer.relatedVendors));
       assert.ok(offer.relatedVendors.length > 0);
-      assert.strictEqual(typeof offer.relatedVendors[0], "string");
-      assert.strictEqual(offer.alternatives, undefined);
+      assert.ok(Array.isArray(offer.alternatives));
+      assert.ok(offer.alternatives.length > 0);
     } finally {
       proc.kill();
     }
   });
 
-  it("returns full deal objects in alternatives when include_alternatives is true", async () => {
+  it("returns full deal objects in alternatives", async () => {
     const proc = startServer();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -930,7 +931,7 @@ describe("get_offer_details include_alternatives", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "Neon", include_alternatives: true } },
+          params: { name: "search_deals", arguments: { vendor: "Neon" } },
         },
       ])) as any[];
 
@@ -962,7 +963,7 @@ describe("get_offer_details include_alternatives", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "Neon", include_alternatives: true } },
+          params: { name: "search_deals", arguments: { vendor: "Neon" } },
         },
       ])) as any[];
 
@@ -986,7 +987,7 @@ describe("get_offer_details include_alternatives", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "Neon", include_alternatives: true } },
+          params: { name: "search_deals", arguments: { vendor: "Neon" } },
         },
       ])) as any[];
 
@@ -1005,7 +1006,7 @@ describe("get_offer_details include_alternatives", () => {
   });
 });
 
-describe("compare_services tool", () => {
+describe("compare_vendors tool", () => {
   it("compares two vendors in the same category", async () => {
     const proc = startServer();
     try {
@@ -1015,7 +1016,7 @@ describe("compare_services tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "compare_services", arguments: { vendor_a: "Supabase", vendor_b: "Neon" } },
+          params: { name: "compare_vendors", arguments: { vendors: ["Supabase", "Neon"] } },
         },
       ])) as any[];
 
@@ -1031,6 +1032,8 @@ describe("compare_services tool", () => {
       assert.ok(typeof comparison.vendor_b.description === "string");
       assert.ok(Array.isArray(comparison.vendor_a.deal_changes));
       assert.ok(Array.isArray(comparison.vendor_b.deal_changes));
+      // compare_vendors includes risk by default
+      assert.ok(comparison.risk);
     } finally {
       proc.kill();
     }
@@ -1045,7 +1048,7 @@ describe("compare_services tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "compare_services", arguments: { vendor_a: "Vercel", vendor_b: "Supabase" } },
+          params: { name: "compare_vendors", arguments: { vendors: ["Vercel", "Supabase"] } },
         },
       ])) as any[];
 
@@ -1069,7 +1072,7 @@ describe("compare_services tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "compare_services", arguments: { vendor_a: "supabase", vendor_b: "neon" } },
+          params: { name: "compare_vendors", arguments: { vendors: ["supabase", "neon"] } },
         },
       ])) as any[];
 
@@ -1092,7 +1095,7 @@ describe("compare_services tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "compare_services", arguments: { vendor_a: "cloud", vendor_b: "Neon" } },
+          params: { name: "compare_vendors", arguments: { vendors: ["cloud", "Neon"] } },
         },
       ])) as any[];
 
@@ -1115,7 +1118,7 @@ describe("compare_services tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "compare_services", arguments: { vendor_a: "zzzzz", vendor_b: "yyyyy" } },
+          params: { name: "compare_vendors", arguments: { vendors: ["zzzzz", "yyyyy"] } },
         },
       ])) as any[];
 
@@ -1139,7 +1142,7 @@ describe("compare_services tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "compare_services", arguments: { vendor_a: "Vercel", vendor_b: "Vercel" } },
+          params: { name: "compare_vendors", arguments: { vendors: ["Vercel", "Vercel"] } },
         },
       ])) as any[];
 
@@ -1149,6 +1152,28 @@ describe("compare_services tool", () => {
       assert.strictEqual(comparison.vendor_a.vendor, "Vercel");
       assert.strictEqual(comparison.vendor_b.vendor, "Vercel");
       assert.strictEqual(comparison.shared_categories, true);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns risk assessment for a single vendor", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "compare_vendors", arguments: { vendors: ["Vercel"] } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError);
+      const risk = JSON.parse(result.result.content[0].text);
+      assert.ok(risk.vendor || risk.risk_level);
     } finally {
       proc.kill();
     }

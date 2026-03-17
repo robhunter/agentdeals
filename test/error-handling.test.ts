@@ -74,7 +74,7 @@ function startServerWithBadApi() {
 // by pointing it at a non-existent API endpoint.
 
 describe("error handling", () => {
-  it("returns error for list_categories when API is unreachable", async () => {
+  it("returns error for search_deals categories when API is unreachable", async () => {
     const proc = startServerWithBadApi();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -83,7 +83,7 @@ describe("error handling", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "list_categories", arguments: {} },
+          params: { name: "search_deals", arguments: { category: "list" } },
         },
       ])) as any[];
 
@@ -97,7 +97,7 @@ describe("error handling", () => {
     }
   });
 
-  it("returns error for search_offers when API is unreachable", async () => {
+  it("returns error for search_deals search when API is unreachable", async () => {
     const proc = startServerWithBadApi();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -106,7 +106,7 @@ describe("error handling", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "search_offers", arguments: { query: "anything" } },
+          params: { name: "search_deals", arguments: { query: "anything" } },
         },
       ])) as any[];
 
@@ -120,7 +120,7 @@ describe("error handling", () => {
     }
   });
 
-  it("returns error for get_offer_details when API is unreachable", async () => {
+  it("returns error for search_deals vendor when API is unreachable", async () => {
     const proc = startServerWithBadApi();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -129,7 +129,7 @@ describe("error handling", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "get_offer_details", arguments: { vendor: "Vercel" } },
+          params: { name: "search_deals", arguments: { vendor: "Vercel" } },
         },
       ])) as any[];
 

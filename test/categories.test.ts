@@ -45,7 +45,7 @@ function sendMcpMessages(
   });
 }
 
-describe("list_categories tool", () => {
+describe("search_deals category list", () => {
   it("returns categories from index data", async () => {
     const serverPath = path.join(__dirname, "..", "dist", "index.js");
     const proc = spawn("node", [serverPath], {
@@ -69,7 +69,7 @@ describe("list_categories tool", () => {
           jsonrpc: "2.0",
           id: 2,
           method: "tools/call",
-          params: { name: "list_categories", arguments: {} },
+          params: { name: "search_deals", arguments: { category: "list" } },
         },
       ])) as any[];
 

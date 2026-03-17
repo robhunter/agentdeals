@@ -133,10 +133,10 @@ describe("check_vendor_risk MCP tool via stdio", () => {
     assert.ok(parsed.result);
     const tools = parsed.result.tools;
     assert.ok(Array.isArray(tools));
-    const riskTool = tools.find((t: any) => t.name === "check_vendor_risk");
-    assert.ok(riskTool, "check_vendor_risk should be in tools list");
-    assert.ok(riskTool.description.includes("risk"), "Description should mention risk");
-    assert.ok(riskTool.inputSchema.properties.vendor, "Should have vendor input parameter");
+    const compareTool = tools.find((t: any) => t.name === "compare_vendors");
+    assert.ok(compareTool, "compare_vendors should be in tools list");
+    assert.ok(compareTool.description.includes("risk") || compareTool.description.includes("Compare"), "Description should mention risk or compare");
+    assert.ok(compareTool.inputSchema.properties.vendors, "Should have vendors input parameter");
   });
 });
 
