@@ -7,7 +7,7 @@ An MCP server that aggregates free tiers, startup credits, and developer tool de
 
 AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 53 categories. Available on [npm](https://www.npmjs.com/package/agentdeals) for local use or as a hosted remote server. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
 
-**Live:** [agentdeals-production.up.railway.app](https://agentdeals-production.up.railway.app)
+**Live:** [agentdeals.dev](https://agentdeals.dev)
 
 ## Install
 
@@ -54,7 +54,7 @@ Connect to the hosted instance — no install required:
 {
   "mcpServers": {
     "agentdeals": {
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "https://agentdeals.dev/mcp"
     }
   }
 }
@@ -114,7 +114,7 @@ Add to `claude_desktop_config.json`:
 {
   "mcpServers": {
     "agentdeals": {
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "https://agentdeals.dev/mcp"
     }
   }
 }
@@ -145,7 +145,7 @@ Add to `.cursor/mcp.json` in your project or global config:
 {
   "mcpServers": {
     "agentdeals": {
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "https://agentdeals.dev/mcp"
     }
   }
 }
@@ -174,7 +174,7 @@ Add to `.vscode/mcp.json` in your workspace:
   "servers": {
     "agentdeals": {
       "type": "http",
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "https://agentdeals.dev/mcp"
     }
   }
 }
@@ -202,7 +202,7 @@ Add to `.mcp.json` in your project root:
   "mcpServers": {
     "agentdeals": {
       "type": "url",
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "https://agentdeals.dev/mcp"
     }
   }
 }
@@ -216,16 +216,16 @@ AgentDeals also provides a REST API for programmatic access without MCP.
 
 ```bash
 # Search by keyword
-curl "https://agentdeals-production.up.railway.app/api/offers?q=database&limit=5"
+curl "https://agentdeals.dev/api/offers?q=database&limit=5"
 
 # Filter by category
-curl "https://agentdeals-production.up.railway.app/api/offers?category=Databases&limit=10"
+curl "https://agentdeals.dev/api/offers?category=Databases&limit=10"
 
 # Paginate results
-curl "https://agentdeals-production.up.railway.app/api/offers?limit=20&offset=40"
+curl "https://agentdeals.dev/api/offers?limit=20&offset=40"
 
 # Combine search + category
-curl "https://agentdeals-production.up.railway.app/api/offers?q=postgres&category=Databases"
+curl "https://agentdeals.dev/api/offers?q=postgres&category=Databases"
 ```
 
 Response:
@@ -248,7 +248,7 @@ Response:
 ### List categories
 
 ```bash
-curl "https://agentdeals-production.up.railway.app/api/categories"
+curl "https://agentdeals.dev/api/categories"
 ```
 
 Response:
@@ -266,34 +266,34 @@ Response:
 
 ```bash
 # Recently added offers
-curl "https://agentdeals-production.up.railway.app/api/new?days=7"
+curl "https://agentdeals.dev/api/new?days=7"
 
 # Pricing changes
-curl "https://agentdeals-production.up.railway.app/api/changes?since=2025-01-01"
+curl "https://agentdeals.dev/api/changes?since=2025-01-01"
 
 # Vendor details
-curl "https://agentdeals-production.up.railway.app/api/details/Supabase?alternatives=true"
+curl "https://agentdeals.dev/api/details/Supabase?alternatives=true"
 
 # Stack recommendation
-curl "https://agentdeals-production.up.railway.app/api/stack?use_case=saas"
+curl "https://agentdeals.dev/api/stack?use_case=saas"
 
 # Cost estimation
-curl "https://agentdeals-production.up.railway.app/api/costs?services=Vercel,Supabase&scale=startup"
+curl "https://agentdeals.dev/api/costs?services=Vercel,Supabase&scale=startup"
 
 # Compare vendors
-curl "https://agentdeals-production.up.railway.app/api/compare?a=Supabase&b=Neon"
+curl "https://agentdeals.dev/api/compare?a=Supabase&b=Neon"
 
 # Vendor risk check
-curl "https://agentdeals-production.up.railway.app/api/vendor-risk/Heroku"
+curl "https://agentdeals.dev/api/vendor-risk/Heroku"
 
 # Stack audit
-curl "https://agentdeals-production.up.railway.app/api/audit-stack?services=Vercel,Supabase,Clerk"
+curl "https://agentdeals.dev/api/audit-stack?services=Vercel,Supabase,Clerk"
 
 # Server stats
-curl "https://agentdeals-production.up.railway.app/api/stats"
+curl "https://agentdeals.dev/api/stats"
 
 # OpenAPI spec
-curl "https://agentdeals-production.up.railway.app/api/openapi.json"
+curl "https://agentdeals.dev/api/openapi.json"
 ```
 
 ## Available Tools
@@ -422,7 +422,7 @@ npm run serve
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `PORT` | HTTP server port | `3000` |
-| `BASE_URL` | Base URL for canonical links, OG tags, sitemaps, and feeds | `https://agentdeals-production.up.railway.app` |
+| `BASE_URL` | Base URL for canonical links, OG tags, sitemaps, and feeds | `https://agentdeals.dev` |
 | `GOOGLE_SITE_VERIFICATION` | Google Search Console verification code | _(none)_ |
 
 ## Stats

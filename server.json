@@ -10,7 +10,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://agentdeals-production.up.railway.app/mcp"
+      "url": "https://agentdeals.dev/mcp"
     }
   ]
 }

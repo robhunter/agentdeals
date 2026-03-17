@@ -6,7 +6,7 @@ export const openapiSpec = {
     version: "0.1.0",
     contact: {
       name: "AgentDeals",
-      url: "https://agentdeals-production.up.railway.app"
+      url: "https://agentdeals.dev"
     },
     license: {
       name: "MIT",
@@ -15,7 +15,7 @@ export const openapiSpec = {
   },
   servers: [
     {
-      url: "https://agentdeals-production.up.railway.app",
+      url: "https://agentdeals.dev",
       description: "Production server"
     }
   ],
