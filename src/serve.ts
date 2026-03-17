@@ -547,7 +547,7 @@ function buildCategoryIndexPage(): string {
     name: "All Categories",
     description: metaDesc,
     numberOfItems: stats.categories,
-    url: "${BASE_URL}/category",
+    url: `${BASE_URL}/category`,
   };
 
   return `<!DOCTYPE html>
@@ -1008,7 +1008,7 @@ ${pairs.map(p => `          <a href="/compare/${p.slug}" class="compare-card">
     name: "Free Tier Vendor Comparisons",
     description: metaDesc,
     numberOfItems: totalComparisons,
-    url: "${BASE_URL}/compare",
+    url: `${BASE_URL}/compare`,
   };
 
   return `<!DOCTYPE html>
@@ -1476,7 +1476,7 @@ function buildDigestArchivePage(): string {
     "@type": "CollectionPage",
     name: "Pricing Change Digest Archive",
     description: metaDesc,
-    url: "${BASE_URL}/digest/archive",
+    url: `${BASE_URL}/digest/archive`,
     numberOfItems: weeks.length,
   };
 
@@ -1572,7 +1572,7 @@ ${vendors.map(v => `          <a href="/vendor/${v.slug}" class="vendor-card">
     name: "All Vendors",
     description: metaDesc,
     numberOfItems: totalVendors,
-    url: "${BASE_URL}/vendor",
+    url: `${BASE_URL}/vendor`,
   };
 
   return `<!DOCTYPE html>
@@ -2240,7 +2240,7 @@ function buildAlternativesIndexPage(): string {
     "@type": "CollectionPage",
     name: title,
     description: metaDesc,
-    url: "${BASE_URL}/alternative-to",
+    url: `${BASE_URL}/alternative-to`,
     numberOfItems: scored.length,
   };
 
@@ -2725,7 +2725,7 @@ ${entriesHtml}
     name: title,
     description: metaDesc,
     numberOfItems: totalUpcoming + recent.length,
-    url: "${BASE_URL}/expiring",
+    url: `${BASE_URL}/expiring`,
     itemListElement: upcoming.slice(0, 50).map((c, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -3097,7 +3097,7 @@ function buildTrendsIndexPage(): string {
     name: "Pricing Trends by Category",
     description: metaDesc,
     numberOfItems: totalCategories,
-    url: "${BASE_URL}/trends",
+    url: `${BASE_URL}/trends`,
   };
 
   return `<!DOCTYPE html>
