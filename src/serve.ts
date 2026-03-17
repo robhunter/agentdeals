@@ -336,7 +336,7 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "compare" | "digest" | "expiring" | "api" | "setup" | "home";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "compare" | "digest" | "changes" | "expiring" | "api" | "setup" | "home";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -358,6 +358,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/alternative-to", label: "Alternatives", section: "alternatives" },
     { href: "/compare", label: "Compare", section: "compare" },
     { href: "/digest", label: "Digest", section: "digest" },
+    { href: "/changes", label: "Changes", section: "changes" },
     { href: "/expiring", label: "Expiring", section: "expiring" },
     { href: "/api/docs", label: "API", section: "api" },
     { href: "/setup", label: "Setup", section: "setup" },
@@ -2640,6 +2641,186 @@ function copyConfig(btn){
 </html>`;
 }
 
+// --- Deal changes timeline page ---
+
+function buildChangesPage(): string {
+  const allChanges = loadDealChanges();
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Sort all changes reverse chronological
+  const sorted = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
+
+  // Group by month
+  const byMonth = new Map<string, typeof sorted>();
+  for (const c of sorted) {
+    const monthKey = c.date.slice(0, 7);
+    if (!byMonth.has(monthKey)) byMonth.set(monthKey, []);
+    byMonth.get(monthKey)!.push(c);
+  }
+
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  function formatMonth(key: string): string {
+    const [y, m] = key.split("-");
+    return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
+  }
+
+  function buildChangeEntry(c: typeof allChanges[0]): string {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    const vendorSlug = toSlug(c.vendor);
+    const isUpcoming = c.date >= today;
+    const altHtml = c.alternatives && c.alternatives.length > 0
+      ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
+      : "";
+    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}">
+        <div class="chg-left">
+          <div class="chg-date">${c.date}</div>
+          ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}
+        </div>
+        <div class="chg-right">
+          <div class="chg-head">
+            <span class="badge" style="background:${badge.color}">${badge.label}</span>
+            <a href="/vendor/${vendorSlug}" class="chg-vendor">${escHtmlServer(c.vendor)}</a>
+            <span class="chg-impact" style="color:${impactColor}">${c.impact}</span>
+          </div>
+          <div class="chg-summary">${escHtmlServer(c.summary)}</div>
+${altHtml}
+        </div>
+      </div>`;
+  }
+
+  const upcomingCount = sorted.filter(c => c.date >= today).length;
+  const removedCount = sorted.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+
+  const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {
+    const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
+    return `    <div class="month-group">
+      <h2 class="month-heading">${formatMonth(month)}</h2>
+${entriesHtml}
+    </div>`;
+  }).join("\n");
+
+  const title = "Deal Change Timeline \u2014 AgentDeals";
+  const metaDesc = `${allChanges.length} developer infrastructure pricing changes tracked. Free tier removals, price increases, product shutdowns, and new deals.`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: allChanges.length,
+    url: `${BASE_URL}/changes`,
+    itemListElement: sorted.slice(0, 50).map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Event",
+        name: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+        description: c.summary,
+        startDate: c.date,
+        location: { "@type": "VirtualLocation", url: `${BASE_URL}/vendor/${toSlug(c.vendor)}` },
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/changes">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/changes">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1rem}
+.rss-link{display:inline-block;color:var(--accent);font-size:.85rem;margin-bottom:1.5rem;padding:.3rem .6rem;border:1px solid var(--border);border-radius:6px}
+.rss-link:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.stat-card{flex:1;min-width:120px;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-align:center}
+.stat-value{font-family:var(--serif);font-size:1.5rem;color:var(--text)}
+.stat-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.month-group{margin-bottom:2rem}
+.month-heading{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.chg-entry{display:flex;gap:1rem;padding:.75rem;margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s}
+.chg-entry:hover{border-color:var(--accent)}
+.chg-upcoming{border-color:rgba(88,166,255,0.3)}
+.chg-left{flex-shrink:0;min-width:100px;text-align:right}
+.chg-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
+.chg-upcoming-badge{font-family:var(--mono);font-size:.65rem;color:#58a6ff;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.chg-right{flex:1;min-width:0}
+.chg-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
+.chg-vendor{color:var(--text);font-weight:600;font-size:.85rem}
+.chg-vendor:hover{color:var(--accent)}
+.chg-impact{font-family:var(--mono);font-size:.7rem}
+.chg-summary{font-size:.85rem;color:var(--text-muted)}
+.chg-alts{font-size:.8rem;color:var(--text-dim);margin-top:.35rem}
+.chg-alts-label{font-weight:600;color:var(--text-muted)}
+.chg-alts a{color:var(--accent);font-size:.8rem}
+.badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
+.mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.mcp-cta a{font-weight:600}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.chg-entry{flex-direction:column;gap:.25rem}.chg-left{text-align:left;min-width:auto;display:flex;gap:.75rem;align-items:center}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Changes</div>
+  <h1>Deal Change Timeline</h1>
+  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. Subscribe to stay ahead.</p>
+  <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to deal changes</a>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value">${allChanges.length}</div>
+      <div class="stat-label">Total Changes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${upcomingCount}</div>
+      <div class="stat-label">Upcoming</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${removedCount}</div>
+      <div class="stat-label">Removals</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${byMonth.size}</div>
+      <div class="stat-label">Months Tracked</div>
+    </div>
+  </div>
+
+${monthsHtml}
+
+  <div class="mcp-cta">
+    <p>Get real-time pricing change alerts in your AI coding assistant.</p>
+    <a href="/setup">Connect via MCP &rarr;</a>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 // --- Expiring deals timeline page ---
 
 function buildExpiringPage(): string {
@@ -4659,6 +4840,12 @@ ${entries}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/changes</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/category</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -4846,6 +5033,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
     }
+  } else if (url.pathname === "/changes" && req.method === "GET") {
+    recordApiHit("/changes");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/changes", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildChangesPage());
   } else if (url.pathname === "/expiring" && req.method === "GET") {
     recordApiHit("/expiring");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/expiring", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
