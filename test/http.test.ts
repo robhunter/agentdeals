@@ -844,7 +844,7 @@ describe("HTTP transport", () => {
     }
   });
 
-  it("prompts/list returns all 5 prompt templates", async () => {
+  it("prompts/list returns all 6 prompt templates", async () => {
     proc = await startHttpServer();
 
     // Initialize session

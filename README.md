@@ -5,7 +5,7 @@
 
 An MCP server that aggregates free tiers, startup credits, and developer tool deals — so your AI agent (or you) can find the best infrastructure offers without leaving the workflow.
 
-AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 53 categories. Available on [npm](https://www.npmjs.com/package/agentdeals) for local use or as a hosted remote server. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
+AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 54 categories. Available on [npm](https://www.npmjs.com/package/agentdeals) for local use or as a hosted remote server. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
 
 **Live:** [agentdeals.dev](https://agentdeals.dev)
 
@@ -19,7 +19,7 @@ Install AgentDeals in Claude Code with a single command:
 claude plugin install robhunter/agentdeals
 ```
 
-This auto-configures the remote MCP server — no local setup needed. All 12 tools, 5 prompt templates, and 2 skills are immediately available.
+This auto-configures the remote MCP server — no local setup needed. All 4 tools and 6 prompt templates are immediately available.
 
 ### Option B: Claude Desktop Extension (one-click)
 
@@ -27,7 +27,7 @@ Install AgentDeals directly in Claude Desktop — no configuration needed:
 
 1. Download the latest `agentdeals.mcpb` from [Releases](https://github.com/robhunter/agentdeals/releases)
 2. Double-click the file to install in Claude Desktop
-3. All 12 tools and 5 prompt templates are immediately available
+3. All 4 tools and 6 prompt templates are immediately available
 
 Or browse for AgentDeals in Claude Desktop under **Settings > Extensions**.
 
@@ -62,7 +62,7 @@ Connect to the hosted instance — no install required:
 
 ## Quick Start
 
-### 2. Try these example queries
+### Try these example queries
 
 **Find free database hosting:**
 ```
@@ -369,7 +369,7 @@ AI / ML, AI Coding, API Development, API Gateway, Analytics, Auth, Background Jo
 ```bash
 npm install          # Install dependencies
 npm run build        # Compile TypeScript
-npm test             # Run tests (159 passing)
+npm test             # Run tests (266 passing)
 npm run serve        # Run HTTP server (port 3000)
 npm start            # Run stdio server
 ```
@@ -399,10 +399,10 @@ npm run serve
 
 ## Stats
 
-- **1,511** vendor offers across **53** categories
-- **52** tracked pricing changes
-- **10** MCP tools + **4** prompt templates + **12** REST API endpoints
-- **159** passing tests
+- **1,525** vendor offers across **54** categories
+- **57** tracked pricing changes
+- **4** MCP tools + **6** prompt templates + **17** REST API endpoints
+- **266** passing tests
 - Data verified as of 2026-03-14
 
 ## Registries
