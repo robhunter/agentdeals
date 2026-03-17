@@ -45,7 +45,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "swagger-ui-dist": "^5.32.0"
+    "swagger-ui-dist": "^5.32.0",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@anthropic-ai/mcpb": "^2.1.2",
