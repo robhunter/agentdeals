@@ -53,7 +53,7 @@
     <text x="320" y="62" font-family="system-ui, sans-serif" font-size="16" fill="#64748b" text-anchor="middle">categories</text>
 
     <rect x="440" width="200" height="80" rx="12" fill="white" fill-opacity="0.06"/>
-    <text x="540" y="35" font-family="system-ui, sans-serif" font-size="28" fill="#06b6d4" font-weight="700" text-anchor="middle">12</text>
+    <text x="540" y="35" font-family="system-ui, sans-serif" font-size="28" fill="#06b6d4" font-weight="700" text-anchor="middle">4</text>
     <text x="540" y="62" font-family="system-ui, sans-serif" font-size="16" fill="#64748b" text-anchor="middle">MCP tools</text>
   </g>
 
