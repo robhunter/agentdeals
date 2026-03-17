@@ -317,7 +317,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Browse deals"), "Landing page should have Browse deals section");
     assert.ok(html.includes("deal-search"), "Landing page should have search input");
     assert.ok(html.includes("/api/offers"), "Landing page should fetch from /api/offers");
-    assert.ok(html.includes("DM Serif Display"), "Landing page should use serif display font");
+    assert.ok(html.includes("Inter"), "Landing page should use Inter sans-serif font");
   });
 
   it("GET /api/offers returns offers with pagination", async () => {
