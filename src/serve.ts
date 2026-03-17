@@ -265,6 +265,41 @@ function buildDeadlinesHtml(): string {
   }).join("\n");
 }
 
+function buildChangingSoonSection(): string {
+  if (upcomingDeadlines.length === 0) return "";
+  const entries = upcomingDeadlines.slice(0, 5).map((c) => {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const vendorSlug = toSlug(c.vendor);
+    const deadlineDate = new Date(c.date + "T00:00:00Z");
+    const todayDate = new Date(today + "T00:00:00Z");
+    const daysLeft = Math.ceil((deadlineDate.getTime() - todayDate.getTime()) / 86400000);
+    const relTime = daysLeft === 0 ? "today" : daysLeft === 1 ? "tomorrow" : `in ${daysLeft} days`;
+    return `      <div class="cs-entry">
+        <div class="cs-countdown${daysLeft <= 14 ? " cs-urgent" : ""}">${daysLeft}<span class="cs-unit">${daysLeft === 1 ? "day" : "days"}</span></div>
+        <div class="cs-detail">
+          <div class="cs-head">
+            <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
+            <a href="/vendor/${vendorSlug}" class="cs-vendor">${c.vendor}</a>
+            <span class="cs-rel">${relTime}</span>
+          </div>
+          <div class="cs-summary">${c.summary}</div>
+        </div>
+      </div>`;
+  }).join("\n");
+  return `
+  <div class="section" id="changing-soon">
+    <div class="section-label">Changing Soon</div>
+    <h2>Upcoming deal changes</h2>
+    <p>Free tiers disappearing, prices increasing. These changes are happening now.</p>
+    <div class="cs-list">
+${entries}
+    </div>
+    <a href="/changes" class="see-all-link">View all changes \u2192</a>
+  </div>
+
+  <div class="divider"></div>`;
+}
+
 function buildRecentChangesSection(): string {
   if (recentChanges.length === 0) return "";
   const entries = recentChanges.map((c) => {
@@ -3694,6 +3729,20 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .deadline-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
 .deadline-date{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
 
+/* Changing Soon */
+.cs-list{display:flex;flex-direction:column;gap:0}
+.cs-entry{display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid rgba(42,39,32,0.6);align-items:flex-start}
+.cs-entry:last-child{border-bottom:none}
+.cs-countdown{flex-shrink:0;width:52px;text-align:center;border:2px solid var(--accent);border-radius:8px;padding:.3rem .25rem;background:var(--bg);font-family:var(--mono);font-size:1.25rem;font-weight:600;color:var(--text);line-height:1}
+.cs-countdown.cs-urgent{border-color:#f85149;animation:pulse-urgent 2s ease-in-out infinite}
+.cs-unit{display:block;font-size:.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-top:.1rem;font-weight:400}
+.cs-detail{flex:1;min-width:0}
+.cs-head{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
+.cs-vendor{color:var(--accent);text-decoration:none;font-weight:500}
+.cs-vendor:hover{text-decoration:underline}
+.cs-rel{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
+.cs-summary{color:var(--text-muted);font-size:.85rem;line-height:1.4}
+
 /* Browse */
 .browse-controls{margin-bottom:1.25rem}
 .search-input{width:100%;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--sans);font-size:.9rem;outline:none;transition:border-color .2s}
@@ -3816,9 +3865,11 @@ ${globalNavCss()}
   <div class="stats-bar">
     <div class="stat-item"><div class="stat-num">${stats.offers.toLocaleString()}</div><div class="stat-label">Deals</div></div>
     <div class="stat-item"><div class="stat-num">${stats.categories}</div><div class="stat-label">Categories</div></div>
-    <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">MCP Tools</div></div>
+    <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">MCP Tools</div></div>
     <div class="stat-item"><div class="stat-num">${stats.dealChanges}</div><div class="stat-label">Changes Tracked</div></div>
   </div>
+
+${buildChangingSoonSection()}
 
   <div class="wavy-divider"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0,20 Q150,0 300,20 T600,20 T900,20 T1200,20 V40 H0 Z" fill="none" stroke="rgba(42,39,32,0.8)" stroke-width="1"/></svg></div>
 

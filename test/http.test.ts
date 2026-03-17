@@ -1442,6 +1442,18 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('"Recent Pricing Changes"'), "Should have ItemList JSON-LD");
   });
 
+  it("landing page has changing soon section with upcoming deal changes", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/`);
+    const html = await response.text();
+    assert.ok(html.includes('id="changing-soon"'), "Should have changing-soon section");
+    assert.ok(html.includes("cs-entry"), "Should have change entries");
+    assert.ok(html.includes("cs-vendor"), "Should have vendor links");
+    assert.ok(html.includes("cs-countdown"), "Should have countdown indicators");
+    assert.ok(html.includes('href="/changes"'), "Should link to /changes");
+  });
+
   it("serves og-image.png at /og-image.png", async () => {
     proc = await startHttpServer();
     const response = await fetch(`http://localhost:${PORT}/og-image.png`);
