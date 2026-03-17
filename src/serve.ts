@@ -2562,7 +2562,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Setup</div>
 
   <h1>Setup Guide</h1>
-  <p class="page-sub">Add AgentDeals to your AI coding assistant. 12 MCP tools for searching deals, comparing vendors, estimating costs, and auditing your stack.</p>
+  <p class="page-sub">Add AgentDeals to your AI coding assistant. 4 MCP tools for searching deals, comparing vendors, planning stacks, and tracking changes.</p>
 
   <div class="quick-start">
     <h3>Quick start</h3>
@@ -3925,7 +3925,7 @@ ${buildRecentChangesSection()}
     </div>
 
     <div class="connect-block" style="margin-top:1.5rem">
-      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem">12 MCP Tools</h3>
+      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem">4 MCP Tools</h3>
       <div style="display:grid;gap:.5rem">
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">search_deals</code> <span style="color:var(--text-muted)">&mdash; Find free tiers, browse categories, get vendor details with alternatives. Filter by category, eligibility, or keyword.</span></div>
         <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">plan_stack</code> <span style="color:var(--text-muted)">&mdash; Get stack recommendations, cost estimates, or a full infrastructure audit for your project.</span></div>
