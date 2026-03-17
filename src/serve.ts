@@ -4779,6 +4779,9 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/digest", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: digest.deal_changes.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(digest));
+  } else if (url.pathname === "/api" && req.method === "GET") {
+    res.writeHead(301, { "Location": "/api/docs" });
+    res.end();
   } else if (url.pathname === "/api/docs" && req.method === "GET") {
     recordApiHit("/api/docs");
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
