@@ -50,59 +50,59 @@ const swaggerDocsHtml = `<!DOCTYPE html>
   <style>
     html { box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
-    body { margin: 0; background: #14120b; color: #e8e0d0; }
+    body { margin: 0; background: #0f172a; color: #f1f5f9; }
     .topbar { display: none; }
     /* Dark theme overrides matching landing page */
-    .swagger-ui { background: #14120b; }
-    .swagger-ui .opblock-tag { color: #e8e0d0; border-bottom-color: #2a2520; }
-    .swagger-ui .opblock-tag:hover { background: rgba(200,164,78,0.05); }
-    .swagger-ui .opblock-tag small { color: #a09880; }
-    .swagger-ui .opblock .opblock-summary { border-color: #2a2520; }
+    .swagger-ui { background: #0f172a; }
+    .swagger-ui .opblock-tag { color: #f1f5f9; border-bottom-color: #334155; }
+    .swagger-ui .opblock-tag:hover { background: rgba(59,130,246,0.05); }
+    .swagger-ui .opblock-tag small { color: #94a3b8; }
+    .swagger-ui .opblock .opblock-summary { border-color: #334155; }
     .swagger-ui .opblock.opblock-get { background: rgba(97,175,254,0.05); border-color: rgba(97,175,254,0.3); }
     .swagger-ui .opblock.opblock-get .opblock-summary { border-color: rgba(97,175,254,0.3); }
     .swagger-ui .opblock.opblock-post { background: rgba(73,204,144,0.05); border-color: rgba(73,204,144,0.3); }
     .swagger-ui .opblock.opblock-post .opblock-summary { border-color: rgba(73,204,144,0.3); }
-    .swagger-ui .opblock .opblock-summary-description { color: #a09880; }
-    .swagger-ui .opblock-body { background: #1a1710; }
+    .swagger-ui .opblock .opblock-summary-description { color: #94a3b8; }
+    .swagger-ui .opblock-body { background: #1e293b; }
     .swagger-ui .opblock-description-wrapper p,
-    .swagger-ui .opblock-external-docs-wrapper p { color: #c0b8a0; }
-    .swagger-ui table thead tr th { color: #c8a44e; border-bottom-color: #2a2520; }
-    .swagger-ui table tbody tr td { color: #e8e0d0; border-bottom-color: #2a2520; }
-    .swagger-ui .parameter__name { color: #e8e0d0; }
-    .swagger-ui .parameter__type { color: #a09880; }
-    .swagger-ui .parameter__in { color: #a09880; }
-    .swagger-ui .response-col_status { color: #c8a44e; }
-    .swagger-ui .response-col_description { color: #c0b8a0; }
-    .swagger-ui .responses-inner { background: #14120b; }
-    .swagger-ui .model-box { background: #1a1710; }
-    .swagger-ui .model { color: #e8e0d0; }
-    .swagger-ui .model-title { color: #c8a44e; }
-    .swagger-ui section.models { border-color: #2a2520; }
-    .swagger-ui section.models h4 { color: #e8e0d0; border-bottom-color: #2a2520; }
-    .swagger-ui .model-container { background: #1a1710; }
-    .swagger-ui .prop-type { color: #c8a44e; }
-    .swagger-ui .prop-format { color: #a09880; }
-    .swagger-ui .info .title { color: #e8e0d0; }
-    .swagger-ui .info .title small { background: #c8a44e; color: #14120b; }
-    .swagger-ui .info p, .swagger-ui .info li { color: #c0b8a0; }
-    .swagger-ui .info a { color: #c8a44e; }
-    .swagger-ui .scheme-container { background: #1a1710; border-bottom-color: #2a2520; box-shadow: none; }
-    .swagger-ui .scheme-container .schemes > label { color: #a09880; }
-    .swagger-ui select { background: #1a1710; color: #e8e0d0; border-color: #2a2520; }
-    .swagger-ui input[type=text], .swagger-ui textarea { background: #1a1710; color: #e8e0d0; border-color: #2a2520; }
-    .swagger-ui .btn { color: #e8e0d0; border-color: #2a2520; }
-    .swagger-ui .btn.execute { background: #c8a44e; color: #14120b; border-color: #c8a44e; }
-    .swagger-ui .btn.authorize { color: #c8a44e; border-color: #c8a44e; }
-    .swagger-ui .highlight-code { background: #1a1710; }
-    .swagger-ui .highlight-code .microlight { color: #e8e0d0; background: #1a1710; }
-    .swagger-ui .copy-to-clipboard { background: #1a1710; }
-    .swagger-ui .download-contents { color: #c8a44e; }
-    .swagger-ui .opblock-body pre.microlight { background: #1a1710 !important; color: #e8e0d0; border: 1px solid #2a2520; }
-    .swagger-ui .response-control-media-type__accept-message { color: #c8a44e; }
-    .swagger-ui .loading-container .loading::after { color: #c8a44e; }
+    .swagger-ui .opblock-external-docs-wrapper p { color: #cbd5e1; }
+    .swagger-ui table thead tr th { color: #3b82f6; border-bottom-color: #334155; }
+    .swagger-ui table tbody tr td { color: #f1f5f9; border-bottom-color: #334155; }
+    .swagger-ui .parameter__name { color: #f1f5f9; }
+    .swagger-ui .parameter__type { color: #94a3b8; }
+    .swagger-ui .parameter__in { color: #94a3b8; }
+    .swagger-ui .response-col_status { color: #3b82f6; }
+    .swagger-ui .response-col_description { color: #cbd5e1; }
+    .swagger-ui .responses-inner { background: #0f172a; }
+    .swagger-ui .model-box { background: #1e293b; }
+    .swagger-ui .model { color: #f1f5f9; }
+    .swagger-ui .model-title { color: #3b82f6; }
+    .swagger-ui section.models { border-color: #334155; }
+    .swagger-ui section.models h4 { color: #f1f5f9; border-bottom-color: #334155; }
+    .swagger-ui .model-container { background: #1e293b; }
+    .swagger-ui .prop-type { color: #3b82f6; }
+    .swagger-ui .prop-format { color: #94a3b8; }
+    .swagger-ui .info .title { color: #f1f5f9; }
+    .swagger-ui .info .title small { background: #3b82f6; color: #fff; }
+    .swagger-ui .info p, .swagger-ui .info li { color: #cbd5e1; }
+    .swagger-ui .info a { color: #3b82f6; }
+    .swagger-ui .scheme-container { background: #1e293b; border-bottom-color: #334155; box-shadow: none; }
+    .swagger-ui .scheme-container .schemes > label { color: #94a3b8; }
+    .swagger-ui select { background: #1e293b; color: #f1f5f9; border-color: #334155; }
+    .swagger-ui input[type=text], .swagger-ui textarea { background: #1e293b; color: #f1f5f9; border-color: #334155; }
+    .swagger-ui .btn { color: #f1f5f9; border-color: #334155; }
+    .swagger-ui .btn.execute { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+    .swagger-ui .btn.authorize { color: #3b82f6; border-color: #3b82f6; }
+    .swagger-ui .highlight-code { background: #1e293b; }
+    .swagger-ui .highlight-code .microlight { color: #f1f5f9; background: #1e293b; }
+    .swagger-ui .copy-to-clipboard { background: #1e293b; }
+    .swagger-ui .download-contents { color: #3b82f6; }
+    .swagger-ui .opblock-body pre.microlight { background: #1e293b !important; color: #f1f5f9; border: 1px solid #334155; }
+    .swagger-ui .response-control-media-type__accept-message { color: #3b82f6; }
+    .swagger-ui .loading-container .loading::after { color: #3b82f6; }
     /* Back link */
-    .back-link { display: block; padding: 12px 20px; background: #1a1710; border-bottom: 1px solid #2a2520; font-family: 'Inter', sans-serif; font-size: 14px; }
-    .back-link a { color: #c8a44e; text-decoration: none; }
+    .back-link { display: block; padding: 12px 20px; background: #1e293b; border-bottom: 1px solid #334155; font-family: 'Inter', sans-serif; font-size: 14px; }
+    .back-link a { color: #3b82f6; text-decoration: none; }
     .back-link a:hover { text-decoration: underline; }
   </style>
 </head>
@@ -502,11 +502,11 @@ function buildCategoryPage(slug: string): string | null {
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/category/${slug}">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -599,11 +599,11 @@ function buildCategoryIndexPage(): string {
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/category">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -778,11 +778,11 @@ function buildBestOfPage(slug: string): string | null {
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/best/${slug}">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -905,11 +905,11 @@ function buildBestOfIndexPage(): string {
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/best">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -1060,11 +1060,11 @@ ${pairs.map(p => `          <a href="/compare/${p.slug}" class="compare-card">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/compare">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -1185,11 +1185,11 @@ ${relatedComparisons.map(([s, [ra, rb]]) => `      <a href="/compare/${s}" class
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/compare/${slug}">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -1323,7 +1323,7 @@ function formatDateRange(year: number, week: number): string {
 }
 
 const digestCss = `*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -1469,7 +1469,7 @@ function buildDigestPage(weekKey: string): string | null {
 <meta property="og:url" content="${BASE_URL}/digest/${weekKey}">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>${digestCss}</style>
 </head>
@@ -1530,7 +1530,7 @@ function buildDigestArchivePage(): string {
 <meta property="og:url" content="${BASE_URL}/digest/archive">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>${digestCss}</style>
 </head>
@@ -1624,11 +1624,11 @@ ${vendors.map(v => `          <a href="/vendor/${v.slug}" class="vendor-card">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/vendor">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -1817,12 +1817,12 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/vendor/${slug}">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -1859,7 +1859,7 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .compare-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 .mcp-section code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
 .cat-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.25rem}
-.cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(200,164,78,0.2)}
+.cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.2)}
 .faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;overflow:hidden}
 .faq-q{padding:.75rem 1rem;font-weight:600;font-size:.9rem;color:var(--text);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem}
 .faq-q::before{content:'▸';color:var(--accent);font-size:.8rem;transition:transform .2s}
@@ -2137,12 +2137,12 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/alternative-to/${slug}">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(altFaqJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -2156,7 +2156,7 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .risk-row{margin-bottom:.5rem;font-size:.9rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .risk-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;min-width:100px}
 .risk-badge-inline{display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.7rem;font-weight:600}
-.cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(200,164,78,0.2)}
+.cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.2)}
 .changes-summary{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
 .change-item{margin-bottom:.5rem;padding:.5rem .75rem;border-left:3px solid var(--border);background:var(--bg-card);border-radius:0 8px 8px 0}
 .change-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem;flex-wrap:wrap}
@@ -2293,11 +2293,11 @@ function buildAlternativesIndexPage(): string {
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/alternative-to">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -2526,11 +2526,11 @@ Session: Mcp-Session-Id header (auto-managed)`,
   }).join("\n    ");
 
   const css = `${globalNavCss()}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-glow:rgba(200,164,78,0.08);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-code{font-family:var(--mono);font-size:.85em;background:rgba(200,164,78,0.08);padding:.15em .35em;border-radius:4px}
+code{font-family:var(--mono);font-size:.85em;background:rgba(59,130,246,0.08);padding:.15em .35em;border-radius:4px}
 pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;position:relative;margin:.5rem 0}
 pre code{background:none;padding:0;font-size:.8rem;color:var(--text)}
 .container{max-width:800px;margin:0 auto;padding:1.5rem 1rem}
@@ -2588,7 +2588,7 @@ footer{text-align:center;color:var(--text-dim);font-size:.75rem;margin-top:3rem;
 <meta property="og:type" content="website">
 <meta property="og:url" content="${baseUrl}/setup">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>${css}</style>
 </head>
@@ -2772,11 +2772,11 @@ ${entriesHtml}
 <meta property="og:url" content="${BASE_URL}/changes">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -2969,11 +2969,11 @@ ${entriesHtml}
 <meta property="og:url" content="${BASE_URL}/expiring">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -3170,11 +3170,11 @@ function buildSearchPage(query: string, categoryFilter: string, page: number): s
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/search">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -3329,11 +3329,11 @@ function buildTrendsIndexPage(): string {
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/trends">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -3477,11 +3477,11 @@ ${stablePicks.map(o => `      <a href="/vendor/${toSlug(o.vendor)}" class="stabl
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/trends/${slug}">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#14120b;--bg-elevated:#1c1a12;--bg-card:rgba(28,26,18,0.6);--border:#2a2720;--border-hover:#c8a44e;--text:#e8e0cc;--text-muted:#9e9685;--text-dim:#6b6356;--accent:#c8a44e;--accent-hover:#dbb85e;--accent-glow:rgba(200,164,78,0.15);--serif:'DM Serif Display',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem}
@@ -5005,7 +5005,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.end(html);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Best-of list not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Best-of list "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/best">Browse all best-of lists</a></p></div></body></html>`);
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Best-of list not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Best-of list "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/best">Browse all best-of lists</a></p></div></body></html>`);
     }
   } else if ((url.pathname === "/category" || url.pathname === "/category/") && req.method === "GET") {
     recordApiHit("/category");
@@ -5022,7 +5022,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.end(html);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Category not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/">Browse all ${stats.categories} categories on AgentDeals</a></p></div></body></html>`);
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Category not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/">Browse all ${stats.categories} categories on AgentDeals</a></p></div></body></html>`);
     }
   } else if (url.pathname === "/compare" && req.method === "GET") {
     recordApiHit("/compare");
@@ -5051,7 +5051,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.end(html);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparison not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Comparison not found.</p><p style="margin-top:1rem"><a href="/compare">Browse all comparisons</a></p></div></body></html>`);
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparison not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Comparison not found.</p><p style="margin-top:1rem"><a href="/compare">Browse all comparisons</a></p></div></body></html>`);
     }
   } else if (url.pathname === "/digest" && req.method === "GET") {
     // Redirect to current week's digest
@@ -5073,7 +5073,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.end(html);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Digest not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Invalid week format. Use YYYY-wNN (e.g., 2026-w11).</p><p style="margin-top:1rem"><a href="/digest/archive">Browse the digest archive</a></p></div></body></html>`);
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Digest not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Invalid week format. Use YYYY-wNN (e.g., 2026-w11).</p><p style="margin-top:1rem"><a href="/digest/archive">Browse the digest archive</a></p></div></body></html>`);
     }
   } else if (url.pathname === "/vendor" && req.method === "GET") {
     recordApiHit("/vendor");
@@ -5090,7 +5090,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.end(html);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
     }
   } else if (url.pathname === "/changes" && req.method === "GET") {
     recordApiHit("/changes");
@@ -5130,7 +5130,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.end(html);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/alternative-to">Browse all alternatives</a></p></div></body></html>`);
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/alternative-to">Browse all alternatives</a></p></div></body></html>`);
     }
   } else if (url.pathname === "/trends" && req.method === "GET") {
     recordApiHit("/trends");
@@ -5147,7 +5147,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.end(html);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trends not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#14120b;color:#e8e0cc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#c8a44e}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/trends">Browse all category trends</a></p></div></body></html>`);
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trends not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/trends">Browse all category trends</a></p></div></body></html>`);
     }
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
