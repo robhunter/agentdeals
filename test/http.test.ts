@@ -1285,6 +1285,25 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Recently Changed"), "Should have recently changed section");
   });
 
+  // --- Changes page ---
+
+  it("GET /changes renders deal change timeline page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/changes`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Deal Change Timeline"), "Should have changes title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("ItemList"), "JSON-LD should use ItemList");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/changes"), "Should reference /changes");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("feed.xml"), "Should link to RSS feed");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {
