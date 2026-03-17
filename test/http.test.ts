@@ -808,6 +808,14 @@ describe("HTTP transport", () => {
     assert.ok(body.components.schemas.Eligibility);
   });
 
+  it("GET /api redirects to /api/docs", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/api/docs");
+  });
+
   it("GET /feed.xml returns valid Atom XML", async () => {
     proc = await startHttpServer();
 
