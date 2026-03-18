@@ -740,7 +740,7 @@ export function getWeeklyDigest(): {
   // Build summary
   const parts: string[] = [];
   if (changes.length > 0) {
-    const negative = changes.filter((c) => ["free_tier_removed", "limits_reduced", "open_source_killed", "product_deprecated"].includes(c.change_type));
+    const negative = changes.filter((c) => ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"].includes(c.change_type));
     const positive = changes.filter((c) => ["new_free_tier", "limits_increased", "startup_program_expanded"].includes(c.change_type));
     parts.push(`${changes.length} pricing change${changes.length !== 1 ? "s" : ""} tracked${usedFallback ? " in the past 30 days" : " this week"}`);
     if (negative.length > 0) parts.push(`${negative.length} negative (${negative.map((c) => c.vendor).join(", ")})`);
