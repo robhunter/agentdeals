@@ -17,7 +17,7 @@
     {
       "vendor": "Render",
       "category": "Cloud Hosting",
-      "description": "Free tier for static sites and web services with auto-deploy from Git",
+      "description": "Free web services (512 MB RAM, 0.1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 100 GB bandwidth/month, 500 build minutes/month. 1 project with 2 environments. Auto-deploy from Git",
       "tier": "Hobby",
       "url": "https://render.com/pricing",
       "tags": [
@@ -26,7 +26,7 @@
         "deployment",
         "docker"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Cloudflare Workers",
@@ -229,7 +229,7 @@
     {
       "vendor": "Supabase",
       "category": "Databases",
-      "description": "Open source Firebase alternative with free tier — Postgres, Auth, Storage, Realtime",
+      "description": "Open source Firebase alternative — 500 MB Postgres database, 50K monthly active users, 1 GB file storage, 5 GB bandwidth, 500K edge function invocations, 200 concurrent realtime connections, 2 free projects. Includes Auth, Storage, Realtime, and Edge Functions",
       "tier": "Free",
       "url": "https://supabase.com/pricing",
       "tags": [
@@ -240,7 +240,7 @@
         "realtime",
         "baas"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Neon",
@@ -4788,7 +4788,7 @@
     {
       "vendor": "Neptune.ai",
       "category": "AI / ML",
-      "description": "ML experiment tracking for foundation models — free for individuals, students, professors, and researchers. Includes experiment tracking, metadata logging, and basic collaboration",
+      "description": "ML experiment tracking — free for individuals/researchers. 200 GB metadata storage, 50 GB file storage, 100K tracking calls/hour, 20 active runs, unlimited archived experiments, Jupyter/Colab integration",
       "tier": "Free (Individual)",
       "url": "https://neptune.ai/pricing",
       "tags": [
@@ -4798,7 +4798,7 @@
         "foundation-models",
         "research"
       ],
-      "verifiedDate": "2026-03-01"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Labelbox",
@@ -5250,7 +5250,7 @@
     {
       "vendor": "Google Colab",
       "category": "Cloud IaaS",
-      "description": "Free Jupyter Notebooks development environment.",
+      "description": "Free Jupyter notebooks with GPU access (T4 when available). Sessions up to 12 hours. Python with pre-installed ML libraries (TensorFlow, PyTorch, scikit-learn). Dynamic resource limits based on availability",
       "tier": "Free",
       "url": "https://colab.research.google.com/",
       "tags": [
@@ -5258,12 +5258,12 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Zoho",
       "category": "Cloud IaaS",
-      "description": "Started as an e-mail provider but now provides a suite of services, some of which have free plans. List of services having free plans :",
+      "description": "Suite of 45+ business apps with free tiers — Zoho Mail (5 users, 5 GB/user), CRM (3 users), Projects (3 users, 2 projects), Invoice (5 customers), Cliq (unlimited users), Forms (3 forms), and more",
       "tier": "Free",
       "url": "https://www.zoho.com",
       "tags": [
@@ -5271,7 +5271,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Zoho Assist",
@@ -5341,7 +5341,7 @@
     {
       "vendor": "Vault",
       "category": "Cloud IaaS",
-      "description": "Password Management is accessible for Individuals.",
+      "description": "Password manager (Zoho) — unlimited passwords for 1 user, password generator, browser extensions (Chrome/Firefox/Safari/Edge), mobile apps, secure sharing, offline access",
       "tier": "Free",
       "url": "https://zoho.com/vault",
       "tags": [
@@ -5349,7 +5349,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Showtime",
@@ -7259,14 +7259,14 @@
     {
       "vendor": "evernote.com",
       "category": "Team Collaboration",
-      "description": "Tool for organizing information. Share your notes and work together with others",
+      "description": "Note-taking — 50 notes, 1 notebook, 20 MB monthly uploads, 1 device sync, 50 attachments, 20 tags, 5 spaces. Web clipper and search included",
       "tier": "Free",
       "url": "https://evernote.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Fibery",
@@ -7451,14 +7451,14 @@
     {
       "vendor": "Miro",
       "category": "Diagramming",
-      "description": "Scalable, secure, cross-device, and enterprise-ready collaboration whiteboard for distributed teams. With a freemium plan.",
+      "description": "Collaborative whiteboard — 3 editable boards, unlimited team members, 10 AI credits/month, 5 Talktracks, 160+ app integrations including Zoom, Slack, and Google Drive",
       "tier": "Free",
       "url": "https://miro.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Nuclino",
@@ -7943,7 +7943,7 @@
     {
       "vendor": "Cosmic",
       "category": "Headless CMS",
-      "description": "Headless CMS and API toolkit. Free personal plans for developers.",
+      "description": "Headless CMS — 1 project, 2 users, 1,000 objects, 10K API requests/month (100K cached), 1 GB storage, 1 GB API bandwidth, 3 AI agents, 300K AI tokens/month",
       "tier": "Free",
       "url": "https://www.cosmicjs.com/",
       "tags": [
@@ -7952,7 +7952,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Crystallize",
@@ -8153,14 +8153,14 @@
     {
       "vendor": "codacy.com",
       "category": "Code Quality",
-      "description": "Automated code reviews for PHP, Python, Ruby, Java, JavaScript, Scala, CSS, and CoffeeScript, free for unlimited public and private repositories",
+      "description": "Automated code reviews for PHP, Python, Ruby, Java, JavaScript, Scala, CSS, and CoffeeScript — free for open source. 4 users, 7 repos on free plan. Static analysis, security patterns, duplication detection, code complexity metrics",
       "tier": "Free",
       "url": "https://www.codacy.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Codeac.io",
@@ -8213,14 +8213,14 @@
     {
       "vendor": "coveralls.io",
       "category": "Code Quality",
-      "description": "Display test coverage reports, free for Open Source",
+      "description": "Test coverage tracking — displays coverage reports with line-by-line detail, PR comments, and badge embeds. Free for open source repos with unlimited public repos. Supports 22+ languages",
       "tier": "Free",
       "url": "https://coveralls.io/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "deepscan.io",
@@ -8297,14 +8297,14 @@
     {
       "vendor": "gtmetrix.com",
       "category": "Code Quality",
-      "description": "Reports and thorough recommendations to optimize websites",
+      "description": "Website performance testing — Lighthouse-based reports with Core Web Vitals, waterfall charts, and optimization recommendations. Free plan: 5 monitored URLs, daily checks, 20 on-demand tests/day",
       "tier": "Free",
       "url": "https://gtmetrix.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "holistic.dev",
@@ -11162,14 +11162,14 @@
     {
       "vendor": "Substack",
       "category": "Email",
-      "description": "Unlimited free newsletter service. Start paying when you charge for it.",
+      "description": "Newsletter platform — unlimited subscribers, unlimited posts, custom domain, podcast hosting, community features, analytics. Free until you enable paid subscriptions (10% platform fee on paid subs)",
       "tier": "Free",
       "url": "https://substack.com",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Sweego",
@@ -12105,7 +12105,7 @@
     {
       "vendor": "encore.dev",
       "category": "Cloud Hosting",
-      "description": "Backend framework using static analysis to provide automatic infrastructure, boilerplate-free code, and more. Includes free cloud hosting for hobby projects.",
+      "description": "Backend framework with static analysis for automatic infrastructure provisioning. Free cloud hosting for hobby projects, up to 2 environments, built-in monitoring and tracing",
       "tier": "Free",
       "url": "https://encore.dev/",
       "tags": [
@@ -12113,7 +12113,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "flightcontrol.dev",
@@ -12474,7 +12474,7 @@
     {
       "vendor": "Bubble",
       "category": "Cloud Hosting",
-      "description": "Visual programming to build web and mobile apps without code, free with Bubble branding.",
+      "description": "Visual no-code web app builder — free with Bubble branding. Includes responsive design, basic workflows, REST API connector, core plugins, SEO settings, and community support. Hosted on bubbleapps.io subdomain",
       "tier": "Free",
       "url": "https://bubble.io/",
       "tags": [
@@ -12482,7 +12482,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "dAppling Network",
@@ -13278,14 +13278,14 @@
     {
       "vendor": "asana.com",
       "category": "Project Management",
-      "description": "Free for private project with collaborators",
+      "description": "Project management — up to 10 users, unlimited tasks, unlimited projects, list/board/calendar views, 100+ integrations, assignees, due dates, comments, mobile apps",
       "tier": "Free",
       "url": "https://asana.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Backlog",
@@ -13338,26 +13338,26 @@
     {
       "vendor": "clickup.com",
       "category": "Project Management",
-      "description": "Project management. Free, premium version with cloud storage. Mobile applications and Git integrations are available.",
+      "description": "Project management — unlimited tasks, unlimited members, 60 MB storage, 1 form, kanban boards, sprint management, collaborative docs, calendar view, 24/7 support",
       "tier": "Free",
       "url": "https://clickup.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Clockify",
       "category": "Project Management",
-      "description": "Time tracker and timesheet app that lets you track work hours across projects. Unlimited users, free forever.",
+      "description": "Time tracker — unlimited users, unlimited projects, unlimited time tracking. Timesheets, reports, kiosk mode, Pomodoro timer, idle detection, calendar view. Desktop, mobile, and web apps",
       "tier": "Free",
       "url": "https://clockify.me",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Cloudcraft",
@@ -13746,14 +13746,14 @@
     {
       "vendor": "teamwork.com",
       "category": "Project Management",
-      "description": "Project management & Team Chat. Free for five users and two projects. Premium plans are available.",
+      "description": "Project management — 5 users, 2 projects on free plan. Task lists, milestones, time tracking, file storage, messages, Gantt chart view, board view",
       "tier": "Free",
       "url": "https://teamwork.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "teleretro.com",
@@ -14253,7 +14253,7 @@
     {
       "vendor": "podio.com",
       "category": "Storage",
-      "description": "You can use Podio with a team of up to five people and try out the features of the Basic Plan, except user management",
+      "description": "Work management platform — up to 5 users on free plan, task management, apps, workspaces, basic workflow automations. 1 GB storage. Citrix-backed",
       "tier": "Free",
       "url": "https://podio.com/",
       "tags": [
@@ -14261,7 +14261,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Proton Drive",
@@ -15658,7 +15658,7 @@
     {
       "vendor": "Webflow",
       "category": "Design",
-      "description": "WYSIWYG website builder with animations and website hosting. Free for two projects.",
+      "description": "Visual website builder — 2 pages, 20 CMS collections, 50 CMS items, 1 GB bandwidth/month, 50 form submissions (lifetime). Hosted on webflow.io subdomain. AI site builder included",
       "tier": "Free",
       "url": "https://webflow.com",
       "tags": [
@@ -15666,7 +15666,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Webstudio",
@@ -15697,7 +15697,7 @@
     {
       "vendor": "Zeplin",
       "category": "Design",
-      "description": "Designer and developer collaboration platform. Show designs, assets, and style guides. Free for one project.",
+      "description": "Design handoff platform — 1 active project, unlimited members, style guide, component inspection, asset export. Integrates with Figma, Sketch, and Adobe XD",
       "tier": "Free",
       "url": "https://zeplin.io/",
       "tags": [
@@ -15705,7 +15705,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Clockwork Micro",
@@ -16036,14 +16036,14 @@
     {
       "vendor": "cocalc.com",
       "category": "Notebooks & Data Science",
-      "description": "(formerly SageMathCloud at cloud.sagemath.com) — Collaborative calculation in the cloud. Browser access to full Ubuntu with built-in collaboration and lots of free software for mathematics, science, data science, preinstalled: Python, LaTeX, Jupyter Notebooks, SageMath, scikitlearn, etc.",
+      "description": "Collaborative computation platform (formerly SageMathCloud) — browser-based Ubuntu with Python, LaTeX, Jupyter, SageMath, R, and Julia pre-installed. 1 project, 1 GB disk, shared CPU",
       "tier": "Free",
       "url": "https://cocalc.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "code.cs50.io",
@@ -16072,26 +16072,26 @@
     {
       "vendor": "codepen.io",
       "category": "IDE & Code Editors",
-      "description": "CodePen is a playground for the front-end side of the web.",
+      "description": "Front-end code playground — unlimited public pens (HTML/CSS/JS), 1 project with 10 files, asset hosting, embedded previews, console, live collaboration. Supports preprocessors (Sass, LESS, TypeScript)",
       "tier": "Free",
       "url": "https://codepen.io/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "codesandbox.io",
       "category": "IDE & Code Editors",
-      "description": "Online Playground for React, Vue, Angular, Preact, and more.",
+      "description": "Cloud IDE — unlimited public sandboxes, 5 private repositories, 40 hrs/month VM credits (4 vCPU, 8 GB RAM). Real-time collaboration, GitHub integration, instant previews",
       "tier": "Free",
       "url": "https://codesandbox.io/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "codiga.io",
@@ -16168,14 +16168,14 @@
     {
       "vendor": "MarsCode",
       "category": "IDE & Code Editors",
-      "description": "A free AI-powered cloud-based IDE.",
+      "description": "Cloud IDE with AI coding assistant — code completion, debugging, code explanation, unit test generation. 2 GB workspace storage, supports 100+ languages and frameworks",
       "tier": "Free",
       "url": "https://www.marscode.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "mockaroo",
@@ -16240,14 +16240,14 @@
     {
       "vendor": "Replit",
       "category": "IDE & Code Editors",
-      "description": "A cloud coding environment for various program languages.",
+      "description": "Cloud IDE with AI code assistant — 10 GiB account storage, multiplayer collaboration, unlimited public Repls. Supports 50+ languages. Built-in hosting, version history, and package management",
       "tier": "Free",
       "url": "https://replit.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "SoloLearn",
@@ -16264,14 +16264,14 @@
     {
       "vendor": "stackblitz.com",
       "category": "IDE & Code Editors",
-      "description": "Online/Cloud Code IDE to create, edit, & deploy full-stack apps. Support any popular NodeJs-based frontend & backend frameworks. Shortlink to create a new project: [https://node.new](https://node.new).",
+      "description": "Browser-based IDE with WebContainers — unlimited public projects and GitHub repos. Runs Node.js natively in the browser with no remote server. Instant environment setup, offline support",
       "tier": "Free",
       "url": "https://stackblitz.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Sublime Text",
@@ -16324,14 +16324,14 @@
     {
       "vendor": "wakatime.com",
       "category": "IDE & Code Editors",
-      "description": "Quantified self-metrics about your coding activity using text editor plugins, limited plan for free.",
+      "description": "Coding activity tracker via editor plugins — 1-week dashboard history, 1 programming goal, weekly email reports, public leaderboard. Supports 60+ IDEs including VS Code, JetBrains, Vim",
       "tier": "Free",
       "url": "https://wakatime.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "Wave Terminal",
@@ -16489,7 +16489,7 @@
     {
       "vendor": "Expensify",
       "category": "Analytics",
-      "description": "Expense reporting, free personal reporting approval workflow",
+      "description": "Expense management — unlimited receipt scanning (SmartScan OCR), expense reports, next-day reimbursement, corporate card program. Free for individuals",
       "tier": "Free",
       "url": "https://www.expensify.com/",
       "tags": [
@@ -16497,7 +16497,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-03-18"
     },
     {
       "vendor": "getinsights.io",
