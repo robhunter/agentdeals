@@ -2470,7 +2470,8 @@
         "iac",
         "devops",
         "cloud",
-        "free tier"
+        "free tier",
+        "terraform-alternative"
       ],
       "verifiedDate": "2026-02-26"
     },
@@ -2485,7 +2486,8 @@
         "iac",
         "devops",
         "terraform",
-        "free tier"
+        "free tier",
+        "terraform-alternative"
       ],
       "verifiedDate": "2026-02-26"
     },
@@ -5530,7 +5532,8 @@
         "infrastructure",
         "cloud",
         "management",
-        "free-for-dev"
+        "free-for-dev",
+        "terraform-alternative"
       ],
       "verifiedDate": "2026-03-02"
     },
@@ -5572,7 +5575,8 @@
         "infrastructure",
         "cloud",
         "management",
-        "free-for-dev"
+        "free-for-dev",
+        "terraform-alternative"
       ],
       "verifiedDate": "2026-03-02"
     },
@@ -5587,7 +5591,8 @@
         "terraform",
         "gitops",
         "infrastructure",
-        "devops"
+        "devops",
+        "terraform-alternative"
       ],
       "verifiedDate": "2026-03-04"
     },
@@ -8597,7 +8602,8 @@
         "ci",
         "cd",
         "continuous-integration",
-        "free-for-dev"
+        "free-for-dev",
+        "terraform-alternative"
       ],
       "verifiedDate": "2026-03-02"
     },
@@ -8611,7 +8617,8 @@
         "ci",
         "cd",
         "continuous-integration",
-        "free-for-dev"
+        "free-for-dev",
+        "terraform-alternative"
       ],
       "verifiedDate": "2026-03-02"
     },
@@ -20948,7 +20955,8 @@
         "scanning",
         "terraform",
         "kubernetes",
-        "open-source"
+        "open-source",
+        "terraform-alternative"
       ],
       "verifiedDate": "2026-03-03"
     },

@@ -2364,6 +2364,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     tag: "postman-alternative",
     primaryVendor: "Postman",
   },
+  {
+    slug: "terraform-alternatives",
+    title: "HCP Terraform Alternatives — Free IaC Tools After the March 2026 EOL",
+    metaDesc: "HCP Terraform legacy free plan ends March 31, 2026. Compare free alternatives: Spacelift, Terragrunt Scale, Pulumi, Scalr, and more. Verified pricing and free tier details.",
+    contextHtml: `<p>HCP Terraform's legacy free plan reaches <strong>end-of-life on March 31, 2026</strong>. Organizations on the legacy plan will be auto-transitioned to an enhanced free tier — but with a <strong>500 managed resource cap</strong> (previously unlimited for small teams).</p>
+      <p>This isn't a complete shutdown — the new enhanced tier includes SSO, policy as code, and unlimited users. But if the 500-resource limit doesn't fit your workloads, here are free IaC alternatives worth evaluating.</p>`,
+    tag: "terraform-alternative",
+    primaryVendor: "HCP Terraform",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
