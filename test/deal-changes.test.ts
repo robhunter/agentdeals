@@ -324,7 +324,7 @@ describe("track_changes tool", () => {
 
   it("every change_type in data matches the tool enum", async () => {
     const VALID_CHANGE_TYPES = new Set([
-      "free_tier_removed", "limits_reduced", "limits_increased",
+      "free_tier_removed", "limits_reduced", "restriction", "limits_increased",
       "new_free_tier", "pricing_restructured", "open_source_killed",
       "pricing_model_change", "startup_program_expanded",
       "pricing_postponed", "product_deprecated",
