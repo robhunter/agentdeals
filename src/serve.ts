@@ -4661,7 +4661,9 @@ const httpServer = createHttpServer(async (req, res) => {
         url.pathname.startsWith("/api/") ||
         url.pathname.startsWith("/.well-known/") ||
         url.pathname === "/favicon.png" ||
-        url.pathname === "/favicon.ico";
+        url.pathname === "/favicon.ico" ||
+        url.pathname === "/llms.txt" ||
+        url.pathname === "/llms-full.txt";
       if (!skip) {
         const target = `${BASE_URL}${url.pathname}${url.search}`;
         res.writeHead(301, { Location: target });
@@ -5095,6 +5097,146 @@ ${entries}
     const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
     res.end(robotsTxt);
+  } else if (url.pathname === "/llms.txt" && req.method === "GET") {
+    const llmsTxt = `# AgentDeals
+
+> An MCP server and REST API that aggregates free tiers, startup credits, and developer tool deals. ${stats.offers} verified offers across ${stats.categories} categories with pricing change tracking.
+
+## What AgentDeals Does
+
+AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure — databases, cloud hosting, CI/CD, monitoring, auth, AI services, and more. Data is verified and includes specific free tier limits, eligibility requirements, and pricing change history.
+
+## MCP Tools (4)
+
+- **search_deals**: Find free tiers, startup credits, and developer deals. Search by keyword, category, vendor name, or eligibility type. Returns verified deal details with specific limits.
+- **plan_stack**: Plan a technology stack with cost-optimized choices. Recommends free-tier services, estimates costs at scale, or audits existing stacks for risk.
+- **compare_vendors**: Compare developer tools side by side — free tier limits, pricing tiers, risk levels, and recent pricing changes.
+- **track_changes**: Track pricing changes across developer tools — free tier removals, limit reductions, new free tiers, and upcoming expirations.
+
+## Prompt Templates (6)
+
+- **new-project-setup**: Find free tiers for a new project's entire stack
+- **cost-audit**: Audit an existing stack for cost savings
+- **check-pricing-changes**: Check recent developer tool pricing changes
+- **compare-options**: Compare two or more services side-by-side
+- **find-startup-credits**: Find startup credit programs and special deals
+- **monitor-vendor-changes**: Monitor pricing changes for your vendor watchlist
+
+## Connect
+
+- MCP endpoint: ${BASE_URL}/mcp
+- REST API docs: ${BASE_URL}/api/docs
+- npm: npx agentdeals
+
+## Links
+
+- [API Documentation](${BASE_URL}/api/docs)
+- [Setup Guide](${BASE_URL}/setup)
+- [Browse Categories](${BASE_URL}/category)
+- [Pricing Changes Feed](${BASE_URL}/feed.xml)
+- [Expiring Deals](${BASE_URL}/expiring)
+- [Full details for LLMs](${BASE_URL}/llms-full.txt)
+`;
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(llmsTxt);
+  } else if (url.pathname === "/llms-full.txt" && req.method === "GET") {
+    const catList = categories.map(c => `- ${c.name} (${c.count} offers)`).join("\n");
+    const llmsFullTxt = `# AgentDeals — Full Reference
+
+> ${stats.offers} verified developer tool deals across ${stats.categories} categories. Free tiers, startup credits, and pricing change tracking.
+
+## MCP Connection
+
+Endpoint: ${BASE_URL}/mcp
+Transport: Streamable HTTP (POST/GET/DELETE)
+
+\`\`\`json
+{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "${BASE_URL}/mcp"
+    }
+  }
+}
+\`\`\`
+
+## Tool Schemas
+
+### search_deals
+Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more.
+
+Parameters:
+- query (string, optional): Keyword search (vendor names, descriptions, tags)
+- category (string, optional): Filter by category. Pass "list" to get all categories with counts.
+- vendor (string, optional): Get full details for a specific vendor (fuzzy match). Returns alternatives.
+- eligibility (enum, optional): public, accelerator, oss, student, fintech, geographic, enterprise
+- sort (enum, optional): vendor (A-Z), category, newest
+- since (string, optional): ISO date (YYYY-MM-DD). Only return deals verified/added after this date.
+- limit (number, optional): Max results (default: 20)
+- offset (number, optional): Pagination offset (default: 0)
+
+### plan_stack
+Plan a technology stack with cost-optimized infrastructure choices.
+
+Parameters:
+- mode (enum, required): recommend, estimate, or audit
+- use_case (string, optional): What you're building (for recommend mode)
+- services (array of strings, optional): Current vendor names (for estimate/audit mode)
+- scale (enum, optional): hobby, startup, growth (for estimate mode)
+- requirements (array of strings, optional): Specific infra needs (for recommend mode)
+
+### compare_vendors
+Compare developer tools and services side by side.
+
+Parameters:
+- vendors (array of strings, required): 1 or 2 vendor names. 1 = risk check, 2 = side-by-side comparison.
+- include_risk (boolean, optional): Include risk assessment (default: true)
+
+### track_changes
+Track recent pricing changes across developer tools.
+
+Parameters:
+- since (string, optional): ISO date (YYYY-MM-DD). Default: 7 days ago.
+- change_type (enum, optional): free_tier_removed, limits_reduced, restriction, limits_increased, new_free_tier, pricing_restructured, open_source_killed, pricing_model_change, startup_program_expanded, pricing_postponed, product_deprecated
+- vendor (string, optional): Filter to one vendor
+- vendors (string, optional): Comma-separated vendor names
+- include_expiring (boolean, optional): Include upcoming expirations (default: true)
+- lookahead_days (number, optional): Days to look ahead for expirations (default: 30)
+
+## REST API Endpoints
+
+- GET /api/offers — Search deals (params: q, category, eligibility_type, sort, limit, offset)
+- GET /api/categories — List all categories with counts
+- GET /api/changes — Pricing changes (params: since, change_type, vendor)
+- GET /api/new — Recently added offers (params: days)
+- GET /api/newest — Newest deals (params: since, limit, category)
+- GET /api/compare — Compare two vendors (params: a, b)
+- GET /api/details/:vendor — Vendor details (params: alternatives)
+- GET /api/vendor-risk/:vendor — Vendor risk assessment
+- GET /api/stack — Stack recommendation (params: use_case, requirements)
+- GET /api/costs — Cost estimation (params: services, scale)
+- GET /api/audit-stack — Stack audit (params: services)
+- GET /api/expiring — Expiring deals (params: days)
+- GET /api/digest — Weekly pricing digest
+- GET /api/openapi.json — OpenAPI 3.0 specification
+- GET /api/docs — Swagger UI documentation
+- GET /api/feed — Atom feed of pricing changes
+- GET /api/pageviews — Page view analytics
+
+## Categories (${stats.categories})
+
+${catList}
+
+## Example Queries
+
+1. "What databases have a free tier?" → search_deals with category="Databases"
+2. "Compare Supabase and Neon" → compare_vendors with vendors=["Supabase", "Neon"]
+3. "What free tier changes happened this month?" → track_changes with since="2026-03-01"
+4. "Recommend a stack for a Next.js SaaS app" → plan_stack with mode="recommend", use_case="Next.js SaaS app"
+5. "Is Heroku's free tier still available?" → search_deals with vendor="Heroku"
+`;
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(llmsFullTxt);
   } else if (url.pathname === "/sitemap.xml" && req.method === "GET") {
     const now = new Date().toISOString().split("T")[0];
     const categoryUrls = categories.map((c) => `  <url>

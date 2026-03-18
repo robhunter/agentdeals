@@ -9,7 +9,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
   const server = new McpServer({
     name: "agentdeals",
     version: "0.1.0",
-    description: "Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. 1,500+ verified offers across 54 categories with pricing change tracking.",
+    description: "AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. 1,500+ verified offers across 54 categories with pricing change tracking.",
   });
 
   // --- Tool 1: search_deals ---
@@ -18,7 +18,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     "search_deals",
     {
       description:
-        "Find free tiers, credits, and discounts for 1,500+ developer tools. Search by keyword, browse categories, or get full vendor details with alternatives. Covers AWS, Vercel, Supabase, Cloudflare, and more.",
+        "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. Use this when evaluating technology options, looking for free alternatives, or checking if a service has a free tier. Returns verified deal details including specific limits, eligibility requirements, and verification dates.",
       inputSchema: {
         query: z.string().optional().describe("Keyword search (vendor names, descriptions, tags)"),
         category: z.string().optional().describe("Filter by category. Pass \"list\" to get all categories with counts."),
@@ -106,7 +106,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     "plan_stack",
     {
       description:
-        "Get stack recommendations, cost estimates, or a full infrastructure audit. Describe what you're building to get a free-tier stack, or pass your current services to estimate costs and find risks.",
+        "Plan a technology stack with cost-optimized infrastructure choices. Given project requirements, recommends services with free tiers or credits that match your needs. Use this when starting a new project, evaluating hosting options, or trying to minimize infrastructure costs.",
       inputSchema: {
         mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: cost analysis at scale. audit: risk + cost + gap analysis."),
         use_case: z.string().optional().describe("What you're building (for recommend mode, e.g. 'Next.js SaaS app')"),
@@ -181,7 +181,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     "compare_vendors",
     {
       description:
-        "Compare 2 vendors side-by-side or check a single vendor's pricing risk. Returns free tier limits, risk levels, pricing history, and alternatives.",
+        "Compare developer tools and services side by side — free tier limits, pricing tiers, and recent pricing changes. Use this when choosing between similar services (e.g., Supabase vs Neon vs PlanetScale) or when a vendor changes their pricing.",
       inputSchema: {
         vendors: z.array(z.string()).describe("1 or 2 vendor names. 1 vendor = risk check. 2 vendors = side-by-side comparison."),
         include_risk: z.boolean().optional().describe("Include risk assessment (default: true)"),
@@ -258,7 +258,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     "track_changes",
     {
       description:
-        "Track developer tool pricing changes, upcoming expirations, and new deals. With no params, returns a weekly digest. Filter by vendor, change type, or date range.",
+        "Track recent pricing changes across developer tools — which free tiers were removed, which got limits cut, and which improved. Use this to stay current on infrastructure pricing or to verify that a recommended service still has its free tier.",
       inputSchema: {
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),

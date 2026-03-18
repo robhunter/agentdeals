@@ -60,6 +60,22 @@ Connect to the hosted instance — no install required:
 }
 ```
 
+### Quick Setup (.mcp.json)
+
+Add AgentDeals to any project by dropping this `.mcp.json` in the project root:
+
+```json
+{
+  "mcpServers": {
+    "agentdeals": {
+      "url": "https://agentdeals.dev/mcp"
+    }
+  }
+}
+```
+
+This works with Claude Code, Cursor, and other MCP-compatible clients that read `.mcp.json`.
+
 ## Quick Start
 
 ### Try these example queries
@@ -300,10 +316,10 @@ curl "https://agentdeals.dev/api/openapi.json"
 
 | Tool | Description |
 |------|-------------|
-| `search_deals` | Find free tiers, browse categories, get vendor details with alternatives. Search by keyword, category, eligibility, or vendor name. |
-| `plan_stack` | Get stack recommendations, cost estimates, or a full infrastructure audit for your project. |
-| `compare_vendors` | Compare 2 vendors side-by-side or check a single vendor's pricing risk. |
-| `track_changes` | Track pricing changes, upcoming expirations, and new deals. Weekly digest with no params. |
+| `search_deals` | Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. |
+| `plan_stack` | Plan a technology stack with cost-optimized infrastructure choices. Recommends free-tier services, estimates costs, or audits existing stacks. |
+| `compare_vendors` | Compare developer tools side by side — free tier limits, pricing tiers, and recent pricing changes. |
+| `track_changes` | Track recent pricing changes across developer tools — free tier removals, limit reductions, new free tiers, and expirations. |
 
 ### search_deals
 
