@@ -1312,6 +1312,38 @@ describe("HTTP transport", () => {
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
   });
 
+  // --- Timely alternatives pages ---
+
+  it("GET /localstack-alternatives renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/localstack-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("LocalStack CE Alternatives"), "Should have LocalStack title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("March 23, 2026"), "Should mention shutdown date");
+  });
+
+  it("GET /postman-alternatives renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/postman-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Postman Alternatives"), "Should have Postman title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("single-user only"), "Should mention the restriction");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {

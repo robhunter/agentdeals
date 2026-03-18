@@ -2334,6 +2334,234 @@ ${vendorListHtml}
 </html>`;
 }
 
+// --- Timely alternatives pages ---
+
+interface AlternativesPageConfig {
+  slug: string;
+  title: string;
+  metaDesc: string;
+  contextHtml: string;
+  tag: string;
+  primaryVendor: string;
+}
+
+const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
+  {
+    slug: "localstack-alternatives",
+    title: "LocalStack CE Alternatives — Free and Open Source Options for 2026",
+    metaDesc: "LocalStack Community Edition shuts down March 23, 2026. Compare free alternatives: Moto, Testcontainers, MinIO, and more. Verified pricing and free tier details.",
+    contextHtml: `<p>LocalStack Community Edition — the open-source AWS cloud emulator used by thousands of developers — <strong>shuts down on March 23, 2026</strong>. The single unified image now requires registration and an auth token. Commercial use requires a paid plan starting at $39/month.</p>
+      <p>If you relied on LocalStack CE for local AWS development and testing, here are the best free and open-source alternatives available today.</p>`,
+    tag: "localstack-alternative",
+    primaryVendor: "LocalStack",
+  },
+  {
+    slug: "postman-alternatives",
+    title: "Postman Alternatives — Free API Testing Tools for Teams in 2026",
+    metaDesc: "Postman's free plan is now single-user only (March 2026). Compare free alternatives for teams: Bruno, Hoppscotch, Insomnia, Thunder Client, Apidog. Verified pricing.",
+    contextHtml: `<p>Postman's free plan changed in <strong>March 2026</strong>: it is now <strong>single-user only</strong>. Team collaboration features — shared workspaces, collection sharing — are paywalled at $19/user/month.</p>
+      <p>If your team relied on Postman's free tier for API development, here are the best free alternatives with team-friendly features.</p>`,
+    tag: "postman-alternative",
+    primaryVendor: "Postman",
+  },
+];
+
+const alternativesPageMap = new Map<string, AlternativesPageConfig>();
+for (const page of ALTERNATIVES_PAGES) {
+  alternativesPageMap.set(page.slug, page);
+}
+
+function buildTimelyAlternativesPage(slug: string): string | null {
+  const config = alternativesPageMap.get(slug);
+  if (!config) return null;
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Get the primary vendor's deal change
+  const primaryChange = dealChanges.find(c => c.vendor === config.primaryVendor);
+
+  // Get all alternatives tagged in our index (excluding the primary vendor)
+  const taggedOffers = offers.filter(o => o.tags?.includes(config.tag) && o.vendor !== config.primaryVendor);
+  const enriched = enrichOffers(taggedOffers);
+
+  // Also get any other offers in the same category that might be relevant
+  const primaryOffer = offers.find(o => o.vendor === config.primaryVendor);
+  const categoryOffers = primaryOffer
+    ? offers.filter(o => o.category === primaryOffer.category && o.vendor !== config.primaryVendor && !taggedOffers.some(t => t.vendor === o.vendor))
+    : [];
+  const enrichedCategory = enrichOffers(categoryOffers.slice(0, 5));
+
+  // Build alternative cards
+  const altCards = enriched.map((o) => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `      <div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">More alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing page &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Category offers section
+  const categoryHtml = enrichedCategory.length > 0 ? `
+  <h2>Other ${escHtmlServer(primaryOffer?.category ?? "")} Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">More free tools in the same category that may fit your needs.</p>
+  ${enrichedCategory.map((o) => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `      <div class="alt-card" style="border-color:var(--border)">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing page &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n")}` : "";
+
+  // Comparison table
+  const allAlts = [...enriched, ...enrichedCategory];
+  const tableRows = allAlts.map((o) => `        <tr>
+          <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+          <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
+          <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(o.description.slice(0, 120))}${o.description.length > 120 ? "..." : ""}</td>
+          <td><span style="color:${riskColors[o.risk_level ?? "stable"]}">${o.risk_level ?? "stable"}</span></td>
+        </tr>`).join("\n");
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: config.title,
+    description: config.metaDesc,
+    numberOfItems: allAlts.length,
+    itemListElement: allAlts.map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  // Deal change context
+  const changeHtml = primaryChange ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
+    <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.25rem">${escHtmlServer(primaryChange.change_type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()))}</div>
+    <p style="margin:.25rem 0">${escHtmlServer(primaryChange.summary)}</p>
+    <div style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">
+      <strong>Before:</strong> ${escHtmlServer(primaryChange.previous_state)}<br>
+      <strong>After:</strong> ${escHtmlServer(primaryChange.current_state)}
+    </div>
+  </div>` : "";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(config.title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(config.metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(config.title)}">
+<meta property="og:description" content="${escHtmlServer(config.metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternative-to">Alternatives</a> &rsaquo; ${escHtmlServer(config.primaryVendor)}</div>
+  <h1>${escHtmlServer(config.title.split(" — ")[0])}</h1>
+
+  <div class="context">
+    ${config.contextHtml}
+  </div>
+
+  ${changeHtml}
+
+  <h2>Top Alternatives</h2>
+${altCards}
+
+${categoryHtml}
+
+  <h2>Quick Comparison</h2>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Free Tier</th>
+        <th>Details</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+
+  <div class="search-cta">
+    <p>Looking for more? <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}">Search all ${config.primaryVendor} alternatives</a> in our index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMcpCta("Get personalized recommendations from your AI. Search " + offers.length.toLocaleString() + "+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -4971,6 +5199,12 @@ ${categories.map(c => `  <url>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>`).join("\n")}
+${ALTERNATIVES_PAGES.map(p => `  <url>
+    <loc>${BASE_URL}/${p.slug}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>`).join("\n")}
   <url>
     <loc>${BASE_URL}/alternative-to</loc>
     <lastmod>${now}</lastmod>
@@ -5149,6 +5383,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trends not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/trends">Browse all category trends</a></p></div></body></html>`);
     }
+  } else if (alternativesPageMap.has(url.pathname.slice(1)) && req.method === "GET") {
+    const slug = url.pathname.slice(1);
+    recordApiHit("/" + slug);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildTimelyAlternativesPage(slug)!);
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
