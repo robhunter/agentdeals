@@ -2243,7 +2243,7 @@ function buildAlternativesIndexPage(): string {
     const sig = vendorSignals.get(c.vendor);
     if (sig) {
       sig.changes++;
-      if (["free_tier_removed", "limits_reduced", "open_source_killed", "product_deprecated"].includes(c.change_type)) {
+      if (["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"].includes(c.change_type)) {
         sig.negative++;
       }
     }
@@ -3246,7 +3246,7 @@ ${catPillsHtml}
 // --- Pricing trends pages ---
 
 // Negative change types that indicate prices rising / free tiers shrinking
-const NEGATIVE_TYPES = new Set(["free_tier_removed", "limits_reduced", "open_source_killed", "product_deprecated"]);
+const NEGATIVE_TYPES = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
 const POSITIVE_TYPES = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
 
 function getTrendDirection(changes: Array<{ change_type: string }>): "rising" | "stable" | "declining" {
