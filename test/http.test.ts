@@ -1344,6 +1344,21 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("single-user only"), "Should mention the restriction");
   });
 
+  it("GET /terraform-alternatives renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/terraform-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("HCP Terraform Alternatives"), "Should have Terraform title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("March 31, 2026"), "Should mention the EOL date");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {
