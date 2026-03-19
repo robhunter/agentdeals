@@ -850,7 +850,8 @@ describe("HTTP transport", () => {
     assert.ok(body.paths["/api/costs"]);
     assert.ok(body.paths["/feed.xml"]);
     assert.ok(body.paths["/api/pageviews"]);
-    assert.strictEqual(Object.keys(body.paths).length, 17);
+    assert.ok(body.paths["/api/freshness"]);
+    assert.strictEqual(Object.keys(body.paths).length, 18);
     assert.ok(body.components.schemas.Offer);
     assert.ok(body.components.schemas.DealChange);
     assert.ok(body.components.schemas.Eligibility);
@@ -1358,6 +1359,63 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("feed.xml"), "Should link to RSS feed");
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("GET /freshness renders data freshness dashboard page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/freshness`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Data Freshness Dashboard"), "Should have freshness title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("Dataset"), "JSON-LD should use Dataset type");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/freshness"), "Should reference /freshness");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("freshness score"), "Should show freshness score");
+    assert.ok(html.includes("Stalest Entries"), "Should have stalest entries section");
+    assert.ok(html.includes("Freshness by Category"), "Should have category breakdown");
+    assert.ok(html.includes("/api/freshness"), "Should link to API endpoint");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("GET /api/freshness returns freshness metrics", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/freshness`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    const body = await response.json() as any;
+    assert.ok(typeof body.total_offers === "number");
+    assert.ok(body.total_offers > 0, "Should have offers");
+    assert.ok(typeof body.freshness_score === "number");
+    assert.ok(body.freshness_score >= 0 && body.freshness_score <= 100, "Freshness score should be 0-100");
+    assert.ok(typeof body.verified_within_7_days === "number");
+    assert.ok(typeof body.verified_within_30_days === "number");
+    assert.ok(typeof body.verified_within_90_days === "number");
+    assert.ok(typeof body.verified_within_180_days === "number");
+    assert.ok(Array.isArray(body.stalest_entries), "Should have stalest entries");
+    assert.ok(body.stalest_entries.length > 0, "Should have at least one stalest entry");
+    assert.ok(body.stalest_entries[0].vendor, "Stalest entry should have vendor");
+    assert.ok(body.stalest_entries[0].days_since_verified >= 0, "Should have days_since_verified");
+    assert.ok(Array.isArray(body.freshest_entries), "Should have freshest entries");
+    assert.ok(Array.isArray(body.by_category), "Should have category breakdown");
+    assert.ok(body.by_category.length > 0, "Should have at least one category");
+    assert.ok(body.by_category[0].category, "Category should have name");
+    assert.ok(typeof body.by_category[0].freshness_score === "number", "Category should have freshness score");
+  });
+
+  it("GET /api/offers includes days_since_verified", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api/offers?q=vercel&limit=1`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.offers.length > 0, "Should have at least one offer");
+    assert.ok(typeof body.offers[0].days_since_verified === "number", "Offer should include days_since_verified");
+    assert.ok(body.offers[0].days_since_verified >= 0, "days_since_verified should be non-negative");
   });
 
   // --- Timely alternatives pages ---

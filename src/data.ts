@@ -250,7 +250,11 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       risk_level = "stable";
     }
 
-    return { ...offer, recent_change, expires_soon, risk_level };
+    const days_since_verified = Math.floor(
+      (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
+    );
+
+    return { ...offer, recent_change, expires_soon, risk_level, days_since_verified };
   });
 }
 
@@ -696,6 +700,76 @@ export function getExpiringDeals(withinDays: number = 30): { deals: Array<Offer 
     .sort((a, b) => a.days_until_expiry - b.days_until_expiry);
 
   return { deals: expiring, total: expiring.length };
+}
+
+export interface FreshnessMetrics {
+  total_offers: number;
+  verified_within_7_days: number;
+  verified_within_30_days: number;
+  verified_within_90_days: number;
+  verified_within_180_days: number;
+  freshness_score: number;
+  stalest_entries: Array<{ vendor: string; category: string; verifiedDate: string; url: string; days_since_verified: number }>;
+  freshest_entries: Array<{ vendor: string; category: string; verifiedDate: string; url: string; days_since_verified: number }>;
+  by_category: Array<{ category: string; count: number; avg_days_since_verified: number; freshness_score: number }>;
+}
+
+export function getFreshnessMetrics(): FreshnessMetrics {
+  const offers = loadOffers();
+  const now = new Date();
+  const nowMs = now.getTime();
+  const dayMs = 24 * 60 * 60 * 1000;
+
+  const withAge = offers.map((o) => ({
+    ...o,
+    days_since_verified: Math.floor((nowMs - new Date(o.verifiedDate).getTime()) / dayMs),
+  }));
+
+  const total = withAge.length;
+  const within7 = withAge.filter((o) => o.days_since_verified <= 7).length;
+  const within30 = withAge.filter((o) => o.days_since_verified <= 30).length;
+  const within90 = withAge.filter((o) => o.days_since_verified <= 90).length;
+  const within180 = withAge.filter((o) => o.days_since_verified <= 180).length;
+
+  const freshnessScore = total > 0 ? Math.round((within90 / total) * 100) : 0;
+
+  const sorted = [...withAge].sort((a, b) => b.days_since_verified - a.days_since_verified);
+  const stalest = sorted.slice(0, 20).map((o) => ({
+    vendor: o.vendor, category: o.category, verifiedDate: o.verifiedDate, url: o.url, days_since_verified: o.days_since_verified,
+  }));
+  const freshest = sorted.slice(-20).reverse().map((o) => ({
+    vendor: o.vendor, category: o.category, verifiedDate: o.verifiedDate, url: o.url, days_since_verified: o.days_since_verified,
+  }));
+
+  // Category breakdown
+  const catMap = new Map<string, { count: number; totalDays: number; within90: number }>();
+  for (const o of withAge) {
+    const entry = catMap.get(o.category) ?? { count: 0, totalDays: 0, within90: 0 };
+    entry.count++;
+    entry.totalDays += o.days_since_verified;
+    if (o.days_since_verified <= 90) entry.within90++;
+    catMap.set(o.category, entry);
+  }
+  const byCategory = Array.from(catMap.entries())
+    .map(([category, stats]) => ({
+      category,
+      count: stats.count,
+      avg_days_since_verified: Math.round(stats.totalDays / stats.count),
+      freshness_score: Math.round((stats.within90 / stats.count) * 100),
+    }))
+    .sort((a, b) => b.freshness_score - a.freshness_score);
+
+  return {
+    total_offers: total,
+    verified_within_7_days: within7,
+    verified_within_30_days: within30,
+    verified_within_90_days: within90,
+    verified_within_180_days: within180,
+    freshness_score: freshnessScore,
+    stalest_entries: stalest,
+    freshest_entries: freshest,
+    by_category: byCategory,
+  };
 }
 
 export function getWeeklyDigest(): {
