@@ -300,6 +300,42 @@ describe("HTTP transport", () => {
     assert.ok(body.includes("search_deals"));
   });
 
+  it("serves /.well-known/mcp.json server card", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/.well-known/mcp.json`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    assert.strictEqual(response.headers.get("cache-control"), "public, max-age=3600");
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const body = await response.json() as any;
+    assert.strictEqual(body.version, "1.0");
+    assert.strictEqual(body.serverInfo.name, "agentdeals");
+    assert.strictEqual(body.transport.type, "streamable-http");
+    assert.ok(body.transport.endpoint.endsWith("/mcp"));
+    assert.strictEqual(body.authentication.required, false);
+    assert.ok(Array.isArray(body.tools));
+    assert.strictEqual(body.tools.length, 4);
+    assert.ok(Array.isArray(body.prompts));
+    assert.strictEqual(body.prompts.length, 6);
+    const toolNames = body.tools.map((t: any) => t.name);
+    assert.ok(toolNames.includes("search_deals"));
+    assert.ok(toolNames.includes("plan_stack"));
+    assert.ok(toolNames.includes("compare_vendors"));
+    assert.ok(toolNames.includes("track_changes"));
+  });
+
+  it("serves /.well-known/mcp/server-card.json as alias", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/.well-known/mcp/server-card.json`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    const body = await response.json() as any;
+    assert.strictEqual(body.serverInfo.name, "agentdeals");
+    assert.strictEqual(body.tools.length, 4);
+  });
+
   it("serves /setup page with client configs and HowTo schema", async () => {
     proc = await startHttpServer();
 

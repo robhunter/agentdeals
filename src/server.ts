@@ -508,3 +508,102 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
   return server;
 }
+
+// --- MCP Server Card (/.well-known/mcp.json) ---
+// Generated from actual server configuration so it stays in sync
+
+export function getServerCard(baseUrl: string) {
+  return {
+    "$schema": "https://static.modelcontextprotocol.io/schemas/mcp-server-card/v1.json",
+    version: "1.0",
+    protocolVersion: "2025-06-18",
+    serverInfo: {
+      name: "agentdeals",
+      title: "AgentDeals",
+      version: "0.2.0",
+    },
+    description: "Search and compare free tiers, startup credits, and pricing changes across 1,500+ developer tools. 4 intent-based MCP tools for infrastructure decisions, cost estimation, and vendor comparison.",
+    iconUrl: `${baseUrl}/og-image.png`,
+    documentationUrl: `${baseUrl}/setup`,
+    transport: {
+      type: "streamable-http",
+      endpoint: `${baseUrl}/mcp`,
+    },
+    capabilities: {
+      tools: { listChanged: false },
+      prompts: { listChanged: false },
+    },
+    authentication: {
+      required: false,
+    },
+    tools: [
+      {
+        name: "search_deals",
+        description: "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            query: { type: "string", description: "Keyword search (vendor names, descriptions, tags)" },
+            category: { type: "string", description: "Filter by category. Pass \"list\" to get all categories with counts." },
+            vendor: { type: "string", description: "Get full details for a specific vendor (fuzzy match)" },
+            eligibility: { type: "string", enum: ["public", "accelerator", "oss", "student", "fintech", "geographic", "enterprise"], description: "Filter by eligibility type" },
+            sort: { type: "string", enum: ["vendor", "category", "newest"], description: "Sort order" },
+            since: { type: "string", description: "ISO date (YYYY-MM-DD). Only return deals verified/added after this date." },
+            limit: { type: "number", description: "Max results (default: 20)" },
+            offset: { type: "number", description: "Pagination offset (default: 0)" },
+          },
+        },
+      },
+      {
+        name: "plan_stack",
+        description: "Plan a technology stack with cost-optimized infrastructure choices. Recommends services, estimates costs, or audits existing stacks.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            mode: { type: "string", enum: ["recommend", "estimate", "audit"], description: "recommend: free-tier stack. estimate: cost analysis. audit: risk + cost + gap analysis." },
+            use_case: { type: "string", description: "What you're building (for recommend mode)" },
+            services: { type: "array", items: { type: "string" }, description: "Current vendor names (for estimate/audit mode)" },
+            scale: { type: "string", enum: ["hobby", "startup", "growth"], description: "Scale for cost estimation" },
+            requirements: { type: "array", items: { type: "string" }, description: "Specific infra needs for recommend mode" },
+          },
+          required: ["mode"],
+        },
+      },
+      {
+        name: "compare_vendors",
+        description: "Compare developer tools side by side — free tier limits, pricing tiers, and recent pricing changes.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            vendors: { type: "array", items: { type: "string" }, description: "1 or 2 vendor names. 1 = risk check. 2 = comparison." },
+            include_risk: { type: "boolean", description: "Include risk assessment (default: true)" },
+          },
+          required: ["vendors"],
+        },
+      },
+      {
+        name: "track_changes",
+        description: "Track recent pricing changes — free tier removals, limit cuts, and improvements across developer tools.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            since: { type: "string", description: "ISO date (YYYY-MM-DD). Default: 7 days ago." },
+            change_type: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"], description: "Filter by type of change" },
+            vendor: { type: "string", description: "Filter to one vendor" },
+            vendors: { type: "string", description: "Comma-separated vendor names" },
+            include_expiring: { type: "boolean", description: "Include upcoming expirations (default: true)" },
+            lookahead_days: { type: "number", description: "Days to look ahead for expirations (default: 30)" },
+          },
+        },
+      },
+    ],
+    prompts: [
+      { name: "new-project-setup", description: "Find free tiers for a new project's entire stack" },
+      { name: "cost-audit", description: "Audit an existing stack for cost savings" },
+      { name: "check-pricing-changes", description: "Check what developer tool pricing has changed recently" },
+      { name: "compare-options", description: "Compare two or more services side-by-side" },
+      { name: "find-startup-credits", description: "Find startup credit programs and special eligibility offers" },
+      { name: "monitor-vendor-changes", description: "Monitor pricing changes for vendors you depend on" },
+    ],
+  };
+}

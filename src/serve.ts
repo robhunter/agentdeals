@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { createServer } from "./server.js";
+import { createServer, getServerCard } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -4830,6 +4830,16 @@ const httpServer = createHttpServer(async (req, res) => {
   } else if (url.pathname === "/.well-known/glama.json") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(readFileSync(join(__dirname, "..", "glama.json"), "utf-8"));
+  } else if (url.pathname === "/.well-known/mcp.json" || url.pathname === "/.well-known/mcp/server-card.json") {
+    const card = getServerCard(BASE_URL);
+    const body = JSON.stringify(card, null, 2);
+    res.writeHead(200, {
+      "Content-Type": "application/json",
+      "Cache-Control": "public, max-age=3600",
+      "Access-Control-Allow-Origin": "*",
+      "X-Content-Type-Options": "nosniff",
+    });
+    res.end(body);
   } else if (url.pathname === "/api/stack" && req.method === "GET") {
     recordApiHit("/api/stack");
     const useCase = url.searchParams.get("use_case") || url.searchParams.get("q") || "";
