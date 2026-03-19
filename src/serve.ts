@@ -325,11 +325,11 @@ function buildRecentChangesSection(): string {
       "@type": "ListItem",
       position: i + 1,
       item: {
-        "@type": "Event",
-        name: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+        "@type": "Article",
+        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
-        startDate: c.date,
-        location: { "@type": "VirtualLocation", url: `${BASE_URL}/vendor/${c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}` },
+        datePublished: c.date,
+        url: `${BASE_URL}/vendor/${c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
       },
     })),
   });
@@ -2986,11 +2986,11 @@ ${entriesHtml}
       "@type": "ListItem",
       position: i + 1,
       item: {
-        "@type": "Event",
-        name: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+        "@type": "Article",
+        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
-        startDate: c.date,
-        location: { "@type": "VirtualLocation", url: `${BASE_URL}/vendor/${toSlug(c.vendor)}` },
+        datePublished: c.date,
+        url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
       },
     })),
   };
@@ -3183,11 +3183,11 @@ ${entriesHtml}
       "@type": "ListItem",
       position: i + 1,
       item: {
-        "@type": "Event",
-        name: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+        "@type": "Article",
+        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
-        startDate: c.date,
-        location: { "@type": "VirtualLocation", url: `${BASE_URL}/vendor/${toSlug(c.vendor)}` },
+        datePublished: c.date,
+        url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
       },
     })),
   };
