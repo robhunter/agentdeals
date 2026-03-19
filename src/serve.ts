@@ -5239,9 +5239,14 @@ ${catList}
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(llmsFullTxt);
   } else if (url.pathname === "/AGENTS.md" && req.method === "GET") {
-    const agentsMd = readFileSync(join(__dirname, "..", "AGENTS.md"), "utf-8");
-    res.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(agentsMd);
+    try {
+      const agentsMd = readFileSync(join(__dirname, "..", "AGENTS.md"), "utf-8");
+      res.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(agentsMd);
+    } catch {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("Not found");
+    }
   } else if (url.pathname === "/sitemap.xml" && req.method === "GET") {
     const now = new Date().toISOString().split("T")[0];
     const categoryUrls = categories.map((c) => `  <url>

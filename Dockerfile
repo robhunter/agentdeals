@@ -21,6 +21,7 @@ COPY --from=build /app/dist/ dist/
 COPY data/ data/
 COPY assets/ assets/
 COPY glama.json ./
+COPY AGENTS.md ./
 
 EXPOSE 3000
 
