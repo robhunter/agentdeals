@@ -412,6 +412,71 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/freshness": {
+      get: {
+        summary: "Get data freshness metrics",
+        description: "Returns data quality metrics including freshness score, verification age breakdowns, stalest/freshest entries, and per-category freshness.",
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Data freshness metrics",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    total_offers: { type: "integer" },
+                    verified_within_7_days: { type: "integer" },
+                    verified_within_30_days: { type: "integer" },
+                    verified_within_90_days: { type: "integer" },
+                    verified_within_180_days: { type: "integer" },
+                    freshness_score: { type: "integer", description: "Percentage of offers verified within 90 days" },
+                    stalest_entries: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          vendor: { type: "string" },
+                          category: { type: "string" },
+                          verifiedDate: { type: "string", format: "date" },
+                          url: { type: "string", format: "uri" },
+                          days_since_verified: { type: "integer" }
+                        }
+                      }
+                    },
+                    freshest_entries: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          vendor: { type: "string" },
+                          category: { type: "string" },
+                          verifiedDate: { type: "string", format: "date" },
+                          url: { type: "string", format: "uri" },
+                          days_since_verified: { type: "integer" }
+                        }
+                      }
+                    },
+                    by_category: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          category: { type: "string" },
+                          count: { type: "integer" },
+                          avg_days_since_verified: { type: "integer" },
+                          freshness_score: { type: "integer" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/digest": {
       get: {
         summary: "Get weekly pricing digest",
