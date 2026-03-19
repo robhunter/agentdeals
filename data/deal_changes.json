@@ -878,6 +878,90 @@
       "source_url": "https://www.anthropic.com/news",
       "category": "AI/ML",
       "alternatives": ["OpenAI ChatGPT Plus", "Google Gemini Advanced"]
+    },
+    {
+      "vendor": "Heroku",
+      "change_type": "free_tier_removed",
+      "date": "2022-11-28",
+      "summary": "Heroku removed all free dynos, free Heroku Postgres, and free Heroku Data for Redis. The iconic PaaS that defined 'free tier' for a generation eliminated free offerings entirely after Salesforce acquisition",
+      "previous_state": "Free dyno: 550 hours/month (1,000 with credit card), free Postgres: 10K rows, free Redis: 25 MB. Dynos slept after 30 min inactivity",
+      "current_state": "No free tier. Mini plan starts at $5/month (Eco dynos $5/month for 1,000 shared hours). Postgres starts at $5/month",
+      "impact": "high",
+      "source_url": "https://blog.heroku.com/next-chapter",
+      "category": "Cloud Hosting",
+      "alternatives": ["Render", "Railway", "Fly.io", "Koyeb"]
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "new_free_tier",
+      "date": "2025-12-18",
+      "summary": "GitHub launched Copilot Free tier — AI code completion available to all GitHub users at no cost. 2,000 completions and 50 chat messages per month included",
+      "previous_state": "Paid only: Individual $10/month, Business $19/user/month. Free for verified students, teachers, and OSS maintainers only",
+      "current_state": "Free tier: 2,000 code completions/month, 50 chat messages/month. Individual $10/month, Business $19/month, Enterprise $39/month remain for higher limits",
+      "impact": "high",
+      "source_url": "https://github.blog/news-insights/product-news/github-copilot-in-vscode-free/",
+      "category": "AI Coding",
+      "alternatives": ["Cline", "Cody", "Cursor"]
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "limits_increased",
+      "date": "2025-11-01",
+      "summary": "Auth0 increased free tier from 7,500 to 25,000 monthly active users. Largest free tier expansion since Okta acquisition. Makes Auth0 competitive with Clerk and Firebase Auth on free tier",
+      "previous_state": "Free tier: 7,500 MAU, unlimited social connections, 2 organizations",
+      "current_state": "Free tier: 25,000 MAU (+233%), unlimited social connections, 5 organizations. Actions, Branding, MFA included",
+      "impact": "high",
+      "source_url": "https://auth0.com/pricing",
+      "category": "Authentication",
+      "alternatives": ["Clerk", "Firebase Auth", "Supabase Auth"]
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "limits_increased",
+      "date": "2025-10-01",
+      "summary": "Railway expanded free tier following $100M Series B. Trial plan now includes $5 in free credits/month, sufficient for small hobby projects. Removed credit card requirement for trial",
+      "previous_state": "$5 free trial credit one-time, credit card required for Hobby plan",
+      "current_state": "Trial: $5/month in free credits, no credit card needed. Hobby: $5/month + usage. Pro: $20/month per seat",
+      "impact": "medium",
+      "source_url": "https://railway.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": ["Render", "Fly.io", "Koyeb"]
+    },
+    {
+      "vendor": "Render",
+      "change_type": "limits_reduced",
+      "date": "2025-09-01",
+      "summary": "Free web services now spin down after 15 minutes of inactivity (previously 30 minutes). Cold starts take 30-60 seconds. Free tier remains but with faster sleep times",
+      "previous_state": "Free web services slept after 30 minutes of inactivity",
+      "current_state": "Free web services sleep after 15 minutes of inactivity. 750 hours/month free compute unchanged. Cold start 30-60 seconds",
+      "impact": "low",
+      "source_url": "https://render.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": ["Railway", "Fly.io", "Koyeb"]
+    },
+    {
+      "vendor": "Redis",
+      "change_type": "pricing_restructured",
+      "date": "2024-03-20",
+      "summary": "Redis switched from BSD license to dual SSPL/RSALv2 license, effectively ending open-source status. Triggered creation of Valkey fork by Linux Foundation. Redis Cloud pricing unchanged but community trust impacted",
+      "previous_state": "BSD 3-Clause open-source license. Community-driven development. Multiple hosted providers (AWS ElastiCache, etc.)",
+      "current_state": "Dual SSPL + RSALv2 license. Cloud hosting by third parties restricted. Valkey fork (BSD) created by Linux Foundation with AWS, Google, Oracle backing",
+      "impact": "high",
+      "source_url": "https://redis.io/blog/redis-adopts-dual-source-available-licensing/",
+      "category": "Databases",
+      "alternatives": ["Valkey", "KeyDB", "DragonflyDB", "Upstash"]
+    },
+    {
+      "vendor": "HashiCorp",
+      "change_type": "pricing_restructured",
+      "date": "2023-08-10",
+      "summary": "HashiCorp switched Terraform, Vault, Consul, Nomad, and other products from MPL 2.0 to BSL 1.1 license. Triggered OpenTofu fork under Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024",
+      "previous_state": "Mozilla Public License 2.0 (open-source). Community-driven development with corporate stewardship",
+      "current_state": "Business Source License 1.1. Non-production use free, competitive commercial use restricted. OpenTofu fork (MPL 2.0) maintained by Linux Foundation",
+      "impact": "high",
+      "source_url": "https://www.hashicorp.com/blog/hashicorp-adopts-business-source-license",
+      "category": "Infrastructure",
+      "alternatives": ["OpenTofu", "Pulumi", "Crossplane"]
     }
   ]
 }
