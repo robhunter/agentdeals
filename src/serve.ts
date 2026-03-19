@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFreshnessMetrics } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews } from "./stats.js";
@@ -371,7 +371,7 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "compare" | "digest" | "changes" | "expiring" | "api" | "setup" | "home";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "api" | "setup" | "home";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -395,6 +395,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/digest", label: "Digest", section: "digest" },
     { href: "/changes", label: "Changes", section: "changes" },
     { href: "/expiring", label: "Expiring", section: "expiring" },
+    { href: "/freshness", label: "Freshness", section: "freshness" },
     { href: "/api/docs", label: "API", section: "api" },
     { href: "/setup", label: "Setup", section: "setup" },
   ];
@@ -3303,6 +3304,201 @@ ${recent.map(c => buildEntry(c, false)).join("\n")}
 </html>`;
 }
 
+// --- Data freshness dashboard ---
+
+function freshnessGrade(score: number): { grade: string; color: string } {
+  if (score >= 90) return { grade: "A", color: "#3fb950" };
+  if (score >= 75) return { grade: "B", color: "#3b82f6" };
+  if (score >= 60) return { grade: "C", color: "#d29922" };
+  if (score >= 40) return { grade: "D", color: "#f85149" };
+  return { grade: "F", color: "#f85149" };
+}
+
+function buildFreshnessPage(): string {
+  const m = getFreshnessMetrics();
+  const { grade, color: gradeColor } = freshnessGrade(m.freshness_score);
+
+  const title = "Data Freshness Dashboard \u2014 AgentDeals";
+  const metaDesc = `${m.total_offers} offers tracked. ${m.freshness_score}% verified within 90 days. Transparent data quality metrics for developer deal intelligence.`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: "AgentDeals Data Freshness",
+    description: metaDesc,
+    url: `${BASE_URL}/freshness`,
+    dateModified: new Date().toISOString().slice(0, 10),
+    creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  // Category table rows
+  const categoryRows = m.by_category.map((c) => {
+    const { grade: catGrade, color: catColor } = freshnessGrade(c.freshness_score);
+    return `        <tr>
+          <td><a href="/category/${toSlug(c.category)}">${escHtmlServer(c.category)}</a></td>
+          <td>${c.count}</td>
+          <td>${c.avg_days_since_verified}d</td>
+          <td><span style="color:${catColor};font-weight:600">${catGrade}</span> ${c.freshness_score}%</td>
+        </tr>`;
+  }).join("\n");
+
+  // Stalest entries
+  const stalestRows = m.stalest_entries.map((e) =>
+    `        <tr>
+          <td><a href="/vendor/${toSlug(e.vendor)}">${escHtmlServer(e.vendor)}</a></td>
+          <td>${escHtmlServer(e.category)}</td>
+          <td class="stale-date">${e.verifiedDate}</td>
+          <td class="stale-days">${e.days_since_verified}d ago</td>
+        </tr>`
+  ).join("\n");
+
+  // Freshest entries
+  const freshestRows = m.freshest_entries.map((e) =>
+    `        <tr>
+          <td><a href="/vendor/${toSlug(e.vendor)}">${escHtmlServer(e.vendor)}</a></td>
+          <td>${escHtmlServer(e.category)}</td>
+          <td>${e.verifiedDate}</td>
+          <td>${e.days_since_verified}d ago</td>
+        </tr>`
+  ).join("\n");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/freshness">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/freshness">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin:2rem 0 .75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.5rem}
+.grade-hero{display:flex;align-items:center;gap:2rem;margin-bottom:2rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-card)}
+.grade-circle{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:3rem;font-weight:700;flex-shrink:0}
+.grade-details{flex:1}
+.grade-score{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--text)}
+.grade-explanation{color:var(--text-muted);font-size:.85rem;margin-top:.25rem}
+.stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.stat-card{flex:1;min-width:120px;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-align:center}
+.stat-value{font-family:var(--serif);font-size:1.5rem;color:var(--text)}
+.stat-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.stat-pct{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
+table{width:100%;border-collapse:collapse;margin-bottom:1.5rem}
+th{text-align:left;font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:.5rem .75rem;border-bottom:1px solid var(--border)}
+td{padding:.5rem .75rem;font-size:.85rem;color:var(--text-muted);border-bottom:1px solid rgba(51,65,85,0.5)}
+td a{color:var(--text);font-weight:500}
+td a:hover{color:var(--accent)}
+.stale-date{color:var(--text-dim)}
+.stale-days{color:#f85149;font-family:var(--mono);font-size:.8rem}
+.section-desc{color:var(--text-dim);font-size:.85rem;margin-bottom:1rem}
+.toggle-btn{background:none;border:1px solid var(--border);color:var(--accent);padding:.4rem .8rem;border-radius:6px;cursor:pointer;font-size:.8rem;font-family:var(--sans);margin-bottom:.75rem}
+.toggle-btn:hover{border-color:var(--accent);background:var(--accent-glow)}
+.hidden-section{display:none}.hidden-section.show{display:block}
+.mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
+.mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.mcp-cta a{font-weight:600}
+.api-hint{color:var(--text-dim);font-size:.8rem;margin-top:.5rem;font-family:var(--mono)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.grade-hero{flex-direction:column;text-align:center;gap:1rem}table{font-size:.75rem}th,td{padding:.4rem .5rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("freshness")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Freshness</div>
+  <h1>Data Freshness Dashboard</h1>
+  <p class="page-intro">Transparent data quality metrics. We track ${m.total_offers.toLocaleString()} offers \u2014 here\u2019s how fresh they are.</p>
+
+  <div class="grade-hero">
+    <div class="grade-circle" style="background:${gradeColor}20;color:${gradeColor};border:3px solid ${gradeColor}">${grade}</div>
+    <div class="grade-details">
+      <div class="grade-score">${m.freshness_score}% freshness score</div>
+      <div class="grade-explanation">${m.verified_within_90_days.toLocaleString()} of ${m.total_offers.toLocaleString()} entries verified within the last 90 days.</div>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value">${m.verified_within_7_days.toLocaleString()}</div>
+      <div class="stat-label">Last 7 Days</div>
+      <div class="stat-pct">${m.total_offers > 0 ? Math.round((m.verified_within_7_days / m.total_offers) * 100) : 0}%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${m.verified_within_30_days.toLocaleString()}</div>
+      <div class="stat-label">Last 30 Days</div>
+      <div class="stat-pct">${m.total_offers > 0 ? Math.round((m.verified_within_30_days / m.total_offers) * 100) : 0}%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${m.verified_within_90_days.toLocaleString()}</div>
+      <div class="stat-label">Last 90 Days</div>
+      <div class="stat-pct">${m.freshness_score}%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${m.verified_within_180_days.toLocaleString()}</div>
+      <div class="stat-label">Last 180 Days</div>
+      <div class="stat-pct">${m.total_offers > 0 ? Math.round((m.verified_within_180_days / m.total_offers) * 100) : 0}%</div>
+    </div>
+  </div>
+
+  <h2>Freshness by Category</h2>
+  <p class="section-desc">${m.by_category.length} categories ranked by freshness score.</p>
+  <table>
+    <thead><tr><th>Category</th><th>Offers</th><th>Avg Age</th><th>Score</th></tr></thead>
+    <tbody>
+${categoryRows}
+    </tbody>
+  </table>
+
+  <h2>Stalest Entries</h2>
+  <p class="section-desc">Top 20 entries most in need of re-verification.</p>
+  <table>
+    <thead><tr><th>Vendor</th><th>Category</th><th>Verified</th><th>Age</th></tr></thead>
+    <tbody>
+${stalestRows}
+    </tbody>
+  </table>
+
+  <h2>Recently Verified</h2>
+  <p class="section-desc">Top 20 most recently verified entries.</p>
+  <button class="toggle-btn" onclick="document.getElementById('freshest-table').classList.toggle('show');this.textContent=this.textContent==='Show recently verified'?'Hide recently verified':'Show recently verified'">Show recently verified</button>
+  <div id="freshest-table" class="hidden-section">
+    <table>
+      <thead><tr><th>Vendor</th><th>Category</th><th>Verified</th><th>Age</th></tr></thead>
+      <tbody>
+${freshestRows}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="api-hint">API: <a href="/api/freshness">/api/freshness</a> \u2014 get this data as JSON</p>
+
+  <div class="mcp-cta">
+    <p>Want AI-powered deal intelligence with freshness signals?</p>
+    <a href="/setup">Connect via MCP &rarr;</a>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 // --- Web search page ---
 
 function buildSearchPage(query: string, categoryFilter: string, page: number): string {
@@ -5028,6 +5224,12 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/expiring", params: { within_days: withinDays }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
+  } else if (url.pathname === "/api/freshness" && req.method === "GET") {
+    recordApiHit("/api/freshness");
+    const result = getFreshnessMetrics();
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/freshness", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total_offers });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=3600" });
+    res.end(JSON.stringify(result));
   } else if (url.pathname === "/api/digest" && req.method === "GET") {
     recordApiHit("/api/digest");
     const digest = getWeeklyDigest();
@@ -5304,6 +5506,12 @@ ${catList}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/freshness</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/category</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -5507,6 +5715,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/expiring", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildExpiringPage());
+  } else if (url.pathname === "/freshness" && req.method === "GET") {
+    recordApiHit("/freshness");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/freshness", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreshnessPage());
   } else if (url.pathname === "/setup" && req.method === "GET") {
     recordApiHit("/setup");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
