@@ -288,6 +288,18 @@ describe("HTTP transport", () => {
     assert.ok(Array.isArray(body.transport));
   });
 
+  it("serves /AGENTS.md with text/markdown content type", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/AGENTS.md`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "text/markdown; charset=utf-8");
+    const body = await response.text();
+    assert.ok(body.includes("# AgentDeals"));
+    assert.ok(body.includes("## MCP Tools"));
+    assert.ok(body.includes("search_deals"));
+  });
+
   it("serves /setup page with client configs and HowTo schema", async () => {
     proc = await startHttpServer();
 
