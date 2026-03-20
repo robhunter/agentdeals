@@ -2435,6 +2435,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     tag: "terraform-alternative",
     primaryVendor: "HCP Terraform",
   },
+  {
+    slug: "hetzner-alternatives",
+    title: "Hetzner Alternatives After April 2026 Price Increase — Budget Cloud Options",
+    metaDesc: "Hetzner is raising dedicated server prices 30-50% on April 1, 2026. Compare free-tier alternatives: DigitalOcean, Oracle Cloud, Render, Railway, Fly.io, Cloudflare Workers, Google Cloud.",
+    contextHtml: `<p><strong>Hetzner</strong> is increasing cloud and dedicated server prices <strong>30-50% on April 1, 2026</strong>, driven by surging DRAM costs (+171% YoY) from AI infrastructure demand. Entry-level cloud servers like the CX23 go from €2.99 to €3.99/mo (+33%). The increase applies to <strong>all regions and all customers</strong> — both new and existing.</p>
+      <p>If you're looking for budget-friendly alternatives with generous free tiers or credits, here are the best options across VPS/cloud providers, managed platforms, and serverless offerings.</p>`,
+    tag: "hetzner-alternative",
+    primaryVendor: "Hetzner",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
