@@ -561,7 +561,7 @@ ${offersHtml}
   </div>
 
   ${buildMcpCta("Browse this category from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -633,7 +633,7 @@ ${globalNavCss()}
   <div class="cat-index-grid">${catCardsHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -854,7 +854,7 @@ ${tableRows}
   </div>
 
   ${buildMcpCta("Get personalized recommendations from your AI. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -940,7 +940,7 @@ ${globalNavCss()}
   <div class="best-index-grid">${cardsHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -1094,7 +1094,7 @@ ${globalNavCss()}
   <h1>Free Tier Comparisons</h1>
   <p class="page-meta">${totalComparisons} side-by-side vendor comparisons. Verified pricing, change history, and risk indicators.</p>
 ${categorySections}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -1263,7 +1263,7 @@ ${globalNavCss()}
   </div>
 ${relatedHtml}
   ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -1490,7 +1490,7 @@ ${trendingHtml}
     <a href="/feed.xml">Subscribe via RSS &rarr;</a>
   </div>
 ${navHtml}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -1551,7 +1551,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
     <a href="/feed.xml">Subscribe via RSS &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -1659,7 +1659,7 @@ ${globalNavCss()}
   <h1>All Vendors</h1>
   <p class="page-meta">${totalVendors} developer tools with free tiers, organized by category.</p>
 ${categorySections}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -1920,7 +1920,7 @@ ${comparisonsHtml}
   </div>
 ${faqHtml}
   ${buildMcpCta("Want to compare this vendor in your AI? Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -2218,7 +2218,7 @@ ${allAltsHtml}
   </div>
 ${altFaqHtml}
   ${buildMcpCta("Find alternatives from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -2330,7 +2330,7 @@ ${globalNavCss()}
 ${vendorListHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -2638,7 +2638,7 @@ ${tableRows}
   </div>
 
   ${buildMcpCta("Get personalized recommendations from your AI. Search " + offers.length.toLocaleString() + "+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -2947,7 +2947,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
     </dl>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>
 (function(){
@@ -3161,7 +3161,7 @@ ${monthsHtml}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -3371,7 +3371,7 @@ ${recent.map(c => buildEntry(c, false)).join("\n")}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -3566,7 +3566,7 @@ ${freshestRows}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -3765,7 +3765,123 @@ ${bundleHtml}
     <p style="margin-top:.75rem"><a href="/setup">Set up MCP client \u2192</a></p>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+</body>
+</html>`;
+}
+
+// --- Privacy policy page ---
+
+function buildPrivacyPage(): string {
+  const title = "Privacy Policy — AgentDeals";
+  const metaDesc = "AgentDeals privacy policy. We are a read-only data server — no accounts, no cookies, no personal data collected.";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description: metaDesc,
+    url: `${BASE_URL}/privacy`,
+    dateModified: new Date().toISOString().slice(0, 10),
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/privacy">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/privacy">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:720px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.2rem;color:var(--text);margin:2rem 0 .75rem}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;max-width:640px}
+.section{border:1px solid var(--border);border-radius:12px;background:var(--bg-card);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.section p,.section ul{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.section ul{margin-left:1.25rem}
+.section li{margin-bottom:.35rem}
+.section p:last-child,.section ul:last-child{margin-bottom:0}
+.updated{color:var(--text-dim);font-size:.8rem;font-style:italic;margin-top:2rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--text-muted)}
+@media(max-width:768px){h1{font-size:1.5rem}.section{padding:1rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("home")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Privacy Policy</div>
+  <h1>Privacy Policy</h1>
+  <p class="page-intro">AgentDeals is a read-only data server that provides publicly available vendor pricing information. We have no user accounts, no cookies, and collect no personal data.</p>
+
+  <h2>What We Collect</h2>
+  <div class="section">
+    <p><strong>Nothing personal.</strong> AgentDeals does not collect, store, or process any personal data. There are no user accounts, no login forms, no email collection, and no cookies.</p>
+  </div>
+
+  <h2>Server-Side Request Counting</h2>
+  <div class="section">
+    <p>We maintain basic, anonymous server-side request counters (page views per path) for operational monitoring. These counters:</p>
+    <ul>
+      <li>Contain no personally identifiable information</li>
+      <li>Do not track individual users or sessions</li>
+      <li>Do not use cookies, fingerprinting, or any client-side tracking</li>
+      <li>Filter out known bot traffic</li>
+    </ul>
+  </div>
+
+  <h2>What We Serve</h2>
+  <div class="section">
+    <p>AgentDeals serves publicly available information about vendor pricing, free tiers, and developer tool offers. All data is sourced from vendors\u2019 public pricing pages.</p>
+  </div>
+
+  <h2>MCP Server</h2>
+  <div class="section">
+    <p>When used as an MCP (Model Context Protocol) server, AgentDeals operates in read-only mode. All MCP tools are annotated with <code>readOnlyHint: true</code> and <code>destructiveHint: false</code>. The server:</p>
+    <ul>
+      <li>Only returns publicly available pricing data</li>
+      <li>Does not write to or modify any external systems</li>
+      <li>Does not collect or transmit data about the client or user</li>
+      <li>Does not require authentication</li>
+    </ul>
+  </div>
+
+  <h2>Third-Party Services</h2>
+  <div class="section">
+    <p>AgentDeals does not embed third-party analytics, advertising, or tracking scripts. We do not share data with third parties because we do not collect data to share.</p>
+  </div>
+
+  <h2>Open Source</h2>
+  <div class="section">
+    <p>AgentDeals is open source. You can inspect our entire codebase to verify these claims at <a href="https://github.com/robhunter/agentdeals">github.com/robhunter/agentdeals</a>.</p>
+  </div>
+
+  <h2>Contact</h2>
+  <div class="section">
+    <p>Questions about this policy? Open an issue on our <a href="https://github.com/robhunter/agentdeals/issues">GitHub repository</a>.</p>
+  </div>
+
+  <p class="updated">Last updated: March 20, 2026</p>
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -3942,7 +4058,7 @@ ${catPillsHtml}
 
   ${totalResults > 0 ? `<div class="results">\n${resultsHtml}\n  </div>\n  ${paginationHtml}` : emptyStateHtml}
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -4072,7 +4188,7 @@ ${zeroCats.length > 0 ? `  <div class="section-label">Stable categories (no trac
   <div class="trend-list">
 ${zeroCatRows}
   </div>` : ""}
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -4274,7 +4390,7 @@ ${stableHtml}
     </div>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 </body>
 </html>`;
@@ -4884,7 +5000,7 @@ ${buildRecentChangesSection()}
     </div>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents</footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>
 /* Client tab switching */
@@ -5766,6 +5882,12 @@ ${catList}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/privacy</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/expiring</loc>
     <lastmod>${now}</lastmod>
     <changefreq>daily</changefreq>
@@ -6008,6 +6130,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSetupPage());
+  } else if (url.pathname === "/privacy" && req.method === "GET") {
+    recordApiHit("/privacy");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/privacy", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildPrivacyPage());
   } else if (url.pathname === "/search" && req.method === "GET") {
     const query = url.searchParams.get("q") ?? "";
     const categoryFilter = url.searchParams.get("category") ?? "";
