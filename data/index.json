@@ -4022,6 +4022,54 @@
       "verifiedDate": "2026-03-14"
     },
     {
+      "vendor": "AWS SAM CLI",
+      "category": "Testing",
+      "description": "Official AWS Serverless Application Model CLI for local Lambda and API Gateway testing. Runs Lambda functions locally via Docker, emulates API Gateway, generates events. Open source (Apache-2.0). No AWS account required for local testing. Supports Python, Node.js, Go, Java, .NET, Rust runtimes",
+      "tier": "Open Source",
+      "url": "https://github.com/aws/aws-sam-cli",
+      "tags": [
+        "aws",
+        "serverless",
+        "lambda",
+        "local-dev",
+        "testing",
+        "localstack-alternative"
+      ],
+      "verifiedDate": "2026-03-19"
+    },
+    {
+      "vendor": "DynamoDB Local",
+      "category": "Databases",
+      "description": "Official AWS DynamoDB emulator for local development and testing. Full DynamoDB API compatibility. Runs as downloadable JAR or Docker container. No AWS account needed, no network latency, no usage charges. Supports streams, transactions, TTL, and all query patterns",
+      "tier": "Free",
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html",
+      "tags": [
+        "aws",
+        "dynamodb",
+        "database",
+        "local-dev",
+        "nosql",
+        "localstack-alternative"
+      ],
+      "verifiedDate": "2026-03-19"
+    },
+    {
+      "vendor": "ElasticMQ",
+      "category": "Messaging",
+      "description": "Lightweight message queue server with SQS-compatible interface. In-memory or file-backed persistence. REST and SQS query APIs. Open source (Apache-2.0). Runs as single JAR or Docker container. Ideal for local dev and testing without AWS dependencies",
+      "tier": "Open Source",
+      "url": "https://github.com/softwaremill/elasticmq",
+      "tags": [
+        "aws",
+        "sqs",
+        "messaging",
+        "queue",
+        "local-dev",
+        "localstack-alternative"
+      ],
+      "verifiedDate": "2026-03-19"
+    },
+    {
       "vendor": "Brave Search API",
       "category": "Search",
       "description": "$5/month credit (~1,000 queries/mo at $5/1,000 requests). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required to keep credit. Credit card required, overages billed with no spending cap. Free tier (5,000 queries/mo) removed Feb 2026",
