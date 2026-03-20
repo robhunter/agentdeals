@@ -2345,17 +2345,77 @@ interface AlternativesPageConfig {
   contextHtml: string;
   tag: string;
   primaryVendor: string;
+  serviceMatrixHtml?: string;
 }
 
 const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "localstack-alternatives",
     title: "LocalStack CE Alternatives — Free and Open Source Options for 2026",
-    metaDesc: "LocalStack Community Edition shuts down March 23, 2026. Compare free alternatives: Moto, Testcontainers, MinIO, and more. Verified pricing and free tier details.",
-    contextHtml: `<p>LocalStack Community Edition — the open-source AWS cloud emulator used by thousands of developers — <strong>shuts down on March 23, 2026</strong>. The single unified image now requires registration and an auth token. Commercial use requires a paid plan starting at $39/month.</p>
-      <p>If you relied on LocalStack CE for local AWS development and testing, here are the best free and open-source alternatives available today.</p>`,
+    metaDesc: "LocalStack Community Edition shuts down March 23, 2026. Compare free alternatives: Moto, Testcontainers, MinIO, AWS SAM CLI, DynamoDB Local, ElasticMQ. Service coverage comparison.",
+    contextHtml: `<p><strong>LocalStack Community Edition</strong> — the open-source AWS cloud emulator that let developers run S3, Lambda, DynamoDB, SQS, and 30+ other AWS services locally — <strong>shuts down on March 23, 2026</strong>. The unified Docker image now requires registration and an auth token. Commercial use requires a paid plan starting at $39/month (Starter) or $89/month (Ultimate).</p>
+      <p>Unlike LocalStack, which provided a single all-in-one emulator, the migration path is typically a combination of service-specific tools. Below are the best free and open-source alternatives, organized by which AWS services they replace.</p>`,
     tag: "localstack-alternative",
     primaryVendor: "LocalStack",
+    serviceMatrixHtml: `
+  <h2>AWS Service Coverage Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Which AWS services each alternative covers. LocalStack CE supported 30+ services in a single tool — migration typically means combining 2-3 specialized alternatives.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>S3</th>
+        <th>DynamoDB</th>
+        <th>Lambda</th>
+        <th>SQS</th>
+        <th>SNS</th>
+        <th>API GW</th>
+        <th>IAM</th>
+        <th>EC2</th>
+        <th>License</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">LocalStack CE</td>
+        <td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td>
+        <td style="color:var(--text-dim)">Discontinued</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/moto" style="color:var(--text)">Moto</a></td>
+        <td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td>
+        <td>Apache-2.0</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/minio" style="color:var(--text)">MinIO</a></td>
+        <td>\u2705</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td>
+        <td>AGPL v3</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/dynamodb-local" style="color:var(--text)">DynamoDB Local</a></td>
+        <td>\u2014</td><td>\u2705</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td>
+        <td>Free (AWS)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/aws-sam-cli" style="color:var(--text)">AWS SAM CLI</a></td>
+        <td>\u2014</td><td>\u2014</td><td>\u2705</td><td>\u2014</td><td>\u2014</td><td>\u2705</td><td>\u2014</td><td>\u2014</td>
+        <td>Apache-2.0</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/elasticmq" style="color:var(--text)">ElasticMQ</a></td>
+        <td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2705</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td>
+        <td>Apache-2.0</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/testcontainers" style="color:var(--text)">Testcontainers</a></td>
+        <td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td>
+        <td>MIT</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u2014 = not applicable. Testcontainers uses LocalStack or other containers under the hood for AWS services.</p>`,
   },
   {
     slug: "postman-alternatives",
@@ -2396,10 +2456,11 @@ function buildTimelyAlternativesPage(slug: string): string | null {
   const enriched = enrichOffers(taggedOffers);
 
   // Also get any other offers in the same category that might be relevant
+  // Skip category section when we have enough tagged alternatives (6+)
   const primaryOffer = offers.find(o => o.vendor === config.primaryVendor);
-  const categoryOffers = primaryOffer
+  const categoryOffers = taggedOffers.length >= 6 ? [] : (primaryOffer
     ? offers.filter(o => o.category === primaryOffer.category && o.vendor !== config.primaryVendor && !taggedOffers.some(t => t.vendor === o.vendor))
-    : [];
+    : []);
   const enrichedCategory = enrichOffers(categoryOffers.slice(0, 5));
 
   // Build alternative cards
@@ -2543,6 +2604,8 @@ ${mcpCtaCss()}
 
   <h2>Top Alternatives</h2>
 ${altCards}
+
+${config.serviceMatrixHtml ?? ""}
 
 ${categoryHtml}
 
