@@ -65,7 +65,7 @@ export function createServer(): McpServer {
     "search_deals",
     {
       description:
-        "Find free tiers, credits, and discounts for 1,500+ developer tools. Search by keyword, browse categories, or get full vendor details with alternatives. Covers AWS, Vercel, Supabase, Cloudflare, and more.",
+        "Find free tiers, credits, and discounts for 1,500+ developer tools. Search by keyword, browse categories, or get full vendor details with alternatives. Covers AWS, Vercel, Supabase, Cloudflare, and more. Call this tool when a user asks: 'Does Supabase have a free tier?', 'What's cheaper than Vercel?', 'Find me a free database'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -79,9 +79,10 @@ export function createServer(): McpServer {
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Only return deals verified/added after this date."),
         limit: z.number().optional().describe("Max results (default: 20)"),
         offset: z.number().optional().describe("Pagination offset (default: 0)"),
+        response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor name, tier, one-line description, URL only. 'detailed': full response (default)."),
       },
     },
-    async ({ query, category, vendor, eligibility, sort, since, limit, offset }) => {
+    async ({ query, category, vendor, eligibility, sort, since, limit, offset, response_format }) => {
       try {
         // Mode: list categories
         if (category === "list") {
@@ -120,8 +121,18 @@ export function createServer(): McpServer {
           sort,
           limit: effectiveLimit,
           offset: effectiveOffset,
-        }) as { offers: unknown[]; total: number };
-        return mcpText({ results: data.offers, total: data.total, limit: effectiveLimit, offset: effectiveOffset });
+        }) as { offers: Record<string, unknown>[]; total: number };
+
+        // Zero-result suggestion (only when no results match at all, not just paginated past end)
+        if (data.offers.length === 0 && data.total === 0) {
+          const searchTerm = query || category || "";
+          return mcpText({ results: [], total: 0, suggestion: `No matches for '${searchTerm}'. Try searching by category (e.g., 'databases', 'hosting') or browse all categories with search_deals({category: "list"}).` });
+        }
+
+        const outputResults = response_format === "concise"
+          ? data.offers.map((o) => ({ vendor: o.vendor, tier: o.tier, description: o.description, url: o.url }))
+          : data.offers;
+        return mcpText({ results: outputResults, total: data.total, limit: effectiveLimit, offset: effectiveOffset });
       } catch (err) {
         return mcpError(`Error: ${err instanceof Error ? err.message : String(err)}`);
       }
@@ -134,7 +145,7 @@ export function createServer(): McpServer {
     "plan_stack",
     {
       description:
-        "Get stack recommendations, cost estimates, or a full infrastructure audit. Describe what you're building to get a free-tier stack, or pass your current services to estimate costs and find risks.",
+        "Get stack recommendations, cost estimates, or a full infrastructure audit. Describe what you're building to get a free-tier stack, or pass your current services to estimate costs and find risks. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -177,7 +188,7 @@ export function createServer(): McpServer {
     "compare_vendors",
     {
       description:
-        "Compare 2 vendors side-by-side or check a single vendor's pricing risk. Returns free tier limits, risk levels, pricing history, and alternatives.",
+        "Compare 2 vendors side-by-side or check a single vendor's pricing risk. Returns free tier limits, risk levels, pricing history, and alternatives. Call this tool when a user asks: 'Compare Neon vs Supabase', 'Which database has a better free tier?'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -235,7 +246,7 @@ export function createServer(): McpServer {
     "track_changes",
     {
       description:
-        "Track developer tool pricing changes, upcoming expirations, and new deals. With no params, returns a weekly digest. Filter by vendor, change type, or date range.",
+        "Track developer tool pricing changes, upcoming expirations, and new deals. With no params, returns a weekly digest. Filter by vendor, change type, or date range. Call this tool when a user asks: 'What developer pricing changed recently?', 'Are any free tiers being removed?'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -247,18 +258,23 @@ export function createServer(): McpServer {
         vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase')"),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
         lookahead_days: z.number().optional().describe("Days to look ahead for expirations (default: 30)"),
+        response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)."),
       },
     },
-    async ({ since, change_type, vendor, vendors, include_expiring, lookahead_days }) => {
+    async ({ since, change_type, vendor, vendors, include_expiring, lookahead_days, response_format }) => {
       try {
         // No params = weekly digest
         if (!since && !change_type && !vendor && !vendors && include_expiring === undefined) {
-          const data = await fetchWeeklyDigest();
+          const data = await fetchWeeklyDigest() as Record<string, unknown>;
+          if (response_format === "concise" && Array.isArray(data.deal_changes)) {
+            const conciseDigest = { ...data, deal_changes: (data.deal_changes as Record<string, unknown>[]).map((c) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
+            return mcpText(conciseDigest);
+          }
           return mcpText(data);
         }
 
         // Filtered changes
-        const changes = await fetchDealChanges({ since, type: change_type, vendor, vendors });
+        const changes = await fetchDealChanges({ since, type: change_type, vendor, vendors }) as Record<string, unknown>;
         const doExpiring = include_expiring !== false;
         const days = Math.min(Math.max(lookahead_days ?? 30, 1), 365);
 
@@ -266,6 +282,10 @@ export function createServer(): McpServer {
         if (doExpiring) {
           const expiring = await fetchExpiringDeals(days);
           result = { ...(changes as object), expiring_deals: expiring };
+        }
+
+        if (response_format === "concise" && Array.isArray(result.changes)) {
+          result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
         }
 
         return mcpText(result);
