@@ -371,7 +371,7 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "api" | "setup" | "home";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -389,6 +389,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/search", label: "Search", section: "search" },
     { href: "/category", label: "Categories", section: "categories" },
     { href: "/best", label: "Best Of", section: "best" },
+    { href: "/agent-stack", label: "Agent Stacks", section: "agent-stack" },
     { href: "/trends", label: "Trends", section: "trends" },
     { href: "/alternative-to", label: "Alternatives", section: "alternatives" },
     { href: "/compare", label: "Compare", section: "compare" },
@@ -3499,6 +3500,205 @@ ${freshestRows}
 </html>`;
 }
 
+// --- Agent Stack Guide page ---
+
+interface StackBundle {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  services: { role: string; vendorName: string }[];
+}
+
+const AGENT_STACK_BUNDLES: StackBundle[] = [
+  {
+    id: "rag",
+    name: "RAG Agent",
+    emoji: "\uD83D\uDD0D",
+    description: "Retrieval-augmented generation — ingest documents, embed them, and answer questions with citations.",
+    services: [
+      { role: "Vector DB", vendorName: "Pinecone" },
+      { role: "LLM API", vendorName: "Groq" },
+      { role: "Compute", vendorName: "Vercel" },
+      { role: "Database & Storage", vendorName: "Supabase" },
+    ],
+  },
+  {
+    id: "coding",
+    name: "Autonomous Coding Agent",
+    emoji: "\uD83E\uDD16",
+    description: "An agent that writes code, runs tests, and ships PRs — the foundation for AI-powered development workflows.",
+    services: [
+      { role: "LLM API", vendorName: "OpenRouter" },
+      { role: "CI/CD", vendorName: "GitHub Actions" },
+      { role: "Monitoring", vendorName: "Grafana Cloud" },
+      { role: "Auth", vendorName: "Clerk" },
+    ],
+  },
+  {
+    id: "pipeline",
+    name: "Data Pipeline Agent",
+    emoji: "\uD83D\uDD04",
+    description: "Orchestrate data ingestion, transformation, and loading — ETL pipelines that run themselves.",
+    services: [
+      { role: "Database", vendorName: "Neon" },
+      { role: "Queue & Cache", vendorName: "Upstash" },
+      { role: "Object Storage", vendorName: "Cloudflare R2" },
+      { role: "Monitoring", vendorName: "BetterStack" },
+    ],
+  },
+  {
+    id: "chat",
+    name: "Chat / Customer Agent",
+    emoji: "\uD83D\uDCAC",
+    description: "Customer-facing conversational agent with auth, analytics, and fast inference.",
+    services: [
+      { role: "LLM API", vendorName: "Groq" },
+      { role: "Database", vendorName: "Supabase" },
+      { role: "Auth", vendorName: "Auth0" },
+      { role: "Analytics", vendorName: "PostHog" },
+    ],
+  },
+];
+
+function buildAgentStackPage(): string {
+  const title = "AI Agent Builder\u2019s Free Stack Guide \u2014 AgentDeals";
+  const metaDesc = "Curated free-tier infrastructure stacks for AI agents \u2014 RAG, coding agents, data pipelines, and chatbots. $0/month to start.";
+
+  // Resolve vendor data for each bundle
+  const resolvedBundles = AGENT_STACK_BUNDLES.map((bundle) => {
+    const resolvedServices = bundle.services.map((svc) => {
+      const offer = offers.find((o) => o.vendor === svc.vendorName);
+      return {
+        role: svc.role,
+        vendorName: svc.vendorName,
+        slug: toSlug(svc.vendorName),
+        category: offer?.category ?? "",
+        tier: offer?.tier ?? "Free",
+        description: offer?.description ?? "",
+        url: offer?.url ?? "",
+      };
+    });
+    return { ...bundle, resolvedServices };
+  });
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/agent-stack`,
+    datePublished: "2026-03-19",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const bundleHtml = resolvedBundles.map((bundle) => {
+    const serviceRows = bundle.resolvedServices.map((svc) => {
+      const limits = svc.description;
+      // Extract a concise limit string — first sentence or first 120 chars
+      const shortLimits = limits.split(". ")[0].substring(0, 140);
+      return `          <tr>
+            <td class="role-cell">${escHtmlServer(svc.role)}</td>
+            <td><a href="/vendor/${svc.slug}" class="vendor-link">${escHtmlServer(svc.vendorName)}</a> <span class="tier-badge">${escHtmlServer(svc.tier)}</span></td>
+            <td class="limits-cell">${escHtmlServer(shortLimits)}</td>
+            <td class="link-cell"><a href="${escHtmlServer(svc.url)}" target="_blank" rel="noopener">Pricing \u2192</a></td>
+          </tr>`;
+    }).join("\n");
+
+    return `      <div class="stack-bundle" id="${bundle.id}">
+        <div class="bundle-header">
+          <span class="bundle-emoji">${bundle.emoji}</span>
+          <div>
+            <h2>${escHtmlServer(bundle.name)}</h2>
+            <p class="bundle-desc">${escHtmlServer(bundle.description)}</p>
+          </div>
+        </div>
+        <div class="bundle-cost">Total: <strong>$0/month</strong></div>
+        <table>
+          <thead><tr><th>Role</th><th>Service</th><th>Free Tier</th><th></th></tr></thead>
+          <tbody>
+${serviceRows}
+          </tbody>
+        </table>
+      </div>`;
+  }).join("\n\n");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/agent-stack">
+<meta property="og:title" content="Free infrastructure stack for AI agents \u2014 $0/month">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/agent-stack">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--purple:#8b5cf6;--purple-glow:rgba(139,92,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.3rem;color:var(--text);margin:0}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;max-width:640px}
+.stack-bundle{border:1px solid var(--border);border-radius:12px;background:var(--bg-card);padding:1.5rem;margin-bottom:1.5rem;transition:border-color .2s}
+.stack-bundle:hover{border-color:var(--border-hover)}
+.bundle-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem}
+.bundle-emoji{font-size:2rem;line-height:1;flex-shrink:0;margin-top:.1rem}
+.bundle-desc{color:var(--text-muted);font-size:.85rem;margin-top:.25rem}
+.bundle-cost{display:inline-block;background:var(--accent-glow);color:var(--accent);padding:.3rem .8rem;border-radius:20px;font-size:.85rem;margin-bottom:1rem;font-family:var(--mono)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:.5rem .75rem;border-bottom:1px solid var(--border)}
+td{padding:.5rem .75rem;font-size:.85rem;color:var(--text-muted);border-bottom:1px solid rgba(51,65,85,0.5)}
+.role-cell{color:var(--text);font-weight:500;white-space:nowrap}
+.vendor-link{color:var(--text);font-weight:600}
+.vendor-link:hover{color:var(--accent)}
+.tier-badge{display:inline-block;font-size:.65rem;font-family:var(--mono);color:var(--purple);background:var(--purple-glow);padding:.1rem .4rem;border-radius:4px;vertical-align:middle;margin-left:.25rem;text-transform:uppercase;letter-spacing:.05em}
+.limits-cell{font-size:.8rem;color:var(--text-dim);max-width:280px}
+.link-cell{white-space:nowrap;font-size:.8rem}
+.mcp-section{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow)}
+.mcp-section h3{font-family:var(--serif);font-size:1.1rem;margin:0 0 .5rem}
+.mcp-section p{color:var(--text-muted);font-size:.85rem;margin-bottom:1rem}
+.mcp-code{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;font-family:var(--mono);font-size:.85rem;color:var(--accent);overflow-x:auto;white-space:pre;position:relative}
+.mcp-code .copy-btn{position:absolute;top:.5rem;right:.5rem;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted);padding:.2rem .5rem;border-radius:4px;cursor:pointer;font-size:.7rem;font-family:var(--sans);transition:all .15s}
+.mcp-code .copy-btn:hover{color:var(--text);border-color:var(--text-dim)}
+.mcp-code .copy-btn.copied{color:var(--accent);border-color:var(--accent)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.bundle-header{flex-direction:column;gap:.5rem}.limits-cell{max-width:160px}table{font-size:.75rem}th,td{padding:.4rem .5rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("best")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/best">Best Of</a> &rsaquo; Agent Stack Guide</div>
+  <h1>AI Agent Builder\u2019s Free Stack Guide</h1>
+  <p class="page-intro">Curated free-tier infrastructure stacks for common AI agent patterns. Every service below has a real free tier \u2014 start building for $0/month.</p>
+
+${bundleHtml}
+
+  <div class="mcp-section">
+    <h3>Get personalized recommendations via MCP</h3>
+    <p>Use the <code>plan_stack</code> tool to get stack recommendations tailored to your specific project:</p>
+    <div class="mcp-code"><button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('.code-text').textContent).then(()=>{this.textContent='Copied!';this.classList.add('copied');setTimeout(()=>{this.textContent='Copy';this.classList.remove('copied')},2000)})">Copy</button><span class="code-text">plan_stack({ use_case: "I'm building a RAG agent for internal docs" })</span></div>
+    <p style="margin-top:.75rem"><a href="/setup">Set up MCP client \u2192</a></p>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents</footer>
+</div>
+</body>
+</html>`;
+}
+
 // --- Web search page ---
 
 function buildSearchPage(query: string, categoryFilter: string, page: number): string {
@@ -5512,6 +5712,12 @@ ${catList}
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/agent-stack</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/category</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -5715,6 +5921,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/expiring", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildExpiringPage());
+  } else if (url.pathname === "/agent-stack" && req.method === "GET") {
+    recordApiHit("/agent-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAgentStackPage());
   } else if (url.pathname === "/freshness" && req.method === "GET") {
     recordApiHit("/freshness");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/freshness", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
