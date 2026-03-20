@@ -1560,7 +1560,7 @@
     {
       "vendor": "Segment",
       "category": "Analytics",
-      "description": "$25,000 in credits toward monthly Team plan for up to 2 years. Includes access to $1M+ in partner deals (AWS, Google, Intercom) and Analytics Academy",
+      "description": "$50,000 in credits toward monthly Team plan for up to 2 years. Includes access to $1M+ in partner deals (AWS, Google, Intercom) and Analytics Academy",
       "tier": "Startup Program",
       "url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
       "tags": [
@@ -1570,7 +1570,7 @@
         "startup credits",
         "data pipeline"
       ],
-      "verifiedDate": "2026-03-11",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
