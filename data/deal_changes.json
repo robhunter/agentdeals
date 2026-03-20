@@ -3,7 +3,7 @@
     {
       "vendor": "Brave Search API",
       "change_type": "free_tier_removed",
-      "date": "2026-02-01",
+      "date": "2026-02-12",
       "summary": "Free plan (5,000 queries/month) replaced with metered billing at $5/1,000 requests. $5 monthly credit provided as offset (~1,000 queries). Credit cards now actively charged with no spending cap",
       "previous_state": "Free plan: 5,000 queries/month, 3 QPS, no credit card required",
       "current_state": "Metered billing at $5/1,000 requests with $5 monthly credit (~1,000 free queries). No free plan. Credit card required, no spending cap",
