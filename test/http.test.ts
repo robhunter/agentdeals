@@ -323,6 +323,11 @@ describe("HTTP transport", () => {
     assert.ok(toolNames.includes("plan_stack"));
     assert.ok(toolNames.includes("compare_vendors"));
     assert.ok(toolNames.includes("track_changes"));
+    // Verify tool safety annotations
+    for (const tool of body.tools) {
+      assert.strictEqual(tool.annotations.readOnlyHint, true, `${tool.name} should have readOnlyHint: true`);
+      assert.strictEqual(tool.annotations.destructiveHint, false, `${tool.name} should have destructiveHint: false`);
+    }
   });
 
   it("serves /.well-known/mcp/server-card.json as alias", async () => {
