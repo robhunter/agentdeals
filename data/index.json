@@ -1530,7 +1530,7 @@
       "category": "Startup Programs",
       "description": "$50,000/year in credits for Y Combinator companies — auto-renews annually. Covers product analytics, session replay, feature flags, and experimentation. Must have raised less than $25M",
       "tier": "YC Deal",
-      "url": "https://posthog.com/startups",
+      "url": "https://posthog.com/pricing",
       "tags": [
         "analytics",
         "product analytics",
