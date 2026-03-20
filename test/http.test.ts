@@ -2001,3 +2001,65 @@ describe("301 canonical hostname redirect", () => {
     assert.strictEqual(response.status, 200);
   });
 });
+
+const INDEXNOW_PORT = 3460;
+const INDEXNOW_TEST_KEY = "test-indexnow-key-abc123";
+
+function startIndexNowServer(): Promise<ChildProcess> {
+  return new Promise((resolve, reject) => {
+    const serverPath = path.join(__dirname, "..", "dist", "serve.js");
+    const proc = spawn("node", [serverPath], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PORT: String(INDEXNOW_PORT), BASE_URL: `http://localhost:${INDEXNOW_PORT}`, INDEXNOW_KEY: INDEXNOW_TEST_KEY },
+    });
+
+    const timeout = setTimeout(() => {
+      proc.kill();
+      reject(new Error("Server startup timeout"));
+    }, 5000);
+
+    proc.stderr!.on("data", (data: Buffer) => {
+      if (data.toString().includes("running on http")) {
+        clearTimeout(timeout);
+        resolve(proc);
+      }
+    });
+
+    proc.on("error", (err) => {
+      clearTimeout(timeout);
+      reject(err);
+    });
+  });
+}
+
+describe("IndexNow integration", () => {
+  let proc: ChildProcess | null = null;
+
+  afterEach(() => {
+    if (proc) {
+      proc.kill();
+      proc = null;
+    }
+  });
+
+  it("serves IndexNow key verification file at /{key}.txt", async () => {
+    proc = await startIndexNowServer();
+    const response = await fetch(`http://localhost:${INDEXNOW_PORT}/${INDEXNOW_TEST_KEY}.txt`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "text/plain; charset=utf-8");
+    const body = await response.text();
+    assert.strictEqual(body, INDEXNOW_TEST_KEY);
+  });
+
+  it("returns 404 for incorrect key file path", async () => {
+    proc = await startIndexNowServer();
+    const response = await fetch(`http://localhost:${INDEXNOW_PORT}/wrong-key.txt`);
+    assert.strictEqual(response.status, 404);
+  });
+
+  it("does not serve key file when INDEXNOW_KEY is not set", async () => {
+    proc = await startHttpServer(); // default server without INDEXNOW_KEY
+    const response = await fetch(`http://localhost:${PORT}/.txt`);
+    assert.strictEqual(response.status, 404);
+  });
+});

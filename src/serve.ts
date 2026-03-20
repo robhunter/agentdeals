@@ -17,6 +17,8 @@ const __dirname = dirname(__filename);
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
 const BASE_URL = (process.env.BASE_URL ?? "https://agentdeals.dev").replace(/\/+$/, "");
 
+const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? "";
+
 const GOOGLE_VERIFICATION_META = process.env.GOOGLE_SITE_VERIFICATION
   ? `<meta name="google-site-verification" content="${process.env.GOOGLE_SITE_VERIFICATION}">\n` : "";
 
@@ -5248,7 +5250,8 @@ const httpServer = createHttpServer(async (req, res) => {
         url.pathname === "/favicon.ico" ||
         url.pathname === "/llms.txt" ||
         url.pathname === "/llms-full.txt" ||
-        url.pathname === "/AGENTS.md";
+        url.pathname === "/AGENTS.md" ||
+        (INDEXNOW_KEY && url.pathname === `/${INDEXNOW_KEY}.txt`);
       if (!skip) {
         const target = `${BASE_URL}${url.pathname}${url.search}`;
         res.writeHead(301, { Location: target });
@@ -5694,6 +5697,9 @@ ${entries}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: feedPath, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: allChanges.length });
     res.writeHead(200, { "Content-Type": "application/atom+xml; charset=utf-8", "Cache-Control": "public, max-age=3600", "Access-Control-Allow-Origin": "*" });
     res.end(atom);
+  } else if (INDEXNOW_KEY && url.pathname === `/${INDEXNOW_KEY}.txt` && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
+    res.end(INDEXNOW_KEY);
   } else if (url.pathname === "/robots.txt" && req.method === "GET") {
     const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
@@ -6192,6 +6198,96 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
 httpServer.listen(PORT, () => {
   console.error(`agentdeals MCP server running on http://localhost:${PORT}/mcp`);
 });
+
+// IndexNow + sitemap ping on startup (fire-and-forget, no impact on server readiness)
+async function pingSearchEngines(): Promise<void> {
+  // Build priority URL list for IndexNow (most important pages first)
+  const urlList: string[] = [
+    `${BASE_URL}/`,
+    `${BASE_URL}/changes`,
+    `${BASE_URL}/search`,
+    `${BASE_URL}/category`,
+    `${BASE_URL}/expiring`,
+    `${BASE_URL}/freshness`,
+    `${BASE_URL}/agent-stack`,
+    `${BASE_URL}/setup`,
+    `${BASE_URL}/best`,
+    `${BASE_URL}/compare`,
+    `${BASE_URL}/digest/archive`,
+    `${BASE_URL}/trends`,
+    `${BASE_URL}/vendor`,
+    `${BASE_URL}/alternative-to`,
+  ];
+  // Add alternatives pages
+  for (const p of ALTERNATIVES_PAGES) {
+    urlList.push(`${BASE_URL}/${p.slug}`);
+  }
+  // Add category pages
+  for (const c of categories) {
+    urlList.push(`${BASE_URL}/category/${toSlug(c.name)}`);
+  }
+  // Add best-of pages
+  for (const s of bestOfSlugMap.keys()) {
+    urlList.push(`${BASE_URL}/best/${s}`);
+  }
+  // Add comparison pages
+  for (const s of comparisonMap.keys()) {
+    urlList.push(`${BASE_URL}/compare/${s}`);
+  }
+  // Add vendor pages (top by recent changes first, then alphabetical — cap at ~2000 to stay well under 10k limit)
+  const changedVendorSlugs = new Set(dealChanges.map((dc: any) => toSlug(dc.vendor)));
+  const vendorSlugs = Array.from(vendorSlugMap.keys());
+  const sortedVendorSlugs = [
+    ...vendorSlugs.filter(s => changedVendorSlugs.has(s)),
+    ...vendorSlugs.filter(s => !changedVendorSlugs.has(s)),
+  ].slice(0, 2000);
+  for (const s of sortedVendorSlugs) {
+    urlList.push(`${BASE_URL}/vendor/${s}`);
+  }
+
+  // Ping sitemap to search engines
+  const sitemapUrl = `${BASE_URL}/sitemap.xml`;
+  const sitemapPings = [
+    `https://www.bing.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`,
+    `https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`,
+  ];
+  for (const pingUrl of sitemapPings) {
+    try {
+      const resp = await fetch(pingUrl, { signal: AbortSignal.timeout(10000) });
+      console.error(`Sitemap ping ${new URL(pingUrl).hostname}: ${resp.status}`);
+    } catch (err: any) {
+      console.error(`Sitemap ping ${new URL(pingUrl).hostname} failed: ${err.message}`);
+    }
+  }
+
+  // Submit to IndexNow (requires INDEXNOW_KEY)
+  if (!INDEXNOW_KEY) {
+    console.error("IndexNow: skipped (INDEXNOW_KEY not set)");
+    return;
+  }
+  try {
+    const payload = {
+      host: new URL(BASE_URL).hostname,
+      key: INDEXNOW_KEY,
+      keyLocation: `${BASE_URL}/${INDEXNOW_KEY}.txt`,
+      urlList,
+    };
+    const resp = await fetch("https://api.indexnow.org/IndexNow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(15000),
+    });
+    console.error(`IndexNow: submitted ${urlList.length} URLs, status ${resp.status}`);
+  } catch (err: any) {
+    console.error(`IndexNow: failed — ${err.message}`);
+  }
+}
+
+// Run ping in background on production only — don't block server startup or interfere with tests
+if (!BASE_URL.includes("localhost")) {
+  pingSearchEngines().catch((err) => console.error(`pingSearchEngines error: ${err.message}`));
+}
 
 // Flush telemetry every 5 minutes
 const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
