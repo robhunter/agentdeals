@@ -4,6 +4,15 @@ import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDe
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
+import type { Offer, EnrichedOffer, DealChange } from "./types.js";
+
+function toConciseOffer(offer: Offer | EnrichedOffer) {
+  return { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url };
+}
+
+function toConciseDealChange(change: DealChange) {
+  return { vendor: change.vendor, change_type: change.change_type, date: change.date, summary: change.summary };
+}
 
 export function createServer(getSessionId?: () => string | undefined): McpServer {
   const server = new McpServer({
@@ -18,7 +27,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     "search_deals",
     {
       description:
-        "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. Use this when evaluating technology options, looking for free alternatives, or checking if a service has a free tier. Returns verified deal details including specific limits, eligibility requirements, and verification dates.",
+        "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. Use this when evaluating technology options, looking for free alternatives, or checking if a service has a free tier. Returns verified deal details including specific limits, eligibility requirements, and verification dates. Call this tool when a user asks: 'Does Supabase have a free tier?', 'What's cheaper than Vercel?', 'Find me a free database'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -32,9 +41,10 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Only return deals verified/added after this date."),
         limit: z.number().optional().describe("Max results (default: 20)"),
         offset: z.number().optional().describe("Pagination offset (default: 0)"),
+        response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor name, tier, one-line description, URL only. 'detailed': full response (default)."),
       },
     },
-    async ({ query, category, vendor, eligibility, sort, since, limit, offset }) => {
+    async ({ query, category, vendor, eligibility, sort, since, limit, offset, response_format }) => {
       try {
         recordToolCall("search_deals");
 
@@ -90,9 +100,20 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
 
         const paged = filtered.slice(effectiveOffset, effectiveOffset + effectiveLimit);
         const results = enrichOffers(paged);
+        const finalTotal = since ? filtered.length : total;
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { query, category, eligibility, sort, limit: effectiveLimit, offset: effectiveOffset, since }, result_count: results.length, session_id: getSessionId?.() });
+
+        // Zero-result suggestion (only when no results match at all, not just paginated past end)
+        if (results.length === 0 && finalTotal === 0) {
+          const searchTerm = query || category || "";
+          return {
+            content: [{ type: "text" as const, text: JSON.stringify({ results: [], total: 0, suggestion: `No matches for '${searchTerm}'. Try searching by category (e.g., 'databases', 'hosting') or browse all categories with search_deals({category: "list"}).` }, null, 2) }],
+          };
+        }
+
+        const outputResults = response_format === "concise" ? results.map(toConciseOffer) : results;
         return {
-          content: [{ type: "text" as const, text: JSON.stringify({ results, total: since ? filtered.length : total, limit: effectiveLimit, offset: effectiveOffset }, null, 2) }],
+          content: [{ type: "text" as const, text: JSON.stringify({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset }, null, 2) }],
         };
       } catch (err) {
         console.error("search_deals error:", err);
@@ -110,7 +131,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     "plan_stack",
     {
       description:
-        "Plan a technology stack with cost-optimized infrastructure choices. Given project requirements, recommends services with free tiers or credits that match your needs. Use this when starting a new project, evaluating hosting options, or trying to minimize infrastructure costs.",
+        "Plan a technology stack with cost-optimized infrastructure choices. Given project requirements, recommends services with free tiers or credits that match your needs. Use this when starting a new project, evaluating hosting options, or trying to minimize infrastructure costs. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -189,7 +210,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     "compare_vendors",
     {
       description:
-        "Compare developer tools and services side by side — free tier limits, pricing tiers, and recent pricing changes. Use this when choosing between similar services (e.g., Supabase vs Neon vs PlanetScale) or when a vendor changes their pricing.",
+        "Compare developer tools and services side by side — free tier limits, pricing tiers, and recent pricing changes. Use this when choosing between similar services (e.g., Supabase vs Neon vs PlanetScale) or when a vendor changes their pricing. Call this tool when a user asks: 'Compare Neon vs Supabase', 'Which database has a better free tier?'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -270,7 +291,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     "track_changes",
     {
       description:
-        "Track recent pricing changes across developer tools — which free tiers were removed, which got limits cut, and which improved. Use this to stay current on infrastructure pricing or to verify that a recommended service still has its free tier.",
+        "Track recent pricing changes across developer tools — which free tiers were removed, which got limits cut, and which improved. Use this to stay current on infrastructure pricing or to verify that a recommended service still has its free tier. Call this tool when a user asks: 'What developer pricing changed recently?', 'Are any free tiers being removed?'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -282,9 +303,10 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase')"),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
         lookahead_days: z.number().optional().describe("Days to look ahead for expirations (default: 30)"),
+        response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)."),
       },
     },
-    async ({ since, change_type, vendor, vendors, include_expiring, lookahead_days }) => {
+    async ({ since, change_type, vendor, vendors, include_expiring, lookahead_days, response_format }) => {
       try {
         recordToolCall("track_changes");
 
@@ -292,6 +314,12 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         if (!since && !change_type && !vendor && !vendors && include_expiring === undefined) {
           const digest = getWeeklyDigest();
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: {}, result_count: digest.deal_changes.length, session_id: getSessionId?.() });
+          if (response_format === "concise") {
+            const conciseDigest = { ...digest, deal_changes: digest.deal_changes.map(toConciseDealChange) };
+            return {
+              content: [{ type: "text" as const, text: JSON.stringify(conciseDigest, null, 2) }],
+            };
+          }
           return {
             content: [{ type: "text" as const, text: JSON.stringify(digest, null, 2) }],
           };
@@ -306,6 +334,10 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         if (doExpiring) {
           const expiring = getExpiringDeals(days);
           result = { ...changes, expiring_deals: expiring };
+        }
+
+        if (response_format === "concise") {
+          result = { ...result, changes: result.changes.map(toConciseDealChange) };
         }
 
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, include_expiring: doExpiring, lookahead_days: days }, result_count: changes.changes.length, session_id: getSessionId?.() });
@@ -555,7 +587,7 @@ export function getServerCard(baseUrl: string) {
     tools: [
       {
         name: "search_deals",
-        description: "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more.",
+        description: "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. Call this tool when a user asks: 'Does Supabase have a free tier?', 'What's cheaper than Vercel?', 'Find me a free database'.",
         annotations: {
           readOnlyHint: true,
           destructiveHint: false,
@@ -571,12 +603,13 @@ export function getServerCard(baseUrl: string) {
             since: { type: "string", description: "ISO date (YYYY-MM-DD). Only return deals verified/added after this date." },
             limit: { type: "number", description: "Max results (default: 20)" },
             offset: { type: "number", description: "Pagination offset (default: 0)" },
+            response_format: { type: "string", enum: ["concise", "detailed"], description: "Response detail level. 'concise': vendor, tier, description, URL only. 'detailed': full response (default)." },
           },
         },
       },
       {
         name: "plan_stack",
-        description: "Plan a technology stack with cost-optimized infrastructure choices. Recommends services, estimates costs, or audits existing stacks.",
+        description: "Plan a technology stack with cost-optimized infrastructure choices. Recommends services, estimates costs, or audits existing stacks. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
         annotations: {
           readOnlyHint: true,
           destructiveHint: false,
@@ -595,7 +628,7 @@ export function getServerCard(baseUrl: string) {
       },
       {
         name: "compare_vendors",
-        description: "Compare developer tools side by side — free tier limits, pricing tiers, and recent pricing changes.",
+        description: "Compare developer tools side by side — free tier limits, pricing tiers, and recent pricing changes. Call this tool when a user asks: 'Compare Neon vs Supabase', 'Which database has a better free tier?'.",
         annotations: {
           readOnlyHint: true,
           destructiveHint: false,
@@ -611,7 +644,7 @@ export function getServerCard(baseUrl: string) {
       },
       {
         name: "track_changes",
-        description: "Track recent pricing changes — free tier removals, limit cuts, and improvements across developer tools.",
+        description: "Track recent pricing changes — free tier removals, limit cuts, and improvements across developer tools. Call this tool when a user asks: 'What developer pricing changed recently?', 'Are any free tiers being removed?'.",
         annotations: {
           readOnlyHint: true,
           destructiveHint: false,
@@ -625,6 +658,7 @@ export function getServerCard(baseUrl: string) {
             vendors: { type: "string", description: "Comma-separated vendor names" },
             include_expiring: { type: "boolean", description: "Include upcoming expirations (default: true)" },
             lookahead_days: { type: "number", description: "Days to look ahead for expirations (default: 30)" },
+            response_format: { type: "string", enum: ["concise", "detailed"], description: "Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)." },
           },
         },
       },
