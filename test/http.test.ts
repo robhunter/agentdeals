@@ -1494,6 +1494,21 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("March 31, 2026"), "Should mention the EOL date");
   });
 
+  it("GET /hetzner-alternatives renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/hetzner-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Hetzner Alternatives"), "Should have Hetzner title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("30-50%"), "Should mention the price increase");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {

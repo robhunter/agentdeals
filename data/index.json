@@ -24,7 +24,8 @@
         "hosting",
         "paas",
         "deployment",
-        "docker"
+        "docker",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-18"
     },
@@ -38,7 +39,8 @@
         "edge",
         "serverless",
         "hosting",
-        "workers"
+        "workers",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -82,7 +84,8 @@
         "paas",
         "deployment",
         "docker",
-        "low-cost"
+        "low-cost",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -97,7 +100,8 @@
         "edge",
         "deployment",
         "docker",
-        "global"
+        "global",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -174,7 +178,8 @@
         "iaas",
         "compute",
         "serverless",
-        "free tier"
+        "free tier",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-14",
       "expires_date": "2027-03-31"
@@ -205,7 +210,8 @@
         "iaas",
         "credits",
         "startup",
-        "free tier"
+        "free tier",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-14",
       "expires_date": "2026-06-30"
@@ -222,7 +228,8 @@
         "compute",
         "arm",
         "database",
-        "free tier"
+        "free tier",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -1875,7 +1882,8 @@
         "credits",
         "startup credits",
         "google cloud",
-        "accelerator"
+        "accelerator",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-14",
       "eligibility": {
@@ -2420,7 +2428,8 @@
         "iaas",
         "startup-credits",
         "gpu",
-        "compute"
+        "compute",
+        "hetzner-alternative"
       ],
       "verifiedDate": "2026-03-14",
       "eligibility": {
