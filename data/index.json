@@ -224,7 +224,7 @@
         "database",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Supabase",
@@ -713,7 +713,7 @@
         "api",
         "transactional"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Postmark",
@@ -727,7 +727,7 @@
         "transactional",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Mailchimp",
@@ -742,7 +742,7 @@
         "crm",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Mailjet",
@@ -757,7 +757,7 @@
         "marketing",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Brevo",
@@ -772,7 +772,7 @@
         "crm",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Algolia",
@@ -878,7 +878,7 @@
         "amqp",
         "free tier"
       ],
-      "verifiedDate": "2026-02-23"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Cloudflare Queues",
@@ -908,7 +908,7 @@
         "scheduling",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Pusher",
@@ -923,7 +923,7 @@
         "pubsub",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Ably",
@@ -939,7 +939,7 @@
         "chat",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Bright Data MCP Server",
@@ -972,7 +972,7 @@
         "crawling",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Apify",
@@ -988,7 +988,7 @@
         "actors",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Windsurf",
@@ -1003,7 +1003,7 @@
         "ide",
         "free tier"
       ],
-      "verifiedDate": "2026-02-24"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "GitHub Copilot",
@@ -1048,7 +1048,7 @@
         "agile",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Snyk",
@@ -1124,7 +1124,7 @@
         "ipv6",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "deSEC",
@@ -1139,7 +1139,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Fastly",
@@ -1184,7 +1184,7 @@
         "rollout",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Flagsmith",
@@ -1198,7 +1198,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Harness Feature Flags",
@@ -1213,7 +1213,7 @@
         "rollout",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Logz.io",
@@ -1243,7 +1243,7 @@
         "real-time",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Stripe",
@@ -1273,7 +1273,7 @@
         "tax",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Contentful",
@@ -1288,7 +1288,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Sanity",
@@ -1304,7 +1304,7 @@
         "groq",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Hygraph",
@@ -1319,7 +1319,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Hugging Face",
@@ -1478,7 +1478,7 @@
         "scheduling",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Trigger.dev",
@@ -1493,7 +1493,7 @@
         "queues",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Momento",
@@ -1523,7 +1523,7 @@
         "security",
         "free tier"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "PostHog",
@@ -1587,7 +1587,7 @@
         "experimentation",
         "cohorts"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -1636,7 +1636,7 @@
         "wiki",
         "startup credits"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -1660,7 +1660,7 @@
         "oss",
         "jetbrains"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -1732,7 +1732,7 @@
         "google cloud",
         "partner discounts"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -1757,7 +1757,7 @@
         "aws credits",
         "google cloud"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -1781,7 +1781,7 @@
         "aws",
         "partner discounts"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -1829,7 +1829,7 @@
         "google cloud",
         "credits"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -1900,7 +1900,7 @@
         "typo-tolerant",
         "free credit"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Statically",
@@ -1929,7 +1929,7 @@
         "error-tracking",
         "tracing"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Baselime",
@@ -1944,7 +1944,7 @@
         "tracing",
         "serverless"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Polar",
@@ -1958,7 +1958,7 @@
         "subscriptions",
         "open-source"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Paddle",
@@ -1972,7 +1972,7 @@
         "tax-compliance",
         "subscriptions"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Socket.dev",
@@ -2000,7 +2000,7 @@
         "environment-variables",
         "encryption"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "HashiCorp Vault",
@@ -2029,7 +2029,7 @@
         "ab-testing",
         "open-source"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Statsig",
@@ -2043,7 +2043,7 @@
         "ab-testing",
         "analytics"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Zuplo",
@@ -2057,7 +2057,7 @@
         "rate-limiting",
         "developer-portal"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Kong",
@@ -2071,7 +2071,7 @@
         "self-hosted",
         "microservices"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Hookdeck",
@@ -2085,7 +2085,7 @@
         "event-gateway",
         "reliability"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Unkey",
@@ -2099,7 +2099,7 @@
         "rate-limiting",
         "authentication"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "GitHub Container Registry",
@@ -2171,7 +2171,7 @@
         "self-hosted",
         "api"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Loops",
@@ -2185,7 +2185,7 @@
         "transactional",
         "automation"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "ClouDNS",
@@ -2199,7 +2199,7 @@
         "nameserver",
         "dynamic-dns"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Tinybird",
@@ -2228,7 +2228,7 @@
         "multi-channel",
         "workflow"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Svix",
@@ -2242,7 +2242,7 @@
         "delivery",
         "reliability"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Crisp",
@@ -2256,7 +2256,7 @@
         "customer-support",
         "live-chat"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Mintlify",
@@ -2326,7 +2326,7 @@
         "background-jobs",
         "automation"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "OneSignal",
@@ -2340,7 +2340,7 @@
         "mobile",
         "web-push"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "n8n",
@@ -2354,7 +2354,7 @@
         "integrations",
         "self-hosted"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Retool",
@@ -2368,7 +2368,7 @@
         "admin-panel",
         "dashboard"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "MinIO",
@@ -2398,7 +2398,7 @@
         "startup-credits",
         "cloud-storage"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2448,7 +2448,7 @@
         "jira",
         "confluence"
       ],
-      "verifiedDate": "2026-02-25",
+      "verifiedDate": "2026-03-20",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
