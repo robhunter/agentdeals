@@ -777,10 +777,13 @@ export function getWeeklyDigest(): {
   date_range: string;
   deal_changes: DealChange[];
   new_offers: { vendor: string; category: string; description: string }[];
-  upcoming_deadlines: { vendor: string; expires_date: string; days_until_expiry: number }[];
+  upcoming_deadlines: { vendor: string; date: string; change_type: string; summary: string }[];
   summary: string;
 } {
   const now = new Date();
+  const fmt = (d: Date) => d.toISOString().slice(0, 10);
+  const today = fmt(now);
+  const thirtyDaysFromNow = fmt(new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000));
 
   // Get deal changes — 7-day window, fallback to 30 if <3 changes
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
@@ -798,17 +801,40 @@ export function getWeeklyDigest(): {
     description: o.description,
   }));
 
-  // Upcoming deadlines (next 30 days)
-  const deadlines = getExpiringDeals(30).deals.slice(0, 10).map((d) => ({
+  // Upcoming deadlines (next 30 days) — from expiring offers
+  const expiringDeadlines = getExpiringDeals(30).deals.map((d) => ({
     vendor: d.vendor,
-    expires_date: d.expires_date!,
-    days_until_expiry: d.days_until_expiry,
+    date: d.expires_date!,
+    change_type: "deal_expiring",
+    summary: `${d.vendor} deal expires`,
   }));
+
+  // Upcoming deadlines from deal changes with future dates (next 30 days)
+  const allChanges = loadDealChanges();
+  const changeDeadlines = allChanges
+    .filter((c) => c.date >= today && c.date <= thirtyDaysFromNow)
+    .map((c) => ({
+      vendor: c.vendor,
+      date: c.date,
+      change_type: c.change_type,
+      summary: c.summary,
+    }));
+
+  // Merge, deduplicate by vendor+date, sort by date ascending
+  const seen = new Set<string>();
+  const deadlines = [...expiringDeadlines, ...changeDeadlines]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .filter((d) => {
+      const key = `${d.vendor}|${d.date}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 10);
 
   // Week label
   const weekStart = new Date(now.getTime() - now.getUTCDay() * 86400000 + 86400000); // Monday
   const weekEnd = new Date(weekStart.getTime() + 6 * 86400000);
-  const fmt = (d: Date) => d.toISOString().slice(0, 10);
   const week = `${fmt(weekStart)} to ${fmt(weekEnd)}`;
 
   // Build summary
@@ -823,7 +849,7 @@ export function getWeeklyDigest(): {
     parts.push("No pricing changes this week");
   }
   if (newOffers.length > 0) parts.push(`${newOffers.length} new offer${newOffers.length !== 1 ? "s" : ""} added`);
-  if (deadlines.length > 0) parts.push(`${deadlines.length} deal${deadlines.length !== 1 ? "s" : ""} expiring in the next 30 days`);
+  if (deadlines.length > 0) parts.push(`${deadlines.length} upcoming deadline${deadlines.length !== 1 ? "s" : ""} in the next 30 days`);
   const summary = parts.join(". ") + ".";
 
   return {
