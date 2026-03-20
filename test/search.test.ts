@@ -1179,3 +1179,105 @@ describe("compare_vendors tool", () => {
     }
   });
 });
+
+describe("response_format=concise", () => {
+  it("returns concise output for search_deals", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_deals",
+            arguments: { query: "database", limit: 3, response_format: "concise" },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      assert.ok(body.results.length > 0);
+      const offer = body.results[0];
+      // Concise: only vendor, tier, description, url
+      assert.ok(typeof offer.vendor === "string");
+      assert.ok(typeof offer.tier === "string");
+      assert.ok(typeof offer.description === "string");
+      assert.ok(typeof offer.url === "string");
+      // Should NOT have enriched fields
+      assert.strictEqual(offer.category, undefined);
+      assert.strictEqual(offer.tags, undefined);
+      assert.strictEqual(offer.risk_level, undefined);
+      assert.strictEqual(offer.days_since_verified, undefined);
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns concise output for track_changes", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "track_changes",
+            arguments: { since: "2020-01-01", response_format: "concise" },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      assert.ok(body.changes.length > 0);
+      const change = body.changes[0];
+      // Concise: only vendor, change_type, date, summary
+      assert.ok(typeof change.vendor === "string");
+      assert.ok(typeof change.change_type === "string");
+      assert.ok(typeof change.date === "string");
+      assert.ok(typeof change.summary === "string");
+      // Should NOT have full fields
+      assert.strictEqual(change.previous_state, undefined);
+      assert.strictEqual(change.current_state, undefined);
+      assert.strictEqual(change.impact, undefined);
+      assert.strictEqual(change.source_url, undefined);
+    } finally {
+      proc.kill();
+    }
+  });
+});
+
+describe("zero-result suggestion", () => {
+  it("returns suggestion when search has no matches", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: {
+            name: "search_deals",
+            arguments: { query: "zzzznonexistentquery99999" },
+          },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      const body = JSON.parse(result.result.content[0].text);
+      assert.strictEqual(body.results.length, 0);
+      assert.strictEqual(body.total, 0);
+      assert.ok(typeof body.suggestion === "string");
+      assert.ok(body.suggestion.includes("No matches"));
+      assert.ok(body.suggestion.includes("category"));
+    } finally {
+      proc.kill();
+    }
+  });
+});
