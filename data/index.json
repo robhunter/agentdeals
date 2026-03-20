@@ -2512,9 +2512,10 @@
         "terraform",
         "hashicorp",
         "free tier",
-        "deal-change"
+        "deal-change",
+        "terraform-alternative"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-03-20"
     },
     {
       "vendor": "Orama",
@@ -5623,16 +5624,17 @@
       "verifiedDate": "2026-03-20"
     },
     {
-      "vendor": "scalr.com",
+      "vendor": "Scalr",
       "category": "Infrastructure",
-      "description": "Scalr is a Terraform Automation and COllaboration (TACO) product used to better collaboration and automation on infrastructure and configurations managed by Terraform. Full Terraform CLI support, OPA integration, and a hierarchical configuration model. No SSO tax. All features are included. Use up to 50 runs/month for free.",
+      "description": "Terraform Automation and Collaboration (TACO) platform — full Terraform CLI support, OPA integration, hierarchical configuration model. No SSO tax. All features included. Up to 50 runs/month free",
       "tier": "Free",
-      "url": "https://scalr.com/",
+      "url": "https://www.scalr.com/pricing",
       "tags": [
         "infrastructure",
-        "cloud",
-        "management",
-        "free-for-dev",
+        "iac",
+        "terraform",
+        "devops",
+        "free tier",
         "terraform-alternative"
       ],
       "verifiedDate": "2026-03-20"
