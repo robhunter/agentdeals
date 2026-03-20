@@ -66,6 +66,10 @@ export function createServer(): McpServer {
     {
       description:
         "Find free tiers, credits, and discounts for 1,500+ developer tools. Search by keyword, browse categories, or get full vendor details with alternatives. Covers AWS, Vercel, Supabase, Cloudflare, and more.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         query: z.string().optional().describe("Keyword search (vendor names, descriptions, tags)"),
         category: z.string().optional().describe("Filter by category. Pass \"list\" to get all categories with counts."),
@@ -131,6 +135,10 @@ export function createServer(): McpServer {
     {
       description:
         "Get stack recommendations, cost estimates, or a full infrastructure audit. Describe what you're building to get a free-tier stack, or pass your current services to estimate costs and find risks.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: cost analysis at scale. audit: risk + cost + gap analysis."),
         use_case: z.string().optional().describe("What you're building (for recommend mode, e.g. 'Next.js SaaS app')"),
@@ -170,6 +178,10 @@ export function createServer(): McpServer {
     {
       description:
         "Compare 2 vendors side-by-side or check a single vendor's pricing risk. Returns free tier limits, risk levels, pricing history, and alternatives.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         vendors: z.array(z.string()).describe("1 or 2 vendor names. 1 vendor = risk check. 2 vendors = side-by-side comparison."),
         include_risk: z.boolean().optional().describe("Include risk assessment (default: true)"),
@@ -224,6 +236,10 @@ export function createServer(): McpServer {
     {
       description:
         "Track developer tool pricing changes, upcoming expirations, and new deals. With no params, returns a weekly digest. Filter by vendor, change type, or date range.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),

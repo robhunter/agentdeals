@@ -19,6 +19,10 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     {
       description:
         "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. Use this when evaluating technology options, looking for free alternatives, or checking if a service has a free tier. Returns verified deal details including specific limits, eligibility requirements, and verification dates.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         query: z.string().optional().describe("Keyword search (vendor names, descriptions, tags)"),
         category: z.string().optional().describe("Filter by category. Pass \"list\" to get all categories with counts."),
@@ -107,6 +111,10 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     {
       description:
         "Plan a technology stack with cost-optimized infrastructure choices. Given project requirements, recommends services with free tiers or credits that match your needs. Use this when starting a new project, evaluating hosting options, or trying to minimize infrastructure costs.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: cost analysis at scale. audit: risk + cost + gap analysis."),
         use_case: z.string().optional().describe("What you're building (for recommend mode, e.g. 'Next.js SaaS app')"),
@@ -182,6 +190,10 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     {
       description:
         "Compare developer tools and services side by side — free tier limits, pricing tiers, and recent pricing changes. Use this when choosing between similar services (e.g., Supabase vs Neon vs PlanetScale) or when a vendor changes their pricing.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         vendors: z.array(z.string()).describe("1 or 2 vendor names. 1 vendor = risk check. 2 vendors = side-by-side comparison."),
         include_risk: z.boolean().optional().describe("Include risk assessment (default: true)"),
@@ -259,6 +271,10 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     {
       description:
         "Track recent pricing changes across developer tools — which free tiers were removed, which got limits cut, and which improved. Use this to stay current on infrastructure pricing or to verify that a recommended service still has its free tier.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),
@@ -540,6 +556,10 @@ export function getServerCard(baseUrl: string) {
       {
         name: "search_deals",
         description: "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more.",
+        annotations: {
+          readOnlyHint: true,
+          destructiveHint: false,
+        },
         inputSchema: {
           type: "object",
           properties: {
@@ -557,6 +577,10 @@ export function getServerCard(baseUrl: string) {
       {
         name: "plan_stack",
         description: "Plan a technology stack with cost-optimized infrastructure choices. Recommends services, estimates costs, or audits existing stacks.",
+        annotations: {
+          readOnlyHint: true,
+          destructiveHint: false,
+        },
         inputSchema: {
           type: "object",
           properties: {
@@ -572,6 +596,10 @@ export function getServerCard(baseUrl: string) {
       {
         name: "compare_vendors",
         description: "Compare developer tools side by side — free tier limits, pricing tiers, and recent pricing changes.",
+        annotations: {
+          readOnlyHint: true,
+          destructiveHint: false,
+        },
         inputSchema: {
           type: "object",
           properties: {
@@ -584,6 +612,10 @@ export function getServerCard(baseUrl: string) {
       {
         name: "track_changes",
         description: "Track recent pricing changes — free tier removals, limit cuts, and improvements across developer tools.",
+        annotations: {
+          readOnlyHint: true,
+          destructiveHint: false,
+        },
         inputSchema: {
           type: "object",
           properties: {
