@@ -1361,6 +1361,30 @@ describe("HTTP transport", () => {
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
   });
 
+  it("GET /agent-stack renders agent stack guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/agent-stack`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>AI Agent Builder"), "Should have agent stack title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/agent-stack"), "Should reference /agent-stack");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("RAG Agent"), "Should have RAG Agent bundle");
+    assert.ok(html.includes("Autonomous Coding Agent"), "Should have Coding Agent bundle");
+    assert.ok(html.includes("Data Pipeline Agent"), "Should have Pipeline Agent bundle");
+    assert.ok(html.includes("Chat / Customer Agent"), "Should have Chat Agent bundle");
+    assert.ok(html.includes("$0/month"), "Should show $0 cost");
+    assert.ok(html.includes("plan_stack"), "Should reference plan_stack MCP tool");
+    assert.ok(html.includes("Pinecone"), "Should include Pinecone vendor");
+    assert.ok(html.includes("Groq"), "Should include Groq vendor");
+    assert.ok(html.includes("/vendor/"), "Should link to vendor pages");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
   it("GET /freshness renders data freshness dashboard page", async () => {
     proc = await startHttpServer();
 
