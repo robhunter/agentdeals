@@ -12,7 +12,7 @@
         "frontend",
         "jamstack"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Render",
@@ -59,7 +59,7 @@
         "deployment",
         "jamstack"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Cloudflare Pages",
@@ -237,7 +237,7 @@
         "realtime",
         "baas"
       ],
-      "verifiedDate": "2026-03-18"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Neon",
@@ -251,7 +251,7 @@
         "serverless",
         "branching"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "MongoDB Atlas",
@@ -281,7 +281,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Turso",
@@ -296,7 +296,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Upstash",
@@ -528,7 +528,7 @@
         "performance",
         "observability"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Datadog",
@@ -542,7 +542,7 @@
         "observability",
         "apm"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Grafana Cloud",
@@ -558,12 +558,12 @@
         "traces",
         "grafana"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "BetterStack",
       "category": "Monitoring",
-      "description": "10 uptime monitors, 3 GB logs (3-day retention), 100K exceptions/mo, unlimited team members",
+      "description": "10 uptime monitors, 3 GB logs (3-day retention), 100K exceptions/mo, 5K session replays, 30 GB metrics, 1 status page, 1 responder",
       "tier": "Free",
       "url": "https://betterstack.com/pricing",
       "tags": [
@@ -574,7 +574,7 @@
         "status page",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Axiom",
@@ -622,7 +622,7 @@
         "distributed tracing",
         "free tier"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "UptimeRobot",
@@ -1366,7 +1366,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Groq",
@@ -1740,7 +1740,7 @@
         "oss",
         "apm"
       ],
-      "verifiedDate": "2026-03-14",
+      "verifiedDate": "2026-03-21",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -3771,7 +3771,7 @@
         "reranking",
         "api"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Coolify",
@@ -4831,7 +4831,7 @@
         "inference",
         "gpu"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Baseten",
@@ -4852,7 +4852,7 @@
     {
       "vendor": "Weights & Biases",
       "category": "AI / ML",
-      "description": "ML experiment tracking and model registry \u2014 free tier: unlimited experiment tracking, unlimited teams and projects, 100 GB cloud storage. Community support. Model registry and dataset versioning included",
+      "description": "ML experiment tracking and model registry \u2014 free tier: experiment tracking, unlimited projects, 5 GB cloud storage, up to 5 Model seats. Community support. Model registry and dataset versioning included. Non-commercial use only",
       "tier": "Free",
       "url": "https://wandb.ai/site/pricing/",
       "tags": [
@@ -4862,7 +4862,7 @@
         "mlops",
         "datasets"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Comet ML",
@@ -8072,16 +8072,16 @@
     {
       "vendor": "Crystallize",
       "category": "Headless CMS",
-      "description": "Headless PIM with ecommerce support. Built-in GraphQL API. The free version includes unlimited users, 1000 catalog items, 5 GB/month bandwidth, and 25k/month API calls.",
+      "description": "Headless PIM with ecommerce support. Built-in GraphQL API. Particle plan (free): unlimited users, 100 catalog items, 25 orders/month, 5 GB bandwidth/month, 25K API calls/month.",
       "tier": "Free",
-      "url": "https://crystallize.com",
+      "url": "https://crystallize.com/pricing",
       "tags": [
         "cms",
         "headless",
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "DatoCMS",
@@ -12322,17 +12322,18 @@
       "verifiedDate": "2026-03-20"
     },
     {
-      "vendor": "back4app.com",
+      "vendor": "Back4App",
       "category": "Cloud Hosting",
-      "description": "Back4App is an easy-to-use, flexible and scalable backend based on Parse Platform.",
+      "description": "Parse-based backend platform \u2014 free tier: 25K API requests/month, 250 MB database, 1 GB file storage, 1 GB transfer, up to 5 apps. REST + GraphQL APIs",
       "tier": "Free",
-      "url": "https://www.back4app.com",
+      "url": "https://www.back4app.com/pricing/backend-as-a-service",
       "tags": [
         "hosting",
         "paas",
-        "free-for-dev"
+        "free-for-dev",
+        "backend"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "bismuth.cloud",
@@ -21369,7 +21370,7 @@
     {
       "vendor": "Lovable",
       "category": "AI Coding",
-      "description": "AI app builder (formerly GPT Engineer) \u2014 generates full-stack apps from natural language. Free tier: 5 daily credits (up to 30/month), public and private projects, cloud hosting on lovable.app, Lovable branding badge. Pro $25/mo (100 credits + 5 daily). Business $50/mo.",
+      "description": "AI app builder (formerly GPT Engineer) \u2014 generates full-stack apps from natural language. Free tier: 5 daily credits (up to 30/month), public projects only (private projects require paid plan), cloud hosting on lovable.app, Lovable branding badge. Credits consumed at variable rates (simple styling ~0.50, auth setup ~1.20, full landing page ~1.70). Pro $25/mo (100 credits + 5 daily). Business $50/mo.",
       "tier": "Free",
       "url": "https://lovable.dev/pricing",
       "tags": [
@@ -21379,7 +21380,7 @@
         "no-code",
         "developer tools"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Claude Code",
