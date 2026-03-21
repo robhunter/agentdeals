@@ -2431,10 +2431,62 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     slug: "postman-alternatives",
     title: "Postman Alternatives — Free API Testing Tools for Teams in 2026",
     metaDesc: "Postman's free plan is now single-user only (March 2026). Compare free alternatives for teams: Bruno, Hoppscotch, Insomnia, Thunder Client, Apidog. Verified pricing.",
-    contextHtml: `<p>Postman's free plan changed in <strong>March 2026</strong>: it is now <strong>single-user only</strong>. Team collaboration features — shared workspaces, collection sharing — are paywalled at $19/user/month.</p>
-      <p>If your team relied on Postman's free tier for API development, here are the best free alternatives with team-friendly features.</p>`,
+    contextHtml: `<p><strong>Postman</strong> changed its free plan on <strong>March 1, 2026</strong>: it is now <strong>single-user only</strong>. Team collaboration features — shared workspaces, collection sharing, and team roles — have been removed from the free tier. The Team plan starts at <strong>$19/user/month</strong>. Previously, up to 3 users could collaborate in shared workspaces for free.</p>
+      <p>This is one of the most impactful free tier removals in 2026 — Postman has millions of developer users. If your team relied on Postman's free plan for API development, here are the best free alternatives with collaboration and team-friendly features.</p>`,
     tag: "postman-alternative",
     primaryVendor: "Postman",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Postman offered. Postman's free plan previously supported 3 users with shared workspaces and collection sharing.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Free Users</th>
+        <th>REST</th>
+        <th>GraphQL</th>
+        <th>Team Collab</th>
+        <th>Git-Friendly</th>
+        <th>Self-Hostable</th>
+        <th>License</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Postman (now single-user)</td>
+        <td>1</td><td>\u2705</td><td>\u2705</td><td>\u274c</td><td>\u2014</td><td>\u2014</td>
+        <td style="color:var(--text-dim)">Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/apidog" style="color:var(--text)">Apidog</a></td>
+        <td>4</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2014</td><td>\u2014</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/bruno" style="color:var(--text)">Bruno</a></td>
+        <td>Unlimited</td><td>\u2705</td><td>\u2705</td><td>\u2705 (via Git)</td><td>\u2705</td><td>\u2014</td>
+        <td>MIT</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hoppscotch" style="color:var(--text)">Hoppscotch</a></td>
+        <td>Unlimited</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2014</td><td>\u2705</td>
+        <td>MIT</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/thunder-client" style="color:var(--text)">Thunder Client</a></td>
+        <td>1</td><td>\u2705</td><td>\u2014</td><td>\u2014</td><td>\u2705</td><td>\u2014</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/insomnia" style="color:var(--text)">Insomnia</a></td>
+        <td>Unlimited</td><td>\u2705</td><td>\u2705</td><td>\u2014</td><td>\u2014</td><td>\u2014</td>
+        <td>MIT</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u274c = removed from free tier &nbsp; \u2014 = not applicable. Bruno collaboration works via Git (collections stored as files).</p>`,
   },
   {
     slug: "terraform-alternatives",
