@@ -2575,6 +2575,77 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   </div>
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = included in free tier &nbsp; \u2014 = not included or requires paid plan. UptimeRobot free tier is for personal/non-commercial use only.</p>`,
   },
+  {
+    slug: "heroku-alternatives",
+    title: "Heroku Alternatives — Free PaaS Options After the Free Tier Sunset",
+    metaDesc: "Heroku removed its free tier in November 2022 and entered sustaining engineering mode in 2026. Compare free alternatives: Render, Railway, Fly.io, Coolify, Koyeb, Deno Deploy, DigitalOcean. Verified pricing.",
+    contextHtml: `<p><strong>Heroku</strong> — the PaaS that defined "free tier" for a generation of developers — <strong>removed all free offerings on November 28, 2022</strong> following the Salesforce acquisition. The free dyno (550 hrs/month), free Postgres (10K rows), and free Redis (25 MB) all disappeared. Plans now start at $5/month.</p>
+      <p>The decline continued: <strong>major outages in June 2025</strong>, then in <strong>February 2026 Salesforce moved Heroku to "sustaining engineering" mode</strong> — no new features, no new Enterprise contracts. This is the third wave of migration interest, and the largest.</p>
+      <p>If you're looking for a Heroku replacement with a generous free tier and similar git-push deployment experience, here are the best alternatives — all with verified pricing data from our index.</p>`,
+    tag: "heroku-alternative",
+    primaryVendor: "Heroku",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Heroku offered. Heroku's free dyno included 550 hours/month with automatic sleep after 30 minutes of inactivity.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Free Compute</th>
+        <th>Free Database</th>
+        <th>Git Deploy</th>
+        <th>Docker</th>
+        <th>Cold Starts</th>
+        <th>Paid From</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Heroku (discontinued)</td>
+        <td>550 hrs/mo dyno</td><td>10K rows Postgres</td><td>\u2705</td><td>\u274c</td>
+        <td style="color:var(--text-dim)">30 min sleep</td><td>$5/mo</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/render" style="color:var(--text)">Render</a></td>
+        <td>Free web service (512 MB)</td><td>256 MB Postgres (30-day expiry)</td><td>\u2705</td><td>\u2705</td>
+        <td>Yes (free tier)</td><td>$7/mo</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/railway" style="color:var(--text)">Railway</a></td>
+        <td>$5 credit/mo (48 GB RAM)</td><td>Included in credit</td><td>\u2705</td><td>\u2705</td>
+        <td>No</td><td>Usage-based</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/fly-io" style="color:var(--text)">Fly.io</a></td>
+        <td>Trial (7 days)</td><td>Included</td><td>\u2014</td><td>\u2705</td>
+        <td>No</td><td>Usage-based</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/coolify" style="color:var(--text)">Coolify</a></td>
+        <td>Unlimited (self-hosted)</td><td>280+ one-click services</td><td>\u2705</td><td>\u2705</td>
+        <td>No</td><td>$5/mo (cloud)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
+        <td>1 free service (512 MB)</td><td>1 GB Postgres</td><td>\u2705</td><td>\u2705</td>
+        <td>Scale-to-zero</td><td>$5.40/mo</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/digitalocean" style="color:var(--text)">DigitalOcean</a></td>
+        <td>$200 credit (60 days)</td><td>Not in free tier</td><td>\u2705</td><td>\u2705</td>
+        <td>No</td><td>$5/mo</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
+        <td>1M req/day, 15 hrs CPU</td><td>1 GiB KV storage</td><td>\u2705</td><td>\u2014</td>
+        <td>No (V8 isolates)</td><td>$20/mo</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u274c = not available &nbsp; \u2014 = not applicable. Railway's $5/mo is a resource credit shared across all services. Coolify is free when self-hosted on your own server. DigitalOcean credit expires after 60 days.</p>`,
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();

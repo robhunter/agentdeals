@@ -25,7 +25,8 @@
         "paas",
         "deployment",
         "docker",
-        "hetzner-alternative"
+        "hetzner-alternative",
+        "heroku-alternative"
       ],
       "verifiedDate": "2026-03-18"
     },
@@ -40,7 +41,8 @@
         "serverless",
         "hosting",
         "workers",
-        "hetzner-alternative"
+        "hetzner-alternative",
+        "heroku-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },
@@ -85,7 +87,8 @@
         "deployment",
         "docker",
         "low-cost",
-        "hetzner-alternative"
+        "hetzner-alternative",
+        "heroku-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -101,7 +104,8 @@
         "deployment",
         "docker",
         "global",
-        "hetzner-alternative"
+        "hetzner-alternative",
+        "heroku-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -117,7 +121,8 @@
         "serverless",
         "typescript",
         "kv",
-        "free tier"
+        "free tier",
+        "heroku-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -147,7 +152,8 @@
         "paas",
         "deployment",
         "scale-to-zero",
-        "free tier"
+        "free tier",
+        "heroku-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -194,7 +200,8 @@
         "credits",
         "startup",
         "free tier",
-        "hetzner-alternative"
+        "hetzner-alternative",
+        "heroku-alternative"
       ],
       "verifiedDate": "2026-03-21",
       "expires_date": "2026-06-30"
@@ -3776,7 +3783,8 @@
         "paas",
         "deployment",
         "self-hosted",
-        "open source"
+        "open source",
+        "heroku-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
