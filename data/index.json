@@ -168,23 +168,6 @@
       "verifiedDate": "2026-03-14"
     },
     {
-      "vendor": "Google Cloud",
-      "category": "Cloud IaaS",
-      "description": "Always-free tier includes 1 e2-micro VM, 5 GB Cloud Storage, 1 TiB BigQuery queries, 2M Cloud Functions invocations/mo",
-      "tier": "Always Free",
-      "url": "https://cloud.google.com/free",
-      "tags": [
-        "cloud",
-        "iaas",
-        "compute",
-        "serverless",
-        "free tier",
-        "hetzner-alternative"
-      ],
-      "verifiedDate": "2026-03-14",
-      "expires_date": "2027-03-31"
-    },
-    {
       "vendor": "Azure",
       "category": "Cloud IaaS",
       "description": "Always-free tier includes Azure Functions (1M req/mo), Cosmos DB (1K RU/s + 25 GB). New accounts get 12-month free VMs and SQL",
@@ -21579,6 +21562,160 @@
         "deal-change"
       ],
       "verifiedDate": "2026-03-19"
+    },
+    {
+      "vendor": "Google Cloud BigQuery",
+      "category": "Databases",
+      "description": "Always Free: 1 TiB queries/month, 10 GiB storage. Serverless data warehouse with SQL, ML, and BI built in. No infrastructure to manage",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/bigquery/pricing",
+      "tags": [
+        "analytics",
+        "data-warehouse",
+        "sql",
+        "bigquery",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Cloud Run",
+      "category": "Cloud Hosting",
+      "description": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/run/pricing",
+      "tags": [
+        "serverless",
+        "containers",
+        "hosting",
+        "google cloud",
+        "hetzner-alternative"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Compute Engine",
+      "category": "Cloud IaaS",
+      "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/compute/pricing",
+      "tags": [
+        "compute",
+        "vm",
+        "iaas",
+        "google cloud",
+        "hetzner-alternative"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Cloud Storage",
+      "category": "Storage",
+      "description": "Always Free: 5 GB regional storage (US regions), 5K Class A ops/month, 50K Class B ops/month, 100 GB North America egress",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/storage/pricing",
+      "tags": [
+        "storage",
+        "object-storage",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Cloud Pub/Sub",
+      "category": "Messaging",
+      "description": "Always Free: 10 GiB messages/month. Scalable real-time messaging and event streaming for event-driven architectures",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/pubsub/pricing",
+      "tags": [
+        "messaging",
+        "pubsub",
+        "event-driven",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Cloud Build",
+      "category": "CI/CD",
+      "description": "Always Free: 2,500 build-minutes/month (e2-standard-2). Serverless CI/CD platform with support for Docker, Maven, Gradle, and custom builders",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/build/pricing",
+      "tags": [
+        "ci-cd",
+        "build",
+        "docker",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Artifact Registry",
+      "category": "Container Registry",
+      "description": "Always Free: 0.5 GB storage/month. Universal package manager for Docker, Maven, npm, Python, and OS packages",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/artifact-registry/pricing",
+      "tags": [
+        "container-registry",
+        "docker",
+        "packages",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Cloud Logging",
+      "category": "Logging",
+      "description": "Always Free: 50 GiB log data/month per project with default retention. Part of Google Cloud Operations suite",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/logging/pricing",
+      "tags": [
+        "logging",
+        "observability",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Secret Manager",
+      "category": "Secrets Management",
+      "description": "Always Free: 6 active secret versions, 10K access operations/month, 3 rotation notifications/month. Centralized secrets storage with IAM-based access control",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/secret-manager/pricing",
+      "tags": [
+        "secrets",
+        "security",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Cloud Shell",
+      "category": "Dev Utilities",
+      "description": "Always Free: browser-based terminal with 5 GB persistent disk, pre-installed tools (gcloud, kubectl, docker, git), and built-in code editor",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/shell",
+      "tags": [
+        "terminal",
+        "ide",
+        "developer-tools",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Google Cloud Monitoring",
+      "category": "Monitoring",
+      "description": "Always Free: all non-chargeable Google Cloud metrics, first 1M monitoring API calls/month. Dashboards, alerting, and uptime checks for GCP resources",
+      "tier": "Always Free",
+      "url": "https://cloud.google.com/monitoring/pricing",
+      "tags": [
+        "monitoring",
+        "observability",
+        "alerting",
+        "google cloud"
+      ],
+      "verifiedDate": "2026-03-21"
     }
   ]
 }
