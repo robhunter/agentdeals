@@ -32,7 +32,7 @@
     {
       "vendor": "Cloudflare Workers",
       "category": "Cloud Hosting",
-      "description": "Edge compute with 100K requests/day free",
+      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. Includes cron triggers, WebSockets, and service bindings",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "tags": [
@@ -42,7 +42,7 @@
         "workers",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Netlify",
@@ -202,7 +202,7 @@
     {
       "vendor": "DigitalOcean",
       "category": "Cloud IaaS",
-      "description": "$200 credit for 60 days for new accounts. Free static sites (up to 3), functions (90K GiB-seconds/mo), and managed databases (1 basic cluster)",
+      "description": "$200 credit for 60 days for new accounts. Free static sites (up to 3) and functions (90K GiB-seconds/mo). Note: managed databases are not included in free tier (start at $15/mo)",
       "tier": "Credits",
       "url": "https://www.digitalocean.com/pricing",
       "tags": [
@@ -213,7 +213,7 @@
         "free tier",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-03-14",
+      "verifiedDate": "2026-03-21",
       "expires_date": "2026-06-30"
     },
     {
@@ -890,7 +890,7 @@
     {
       "vendor": "Cloudflare Queues",
       "category": "Messaging",
-      "description": "Message queues on Workers \u2014 10K operations/day free, 24-hour message retention",
+      "description": "Message queues on Workers \u2014 1M operations/month free, 24-hour message retention. Added to free plan late 2025",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/queues/platform/pricing/",
       "tags": [
@@ -900,7 +900,38 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Cloudflare KV",
+      "category": "Databases",
+      "description": "Key-value store at the edge \u2014 100K reads/day, 1K writes/day, 1 GB storage. Eventually consistent with global replication",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/kv/platform/pricing/",
+      "tags": [
+        "key-value",
+        "edge",
+        "serverless",
+        "cloudflare",
+        "free tier"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
+      "vendor": "Cloudflare Durable Objects",
+      "category": "Cloud Hosting",
+      "description": "Stateful serverless compute \u2014 100K requests/day on free plan. Strongly consistent storage with WebSocket hibernation. SQLite storage included (first 10 GB on paid plan)",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
+      "tags": [
+        "serverless",
+        "stateful",
+        "edge",
+        "cloudflare",
+        "websocket",
+        "free tier"
+      ],
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "QStash",
