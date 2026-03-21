@@ -2211,6 +2211,14 @@ ${mcpCtaCss()}
     <h2>Current ${escHtmlServer(vendorName)} Situation</h2>
     ${situationHtml}
   </div>
+${(() => {
+    const editorial = editorialByVendor.get(vendorName.toLowerCase());
+    if (!editorial) return "";
+    return `  <div class="editorial-cta" style="background:var(--accent-glow);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:1rem 1.25rem;margin-bottom:2rem;font-size:.9rem">
+    <strong style="color:var(--accent)">\u{1F4D6} In-depth migration guide available</strong>
+    <p style="margin:.25rem 0 0;color:var(--text-muted)">Read our detailed <a href="/${editorial.slug}">${escHtmlServer(editorial.title.split(" — ")[0])}</a> guide with curated recommendations and service comparison.</p>
+  </div>`;
+  })()}
 ${curatedHtml}
 ${allAltsHtml}
   <div class="section">
@@ -2518,8 +2526,10 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
+const editorialByVendor = new Map<string, AlternativesPageConfig>();
 for (const page of ALTERNATIVES_PAGES) {
   alternativesPageMap.set(page.slug, page);
+  editorialByVendor.set(page.primaryVendor.toLowerCase(), page);
 }
 
 function buildTimelyAlternativesPage(slug: string): string | null {
@@ -2705,7 +2715,8 @@ ${tableRows}
   </table>
 
   <div class="search-cta">
-    <p>Looking for more? <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}">Search all ${config.primaryVendor} alternatives</a> in our index of ${offers.length.toLocaleString()}+ developer deals.</p>
+    ${vendorSlugMap.has(toSlug(config.primaryVendor)) ? `<p>Looking for more? <a href="/alternative-to/${toSlug(config.primaryVendor)}">Browse all free alternatives to ${config.primaryVendor} &rarr;</a></p>
+    <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">Or <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>` : `<p>Looking for more? <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}">Search all ${config.primaryVendor} alternatives</a> in our index of ${offers.length.toLocaleString()}+ developer deals.</p>`}
   </div>
 
   ${buildMcpCta("Get personalized recommendations from your AI. Search " + offers.length.toLocaleString() + "+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
