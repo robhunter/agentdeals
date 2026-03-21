@@ -3062,11 +3062,12 @@ ${entriesHtml}
       "@type": "ListItem",
       position: i + 1,
       item: {
-        "@type": "Article",
+        "@type": "NewsArticle",
         headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
         datePublished: c.date,
         url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
+        publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
     })),
   };
@@ -3259,11 +3260,12 @@ ${entriesHtml}
       "@type": "ListItem",
       position: i + 1,
       item: {
-        "@type": "Article",
+        "@type": "NewsArticle",
         headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
         datePublished: c.date,
         url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
+        publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
     })),
   };
