@@ -1,4 +1,4 @@
-import { describe, it, afterEach } from "node:test";
+import { describe, it, before, after, afterEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
@@ -134,12 +134,15 @@ describe("get_newest_deals REST endpoint", () => {
     });
   }
 
-  afterEach(() => {
+  before(async () => {
+    proc = await startHttpServer();
+  });
+
+  after(() => {
     if (proc) { proc.kill(); proc = null; }
   });
 
   it("GET /api/newest returns newest deals", async () => {
-    proc = await startHttpServer();
     const response = await fetch(`http://localhost:${PORT}/api/newest?since=2020-01-01&limit=5`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
@@ -153,7 +156,6 @@ describe("get_newest_deals REST endpoint", () => {
   });
 
   it("GET /api/newest with invalid since returns 400", async () => {
-    proc = await startHttpServer();
     const response = await fetch(`http://localhost:${PORT}/api/newest?since=not-a-date`);
     assert.strictEqual(response.status, 400);
     const body = await response.json() as any;
