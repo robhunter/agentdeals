@@ -2446,6 +2446,75 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     tag: "hetzner-alternative",
     primaryVendor: "Hetzner",
   },
+  {
+    slug: "freshping-alternatives",
+    title: "Freshping Alternatives — Free Uptime Monitoring Tools for 2026",
+    metaDesc: "Freshping shut down March 6, 2026. Compare free uptime monitoring alternatives: UptimeRobot, Better Stack, Checkly, StatusCake, Pulsetic, Cronitor. Verified pricing.",
+    contextHtml: `<p><strong>Freshping</strong> — Freshworks' free uptime monitoring tool that offered <strong>50 monitors with 1-minute check intervals</strong> and public status pages — <strong>shut down on March 6, 2026</strong>. Free accounts have been disabled, paid plans will expire at end of term, and all data will be deleted 90 days later (~June 4, 2026). Freshworks has not offered a replacement product.</p>
+      <p>If you relied on Freshping for uptime monitoring, here are the best free alternatives — several match or exceed Freshping's 50-monitor free tier.</p>`,
+    tag: "freshping-alternative",
+    primaryVendor: "Freshping",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Freshping offered. Freshping's free plan included 50 monitors, 1-minute intervals, and public status pages.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Free Monitors</th>
+        <th>Check Interval</th>
+        <th>Status Pages</th>
+        <th>Alerts</th>
+        <th>Log Retention</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Freshping (discontinued)</td>
+        <td>50</td><td>1 min</td><td>\u2705</td><td>Email, Slack</td>
+        <td>6 months</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/uptimerobot" style="color:var(--text)">UptimeRobot</a></td>
+        <td>50</td><td>5 min</td><td>\u2705</td><td>Email</td>
+        <td>3 months</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/better-stack" style="color:var(--text)">Better Stack</a></td>
+        <td>10</td><td>3 min</td><td>\u2705</td><td>Email, Slack</td>
+        <td>3 days</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/checkly" style="color:var(--text)">Checkly</a></td>
+        <td>10</td><td>10 min</td><td>\u2014</td><td>Email, Slack</td>
+        <td>30 days</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/statuscake" style="color:var(--text)">StatusCake</a></td>
+        <td>10</td><td>5 min</td><td>\u2014</td><td>Email</td>
+        <td>7 days</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pulsetic" style="color:var(--text)">Pulsetic</a></td>
+        <td>10</td><td>5 min</td><td>\u2705</td><td>Email</td>
+        <td>3 months</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cronitor" style="color:var(--text)">Cronitor</a></td>
+        <td>5</td><td>5 min</td><td>\u2705</td><td>Email, Slack</td>
+        <td>30 days</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/upptime" style="color:var(--text)">Upptime</a></td>
+        <td>Unlimited</td><td>5 min</td><td>\u2705</td><td>Email</td>
+        <td>Unlimited</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = included in free tier &nbsp; \u2014 = not included or requires paid plan. UptimeRobot free tier is for personal/non-commercial use only.</p>`,
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
