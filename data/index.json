@@ -581,7 +581,8 @@
         "uptime",
         "logging",
         "observability",
-        "status page"
+        "status page",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -612,7 +613,8 @@
         "synthetic",
         "api",
         "browser",
-        "free tier"
+        "free tier",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -643,7 +645,8 @@
         "uptime",
         "alerts",
         "status page",
-        "free tier"
+        "free tier",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -2335,7 +2338,8 @@
         "monitoring",
         "uptime",
         "status-page",
-        "alerting"
+        "alerting",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -2978,7 +2982,8 @@
         "uptime",
         "monitoring",
         "incidents",
-        "alerts"
+        "alerts",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -3328,7 +3333,8 @@
         "status page",
         "monitoring",
         "uptime",
-        "open source"
+        "open source",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -3342,7 +3348,8 @@
         "status page",
         "monitoring",
         "github",
-        "open source"
+        "open source",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -4331,7 +4338,8 @@
         "monitoring",
         "uptime",
         "status",
-        "alerts"
+        "alerts",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -4448,7 +4456,8 @@
         "cron",
         "uptime",
         "status-page",
-        "alerts"
+        "alerts",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -5125,7 +5134,8 @@
         "monitoring",
         "uptime",
         "website",
-        "alerts"
+        "alerts",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -5140,7 +5150,8 @@
         "uptime",
         "status-page",
         "ssl",
-        "alerts"
+        "alerts",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -5156,7 +5167,8 @@
         "status-page",
         "api",
         "cron",
-        "ssl"
+        "ssl",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -5218,7 +5230,8 @@
         "server",
         "uptime",
         "website",
-        "alerts"
+        "alerts",
+        "freshping-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -5657,7 +5670,7 @@
     {
       "vendor": "Scalr",
       "category": "Infrastructure",
-      "description": "Terraform Automation and Collaboration (TACO) platform — full Terraform CLI support, OPA integration, hierarchical configuration model. No SSO tax. All features included. Up to 50 runs/month free",
+      "description": "Terraform Automation and Collaboration (TACO) platform \u2014 full Terraform CLI support, OPA integration, hierarchical configuration model. No SSO tax. All features included. Up to 50 runs/month free",
       "tier": "Free",
       "url": "https://www.scalr.com/pricing",
       "tags": [

@@ -1509,6 +1509,22 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("30-50%"), "Should mention the price increase");
   });
 
+  it("GET /freshping-alternatives renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/freshping-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Freshping Alternatives"), "Should have Freshping title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("March 6, 2026"), "Should mention the shutdown date");
+    assert.ok(html.includes("Free Tier Comparison"), "Should have comparison matrix");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {
