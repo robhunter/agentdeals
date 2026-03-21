@@ -1,4 +1,4 @@
-import { describe, it, afterEach } from "node:test";
+import { describe, it, before, after, afterEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
@@ -1940,65 +1940,68 @@ describe("page view tracking", () => {
 });
 
 describe("301 canonical hostname redirect", () => {
-  let proc: ChildProcess | null = null;
+  let redirectProc: ChildProcess | null = null;
 
-  afterEach(() => {
-    if (proc) {
-      proc.kill();
-      proc = null;
+  before(async () => {
+    redirectProc = await startRedirectServer();
+  });
+
+  after(() => {
+    if (redirectProc) {
+      redirectProc.kill();
+      redirectProc = null;
     }
   });
 
   it("redirects HTML pages to canonical domain with 301", async () => {
-    proc = await startRedirectServer();
     const response = await fetch(`http://localhost:${REDIRECT_PORT}/vendor/supabase?ref=foo`, { redirect: "manual" });
     assert.strictEqual(response.status, 301);
     assert.strictEqual(response.headers.get("location"), "https://agentdeals.dev/vendor/supabase?ref=foo");
   });
 
   it("redirects landing page to canonical domain", async () => {
-    proc = await startRedirectServer();
     const response = await fetch(`http://localhost:${REDIRECT_PORT}/`, { redirect: "manual" });
     assert.strictEqual(response.status, 301);
     assert.strictEqual(response.headers.get("location"), "https://agentdeals.dev/");
   });
 
   it("does NOT redirect /api/* endpoints", async () => {
-    proc = await startRedirectServer();
     const response = await fetch(`http://localhost:${REDIRECT_PORT}/api/stats`, { redirect: "manual" });
     assert.strictEqual(response.status, 200);
   });
 
   it("does NOT redirect /mcp endpoint", async () => {
-    proc = await startRedirectServer();
     // GET /mcp without session returns 400, but should NOT be 301
     const response = await fetch(`http://localhost:${REDIRECT_PORT}/mcp`, { redirect: "manual" });
     assert.notStrictEqual(response.status, 301, "MCP should not redirect");
   });
 
   it("does NOT redirect /health endpoint", async () => {
-    proc = await startRedirectServer();
     const response = await fetch(`http://localhost:${REDIRECT_PORT}/health`, { redirect: "manual" });
     assert.strictEqual(response.status, 200);
   });
 
   it("does NOT redirect /.well-known/* endpoints", async () => {
-    proc = await startRedirectServer();
     const response = await fetch(`http://localhost:${REDIRECT_PORT}/.well-known/glama.json`, { redirect: "manual" });
     assert.notStrictEqual(response.status, 301, ".well-known should not redirect");
   });
 
   it("does NOT redirect favicon", async () => {
-    proc = await startRedirectServer();
     const response = await fetch(`http://localhost:${REDIRECT_PORT}/favicon.png`, { redirect: "manual" });
     assert.strictEqual(response.status, 200);
   });
 
   it("no redirect when BASE_URL matches request host", async () => {
     // Default server has BASE_URL matching localhost (or not set to external domain)
-    proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/`, { redirect: "manual" });
-    assert.strictEqual(response.status, 200);
+    // This test uses a separate server with matching BASE_URL
+    let proc: ChildProcess | null = null;
+    try {
+      proc = await startHttpServer();
+      const response = await fetch(`http://localhost:${PORT}/`, { redirect: "manual" });
+      assert.strictEqual(response.status, 200);
+    } finally {
+      if (proc) proc.kill();
+    }
   });
 });
 
@@ -2033,17 +2036,20 @@ function startIndexNowServer(): Promise<ChildProcess> {
 }
 
 describe("IndexNow integration", () => {
-  let proc: ChildProcess | null = null;
+  let indexNowProc: ChildProcess | null = null;
 
-  afterEach(() => {
-    if (proc) {
-      proc.kill();
-      proc = null;
+  before(async () => {
+    indexNowProc = await startIndexNowServer();
+  });
+
+  after(() => {
+    if (indexNowProc) {
+      indexNowProc.kill();
+      indexNowProc = null;
     }
   });
 
   it("serves IndexNow key verification file at /{key}.txt", async () => {
-    proc = await startIndexNowServer();
     const response = await fetch(`http://localhost:${INDEXNOW_PORT}/${INDEXNOW_TEST_KEY}.txt`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "text/plain; charset=utf-8");
@@ -2052,14 +2058,19 @@ describe("IndexNow integration", () => {
   });
 
   it("returns 404 for incorrect key file path", async () => {
-    proc = await startIndexNowServer();
     const response = await fetch(`http://localhost:${INDEXNOW_PORT}/wrong-key.txt`);
     assert.strictEqual(response.status, 404);
   });
 
   it("does not serve key file when INDEXNOW_KEY is not set", async () => {
-    proc = await startHttpServer(); // default server without INDEXNOW_KEY
-    const response = await fetch(`http://localhost:${PORT}/.txt`);
-    assert.strictEqual(response.status, 404);
+    // This test uses a separate server without INDEXNOW_KEY
+    let proc: ChildProcess | null = null;
+    try {
+      proc = await startHttpServer();
+      const response = await fetch(`http://localhost:${PORT}/.txt`);
+      assert.strictEqual(response.status, 404);
+    } finally {
+      if (proc) proc.kill();
+    }
   });
 });
