@@ -1477,6 +1477,8 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
     assert.ok(html.includes("single-user only"), "Should mention the restriction");
+    assert.ok(html.includes("March 1, 2026"), "Should mention the date");
+    assert.ok(html.includes("Free Tier Comparison"), "Should have comparison table");
   });
 
   it("GET /terraform-alternatives renders alternatives page", async () => {
