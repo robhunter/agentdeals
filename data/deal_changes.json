@@ -962,6 +962,18 @@
       "source_url": "https://www.hashicorp.com/blog/hashicorp-adopts-business-source-license",
       "category": "Infrastructure",
       "alternatives": ["OpenTofu", "Pulumi", "Crossplane"]
+    },
+    {
+      "vendor": "DigitalOcean",
+      "change_type": "restriction",
+      "date": "2026-03-21",
+      "summary": "Managed databases are not part of the free tier. Pricing starts at $15/month. Previous listing incorrectly included '1 basic cluster' as a free tier benefit",
+      "previous_state": "Listed as: Free static sites (up to 3), functions (90K GiB-seconds/mo), and managed databases (1 basic cluster)",
+      "current_state": "Free static sites (up to 3) and functions (90K GiB-seconds/mo). Managed databases start at $15/mo, not free",
+      "impact": "medium",
+      "source_url": "https://www.digitalocean.com/pricing",
+      "category": "Cloud IaaS",
+      "alternatives": ["Neon", "PlanetScale", "Supabase"]
     }
   ]
 }
