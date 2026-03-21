@@ -448,7 +448,7 @@
         "github",
         "deal-change"
       ],
-      "verifiedDate": "2026-03-15"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "GitLab CI",
@@ -2182,7 +2182,7 @@
         "deal-change",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-03-18"
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Directus",
@@ -4099,6 +4099,26 @@
         "localstack-alternative"
       ],
       "verifiedDate": "2026-03-19"
+    },
+    {
+      "vendor": "CloudDev",
+      "category": "Cloud IaaS",
+      "description": "Open-source LocalStack alternative for running AWS services locally. Supports S3, DynamoDB, Lambda, SQS, and API Gateway in one command. Written in Go. Very early stage (launched March 2026, 8 GitHub stars). Single binary, no Docker required",
+      "tier": "Open Source",
+      "url": "https://github.com/Jeffrin-dev/CloudDev",
+      "tags": [
+        "aws",
+        "cloud",
+        "local-dev",
+        "testing",
+        "s3",
+        "dynamodb",
+        "lambda",
+        "sqs",
+        "api-gateway",
+        "localstack-alternative"
+      ],
+      "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "Brave Search API",
