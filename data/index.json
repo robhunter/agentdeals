@@ -332,6 +332,21 @@
       "verifiedDate": "2026-03-11"
     },
     {
+      "vendor": "Databricks (Lakeflow Connect)",
+      "category": "Databases",
+      "description": "Azure Databricks Lakeflow Connect — managed data ingestion. Free tier: 100 DBUs/day per workspace (~100M records/day). Supports 40+ data sources including SQL Server, PostgreSQL, MySQL, Salesforce, Sharepoint, Google Sheets. Serverless compute included",
+      "tier": "Free",
+      "url": "https://learn.microsoft.com/en-us/azure/databricks/connect/",
+      "tags": [
+        "databases",
+        "etl",
+        "data-engineering",
+        "azure",
+        "databricks"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
       "vendor": "Convex",
       "category": "Databases",
       "description": "Reactive backend \u2014 1M function calls/month, 0.5 GB database + vector storage, 1 GB file storage, real-time sync",
