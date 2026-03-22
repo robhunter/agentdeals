@@ -785,7 +785,7 @@
     {
       "vendor": "Mailjet",
       "category": "Email",
-      "description": "Email API — 6,000 emails/month (200/day limit), 1,500 contacts, email editor and templates",
+      "description": "Email API — 6,000 emails/month (200/day limit), 1,000 contacts, email editor and templates",
       "tier": "Free",
       "url": "https://www.mailjet.com/pricing/",
       "tags": [
@@ -795,7 +795,7 @@
         "marketing",
         "free tier"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Brevo",
@@ -3276,7 +3276,7 @@
     {
       "vendor": "Dub.co",
       "category": "Dev Utilities",
-      "description": "Open-source link management — 1,000 links, 1,000 tracked clicks/month, up to 3 custom domains, API with native SDKs, analytics. No credit card required",
+      "description": "Open-source link management — 25 new links/month, 1,000 tracked events/month, 3 custom domains, 1 user, 30-day analytics retention, API with native SDKs. No credit card required",
       "tier": "Free",
       "url": "https://dub.co/pricing",
       "tags": [
@@ -3286,7 +3286,7 @@
         "open source",
         "attribution"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Stytch",
@@ -3308,7 +3308,7 @@
     {
       "vendor": "Liveblocks",
       "category": "Team Collaboration",
-      "description": "Real-time collaboration infrastructure — 100 MAU, 500 monthly active rooms, 8 GB storage. Presence, cursors, comments, notifications, text editor components",
+      "description": "Real-time collaboration infrastructure — 100 MAU, 500 monthly active rooms, 256 MB realtime data + 512 MB file storage. Presence, cursors, comments, notifications, text editor components",
       "tier": "Free",
       "url": "https://liveblocks.io/pricing",
       "tags": [
@@ -3319,7 +3319,7 @@
         "comments",
         "sdk"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Nango",
