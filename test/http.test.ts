@@ -1545,6 +1545,24 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Supabase"), "Should include Supabase alternative");
   });
 
+  it("GET /ai-free-tiers renders AI free tiers editorial page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/ai-free-tiers`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free AI APIs"), "Should have AI free tiers title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("LLM Inference"), "Should have LLM section");
+    assert.ok(html.includes("AI Coding Tools"), "Should have AI coding section");
+    assert.ok(html.includes("Groq"), "Should include Groq");
+    assert.ok(html.includes("Cursor"), "Should include Cursor");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("GET /alternatives renders hub page with all editorial guides", async () => {
     proc = await startHttpServer();
 
@@ -1563,6 +1581,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/terraform-alternatives"), "Should link to Terraform page");
     assert.ok(html.includes("/hetzner-alternatives"), "Should link to Hetzner page");
     assert.ok(html.includes("/freshping-alternatives"), "Should link to Freshping page");
+    assert.ok(html.includes("/ai-free-tiers"), "Should link to AI free tiers page");
   });
 
   it("editorial alternatives pages cross-link to other guides", async () => {
