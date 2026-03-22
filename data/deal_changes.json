@@ -1073,6 +1073,21 @@
         "Nhost",
         "Convex"
       ]
+    },
+    {
+      "vendor": "Dub.co",
+      "change_type": "limits_reduced",
+      "date": "2026-03-22",
+      "summary": "Free tier link limit reduced 40x from 1,000 links to 25 new links/month. Added 30-day analytics retention limit and 1-user cap",
+      "previous_state": "1,000 links, 1,000 tracked clicks/month, up to 3 custom domains",
+      "current_state": "25 new links/month, 1,000 tracked events/month, 3 custom domains, 1 user, 30-day analytics retention",
+      "impact": "high",
+      "source_url": "https://dub.co/pricing",
+      "category": "Dev Utilities",
+      "alternatives": [
+        "Bitly",
+        "Short.io"
+      ]
     }
   ]
 }
