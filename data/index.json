@@ -1031,7 +1031,7 @@
     {
       "vendor": "Apify",
       "category": "Web Scraping",
-      "description": "Web scraping and automation — $5 platform credits/month (renews), 3 concurrent Actor runs, 7-day data retention",
+      "description": "Web scraping and automation — $5 platform credits/month (renews), 25 concurrent Actor runs, 7-day data retention",
       "tier": "Free",
       "url": "https://apify.com/pricing",
       "tags": [
@@ -1042,7 +1042,7 @@
         "actors",
         "free tier"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Windsurf",
@@ -3293,7 +3293,7 @@
     {
       "vendor": "Liveblocks",
       "category": "Team Collaboration",
-      "description": "Real-time collaboration infrastructure — 100 MAU, 500 monthly active rooms, 256 MB realtime data + 512 MB file storage. Presence, cursors, comments, notifications, text editor components",
+      "description": "Real-time collaboration infrastructure — unlimited MAU, 500 monthly active rooms, 256 MB realtime data + 512 MB file storage, 3 dashboard seats, 10 projects. Presence, cursors, comments, notifications, text editor components",
       "tier": "Free",
       "url": "https://liveblocks.io/pricing",
       "tags": [
@@ -5121,7 +5121,7 @@
     {
       "vendor": "Neo4j AuraDB",
       "category": "Databases",
-      "description": "Graph database cloud service — free tier: single database, up to 50,000 nodes and 175,000 relationships. Full Cypher query language support. No credit card required",
+      "description": "Graph database cloud service — free tier: single database, up to 200,000 nodes and 400,000 relationships. Full Cypher query language support. No credit card required",
       "tier": "Free",
       "url": "https://neo4j.com/pricing/",
       "tags": [
