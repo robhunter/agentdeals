@@ -1527,6 +1527,24 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Free Tier Comparison"), "Should have comparison matrix");
   });
 
+  it("GET /firebase-alternatives renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/firebase-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Firebase Alternatives"), "Should have Firebase title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("March 19, 2026"), "Should mention the Studio shutdown date");
+    assert.ok(html.includes("Free Tier Comparison"), "Should have comparison table");
+    assert.ok(html.includes("PocketBase"), "Should include PocketBase alternative");
+    assert.ok(html.includes("Supabase"), "Should include Supabase alternative");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {

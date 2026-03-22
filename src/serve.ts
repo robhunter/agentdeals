@@ -2651,6 +2651,78 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   </div>
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u274c = not available &nbsp; \u2014 = not applicable. Railway's $5/mo is a resource credit shared across all services. Coolify is free when self-hosted on your own server. DigitalOcean credit expires after 60 days.</p>`,
   },
+  {
+    slug: "firebase-alternatives",
+    title: "Firebase Alternatives \u2014 Free Backend-as-a-Service Options for 2026",
+    metaDesc: "Firebase Studio shut down March 2026 and Spark plan forced migrations to pay-as-you-go Blaze. Compare free alternatives with exact tier limits: Supabase, Appwrite, PocketBase, Nhost, Convex, Back4App, Hasura.",
+    contextHtml: `<p><strong>Firebase</strong> \u2014 Google's all-in-one Backend-as-a-Service \u2014 is facing developer trust issues in 2026. <strong>Firebase Studio was shut down on March 19, 2026</strong> (accessible until March 2027 for migration). In February 2026, <strong>Spark plan projects using legacy *.appspot.com Cloud Storage buckets were forced to upgrade to Blaze</strong> (pay-as-you-go) or lose access \u2014 with no hard billing caps to prevent runaway charges.</p>
+      <p>Developer sentiment is increasingly negative: "building on Google products is always a gamble." The Spark free tier still exists for new projects, but the pattern of forced migrations and product shutdowns is driving developers to open-source, self-hostable alternatives.</p>
+      <p>Below are the best free Firebase alternatives, compared by <strong>what you actually get for free</strong> \u2014 exact storage, MAU, bandwidth, and function limits. Not marketing copy.</p>`,
+    tag: "firebase-alternative",
+    primaryVendor: "Firebase",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Firebase Spark is generous on paper but lacks billing caps on Blaze \u2014 one misconfigured query can cost hundreds.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Database</th>
+        <th>File Storage</th>
+        <th>Auth (MAUs)</th>
+        <th>Functions</th>
+        <th>Bandwidth</th>
+        <th>Real-time</th>
+        <th>License</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Firebase (Spark)</td>
+        <td>1 GiB Firestore</td><td>5 GB</td><td>50K</td><td>2M invocations/mo</td><td>10 GB/mo</td><td>\u2705</td>
+        <td style="color:var(--text-dim)">Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/supabase" style="color:var(--text)">Supabase</a></td>
+        <td>500 MB Postgres</td><td>1 GB</td><td>50K</td><td>500K edge fn</td><td>5 GB</td><td>\u2705 (200 conn)</td>
+        <td>Apache-2.0</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/appwrite-cloud" style="color:var(--text)">Appwrite Cloud</a></td>
+        <td>Included</td><td>2 GB</td><td>75K</td><td>750K exec/mo</td><td>5 GB</td><td>\u2705</td>
+        <td>BSD-3</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pocketbase" style="color:var(--text)">PocketBase</a></td>
+        <td>Unlimited (SQLite)</td><td>Unlimited</td><td>Unlimited</td><td>\u2014</td><td>Unlimited</td><td>\u2705</td>
+        <td>MIT</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/nhost" style="color:var(--text)">Nhost</a></td>
+        <td>1 GB Postgres</td><td>5 GB</td><td>Included</td><td>Included</td><td>5 GB</td><td>\u2705 (GraphQL)</td>
+        <td>MIT</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/convex" style="color:var(--text)">Convex</a></td>
+        <td>0.5 GB</td><td>1 GB</td><td>Included</td><td>1M calls/mo</td><td>Included</td><td>\u2705</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/back4app" style="color:var(--text)">Back4App</a></td>
+        <td>250 MB</td><td>1 GB</td><td>Included</td><td>\u2014</td><td>1 GB</td><td>\u2705 (Live Query)</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hasura-cloud" style="color:var(--text)">Hasura Cloud</a></td>
+        <td>BYO Postgres</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>1 GB passthrough</td><td>\u2705 (subscriptions)</td>
+        <td>Apache-2.0</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">PocketBase limits are "unlimited" because it's self-hosted \u2014 actual limits depend on your server hardware. Hasura is a GraphQL engine that sits on top of your own Postgres database. Appwrite projects pause after 1 week of inactivity on the free tier. Firebase Spark has no billing caps if you upgrade to Blaze.</p>`,
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
