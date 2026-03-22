@@ -2500,8 +2500,57 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     slug: "terraform-alternatives",
     title: "HCP Terraform Alternatives — Free IaC Tools After the March 2026 EOL",
     metaDesc: "HCP Terraform legacy free plan ends March 31, 2026. Compare free alternatives: Spacelift, Terragrunt Scale, Pulumi, Scalr, and more. Verified pricing and free tier details.",
-    contextHtml: `<p>HCP Terraform's legacy free plan reaches <strong>end-of-life on March 31, 2026</strong>. Organizations on the legacy plan will be auto-transitioned to an enhanced free tier — but with a <strong>500 managed resource cap</strong> (previously unlimited for small teams).</p>
-      <p>This isn't a complete shutdown — the new enhanced tier includes SSO, policy as code, and unlimited users. But if the 500-resource limit doesn't fit your workloads, here are free IaC alternatives worth evaluating.</p>`,
+    contextHtml: `<p>HCP Terraform's legacy free plan reaches <strong>end-of-life on March 31, 2026</strong> — that's <strong>9 days away</strong>. Organizations on the legacy plan will be auto-transitioned to an enhanced free tier with a <strong>500 managed resource cap</strong> (previously unlimited for small teams). If you haven't evaluated your options yet, now is the time.</p>
+      <p>The new enhanced tier does include SSO, policy as code (Sentinel + OPA), and unlimited users. But if the 500-resource limit doesn't fit your workloads, or you want to avoid vendor lock-in, here are free IaC alternatives worth evaluating — including <strong>Terragrunt Scale</strong>, a new free tier from Gruntwork positioned as a direct HCP Terraform replacement.</p>`,
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">How each IaC platform's free tier compares. HCP Terraform's enhanced free tier (replacing the legacy plan on March 31) caps managed resources at 500.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Free Users</th>
+        <th>Managed Resources</th>
+        <th>Runs</th>
+        <th>GitOps</th>
+        <th>Drift Detection</th>
+        <th>Policy as Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">HCP Terraform (enhanced)</td>
+        <td>Unlimited</td><td>500</td><td>1 concurrent</td><td>\u2705</td><td>\u2014</td><td>\u2705 Sentinel + OPA</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/terragrunt-scale" style="color:var(--text)">Terragrunt Scale</a></td>
+        <td>\u2014</td><td>500+</td><td>\u2014</td><td>\u2705 GitHub/GitLab</td><td>\u2705</td><td>\u2014</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/spacelift" style="color:var(--text)">Spacelift</a></td>
+        <td>2</td><td>\u2014</td><td>1 public worker</td><td>\u2705</td><td>\u2014</td><td>\u2705 OPA</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/scalr" style="color:var(--text)">Scalr</a></td>
+        <td>Unlimited</td><td>Unlimited</td><td>50/month</td><td>\u2705</td><td>\u2014</td><td>\u2705 OPA</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pulumi" style="color:var(--text)">Pulumi</a></td>
+        <td>1</td><td>Unlimited</td><td>500 deploy min/mo</td><td>\u2705</td><td>\u2705</td><td>\u2705</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/terramate" style="color:var(--text)">Terramate</a></td>
+        <td>2</td><td>\u2014</td><td>\u2014</td><td>\u2705</td><td>\u2705</td><td>\u2014</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/terrateam" style="color:var(--text)">Terrateam</a></td>
+        <td>3</td><td>\u2014</td><td>\u2014</td><td>\u2705 PR-driven</td><td>\u2014</td><td>\u2014</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = included in free tier &nbsp; \u2014 = not specified or requires paid plan. Scalr charges only for qualifying runs — users, workspaces, and resources are free.</p>`,
     tag: "terraform-alternative",
     primaryVendor: "HCP Terraform",
     hubDesc: "HCP Terraform legacy plan ends March 31, 2026 — free IaC alternatives compared",
