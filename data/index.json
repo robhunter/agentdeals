@@ -557,7 +557,7 @@
     {
       "vendor": "Sentry",
       "category": "Monitoring",
-      "description": "Developer tier: 5K errors/month, 5M spans/month, 50 session replays, 5GB application logs, 1GB attachments",
+      "description": "Developer tier: 1 user, 5K errors/month, 5M spans/month, 50 session replays, 5GB application logs, 1GB attachments",
       "tier": "Developer",
       "url": "https://sentry.io/pricing/",
       "tags": [
@@ -566,7 +566,7 @@
         "performance",
         "observability"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Datadog",
@@ -617,7 +617,7 @@
     {
       "vendor": "Axiom",
       "category": "Monitoring",
-      "description": "Observability platform \u2014 500 GB ingest/month, 25 GB storage, 30-day retention, 2 datasets, 1 user",
+      "description": "Observability platform \u2014 500 GB ingest/month, 25 GB storage, 30-day retention, 2 datasets, 1 user, 10 GB-hrs/mo query compute, 256 fields/dataset, 3 monitors, Email/Discord notifiers only",
       "tier": "Personal",
       "url": "https://axiom.co/pricing",
       "tags": [
@@ -627,7 +627,7 @@
         "analytics",
         "free tier"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Checkly",
