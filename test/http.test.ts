@@ -1545,6 +1545,38 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Supabase"), "Should include Supabase alternative");
   });
 
+  it("GET /alternatives renders hub page with all editorial guides", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Alternatives Guides"), "Should have hub title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("/localstack-alternatives"), "Should link to LocalStack page");
+    assert.ok(html.includes("/firebase-alternatives"), "Should link to Firebase page");
+    assert.ok(html.includes("/heroku-alternatives"), "Should link to Heroku page");
+    assert.ok(html.includes("/postman-alternatives"), "Should link to Postman page");
+    assert.ok(html.includes("/terraform-alternatives"), "Should link to Terraform page");
+    assert.ok(html.includes("/hetzner-alternatives"), "Should link to Hetzner page");
+    assert.ok(html.includes("/freshping-alternatives"), "Should link to Freshping page");
+  });
+
+  it("editorial alternatives pages cross-link to other guides", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/localstack-alternatives`);
+    const html = await response.text();
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links section");
+    assert.ok(html.includes("/firebase-alternatives"), "Should link to Firebase alternatives");
+    assert.ok(html.includes("/heroku-alternatives"), "Should link to Heroku alternatives");
+    assert.ok(!html.includes('href="/localstack-alternatives"'), "Should not link to itself");
+    assert.ok(html.includes("/alternatives"), "Should link to hub page");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {
@@ -1612,7 +1644,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('href="/category"'), "Nav should link to Categories");
     assert.ok(html.includes('href="/best"'), "Nav should link to Best Of");
     assert.ok(html.includes('href="/trends"'), "Nav should link to Trends");
-    assert.ok(html.includes('href="/alternative-to"'), "Nav should link to Alternatives");
+    assert.ok(html.includes('href="/alternatives"'), "Nav should link to Alternatives");
     assert.ok(html.includes('href="/compare"'), "Nav should link to Compare");
     assert.ok(html.includes('href="/digest"'), "Nav should link to Digest");
     assert.ok(html.includes('href="/api/docs"'), "Nav should link to API");

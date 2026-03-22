@@ -393,7 +393,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/best", label: "Best Of", section: "best" },
     { href: "/agent-stack", label: "Agent Stacks", section: "agent-stack" },
     { href: "/trends", label: "Trends", section: "trends" },
-    { href: "/alternative-to", label: "Alternatives", section: "alternatives" },
+    { href: "/alternatives", label: "Alternatives", section: "alternatives" },
     { href: "/compare", label: "Compare", section: "compare" },
     { href: "/digest", label: "Digest", section: "digest" },
     { href: "/changes", label: "Changes", section: "changes" },
@@ -2356,6 +2356,7 @@ interface AlternativesPageConfig {
   tag: string;
   primaryVendor: string;
   serviceMatrixHtml?: string;
+  hubDesc: string; // One-line description for the /alternatives hub page and cross-links
 }
 
 const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
@@ -2367,6 +2368,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>Unlike LocalStack, which provided a single all-in-one emulator, the migration path is typically a combination of service-specific tools. Below are the best free and open-source alternatives, organized by which AWS services they replace.</p>`,
     tag: "localstack-alternative",
     primaryVendor: "LocalStack",
+    hubDesc: "LocalStack CE shuts down March 23, 2026 — compare 8 free open-source AWS emulators",
     serviceMatrixHtml: `
   <h2>AWS Service Coverage Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">Which AWS services each alternative covers. LocalStack CE supported 30+ services in a single tool — migration typically means combining 2-3 specialized alternatives.</p>
@@ -2440,6 +2442,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>This is one of the most impactful free tier removals in 2026 — Postman has millions of developer users. If your team relied on Postman's free plan for API development, here are the best free alternatives with collaboration and team-friendly features.</p>`,
     tag: "postman-alternative",
     primaryVendor: "Postman",
+    hubDesc: "Postman killed free team collaboration March 1, 2026 — 5 free API testing alternatives",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Postman offered. Postman's free plan previously supported 3 users with shared workspaces and collection sharing.</p>
@@ -2501,6 +2504,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>This isn't a complete shutdown — the new enhanced tier includes SSO, policy as code, and unlimited users. But if the 500-resource limit doesn't fit your workloads, here are free IaC alternatives worth evaluating.</p>`,
     tag: "terraform-alternative",
     primaryVendor: "HCP Terraform",
+    hubDesc: "HCP Terraform legacy plan ends March 31, 2026 — free IaC alternatives compared",
   },
   {
     slug: "hetzner-alternatives",
@@ -2510,6 +2514,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>If you're looking for budget-friendly alternatives with generous free tiers or credits, here are the best options across VPS/cloud providers, managed platforms, and serverless offerings.</p>`,
     tag: "hetzner-alternative",
     primaryVendor: "Hetzner",
+    hubDesc: "Hetzner raises prices 30–50% on April 1, 2026 — cloud hosting alternatives with free tiers",
   },
   {
     slug: "freshping-alternatives",
@@ -2519,6 +2524,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>If you relied on Freshping for uptime monitoring, here are the best free alternatives — several match or exceed Freshping's 50-monitor free tier.</p>`,
     tag: "freshping-alternative",
     primaryVendor: "Freshping",
+    hubDesc: "Freshping shut down March 6, 2026 — 13 free uptime monitoring alternatives",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Freshping offered. Freshping's free plan included 50 monitors, 1-minute intervals, and public status pages.</p>
@@ -2589,6 +2595,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>If you're looking for a Heroku replacement with a generous free tier and similar git-push deployment experience, here are the best alternatives — all with verified pricing data from our index.</p>`,
     tag: "heroku-alternative",
     primaryVendor: "Heroku",
+    hubDesc: "Heroku removed free tier Nov 2022, entered sustaining mode Feb 2026 — 8 free PaaS options",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Heroku offered. Heroku's free dyno included 550 hours/month with automatic sleep after 30 minutes of inactivity.</p>
@@ -2660,6 +2667,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>Below are the best free Firebase alternatives, compared by <strong>what you actually get for free</strong> \u2014 exact storage, MAU, bandwidth, and function limits. Not marketing copy.</p>`,
     tag: "firebase-alternative",
     primaryVendor: "Firebase",
+    hubDesc: "Firebase Studio shut down March 19, 2026 + Spark forced Blaze migration — 7 BaaS alternatives",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Firebase Spark is generous on paper but lacks billing caps on Blaze \u2014 one misconfigured query can cost hundreds.</p>
@@ -2919,7 +2927,107 @@ ${tableRows}
     <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">Or <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>` : `<p>Looking for more? <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}">Search all ${config.primaryVendor} alternatives</a> in our index of ${offers.length.toLocaleString()}+ developer deals.</p>`}
   </div>
 
+  ${buildMoreAlternativesGuides(slug)}
+
   ${buildMcpCta("Get personalized recommendations from your AI. Search " + offers.length.toLocaleString() + "+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildMoreAlternativesGuides(currentSlug: string): string {
+  const others = ALTERNATIVES_PAGES.filter(p => p.slug !== currentSlug);
+  if (others.length === 0) return "";
+  const items = others.map(p =>
+    `<li><a href="/${p.slug}">${escHtmlServer(p.title.split(" — ")[0])}</a> <span style="color:var(--text-muted);font-size:.85rem">— ${escHtmlServer(p.hubDesc)}</span></li>`
+  ).join("\n      ");
+  return `<div class="more-guides" style="margin:2.5rem 0 1rem;padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)">
+    <h3 style="margin:0 0 .75rem;font-family:var(--serif);font-size:1rem;color:var(--text)">More Alternatives Guides</h3>
+    <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem">
+      ${items}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.85rem;color:var(--text-dim)"><a href="/alternatives">View all alternatives guides &rarr;</a></p>
+  </div>`;
+}
+
+// --- Alternatives hub page ---
+
+function buildAlternativesHubPage(): string {
+  const title = "Alternatives Guides — Developer Tool Migration Guides";
+  const metaDesc = `In-depth comparison guides for ${ALTERNATIVES_PAGES.length} major developer tool changes. Free tier comparisons, service matrices, and migration timelines.`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: ALTERNATIVES_PAGES.length,
+    itemListElement: ALTERNATIVES_PAGES.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Article",
+        name: p.title,
+        description: p.hubDesc,
+        url: `${BASE_URL}/${p.slug}`
+      }
+    }))
+  };
+
+  const cards = ALTERNATIVES_PAGES.map(p => {
+    const shortTitle = p.title.split(" — ")[0];
+    return `<a href="/${p.slug}" class="hub-card" style="display:block;padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s,background .15s">
+      <h2 style="margin:0 0 .5rem;font-size:1.1rem;color:var(--accent);font-family:var(--serif)">${escHtmlServer(shortTitle)}</h2>
+      <p style="margin:0;font-size:.9rem;color:var(--text-muted);line-height:1.5">${escHtmlServer(p.hubDesc)}</p>
+    </a>`;
+  }).join("\n    ");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/alternatives">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:url" content="${BASE_URL}/alternatives">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${BASE_URL}/og-image.png">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+:root{--bg:#0f172a;--bg-card:#1e293b;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.08);--border:#334155;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--serif:'Georgia',serif;--mono:'SF Mono','Fira Code',monospace}
+*{box-sizing:border-box}body{font-family:var(--sans);background:var(--bg);color:var(--text);margin:0;padding:0;line-height:1.6}
+.container{max-width:800px;margin:0 auto;padding:1.5rem}
+.breadcrumb{font-size:.85rem;color:var(--text-dim);margin-bottom:1.5rem}.breadcrumb a{color:var(--accent);text-decoration:none}.breadcrumb a:hover{text-decoration:underline}
+h1{font-family:var(--serif);font-size:2rem;margin:0 0 .5rem}
+.subtitle{color:var(--text-muted);font-size:1rem;margin:0 0 2rem;line-height:1.5}
+.hub-cards{display:flex;flex-direction:column;gap:1rem;margin:0 0 2rem}
+.hub-card:hover{border-color:var(--accent);background:var(--accent-glow)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Alternatives Guides</div>
+  <h1>Alternatives Guides</h1>
+  <p class="subtitle">In-depth migration guides for major developer tool changes. Each guide compares free alternatives with service matrices, pricing details, and migration timelines.</p>
+
+  <div class="hub-cards">
+    ${cards}
+  </div>
+
+  <div style="text-align:center;margin:2rem 0;font-size:.9rem;color:var(--text-muted)">
+    <p>Looking for a specific tool? <a href="/alternative-to" style="color:var(--accent)">Browse all ${Array.from(vendorSlugMap.keys()).length.toLocaleString()} vendor alternatives</a> or <a href="/search" style="color:var(--accent)">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMcpCta("Get personalized migration advice from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -6274,6 +6382,12 @@ ${ALTERNATIVES_PAGES.map(p => `  <url>
     <priority>0.9</priority>
   </url>`).join("\n")}
   <url>
+    <loc>${BASE_URL}/alternatives</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/alternative-to</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -6432,6 +6546,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/search", params: { q: query, category: categoryFilter, page: String(page) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" });
     res.end(buildSearchPage(query, categoryFilter, page));
+  } else if (url.pathname === "/alternatives" && isGetOrHead) {
+    recordApiHit("/alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: ALTERNATIVES_PAGES.length });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAlternativesHubPage());
   } else if (url.pathname === "/alternative-to" && isGetOrHead) {
     recordApiHit("/alternative-to");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternative-to", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -6501,7 +6620,8 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/vendor`,
     `${BASE_URL}/alternative-to`,
   ];
-  // Add alternatives pages
+  // Add alternatives hub + individual pages
+  urlList.push(`${BASE_URL}/alternatives`);
   for (const p of ALTERNATIVES_PAGES) {
     urlList.push(`${BASE_URL}/${p.slug}`);
   }
