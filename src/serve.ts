@@ -5441,6 +5441,7 @@ const canonicalHost = (() => {
 
 const httpServer = createHttpServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://localhost:${PORT}`);
+  const isGetOrHead = req.method === "GET" || req.method === "HEAD";
 
   // 301 redirect non-canonical hostnames to BASE_URL (SEO canonical domain)
   if (canonicalHost) {
@@ -5467,7 +5468,7 @@ const httpServer = createHttpServer(async (req, res) => {
   }
 
   // Feed URL aliases — redirect common feed paths to canonical /feed.xml
-  if ((url.pathname === "/rss" || url.pathname === "/feed" || url.pathname === "/atom") && req.method === "GET") {
+  if ((url.pathname === "/rss" || url.pathname === "/feed" || url.pathname === "/atom") && isGetOrHead) {
     res.writeHead(301, { Location: "/feed.xml" });
     res.end();
     return;
@@ -5632,7 +5633,7 @@ const httpServer = createHttpServer(async (req, res) => {
       "X-Content-Type-Options": "nosniff",
     });
     res.end(body);
-  } else if (url.pathname === "/api/stack" && req.method === "GET") {
+  } else if (url.pathname === "/api/stack" && isGetOrHead) {
     recordApiHit("/api/stack");
     const useCase = url.searchParams.get("use_case") || url.searchParams.get("q") || "";
     if (!useCase) {
@@ -5646,7 +5647,7 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/stack", params: { use_case: useCase, requirements }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.stack.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
-  } else if (url.pathname === "/api/costs" && req.method === "GET") {
+  } else if (url.pathname === "/api/costs" && isGetOrHead) {
     recordApiHit("/api/costs");
     const servicesParam = url.searchParams.get("services");
     if (!servicesParam) {
@@ -5665,24 +5666,24 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/costs", params: { services, scale }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.services.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
-  } else if (url.pathname === "/api/query-log" && req.method === "GET") {
+  } else if (url.pathname === "/api/query-log" && isGetOrHead) {
     const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") ?? "50", 10) || 50, 1), 200);
     const entries = await getRequestLog(limit);
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ entries, count: entries.length }));
-  } else if (url.pathname === "/api/openapi.json" && req.method === "GET") {
+  } else if (url.pathname === "/api/openapi.json" && isGetOrHead) {
     recordApiHit("/api/openapi.json");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/openapi.json", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(openapiSpec));
-  } else if (url.pathname === "/api/stats" && req.method === "GET") {
+  } else if (url.pathname === "/api/stats" && isGetOrHead) {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(getConnectionStats(sessions.size)));
-  } else if (url.pathname === "/api/pageviews" && req.method === "GET") {
+  } else if (url.pathname === "/api/pageviews" && isGetOrHead) {
     const data = await getPageViews();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(data));
-  } else if (url.pathname === "/api/offers" && req.method === "GET") {
+  } else if (url.pathname === "/api/offers" && isGetOrHead) {
     recordApiHit("/api/offers");
     const q = url.searchParams.get("q") || undefined;
     const category = url.searchParams.get("category") || undefined;
@@ -5696,7 +5697,7 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ offers: paged, total }));
-  } else if (url.pathname === "/api/compare" && req.method === "GET") {
+  } else if (url.pathname === "/api/compare" && isGetOrHead) {
     recordApiHit("/api/compare");
     const a = url.searchParams.get("a") || "";
     const b = url.searchParams.get("b") || "";
@@ -5715,14 +5716,14 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/compare", params: { a, b }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 2 });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result.comparison));
-  } else if (url.pathname === "/api/new" && req.method === "GET") {
+  } else if (url.pathname === "/api/new" && isGetOrHead) {
     recordApiHit("/api/new");
     const days = parseInt(url.searchParams.get("days") ?? "7", 10);
     const result = getNewOffers(days);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/new", params: { days }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.offers.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
-  } else if (url.pathname === "/api/newest" && req.method === "GET") {
+  } else if (url.pathname === "/api/newest" && isGetOrHead) {
     recordApiHit("/api/newest");
     const since = url.searchParams.get("since") || undefined;
     const limit = parseInt(url.searchParams.get("limit") ?? "20", 10) || 20;
@@ -5736,13 +5737,13 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/newest", params: { since, limit, category }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
-  } else if (url.pathname === "/api/categories" && req.method === "GET") {
+  } else if (url.pathname === "/api/categories" && isGetOrHead) {
     recordApiHit("/api/categories");
     const cats = getCategories();
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/categories", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: cats.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ categories: cats }));
-  } else if (url.pathname === "/api/changes" && req.method === "GET") {
+  } else if (url.pathname === "/api/changes" && isGetOrHead) {
     recordApiHit("/api/changes");
     const since = url.searchParams.get("since") || undefined;
     const type = url.searchParams.get("type") || undefined;
@@ -5758,7 +5759,7 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
-  } else if (url.pathname === "/api/audit-stack" && req.method === "GET") {
+  } else if (url.pathname === "/api/audit-stack" && isGetOrHead) {
     recordApiHit("/api/audit-stack");
     const servicesParam = url.searchParams.get("services");
     if (!servicesParam) {
@@ -5776,7 +5777,7 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/audit-stack", params: { services: servicesList }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: auditResult.services_analyzed });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(auditResult));
-  } else if (url.pathname.startsWith("/api/vendor-risk/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/api/vendor-risk/") && isGetOrHead) {
     recordApiHit("/api/vendor-risk");
     const vendorParam = decodeURIComponent(url.pathname.slice("/api/vendor-risk/".length));
     if (!vendorParam) {
@@ -5794,7 +5795,7 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/vendor-risk", params: { vendor: vendorParam }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(riskResult.result));
-  } else if (url.pathname.startsWith("/api/details/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/api/details/") && isGetOrHead) {
     recordApiHit("/api/details");
     const vendorParam = decodeURIComponent(url.pathname.slice("/api/details/".length));
     if (!vendorParam) {
@@ -5813,33 +5814,33 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ offer: detailResult.offer, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}) }));
-  } else if (url.pathname === "/api/expiring" && req.method === "GET") {
+  } else if (url.pathname === "/api/expiring" && isGetOrHead) {
     recordApiHit("/api/expiring");
     const withinDays = Math.min(Math.max(parseInt(url.searchParams.get("within_days") ?? "30", 10) || 30, 1), 365);
     const result = getExpiringDeals(withinDays);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/expiring", params: { within_days: withinDays }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(result));
-  } else if (url.pathname === "/api/freshness" && req.method === "GET") {
+  } else if (url.pathname === "/api/freshness" && isGetOrHead) {
     recordApiHit("/api/freshness");
     const result = getFreshnessMetrics();
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/freshness", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total_offers });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=3600" });
     res.end(JSON.stringify(result));
-  } else if (url.pathname === "/api/digest" && req.method === "GET") {
+  } else if (url.pathname === "/api/digest" && isGetOrHead) {
     recordApiHit("/api/digest");
     const digest = getWeeklyDigest();
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/digest", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: digest.deal_changes.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(digest));
-  } else if (url.pathname === "/api" && req.method === "GET") {
+  } else if (url.pathname === "/api" && isGetOrHead) {
     res.writeHead(301, { "Location": "/api/docs" });
     res.end();
-  } else if (url.pathname === "/api/docs" && req.method === "GET") {
+  } else if (url.pathname === "/api/docs" && isGetOrHead) {
     recordApiHit("/api/docs");
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(swaggerDocsHtml);
-  } else if (url.pathname.startsWith("/api/docs/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/api/docs/") && isGetOrHead) {
     const filename = url.pathname.slice("/api/docs/".length);
     if (filename.includes("..") || filename.includes("/")) {
       res.writeHead(400, { "Content-Type": "application/json" });
@@ -5857,7 +5858,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const content = readFileSync(filePath);
     res.writeHead(200, { "Content-Type": contentType, "Cache-Control": "public, max-age=86400" });
     res.end(content);
-  } else if ((url.pathname === "/feed.xml" || url.pathname === "/api/feed") && req.method === "GET") {
+  } else if ((url.pathname === "/feed.xml" || url.pathname === "/api/feed") && isGetOrHead) {
     const feedPath = url.pathname === "/feed.xml" ? "/feed.xml" : "/api/feed";
     recordApiHit(feedPath);
     const baseUrl = BASE_URL;
@@ -5902,14 +5903,14 @@ ${entries}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: feedPath, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: allChanges.length });
     res.writeHead(200, { "Content-Type": "application/atom+xml; charset=utf-8", "Cache-Control": "public, max-age=3600", "Access-Control-Allow-Origin": "*" });
     res.end(atom);
-  } else if (INDEXNOW_KEY && url.pathname === `/${INDEXNOW_KEY}.txt` && req.method === "GET") {
+  } else if (INDEXNOW_KEY && url.pathname === `/${INDEXNOW_KEY}.txt` && isGetOrHead) {
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
     res.end(INDEXNOW_KEY);
-  } else if (url.pathname === "/robots.txt" && req.method === "GET") {
+  } else if (url.pathname === "/robots.txt" && isGetOrHead) {
     const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
     res.end(robotsTxt);
-  } else if (url.pathname === "/llms.txt" && req.method === "GET") {
+  } else if (url.pathname === "/llms.txt" && isGetOrHead) {
     const llmsTxt = `# AgentDeals
 
 > An MCP server and REST API that aggregates free tiers, startup credits, and developer tool deals. ${stats.offers} verified offers across ${stats.categories} categories with pricing change tracking.
@@ -5951,7 +5952,7 @@ AgentDeals helps developers find free tiers, startup credits, and deals on devel
 `;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(llmsTxt);
-  } else if (url.pathname === "/llms-full.txt" && req.method === "GET") {
+  } else if (url.pathname === "/llms-full.txt" && isGetOrHead) {
     const catList = categories.map(c => `- ${c.name} (${c.count} offers)`).join("\n");
     const llmsFullTxt = `# AgentDeals — Full Reference
 
@@ -6049,7 +6050,7 @@ ${catList}
 `;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(llmsFullTxt);
-  } else if (url.pathname === "/AGENTS.md" && req.method === "GET") {
+  } else if (url.pathname === "/AGENTS.md" && isGetOrHead) {
     try {
       const agentsMd = readFileSync(join(__dirname, "..", "AGENTS.md"), "utf-8");
       res.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8", "Cache-Control": "public, max-age=3600" });
@@ -6058,7 +6059,7 @@ ${catList}
       res.writeHead(404, { "Content-Type": "text/plain" });
       res.end("Not found");
     }
-  } else if (url.pathname === "/sitemap.xml" && req.method === "GET") {
+  } else if (url.pathname === "/sitemap.xml" && isGetOrHead) {
     const now = new Date().toISOString().split("T")[0];
     const categoryUrls = categories.map((c) => `  <url>
     <loc>${BASE_URL}/category/${toSlug(c.name)}</loc>
@@ -6214,12 +6215,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(landingPageHtml);
-  } else if ((url.pathname === "/best" || url.pathname === "/best/") && req.method === "GET") {
+  } else if ((url.pathname === "/best" || url.pathname === "/best/") && isGetOrHead) {
     recordApiHit("/best");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/best", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: bestOfSlugMap.size });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildBestOfIndexPage());
-  } else if (url.pathname.startsWith("/best/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/best/") && isGetOrHead) {
     const slug = url.pathname.slice("/best/".length).replace(/\/$/, "");
     const html = buildBestOfPage(slug);
     if (html) {
@@ -6231,12 +6232,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Best-of list not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Best-of list "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/best">Browse all best-of lists</a></p></div></body></html>`);
     }
-  } else if ((url.pathname === "/category" || url.pathname === "/category/") && req.method === "GET") {
+  } else if ((url.pathname === "/category" || url.pathname === "/category/") && isGetOrHead) {
     recordApiHit("/category");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/category", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: stats.categories });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCategoryIndexPage());
-  } else if (url.pathname.startsWith("/category/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/category/") && isGetOrHead) {
     const slug = url.pathname.slice("/category/".length).replace(/\/$/, "");
     const html = buildCategoryPage(slug);
     if (html) {
@@ -6248,12 +6249,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Category not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/">Browse all ${stats.categories} categories on AgentDeals</a></p></div></body></html>`);
     }
-  } else if (url.pathname === "/compare" && req.method === "GET") {
+  } else if (url.pathname === "/compare" && isGetOrHead) {
     recordApiHit("/compare");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/compare", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: comparisonMap.size });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCompareIndexPage());
-  } else if (url.pathname.startsWith("/compare/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/compare/") && isGetOrHead) {
     const slug = url.pathname.slice("/compare/".length).replace(/\/$/, "");
     // Check for reverse URL (e.g., netlify-vs-vercel → vercel-vs-netlify)
     if (!comparisonMap.has(slug) && slug.includes("-vs-")) {
@@ -6277,17 +6278,17 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparison not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Comparison not found.</p><p style="margin-top:1rem"><a href="/compare">Browse all comparisons</a></p></div></body></html>`);
     }
-  } else if (url.pathname === "/digest" && req.method === "GET") {
+  } else if (url.pathname === "/digest" && isGetOrHead) {
     // Redirect to current week's digest
     const currentWeek = getCurrentWeekKey();
     res.writeHead(302, { Location: `/digest/${currentWeek}` });
     res.end();
-  } else if (url.pathname === "/digest/archive" && req.method === "GET") {
+  } else if (url.pathname === "/digest/archive" && isGetOrHead) {
     recordApiHit("/digest/archive");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digest/archive", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildDigestArchivePage());
-  } else if (url.pathname.startsWith("/digest/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/digest/") && isGetOrHead) {
     const weekKey = url.pathname.slice("/digest/".length).replace(/\/$/, "");
     const html = buildDigestPage(weekKey);
     if (html) {
@@ -6299,12 +6300,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Digest not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Invalid week format. Use YYYY-wNN (e.g., 2026-w11).</p><p style="margin-top:1rem"><a href="/digest/archive">Browse the digest archive</a></p></div></body></html>`);
     }
-  } else if (url.pathname === "/vendor" && req.method === "GET") {
+  } else if (url.pathname === "/vendor" && isGetOrHead) {
     recordApiHit("/vendor");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vendor", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: vendorSlugMap.size });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildVendorIndexPage());
-  } else if (url.pathname.startsWith("/vendor/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/vendor/") && isGetOrHead) {
     const slug = url.pathname.slice("/vendor/".length).replace(/\/$/, "");
     const html = buildVendorPage(slug);
     if (html) {
@@ -6316,37 +6317,37 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
     }
-  } else if (url.pathname === "/changes" && req.method === "GET") {
+  } else if (url.pathname === "/changes" && isGetOrHead) {
     recordApiHit("/changes");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/changes", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildChangesPage());
-  } else if (url.pathname === "/expiring" && req.method === "GET") {
+  } else if (url.pathname === "/expiring" && isGetOrHead) {
     recordApiHit("/expiring");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/expiring", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildExpiringPage());
-  } else if (url.pathname === "/agent-stack" && req.method === "GET") {
+  } else if (url.pathname === "/agent-stack" && isGetOrHead) {
     recordApiHit("/agent-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAgentStackPage());
-  } else if (url.pathname === "/freshness" && req.method === "GET") {
+  } else if (url.pathname === "/freshness" && isGetOrHead) {
     recordApiHit("/freshness");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/freshness", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreshnessPage());
-  } else if (url.pathname === "/setup" && req.method === "GET") {
+  } else if (url.pathname === "/setup" && isGetOrHead) {
     recordApiHit("/setup");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSetupPage());
-  } else if (url.pathname === "/privacy" && req.method === "GET") {
+  } else if (url.pathname === "/privacy" && isGetOrHead) {
     recordApiHit("/privacy");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/privacy", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildPrivacyPage());
-  } else if (url.pathname === "/search" && req.method === "GET") {
+  } else if (url.pathname === "/search" && isGetOrHead) {
     const query = url.searchParams.get("q") ?? "";
     const categoryFilter = url.searchParams.get("category") ?? "";
     const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10) || 1);
@@ -6354,12 +6355,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/search", params: { q: query, category: categoryFilter, page: String(page) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" });
     res.end(buildSearchPage(query, categoryFilter, page));
-  } else if (url.pathname === "/alternative-to" && req.method === "GET") {
+  } else if (url.pathname === "/alternative-to" && isGetOrHead) {
     recordApiHit("/alternative-to");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternative-to", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAlternativesIndexPage());
-  } else if (url.pathname.startsWith("/alternative-to/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/alternative-to/") && isGetOrHead) {
     const slug = url.pathname.slice("/alternative-to/".length).replace(/\/$/, "");
     const html = buildAlternativesPage(slug);
     if (html) {
@@ -6371,12 +6372,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/alternative-to">Browse all alternatives</a></p></div></body></html>`);
     }
-  } else if (url.pathname === "/trends" && req.method === "GET") {
+  } else if (url.pathname === "/trends" && isGetOrHead) {
     recordApiHit("/trends");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/trends", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: categories.length });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildTrendsIndexPage());
-  } else if (url.pathname.startsWith("/trends/") && req.method === "GET") {
+  } else if (url.pathname.startsWith("/trends/") && isGetOrHead) {
     const slug = url.pathname.slice("/trends/".length).replace(/\/$/, "");
     const html = buildTrendsPage(slug);
     if (html) {
@@ -6388,7 +6389,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trends not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Category "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/trends">Browse all category trends</a></p></div></body></html>`);
     }
-  } else if (alternativesPageMap.has(url.pathname.slice(1)) && req.method === "GET") {
+  } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
