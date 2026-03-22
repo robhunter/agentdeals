@@ -1567,7 +1567,7 @@
     {
       "vendor": "Doppler",
       "category": "Secrets Management",
-      "description": "Secrets management — up to 5 team members, unlimited secrets, projects, and environments. CLI, SDKs, and integrations included",
+      "description": "Secrets management — up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations included",
       "tier": "Free",
       "url": "https://www.doppler.com/pricing",
       "tags": [
@@ -1577,7 +1577,7 @@
         "security",
         "free tier"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "PostHog",
@@ -7368,14 +7368,14 @@
     {
       "vendor": "Chanty.com",
       "category": "Team Collaboration",
-      "description": "Chanty is another alternative to Slack. It has a free forever plan for small teams (up to 10) with unlimited public and private conversations, searchable history, unlimited 1:1 audio calls, unlimited voice messages, ten integrations, and 20 GB storage per team.",
+      "description": "Chanty is another alternative to Slack. It has a free forever plan for small teams (up to 5) with unlimited public and private conversations, searchable history, unlimited 1:1 audio calls, unlimited voice messages, ten integrations, and 20 GB storage per team.",
       "tier": "Free",
       "url": "https://chanty.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "DevToolLab",
