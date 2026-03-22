@@ -115,7 +115,8 @@ describe("search_deals tool", () => {
 
       assert.ok(Array.isArray(offers));
       assert.ok(offers.length >= 2);
-      assert.strictEqual(body.total, offers.length);
+      assert.ok(body.total >= offers.length, "total should be >= results (pagination)");
+      assert.ok(offers.length <= 20, "default limit is 20");
       for (const offer of offers) {
         const searchable = [offer.vendor, offer.description, ...offer.tags]
           .join(" ")
