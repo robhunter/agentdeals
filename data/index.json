@@ -889,21 +889,6 @@
       "verifiedDate": "2026-03-14"
     },
     {
-      "vendor": "Uploadthing",
-      "category": "Storage",
-      "description": "File uploads for TypeScript apps — 2 GB storage, 2 GB bandwidth/month free",
-      "tier": "Free",
-      "url": "https://uploadthing.com/pricing",
-      "tags": [
-        "storage",
-        "file uploads",
-        "typescript",
-        "nextjs",
-        "free tier"
-      ],
-      "verifiedDate": "2026-03-14"
-    },
-    {
       "vendor": "CloudAMQP",
       "category": "Messaging",
       "description": "Managed RabbitMQ — 1M messages/month, 20 connections, 100 queues free",
@@ -5136,7 +5121,7 @@
     {
       "vendor": "Neo4j AuraDB",
       "category": "Databases",
-      "description": "Graph database cloud service — free tier: single database, up to 200,000 nodes and 400,000 relationships. Full Cypher query language support. No credit card required",
+      "description": "Graph database cloud service — free tier: single database, up to 50,000 nodes and 175,000 relationships. Full Cypher query language support. No credit card required",
       "tier": "Free",
       "url": "https://neo4j.com/pricing/",
       "tags": [
@@ -5146,7 +5131,7 @@
         "knowledge-graph",
         "cloud"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "InfluxDB Cloud",
@@ -12685,17 +12670,18 @@
       "verifiedDate": "2026-03-20"
     },
     {
-      "vendor": "Kinsta Static Site Hosting",
+      "vendor": "Sevalla (formerly Kinsta)",
       "category": "Cloud Hosting",
-      "description": "Deploy up to 100 static sites for free, custom domains with SSL, 100 GB monthly bandwidth, 260+ Cloudflare CDN locations.",
+      "description": "Deploy up to 100 static sites for free, custom domains with SSL, 100 GB monthly bandwidth, 260+ Cloudflare CDN locations. Rebranded from Kinsta in February 2026.",
       "tier": "Free",
-      "url": "https://kinsta.com/static-site-hosting/",
+      "url": "https://sevalla.com/static-site-hosting/",
       "tags": [
         "hosting",
         "paas",
-        "free-for-dev"
+        "free-for-dev",
+        "kinsta-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "MDB GO",
