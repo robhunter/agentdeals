@@ -1680,7 +1680,7 @@
     {
       "vendor": "Notion",
       "category": "Team Collaboration",
-      "description": "3-6 months free on Plus or Business plan (up to $6,000 value) for early-stage startups. Must be a new non-paying Notion customer",
+      "description": "3-6 months free on Business plan (up to $12,000 value) for early-stage startups. Must be a new non-paying Notion customer",
       "tier": "Startup Program",
       "url": "https://www.notion.com/startups",
       "tags": [
@@ -1690,7 +1690,7 @@
         "wiki",
         "startup credits"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-03-22",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
