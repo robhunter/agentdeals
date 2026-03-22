@@ -906,6 +906,17 @@ describe("HTTP transport", () => {
     }
   });
 
+  it("RSS auto-discovery link present on all page types", async () => {
+    proc = await startHttpServer();
+    const atomLink = 'type="application/atom+xml"';
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack"];
+    for (const path of pages) {
+      const response = await fetch(`http://localhost:${PORT}${path}`);
+      const html = await response.text();
+      assert.ok(html.includes(atomLink), `${path} should have RSS auto-discovery link`);
+    }
+  });
+
   it("prompts/list returns all 6 prompt templates", async () => {
     proc = await startHttpServer();
 
