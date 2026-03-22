@@ -33,7 +33,7 @@
     {
       "vendor": "Cloudflare Workers",
       "category": "Cloud Hosting",
-      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. Includes cron triggers, WebSockets, and service bindings",
+      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2: 10 GB-month storage, 1M Class A ops/month, 10M Class B ops/month. Durable Objects: 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored. Includes cron triggers, WebSockets, and service bindings",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "tags": [
@@ -44,7 +44,7 @@
         "hetzner-alternative",
         "heroku-alternative"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Netlify",
@@ -1537,7 +1537,7 @@
     {
       "vendor": "Trigger.dev",
       "category": "Background Jobs",
-      "description": "Background jobs platform \u2014 $5 free monthly compute, 20 concurrent runs, unlimited tasks, 5 team members, 10 schedules",
+      "description": "Background jobs platform \u2014 $5 free monthly compute, 20 concurrent runs, unlimited tasks, 5 team members, 10 schedules, 1 day log retention, community support",
       "tier": "Free",
       "url": "https://trigger.dev/pricing",
       "tags": [
@@ -1547,7 +1547,7 @@
         "queues",
         "free tier"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Momento",
