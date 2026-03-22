@@ -2362,7 +2362,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "localstack-alternatives",
     title: "LocalStack CE Alternatives — Free and Open Source Options for 2026",
-    metaDesc: "LocalStack Community Edition shuts down March 23, 2026. Compare free alternatives: Moto, Testcontainers, MinIO, AWS SAM CLI, DynamoDB Local, ElasticMQ. Service coverage comparison.",
+    metaDesc: "LocalStack Community Edition shuts down March 23, 2026. Compare free alternatives: Vera AWS, Moto, Testcontainers, MinIO, AWS SAM CLI, DynamoDB Local, ElasticMQ. Service coverage comparison.",
     contextHtml: `<p><strong>LocalStack Community Edition</strong> — the open-source AWS cloud emulator that let developers run S3, Lambda, DynamoDB, SQS, and 30+ other AWS services locally — <strong>shuts down on March 23, 2026</strong>. The unified Docker image now requires registration and an auth token. Commercial use requires a paid plan starting at $39/month (Starter) or $89/month (Ultimate).</p>
       <p>Unlike LocalStack, which provided a single all-in-one emulator, the migration path is typically a combination of service-specific tools. Below are the best free and open-source alternatives, organized by which AWS services they replace.</p>`,
     tag: "localstack-alternative",
@@ -2422,10 +2422,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
         <td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td>
         <td>MIT</td>
       </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/vera-aws" style="color:var(--text)">Vera AWS</a></td>
+        <td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2705</td>
+        <td>Open Source</td>
+      </tr>
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u2014 = not applicable. Testcontainers uses LocalStack or other containers under the hood for AWS services.</p>`,
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u2014 = not applicable. Testcontainers uses LocalStack or other containers under the hood for AWS services. Vera AWS focuses on EC2/VPC infrastructure (89 resource types in v0.1).</p>`,
   },
   {
     slug: "postman-alternatives",

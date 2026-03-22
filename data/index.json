@@ -4144,6 +4144,25 @@
       "verifiedDate": "2026-03-21"
     },
     {
+      "vendor": "Vera AWS",
+      "category": "Cloud IaaS",
+      "description": "Open-source local AWS emulator. v0.1 supports 89 resource types including VPCs, EC2 instances, security groups, and EBS volumes — EC2 emulation is unique among LocalStack alternatives. Includes awscli drop-in wrapper and terlocal terraform wrapper. No AWS account or Docker required. Runs entirely on your machine",
+      "tier": "Open Source",
+      "url": "https://github.com/project-vera/vera-aws",
+      "tags": [
+        "aws",
+        "cloud",
+        "testing",
+        "emulator",
+        "local-development",
+        "ec2",
+        "vpc",
+        "open-source",
+        "localstack-alternative"
+      ],
+      "verifiedDate": "2026-03-21"
+    },
+    {
       "vendor": "Brave Search API",
       "category": "Search",
       "description": "$5/month credit (~1,000 queries/mo at $5/1,000 requests). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required to keep credit. Credit card required, overages billed with no spending cap. Free tier (5,000 queries/mo) removed Feb 2026",
