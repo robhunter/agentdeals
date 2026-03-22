@@ -1088,6 +1088,37 @@
         "Bitly",
         "Short.io"
       ]
+    },
+    {
+      "vendor": "Uploadthing",
+      "change_type": "free_tier_removed",
+      "date": "2025-01-15",
+      "summary": "Free tier eliminated. Uploadthing moved to usage-based pricing with minimum $25/month plan (250 GB storage). No free tier available",
+      "previous_state": "Free tier: 2 GB storage, 2 GB bandwidth/month",
+      "current_state": "Usage-based pricing only. Minimum $25/month plan with 250 GB storage. No free tier",
+      "impact": "high",
+      "source_url": "https://uploadthing.com/pricing",
+      "category": "Storage",
+      "alternatives": [
+        "Cloudinary",
+        "Vercel Blob",
+        "AWS S3"
+      ]
+    },
+    {
+      "vendor": "Neo4j AuraDB",
+      "change_type": "limits_reduced",
+      "date": "2026-03-22",
+      "summary": "Free tier limits corrected — actual limits are 50,000 nodes and 175,000 relationships, not the previously listed 200,000 nodes and 400,000 relationships (4x overstatement on nodes)",
+      "previous_state": "200,000 nodes, 400,000 relationships (incorrectly listed)",
+      "current_state": "50,000 nodes, 175,000 relationships",
+      "impact": "medium",
+      "source_url": "https://neo4j.com/docs/aura/auradb/getting-started/create-database/",
+      "category": "Databases",
+      "alternatives": [
+        "Dgraph Cloud",
+        "Amazon Neptune"
+      ]
     }
   ]
 }
