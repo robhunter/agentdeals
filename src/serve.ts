@@ -3204,6 +3204,125 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare Pages stands out with unlimited bandwidth on the free tier. Netlify switched to a credit-based system in late 2025 — legacy accounts keep 100 GB bandwidth + 300 build minutes. Railway's $5/month includes a $5 credit that covers most hobby projects. Coolify is fully free if you self-host on your own server.</p>`,
   },
   {
+    slug: "auth0-alternatives",
+    title: "Auth0 Alternatives — Best Free Authentication Platforms for 2026",
+    metaDesc: "Auth0 free tier too limited? Compare free authentication alternatives: Clerk, WorkOS, Supabase Auth, Firebase Auth, Logto, FusionAuth, Keycloak, and more. Verified 2026 free tier limits.",
+    contextHtml: `<p><strong>Auth0</strong> is a powerful identity platform, but its pricing is one of the steepest cliffs in developer tools. The free tier gives you <strong>25K MAU</strong> — generous for prototyping. But the moment you outgrow it, you're looking at the Essential plan starting at <strong>$240/month for just 500 external MAU</strong>. That's a jump from $0 to nearly $3,000/year with no middle ground.</p>
+    <p>The pricing pain is compounded by complexity. Auth0's tenant model, rule/action system, and connection limits create billing surprises. Teams regularly discover they need features (SSO, MFA customization, branding removal) that are locked behind higher tiers. "Auth0 alternatives" remains one of the most consistently searched developer queries.</p>
+    <p>The authentication landscape in 2026 offers real competition. Managed platforms (Clerk, WorkOS, Stytch) provide modern DX with generous free tiers. Open-source solutions (Keycloak, FusionAuth, Ory, Logto) give you unlimited users when self-hosted. And BaaS platforms (Supabase, Firebase) include auth as part of a broader free tier. The right choice depends on whether you prioritize DX, cost, or control.</p>`,
+    tag: "auth0-alternative",
+    primaryVendor: "Auth0",
+    hubDesc: "$0 to $240/mo pricing cliff drives alternatives search — 9 free authentication platforms compared",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Auth0's 25K MAU free tier is competitive, but the jump to paid is the steepest in the industry.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Free MAU</th>
+        <th>SSO</th>
+        <th>MFA</th>
+        <th>Self-Hosted</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Auth0</td>
+        <td>25K</td>
+        <td>Paid</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td style="color:var(--text-dim)">Enterprise identity + rules engine</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a></td>
+        <td>50K</td>
+        <td>Paid</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>Pre-built UI components + React DX</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/workos" style="color:var(--text)">WorkOS</a></td>
+        <td>1M</td>
+        <td>Paid</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>Enterprise SSO + SCIM at scale</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/supabase" style="color:var(--text)">Supabase Auth</a></td>
+        <td>50K</td>
+        <td>No</td>
+        <td>Yes</td>
+        <td>Yes (OSS)</td>
+        <td>Full BaaS — auth + database + storage</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/firebase" style="color:var(--text)">Firebase Auth</a></td>
+        <td>50K</td>
+        <td>No</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>Google ecosystem + mobile SDKs</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/logto" style="color:var(--text)">Logto</a></td>
+        <td>50K</td>
+        <td>Paid</td>
+        <td>Yes</td>
+        <td>Yes (OSS)</td>
+        <td>Modern OIDC + open-source option</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/stytch" style="color:var(--text)">Stytch</a></td>
+        <td>10K</td>
+        <td>5 connections</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>Passwordless + fraud prevention</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/fusionauth" style="color:var(--text)">FusionAuth</a></td>
+        <td>Unlimited*</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes (Apache 2.0)</td>
+        <td>Full-featured self-hosted — zero cost</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/keycloak" style="color:var(--text)">Keycloak</a></td>
+        <td>Unlimited*</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes (Apache 2.0)</td>
+        <td>Enterprise IAM — Red Hat backed</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/ory" style="color:var(--text)">Ory</a></td>
+        <td>25K (cloud)</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes (Apache 2.0)</td>
+        <td>Modular identity — Kratos + Hydra</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/kinde" style="color:var(--text)">Kinde</a></td>
+        <td>10.5K</td>
+        <td>SAML</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>Auth + feature flags + billing</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*FusionAuth and Keycloak are free self-hosted with no user limits. WorkOS leads managed platforms at 1M MAU free (AuthKit). Clerk and Logto both offer 50K MAU. Supabase and Firebase bundle auth into broader BaaS free tiers.</p>`,
+  },
+  {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
     metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",
