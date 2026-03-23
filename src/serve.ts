@@ -3559,6 +3559,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Compare 65 free AI APIs, LLM inference, vector databases, and coding tools — exact limits and rate caps",
   },
   {
+    slug: "database-alternatives",
+    title: "Best Free Database Hosting for Developers in 2026",
+    metaDesc: "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. Updated March 2026.",
+    contextHtml: "", // Custom page — contextHtml not used by buildTimelyAlternativesPage
+    tag: "database-alternative", // Not used — custom build function
+    primaryVendor: "Supabase", // Not used — custom build function
+    hubDesc: "Compare 30+ free databases by type — Postgres, document, key-value, edge, graph, vector, and time-series",
+  },
+  {
     slug: "email-service-alternatives",
     title: "Email Service Alternatives — Best Free Transactional Email APIs for 2026",
     metaDesc: "SendGrid restricted to 100/day, Mailgun killed its free tier. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. Verified 2026 limits.",
@@ -4216,6 +4225,344 @@ ${buildCards(enrichedCoding)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Database Alternatives category hub page ---
+
+function buildDatabaseAlternativesPage(): string {
+  const title = "Best Free Database Hosting for Developers in 2026";
+  const metaDesc = "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. Updated March 2026.";
+  const slug = "database-alternatives";
+
+  // Get all database offers
+  const dbOffers = offers.filter(o => o.category === "Databases");
+  const enrichedAll = enrichOffers(dbOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by database type
+  const relational = enrichedAll.filter(o =>
+    ["Supabase", "Neon", "CockroachDB", "Xata", "Aiven", "Nile", "Nhost", "Hasura Cloud"].includes(o.vendor)
+  );
+  const document = enrichedAll.filter(o =>
+    ["MongoDB Atlas", "Firebase", "Appwrite Cloud", "Convex", "PocketBase", "SurrealDB Cloud", "Couchbase Capella"].includes(o.vendor)
+  );
+  const keyValue = enrichedAll.filter(o =>
+    ["Upstash", "Redis Cloud", "Momento", "Cloudflare KV"].includes(o.vendor)
+  );
+  const edge = enrichedAll.filter(o =>
+    ["Turso", "Cloudflare D1", "DynamoDB Local"].includes(o.vendor)
+  );
+  const graph = enrichedAll.filter(o =>
+    ["Neo4j AuraDB", "Gel"].includes(o.vendor)
+  );
+  const vector = enrichedAll.filter(o =>
+    ["Weaviate", "Zilliz Cloud", "LanceDB", "Upstash Vector"].includes(o.vendor) || (o.vendor === "Pinecone" || o.vendor === "Qdrant Cloud" || o.vendor === "Qdrant")
+  );
+  const timeSeries = enrichedAll.filter(o =>
+    ["InfluxDB Cloud", "CrateDB"].includes(o.vendor)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Database deal changes
+  const dbChangeVendors = ["MongoDB Atlas", "Redis Cloud", "Firebase", "Supabase", "Neon", "Turso", "Upstash", "CockroachDB"];
+  const dbChanges = dealChanges.filter(c => dbChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = dbChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Database Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${dbChanges.slice(0, 6).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: dbOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Databases</div>
+  <h1>Best Free Database Hosting for Developers</h1>
+
+  <div class="context">
+    <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: in 2026, there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong> and <strong>CockroachDB's 10 GiB</strong>.</p>
+    <p>This page compares every free database in our index, organized by type, with exact limits verified against live pricing pages. Whether you need a Postgres database, a Redis cache, an edge SQLite store, or a vector database for RAG — we've got the comparison.</p>
+  </div>
+
+  ${changesHtml}
+
+  <div class="context-box" style="border-left:3px solid var(--accent)">
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific database? See our dedicated guides: <a href="/mongodb-alternatives">MongoDB Alternatives</a> | <a href="/redis-alternatives">Redis Alternatives</a> | <a href="/firebase-alternatives">Firebase Alternatives</a></p>
+  </div>
+
+  <h2>Relational SQL Databases</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Postgres-based and distributed SQL. The most popular choice for web applications — structured data, ACID transactions, and mature ecosystems.</p>
+${buildCards(relational)}
+
+  <h2>Document &amp; NoSQL Databases</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Flexible schema, JSON-native storage. Good for rapid prototyping, content management, and applications where schema evolves frequently.</p>
+${buildCards(document)}
+
+  <h2>Key-Value &amp; Cache</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">In-memory data stores for caching, session management, rate limiting, and pub/sub messaging.</p>
+${buildCards(keyValue)}
+
+  <h2>Edge &amp; Embedded Databases</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">SQLite-based stores that run close to users — low latency, offline-capable, and lightweight.</p>
+${buildCards(edge)}
+
+  <h2>Graph Databases</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">For interconnected data — social networks, knowledge graphs, recommendation engines, and fraud detection.</p>
+${buildCards(graph)}
+
+  <h2>Vector Databases</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Essential for AI/RAG pipelines, semantic search, and embeddings. The fastest-growing database category in 2026.</p>
+${buildCards(vector)}
+
+${timeSeries.length > 0 ? `
+  <h2>Time-Series Databases</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Optimized for timestamped data — IoT, monitoring, metrics, and financial data.</p>
+${buildCards(timeSeries)}
+` : ""}
+
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free databases compared by storage, type, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Type</th>
+        <th>Free Storage</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/supabase" style="color:var(--text)">Supabase</a></td>
+        <td>Postgres</td>
+        <td>500 MB</td>
+        <td>Full-stack apps (auth + storage + realtime)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/neon" style="color:var(--text)">Neon</a></td>
+        <td>Postgres</td>
+        <td>0.5 GB</td>
+        <td>Serverless Postgres with branching</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cockroachdb" style="color:var(--text)">CockroachDB</a></td>
+        <td>Distributed SQL</td>
+        <td>10 GiB</td>
+        <td>Multi-region, high availability</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/turso" style="color:var(--text)">Turso</a></td>
+        <td>Edge SQLite</td>
+        <td>5 GB</td>
+        <td>Edge-first apps, low latency</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/xata" style="color:var(--text)">Xata</a></td>
+        <td>Postgres</td>
+        <td>15 GB</td>
+        <td>Serverless Postgres with branching</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudflare-d1" style="color:var(--text)">Cloudflare D1</a></td>
+        <td>Edge SQLite</td>
+        <td>5 GB</td>
+        <td>Cloudflare Workers integration</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mongodb-atlas" style="color:var(--text)">MongoDB Atlas</a></td>
+        <td>Document</td>
+        <td>512 MB</td>
+        <td>Document-oriented, flexible schema</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/firebase" style="color:var(--text)">Firebase</a></td>
+        <td>Document (BaaS)</td>
+        <td>1 GiB</td>
+        <td>Mobile/web apps with real-time sync</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/upstash" style="color:var(--text)">Upstash</a></td>
+        <td>Redis / Vector</td>
+        <td>256 MB + 10K vectors</td>
+        <td>Serverless caching and messaging</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/convex" style="color:var(--text)">Convex</a></td>
+        <td>Reactive BaaS</td>
+        <td>0.5 GB</td>
+        <td>Real-time apps, reactive queries</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/aiven" style="color:var(--text)">Aiven</a></td>
+        <td>Managed PG/MySQL/Valkey</td>
+        <td>1 GB</td>
+        <td>Managed open-source databases</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/neo4j-auradb" style="color:var(--text)">Neo4j AuraDB</a></td>
+        <td>Graph</td>
+        <td>200K nodes</td>
+        <td>Knowledge graphs, relationships</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pocketbase" style="color:var(--text)">PocketBase</a></td>
+        <td>Embedded (SQLite)</td>
+        <td>Unlimited (self-hosted)</td>
+        <td>Single-binary backend, rapid prototyping</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/weaviate" style="color:var(--text)">Weaviate</a></td>
+        <td>Vector</td>
+        <td>Unlimited (self-hosted)</td>
+        <td>AI/RAG, hybrid search</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/influxdb-cloud" style="color:var(--text)">InfluxDB Cloud</a></td>
+        <td>Time-Series</td>
+        <td>30-day retention</td>
+        <td>IoT, monitoring, metrics</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Storage limits are for the free tier only. CockroachDB (10 GiB) and Xata (15 GB) offer the most generous managed storage. PocketBase and Weaviate are unlimited when self-hosted. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free Database Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Building a full-stack web app?</dt>
+      <dd><a href="/vendor/supabase">Supabase</a> or <a href="/vendor/nhost">Nhost</a> — Postgres + auth + storage + real-time in one platform. Supabase has the larger ecosystem.</dd>
+
+      <dt>Need pure serverless Postgres?</dt>
+      <dd><a href="/vendor/neon">Neon</a> (branching, scale-to-zero) or <a href="/vendor/xata">Xata</a> (15 GB free, branching). For max free storage, <a href="/vendor/cockroachdb">CockroachDB</a> gives 10 GiB.</dd>
+
+      <dt>Building at the edge?</dt>
+      <dd><a href="/vendor/turso">Turso</a> (5 GB, 500M reads) or <a href="/vendor/cloudflare-d1">Cloudflare D1</a> (5 GB, tight Workers integration). Both use SQLite under the hood.</dd>
+
+      <dt>Need a document/NoSQL database?</dt>
+      <dd><a href="/vendor/firebase">Firebase Firestore</a> (1 GiB, real-time sync) or <a href="/vendor/mongodb-atlas">MongoDB Atlas</a> (512 MB, most tutorials). For self-hosted, <a href="/vendor/pocketbase">PocketBase</a> is unlimited.</dd>
+
+      <dt>Need caching or rate limiting?</dt>
+      <dd><a href="/vendor/upstash">Upstash Redis</a> (256 MB, serverless) or <a href="/vendor/momento">Momento</a> (5 GB transfer/month). For managed Redis, <a href="/vendor/aiven">Aiven</a> offers free Valkey.</dd>
+
+      <dt>Building AI / RAG pipelines?</dt>
+      <dd><a href="/vendor/upstash-vector">Upstash Vector</a> (10K vectors, serverless) or self-hosted <a href="/vendor/weaviate">Weaviate</a> / <a href="/vendor/lancedb">LanceDB</a> for no limits. <a href="/vendor/zilliz-cloud">Zilliz Cloud</a> for managed Milvus.</dd>
+
+      <dt>Need a graph database?</dt>
+      <dd><a href="/vendor/neo4j-auradb">Neo4j AuraDB</a> (200K nodes) is the standard. <a href="/vendor/gel">Gel</a> (formerly EdgeDB) offers a graph-relational hybrid.</dd>
+
+      <dt>Time-series / IoT data?</dt>
+      <dd><a href="/vendor/influxdb-cloud">InfluxDB Cloud</a> for monitoring and metrics. <a href="/vendor/cratedb">CrateDB</a> for distributed SQL with time-series optimization.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? <a href="/category/databases">Browse all ${dbOffers.length} database tools</a> in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get database recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -7786,6 +8133,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-free-tiers", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAiFreeTiersPage());
+  } else if (url.pathname === "/database-alternatives" && isGetOrHead) {
+    recordApiHit("/database-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDatabaseAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
