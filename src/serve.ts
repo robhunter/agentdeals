@@ -3568,6 +3568,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Compare 30+ free databases by type — Postgres, document, key-value, edge, graph, vector, and time-series",
   },
   {
+    slug: "hosting-alternatives",
+    title: "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS",
+    metaDesc: "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits for PaaS, static, serverless, container, and VPS hosting. Updated March 2026.",
+    contextHtml: "", // Custom page — contextHtml not used by buildTimelyAlternativesPage
+    tag: "hosting-alternative", // Not used — custom build function
+    primaryVendor: "Heroku", // Not used — custom build function
+    hubDesc: "Compare 30+ free hosting options by type — PaaS, static/JAMstack, serverless, containers, VPS, and edge/CDN",
+  },
+  {
     slug: "email-service-alternatives",
     title: "Email Service Alternatives — Best Free Transactional Email APIs for 2026",
     metaDesc: "SendGrid restricted to 100/day, Mailgun killed its free tier. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. Verified 2026 limits.",
@@ -4225,6 +4234,354 @@ ${buildCards(enrichedCoding)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Hosting Alternatives category hub page ---
+
+function buildHostingAlternativesPage(): string {
+  const title = "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS";
+  const metaDesc = "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits by hosting type. Updated March 2026.";
+  const slug = "hosting-alternatives";
+
+  // Get all hosting offers
+  const hostingOffers = offers.filter(o => o.category === "Cloud Hosting" || o.category === "Cloud IaaS");
+  const enrichedAll = enrichOffers(hostingOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by hosting type
+  const paas = enrichedAll.filter(o =>
+    ["Railway", "Render", "Fly.io", "Koyeb", "Back4App", "Deno Deploy", "Northflank", "Coolify", "Sevalla (formerly Kinsta)", "Zeabur", "Alwaysdata", "Qoddi", "Claw.cloud"].includes(o.vendor)
+  );
+  const staticJamstack = enrichedAll.filter(o =>
+    ["Cloudflare Pages", "Netlify", "Vercel", "GitHub Pages", "surge.sh", "Neocities", "readthedocs.org", "Versoly", "dAppling Network"].includes(o.vendor)
+  );
+  const serverless = enrichedAll.filter(o =>
+    ["Cloudflare Workers", "Cloudflare Durable Objects", "Val Town", "PythonAnywhere", "YepCode", "Activepieces", "IFTTT", "Integrately"].includes(o.vendor)
+  );
+  const containers = enrichedAll.filter(o =>
+    ["Google Cloud Run", "Fly.io", "Railway", "Render", "Koyeb"].includes(o.vendor) && !paas.some(p => p.vendor === o.vendor)
+  );
+  // Only include vendors not already in PaaS
+  const containerDedicated = enrichedAll.filter(o =>
+    ["Google Cloud Run"].includes(o.vendor)
+  );
+  const vpsIaas = enrichedAll.filter(o =>
+    ["Oracle Cloud", "AWS", "Azure", "Google Compute Engine", "DigitalOcean", "Hetzner"].includes(o.vendor)
+  );
+  const edgeCdn = enrichedAll.filter(o =>
+    ["Cloudflare Workers", "Cloudflare Pages", "4EVERLAND"].includes(o.vendor) && !staticJamstack.some(s => s.vendor === o.vendor) && !serverless.some(s => s.vendor === o.vendor)
+  );
+  const startupCredits = enrichedAll.filter(o =>
+    ["AWS Activate", "Microsoft Founders Hub", "Cloudflare Startup Program", "Heroku for Startups Program", "Scaleway Startup Program", "Microsoft for Startups", "Startup with IBM", "Create@Alibaba Cloud", "Clever Bootstrap Program", "Google Cloud"].includes(o.vendor)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Hosting deal changes
+  const hostingChangeVendors = ["Railway", "Render", "Fly.io", "Heroku", "Vercel", "Hetzner", "Netlify", "Cloudflare", "Koyeb", "Oracle Cloud", "DigitalOcean"];
+  const hostingChanges = dealChanges.filter(c => hostingChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = hostingChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Hosting Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${hostingChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: hostingOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Hosting</div>
+  <h1>Best Free Hosting for Developers</h1>
+
+  <div class="context">
+    <p>Finding free hosting in 2026 is both easier and harder than ever. Easier because there are <strong>${hostingOffers.length} options</strong> across PaaS, static hosting, serverless functions, containers, and traditional VPS. Harder because the landscape keeps shifting — <strong>Heroku killed its free tier</strong> in 2022, <strong>Render now spins down free services</strong> after 15 minutes, <strong>Vercel moved to credit-based pricing</strong>, and <strong>Hetzner is raising prices 30-50%</strong> on April 1, 2026.</p>
+    <p>This page compares every free hosting option in our index, organized by type, with exact limits verified against live pricing pages. Whether you need a PaaS for a full-stack app, static hosting for a portfolio, serverless functions for an API, or a VPS for full control — we have the comparison.</p>
+  </div>
+
+  ${changesHtml}
+
+  <div class="context-box" style="border-left:3px solid var(--accent)">
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific host? See our dedicated guides: <a href="/heroku-alternatives">Heroku Alternatives</a> | <a href="/vercel-alternatives">Vercel Alternatives</a> | <a href="/hetzner-alternatives">Hetzner Alternatives</a></p>
+  </div>
+
+  <h2>App Platforms / PaaS</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Full-featured platforms that handle deployment, scaling, and infrastructure. Deploy from Git, get a URL — the modern Heroku experience.</p>
+${buildCards(paas)}
+
+  <h2>Static &amp; JAMstack Hosting</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Deploy static sites, SPAs, and JAMstack apps with global CDN. Most generous free tiers in the hosting space — often unlimited bandwidth.</p>
+${buildCards(staticJamstack)}
+
+  <h2>Serverless / Functions</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Run code without managing servers. Pay-per-invocation models with generous free tiers for APIs, webhooks, and background jobs.</p>
+${buildCards(serverless)}
+
+${containerDedicated.length > 0 ? `
+  <h2>Container Hosting</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Run Docker containers in the cloud. Many PaaS platforms above also support containers — these are dedicated container runtimes.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem"><strong>Note:</strong> <a href="/vendor/railway">Railway</a>, <a href="/vendor/render">Render</a>, <a href="/vendor/fly-io">Fly.io</a>, and <a href="/vendor/koyeb">Koyeb</a> (listed under PaaS above) also support Docker containers natively.</p>
+${buildCards(containerDedicated)}
+` : ""}
+
+  <h2>VPS / IaaS</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Full virtual machines with root access. Maximum flexibility — you manage the OS, runtime, and deployment. Best for custom setups and production workloads.</p>
+${buildCards(vpsIaas)}
+
+${startupCredits.length > 0 ? `
+  <h2>Startup Credit Programs</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Not free tiers, but substantial free credits for startups. Typically require application and may have eligibility requirements.</p>
+${buildCards(startupCredits)}
+` : ""}
+
+  <h2>Free Hosting Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free hosting providers compared by compute resources, bandwidth, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Type</th>
+        <th>Compute / Resources</th>
+        <th>Bandwidth</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/railway" style="color:var(--text)">Railway</a></td>
+        <td>PaaS</td>
+        <td>$5 credit/month</td>
+        <td>Included</td>
+        <td>Full-stack apps, databases, quick deploys</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/render" style="color:var(--text)">Render</a></td>
+        <td>PaaS</td>
+        <td>512 MB RAM, spins down</td>
+        <td>100 GB/mo</td>
+        <td>Web services, static sites, cron jobs</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/fly-io" style="color:var(--text)">Fly.io</a></td>
+        <td>PaaS / Containers</td>
+        <td>3 shared VMs, 256 MB each</td>
+        <td>100 GB/mo</td>
+        <td>Edge deployment, multi-region apps</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
+        <td>PaaS</td>
+        <td>1 nano instance</td>
+        <td>100 GB/mo</td>
+        <td>Containers, web services, global edge</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
+        <td>Edge PaaS</td>
+        <td>1M req/mo, 100K KV reads</td>
+        <td>100 GB/mo</td>
+        <td>Deno/TypeScript apps, edge functions</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudflare-pages" style="color:var(--text)">Cloudflare Pages</a></td>
+        <td>Static + Functions</td>
+        <td>Unlimited sites, 500 builds/mo</td>
+        <td>Unlimited</td>
+        <td>Static sites with edge functions</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/netlify" style="color:var(--text)">Netlify</a></td>
+        <td>Static + Functions</td>
+        <td>300 build min/mo, 125K fn calls</td>
+        <td>100 GB/mo</td>
+        <td>JAMstack, forms, identity</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/vercel" style="color:var(--text)">Vercel</a></td>
+        <td>Static + Functions</td>
+        <td>100 GB-hrs serverless, 100K fn calls</td>
+        <td>100 GB/mo</td>
+        <td>Next.js, React, frontend frameworks</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/github-pages" style="color:var(--text)">GitHub Pages</a></td>
+        <td>Static</td>
+        <td>1 GB storage</td>
+        <td>100 GB/mo</td>
+        <td>Docs, portfolios, project sites</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudflare-workers" style="color:var(--text)">Cloudflare Workers</a></td>
+        <td>Serverless</td>
+        <td>100K req/day, 10ms CPU</td>
+        <td>Unlimited</td>
+        <td>Edge APIs, lightweight compute</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/google-cloud-run" style="color:var(--text)">Google Cloud Run</a></td>
+        <td>Containers</td>
+        <td>2M req/mo, 360K vCPU-sec</td>
+        <td>1 GB/mo</td>
+        <td>Containerized APIs, auto-scaling to zero</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/oracle-cloud" style="color:var(--text)">Oracle Cloud</a></td>
+        <td>VPS / IaaS</td>
+        <td>4 Arm VMs (24 GB total), 200 GB storage</td>
+        <td>10 TB/mo</td>
+        <td>Always-free VMs, most generous IaaS tier</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/aws" style="color:var(--text)">AWS</a></td>
+        <td>IaaS</td>
+        <td>750 hrs t2.micro/mo (12 mo)</td>
+        <td>100 GB/mo (12 mo)</td>
+        <td>Full cloud platform, 12-month free tier</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's $5/month credit covers small projects entirely. AWS and Azure free tiers are mostly 12-month introductory offers. All limits verified against live pricing pages, March 2026.</p>
+
+  <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
+    <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner Price Hike — April 1, 2026</div>
+    <p style="margin:0;font-size:.9rem">Hetzner Cloud and dedicated server prices are increasing <strong>30-50%</strong> on April 1, 2026. Entry-level CX23: &euro;2.99&rarr;&euro;3.99/mo (+33%). If you're on Hetzner or considering it, see our <a href="/hetzner-alternatives">Hetzner Alternatives</a> guide for options.</p>
+  </div>
+
+  <h2>Which Free Hosting Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Deploying a static site or portfolio?</dt>
+      <dd><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited bandwidth, fast global CDN) or <a href="/vendor/github-pages">GitHub Pages</a> (simplest setup, great for docs). <a href="/vendor/netlify">Netlify</a> and <a href="/vendor/vercel">Vercel</a> add serverless functions if you need them.</dd>
+
+      <dt>Building a full-stack web app?</dt>
+      <dd><a href="/vendor/railway">Railway</a> ($5/month credit, supports databases) or <a href="/vendor/render">Render</a> (free web services, spins down after 15 min). For edge deployment, <a href="/vendor/fly-io">Fly.io</a> gives 3 shared VMs.</dd>
+
+      <dt>Building a Next.js or React app?</dt>
+      <dd><a href="/vendor/vercel">Vercel</a> is purpose-built for Next.js with the best DX. <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> is the alternative with unlimited bandwidth. <a href="/vendor/netlify">Netlify</a> supports most frameworks.</dd>
+
+      <dt>Need an API or serverless functions?</dt>
+      <dd><a href="/vendor/cloudflare-workers">Cloudflare Workers</a> (100K req/day, edge-fast) for lightweight APIs. <a href="/vendor/deno-deploy">Deno Deploy</a> for TypeScript-native. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for containerized APIs with auto-scale.</dd>
+
+      <dt>Need a full VM with root access?</dt>
+      <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — 4 Arm VMs, 24 GB RAM, 200 GB storage, permanently free. <a href="/vendor/aws">AWS</a> and <a href="/vendor/azure">Azure</a> offer 12-month free tiers with t2.micro/B1 instances.</dd>
+
+      <dt>Running Docker containers?</dt>
+      <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (3 shared VMs). <a href="/vendor/railway">Railway</a> and <a href="/vendor/koyeb">Koyeb</a> also run containers natively.</dd>
+
+      <dt>Need hosting for a startup?</dt>
+      <dd>Check the startup credit programs above. <a href="/vendor/aws-activate">AWS Activate</a> and <a href="/vendor/microsoft-founders-hub">Microsoft Founders Hub</a> offer the largest credit packages. <a href="/vendor/railway">Railway</a> and <a href="/vendor/render">Render</a> are popular for early-stage startups.</dd>
+
+      <dt>Coming from Heroku?</dt>
+      <dd>See our dedicated <a href="/heroku-alternatives">Heroku Alternatives</a> guide. TL;DR: <a href="/vendor/railway">Railway</a> is the closest experience, <a href="/vendor/render">Render</a> is the most popular alternative, and <a href="/vendor/fly-io">Fly.io</a> offers the most control.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? <a href="/category/cloud-hosting">Browse all Cloud Hosting tools</a> or <a href="/category/cloud-iaas">Cloud IaaS tools</a> in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get hosting recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -8133,6 +8490,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-free-tiers", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAiFreeTiersPage());
+  } else if (url.pathname === "/hosting-alternatives" && isGetOrHead) {
+    recordApiHit("/hosting-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hosting-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildHostingAlternativesPage());
   } else if (url.pathname === "/database-alternatives" && isGetOrHead) {
     recordApiHit("/database-alternatives");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
