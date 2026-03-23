@@ -218,7 +218,7 @@
     {
       "vendor": "Oracle Cloud",
       "category": "Cloud IaaS",
-      "description": "Always Free includes 2 AMD VMs (1/8 OCPU, 1 GB each), up to 4 Arm VMs (24 GB total), 200 GB block volumes, 10 GB object storage, 2 Autonomous Databases, Load Balancer",
+      "description": "Always Free includes 2 AMD VMs (1/8 OCPU, 1 GB each), up to 4 Arm VMs (24 GB total), 200 GB block volumes, 20 GB object storage, 2 Autonomous Databases, Load Balancer",
       "tier": "Always Free",
       "url": "https://www.oracle.com/cloud/free/",
       "tags": [
@@ -230,7 +230,7 @@
         "free tier",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-23"
     },
     {
       "vendor": "Supabase",
