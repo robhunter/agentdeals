@@ -325,7 +325,8 @@
         "cache",
         "serverless",
         "messaging",
-        "free tier"
+        "free tier",
+        "redis-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -412,7 +413,8 @@
         "mysql",
         "redis",
         "managed",
-        "free tier"
+        "free tier",
+        "redis-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -1594,7 +1596,8 @@
         "cache",
         "serverless",
         "pubsub",
-        "free tier"
+        "free tier",
+        "redis-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
