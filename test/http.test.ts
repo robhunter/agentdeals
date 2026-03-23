@@ -1694,6 +1694,25 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Momento"), "Should include Momento alternative");
   });
 
+  it("GET /email-service-alternatives renders email alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/email-service-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Email Service Alternatives"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("SendGrid"), "Should mention SendGrid");
+    assert.ok(html.includes("Free Tier Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Resend"), "Should include Resend alternative");
+    assert.ok(html.includes("Mailjet"), "Should include Mailjet alternative");
+    assert.ok(html.includes("Brevo"), "Should include Brevo alternative");
+  });
+
   it("GET /ai-free-tiers renders AI free tiers editorial page", async () => {
     proc = await startHttpServer();
 
