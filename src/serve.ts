@@ -3577,6 +3577,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Compare 30+ free hosting options by type — PaaS, static/JAMstack, serverless, containers, VPS, and edge/CDN",
   },
   {
+    slug: "monitoring-alternatives",
+    title: "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking",
+    metaDesc: "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. Updated March 2026.",
+    contextHtml: "", // Custom page — contextHtml not used by buildTimelyAlternativesPage
+    tag: "monitoring-alternative", // Not used — custom build function
+    primaryVendor: "Datadog", // Not used — custom build function
+    hubDesc: "Compare 70+ free monitoring tools by type — APM, uptime, logs, error tracking, and infrastructure",
+  },
+  {
     slug: "email-service-alternatives",
     title: "Email Service Alternatives — Best Free Transactional Email APIs for 2026",
     metaDesc: "SendGrid restricted to 100/day, Mailgun killed its free tier. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. Verified 2026 limits.",
@@ -4920,6 +4929,352 @@ ${buildCards(timeSeries)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get database recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Monitoring Alternatives category hub page ---
+
+function buildMonitoringAlternativesPage(): string {
+  const title = "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking";
+  const metaDesc = "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. Updated March 2026.";
+  const slug = "monitoring-alternatives";
+
+  // Get all monitoring + error tracking offers
+  const monitoringOffers = offers.filter(o => o.category === "Monitoring" || o.category === "Error Tracking");
+  const enrichedAll = enrichOffers(monitoringOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by monitoring type
+  const apmObservability = enrichedAll.filter(o =>
+    ["New Relic", "Grafana Cloud", "Datadog", "Sentry", "Middleware.io", "AppSignal", "Axiom", "Sematext", "Inspector.dev", "skylight.io"].includes(o.vendor)
+  );
+  const uptimeSynthetic = enrichedAll.filter(o =>
+    ["BetterStack", "UptimeRobot", "StatusCake", "Hyperping", "OnlineOrNot", "Cronitor", "Healthchecks.io", "Uptimia", "Pulsetic", "SweetUptime", "UptimeObserver.com", "downtimemonkey.com", "fivenines.io", "pingbreak.com", "Pingmeter.com", "assertible.com", "bleemeo.com", "MonitorMonk", "Xitoring.com", "360 Monitoring", "sitesure.net", "Servervana", "uptimetoolbox.com", "deadmanssnitch.com"].includes(o.vendor)
+  );
+  const errorTracking = enrichedAll.filter(o =>
+    ["Sentry", "Bugsnag", "Rollbar", "GlitchTip", "Exceptionless", "honeybadger.io", "elmah.io", "Bugsink", "CatchJS.com", "Jam", "Whitespace", "LogRocket"].includes(o.vendor)
+    && !apmObservability.some(a => a.vendor === o.vendor)
+  );
+  const logManagement = enrichedAll.filter(o =>
+    ["Axiom", "Sematext", "BetterStack"].includes(o.vendor)
+    && !apmObservability.some(a => a.vendor === o.vendor) && !uptimeSynthetic.some(a => a.vendor === o.vendor)
+  );
+  const infrastructure = enrichedAll.filter(o =>
+    ["Prometheus", "netdata.cloud", "Jaeger", "robusta.dev", "Google Cloud Monitoring", "Simple Observability", "syagent.com", "stathat.com"].includes(o.vendor)
+  );
+  const incidentManagement = enrichedAll.filter(o =>
+    ["PagerDuty", "incident.io", "pagertree.com", "incidenthub.cloud", "phare.io", "StatusPile", "pingpong.one", "statusgator.com"].includes(o.vendor)
+  );
+  const rumAnalytics = enrichedAll.filter(o =>
+    ["LogRocket", "Embrace", "Core Web Vitals History", "loader.io"].includes(o.vendor)
+    && !errorTracking.some(e => e.vendor === o.vendor)
+  );
+  const startupPrograms = enrichedAll.filter(o =>
+    ["Instabug for Startups", "Experian"].includes(o.vendor)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Monitoring deal changes
+  const monitoringChangeVendors = ["Datadog", "New Relic", "Sentry", "Freshping", "Grafana", "BetterStack", "Rollbar", "Bugsnag", "PagerDuty"];
+  const monitoringChanges = dealChanges.filter(c => monitoringChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = monitoringChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Monitoring Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${monitoringChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: monitoringOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Monitoring</div>
+  <h1>Best Free Monitoring Tools for Developers</h1>
+
+  <div class="context">
+    <p>Monitoring is essential infrastructure, but pricing can be brutal. <strong>Datadog</strong> is notorious for unpredictable bills — its free tier gives only <strong>5 hosts with 1-day retention</strong>. <strong>New Relic</strong> is more generous with <strong>100 GB/month</strong> free ingest, but complexity ramps fast. Meanwhile, <strong>Freshping shut down on March 6, 2026</strong>, displacing thousands of uptime monitors.</p>
+    <p>This page compares every free monitoring option in our index — <strong>${monitoringOffers.length} tools</strong> across APM, uptime monitoring, log management, error tracking, infrastructure monitoring, and incident management. Whether you need full-stack observability or just a simple uptime check, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <div class="context-box" style="border-left:3px solid var(--accent)">
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific tool? See our dedicated guides: <a href="/datadog-alternatives">Datadog Alternatives</a> | <a href="/freshping-alternatives">Freshping Alternatives</a></p>
+  </div>
+
+  <h2>APM &amp; Observability Platforms</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Full-stack application performance monitoring — traces, metrics, and logs in one platform. These are the "do everything" tools for teams that want unified observability.</p>
+${buildCards(apmObservability)}
+
+  <h2>Uptime &amp; Synthetic Monitoring</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Monitor websites, APIs, and cron jobs for availability. Simple, focused tools that alert you when something goes down. Most generous free tiers in the monitoring space.</p>
+${buildCards(uptimeSynthetic)}
+
+  <h2>Error Tracking</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Catch, group, and triage application errors with stack traces, breadcrumbs, and release tracking. Essential for production debugging.</p>
+${buildCards(errorTracking)}
+
+  <h2>Infrastructure &amp; Open Source</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Self-hosted and open-source monitoring tools. Maximum control, zero vendor lock-in — but you manage the infrastructure. Many are CNCF graduated projects.</p>
+${buildCards(infrastructure)}
+
+  <h2>Incident Management &amp; Status Pages</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">On-call alerting, incident response, and public status pages. Connect your monitoring to your team's response workflow.</p>
+${buildCards(incidentManagement)}
+
+${rumAnalytics.length > 0 ? `
+  <h2>Real User Monitoring &amp; Performance</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Track real user experience — session replays, performance metrics, and Core Web Vitals from actual browser sessions.</p>
+${buildCards(rumAnalytics)}
+` : ""}
+
+${startupPrograms.length > 0 ? `
+  <h2>Startup Programs</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Discounted monitoring plans for eligible startups and early-stage companies.</p>
+${buildCards(startupPrograms)}
+` : ""}
+
+  <h2>Free Monitoring Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free monitoring tools compared by data ingest, retention, and alerts.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Type</th>
+        <th>Free Tier Limits</th>
+        <th>Retention</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/new-relic" style="color:var(--text)">New Relic</a></td>
+        <td>APM</td>
+        <td>100 GB/mo ingest, 1 full user</td>
+        <td>8+ days</td>
+        <td>Full-stack observability, generous free tier</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/grafana-cloud" style="color:var(--text)">Grafana Cloud</a></td>
+        <td>APM / Logs</td>
+        <td>10K metrics, 50 GB logs, 50 GB traces</td>
+        <td>14 days</td>
+        <td>Open-source stack (Prometheus + Loki + Tempo)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/datadog" style="color:var(--text)">Datadog</a></td>
+        <td>APM</td>
+        <td>5 hosts, core metrics only</td>
+        <td>1 day</td>
+        <td>Teams already on Datadog, broad integrations</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/sentry" style="color:var(--text)">Sentry</a></td>
+        <td>Errors / APM</td>
+        <td>5K errors/mo, 5M spans/mo, 50 replays</td>
+        <td>30 days</td>
+        <td>Error tracking with performance tracing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/betterstack" style="color:var(--text)">BetterStack</a></td>
+        <td>Uptime / Logs</td>
+        <td>10 monitors, 3 GB logs, 100K exceptions</td>
+        <td>3 days (logs)</td>
+        <td>All-in-one uptime + logs + errors</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/uptimerobot" style="color:var(--text)">UptimeRobot</a></td>
+        <td>Uptime</td>
+        <td>50 monitors, 5-min intervals</td>
+        <td>3 months</td>
+        <td>Simple uptime monitoring, most monitors free</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/axiom" style="color:var(--text)">Axiom</a></td>
+        <td>Logs / Traces</td>
+        <td>500 GB ingest/mo, 25 GB storage</td>
+        <td>30 days</td>
+        <td>High-volume log analysis, generous storage</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/middleware-io" style="color:var(--text)">Middleware.io</a></td>
+        <td>APM</td>
+        <td>100 GB/mo data, unlimited users</td>
+        <td>Varies</td>
+        <td>Full observability (APM + logs + RUM + synthetics)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/healthchecks-io" style="color:var(--text)">Healthchecks.io</a></td>
+        <td>Cron</td>
+        <td>20 monitors, email/Slack/Telegram alerts</td>
+        <td>100 log entries</td>
+        <td>Cron job monitoring, dead man's switch</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/prometheus" style="color:var(--text)">Prometheus</a></td>
+        <td>Infrastructure</td>
+        <td>Unlimited (self-hosted, OSS)</td>
+        <td>Configurable</td>
+        <td>Kubernetes, CNCF ecosystem, pull-based metrics</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pagerduty" style="color:var(--text)">PagerDuty</a></td>
+        <td>Incidents</td>
+        <td>5 users, 100 phone/SMS/mo</td>
+        <td>N/A</td>
+        <td>On-call scheduling and incident response</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/bugsnag" style="color:var(--text)">Bugsnag</a></td>
+        <td>Errors</td>
+        <td>7,500 events/mo, 1M spans</td>
+        <td>7 days</td>
+        <td>Mobile + web error tracking</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">New Relic's 100 GB/month is the most generous APM free tier. Axiom leads on log storage (500 GB ingest). UptimeRobot offers the most free monitors (50). Prometheus and Grafana (self-hosted) have no limits. Datadog's free tier is the most restrictive among major APM vendors. All limits verified against live pricing pages, March 2026.</p>
+
+  <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
+    <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Freshping Shutdown — March 6, 2026</div>
+    <p style="margin:0;font-size:.9rem">Freshping (Freshworks) shut down on <strong>March 6, 2026</strong>, displacing thousands of free uptime monitors. If you're migrating, see our <a href="/freshping-alternatives">Freshping Alternatives</a> guide for free replacement options.</p>
+  </div>
+
+  <h2>Which Free Monitoring Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need full-stack APM (traces + metrics + logs)?</dt>
+      <dd><a href="/vendor/new-relic">New Relic</a> (100 GB/mo, most generous) or <a href="/vendor/grafana-cloud">Grafana Cloud</a> (open-source stack, 14-day retention). <a href="/vendor/middleware-io">Middleware.io</a> is a newer option with 100 GB/mo and unlimited users.</dd>
+
+      <dt>Just need uptime monitoring?</dt>
+      <dd><a href="/vendor/uptimerobot">UptimeRobot</a> (50 monitors, 5-min intervals) is the established choice. <a href="/vendor/betterstack">BetterStack</a> adds logs and errors. <a href="/vendor/statuscake">StatusCake</a> includes SSL and domain monitoring.</dd>
+
+      <dt>Tracking application errors?</dt>
+      <dd><a href="/vendor/sentry">Sentry</a> (5K errors/mo + performance tracing) is the developer favorite. <a href="/vendor/bugsnag">Bugsnag</a> excels at mobile. <a href="/vendor/glitchtip">GlitchTip</a> is Sentry-compatible and open source.</dd>
+
+      <dt>Need log management?</dt>
+      <dd><a href="/vendor/axiom">Axiom</a> (500 GB/mo ingest, 30-day retention) is the most generous. <a href="/vendor/grafana-cloud">Grafana Cloud</a> with Loki gives 50 GB logs. <a href="/vendor/betterstack">BetterStack</a> offers 3 GB with 3-day retention.</dd>
+
+      <dt>Monitoring Kubernetes?</dt>
+      <dd><a href="/vendor/prometheus">Prometheus</a> + <a href="/vendor/grafana-cloud">Grafana</a> is the standard CNCF stack. <a href="/vendor/robusta-dev">Robusta</a> adds Kubernetes-specific troubleshooting (20 nodes free). <a href="/vendor/netdata-cloud">Netdata</a> provides real-time metrics with zero config.</dd>
+
+      <dt>Need on-call and incident management?</dt>
+      <dd><a href="/vendor/pagerduty">PagerDuty</a> (5 users, 100 notifications/mo) is the industry standard. <a href="/vendor/incident-io">incident.io</a> offers native Slack/Teams integration. <a href="/vendor/pagertree-com">PagerTree</a> is a simpler alternative (5 users free).</dd>
+
+      <dt>Want open-source and self-hosted?</dt>
+      <dd><a href="/vendor/prometheus">Prometheus</a> (metrics), <a href="/vendor/jaeger">Jaeger</a> (tracing), <a href="/vendor/sentry">Sentry</a> (errors, self-hosted option), and <a href="/vendor/netdata-cloud">Netdata</a> (real-time dashboards) form a comprehensive OSS monitoring stack. All CNCF projects or Apache-licensed.</dd>
+
+      <dt>Coming from Datadog on a budget?</dt>
+      <dd>See our dedicated <a href="/datadog-alternatives">Datadog Alternatives</a> guide. TL;DR: <a href="/vendor/new-relic">New Relic</a> has 20x the free data ingest, <a href="/vendor/grafana-cloud">Grafana Cloud</a> eliminates vendor lock-in, and <a href="/vendor/axiom">Axiom</a> offers the best free log storage.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? <a href="/category/monitoring">Browse all Monitoring tools</a> or <a href="/category/error-tracking">Error Tracking tools</a> in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get monitoring recommendations from your AI assistant. Compare free tiers, track pricing changes, and audit your observability stack — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -8500,6 +8855,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildDatabaseAlternativesPage());
+  } else if (url.pathname === "/monitoring-alternatives" && isGetOrHead) {
+    recordApiHit("/monitoring-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/monitoring-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildMonitoringAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
