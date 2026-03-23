@@ -2976,6 +2976,127 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cline and Aider are fully free — you pay only for the LLM API calls (OpenRouter, Anthropic, OpenAI, etc.). Claude Code is free during beta (expected to become paid). Gemini CLI free tier is generous: 60 req/min, 1,000 req/day with a personal Google account.</p>`,
   },
   {
+    slug: "datadog-alternatives",
+    title: "Datadog Alternatives — Best Free Monitoring & Observability Tools for 2026",
+    metaDesc: "Datadog bills are unpredictable. Compare free observability alternatives: Grafana Cloud, New Relic, Sentry, Axiom, Prometheus, BetterStack, and more. Verified 2026 free tier limits.",
+    contextHtml: `<p><strong>Datadog</strong> is a powerful, full-stack observability platform — but it's notorious for <strong>unpredictable pricing</strong>. Teams routinely discover their bill is 3–5× what they expected after a traffic spike, log volume increase, or custom metrics growth. "Datadog alternatives" is one of the most searched developer tools queries for good reason.</p>
+    <p>The free tier (5 hosts, 1-day metric retention, 1 custom metric per host) is extremely limited — most teams outgrow it within weeks. And once you're on a paid plan, costs scale with hosts, containers, custom metrics, log volume, APM spans, and synthetics — each billed separately.</p>
+    <p>The good news: the monitoring landscape in 2026 offers strong free tiers across every observability need. Full-platform alternatives (Grafana Cloud, New Relic, Middleware.io), specialized tools (Sentry for errors, Axiom for logs), and battle-tested open-source options (Prometheus, Jaeger) can replace parts or all of a Datadog setup — often at zero cost for small-to-medium workloads.</p>`,
+    tag: "datadog-alternative",
+    primaryVendor: "Datadog",
+    hubDesc: "Unpredictable pricing drives developer search — 12 free monitoring and observability alternatives compared",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Datadog's free tier is one of the most restrictive in the category — most alternatives offer significantly more.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Free Tier</th>
+        <th>Best For</th>
+        <th>Self-Hosted Option</th>
+        <th>Key Advantage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Datadog</td>
+        <td>5 hosts, 1-day retention, 1 custom metric/host</td>
+        <td>Full-stack observability</td>
+        <td>—</td>
+        <td style="color:var(--text-dim)">Broadest integration catalog</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/grafana-cloud" style="color:var(--text)">Grafana Cloud</a></td>
+        <td>10K metrics, 50 GB logs, 50 GB traces, 3 users</td>
+        <td>Full-stack observability</td>
+        <td>✅ Grafana + Loki + Tempo</td>
+        <td>Most generous free tier + fully open-source stack</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/new-relic" style="color:var(--text)">New Relic</a></td>
+        <td>100 GB ingest/month, 1 full user</td>
+        <td>Full-stack observability</td>
+        <td>—</td>
+        <td>100 GB free ingest — 10× most competitors</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/middleware-io" style="color:var(--text)">Middleware.io</a></td>
+        <td>100 GB/month (APM, logs, infra, traces, RUM)</td>
+        <td>Full-stack observability</td>
+        <td>—</td>
+        <td>All-in-one: APM + logs + traces + RUM + synthetics</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/sentry" style="color:var(--text)">Sentry</a></td>
+        <td>5K errors/month, 5M spans, 50 replays</td>
+        <td>Error tracking + performance</td>
+        <td>✅ Self-hosted</td>
+        <td>Best-in-class error tracking with session replay</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/axiom" style="color:var(--text)">Axiom</a></td>
+        <td>500 GB ingest/month, 30-day retention</td>
+        <td>Log management</td>
+        <td>—</td>
+        <td>500 GB free log ingest — unmatched for logs</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/betterstack" style="color:var(--text)">BetterStack</a></td>
+        <td>10 monitors, 3 GB logs, 1 status page</td>
+        <td>Uptime + incident management</td>
+        <td>—</td>
+        <td>Uptime + logs + status pages in one tool</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/appsignal" style="color:var(--text)">AppSignal</a></td>
+        <td>50K requests/month, 1 GB logs</td>
+        <td>Small app monitoring</td>
+        <td>—</td>
+        <td>Simple setup — APM + errors + logging combined</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/sematext" style="color:var(--text)">Sematext</a></td>
+        <td>500 MB/day logs, 3 hosts monitoring</td>
+        <td>Logs + infrastructure</td>
+        <td>—</td>
+        <td>No per-host charges on paid plans</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/prometheus" style="color:var(--text)">Prometheus</a></td>
+        <td>Free OSS (Apache 2.0)</td>
+        <td>Metrics + alerting</td>
+        <td>✅ Self-hosted only</td>
+        <td>CNCF standard — no vendor lock-in</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/jaeger" style="color:var(--text)">Jaeger</a></td>
+        <td>Free OSS (Apache 2.0)</td>
+        <td>Distributed tracing</td>
+        <td>✅ Self-hosted only</td>
+        <td>CNCF graduated — OpenTelemetry native</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/uptimerobot" style="color:var(--text)">UptimeRobot</a></td>
+        <td>50 monitors, 5-min intervals</td>
+        <td>Uptime monitoring</td>
+        <td>—</td>
+        <td>50 free monitors — most generous uptime tier</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hyperping" style="color:var(--text)">Hyperping</a></td>
+        <td>5 monitors, 3-min intervals, 1 status page</td>
+        <td>Uptime + status pages</td>
+        <td>—</td>
+        <td>Status page with subscriber notifications included</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Prometheus and Jaeger are fully free open-source — you manage the infrastructure. Grafana Cloud's free tier includes managed Prometheus, Loki (logs), and Tempo (traces). New Relic's 100 GB ingest and Axiom's 500 GB ingest are standout free tiers for teams generating significant telemetry volume.</p>`,
+  },
+  {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
     metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",
