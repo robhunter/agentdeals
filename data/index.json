@@ -152,7 +152,7 @@
     {
       "vendor": "Koyeb",
       "category": "Cloud Hosting",
-      "description": "1 free web service (1 vCPU, 512 MB RAM, 2 GB SSD), 1 free Postgres database (1 GB, 5 hr/month runtime), 100 GB egress, scale-to-zero",
+      "description": "1 free web service (1 vCPU, 512 MB RAM, 2 GB SSD), 1 free Postgres database (1 GB, 5 hr/month runtime), scale-to-zero",
       "tier": "Starter",
       "url": "https://www.koyeb.com/pricing",
       "tags": [
@@ -164,7 +164,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-23"
     },
     {
       "vendor": "AWS",
@@ -311,7 +311,7 @@
     {
       "vendor": "Upstash",
       "category": "Databases",
-      "description": "Serverless Redis — 500K commands/month (256MB data). QStash: 1,000 messages/day free",
+      "description": "Serverless Redis — 500K commands/month (256MB data). Vector: 10K vectors free. QStash: 1,000 messages/day free",
       "tier": "Free",
       "url": "https://upstash.com/pricing",
       "tags": [
@@ -4869,6 +4869,21 @@
         "embedded"
       ],
       "verifiedDate": "2026-03-20"
+    },
+    {
+      "vendor": "Upstash Vector",
+      "category": "Databases",
+      "description": "Serverless vector database by Upstash — 10K vectors, 1536 dimensions, 150K query units/day free. REST API, no connection management",
+      "tier": "Free",
+      "url": "https://upstash.com/pricing/vector",
+      "tags": [
+        "vector-database",
+        "ai",
+        "embeddings",
+        "serverless",
+        "free tier"
+      ],
+      "verifiedDate": "2026-03-23"
     },
     {
       "vendor": "AssemblyAI",
