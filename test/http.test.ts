@@ -1556,6 +1556,26 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Supabase"), "Should include Supabase alternative");
   });
 
+  it("GET /cursor-alternatives renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/cursor-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Cursor Alternatives"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("credit-based pricing"), "Should mention credit-based pricing");
+    assert.ok(html.includes("Free Tier Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Claude Code"), "Should include Claude Code alternative");
+    assert.ok(html.includes("GitHub Copilot"), "Should include GitHub Copilot alternative");
+    assert.ok(html.includes("Cline"), "Should include Cline alternative");
+    assert.ok(html.includes("Aider"), "Should include Aider alternative");
+  });
+
   it("GET /github-actions-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
@@ -1611,6 +1631,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/hetzner-alternatives"), "Should link to Hetzner page");
     assert.ok(html.includes("/freshping-alternatives"), "Should link to Freshping page");
     assert.ok(html.includes("/github-actions-alternatives"), "Should link to GitHub Actions page");
+    assert.ok(html.includes("/cursor-alternatives"), "Should link to Cursor page");
     assert.ok(html.includes("/ai-free-tiers"), "Should link to AI free tiers page");
   });
 

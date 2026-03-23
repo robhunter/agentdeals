@@ -21447,7 +21447,8 @@
         "cli",
         "autonomous",
         "code generation",
-        "developer tools"
+        "developer tools",
+        "cursor-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -21462,7 +21463,8 @@
         "coding",
         "code completion",
         "ide",
-        "developer tools"
+        "developer tools",
+        "cursor-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -21477,7 +21479,8 @@
         "coding",
         "aws",
         "code generation",
-        "developer tools"
+        "developer tools",
+        "cursor-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -21492,7 +21495,8 @@
         "coding",
         "autonomous",
         "open source",
-        "developer tools"
+        "developer tools",
+        "cursor-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -21508,7 +21512,8 @@
         "cli",
         "pair programming",
         "open source",
-        "developer tools"
+        "developer tools",
+        "cursor-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -21523,7 +21528,8 @@
         "coding",
         "ide",
         "code completion",
-        "developer tools"
+        "developer tools",
+        "cursor-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -21538,7 +21544,8 @@
         "coding",
         "code completion",
         "codebase understanding",
-        "developer tools"
+        "developer tools",
+        "cursor-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
@@ -21571,7 +21578,8 @@
         "open source",
         "google",
         "terminal",
-        "developer tools"
+        "developer tools",
+        "cursor-alternative"
       ],
       "verifiedDate": "2026-03-14"
     },
