@@ -4232,6 +4232,23 @@
       "verifiedDate": "2026-03-21"
     },
     {
+      "vendor": "Floci",
+      "category": "Cloud IaaS",
+      "description": "Open-source AWS service emulator — the leading community replacement for LocalStack CE. 20+ AWS services supported with 408/408 SDK tests passing. 90 MB Docker image (vs LocalStack's 1.0 GB), 24ms startup (vs 3.3s). MIT license, no auth token required. v1.0.4 released March 2026",
+      "tier": "Open Source",
+      "url": "https://github.com/hectorvent/floci",
+      "tags": [
+        "aws",
+        "cloud",
+        "local-dev",
+        "testing",
+        "emulator",
+        "open-source",
+        "localstack-alternative"
+      ],
+      "verifiedDate": "2026-03-23"
+    },
+    {
       "vendor": "Brave Search API",
       "category": "Search",
       "description": "$5/month credit (~1,000 queries/mo at $5/1,000 requests). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required to keep credit. Credit card required, overages billed with no spending cap. Free tier (5,000 queries/mo) removed Feb 2026",
