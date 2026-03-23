@@ -3323,6 +3323,125 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*FusionAuth and Keycloak are free self-hosted with no user limits. WorkOS leads managed platforms at 1M MAU free (AuthKit). Clerk and Logto both offer 50K MAU. Supabase and Firebase bundle auth into broader BaaS free tiers.</p>`,
   },
   {
+    slug: "mongodb-alternatives",
+    title: "MongoDB Alternatives — Best Free Databases for 2026",
+    metaDesc: "MongoDB Atlas free tier too small? Compare free database alternatives: Supabase, Neon, CockroachDB, Turso, Xata, PocketBase, Convex, and more. Verified 2026 free tier limits.",
+    contextHtml: `<p><strong>MongoDB Atlas</strong> is the most popular hosted document database, but its free tier comes with hard limits: <strong>512 MB storage</strong> on a shared M0 cluster, no backups, limited connections, and no Atlas Search on free clusters. Developers building side projects hit these limits fast — a modest collection of user data and logs can fill 512 MB in weeks.</p>
+    <p>The bigger issue is the <strong>SSPL license</strong>. MongoDB switched from AGPL to the Server Side Public License in 2018, which effectively prevents cloud providers and many companies from offering MongoDB-as-a-service. This has accelerated the shift toward Postgres-based alternatives (Supabase, Neon, Xata) and edge-native databases (Turso, Cloudflare D1) that offer more generous free tiers with truly open-source licenses.</p>
+    <p>The database landscape in 2026 offers compelling alternatives across every use case: serverless Postgres with branching (Neon), distributed SQL (CockroachDB), edge SQLite (Turso, D1), reactive backends (Convex), and full BaaS platforms (Supabase, Firebase, Appwrite). Most offer significantly more free storage than MongoDB Atlas.</p>`,
+    tag: "mongodb-alternative",
+    primaryVendor: "MongoDB Atlas",
+    hubDesc: "512 MB free tier + SSPL license drive alternatives search — 10 free databases compared",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each database. MongoDB Atlas gives you 512 MB on a shared cluster — most alternatives offer 5-15x more storage.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Database</th>
+        <th>Free Storage</th>
+        <th>Type</th>
+        <th>Backups</th>
+        <th>Self-Hosted</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">MongoDB Atlas</td>
+        <td>512 MB</td>
+        <td>Document</td>
+        <td>No</td>
+        <td>SSPL</td>
+        <td style="color:var(--text-dim)">Document queries + aggregation pipeline</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/supabase" style="color:var(--text)">Supabase</a></td>
+        <td>500 MB</td>
+        <td>Postgres</td>
+        <td>No</td>
+        <td>Yes (Apache 2.0)</td>
+        <td>Full BaaS — auth + storage + realtime</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/neon" style="color:var(--text)">Neon</a></td>
+        <td>512 MB</td>
+        <td>Serverless Postgres</td>
+        <td>7-day history</td>
+        <td>Yes (Apache 2.0)</td>
+        <td>Branching + scale-to-zero Postgres</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cockroachdb" style="color:var(--text)">CockroachDB</a></td>
+        <td>10 GiB</td>
+        <td>Distributed SQL</td>
+        <td>Yes</td>
+        <td>Yes (BSL)</td>
+        <td>Multi-region + horizontal scale</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/turso" style="color:var(--text)">Turso</a></td>
+        <td>5 GB</td>
+        <td>SQLite (libSQL)</td>
+        <td>No</td>
+        <td>Yes (MIT)</td>
+        <td>Edge-native + embedded replicas</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/xata" style="color:var(--text)">Xata</a></td>
+        <td>15 GB</td>
+        <td>Serverless Postgres</td>
+        <td>Daily</td>
+        <td>No</td>
+        <td>Postgres + built-in search + branching</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudflare-d1" style="color:var(--text)">Cloudflare D1</a></td>
+        <td>5 GB</td>
+        <td>SQLite (edge)</td>
+        <td>No</td>
+        <td>No</td>
+        <td>Edge Workers integration + zero egress</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pocketbase" style="color:var(--text)">PocketBase</a></td>
+        <td>Unlimited*</td>
+        <td>SQLite</td>
+        <td>Manual</td>
+        <td>Yes (MIT)</td>
+        <td>Single binary backend — zero dependencies</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/convex" style="color:var(--text)">Convex</a></td>
+        <td>512 MB</td>
+        <td>Document (reactive)</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>Real-time sync + serverless functions</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/firebase" style="color:var(--text)">Firebase</a></td>
+        <td>1 GiB</td>
+        <td>Document (Firestore)</td>
+        <td>No</td>
+        <td>No</td>
+        <td>Google ecosystem + mobile SDKs</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/appwrite-cloud" style="color:var(--text)">Appwrite</a></td>
+        <td>2 GB</td>
+        <td>Document</td>
+        <td>No</td>
+        <td>Yes (BSD)</td>
+        <td>Open-source BaaS — auth + functions + storage</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*PocketBase is fully free self-hosted with no storage limits. CockroachDB leads managed offerings at 10 GiB free. Xata offers the most generous managed storage at 15 GB with daily backups included. Turso and D1 provide 5 GB of edge SQLite.</p>`,
+  },
+  {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
     metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",
