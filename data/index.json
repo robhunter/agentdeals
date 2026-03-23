@@ -245,7 +245,8 @@
         "storage",
         "realtime",
         "baas",
-        "firebase-alternative"
+        "firebase-alternative",
+        "auth0-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },
@@ -337,7 +338,8 @@
         "serverless",
         "hosting",
         "analytics",
-        "free tier"
+        "free tier",
+        "auth0-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -707,7 +709,8 @@
         "auth",
         "authentication",
         "identity",
-        "users"
+        "users",
+        "auth0-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -739,7 +742,8 @@
         "identity",
         "mfa",
         "saml",
-        "free tier"
+        "free tier",
+        "auth0-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -755,7 +759,8 @@
         "identity",
         "sso",
         "enterprise",
-        "free tier"
+        "free tier",
+        "auth0-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -3306,7 +3311,8 @@
         "oauth",
         "mfa",
         "identity",
-        "fraud prevention"
+        "fraud prevention",
+        "auth0-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -3783,9 +3789,27 @@
         "oidc",
         "saml",
         "identity",
-        "open source"
+        "open source",
+        "auth0-alternative"
       ],
       "verifiedDate": "2026-03-20"
+    },
+    {
+      "vendor": "FusionAuth",
+      "category": "Auth",
+      "description": "Full-featured identity platform — community edition: unlimited users, self-hosted free (Apache 2.0). Includes OAuth2/OIDC, SAML, passwordless, MFA, social login, user management, webhooks, themes",
+      "tier": "Community",
+      "url": "https://fusionauth.io/pricing",
+      "tags": [
+        "auth",
+        "authentication",
+        "identity",
+        "sso",
+        "open-source",
+        "self-hosted",
+        "auth0-alternative"
+      ],
+      "verifiedDate": "2026-03-23"
     },
     {
       "vendor": "Cerebras",
@@ -9594,16 +9618,18 @@
     {
       "vendor": "Logto",
       "category": "Auth",
-      "description": "Develop, secure, and manage user identities of your product - for both authentication and authorization. Free for up to 5,000 MAUs with open-source self-hosted option available.",
+      "description": "Open-source identity solution — 50K MAU free (cloud), unlimited self-hosted. OIDC, social login, passwordless, MFA, RBAC, multi-tenancy, webhooks",
       "tier": "Free",
-      "url": "https://logto.io/",
+      "url": "https://logto.io/pricing",
       "tags": [
         "auth",
         "authentication",
         "identity",
-        "free-for-dev"
+        "open-source",
+        "free tier",
+        "auth0-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-23"
     },
     {
       "vendor": "MojoAuth",
@@ -9636,16 +9662,19 @@
     {
       "vendor": "Ory",
       "category": "Auth",
-      "description": "AuthN/AuthZ/OAuth2.0/Zero Trust managed security platform. Forever free developer accounts with all security features, unlimited team members, 200 daily active users, and 25k/mo permission checks.",
+      "description": "Open-source identity infrastructure — Kratos (identity), Hydra (OAuth2/OIDC), Oathkeeper (API gateway), Keto (permissions). Cloud: 25K MAU free. Self-hosted: unlimited, Apache 2.0",
       "tier": "Free",
-      "url": "https://ory.sh/",
+      "url": "https://www.ory.sh/pricing/",
       "tags": [
         "auth",
         "authentication",
         "identity",
-        "free-for-dev"
+        "open-source",
+        "oauth",
+        "free tier",
+        "auth0-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-23"
     },
     {
       "vendor": "Phase Two",
