@@ -2373,12 +2373,12 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "localstack-alternatives",
     title: "LocalStack CE Alternatives — Free and Open Source Options for 2026",
-    metaDesc: "LocalStack Community Edition shuts down March 23, 2026. Compare free alternatives: Vera AWS, Moto, Testcontainers, MinIO, AWS SAM CLI, DynamoDB Local, ElasticMQ. Service coverage comparison.",
+    metaDesc: "LocalStack Community Edition shuts down March 23, 2026. Compare free alternatives: Floci, Vera AWS, Moto, Testcontainers, MinIO, AWS SAM CLI, DynamoDB Local, ElasticMQ. Service coverage comparison.",
     contextHtml: `<p><strong>LocalStack Community Edition</strong> — the open-source AWS cloud emulator that let developers run S3, Lambda, DynamoDB, SQS, and 30+ other AWS services locally — <strong>shuts down on March 23, 2026</strong>. The unified Docker image now requires registration and an auth token. Commercial use requires a paid plan starting at $39/month (Starter) or $89/month (Ultimate).</p>
-      <p>Unlike LocalStack, which provided a single all-in-one emulator, the migration path is typically a combination of service-specific tools. Below are the best free and open-source alternatives, organized by which AWS services they replace.</p>`,
+      <p><strong>Floci</strong> has emerged as the primary community-recommended replacement — an MIT-licensed emulator supporting 20+ AWS services in a 90 MB Docker image with 24ms startup. For more specialized needs, there are also service-specific tools. Below are the best free and open-source alternatives, organized by which AWS services they replace.</p>`,
     tag: "localstack-alternative",
     primaryVendor: "LocalStack",
-    hubDesc: "LocalStack CE shuts down March 23, 2026 — compare 8 free open-source AWS emulators",
+    hubDesc: "LocalStack CE shuts down March 23, 2026 — compare 9 free open-source AWS emulators",
     serviceMatrixHtml: `
   <h2>AWS Service Coverage Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">Which AWS services each alternative covers. LocalStack CE supported 30+ services in a single tool — migration typically means combining 2-3 specialized alternatives.</p>
@@ -2403,6 +2403,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
         <td style="font-weight:600;color:var(--text-dim)">LocalStack CE</td>
         <td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td>
         <td style="color:var(--text-dim)">Discontinued</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/floci" style="color:var(--text)">Floci</a></td>
+        <td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td><td>\u2705</td>
+        <td>MIT</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/moto" style="color:var(--text)">Moto</a></td>
@@ -2442,7 +2447,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u2014 = not applicable. Testcontainers uses LocalStack or other containers under the hood for AWS services. Vera AWS focuses on EC2/VPC infrastructure (89 resource types in v0.1).</p>`,
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u2014 = not applicable. Floci supports 20+ AWS services in a 90 MB image (24ms startup). Testcontainers uses LocalStack or other containers under the hood for AWS services. Vera AWS focuses on EC2/VPC infrastructure (89 resource types in v0.1).</p>`,
   },
   {
     slug: "postman-alternatives",
