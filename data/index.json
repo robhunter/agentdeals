@@ -21468,7 +21468,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "AI Coding",
-      "description": "AI coding assistant by GitHub/Microsoft. Free tier: 2,000 code completions/month, 50 chat messages/month (Copilot Chat), access to Claude 3.5 Sonnet and GPT-4o models. Works in VS Code, JetBrains, Neovim, Xcode. Pro plan $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo. Business $19/seat/mo.",
+      "description": "AI coding assistant by GitHub/Microsoft. Free tier: 2,000 code completions/month, 50 chat messages/month (Copilot Chat), access to Claude and Codex models. Works in VS Code, JetBrains, Neovim, Xcode. Pro plan $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo. Business $19/seat/mo.",
       "tier": "Free",
       "url": "https://github.com/features/copilot",
       "tags": [
@@ -21479,7 +21479,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "Amazon Q Developer",
