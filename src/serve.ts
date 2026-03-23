@@ -3688,6 +3688,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   </div>
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*Buttondown's free tier is unlimited sends but capped at 100 subscribers. Mailjet's 6K/month is split into a 200/day sending limit. Brevo's 300/day works out to ~9K/month. All volumes are approximate where daily caps apply.</p>`,
   },
+  {
+    slug: "ci-cd-alternatives",
+    title: "Best Free CI/CD Tools for Developers in 2026 — Build Minutes, Runners & Pipelines Compared",
+    metaDesc: "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. Updated March 2026.",
+    contextHtml: "",
+    tag: "ci-cd-hub",
+    primaryVendor: "GitHub Actions",
+    hubDesc: "35+ free CI/CD tools compared — build minutes, runners, and pipelines by type (general, cloud-native, mobile, IaC)",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -5275,6 +5284,323 @@ ${buildCards(startupPrograms)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get monitoring recommendations from your AI assistant. Compare free tiers, track pricing changes, and audit your observability stack — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildCiCdAlternativesPage(): string {
+  const title = "Best Free CI/CD Tools for Developers in 2026 — Build Minutes, Runners & Pipelines Compared";
+  const metaDesc = "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. Updated March 2026.";
+  const slug = "ci-cd-alternatives";
+
+  // Get all CI/CD offers
+  const cicdOffers = offers.filter(o => o.category === "CI/CD");
+  const enrichedAll = enrichOffers(cicdOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by CI/CD type
+  const generalPurpose = enrichedAll.filter(o =>
+    ["GitHub Actions", "GitLab CI", "CircleCI", "Buildkite", "Bitbucket Pipelines", "Semaphore CI", "Buddy", "Harness CI", "appveyor.com", "cirrus-ci.org"].includes(o.vendor)
+  );
+  const cloudContainer = enrichedAll.filter(o =>
+    ["Codefresh", "Drone CI", "Woodpecker CI", "Google Cloud Build", "Shipfox"].includes(o.vendor)
+  );
+  const mobileCicd = enrichedAll.filter(o =>
+    ["Bitrise", "Codemagic", "Appcircle"].includes(o.vendor)
+  );
+  const iacAutomation = enrichedAll.filter(o =>
+    ["Terramate", "Terrateam", "Mergify", "Nx Cloud", "LocalOps"].includes(o.vendor)
+  );
+  const specialized = enrichedAll.filter(o =>
+    ["Unity DevOps", "bytebase.com", "cirun.io", "deployhq.com", "RunMyJob", "Squash Labs", "Tugboat"].includes(o.vendor)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // CI/CD deal changes
+  const cicdChangeVendors = ["GitHub Actions", "GitLab", "CircleCI", "Buildkite", "Harness", "Bitrise", "Codefresh"];
+  const cicdChanges = dealChanges.filter(c => cicdChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = cicdChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent CI/CD Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${cicdChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: cicdOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free CI/CD</div>
+  <h1>Best Free CI/CD Tools for Developers</h1>
+
+  <div class="context">
+    <p>Every software team needs CI/CD, but build minutes add up fast. <strong>GitHub Actions</strong> is the default choice with <strong>2,000 free minutes/month</strong> for private repos and unlimited for public, but it introduced <strong>self-hosted runner charges ($0.002/min) in March 2026</strong>. <strong>GitLab CI</strong> cut its free tier to <strong>400 minutes/month</strong>. <strong>CircleCI</strong> offers <strong>30K credits/month</strong> (~6K minutes) but requires a credit card for some features.</p>
+    <p>This page compares every free CI/CD option in our index \u2014 <strong>${cicdOffers.length} tools</strong> across general-purpose platforms, container-native pipelines, mobile CI/CD, and infrastructure automation. Whether you need cloud-hosted runners or self-hosted pipelines, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <div class="context-box" style="border-left:3px solid var(--accent)">
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific CI/CD tool? See our dedicated guide: <a href="/github-actions-alternatives">GitHub Actions Alternatives</a></p>
+  </div>
+
+  <h2>General-Purpose CI/CD Platforms</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Full-featured CI/CD platforms with cloud-hosted runners, pipeline configuration, and integrations. These cover most use cases \u2014 from simple test-and-deploy to complex multi-stage pipelines.</p>
+${buildCards(generalPurpose)}
+
+  <h2>Cloud &amp; Container-Native CI/CD</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Docker-first and Kubernetes-native CI/CD tools. Built for containerized workflows, GitOps, and cloud-native deployments. Many are open source with self-hosted options.</p>
+${buildCards(cloudContainer)}
+
+  <h2>Mobile CI/CD</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Specialized CI/CD for iOS, Android, Flutter, and React Native apps. Handle code signing, device testing, and app store distribution that general-purpose tools struggle with.</p>
+${buildCards(mobileCicd)}
+
+  <h2>Infrastructure &amp; Automation</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">CI/CD tools specialized for Infrastructure as Code (Terraform, OpenTofu), monorepo orchestration, merge automation, and deployment workflows.</p>
+${buildCards(iacAutomation)}
+
+${specialized.length > 0 ? `
+  <h2>Specialized CI/CD</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Domain-specific CI/CD tools \u2014 game development, database migrations, preview environments, Windows builds, and more.</p>
+${buildCards(specialized)}
+` : ""}
+
+  <h2>Free CI/CD Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free CI/CD platforms compared by build minutes, concurrency, and platform support.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Type</th>
+        <th>Free Build Minutes</th>
+        <th>Concurrency</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/github-actions" style="color:var(--text)">GitHub Actions</a></td>
+        <td>General</td>
+        <td>2,000/mo (private), \u221e (public)</td>
+        <td>20 jobs</td>
+        <td>GitHub repos, largest ecosystem of actions</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/gitlab-ci" style="color:var(--text)">GitLab CI</a></td>
+        <td>General</td>
+        <td>400/mo</td>
+        <td>Varies</td>
+        <td>All-in-one DevOps (SCM + CI + registry + deploy)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/circleci" style="color:var(--text)">CircleCI</a></td>
+        <td>General</td>
+        <td>30K credits/mo (~6K min)</td>
+        <td>30 jobs</td>
+        <td>Fast builds, Docker layer caching, orbs</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
+        <td>General</td>
+        <td>500 hosted min/mo</td>
+        <td>3 jobs</td>
+        <td>Hybrid (cloud + self-hosted), large-scale builds</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/harness-ci" style="color:var(--text)">Harness CI</a></td>
+        <td>General</td>
+        <td>2,000 credits/mo</td>
+        <td>Varies</td>
+        <td>AI-powered, multi-cloud, feature flags included</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/google-cloud-build" style="color:var(--text)">Google Cloud Build</a></td>
+        <td>Cloud</td>
+        <td>2,500/mo</td>
+        <td>Varies</td>
+        <td>GCP ecosystem, serverless builds</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/codefresh" style="color:var(--text)">Codefresh</a></td>
+        <td>Container</td>
+        <td>120 builds/mo</td>
+        <td>1 pipeline</td>
+        <td>Docker/K8s native, GitOps with Argo CD</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a></td>
+        <td>Container</td>
+        <td>\u221e (self-hosted)</td>
+        <td>\u221e</td>
+        <td>Self-hosted, Docker-native, lightweight</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/woodpecker-ci" style="color:var(--text)">Woodpecker CI</a></td>
+        <td>Container</td>
+        <td>\u221e (self-hosted)</td>
+        <td>\u221e</td>
+        <td>Drone fork, Apache 2.0, community-driven</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/codemagic" style="color:var(--text)">Codemagic</a></td>
+        <td>Mobile</td>
+        <td>500 macOS M2 min/mo</td>
+        <td>Varies</td>
+        <td>Flutter/mobile, macOS M2 runners, code signing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
+        <td>Mobile</td>
+        <td>300 credits/mo</td>
+        <td>1 build</td>
+        <td>Mobile CI/CD, iOS + Android + Flutter</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/buddy" style="color:var(--text)">Buddy</a></td>
+        <td>General</td>
+        <td>300 GB-min/mo</td>
+        <td>1 pipeline</td>
+        <td>Visual pipeline editor, fast deployments</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">GitHub Actions dominates with unlimited public repo minutes and the largest marketplace of reusable actions. CircleCI offers the most free credits among hosted platforms. Google Cloud Build has the most generous hosted minutes (2,500/mo). Drone CI and Woodpecker CI are unlimited when self-hosted. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free CI/CD Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Building on GitHub with public repos?</dt>
+      <dd><a href="/vendor/github-actions">GitHub Actions</a> \u2014 unlimited free minutes for public repos, 4,000+ marketplace actions, native GitHub integration. The obvious default choice.</dd>
+
+      <dt>Need more minutes for private repos?</dt>
+      <dd><a href="/vendor/circleci">CircleCI</a> (30K credits/mo, ~6K minutes) or <a href="/vendor/google-cloud-build">Google Cloud Build</a> (2,500 min/mo) both exceed GitHub Actions' 2,000 min/mo private repo limit.</dd>
+
+      <dt>Want an all-in-one DevOps platform?</dt>
+      <dd><a href="/vendor/gitlab-ci">GitLab CI</a> \u2014 SCM, CI/CD, container registry, deployments, and security scanning in one platform. Only 400 min/mo free, but everything is integrated.</dd>
+
+      <dt>Running container/Kubernetes workloads?</dt>
+      <dd><a href="/vendor/codefresh">Codefresh</a> for managed GitOps with Argo CD. <a href="/vendor/drone-ci">Drone CI</a> or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> for self-hosted, Docker-native pipelines with unlimited builds.</dd>
+
+      <dt>Building mobile apps (iOS/Android/Flutter)?</dt>
+      <dd><a href="/vendor/codemagic">Codemagic</a> (500 macOS M2 min/mo) is the Flutter favorite. <a href="/vendor/bitrise">Bitrise</a> covers iOS + Android with built-in code signing. <a href="/vendor/appcircle">Appcircle</a> adds OTA distribution.</dd>
+
+      <dt>Need unlimited builds, self-hosted?</dt>
+      <dd><a href="/vendor/drone-ci">Drone CI</a> (Apache 2.0) or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> (community fork) \u2014 both are container-native, lightweight, and free with no build limits. <a href="/vendor/semaphore-ci">Semaphore CI</a> also has a free self-hosted edition.</dd>
+
+      <dt>Managing Infrastructure as Code?</dt>
+      <dd><a href="/vendor/terramate">Terramate</a> and <a href="/vendor/terrateam">Terrateam</a> specialize in Terraform/OpenTofu CI/CD with PR-driven workflows. <a href="/vendor/nx-cloud">Nx Cloud</a> accelerates monorepo builds with remote caching.</dd>
+
+      <dt>Windows-only builds?</dt>
+      <dd><a href="/vendor/appveyor-com">AppVeyor</a> specializes in Windows CI/CD, free for open-source projects. GitHub Actions also supports Windows runners.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? <a href="/category/ci-cd">Browse all CI/CD tools</a> in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get CI/CD recommendations from your AI assistant. Compare build minutes, track pricing changes, and find the right pipeline tool for your stack \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -8860,6 +9186,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/monitoring-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildMonitoringAlternativesPage());
+  } else if (url.pathname === "/ci-cd-alternatives" && isGetOrHead) {
+    recordApiHit("/ci-cd-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ci-cd-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildCiCdAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
