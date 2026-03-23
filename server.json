@@ -3,7 +3,7 @@
   "name": "io.github.robhunter/agentdeals",
   "title": "AgentDeals",
   "description": "MCP server aggregating developer infrastructure deals, free tiers, and startup programs",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "websiteUrl": "https://agentdeals.dev",
   "repository": {
     "url": "https://github.com/robhunter/agentdeals",
