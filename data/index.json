@@ -483,7 +483,7 @@
     {
       "vendor": "GitHub Actions",
       "category": "CI/CD",
-      "description": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free \u2014 planned $0.002/min fee postponed indefinitely (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
+      "description": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runner usage now costs $0.002/min for private repos (March 2026). GitHub-hosted runner free tier (2,000 min/mo) unchanged. Hosted runner prices reduced 39% (Jan 2026)",
       "tier": "Free",
       "url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
       "tags": [
@@ -493,7 +493,7 @@
         "github",
         "deal-change"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-22"
     },
     {
       "vendor": "GitLab CI",
@@ -506,7 +506,8 @@
         "cd",
         "devops",
         "gitlab",
-        "free tier"
+        "free tier",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -520,7 +521,8 @@
         "ci",
         "cd",
         "automation",
-        "free tier"
+        "free tier",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -535,7 +537,8 @@
         "cd",
         "automation",
         "self-hosted",
-        "free tier"
+        "free tier",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -550,7 +553,8 @@
         "cd",
         "automation",
         "bitbucket",
-        "free tier"
+        "free tier",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -3987,7 +3991,8 @@
         "cd",
         "pipelines",
         "containers",
-        "open source"
+        "open source",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -4525,7 +4530,8 @@
         "cd",
         "continuous-integration",
         "pipelines",
-        "self-hosted"
+        "self-hosted",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -5301,7 +5307,8 @@
         "continuous-integration",
         "docker",
         "self-hosted",
-        "open-source"
+        "open-source",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -5317,7 +5324,8 @@
         "continuous-integration",
         "gitops",
         "docker",
-        "kubernetes"
+        "kubernetes",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -5399,7 +5407,8 @@
         "continuous-integration",
         "pipelines",
         "cloud",
-        "devops"
+        "devops",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -21719,7 +21728,8 @@
         "ci-cd",
         "build",
         "docker",
-        "google cloud"
+        "google cloud",
+        "github-actions-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },

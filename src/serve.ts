@@ -2791,6 +2791,98 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">PocketBase limits are "unlimited" because it's self-hosted \u2014 actual limits depend on your server hardware. Hasura is a GraphQL engine that sits on top of your own Postgres database. Appwrite projects pause after 1 week of inactivity on the free tier. Firebase Spark has no billing caps if you upgrade to Blaze.</p>`,
   },
   {
+    slug: "github-actions-alternatives",
+    title: "GitHub Actions Alternatives \u2014 Free CI/CD Tools for 2026",
+    metaDesc: "GitHub Actions self-hosted runners now cost $0.002/min for private repos. Compare free CI/CD alternatives: GitLab CI, CircleCI, Buildkite, Harness, Drone CI, Google Cloud Build, and more. Verified limits.",
+    contextHtml: `<p><strong>GitHub Actions</strong> introduced <strong>self-hosted runner charges ($0.002/min) for private repos on March 1, 2026</strong>. While the GitHub-hosted runner free tier (2,000 min/mo for private repos, unlimited for public) remains unchanged, teams running self-hosted runners for private repository builds now face per-minute costs.</p>
+      <p>For public repositories, GitHub Actions remains the best free CI/CD option \u2014 unlimited minutes with no restrictions. But if you\u2019re running private repo pipelines on self-hosted infrastructure, these alternatives offer generous free tiers without per-minute runner fees.</p>
+      <p>Below are the best free CI/CD alternatives, compared by <strong>exact free tier limits</strong> \u2014 build minutes, concurrent jobs, storage, and platform support.</p>`,
+    tag: "github-actions-alternative",
+    primaryVendor: "GitHub Actions",
+    hubDesc: "Self-hosted runner costs introduced March 2026 \u2014 10 free CI/CD alternatives compared",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">How each CI/CD platform\u2019s free tier compares. GitHub Actions\u2019 2,000 min/mo for private repos remains strong for GitHub-hosted runners \u2014 the new cost only applies to self-hosted runners.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Free Build Time</th>
+        <th>Concurrency</th>
+        <th>Users</th>
+        <th>Self-Hosted</th>
+        <th>GitOps</th>
+        <th>License</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">GitHub Actions</td>
+        <td>2,000 min/mo (private)</td><td>20 concurrent</td><td>Unlimited</td>
+        <td style="color:var(--text-dim)">$0.002/min (private)</td><td>\u2705</td>
+        <td style="color:var(--text-dim)">Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/gitlab-ci" style="color:var(--text)">GitLab CI</a></td>
+        <td>400 min/mo</td><td>Included</td><td>5</td>
+        <td>\u2705 Free</td><td>\u2705</td>
+        <td>MIT (core)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/circleci" style="color:var(--text)">CircleCI</a></td>
+        <td>30K credits/mo (~6K min)</td><td>30x</td><td>5</td>
+        <td>\u2705 Free</td><td>\u2705</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
+        <td>500 hosted min/mo</td><td>3 concurrent</td><td>Unlimited</td>
+        <td>\u2705 Free</td><td>\u2705</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/harness-ci" style="color:var(--text)">Harness CI</a></td>
+        <td>2,000 credits/mo</td><td>Included</td><td>Included</td>
+        <td>\u2705 Free</td><td>\u2705</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/google-cloud-build" style="color:var(--text)">Google Cloud Build</a></td>
+        <td>2,500 min/mo</td><td>Included</td><td>Included</td>
+        <td>\u2014</td><td>\u2705</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a></td>
+        <td>Unlimited (self-hosted)</td><td>Unlimited</td><td>Unlimited</td>
+        <td>\u2705 Self-hosted only</td><td>\u2705</td>
+        <td>Apache-2.0</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/woodpecker-ci" style="color:var(--text)">Woodpecker CI</a></td>
+        <td>Unlimited (self-hosted)</td><td>Unlimited</td><td>Unlimited</td>
+        <td>\u2705 Self-hosted only</td><td>\u2705</td>
+        <td>Apache-2.0</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/codefresh" style="color:var(--text)">Codefresh</a></td>
+        <td>120 builds/mo</td><td>1 concurrent</td><td>Included</td>
+        <td>\u2014</td><td>\u2705 (Argo)</td>
+        <td>Proprietary</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/semaphore-ci" style="color:var(--text)">Semaphore CI</a></td>
+        <td>Unlimited (self-hosted)</td><td>Unlimited</td><td>Unlimited</td>
+        <td>\u2705 Self-hosted only</td><td>\u2705</td>
+        <td>Proprietary</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Drone CI, Woodpecker CI, and Semaphore Community Edition are self-hosted only \u2014 limits depend on your infrastructure. GitLab CI\u2019s 400 min/mo applies to shared runners on gitlab.com; self-hosted GitLab runners are free. Bitbucket Pipelines (50 min/mo) not shown due to limited free tier.</p>`,
+  },
+  {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
     metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",
