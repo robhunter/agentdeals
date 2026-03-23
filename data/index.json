@@ -246,7 +246,8 @@
         "realtime",
         "baas",
         "firebase-alternative",
-        "auth0-alternative"
+        "auth0-alternative",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },
@@ -260,7 +261,8 @@
         "database",
         "postgres",
         "serverless",
-        "branching"
+        "branching",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },
@@ -290,7 +292,8 @@
         "sql",
         "distributed",
         "serverless",
-        "free tier"
+        "free tier",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },
@@ -305,7 +308,8 @@
         "sqlite",
         "edge",
         "serverless",
-        "free tier"
+        "free tier",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },
@@ -339,7 +343,8 @@
         "hosting",
         "analytics",
         "free tier",
-        "auth0-alternative"
+        "auth0-alternative",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -371,7 +376,8 @@
         "serverless",
         "vector",
         "free tier",
-        "firebase-alternative"
+        "firebase-alternative",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -389,7 +395,8 @@
         "serverless",
         "open-source",
         "free tier",
-        "firebase-alternative"
+        "firebase-alternative",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -420,7 +427,8 @@
         "postgres",
         "serverless",
         "branching",
-        "free tier"
+        "free tier",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -436,7 +444,8 @@
         "edge",
         "serverless",
         "cloudflare",
-        "free tier"
+        "free tier",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -471,7 +480,8 @@
         "realtime",
         "open-source",
         "self-hosted",
-        "firebase-alternative"
+        "firebase-alternative",
+        "mongodb-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },
