@@ -1783,6 +1783,29 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /ci-cd-alternatives renders CI/CD hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/ci-cd-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free CI/CD Tools"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("General-Purpose CI/CD"), "Should have general section");
+    assert.ok(html.includes("Container-Native"), "Should have container section");
+    assert.ok(html.includes("Mobile CI/CD"), "Should have mobile section");
+    assert.ok(html.includes("Which Free CI/CD Tool"), "Should have decision guide");
+    assert.ok(html.includes("Free CI/CD Comparison"), "Should have comparison table");
+    assert.ok(html.includes("GitHub Actions"), "Should include GitHub Actions");
+    assert.ok(html.includes("GitLab CI"), "Should include GitLab CI");
+    assert.ok(html.includes("CircleCI"), "Should include CircleCI");
+    assert.ok(html.includes("Drone CI"), "Should include Drone CI");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
