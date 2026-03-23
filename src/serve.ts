@@ -3097,6 +3097,113 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Prometheus and Jaeger are fully free open-source — you manage the infrastructure. Grafana Cloud's free tier includes managed Prometheus, Loki (logs), and Tempo (traces). New Relic's 100 GB ingest and Axiom's 500 GB ingest are standout free tiers for teams generating significant telemetry volume.</p>`,
   },
   {
+    slug: "vercel-alternatives",
+    title: "Vercel Alternatives — Best Free Frontend Deployment Platforms for 2026",
+    metaDesc: "Vercel hobby plan too limited? Compare free deployment alternatives: Cloudflare Pages, Netlify, Render, Railway, Deno Deploy, Coolify, and more. Verified 2026 free tier limits.",
+    contextHtml: `<p><strong>Vercel</strong> set the standard for frontend developer experience — instant preview deployments, edge functions, and seamless framework integration. But its pricing is a recurring pain point. The Hobby plan (100 GB bandwidth, 1M function invocations, 4 hrs CPU) works for small projects, but the jump to Pro at <strong>$20/seat/month</strong> is steep for small teams and indie developers.</p>
+    <p>The core issue isn't quality — Vercel is excellent. It's <strong>cost scaling</strong>. Teams discover that hobby limits are too restrictive for real traffic, bandwidth overages add up fast, and serverless function costs at scale can surprise. "Vercel alternatives" is one of the most searched hosting queries as developers look for more generous free tiers or predictable pricing.</p>
+    <p>The good news: the deployment landscape in 2026 is competitive. Full-featured platforms (Cloudflare Pages, Netlify) offer unlimited bandwidth or generous credits. Container-based platforms (Railway, Render, Fly.io) give you more control. Edge-first options (Deno Deploy, Cloudflare Workers) optimize for performance. And self-hosted tools (Coolify) eliminate hosting costs entirely if you have your own server.</p>`,
+    tag: "vercel-alternative",
+    primaryVendor: "Vercel",
+    hubDesc: "Hobby plan limits and $20/seat Pro pricing drive alternatives search — 10 free deployment platforms compared",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Vercel's hobby tier is competitive but limited — several alternatives offer more bandwidth, builds, or compute for free.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Free Tier</th>
+        <th>Bandwidth</th>
+        <th>Build Minutes</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Vercel</td>
+        <td>Hobby (free)</td>
+        <td>100 GB/month</td>
+        <td>—</td>
+        <td style="color:var(--text-dim)">Next.js + framework DX</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudflare-pages" style="color:var(--text)">Cloudflare Pages</a></td>
+        <td>Free</td>
+        <td>Unlimited</td>
+        <td>500/month</td>
+        <td>Static sites + edge performance</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/netlify" style="color:var(--text)">Netlify</a></td>
+        <td>Free (300 credits/mo)</td>
+        <td>~30 GB (credit-based)</td>
+        <td>~20 builds (credit-based)</td>
+        <td>Jamstack + form handling</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/render" style="color:var(--text)">Render</a></td>
+        <td>Hobby (free)</td>
+        <td>100 GB/month</td>
+        <td>500/month</td>
+        <td>Full-stack (web services + databases)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/railway" style="color:var(--text)">Railway</a></td>
+        <td>$5/mo ($5 credit)</td>
+        <td>Included in credit</td>
+        <td>Included in credit</td>
+        <td>Docker + databases + simplicity</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/fly-io" style="color:var(--text)">Fly.io</a></td>
+        <td>Trial (limited)</td>
+        <td>Included in trial</td>
+        <td>—</td>
+        <td>Global edge deployment + containers</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
+        <td>Free</td>
+        <td>100 GB/month</td>
+        <td>—</td>
+        <td>TypeScript edge runtime</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
+        <td>Starter (free)</td>
+        <td>100 GB/month</td>
+        <td>—</td>
+        <td>Scale-to-zero + free Postgres</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/coolify" style="color:var(--text)">Coolify</a></td>
+        <td>Free OSS (Apache 2.0)</td>
+        <td>Your server</td>
+        <td>Your server</td>
+        <td>Self-hosted PaaS — zero hosting cost</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/val-town" style="color:var(--text)">Val Town</a></td>
+        <td>Free</td>
+        <td>—</td>
+        <td>—</td>
+        <td>Serverless TypeScript scripting</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudflare-workers" style="color:var(--text)">Cloudflare Workers</a></td>
+        <td>Free (100K req/day)</td>
+        <td>Unlimited</td>
+        <td>—</td>
+        <td>Edge compute + KV + D1 + R2</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare Pages stands out with unlimited bandwidth on the free tier. Netlify switched to a credit-based system in late 2025 — legacy accounts keep 100 GB bandwidth + 300 build minutes. Railway's $5/month includes a $5 credit that covers most hobby projects. Coolify is fully free if you self-host on your own server.</p>`,
+  },
+  {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
     metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",

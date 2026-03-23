@@ -26,7 +26,8 @@
         "deployment",
         "docker",
         "hetzner-alternative",
-        "heroku-alternative"
+        "heroku-alternative",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-18"
     },
@@ -42,7 +43,8 @@
         "hosting",
         "workers",
         "hetzner-alternative",
-        "heroku-alternative"
+        "heroku-alternative",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-22"
     },
@@ -57,7 +59,8 @@
         "static",
         "edge",
         "deployment",
-        "jamstack"
+        "jamstack",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-21"
     },
@@ -71,7 +74,8 @@
         "hosting",
         "static",
         "edge",
-        "deployment"
+        "deployment",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -88,7 +92,8 @@
         "docker",
         "low-cost",
         "hetzner-alternative",
-        "heroku-alternative"
+        "heroku-alternative",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -105,7 +110,8 @@
         "docker",
         "global",
         "hetzner-alternative",
-        "heroku-alternative"
+        "heroku-alternative",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -122,7 +128,8 @@
         "typescript",
         "kv",
         "free tier",
-        "heroku-alternative"
+        "heroku-alternative",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -137,7 +144,8 @@
         "serverless",
         "scripting",
         "functions",
-        "free tier"
+        "free tier",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -153,7 +161,8 @@
         "deployment",
         "scale-to-zero",
         "free tier",
-        "heroku-alternative"
+        "heroku-alternative",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-11"
     },
@@ -3818,7 +3827,8 @@
         "deployment",
         "self-hosted",
         "open source",
-        "heroku-alternative"
+        "heroku-alternative",
+        "vercel-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
