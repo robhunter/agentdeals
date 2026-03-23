@@ -1634,6 +1634,26 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Deno Deploy"), "Should include Deno Deploy alternative");
   });
 
+  it("GET /auth0-alternatives renders alternatives page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/auth0-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Auth0 Alternatives"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("steepest cliffs"), "Should mention pricing cliff");
+    assert.ok(html.includes("Free Tier Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Clerk"), "Should include Clerk alternative");
+    assert.ok(html.includes("WorkOS"), "Should include WorkOS alternative");
+    assert.ok(html.includes("Keycloak"), "Should include Keycloak alternative");
+    assert.ok(html.includes("FusionAuth"), "Should include FusionAuth alternative");
+  });
+
   it("GET /ai-free-tiers renders AI free tiers editorial page", async () => {
     proc = await startHttpServer();
 
@@ -1674,6 +1694,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/cursor-alternatives"), "Should link to Cursor page");
     assert.ok(html.includes("/datadog-alternatives"), "Should link to Datadog page");
     assert.ok(html.includes("/vercel-alternatives"), "Should link to Vercel page");
+    assert.ok(html.includes("/auth0-alternatives"), "Should link to Auth0 page");
     assert.ok(html.includes("/ai-free-tiers"), "Should link to AI free tiers page");
   });
 
