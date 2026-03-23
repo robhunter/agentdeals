@@ -1757,6 +1757,30 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/mongodb-alternatives"), "Should link to MongoDB page");
     assert.ok(html.includes("/redis-alternatives"), "Should link to Redis page");
     assert.ok(html.includes("/ai-free-tiers"), "Should link to AI free tiers page");
+    assert.ok(html.includes("/database-alternatives"), "Should link to Database alternatives page");
+  });
+
+  it("GET /database-alternatives renders database hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/database-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Database Hosting"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Relational SQL"), "Should have relational section");
+    assert.ok(html.includes("Key-Value"), "Should have key-value section");
+    assert.ok(html.includes("Vector Databases"), "Should have vector section");
+    assert.ok(html.includes("Which Free Database Should I Use"), "Should have decision guide");
+    assert.ok(html.includes("Free Tier Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Supabase"), "Should include Supabase");
+    assert.ok(html.includes("Neon"), "Should include Neon");
+    assert.ok(html.includes("Turso"), "Should include Turso");
+    assert.ok(html.includes("MongoDB Atlas"), "Should include MongoDB Atlas");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
   it("editorial alternatives pages cross-link to other guides", async () => {
