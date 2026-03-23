@@ -3442,6 +3442,109 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*PocketBase is fully free self-hosted with no storage limits. CockroachDB leads managed offerings at 10 GiB free. Xata offers the most generous managed storage at 15 GB with daily backups included. Turso and D1 provide 5 GB of edge SQLite.</p>`,
   },
   {
+    slug: "redis-alternatives",
+    title: "Redis Alternatives — Best Free Caching and Key-Value Stores for 2026",
+    metaDesc: "Redis switched to BSL? Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven. Protocol-compatible options with verified 2026 free tier limits.",
+    contextHtml: `<p><strong>Redis</strong> changed everything in March 2024 when it switched from BSD to the <strong>Business Source License (BSL)</strong>. The move restricts cloud providers from offering Redis-as-a-service without a commercial agreement — and triggered the Linux Foundation to fork Redis as <strong>Valkey</strong>, backed by AWS, Google Cloud, Oracle, and Ericsson.</p>
+    <p>For developers, the practical impact depends on your use case. If you're using Redis Cloud's free tier, you get just <strong>30 MB of memory</strong> on a single shared database — barely enough for a cache layer. Self-hosting Redis is still free under BSL for non-competitive use, but the license uncertainty has pushed many teams toward truly open-source alternatives.</p>
+    <p>The 2026 landscape offers strong options: <strong>Upstash</strong> provides serverless Redis-compatible caching with 500K commands/month free. <strong>Valkey</strong> is a drop-in BSD-3 fork maintained by the Linux Foundation. <strong>DragonflyDB</strong> claims 25x better throughput. <strong>Momento</strong> offers zero-infrastructure serverless caching. And established options like <strong>Memcached</strong> and <strong>KeyDB</strong> remain fully open-source.</p>`,
+    tag: "redis-alternative",
+    primaryVendor: "Redis Cloud",
+    hubDesc: "BSL license change + 30 MB free tier — 8 open-source and managed alternatives compared",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each caching/key-value platform. Redis Cloud gives you 30 MB on a shared instance — most alternatives offer dramatically more.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Free Tier</th>
+        <th>Redis Compatible</th>
+        <th>Self-Hosted</th>
+        <th>License</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Redis Cloud</td>
+        <td>30 MB</td>
+        <td>Yes (is Redis)</td>
+        <td>BSL restrictions</td>
+        <td>BSL 1.1</td>
+        <td style="color:var(--text-dim)">Existing Redis workloads</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/upstash" style="color:var(--text)">Upstash</a></td>
+        <td>500K cmds/mo</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>Managed</td>
+        <td>Serverless apps — pay-per-request pricing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600">Valkey</td>
+        <td>Free OSS</td>
+        <td>Yes (fork)</td>
+        <td>Yes</td>
+        <td>BSD-3</td>
+        <td>Drop-in Redis replacement — Linux Foundation backed</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/aiven" style="color:var(--text)">Aiven</a></td>
+        <td>1 CPU / 1 GB RAM</td>
+        <td>Yes (Valkey)</td>
+        <td>No</td>
+        <td>Managed</td>
+        <td>Managed Valkey with monitoring + backups</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/momento" style="color:var(--text)">Momento</a></td>
+        <td>5 GB transfer/mo</td>
+        <td>No</td>
+        <td>No</td>
+        <td>Managed</td>
+        <td>Zero-config serverless caching + pub/sub</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600">DragonflyDB</td>
+        <td>Free OSS</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>BSL 1.1</td>
+        <td>High-throughput — claims 25x Redis performance</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600">KeyDB</td>
+        <td>Free OSS</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>BSD-3</td>
+        <td>Multithreaded Redis fork — better multi-core use</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600">Garnet</td>
+        <td>Free OSS</td>
+        <td>Yes (RESP)</td>
+        <td>Yes</td>
+        <td>MIT</td>
+        <td>Microsoft's .NET cache — extreme low latency</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600">Memcached</td>
+        <td>Free OSS</td>
+        <td>No</td>
+        <td>Yes</td>
+        <td>BSD</td>
+        <td>Simple key-value caching — battle-tested at scale</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*Upstash is the only managed option with a meaningful free tier (500K commands/month). Aiven offers managed Valkey with 1 GB RAM free. Valkey, KeyDB, Garnet, and Memcached are fully free self-hosted. DragonflyDB is free self-hosted under BSL (non-competitive use).</p>`,
+  },
+  {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
     metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",
