@@ -785,7 +785,8 @@
       "tags": [
         "email",
         "api",
-        "transactional"
+        "transactional",
+        "email-service-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -799,7 +800,8 @@
         "email",
         "api",
         "transactional",
-        "free tier"
+        "free tier",
+        "email-service-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -814,7 +816,8 @@
         "marketing",
         "newsletter",
         "crm",
-        "free tier"
+        "free tier",
+        "email-service-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -829,7 +832,8 @@
         "api",
         "transactional",
         "marketing",
-        "free tier"
+        "free tier",
+        "email-service-alternative"
       ],
       "verifiedDate": "2026-03-22"
     },
@@ -844,7 +848,8 @@
         "marketing",
         "automation",
         "crm",
-        "free tier"
+        "free tier",
+        "email-service-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -2276,7 +2281,8 @@
         "email",
         "marketing",
         "transactional",
-        "automation"
+        "automation",
+        "email-service-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -10974,7 +10980,8 @@
       "url": "https://ahasend.com",
       "tags": [
         "email",
-        "free-for-dev"
+        "free-for-dev",
+        "email-service-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },
@@ -11034,7 +11041,8 @@
       "url": "https://buttondown.email/",
       "tags": [
         "email",
-        "free-for-dev"
+        "free-for-dev",
+        "email-service-alternative"
       ],
       "verifiedDate": "2026-03-20"
     },

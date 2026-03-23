@@ -3558,6 +3558,109 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "OpenAI", // Not used — custom build function
     hubDesc: "Compare 65 free AI APIs, LLM inference, vector databases, and coding tools — exact limits and rate caps",
   },
+  {
+    slug: "email-service-alternatives",
+    title: "Email Service Alternatives — Best Free Transactional Email APIs for 2026",
+    metaDesc: "SendGrid restricted to 100/day, Mailgun killed its free tier. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. Verified 2026 limits.",
+    contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. But the landscape has shifted dramatically: <strong>SendGrid</strong> cut its free tier to just <strong>100 emails/day</strong> with mandatory phone verification, and <strong>Mailgun</strong> eliminated its free tier entirely (now a 30-day trial).</p>
+    <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day with unlimited contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
+    <p>Below are the best free email services for developers in 2026, compared by volume limits, API quality, and what you actually get for free.</p>`,
+    tag: "email-service-alternative",
+    primaryVendor: "SendGrid",
+    hubDesc: "SendGrid down to 100/day, Mailgun free tier gone — 8 free transactional email alternatives compared",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each email platform. SendGrid gives you 100 emails/day with phone verification required — most alternatives offer dramatically more.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Monthly Volume</th>
+        <th>Contacts</th>
+        <th>Type</th>
+        <th>API/SMTP</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">SendGrid</td>
+        <td>~3K/mo (100/day)</td>
+        <td>2K</td>
+        <td>Both</td>
+        <td>\u2705 / \u2705</td>
+        <td style="color:var(--text-dim)">Legacy — phone verification required</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/resend" style="color:var(--text)">Resend</a></td>
+        <td>3K/mo</td>
+        <td>Unlimited</td>
+        <td>Transactional</td>
+        <td>\u2705 / \u2705</td>
+        <td>Developer-first — React Email, TypeScript SDK</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mailjet" style="color:var(--text)">Mailjet</a></td>
+        <td>6K/mo (200/day)</td>
+        <td>Unlimited</td>
+        <td>Both</td>
+        <td>\u2705 / \u2705</td>
+        <td>Highest free volume — built-in email editor</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/brevo" style="color:var(--text)">Brevo</a></td>
+        <td>~9K/mo (300/day)</td>
+        <td>Unlimited</td>
+        <td>Both</td>
+        <td>\u2705 / \u2705</td>
+        <td>All-in-one — email, SMS, CRM, automation</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/loops" style="color:var(--text)">Loops</a></td>
+        <td>4K/30 days</td>
+        <td>1K</td>
+        <td>Both</td>
+        <td>\u2705 / \u2014</td>
+        <td>Modern UX — marketing + transactional combined</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/postmark" style="color:var(--text)">Postmark</a></td>
+        <td>100/mo</td>
+        <td>Unlimited</td>
+        <td>Transactional</td>
+        <td>\u2705 / \u2705</td>
+        <td>Best deliverability — focused on transactional only</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/ahasend" style="color:var(--text)">AhaSend</a></td>
+        <td>1K/mo</td>
+        <td>Unlimited</td>
+        <td>Transactional</td>
+        <td>\u2705 / \u2705</td>
+        <td>Unlimited domains — simple API, no frills</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/buttondown" style="color:var(--text)">Buttondown</a></td>
+        <td>Unlimited*</td>
+        <td>100</td>
+        <td>Newsletter</td>
+        <td>\u2705 / \u2014</td>
+        <td>Newsletters — Markdown-native, simple UX</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mailchimp" style="color:var(--text)">Mailchimp</a></td>
+        <td>500/mo</td>
+        <td>250</td>
+        <td>Marketing</td>
+        <td>\u2705 / \u2014</td>
+        <td>Marketing email — templates, automation, analytics</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*Buttondown's free tier is unlimited sends but capped at 100 subscribers. Mailjet's 6K/month is split into a 200/day sending limit. Brevo's 300/day works out to ~9K/month. All volumes are approximate where daily caps apply.</p>`,
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
