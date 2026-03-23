@@ -2883,6 +2883,99 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Drone CI, Woodpecker CI, and Semaphore Community Edition are self-hosted only \u2014 limits depend on your infrastructure. GitLab CI\u2019s 400 min/mo applies to shared runners on gitlab.com; self-hosted GitLab runners are free. Bitbucket Pipelines (50 min/mo) not shown due to limited free tier.</p>`,
   },
   {
+    slug: "cursor-alternatives",
+    title: "Cursor Alternatives — Best Free AI Code Editors for 2026",
+    metaDesc: "Cursor moved to credit-based pricing in 2025. Compare free AI coding alternatives: Claude Code, GitHub Copilot, Cline, Aider, Windsurf, Augment Code, Amazon Q Developer, Gemini CLI. Verified 2026 limits.",
+    contextHtml: `<p><strong>Cursor</strong> — the AI-powered code editor built on VS Code — shifted to <strong>credit-based pricing</strong> in mid-2025, plus a new <strong>$200/month Ultra tier</strong>. The free tier still exists (2,000 completions/month, 50 slow premium requests), but the credit model makes costs less predictable for heavy users. Developers are actively evaluating alternatives.</p>
+      <p>The AI coding tool landscape has exploded in 2026. Terminal-based agents (Claude Code, Aider, Gemini CLI), IDE extensions (GitHub Copilot, Windsurf, Augment Code), and open-source autonomous agents (Cline) each offer different trade-offs between cost, flexibility, and capability.</p>
+      <p>Below are the best free alternatives to Cursor, compared by <strong>what you actually get for free</strong> — exact limits, open-source status, and what each tool is best at.</p>`,
+    tag: "cursor-alternative",
+    primaryVendor: "Cursor",
+    hubDesc: "Cursor credit-based pricing drives alternatives search — 8 free AI coding tools compared",
+    serviceMatrixHtml: `
+  <h2>Free Tier Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each AI coding tool. Open-source tools (Cline, Aider) have no vendor limits — you pay only for the LLM API you choose.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Free Tier</th>
+        <th>Type</th>
+        <th>Open Source</th>
+        <th>Key Strength</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-dim)">Cursor</td>
+        <td>2,000 completions/mo, 50 slow premium req</td>
+        <td>IDE (VS Code fork)</td>
+        <td>\u2014</td>
+        <td style="color:var(--text-dim)">Inline editing + chat in one IDE</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/claude-code" style="color:var(--text)">Claude Code</a></td>
+        <td>Free during beta</td>
+        <td>Terminal agent</td>
+        <td>\u2014</td>
+        <td>Deep agentic coding — reads/writes files, runs commands</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/github-copilot" style="color:var(--text)">GitHub Copilot</a></td>
+        <td>2,000 completions/mo, 50 chat msgs/mo</td>
+        <td>IDE extension</td>
+        <td>\u2014</td>
+        <td>Widest IDE support (VS Code, JetBrains, Neovim, Xcode)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cline" style="color:var(--text)">Cline</a></td>
+        <td>Free (bring your own API key)</td>
+        <td>VS Code extension</td>
+        <td>\u2705 Apache-2.0</td>
+        <td>Autonomous agent — no vendor lock-in</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/aider" style="color:var(--text)">Aider</a></td>
+        <td>Free (bring your own API key)</td>
+        <td>Terminal CLI</td>
+        <td>\u2705 Apache-2.0</td>
+        <td>AI pair programming — multi-file edits, git integration</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/windsurf" style="color:var(--text)">Windsurf</a></td>
+        <td>Limited Cascade AI access</td>
+        <td>IDE (VS Code fork)</td>
+        <td>\u2014</td>
+        <td>AI Flow — multi-step autonomous workflows</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/augment-code" style="color:var(--text)">Augment Code</a></td>
+        <td>Free for individuals (limited)</td>
+        <td>IDE extension</td>
+        <td>\u2014</td>
+        <td>Deep codebase understanding — large repo context</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/amazon-q-developer" style="color:var(--text)">Amazon Q Developer</a></td>
+        <td>Unlimited completions, 50 agent/mo</td>
+        <td>IDE extension + CLI</td>
+        <td>\u2014</td>
+        <td>AWS integration — code transformation, security scans</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/gemini-cli" style="color:var(--text)">Gemini CLI</a></td>
+        <td>1,000 req/day (personal account)</td>
+        <td>Terminal CLI</td>
+        <td>\u2705 Apache-2.0</td>
+        <td>1M token context window — massive codebase analysis</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cline and Aider are fully free — you pay only for the LLM API calls (OpenRouter, Anthropic, OpenAI, etc.). Claude Code is free during beta (expected to become paid). Gemini CLI free tier is generous: 60 req/min, 1,000 req/day with a personal Google account.</p>`,
+  },
+  {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
     metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",
@@ -3434,6 +3527,9 @@ ${buildCards(mlPlatforms)}
 
   <h2>Free AI Coding Tools</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">AI-powered code editors, assistants, and autonomous coding agents. From IDE plugins to fully autonomous engineers.</p>
+  <div class="context-box" style="border-left:3px solid var(--accent)">
+    <p style="margin:0;font-size:.9rem">Looking specifically at <strong>Cursor alternatives</strong>? See our dedicated <a href="/cursor-alternatives">Cursor Alternatives</a> guide with a side-by-side comparison table of free tiers, IDE types, and key strengths.</p>
+  </div>
 ${buildCards(enrichedCoding)}
 
   <div class="search-cta">
