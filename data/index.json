@@ -1148,7 +1148,7 @@
     {
       "vendor": "Snyk",
       "category": "Security",
-      "description": "Developer security — unlimited tests for open-source, 200 tests/month for private repos, code and dependency scanning",
+      "description": "Developer security — 200 open-source SCA tests/month, 100 SAST (Snyk Code) tests/month, 100 container tests/month, 300 IaC tests/month. Unlimited contributing developers. Code and dependency scanning across all products.",
       "tier": "Free",
       "url": "https://snyk.io/plans/",
       "tags": [
@@ -1156,9 +1156,13 @@
         "security",
         "scanning",
         "dependencies",
-        "free tier"
+        "free tier",
+        "sast",
+        "sca",
+        "container-security",
+        "iac"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-24"
     },
     {
       "vendor": "SonarCloud",
