@@ -3294,7 +3294,7 @@
     {
       "vendor": "Codecov",
       "category": "Testing",
-      "description": "Code coverage reporting and analytics — free for up to 5 users with unlimited public and private repos. Always free for open-source. Integrates with GitHub, GitLab, Bitbucket CI/CD",
+      "description": "Code coverage reporting and analytics — Developer plan free for 1 user with unlimited public and private repos, 250 private uploads/month. Always free and unlimited for open-source. PR comments, status checks, patch coverage, bundle analysis included. Integrates with GitHub, GitLab, Bitbucket CI/CD",
       "tier": "Developer",
       "url": "https://about.codecov.io/pricing/",
       "tags": [
@@ -3304,7 +3304,7 @@
         "code quality",
         "analytics"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-24"
     },
     {
       "vendor": "Dub.co",
