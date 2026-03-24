@@ -10979,15 +10979,15 @@
     {
       "vendor": "AhaSend",
       "category": "Email",
-      "description": "Transactional email service, free for 1000 emails per month, with unlimited domains, team members, webhooks and message routes in the free plan.",
+      "description": "Transactional email service, free for 1,000 emails per month, 3 sending domains, 7-day data retention, basic support. Includes REST API, SMTP relay, sandbox mode, SDKs, scheduling, open/link tracking, webhooks.",
       "tier": "Free",
-      "url": "https://ahasend.com",
+      "url": "https://ahasend.com/pricing",
       "tags": [
         "email",
         "free-for-dev",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-24"
     },
     {
       "vendor": "AnonAddy",
