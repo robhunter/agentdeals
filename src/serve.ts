@@ -3724,6 +3724,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Cypress Cloud",
     hubDesc: "45+ free testing tools compared — browser, visual regression, load, E2E, API, and code coverage",
   },
+  {
+    slug: "analytics-alternatives",
+    title: "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared",
+    metaDesc: "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. Updated March 2026.",
+    contextHtml: "",
+    tag: "analytics-hub",
+    primaryVendor: "PostHog",
+    hubDesc: "45+ free analytics tools compared — product analytics, web analytics, event tracking, and data infrastructure",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -6618,6 +6627,326 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get cloud storage recommendations from your AI assistant. Compare object storage, media CDNs, and file hosting services \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildAnalyticsAlternativesPage(): string {
+  const title = "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared";
+  const metaDesc = "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. Updated March 2026.";
+  const slug = "analytics-alternatives";
+
+  // Get all analytics offers
+  const analyticsOffers = offers.filter(o => o.category === "Analytics");
+  const enrichedAll = enrichOffers(analyticsOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by analytics domain
+  const productAnalytics = enrichedAll.filter(o =>
+    ["PostHog", "Amplitude", "Mixpanel", "heap.io", "Indicative", "Trackingplan"].includes(o.vendor)
+  );
+  const webAnalytics = enrichedAll.filter(o =>
+    ["Plausible Analytics", "Umami", "GoatCounter", "Clicky", "counter.dev", "Beampipe.io", "getinsights.io", "Google Analytics", "StatCounter", "MetricsWave", "Rybbit", "Seline", "LogSpot", "TrackWith Dicloud", "Repohistory"].includes(o.vendor)
+  );
+  const sessionReplay = enrichedAll.filter(o =>
+    ["FullStory.com", "Hotjar", "Microsoft Clarity", "OpenReplay.com", "smartlook.com", "mouseflow.com", "howuku.com", "inspectlet.com", "UXtweak.com", "usabilityhub.com", "Userbird"].includes(o.vendor)
+  );
+  const eventTracking = enrichedAll.filter(o =>
+    ["Aptabase", "AppFit", "Avo", "DocBeacon", "Moesif", "TraceLog"].includes(o.vendor)
+  );
+  const dataInfra = enrichedAll.filter(o =>
+    ["Segment", "Census", "Tinybird", "Dwh.dev", "Hightouch", "Row Zero", "Expensify"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    !productAnalytics.includes(o) && !webAnalytics.includes(o) && !sessionReplay.includes(o) && !eventTracking.includes(o) && !dataInfra.includes(o)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Analytics deal changes
+  const analyticsChangeVendors = ["PostHog", "Amplitude", "Mixpanel", "Plausible", "Umami", "Google Analytics", "Segment", "Tinybird", "Hotjar"];
+  const analyticsChanges = dealChanges.filter(c => analyticsChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = analyticsChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Analytics Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${analyticsChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: analyticsOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Analytics Tools</div>
+  <h1>Best Free Analytics Tools for Developers</h1>
+
+  <div class="context">
+    <p>Analytics is essential for understanding users, but pricing can be opaque and usage-based costs escalate fast. Fortunately, the free tier landscape is generous. <strong>PostHog</strong> offers <strong>1M events/month</strong> with session replays, feature flags, and A/B testing included. <strong>Amplitude</strong> gives <strong>10M events with 10K MTU</strong>. <strong>Plausible</strong> and <strong>Umami</strong> are privacy-first, cookie-free alternatives you can self-host with no limits.</p>
+    <p>This page compares every free analytics tool in our index \u2014 <strong>${analyticsOffers.length} tools</strong> across product analytics, web analytics, session replay, event tracking, and data infrastructure. Whether you need a Google Analytics alternative or a full product analytics suite, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Product Analytics</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Full-featured product analytics platforms with funnels, retention, cohorts, and user behavior tracking. These are the tools you reach for when you need to understand how users interact with your product.</p>
+${buildCards(productAnalytics)}
+
+  <h2>Web Analytics</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Traffic and pageview analytics \u2014 from privacy-first lightweight scripts to full-featured web analytics suites. Many are open-source and self-hostable, making them ideal Google Analytics alternatives.</p>
+${buildCards(webAnalytics)}
+
+  <h2>Session Replay &amp; UX Analytics</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Watch real user sessions, heatmaps, and click tracking. Understand not just what users do, but how they do it. Essential for debugging UX issues and improving conversion flows.</p>
+${buildCards(sessionReplay)}
+
+  <h2>Event Tracking &amp; SDKs</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Lightweight event tracking for mobile, desktop, and API analytics. These tools focus on capturing specific events rather than full product analytics suites.</p>
+${buildCards(eventTracking)}
+
+  <h2>Data Infrastructure &amp; Pipelines</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Customer data platforms, reverse ETL, real-time analytics engines, and data warehousing tools. The plumbing that connects your analytics stack together.</p>
+${buildCards(dataInfra)}
+
+${other.length > 0 ? `
+  <h2>Other Analytics Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Additional analytics and data tools with free tiers.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free Analytics Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free analytics tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/posthog" style="color:var(--text)">PostHog</a></td>
+        <td>Product</td>
+        <td>1M events/mo, 5K replays</td>
+        <td>Yes</td>
+        <td>All-in-one product analytics + feature flags</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/amplitude" style="color:var(--text)">Amplitude</a></td>
+        <td>Product</td>
+        <td>10M events, 10K MTU</td>
+        <td>No</td>
+        <td>Enterprise-grade product analytics</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mixpanel" style="color:var(--text)">Mixpanel</a></td>
+        <td>Product</td>
+        <td>1M events/mo, unlimited seats</td>
+        <td>No</td>
+        <td>Funnel and retention analysis</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/plausible-analytics" style="color:var(--text)">Plausible</a></td>
+        <td>Web</td>
+        <td>\u221e (self-hosted)</td>
+        <td>Yes (AGPL)</td>
+        <td>Privacy-first GA alternative, &lt;1KB script</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/umami" style="color:var(--text)">Umami</a></td>
+        <td>Web</td>
+        <td>\u221e (self-hosted)</td>
+        <td>Yes (MIT)</td>
+        <td>Simple, self-hosted web analytics</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/microsoft-clarity" style="color:var(--text)">Microsoft Clarity</a></td>
+        <td>Session Replay</td>
+        <td>Unlimited (free)</td>
+        <td>No</td>
+        <td>Free session replay + heatmaps, no limits</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hotjar" style="color:var(--text)">Hotjar</a></td>
+        <td>Session Replay</td>
+        <td>35 daily sessions</td>
+        <td>No</td>
+        <td>Heatmaps + session recordings + surveys</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/tinybird" style="color:var(--text)">Tinybird</a></td>
+        <td>Data Infra</td>
+        <td>10 GB storage, 10 QPS</td>
+        <td>No</td>
+        <td>Real-time analytics APIs over SQL</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/goatcounter" style="color:var(--text)">GoatCounter</a></td>
+        <td>Web</td>
+        <td>100K pageviews/mo</td>
+        <td>Yes</td>
+        <td>Simple, privacy-aware web analytics</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/aptabase" style="color:var(--text)">Aptabase</a></td>
+        <td>Event Tracking</td>
+        <td>20K events/mo</td>
+        <td>Yes</td>
+        <td>Mobile &amp; desktop app analytics</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/segment" style="color:var(--text)">Segment</a></td>
+        <td>Data Infra</td>
+        <td>$50K credits (startup)</td>
+        <td>No</td>
+        <td>Customer data platform, 300+ integrations</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/openreplay-com" style="color:var(--text)">OpenReplay</a></td>
+        <td>Session Replay</td>
+        <td>\u221e (self-hosted)</td>
+        <td>Yes</td>
+        <td>Self-hosted session replay alternative</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">PostHog leads on value with 1M events/month free including session replays, feature flags, and A/B testing \u2014 the most complete free analytics package. Amplitude matches on event volume (10M) but caps at 10K monthly tracked users. For privacy-first web analytics, Plausible and Umami are both self-hostable with no limits. Microsoft Clarity is uniquely free with no caps on session replay. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free Analytics Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need an all-in-one product analytics suite?</dt>
+      <dd><a href="/vendor/posthog">PostHog</a> \u2014 1M events/month free with session replays, feature flags, A/B testing, and error tracking. Open-source and self-hostable. The most complete free product analytics platform.</dd>
+
+      <dt>Want enterprise-grade product analytics?</dt>
+      <dd><a href="/vendor/amplitude">Amplitude</a> \u2014 10M events and 10K MTU on the free Starter plan with unlimited feature flags and 1-year retention. Best for teams that need deep funnel and cohort analysis.</dd>
+
+      <dt>Looking for a privacy-first Google Analytics alternative?</dt>
+      <dd><a href="/vendor/plausible-analytics">Plausible</a> for a sub-1KB script with no cookies (AGPL, self-hostable). <a href="/vendor/umami">Umami</a> for MIT-licensed simplicity. <a href="/vendor/goatcounter">GoatCounter</a> for 100K pageviews/month free hosted.</dd>
+
+      <dt>Need free session replay and heatmaps?</dt>
+      <dd><a href="/vendor/microsoft-clarity">Microsoft Clarity</a> \u2014 completely free with no session limits, heatmaps, and rage-click detection. <a href="/vendor/hotjar">Hotjar</a> adds surveys and feedback but caps at 35 daily sessions. <a href="/vendor/openreplay-com">OpenReplay</a> for self-hosted.</dd>
+
+      <dt>Building a mobile or desktop app?</dt>
+      <dd><a href="/vendor/aptabase">Aptabase</a> \u2014 privacy-friendly analytics with SDKs for Swift, Kotlin, React Native, Flutter, and Electron. 20K events/month free. <a href="/vendor/appfit">AppFit</a> for cross-platform analytics with product journal.</dd>
+
+      <dt>Need a customer data platform?</dt>
+      <dd><a href="/vendor/segment">Segment</a> \u2014 $50K in credits for startups, connecting 300+ integrations. <a href="/vendor/census">Census</a> for reverse ETL from your data warehouse to 60+ SaaS tools.</dd>
+
+      <dt>Want real-time analytics APIs?</dt>
+      <dd><a href="/vendor/tinybird">Tinybird</a> \u2014 10 GB storage and 10 QPS free for building real-time analytics endpoints over SQL. Great for dashboards, usage tracking, and product metrics APIs.</dd>
+
+      <dt>Just need simple, lightweight tracking?</dt>
+      <dd><a href="/vendor/counter-dev">counter.dev</a> for the simplest possible web analytics (free or pay-what-you-want). <a href="/vendor/beampipe-io">Beampipe.io</a> for 5 domains and 10K pageviews. <a href="/vendor/getinsights-io">getinsights.io</a> for 3K events/month, cookie-free.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/analytics">Analytics</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get analytics tool recommendations from your AI assistant. Compare product analytics, web analytics, and session replay tools \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -10223,6 +10552,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/storage-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildStorageAlternativesPage());
+  } else if (url.pathname === "/analytics-alternatives" && isGetOrHead) {
+    recordApiHit("/analytics-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/analytics-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAnalyticsAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
