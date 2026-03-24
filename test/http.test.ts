@@ -1876,6 +1876,30 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /analytics-alternatives renders analytics hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/analytics-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Analytics Tools"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Product Analytics"), "Should have product analytics section");
+    assert.ok(html.includes("Web Analytics"), "Should have web analytics section");
+    assert.ok(html.includes("Session Replay"), "Should have session replay section");
+    assert.ok(html.includes("Event Tracking"), "Should have event tracking section");
+    assert.ok(html.includes("Data Infrastructure"), "Should have data infrastructure section");
+    assert.ok(html.includes("Which Free Analytics Tool"), "Should have decision guide");
+    assert.ok(html.includes("Free Analytics Tools Comparison"), "Should have comparison table");
+    assert.ok(html.includes("PostHog"), "Should include PostHog");
+    assert.ok(html.includes("Amplitude"), "Should include Amplitude");
+    assert.ok(html.includes("Plausible"), "Should include Plausible");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
