@@ -1974,6 +1974,33 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /project-management-alternatives renders PM hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/project-management-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Project Management"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Issue Tracking"), "Should have issue tracking section");
+    assert.ok(html.includes("Kanban Boards"), "Should have kanban section");
+    assert.ok(html.includes("Agile, Scrum"), "Should have agile section");
+    assert.ok(html.includes("Time Tracking"), "Should have time tracking section");
+    assert.ok(html.includes("Team Chat"), "Should have team chat section");
+    assert.ok(html.includes("Video Conferencing"), "Should have video section");
+    assert.ok(html.includes("Docs, Knowledge"), "Should have docs section");
+    assert.ok(html.includes("Scheduling"), "Should have scheduling section");
+    assert.ok(html.includes("Which Free PM Tool"), "Should have decision guide");
+    assert.ok(html.includes("Free PM Tools Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Linear"), "Should include Linear");
+    assert.ok(html.includes("Notion"), "Should include Notion");
+    assert.ok(html.includes("Cal.com"), "Should include Cal.com");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
