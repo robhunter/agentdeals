@@ -2001,6 +2001,30 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /ide-code-editors-alternatives renders IDE hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/ide-code-editors-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free IDEs"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Desktop IDEs"), "Should have desktop IDEs section");
+    assert.ok(html.includes("Cloud IDEs"), "Should have cloud IDEs section");
+    assert.ok(html.includes("AI Coding Assistants"), "Should have AI assistants section");
+    assert.ok(html.includes("AI App Builders"), "Should have AI app builders section");
+    assert.ok(html.includes("Specialized"), "Should have specialized section");
+    assert.ok(html.includes("Which Free IDE"), "Should have decision guide");
+    assert.ok(html.includes("Free IDE"), "Should have comparison table");
+    assert.ok(html.includes("VS Code"), "Should include VS Code");
+    assert.ok(html.includes("Cursor"), "Should include Cursor");
+    assert.ok(html.includes("GitHub Copilot"), "Should include GitHub Copilot");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 

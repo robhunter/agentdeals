@@ -3769,6 +3769,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Linear",
     hubDesc: "93+ free project management tools compared — issue tracking, kanban boards, team chat, video conferencing, scheduling, and knowledge management",
   },
+  {
+    slug: "ide-code-editors-alternatives",
+    title: "Best Free IDEs, Code Editors & AI Coding Tools in 2026 — Desktop, Cloud & AI Assistants Compared",
+    metaDesc: "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. Updated March 2026.",
+    contextHtml: "",
+    tag: "ide-hub",
+    primaryVendor: "Visual Studio Code",
+    hubDesc: "59+ free IDEs and coding tools compared — desktop editors, cloud IDEs, AI coding assistants, AI app builders, and specialized development environments",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -8326,6 +8335,326 @@ ${buildCards(other)}
 </html>`;
 }
 
+function buildIdeCodeEditorsAlternativesPage(): string {
+  const title = "Best Free IDEs, Code Editors & AI Coding Tools in 2026 — Desktop, Cloud & AI Assistants Compared";
+  const metaDesc = "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. Updated March 2026.";
+  const slug = "ide-code-editors-alternatives";
+
+  // Get all IDE & Code Editors + AI Coding offers
+  const ideOffers = offers.filter(o => o.category === "IDE & Code Editors" || o.category === "AI Coding");
+  const enrichedAll = enrichOffers(ideOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by domain
+  const desktopIdes = enrichedAll.filter(o =>
+    ["Visual Studio Code", "VSCodium", "JetBrains", "Zed", "Sublime Text", "Android Studio", "Visual Studio Community", "Apache Netbeans", "Code::Blocks", "Brackets", "BBEdit", "Wave Terminal", "AndroidIDE"].includes(o.vendor)
+  );
+  const cloudIdes = enrichedAll.filter(o =>
+    ["GitHub Codespaces", "Replit", "codesandbox.io", "stackblitz.com", "codepen.io", "Eclipse Che", "GetVM", "code.cs50.io", "MarsCode", "PHPSandbox", "FlutLab", "JDoodle", "OneCompiler", "Paiza", "SoloLearn", "Components.studio", "WebComponents.dev"].includes(o.vendor)
+  );
+  const aiAssistants = enrichedAll.filter(o =>
+    ["GitHub Copilot", "Cursor", "Windsurf", "Supermaven", "Amazon Q Developer", "Augment Code", "Cline", "Aider", "Claude Code", "Gemini CLI", "OpenAI Codex", "ForgeCode"].includes(o.vendor)
+  );
+  const aiAppBuilders = enrichedAll.filter(o =>
+    ["Bolt.new", "Lovable", "v0.dev", "Google Antigravity", "Devin", "DhiWise", "Karbon Sites"].includes(o.vendor)
+  );
+  const specialized = enrichedAll.filter(o =>
+    ["BlueJ", "3Cols", "cacher.io", "codiga.io", "Metalama", "OnlineInterview.io", "wakatime.com", "Code Time"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    !desktopIdes.includes(o) && !cloudIdes.includes(o) && !aiAssistants.includes(o) && !aiAppBuilders.includes(o) && !specialized.includes(o)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // IDE deal changes
+  const ideChangeVendors = ["GitHub Copilot", "Cursor", "Windsurf", "Devin", "Replit", "JetBrains", "VS Code"];
+  const ideChanges = dealChanges.filter(c => ideChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = ideChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent IDE & AI Coding Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${ideChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: ideOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free IDEs &amp; Code Editors</div>
+  <h1>Best Free IDEs, Code Editors &amp; AI Coding Tools</h1>
+
+  <div class="context">
+    <p>The IDE landscape is transforming rapidly. <strong>VS Code</strong> dominates with its free, extensible editor and massive ecosystem. <strong>GitHub Copilot</strong> now offers 2,000 free completions/month. <strong>Cursor</strong> built an AI-native editor on VS Code's foundation. Meanwhile, <strong>Zed</strong> is challenging the performance bar with a GPU-accelerated editor, and <strong>Devin</strong> dropped from $500/month to $20/month.</p>
+    <p>This page compares every free IDE, code editor, and AI coding tool in our index — <strong>${ideOffers.length} tools</strong> across desktop editors, cloud IDEs, AI assistants, and AI app builders. Whether you need a VS Code alternative or a free GitHub Copilot replacement, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Desktop IDEs &amp; Code Editors</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Traditional desktop editors and IDEs. VS Code leads with a massive extension ecosystem. Zed offers GPU-accelerated performance with built-in collaboration. JetBrains provides free OSS licenses for their full IDE suite.</p>
+${buildCards(desktopIdes)}
+
+  <h2>Cloud IDEs &amp; Online Sandboxes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Browser-based development environments. GitHub Codespaces gives 120 core hours/month free. Replit offers cloud IDE with AI assistant. StackBlitz runs Node.js entirely in the browser via WebContainers.</p>
+${buildCards(cloudIdes)}
+
+  <h2>AI Coding Assistants</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">AI-powered code completion and pair programming tools. GitHub Copilot's free tier offers 2,000 completions/month. Cursor and Windsurf are AI-native editors. Cline and Aider are open-source alternatives where you bring your own LLM API key.</p>
+${buildCards(aiAssistants)}
+
+  <h2>AI App Builders</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">AI tools that generate full applications from natural language. Bolt.new and Lovable create complete apps with frontend, backend, and database. v0.dev generates React components. Google Antigravity is a new agent-first IDE powered by Gemini.</p>
+${buildCards(aiAppBuilders)}
+
+  <h2>Specialized &amp; Educational Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Code snippet managers, coding activity trackers, and educational coding platforms. BlueJ is designed for Java beginners. WakaTime tracks coding metrics across editors.</p>
+${buildCards(specialized)}
+
+${other.length > 0 ? `
+  <h2>More IDE &amp; Coding Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Additional IDEs, editors, and development tools with free tiers.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free IDE &amp; AI Coding Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free IDEs and AI coding tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/visual-studio-code" style="color:var(--text)">VS Code</a></td>
+        <td>Desktop IDE</td>
+        <td>Fully free, extensible</td>
+        <td>Yes</td>
+        <td>Most popular editor with massive extension ecosystem</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/zed" style="color:var(--text)">Zed</a></td>
+        <td>Desktop IDE</td>
+        <td>Fully free</td>
+        <td>Yes</td>
+        <td>GPU-accelerated editor with built-in collaboration</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/github-copilot" style="color:var(--text)">GitHub Copilot</a></td>
+        <td>AI Assistant</td>
+        <td>2,000 completions/mo, 50 chats/mo</td>
+        <td>No</td>
+        <td>AI code completion integrated into VS Code and JetBrains</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cursor" style="color:var(--text)">Cursor</a></td>
+        <td>AI IDE</td>
+        <td>2,000 completions/mo, 50 slow requests</td>
+        <td>No</td>
+        <td>AI-native editor with deep codebase understanding</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/windsurf" style="color:var(--text)">Windsurf</a></td>
+        <td>AI IDE</td>
+        <td>Basic Cascade AI flows</td>
+        <td>No</td>
+        <td>AI-powered IDE with agentic coding workflows</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/github-codespaces" style="color:var(--text)">GitHub Codespaces</a></td>
+        <td>Cloud IDE</td>
+        <td>120 core hrs/mo, 15 GB storage</td>
+        <td>No</td>
+        <td>Full VS Code in the cloud with GitHub integration</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/replit" style="color:var(--text)">Replit</a></td>
+        <td>Cloud IDE</td>
+        <td>10 GiB storage, multiplayer</td>
+        <td>No</td>
+        <td>Browser-based IDE with AI assistant and deployment</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cline" style="color:var(--text)">Cline</a></td>
+        <td>AI Agent</td>
+        <td>Fully free (BYOK)</td>
+        <td>Yes</td>
+        <td>Open-source autonomous AI coding agent for VS Code</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/aider" style="color:var(--text)">Aider</a></td>
+        <td>AI Agent</td>
+        <td>Fully free (BYOK)</td>
+        <td>Yes</td>
+        <td>Terminal-based AI pair programming with git integration</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/amazon-q-developer" style="color:var(--text)">Amazon Q Developer</a></td>
+        <td>AI Assistant</td>
+        <td>Inline suggestions, chat, transforms</td>
+        <td>No</td>
+        <td>AWS-integrated AI coding with security scanning</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/bolt-new" style="color:var(--text)">Bolt.new</a></td>
+        <td>AI App Builder</td>
+        <td>Free tier available</td>
+        <td>No</td>
+        <td>Generate full-stack apps from natural language</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/devin" style="color:var(--text)">Devin</a></td>
+        <td>AI Agent</td>
+        <td>Free credits, $20/mo Core</td>
+        <td>No</td>
+        <td>Autonomous AI software engineer for complex tasks</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">VS Code remains the dominant free editor with the largest extension ecosystem. GitHub Copilot's free tier (2,000 completions/month) makes AI coding accessible to all developers. For open-source alternatives, Cline and Aider let you use any LLM provider. Devin's price drop from $500 to $20/month signals the rapid commoditization of AI coding agents. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free IDE or AI Coding Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need a versatile, extensible desktop editor?</dt>
+      <dd><a href="/vendor/visual-studio-code">VS Code</a> — most popular editor with thousands of extensions. <a href="/vendor/vscodium">VSCodium</a> — VS Code without telemetry. <a href="/vendor/zed">Zed</a> — GPU-accelerated, built-in collaboration.</dd>
+
+      <dt>Want AI code completion in your editor?</dt>
+      <dd><a href="/vendor/github-copilot">GitHub Copilot</a> — 2,000 completions/month free, works in VS Code and JetBrains. <a href="/vendor/supermaven">Supermaven</a> — fast completions with large context window. <a href="/vendor/amazon-q-developer">Amazon Q Developer</a> — free inline suggestions with AWS integration.</dd>
+
+      <dt>Want an AI-native code editor?</dt>
+      <dd><a href="/vendor/cursor">Cursor</a> — AI-first editor built on VS Code with deep codebase understanding. <a href="/vendor/windsurf">Windsurf</a> — agentic Cascade flows for multi-file edits. <a href="/vendor/augment-code">Augment Code</a> — AI assistant with deep codebase awareness.</dd>
+
+      <dt>Need an open-source AI coding agent?</dt>
+      <dd><a href="/vendor/cline">Cline</a> — autonomous VS Code agent, bring your own API key. <a href="/vendor/aider">Aider</a> — terminal-based pair programming with git integration. <a href="/vendor/gemini-cli">Gemini CLI</a> — Google's open-source terminal AI agent.</dd>
+
+      <dt>Want to generate full apps with AI?</dt>
+      <dd><a href="/vendor/bolt-new">Bolt.new</a> — generates frontend, backend, and database code in browser. <a href="/vendor/lovable">Lovable</a> — full-stack apps from natural language. <a href="/vendor/v0-dev">v0.dev</a> — Vercel's React component generator.</dd>
+
+      <dt>Need a cloud-based development environment?</dt>
+      <dd><a href="/vendor/github-codespaces">GitHub Codespaces</a> — 120 core hours/month free with full VS Code. <a href="/vendor/replit">Replit</a> — browser IDE with AI and deployment. <a href="/vendor/stackblitz-com">StackBlitz</a> — browser IDE running Node.js via WebContainers.</dd>
+
+      <dt>Need a full IDE suite for enterprise languages?</dt>
+      <dd><a href="/vendor/jetbrains">JetBrains</a> — free OSS license for IntelliJ, WebStorm, PyCharm, etc. <a href="/vendor/visual-studio-community">Visual Studio Community</a> — full IDE for .NET and C++ development. <a href="/vendor/android-studio">Android Studio</a> — official Android development IDE.</dd>
+
+      <dt>Learning to code?</dt>
+      <dd><a href="/vendor/bluej">BlueJ</a> — Java IDE designed for beginners. <a href="/vendor/sololearn">SoloLearn</a> — cloud playground supporting multiple languages. <a href="/vendor/onecompiler">OneCompiler</a> — online compiler for 70+ languages.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/ide-code-editors">IDE & Code Editors</a> and <a href="/category/ai-coding">AI Coding</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get IDE and AI coding tool recommendations from your AI assistant. Compare editors, AI assistants, and cloud IDEs — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -11949,6 +12278,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/project-management-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildProjectManagementAlternativesPage());
+  } else if (url.pathname === "/ide-code-editors-alternatives" && isGetOrHead) {
+    recordApiHit("/ide-code-editors-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ide-code-editors-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildIdeCodeEditorsAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
