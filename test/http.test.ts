@@ -1806,6 +1806,29 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /security-alternatives renders security hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/security-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Security Tools"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Application Security"), "Should have SAST section");
+    assert.ok(html.includes("Secret Scanning"), "Should have secrets section");
+    assert.ok(html.includes("Identity"), "Should have auth section");
+    assert.ok(html.includes("Which Free Security Tool"), "Should have decision guide");
+    assert.ok(html.includes("Free Security Tools Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Snyk"), "Should include Snyk");
+    assert.ok(html.includes("Semgrep"), "Should include Semgrep");
+    assert.ok(html.includes("GitGuardian"), "Should include GitGuardian");
+    assert.ok(html.includes("Trivy"), "Should include Trivy");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 

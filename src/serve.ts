@@ -3697,6 +3697,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "GitHub Actions",
     hubDesc: "35+ free CI/CD tools compared — build minutes, runners, and pipelines by type (general, cloud-native, mobile, IaC)",
   },
+  {
+    slug: "security-alternatives",
+    title: "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security",
+    metaDesc: "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. Updated March 2026.",
+    contextHtml: "",
+    tag: "security-hub",
+    primaryVendor: "Snyk",
+    hubDesc: "100+ free security tools compared — SAST/DAST, secret scanning, dependency analysis, container security, and identity/auth",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -5601,6 +5610,348 @@ ${buildCards(specialized)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get CI/CD recommendations from your AI assistant. Compare build minutes, track pricing changes, and find the right pipeline tool for your stack \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Security alternatives hub page ---
+
+function buildSecurityAlternativesPage(): string {
+  const title = "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security";
+  const metaDesc = "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. Updated March 2026.";
+  const slug = "security-alternatives";
+
+  // Get all security-related offers across categories
+  const securityOffers = offers.filter(o => o.category === "Security" || o.category === "Secrets Management" || o.category === "Auth" || o.category === "Error Tracking");
+  const enrichedAll = enrichOffers(securityOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by security domain
+  const appSecurity = enrichedAll.filter(o =>
+    ["Snyk", "SonarCloud", "Semgrep", "CodeQL", "FOSSA", "aikido.dev", "Bearer", "Corgea", "Datree", "hostedscan.com", "meterian.io", "SOOS", "Probely", "StackHawk", "OWASP ZAP", "Nuclei", "qualys.com", "Checkov"].includes(o.vendor)
+  );
+  const secretScanning = enrichedAll.filter(o =>
+    ["GitGuardian", "HashiCorp Vault", "Doppler", "Infisical", "Gitleaks", "TruffleHog", "Dotenv", "Google Secret Manager", "crypteron.com", "Smart Grow Vault"].includes(o.vendor)
+  );
+  const dependencySupplyChain = enrichedAll.filter(o =>
+    ["Socket.dev", "Dependabot", "Renovate", "Grype", "pyup.io", "Snyk"].includes(o.vendor) && !appSecurity.includes(o)
+  );
+  const containerCloud = enrichedAll.filter(o =>
+    ["Trivy", "Falco", "Twingate", "Tailscale", "Project Gatekeeper", "Public Cloud Threat Intelligence"].includes(o.vendor)
+  );
+  const identityAuth = enrichedAll.filter(o =>
+    o.category === "Auth"
+  );
+  const errorTracking = enrichedAll.filter(o =>
+    o.category === "Error Tracking"
+  );
+  const sslCerts = enrichedAll.filter(o =>
+    ["letsencrypt.org", "ssllabs.com", "TestTLS.com", "Internet.nl", "Mozilla Observatory", "CertKit", "DJ Checkup", "Sucuri SiteCheck"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    ["1Password", "Proton Pass", "FraudLabs Pro", "LoginLlama", "Have I been pwned?", "CyberChef", "Protectumus", "URLscan.io", "VirusTotal", "RandomKeygen", "Virgil Security", "Cookiefirst", "Iubenda", "Ketch", "Pareto Security"].includes(o.vendor)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Security deal changes
+  const secChangeVendors = ["Snyk", "Auth0", "GitGuardian", "SonarCloud", "Trivy", "Tailscale", "HashiCorp", "Clerk", "Sentry"];
+  const secChanges = dealChanges.filter(c => secChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = secChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Security Tool Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${secChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: securityOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Security Tools</div>
+  <h1>Best Free Security Tools for Developers</h1>
+
+  <div class="context">
+    <p>Security is no longer optional \u2014 even side projects get supply chain attacks, credential leaks, and dependency vulnerabilities. The good news: the security tool ecosystem has an unusually strong free tier landscape. <strong>Snyk</strong> offers free SAST scanning for up to <strong>200 tests/month</strong>. <strong>Semgrep</strong> and <strong>CodeQL</strong> are free for open-source. <strong>Trivy</strong> and <strong>Grype</strong> are fully open-source container scanners.</p>
+    <p>This page compares every free security tool in our index \u2014 <strong>${securityOffers.length} tools</strong> across application security (SAST/DAST), secret scanning, dependency analysis, container security, identity/auth, error tracking, and SSL/compliance. Whether you need code scanning or user authentication, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <div class="context-box" style="border-left:3px solid var(--accent)">
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific security tool? See our dedicated guide: <a href="/auth0-alternatives">Auth0 Alternatives</a></p>
+  </div>
+
+  <h2>Application Security (SAST/DAST)</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Static and dynamic analysis tools that find vulnerabilities in your code before they reach production. Ranges from cloud-hosted scanners like Snyk and SonarCloud to open-source engines like Semgrep and CodeQL.</p>
+${buildCards(appSecurity)}
+
+  <h2>Secret Scanning &amp; Management</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Prevent credential leaks and manage secrets securely. GitGuardian catches secrets in commits, while Vault, Doppler, and Infisical provide runtime secret management with rotation and access controls.</p>
+${buildCards(secretScanning)}
+
+  <h2>Dependency &amp; Supply Chain Security</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Automated dependency scanning, vulnerability alerts, and update management. These tools catch known CVEs in your dependency tree and can auto-create PRs to fix them.</p>
+${buildCards(dependencySupplyChain)}
+
+  <h2>Container &amp; Infrastructure Security</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Scan container images for vulnerabilities, enforce Kubernetes policies, and secure network access. Most are open-source with no usage limits when self-hosted.</p>
+${buildCards(containerCloud)}
+
+  <h2>Identity &amp; Authentication</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">User authentication, authorization, and identity management \u2014 from managed services like Auth0 and Clerk to self-hosted options like Keycloak and SuperTokens. Free tiers typically measured by monthly active users.</p>
+${buildCards(identityAuth)}
+
+  <h2>Error Tracking &amp; Runtime Security</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Catch runtime errors, crashes, and exceptions in production. These tools help you detect and fix security-relevant bugs before users report them.</p>
+${buildCards(errorTracking)}
+
+${sslCerts.length > 0 ? `
+  <h2>SSL, TLS &amp; Web Security</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Free SSL certificates, TLS configuration testing, and web security scanners. Essential baseline security that every site needs.</p>
+${buildCards(sslCerts)}
+` : ""}
+
+${other.length > 0 ? `
+  <h2>Other Security Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Password managers, fraud detection, threat intelligence, privacy compliance, and other security utilities with free tiers for developers.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free Security Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free security tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>Open Source</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/snyk" style="color:var(--text)">Snyk</a></td>
+        <td>SAST + SCA</td>
+        <td>200 tests/mo, 5 projects</td>
+        <td>\u2014</td>
+        <td>All-in-one: code, deps, containers, IaC</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/semgrep" style="color:var(--text)">Semgrep</a></td>
+        <td>SAST</td>
+        <td>\u221e scans (OSS rules)</td>
+        <td>\u2705</td>
+        <td>Custom rules, lightweight, fast scans</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/codeql" style="color:var(--text)">CodeQL</a></td>
+        <td>SAST</td>
+        <td>\u221e (public repos)</td>
+        <td>\u2705</td>
+        <td>Deep semantic analysis, GitHub-native</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/sonarcloud" style="color:var(--text)">SonarCloud</a></td>
+        <td>Code Quality + SAST</td>
+        <td>\u221e (public repos)</td>
+        <td>\u2014</td>
+        <td>Code quality + security in one dashboard</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/gitguardian" style="color:var(--text)">GitGuardian</a></td>
+        <td>Secret Scanning</td>
+        <td>25 developers, \u221e scans</td>
+        <td>\u2014</td>
+        <td>Real-time secret detection in commits</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/trivy" style="color:var(--text)">Trivy</a></td>
+        <td>Container Security</td>
+        <td>\u221e (self-hosted)</td>
+        <td>\u2705</td>
+        <td>Container images, IaC, SBOM generation</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/grype" style="color:var(--text)">Grype</a></td>
+        <td>SCA / Deps</td>
+        <td>\u221e (self-hosted)</td>
+        <td>\u2705</td>
+        <td>Fast vulnerability scanner for containers and filesystems</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/dependabot" style="color:var(--text)">Dependabot</a></td>
+        <td>Dependency Updates</td>
+        <td>\u221e (GitHub repos)</td>
+        <td>\u2705</td>
+        <td>Auto-PR for vulnerable deps, GitHub-native</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/auth0" style="color:var(--text)">Auth0</a></td>
+        <td>Identity / Auth</td>
+        <td>25K MAU</td>
+        <td>\u2014</td>
+        <td>Enterprise auth: SSO, MFA, social login</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a></td>
+        <td>Identity / Auth</td>
+        <td>10K MAU</td>
+        <td>\u2014</td>
+        <td>Modern DX: React components, webhooks</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/keycloak" style="color:var(--text)">Keycloak</a></td>
+        <td>Identity / Auth</td>
+        <td>\u221e (self-hosted)</td>
+        <td>\u2705</td>
+        <td>Self-hosted SSO, SAML, OIDC, LDAP</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hashicorp-vault" style="color:var(--text)">HashiCorp Vault</a></td>
+        <td>Secrets Management</td>
+        <td>Community (self-hosted) + HCP Free</td>
+        <td>\u2705</td>
+        <td>Dynamic secrets, encryption as a service</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Snyk leads the all-in-one category with code, dependency, container, and IaC scanning in a single tool. For pure SAST, Semgrep and CodeQL are both excellent and free for open-source. GitGuardian is the standard for secret detection. Trivy dominates container scanning. Auth0 has the most generous free auth tier at 25K MAU. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free Security Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need all-in-one vulnerability scanning?</dt>
+      <dd><a href="/vendor/snyk">Snyk</a> \u2014 covers code (SAST), dependencies (SCA), container images, and Infrastructure as Code in a single dashboard. Free for 200 tests/month on up to 5 projects.</dd>
+
+      <dt>Want open-source code scanning?</dt>
+      <dd><a href="/vendor/semgrep">Semgrep</a> for fast, customizable rule-based scanning. <a href="/vendor/codeql">CodeQL</a> for deep semantic analysis (free on public GitHub repos). Both support custom rules.</dd>
+
+      <dt>Worried about leaked secrets?</dt>
+      <dd><a href="/vendor/gitguardian">GitGuardian</a> for real-time scanning of commits and PRs (free for 25 devs). <a href="/vendor/gitleaks">Gitleaks</a> and <a href="/vendor/trufflehog">TruffleHog</a> are open-source CLI alternatives for pre-commit hooks.</dd>
+
+      <dt>Scanning container images?</dt>
+      <dd><a href="/vendor/trivy">Trivy</a> is the standard \u2014 scans containers, IaC, and generates SBOMs. <a href="/vendor/grype">Grype</a> is a fast alternative from the Anchore team. Both are open-source with no limits.</dd>
+
+      <dt>Need user authentication for your app?</dt>
+      <dd><a href="/vendor/auth0">Auth0</a> (25K MAU free) for enterprise features like SSO and MFA. <a href="/vendor/clerk">Clerk</a> (10K MAU) for modern React-first DX. <a href="/vendor/keycloak">Keycloak</a> for self-hosted with unlimited users. See our <a href="/auth0-alternatives">Auth0 Alternatives</a> guide.</dd>
+
+      <dt>Managing secrets at runtime?</dt>
+      <dd><a href="/vendor/hashicorp-vault">HashiCorp Vault</a> for dynamic secrets and encryption (community edition self-hosted). <a href="/vendor/doppler">Doppler</a> (5 users free) or <a href="/vendor/infisical">Infisical</a> for cloud-hosted secret management with team sharing.</dd>
+
+      <dt>Keeping dependencies updated?</dt>
+      <dd><a href="/vendor/dependabot">Dependabot</a> is built into GitHub and auto-creates PRs for vulnerable deps. <a href="/vendor/renovate">Renovate</a> is the self-hostable alternative with more configuration options.</dd>
+
+      <dt>Catching runtime errors in production?</dt>
+      <dd><a href="/vendor/sentry" style="color:var(--text-muted)">Sentry</a> (see <a href="/category/error-tracking">Error Tracking</a>), <a href="/vendor/bugsnag">Bugsnag</a>, and <a href="/vendor/glitchtip">GlitchTip</a> (open-source Sentry alternative) all have free tiers for exception tracking.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/security">Security</a>, <a href="/category/auth">Auth</a>, and <a href="/category/error-tracking">Error Tracking</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get security tool recommendations from your AI assistant. Compare SAST scanners, secret managers, auth providers, and container security tools \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -9191,6 +9542,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ci-cd-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCiCdAlternativesPage());
+  } else if (url.pathname === "/security-alternatives" && isGetOrHead) {
+    recordApiHit("/security-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/security-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildSecurityAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
