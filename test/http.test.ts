@@ -1900,6 +1900,30 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /ai-ml-alternatives renders AI/ML hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/ai-ml-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free AI"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("LLM API Providers"), "Should have LLM API section");
+    assert.ok(html.includes("AI Coding Tools"), "Should have AI coding section");
+    assert.ok(html.includes("ML Platforms"), "Should have ML platforms section");
+    assert.ok(html.includes("AI Observability"), "Should have observability section");
+    assert.ok(html.includes("Specialized AI Services"), "Should have specialized section");
+    assert.ok(html.includes("Which Free AI Tool"), "Should have decision guide");
+    assert.ok(html.includes("Free AI"), "Should have comparison table");
+    assert.ok(html.includes("Groq"), "Should include Groq");
+    assert.ok(html.includes("GitHub Copilot"), "Should include GitHub Copilot");
+    assert.ok(html.includes("Langfuse"), "Should include Langfuse");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
