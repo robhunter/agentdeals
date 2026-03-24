@@ -1950,6 +1950,30 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /email-alternatives renders email hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/email-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Email Tools"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Transactional Email APIs"), "Should have transactional section");
+    assert.ok(html.includes("Email Marketing"), "Should have marketing section");
+    assert.ok(html.includes("Email Verification"), "Should have verification section");
+    assert.ok(html.includes("Email Forwarding"), "Should have forwarding section");
+    assert.ok(html.includes("Temporary"), "Should have temporary section");
+    assert.ok(html.includes("Which Free Email Tool"), "Should have decision guide");
+    assert.ok(html.includes("Free Email Tools Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Resend"), "Should include Resend");
+    assert.ok(html.includes("Brevo"), "Should include Brevo");
+    assert.ok(html.includes("SimpleLogin"), "Should include SimpleLogin");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 

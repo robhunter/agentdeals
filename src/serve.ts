@@ -3751,6 +3751,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Figma",
     hubDesc: "100+ free design tools compared — UI design, prototyping, component libraries, icons, stock assets, and color tools",
   },
+  {
+    slug: "email-alternatives",
+    title: "Best Free Email Tools for Developers in 2026 — Transactional APIs, Marketing Platforms & Email Infrastructure Compared",
+    metaDesc: "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. Updated March 2026.",
+    contextHtml: "",
+    tag: "email-hub",
+    primaryVendor: "Resend",
+    hubDesc: "59+ free email tools compared — transactional APIs, marketing platforms, verification services, forwarding, and email infrastructure",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -7285,6 +7294,340 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare LLM APIs, coding tools, and ML platforms \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildEmailAlternativesPage(): string {
+  const title = "Best Free Email Tools for Developers in 2026 — Transactional APIs, Marketing Platforms & Email Infrastructure Compared";
+  const metaDesc = "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. Updated March 2026.";
+  const slug = "email-alternatives";
+
+  // Get all Email offers
+  const emailOffers = offers.filter(o => o.category === "Email");
+  const enrichedAll = enrichOffers(emailOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by email domain
+  const transactionalApis = enrichedAll.filter(o =>
+    ["Resend", "Postmark", "MailerSend.com", "Mailtrap.io", "Mailjet", "AhaSend", "EmailLabs.io", "mailchannels.com", "Sweego", "Maileroo", "SendStreak", "Plunk"].includes(o.vendor)
+  );
+  const marketingNewsletter = enrichedAll.filter(o =>
+    ["Brevo", "Mailchimp", "EmailOctopus", "MailerLite.com", "Buttondown", "Loops", "Sendpulse", "Maildroppa", "Substack", "Zoho Campaigns", "Wraps"].includes(o.vendor)
+  );
+  const verificationDeliverability = enrichedAll.filter(o =>
+    ["Verifalia", "Emailvalidation.io", "verimail.io", "Antideo", "mail-tester.com", "dkimvalidator.com", "Mailcheck.ai", "TempMailDetector.com"].includes(o.vendor)
+  );
+  const forwardingAliases = enrichedAll.filter(o =>
+    ["SimpleLogin", "AnonAddy", "forwardemail.net", "ImprovMX", "Bump", "Burnermail", "Mutant Mail", "DNSExit", "trashmail.com"].includes(o.vendor)
+  );
+  const temporaryTesting = enrichedAll.filter(o =>
+    ["mailsac.com", "10minutemail", "inboxkitten.com", "mailinator.com", "temp-mail.io", "EtherealMail", "debugmail.io", "mailcatcher.me", "Imitate Email", "Inboxes App"].includes(o.vendor)
+  );
+  const securePrivacy = enrichedAll.filter(o =>
+    ["Proton Mail", "Tuta"].includes(o.vendor)
+  );
+  const otherEmailTools = enrichedAll.filter(o =>
+    ["Parsio.io", "EmailJS", "Contact.do", "Waitlio", "Prospect.io", "SendGrid", "SendGrid Accelerate"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    !transactionalApis.includes(o) && !marketingNewsletter.includes(o) && !verificationDeliverability.includes(o) && !forwardingAliases.includes(o) && !temporaryTesting.includes(o) && !securePrivacy.includes(o) && !otherEmailTools.includes(o)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Email deal changes
+  const emailChangeVendors = ["SendGrid", "Mailchimp", "Resend", "Brevo", "Postmark", "Mailjet"];
+  const emailChanges = dealChanges.filter(c => emailChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = emailChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Email Tool Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${emailChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: emailOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Email Tools</div>
+  <h1>Best Free Email Tools for Developers</h1>
+
+  <div class="context">
+    <p>Email infrastructure is one of the most fragmented developer tool categories. <strong>SendGrid</strong> slashed its free tier to just 100 emails/day. <strong>Mailgun</strong> eliminated free access entirely. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day with unlimited contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
+    <p>This page compares every free email tool in our index — <strong>${emailOffers.length} tools</strong> across transactional APIs, marketing platforms, verification services, forwarding/alias tools, and more. Whether you need a SendGrid alternative or free email aliases for privacy, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Transactional Email APIs</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">APIs for sending transactional email — password resets, welcome emails, receipts, and notifications. Resend leads with a modern developer experience and React Email templates. Mailjet offers the highest free volume at 6,000/month.</p>
+${buildCards(transactionalApis)}
+
+  <h2>Email Marketing &amp; Newsletter Platforms</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Platforms for email marketing campaigns, newsletters, and subscriber management. Brevo offers 300 emails/day with unlimited contacts and automation. Substack provides unlimited free newsletters with built-in monetization.</p>
+${buildCards(marketingNewsletter)}
+
+  <h2>Email Verification &amp; Deliverability</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Tools for verifying email addresses, checking DKIM/SPF records, and improving deliverability. Essential for maintaining sender reputation and reducing bounces.</p>
+${buildCards(verificationDeliverability)}
+
+  <h2>Email Forwarding &amp; Aliases</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Email forwarding services and alias generators for privacy. SimpleLogin (ProtonMail-owned) and AnonAddy are both open source and let you create unlimited aliases to protect your real email address.</p>
+${buildCards(forwardingAliases)}
+
+  <h2>Temporary &amp; Testing Email</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Disposable email addresses and email testing tools for development. Mailtrap provides an email sandbox for QA. EtherealMail generates fake SMTP credentials for testing without sending real emails.</p>
+${buildCards(temporaryTesting)}
+
+  <h2>Secure &amp; Privacy Email</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">End-to-end encrypted email providers focused on privacy. Proton Mail and Tuta offer free tiers with full encryption — no ads, no tracking.</p>
+${buildCards(securePrivacy)}
+
+  <h2>Other Email Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Email parsing, form-to-email services, waitlist tools, and other email utilities.</p>
+${buildCards(otherEmailTools)}
+
+${other.length > 0 ? `
+  <h2>More Email Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Additional email tools with free tiers.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free Email Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free email tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/resend" style="color:var(--text)">Resend</a></td>
+        <td>Transactional API</td>
+        <td>3K emails/mo</td>
+        <td>No</td>
+        <td>Developer-first transactional email with React templates</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/brevo" style="color:var(--text)">Brevo</a></td>
+        <td>Marketing</td>
+        <td>300 emails/day, 100K contacts</td>
+        <td>No</td>
+        <td>All-in-one marketing with email, SMS, and automation</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mailjet" style="color:var(--text)">Mailjet</a></td>
+        <td>Transactional API</td>
+        <td>6,000 emails/mo (200/day)</td>
+        <td>No</td>
+        <td>High-volume transactional with EU data residency</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/sendgrid" style="color:var(--text)">SendGrid</a></td>
+        <td>Transactional API</td>
+        <td>100 emails/day</td>
+        <td>No</td>
+        <td>Industry standard, extensive integrations</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mailchimp" style="color:var(--text)">Mailchimp</a></td>
+        <td>Marketing</td>
+        <td>500 sends/month, 250 contacts</td>
+        <td>No</td>
+        <td>Marketing CRM with landing pages and automations</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/postmark" style="color:var(--text)">Postmark</a></td>
+        <td>Transactional API</td>
+        <td>100 emails/mo</td>
+        <td>No</td>
+        <td>Fastest delivery, no credit card required</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/simplelogin" style="color:var(--text)">SimpleLogin</a></td>
+        <td>Forwarding</td>
+        <td>10 aliases, open source</td>
+        <td>Yes</td>
+        <td>Email alias service, self-hostable, ProtonMail owned</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/substack" style="color:var(--text)">Substack</a></td>
+        <td>Newsletter</td>
+        <td>Unlimited subscribers</td>
+        <td>No</td>
+        <td>Newsletter platform with built-in monetization</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/proton-mail" style="color:var(--text)">Proton Mail</a></td>
+        <td>Secure Email</td>
+        <td>1 GB storage, E2E encryption</td>
+        <td>Yes</td>
+        <td>Privacy-focused encrypted email</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/emailoctopus" style="color:var(--text)">EmailOctopus</a></td>
+        <td>Marketing</td>
+        <td>2,500 subscribers, 10K emails/mo</td>
+        <td>No</td>
+        <td>Simple email marketing with generous free tier</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mailtrap-io" style="color:var(--text)">Mailtrap.io</a></td>
+        <td>Testing/Transactional</td>
+        <td>3,500 emails/mo</td>
+        <td>No</td>
+        <td>Email sandbox for testing + transactional sending</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/anonaddy" style="color:var(--text)">AnonAddy</a></td>
+        <td>Forwarding</td>
+        <td>Unlimited aliases, open source</td>
+        <td>Yes</td>
+        <td>Anonymous email forwarding, self-hostable</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Resend leads the modern transactional email space with React Email integration and 3K emails/month free. Brevo offers the most generous marketing free tier with 300 emails/day and unlimited contacts. For privacy, SimpleLogin and AnonAddy are both open source with self-hosting options. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free Email Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need transactional email for your app?</dt>
+      <dd><a href="/vendor/resend">Resend</a> — 3K/mo with React Email templates. <a href="/vendor/mailjet">Mailjet</a> — 6K/mo with EU data residency. <a href="/vendor/mailersend-com">MailerSend</a> — 3K/mo. See our <a href="/email-service-alternatives">email service deep comparison</a> for more.</dd>
+
+      <dt>Running an email newsletter?</dt>
+      <dd><a href="/vendor/substack">Substack</a> — unlimited free subscribers with built-in monetization. <a href="/vendor/buttondown">Buttondown</a> — 100 subscribers free. <a href="/vendor/emailoctopus">EmailOctopus</a> — 2,500 subscribers, 10K emails/mo.</dd>
+
+      <dt>Need email marketing with automation?</dt>
+      <dd><a href="/vendor/brevo">Brevo</a> — 300/day, unlimited contacts, full automation. <a href="/vendor/mailchimp">Mailchimp</a> — 250 contacts with landing pages. <a href="/vendor/loops">Loops</a> — 1,000 contacts, modern UI built for SaaS.</dd>
+
+      <dt>Want to protect your inbox with aliases?</dt>
+      <dd><a href="/vendor/simplelogin">SimpleLogin</a> — 10 aliases, open source, ProtonMail-owned. <a href="/vendor/anonaddy">AnonAddy</a> — unlimited aliases, open source, self-hostable. <a href="/vendor/improvmx">ImprovMX</a> — 25 aliases for custom domains.</dd>
+
+      <dt>Need email verification/validation?</dt>
+      <dd><a href="/vendor/verifalia">Verifalia</a> — 25/day real-time verification. <a href="/vendor/emailvalidation-io">Emailvalidation.io</a> — 100/mo. <a href="/vendor/mail-tester-com">mail-tester.com</a> — test your DNS/SPF/DKIM configuration.</dd>
+
+      <dt>Testing email in development?</dt>
+      <dd><a href="/vendor/mailtrap-io">Mailtrap.io</a> — email sandbox for QA plus transactional sending. <a href="/vendor/etherealmail">EtherealMail</a> — fake SMTP for testing. <a href="/vendor/mailsac-com">mailsac.com</a> — 1,500 API calls/mo.</dd>
+
+      <dt>Want secure, encrypted email?</dt>
+      <dd><a href="/vendor/proton-mail">Proton Mail</a> — 1 GB storage, end-to-end encryption, Swiss privacy. <a href="/vendor/tuta">Tuta</a> — 1 GB, open source option, based in Germany.</dd>
+
+      <dt>Need temporary/disposable email?</dt>
+      <dd><a href="/vendor/10minutemail">10minutemail</a> — self-destructing email addresses. <a href="/vendor/mailinator-com">mailinator.com</a> — public inboxes for testing. <a href="/vendor/inboxkitten-com">inboxkitten.com</a> — 3-day auto-delete.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/email">Email</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get email tool recommendations from your AI assistant. Compare transactional APIs, marketing platforms, and email infrastructure — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -11241,6 +11584,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-ml-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAiMlAlternativesPage());
+  } else if (url.pathname === "/email-alternatives" && isGetOrHead) {
+    recordApiHit("/email-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildEmailAlternativesPage());
   } else if (url.pathname === "/design-alternatives" && isGetOrHead) {
     recordApiHit("/design-alternatives");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/design-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
