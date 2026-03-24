@@ -1924,6 +1924,32 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /design-alternatives renders design hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/design-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Design Tools"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Design Tools &amp; Editors"), "Should have design editors section");
+    assert.ok(html.includes("Prototyping &amp; No-Code"), "Should have prototyping section");
+    assert.ok(html.includes("UI Component Libraries"), "Should have UI components section");
+    assert.ok(html.includes("Icons &amp; Illustrations"), "Should have icons section");
+    assert.ok(html.includes("Stock Assets &amp; Images"), "Should have stock assets section");
+    assert.ok(html.includes("Color &amp; CSS Tools"), "Should have color tools section");
+    assert.ok(html.includes("Mockups &amp; Wireframing"), "Should have mockups section");
+    assert.ok(html.includes("Which Free Design Tool"), "Should have decision guide");
+    assert.ok(html.includes("Free Design Tools Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Figma"), "Should include Figma");
+    assert.ok(html.includes("Penpot"), "Should include Penpot");
+    assert.ok(html.includes("ShadcnUI"), "Should include ShadcnUI");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
