@@ -2025,6 +2025,28 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /free-llm-apis renders LLM API hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/free-llm-apis`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free LLM APIs"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Proprietary Model APIs"), "Should have provider APIs section");
+    assert.ok(html.includes("Open-Model Inference Platforms"), "Should have inference platforms section");
+    assert.ok(html.includes("AI Gateways"), "Should have gateways section");
+    assert.ok(html.includes("Rate Limit Comparison"), "Should have rate limit table");
+    assert.ok(html.includes("Which Free LLM API"), "Should have decision guide");
+    assert.ok(html.includes("Groq"), "Should include Groq");
+    assert.ok(html.includes("Cerebras"), "Should include Cerebras");
+    assert.ok(html.includes("OpenRouter"), "Should include OpenRouter");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
