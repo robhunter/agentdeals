@@ -3837,7 +3837,7 @@
     {
       "vendor": "Cerebras",
       "category": "AI / ML",
-      "description": "Ultra-fast LLM inference API. Free tier: 1M tokens/day, 30 requests/min. Models include Llama 3.1 8B/70B, Qwen3 32B/235B. Multi-thousand tokens/sec inference speed",
+      "description": "Ultra-fast LLM inference API. Free tier: 1M tokens/day, 10-30 requests/min (varies by model). Models include Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B. Multi-thousand tokens/sec inference speed",
       "tier": "Free",
       "url": "https://cerebras.ai/",
       "tags": [
@@ -3846,7 +3846,7 @@
         "inference",
         "api"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-24"
     },
     {
       "vendor": "Cohere",
