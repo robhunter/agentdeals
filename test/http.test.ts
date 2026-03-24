@@ -1829,6 +1829,28 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /storage-alternatives renders storage hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/storage-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Cloud Storage"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Object Storage"), "Should have object storage section");
+    assert.ok(html.includes("Media"), "Should have media section");
+    assert.ok(html.includes("File Storage"), "Should have file storage section");
+    assert.ok(html.includes("Which Free Storage"), "Should have decision guide");
+    assert.ok(html.includes("Free Cloud Storage Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Cloudflare R2"), "Should include Cloudflare R2");
+    assert.ok(html.includes("Backblaze"), "Should include Backblaze");
+    assert.ok(html.includes("Cloudinary"), "Should include Cloudinary");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
