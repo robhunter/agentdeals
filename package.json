@@ -1,6 +1,6 @@
 {
   "name": "agentdeals",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "MCP server aggregating developer tool deals, free tiers, and startup programs",
   "type": "module",
   "main": "dist/index.js",
