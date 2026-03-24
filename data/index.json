@@ -235,7 +235,7 @@
     {
       "vendor": "Supabase",
       "category": "Databases",
-      "description": "Open source Firebase alternative \u2014 500 MB Postgres database, 50K monthly active users, 1 GB file storage, 5 GB bandwidth, 500K edge function invocations, 200 concurrent realtime connections, 2 free projects. Includes Auth, Storage, Realtime, and Edge Functions",
+      "description": "Open source Firebase alternative \u2014 500 MB Postgres database, 50K monthly active users, 1 GB file storage, 2 GB database egress, 10 GB total bandwidth (5 GB cached + 5 GB uncached), 500K edge function invocations, 200 concurrent realtime connections, 2 free projects. Includes Auth, Storage, Realtime, and Edge Functions",
       "tier": "Free",
       "url": "https://supabase.com/pricing",
       "tags": [
@@ -249,7 +249,7 @@
         "auth0-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-24"
     },
     {
       "vendor": "Neon",
