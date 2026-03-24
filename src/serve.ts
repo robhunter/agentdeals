@@ -3715,6 +3715,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Cloudflare R2",
     hubDesc: "55+ free cloud storage tools compared — object storage, media/image CDN, file hosting, and general-purpose storage",
   },
+  {
+    slug: "testing-alternatives",
+    title: "Best Free Testing Tools for Developers in 2026 — Browser, Visual, Load, E2E & API Testing Compared",
+    metaDesc: "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. Updated March 2026.",
+    contextHtml: "",
+    tag: "testing-hub",
+    primaryVendor: "Cypress Cloud",
+    hubDesc: "45+ free testing tools compared — browser, visual regression, load, E2E, API, and code coverage",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -5961,6 +5970,341 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get security tool recommendations from your AI assistant. Compare SAST scanners, secret managers, auth providers, and container security tools \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildTestingAlternativesPage(): string {
+  const title = "Best Free Testing Tools for Developers in 2026 — Browser, Visual, Load, E2E & API Testing Compared";
+  const metaDesc = "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. Updated March 2026.";
+  const slug = "testing-alternatives";
+
+  // Get all testing-related offers
+  const testingOffers = offers.filter(o => o.category === "Testing");
+  const enrichedAll = enrichOffers(testingOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by testing domain
+  const browserTesting = enrichedAll.filter(o =>
+    ["BrowserStack", "Sauce Labs", "LambdaTest", "Appetize", "gridlastic.com", "testingbot.com", "Selenium Grid"].includes(o.vendor)
+  );
+  const visualTesting = enrichedAll.filter(o =>
+    ["BrowserStack Percy", "Chromatic", "Argos", "Applitools Eyes", "lost-pixel.com"].includes(o.vendor)
+  );
+  const loadTesting = enrichedAll.filter(o =>
+    ["Grafana k6 Cloud", "Artillery", "Gatling", "Locust", "BlazeMeter", "loadmill.com", "websitepulse.com"].includes(o.vendor)
+  );
+  const e2eTesting = enrichedAll.filter(o =>
+    ["Cypress Cloud", "Checkly", "BugBug", "Keploy", "katalon.com", "kogiQA", "everystep-automation.com"].includes(o.vendor)
+  );
+  const apiTesting = enrichedAll.filter(o =>
+    ["Postman", "UseWebhook.com", "webhook.site", "CORS-Tester"].includes(o.vendor)
+  );
+  const codeQuality = enrichedAll.filter(o =>
+    ["Codecov", "tesults.com", "Testspace.com", "qase.io", "Bencher"].includes(o.vendor)
+  );
+  const localDev = enrichedAll.filter(o =>
+    ["LocalStack", "Testcontainers", "Moto", "AWS SAM CLI"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    !browserTesting.includes(o) && !visualTesting.includes(o) && !loadTesting.includes(o) &&
+    !e2eTesting.includes(o) && !apiTesting.includes(o) && !codeQuality.includes(o) && !localDev.includes(o)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Testing deal changes
+  const testingChangeVendors = ["Cypress", "Postman", "LocalStack", "BrowserStack", "Sauce Labs", "Chromatic"];
+  const testingChanges = dealChanges.filter(c => testingChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = testingChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Testing Tool Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${testingChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: testingOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Testing Tools</div>
+  <h1>Best Free Testing Tools for Developers</h1>
+
+  <div class="context">
+    <p>Testing infrastructure is one of the fastest-growing developer tool categories \u2014 and one of the most expensive to scale. Cloud-based browser testing, visual regression snapshots, and load test minutes all add up quickly. The good news: the free tier landscape is strong. <strong>Cypress Cloud</strong> offers <strong>500 test results/month</strong>. <strong>BrowserStack</strong> and <strong>Sauce Labs</strong> are <strong>free for open-source projects</strong>. <strong>Grafana k6 Cloud</strong> gives <strong>500 virtual user hours/month</strong>. <strong>Chromatic</strong> provides <strong>5,000 snapshots/month</strong> for visual regression.</p>
+    <p>This page compares every free testing tool in our index \u2014 <strong>${testingOffers.length} tools</strong> across browser testing, visual regression, load/performance testing, E2E automation, API testing, code coverage, and local development. Whether you need a BrowserStack alternative or a load testing solution, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Browser &amp; Cross-Platform Testing</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Cloud-based browser testing services for cross-browser compatibility, mobile testing, and Selenium Grid hosting. Run your tests on real browsers and devices without maintaining your own infrastructure.</p>
+${buildCards(browserTesting)}
+
+  <h2>Visual Regression Testing</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Automated screenshot comparison tools that catch visual bugs before they reach production. Integrate with your CI pipeline to detect unintended UI changes on every pull request.</p>
+${buildCards(visualTesting)}
+
+  <h2>Load &amp; Performance Testing</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Load testing and performance benchmarking tools. Simulate thousands of concurrent users to find bottlenecks before your users do. From scriptable open-source frameworks to managed cloud platforms.</p>
+${buildCards(loadTesting)}
+
+  <h2>E2E &amp; Test Automation</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">End-to-end test runners and automation platforms. Record, write, and execute tests that simulate real user flows \u2014 from clicking buttons to filling forms to verifying API responses.</p>
+${buildCards(e2eTesting)}
+
+  <h2>API Testing &amp; Webhooks</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Tools for testing REST APIs, GraphQL endpoints, webhooks, and CORS configurations. From full-featured API development environments to single-purpose debugging utilities.</p>
+${buildCards(apiTesting)}
+
+  <h2>Code Coverage &amp; Quality</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Code coverage reporting, test result tracking, and quality metrics. Integrate with your CI to enforce coverage thresholds and track test health over time.</p>
+${buildCards(codeQuality)}
+
+  <h2>Local Dev &amp; Mocking</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Tools for running cloud services locally during development and testing. Emulate AWS services, spin up test databases in containers, and mock external APIs without cloud costs.</p>
+${buildCards(localDev)}
+
+${other.length > 0 ? `
+  <h2>Other Testing Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">SEO checkers, accessibility testers, SSR validators, and other specialized testing utilities with free tiers.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free Testing Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free testing tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cypress-cloud" style="color:var(--text)">Cypress Cloud</a></td>
+        <td>E2E</td>
+        <td>500 results/mo</td>
+        <td>Framework</td>
+        <td>JavaScript E2E testing with cloud dashboard</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/browserstack" style="color:var(--text)">BrowserStack</a></td>
+        <td>Browser</td>
+        <td>Free for OSS</td>
+        <td>Free for OSS</td>
+        <td>Cross-browser testing on real devices</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/sauce-labs" style="color:var(--text)">Sauce Labs</a></td>
+        <td>Browser</td>
+        <td>Free for OSS</td>
+        <td>Free for OSS</td>
+        <td>Large-scale cross-browser + mobile testing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/lambdatest" style="color:var(--text)">LambdaTest</a></td>
+        <td>Browser</td>
+        <td>60 min/mo</td>
+        <td>No</td>
+        <td>Cloud browser testing with live + automation</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/chromatic" style="color:var(--text)">Chromatic</a></td>
+        <td>Visual</td>
+        <td>5K snapshots/mo</td>
+        <td>No</td>
+        <td>Storybook visual testing + review</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/browserstack-percy" style="color:var(--text)">BrowserStack Percy</a></td>
+        <td>Visual</td>
+        <td>5K screenshots/mo</td>
+        <td>No</td>
+        <td>Cross-browser visual regression</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/applitools-eyes" style="color:var(--text)">Applitools Eyes</a></td>
+        <td>Visual</td>
+        <td>100 checkpoints/mo</td>
+        <td>No</td>
+        <td>AI-powered visual testing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/grafana-k6-cloud" style="color:var(--text)">Grafana k6 Cloud</a></td>
+        <td>Load</td>
+        <td>500 VUh/mo</td>
+        <td>Framework</td>
+        <td>Scriptable load testing with cloud analytics</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/postman" style="color:var(--text)">Postman</a></td>
+        <td>API</td>
+        <td>Free single-user</td>
+        <td>No</td>
+        <td>API development, testing, and documentation</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/codecov" style="color:var(--text)">Codecov</a></td>
+        <td>Coverage</td>
+        <td>Free for 5 users</td>
+        <td>No</td>
+        <td>Code coverage reporting + CI integration</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/localstack" style="color:var(--text)">LocalStack</a></td>
+        <td>Local Dev</td>
+        <td>30+ AWS services</td>
+        <td>Core</td>
+        <td>Local AWS emulation for testing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/testcontainers" style="color:var(--text)">Testcontainers</a></td>
+        <td>Local Dev</td>
+        <td>\u221e (open-source)</td>
+        <td>Yes</td>
+        <td>Throwaway Docker containers for integration tests</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cypress Cloud leads for JavaScript E2E with 500 free results/month and a polished dashboard. BrowserStack and Sauce Labs are unbeatable for OSS projects needing cross-browser coverage. For load testing, Grafana k6 Cloud gives 500 VUh/month with the popular k6 scripting framework. Chromatic dominates Storybook visual testing at 5K snapshots/month. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free Testing Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need cross-browser testing for an open-source project?</dt>
+      <dd><a href="/vendor/browserstack">BrowserStack</a> and <a href="/vendor/sauce-labs">Sauce Labs</a> both offer free plans for open-source projects, including real devices and parallel testing. <a href="/vendor/lambdatest">LambdaTest</a> gives 60 free minutes/month for private projects.</dd>
+
+      <dt>Setting up E2E tests for a JavaScript app?</dt>
+      <dd><a href="/vendor/cypress-cloud">Cypress Cloud</a> \u2014 500 test results/month free with parallelization, screenshots, and video recordings. The Cypress framework itself is open-source. <a href="/vendor/checkly">Checkly</a> adds synthetic monitoring on top of Playwright tests.</dd>
+
+      <dt>Want to catch visual regressions in CI?</dt>
+      <dd><a href="/vendor/chromatic">Chromatic</a> for Storybook projects (5K snapshots/month). <a href="/vendor/browserstack-percy">BrowserStack Percy</a> for cross-browser visual diffs (5K screenshots/month). <a href="/vendor/applitools-eyes">Applitools Eyes</a> for AI-powered visual comparison (100 checkpoints/month).</dd>
+
+      <dt>Need load testing for your API?</dt>
+      <dd><a href="/vendor/grafana-k6-cloud">Grafana k6 Cloud</a> \u2014 500 VUh/month free with the scriptable k6 framework. <a href="/vendor/artillery">Artillery</a>, <a href="/vendor/gatling">Gatling</a>, and <a href="/vendor/locust">Locust</a> are fully open-source alternatives you can self-host.</dd>
+
+      <dt>Testing REST APIs and webhooks?</dt>
+      <dd><a href="/vendor/postman">Postman</a> for full API development workflows (free since March 2026 for single users). <a href="/vendor/webhook-site">webhook.site</a> and <a href="/vendor/usewebhook-com">UseWebhook.com</a> for quick webhook debugging.</dd>
+
+      <dt>Want code coverage reporting in CI?</dt>
+      <dd><a href="/vendor/codecov">Codecov</a> \u2014 free for up to 5 users with GitHub/GitLab integration and PR coverage comments. <a href="/vendor/bencher">Bencher</a> for continuous benchmarking and performance tracking.</dd>
+
+      <dt>Need to test against AWS services locally?</dt>
+      <dd><a href="/vendor/localstack">LocalStack</a> emulates 30+ AWS services locally (free tier). <a href="/vendor/testcontainers">Testcontainers</a> for spinning up disposable Docker containers in tests. <a href="/vendor/moto">Moto</a> for Python AWS mocking.</dd>
+
+      <dt>Looking for open-source test automation?</dt>
+      <dd><a href="/vendor/selenium-grid">Selenium Grid</a> for browser automation across languages. <a href="/vendor/locust">Locust</a> for Python load testing. <a href="/vendor/gatling">Gatling</a> for Scala/Java performance tests. All free, self-hosted, no limits.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/testing">Testing</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get testing tool recommendations from your AI assistant. Compare browser testing, visual regression, load testing, and E2E automation tools \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -9869,6 +10213,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/security-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSecurityAlternativesPage());
+  } else if (url.pathname === "/testing-alternatives" && isGetOrHead) {
+    recordApiHit("/testing-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/testing-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildTestingAlternativesPage());
   } else if (url.pathname === "/storage-alternatives" && isGetOrHead) {
     recordApiHit("/storage-alternatives");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/storage-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
