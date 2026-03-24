@@ -3733,6 +3733,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "PostHog",
     hubDesc: "45+ free analytics tools compared — product analytics, web analytics, event tracking, and data infrastructure",
   },
+  {
+    slug: "ai-ml-alternatives",
+    title: "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared",
+    metaDesc: "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. Updated March 2026.",
+    contextHtml: "",
+    tag: "ai-ml-hub",
+    primaryVendor: "OpenAI",
+    hubDesc: "65+ free AI/ML tools compared — LLM APIs, AI coding assistants, ML platforms, observability, and specialized AI services",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -6947,6 +6956,326 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get analytics tool recommendations from your AI assistant. Compare product analytics, web analytics, and session replay tools \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildAiMlAlternativesPage(): string {
+  const title = "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared";
+  const metaDesc = "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. Updated March 2026.";
+  const slug = "ai-ml-alternatives";
+
+  // Get all AI/ML and AI Coding offers
+  const aiOffers = offers.filter(o => o.category === "AI / ML" || o.category === "AI Coding");
+  const enrichedAll = enrichOffers(aiOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by AI domain
+  const llmApis = enrichedAll.filter(o =>
+    ["OpenAI", "Anthropic API", "Google Gemini API", "Mistral AI", "Groq", "Cerebras", "Cohere", "xAI", "OpenRouter", "Cloudflare Workers AI", "Pollinations.AI", "Mediaworkbench.ai", "Lumenfall.ai"].includes(o.vendor)
+  );
+  const aiCoding = enrichedAll.filter(o =>
+    ["GitHub Copilot", "Cursor", "Claude Code", "Amazon Q Developer", "Windsurf", "Cline", "Aider", "Devin", "Bolt.new", "Lovable", "Augment Code", "Google Antigravity", "Gemini CLI", "OpenAI Codex"].includes(o.vendor)
+  );
+  const mlPlatforms = enrichedAll.filter(o =>
+    ["Hugging Face", "Kaggle", "Replicate", "Baseten", "Vast.ai", "paperspace", "Weights & Biases", "Comet ML", "Neptune.ai"].includes(o.vendor)
+  );
+  const aiObservability = enrichedAll.filter(o =>
+    ["Langfuse", "LangWatch", "Langtrace", "Arize AI", "Arize AX", "Braintrust", "Maxim AI", "Keywords AI", "Portkey", "Composio", "Zenable"].includes(o.vendor)
+  );
+  const specializedAi = enrichedAll.filter(o =>
+    ["Deepgram", "AssemblyAI", "Roboflow", "Scale AI", "Clarifai", "Labelbox", "Pinecone", "Qdrant", "OCR.Space", "Parseur", "Reducto", "Tavily AI", "wolfram.com", "DeepAR", "Audio Enhancer", "Clair", "Othor AI", "ReportGPT"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    !llmApis.includes(o) && !aiCoding.includes(o) && !mlPlatforms.includes(o) && !aiObservability.includes(o) && !specializedAi.includes(o)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // AI deal changes
+  const aiChangeVendors = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "GitHub Copilot", "Cursor", "Windsurf", "Cerebras"];
+  const aiChanges = dealChanges.filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = aiChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent AI/ML Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${aiChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: aiOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free AI &amp; ML Tools</div>
+  <h1>Best Free AI &amp; ML Tools for Developers</h1>
+
+  <div class="context">
+    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast Llama 3.3 70B inference at ~30 RPM free. <strong>Cerebras</strong> gives <strong>1M tokens/day</strong> free. <strong>Mistral</strong> offers access to all models including Large and Codestral at 1B tokens/month. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
+    <p>This page compares every free AI and ML tool in our index \u2014 <strong>${aiOffers.length} tools</strong> across LLM APIs, AI coding assistants, ML platforms, observability, and specialized services. Whether you need an OpenAI alternative or a free AI coding assistant, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>LLM API Providers</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Large language model APIs for text generation, embeddings, and more. These are the foundational building blocks for AI applications \u2014 from GPT-4 and Claude to open-source models like Llama and Mistral.</p>
+${buildCards(llmApis)}
+
+  <h2>AI Coding Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">AI-powered coding assistants, agents, and app builders. From inline autocomplete (GitHub Copilot, Cursor) to fully autonomous agents (Devin, Claude Code) and no-code app builders (Bolt.new, Lovable).</p>
+${buildCards(aiCoding)}
+
+  <h2>ML Platforms &amp; Infrastructure</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Model hosting, training, experiment tracking, and GPU compute. The infrastructure layer for building, training, and deploying custom ML models.</p>
+${buildCards(mlPlatforms)}
+
+  <h2>AI Observability &amp; Evaluation</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">LLM monitoring, prompt engineering, evaluation, and debugging tools. Essential for production AI applications \u2014 track costs, latency, quality, and catch regressions.</p>
+${buildCards(aiObservability)}
+
+  <h2>Specialized AI Services</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Speech-to-text, computer vision, vector databases, document parsing, and other domain-specific AI tools. These services handle specific AI tasks that general-purpose LLMs don't cover well.</p>
+${buildCards(specializedAi)}
+
+${other.length > 0 ? `
+  <h2>Other AI &amp; ML Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Additional AI and ML tools with free tiers.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free AI &amp; ML Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free AI/ML tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/groq" style="color:var(--text)">Groq</a></td>
+        <td>LLM API</td>
+        <td>~30 RPM, Llama 3.3 70B</td>
+        <td>No</td>
+        <td>Fastest free LLM inference (LPU hardware)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cerebras" style="color:var(--text)">Cerebras</a></td>
+        <td>LLM API</td>
+        <td>1M tokens/day, 30 RPM</td>
+        <td>No</td>
+        <td>High-volume free inference, Llama &amp; Qwen</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
+        <td>LLM API</td>
+        <td>1B tokens/mo, 2 RPM</td>
+        <td>No</td>
+        <td>Access to all Mistral models including Codestral</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/openrouter" style="color:var(--text)">OpenRouter</a></td>
+        <td>LLM API</td>
+        <td>~30 free models, ~20 RPM</td>
+        <td>No</td>
+        <td>Multi-model router, OpenAI-compatible API</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/github-copilot" style="color:var(--text)">GitHub Copilot</a></td>
+        <td>AI Coding</td>
+        <td>2,000 completions/mo, 50 chats</td>
+        <td>No</td>
+        <td>Inline code completion in any IDE</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cursor" style="color:var(--text)">Cursor</a></td>
+        <td>AI Coding</td>
+        <td>2,000 completions, 50 requests</td>
+        <td>No</td>
+        <td>AI-native code editor with Composer</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/gemini-cli" style="color:var(--text)">Gemini CLI</a></td>
+        <td>AI Coding</td>
+        <td>1,000 req/day, 60 RPM</td>
+        <td>Yes</td>
+        <td>Free terminal AI agent, open-source</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hugging-face" style="color:var(--text)">Hugging Face</a></td>
+        <td>ML Platform</td>
+        <td>Free inference, unlimited hosting</td>
+        <td>Yes</td>
+        <td>Model hub, 200+ inference providers</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/kaggle" style="color:var(--text)">Kaggle</a></td>
+        <td>ML Platform</td>
+        <td>30 hrs/week GPU, 20 hrs TPU</td>
+        <td>No</td>
+        <td>Free GPU compute for ML training</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/langfuse" style="color:var(--text)">Langfuse</a></td>
+        <td>Observability</td>
+        <td>50K observations/mo</td>
+        <td>Yes</td>
+        <td>Open-source LLM observability &amp; tracing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/deepgram" style="color:var(--text)">Deepgram</a></td>
+        <td>Speech AI</td>
+        <td>$200 free credits (~43K min)</td>
+        <td>No</td>
+        <td>Speech-to-text and text-to-speech API</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pinecone" style="color:var(--text)">Pinecone</a></td>
+        <td>Vector DB</td>
+        <td>2 GB storage, 5 indexes</td>
+        <td>No</td>
+        <td>Managed vector database for RAG/search</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free LLM inference volume \u2014 Groq for speed (LPU), Cerebras for daily token quota (1M/day). Mistral offers the broadest model access on free tier (all models including Large). For AI coding, GitHub Copilot and Cursor both offer 2,000 free completions/month, while Gemini CLI is completely free and open-source. Langfuse is the standout for LLM observability (open-source, 50K observations free). All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free AI Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need fast, free LLM API access?</dt>
+      <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with Llama 3.3 70B, ~30 RPM free. <a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, great for batch workloads. <a href="/vendor/openrouter">OpenRouter</a> for access to ~30 free models through one API.</dd>
+
+      <dt>Want access to all frontier models?</dt>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 all models including Large and Codestral, 1B tokens/month free at 2 RPM. Best free access to frontier-class models without credit card.</dd>
+
+      <dt>Looking for an AI coding assistant?</dt>
+      <dd><a href="/vendor/github-copilot">GitHub Copilot</a> for IDE-integrated autocomplete (2,000/mo free). <a href="/vendor/cursor">Cursor</a> for an AI-native editor. <a href="/vendor/gemini-cli">Gemini CLI</a> and <a href="/vendor/cline">Cline</a> for free open-source terminal agents (BYOK).</dd>
+
+      <dt>Building an AI app and need observability?</dt>
+      <dd><a href="/vendor/langfuse">Langfuse</a> \u2014 open-source LLM tracing, 50K observations/month free. <a href="/vendor/langwatch">LangWatch</a> for monitoring and optimization. <a href="/vendor/braintrust">Braintrust</a> for evals with 1,000 rows/week free.</dd>
+
+      <dt>Need free GPU compute for ML training?</dt>
+      <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU, completely free. <a href="/vendor/paperspace">Paperspace</a> for free notebooks with basic instances. <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
+
+      <dt>Want to host or deploy ML models?</dt>
+      <dd><a href="/vendor/hugging-face">Hugging Face</a> \u2014 free model hosting, inference API with 200+ providers. <a href="/vendor/replicate">Replicate</a> for free runs on curated models. <a href="/vendor/baseten">Baseten</a> for $30 in deployment credits.</dd>
+
+      <dt>Need speech-to-text or computer vision?</dt>
+      <dd><a href="/vendor/deepgram">Deepgram</a> \u2014 $200 free credits for speech AI (~43K minutes). <a href="/vendor/assemblyai">AssemblyAI</a> \u2014 $50 credits (~185 hours). <a href="/vendor/roboflow">Roboflow</a> for computer vision with 250K images free.</dd>
+
+      <dt>Looking for a vector database for RAG?</dt>
+      <dd><a href="/vendor/pinecone">Pinecone</a> \u2014 2 GB storage and 5 indexes free. <a href="/vendor/qdrant">Qdrant</a> \u2014 1 GB free forever cluster, fully managed. Both excellent for retrieval-augmented generation.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/ai-ml">AI / ML</a> and <a href="/category/ai-coding">AI Coding</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare LLM APIs, coding tools, and ML platforms \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -10557,6 +10886,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/analytics-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAnalyticsAlternativesPage());
+  } else if (url.pathname === "/ai-ml-alternatives" && isGetOrHead) {
+    recordApiHit("/ai-ml-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-ml-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAiMlAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
