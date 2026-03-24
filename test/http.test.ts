@@ -2082,6 +2082,31 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/alternatives"), "Should link to hub page");
   });
 
+  // --- Q1 2026 Pricing Report ---
+
+  it("GET /q1-2026-developer-pricing-report renders quarterly pricing report", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/q1-2026-developer-pricing-report`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Q1 2026 Developer Pricing Report"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Free Tiers Removed"), "Should have removals section");
+    assert.ok(html.includes("Limits Tightened"), "Should have restrictions section");
+    assert.ok(html.includes("Pricing Restructured"), "Should have restructured section");
+    assert.ok(html.includes("Bright Spots"), "Should have expansions section");
+    assert.ok(html.includes("LocalStack"), "Should mention LocalStack");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("Related Guides"), "Should have related guides");
+    assert.ok(html.includes("/changes"), "Should link to changes page");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {

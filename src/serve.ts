@@ -3796,6 +3796,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Postman",
     hubDesc: "39+ free API development tools compared — REST/GraphQL clients, mocking, documentation, marketplaces, and integration platforms",
   },
+  {
+    slug: "q1-2026-developer-pricing-report",
+    title: "Q1 2026 Developer Pricing Report — Free Tier Changes, Removals & Trends",
+    metaDesc: "47 verified pricing changes across developer tools in Q1 2026. Free tier removals, limit reductions, price increases, and bright spots. The definitive quarterly analysis.",
+    contextHtml: "",
+    tag: "q1-report",
+    primaryVendor: "AgentDeals",
+    hubDesc: "47 verified pricing changes in Q1 2026 — free tier removals, restrictions, price hikes, and expansions analyzed",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -9306,6 +9315,229 @@ ${buildCards(apiIntegration)}
 </html>`;
 }
 
+// --- Q1 2026 Developer Pricing Report ---
+
+function buildQ1PricingReportPage(): string {
+  const title = "Q1 2026 Developer Pricing Report — Free Tier Changes, Removals & Trends";
+  const metaDesc = "47 verified pricing changes across developer tools in Q1 2026. Free tier removals, limit reductions, price increases, and bright spots. The definitive quarterly analysis.";
+  const slug = "q1-2026-developer-pricing-report";
+  const pubDate = "2026-03-24";
+
+  // Filter Q1 2026 changes
+  const q1Changes = dealChanges.filter(c => c.date >= "2026-01-01" && c.date <= "2026-03-31");
+
+  // Categorize by theme
+  const removals = q1Changes.filter(c => c.change_type === "free_tier_removed");
+  const restrictions = q1Changes.filter(c => ["limits_reduced", "restriction"].includes(c.change_type));
+  const priceIncreases = q1Changes.filter(c => c.change_type === "pricing_restructured");
+  const expansions = q1Changes.filter(c => ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"].includes(c.change_type));
+  const deprecations = q1Changes.filter(c => ["product_deprecated", "open_source_killed", "pricing_model_change"].includes(c.change_type));
+
+  const impactColors: Record<string, string> = { high: "#f85149", medium: "#d29922", low: "#3fb950" };
+  const changeTypeLabels: Record<string, string> = {
+    free_tier_removed: "Free Tier Removed",
+    limits_reduced: "Limits Reduced",
+    restriction: "Restriction Added",
+    pricing_restructured: "Pricing Restructured",
+    limits_increased: "Limits Increased",
+    new_free_tier: "New Free Tier",
+    startup_program_expanded: "Startup Program Expanded",
+    pricing_postponed: "Pricing Postponed",
+    product_deprecated: "Product Deprecated",
+    open_source_killed: "Open Source Killed",
+    pricing_model_change: "Pricing Model Change",
+  };
+
+  const buildChangeCard = (c: typeof dealChanges[0]) => {
+    const impactColor = impactColors[c.impact] ?? "#94a3b8";
+    const typeLabel = changeTypeLabels[c.change_type] ?? c.change_type.replace(/_/g, " ");
+    const vendorSlug = toSlug(c.vendor);
+    const hasEditorial = editorialByVendor.has(c.vendor.toLowerCase());
+    const editorialLink = hasEditorial ? ` <a href="/${editorialByVendor.get(c.vendor.toLowerCase())!.slug}" style="font-size:.75rem;color:var(--accent)">[alternatives guide]</a>` : "";
+    return `<div class="change-card" style="border-left-color:${impactColor}">
+      <div class="change-header">
+        <a href="/vendor/${vendorSlug}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
+        <span class="change-date">${c.date}</span>
+        <span class="change-impact" style="color:${impactColor}">${c.impact}</span>
+      </div>
+      <span class="change-type-badge" style="background:${impactColor}22;color:${impactColor}">${typeLabel}</span>${editorialLink}
+      <p class="change-summary">${escHtmlServer(c.summary)}</p>
+      <div class="change-states">
+        <div class="change-before"><strong>Before:</strong> ${escHtmlServer(c.previous_state)}</div>
+        <div class="change-after"><strong>After:</strong> ${escHtmlServer(c.current_state)}</div>
+      </div>
+      <a href="${escHtmlServer(c.source_url)}" target="_blank" rel="noopener" class="change-source">Source &nearr;</a>
+    </div>`;
+  };
+
+  // Summary stats
+  const highImpact = q1Changes.filter(c => c.impact === "high").length;
+  const uniqueVendors = new Set(q1Changes.map(c => c.vendor)).size;
+
+  // Upcoming deadlines (changes with dates in Q2+ 2026)
+  const upcomingDeadlines = dealChanges.filter(c => c.date > "2026-03-31").slice(0, 6);
+
+  // Cross-links to editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["localstack-alternatives", "postman-alternatives", "hetzner-alternatives", "firebase-alternatives", "github-actions-alternatives", "hosting-alternatives", "monitoring-alternatives", "ai-ml-alternatives", "database-alternatives"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema (not ItemList — editorial content)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: {
+      "@type": "Thing",
+      name: "Developer tool pricing changes Q1 2026",
+      description: `${q1Changes.length} verified pricing changes tracked across ${uniqueVendors} developer tools`,
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.change-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.change-card:hover{border-color:var(--accent)}
+.change-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.change-vendor{font-size:1.05rem;font-weight:600;color:var(--text)}
+.change-vendor:hover{color:var(--accent)}
+.change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
+.change-impact{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.change-type-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600;margin-bottom:.5rem}
+.change-summary{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem;line-height:1.6}
+.change-states{font-size:.8rem;color:var(--text-dim);margin-bottom:.5rem;line-height:1.6}
+.change-before,.change-after{margin-bottom:.25rem}
+.change-source{font-size:.75rem;color:var(--text-dim)}
+.change-source:hover{color:var(--accent)}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Q1 2026 Report</div>
+  <h1>Q1 2026 Developer Pricing Report</h1>
+  <p class="pub-date">Published ${pubDate} &middot; ${q1Changes.length} verified changes across ${uniqueVendors} developer tools</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">${q1Changes.length}</div><div class="stat-label">Pricing Changes</div></div>
+    <div class="stat-card"><div class="stat-number">${removals.length}</div><div class="stat-label">Free Tiers Removed</div></div>
+    <div class="stat-card"><div class="stat-number">${restrictions.length}</div><div class="stat-label">Limits Tightened</div></div>
+    <div class="stat-card"><div class="stat-number">${highImpact}</div><div class="stat-label">High Impact</div></div>
+    <div class="stat-card"><div class="stat-number">${expansions.length}</div><div class="stat-label">Bright Spots</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>The Q1 2026 trend is clear: free tiers are eroding faster than they're expanding.</strong> We tracked ${q1Changes.length} verified pricing changes across ${uniqueVendors} developer tools this quarter. ${removals.length} free tiers were completely removed, ${restrictions.length} had limits tightened, and ${priceIncreases.length} restructured pricing in ways that typically mean higher costs.</p>
+    <p><strong>Biggest impacts:</strong> LocalStack killed its Community Edition (March 23), Freshping shut down entirely (March 6), X/Twitter eliminated its free API tier, and Firebase removed Cloud Storage from its free plan. API platforms were hit hardest — Brave Search, Spotify, Amazon SP-API, and Xero all moved away from free access.</p>
+    <p><strong>Bright spots were rare:</strong> Cloudflare added free Queues, Unity expanded DevOps limits, and startup credit programs grew (Cloudflare $250K, Google Cloud $350K). But expansions were outnumbered by contractions roughly 4:1.</p>
+  </div>
+
+  <h2 style="color:${impactColors.high}">Free Tiers Removed (${removals.length})</h2>
+  <p class="section-intro">These tools completely eliminated their free tier in Q1 2026. If you were using them for free, you need to migrate or pay.</p>
+  ${removals.map(buildChangeCard).join("\n  ")}
+
+  <h2 style="color:${impactColors.medium}">Limits Tightened &amp; Restrictions Added (${restrictions.length})</h2>
+  <p class="section-intro">Free tiers still exist, but with reduced limits or new restrictions that may affect your workflow.</p>
+  ${restrictions.map(buildChangeCard).join("\n  ")}
+
+  <h2>Pricing Restructured (${priceIncreases.length})</h2>
+  <p class="section-intro">These tools changed their pricing model. While some include free tiers, the restructuring typically means higher costs for most users.</p>
+  ${priceIncreases.map(buildChangeCard).join("\n  ")}
+
+  <h2>Deprecations &amp; Model Changes (${deprecations.length})</h2>
+  <p class="section-intro">Products deprecated, open-source projects killed, or fundamental pricing model shifts.</p>
+  ${deprecations.map(buildChangeCard).join("\n  ")}
+
+  <h2 style="color:${impactColors.low}">Bright Spots — Free Tiers Expanded (${expansions.length})</h2>
+  <p class="section-intro">Not all news is bad. These tools increased free tier limits or added new free offerings.</p>
+  ${expansions.map(buildChangeCard).join("\n  ")}
+
+  ${upcomingDeadlines.length > 0 ? `<h2>Upcoming Deadlines to Watch</h2>
+  <p class="section-intro">These pricing changes take effect after Q1. Plan your migrations now.</p>
+  ${upcomingDeadlines.map(buildChangeCard).join("\n  ")}` : ""}
+
+  <div class="methodology">
+    <strong>Methodology:</strong> All ${q1Changes.length} pricing changes were manually verified against vendor pricing pages, blog announcements, or official documentation. Each entry includes a source URL for independent verification. Changes are categorized by type (removal, restriction, restructure, expansion) and rated by impact (high, medium, low) based on the size of the affected developer community and the severity of the change. Data is continuously tracked at <a href="/changes">/changes</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive comparison guides for tools affected by Q1 2026 changes.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  <div class="search-cta">
+    <p>This report covers Q1 2026. For the full timeline of all ${dealChanges.length} tracked pricing changes, visit <a href="/changes">/changes</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track pricing changes from your AI assistant. Get alerts on free tier removals, limit reductions, and new deals — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -12944,6 +13176,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api-development-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildApiDevelopmentAlternativesPage());
+  } else if (url.pathname === "/q1-2026-developer-pricing-report" && isGetOrHead) {
+    recordApiHit("/q1-2026-developer-pricing-report");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/q1-2026-developer-pricing-report", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildQ1PricingReportPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
