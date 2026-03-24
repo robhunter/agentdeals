@@ -3706,6 +3706,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Snyk",
     hubDesc: "100+ free security tools compared — SAST/DAST, secret scanning, dependency analysis, container security, and identity/auth",
   },
+  {
+    slug: "storage-alternatives",
+    title: "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared",
+    metaDesc: "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. Updated March 2026.",
+    contextHtml: "",
+    tag: "storage-hub",
+    primaryVendor: "Cloudflare R2",
+    hubDesc: "55+ free cloud storage tools compared — object storage, media/image CDN, file hosting, and general-purpose storage",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -5952,6 +5961,319 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get security tool recommendations from your AI assistant. Compare SAST scanners, secret managers, auth providers, and container security tools \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildStorageAlternativesPage(): string {
+  const title = "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared";
+  const metaDesc = "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. Updated March 2026.";
+  const slug = "storage-alternatives";
+
+  // Get all storage-related offers
+  const storageOffers = offers.filter(o => o.category === "Storage" || o.category === "CDN");
+  const enrichedAll = enrichOffers(storageOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by storage domain
+  const objectStorage = enrichedAll.filter(o =>
+    ["Cloudflare R2", "Backblaze B2", "Tigris", "MinIO", "Google Cloud Storage", "Backblaze", "Pinata IPFS", "packagecloud.io"].includes(o.vendor)
+  );
+  const mediaCdn = enrichedAll.filter(o =>
+    ["Cloudinary", "ImageKit", "Uploadcare", "twicpics.com", "gumlet.com", "imgix", "embed.ly", "ImageEngine", "ImgBB", "imgen", "kraken.io", "sirv.com", "resmush.it", "tinypng.com", "image-charts.com", "QuickChart", "plot.ly", "nitropack.io"].includes(o.vendor)
+  );
+  const cdnDelivery = enrichedAll.filter(o =>
+    o.category === "CDN" && !mediaCdn.includes(o)
+  );
+  const fileStorageSync = enrichedAll.filter(o =>
+    ["seafile.com", "odrive", "transfernow", "transloadit.com", "wormhol.org", "Wormhole", "GoFile.io", "file.io", "internxt.com", "icedrive.net", "pcloud.com", "sync.com", "Proton Drive", "degoo.com", "Ente", "borgbase.com", "Dropshare"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    !objectStorage.includes(o) && !mediaCdn.includes(o) && !cdnDelivery.includes(o) && !fileStorageSync.includes(o)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Storage deal changes
+  const storageChangeVendors = ["Cloudflare", "Backblaze", "Cloudinary", "ImageKit", "Google Cloud", "Tigris", "Fastly"];
+  const storageChanges = dealChanges.filter(c => storageChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = storageChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Storage Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${storageChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: storageOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Cloud Storage</div>
+  <h1>Best Free Cloud Storage for Developers</h1>
+
+  <div class="context">
+    <p>Cloud storage costs add up fast — egress fees, per-request charges, and surprise overages can blow through a budget on a hobby project. The good news: the free tier landscape for storage is strong. <strong>Cloudflare R2</strong> offers <strong>10 GB free with zero egress fees</strong>. <strong>Backblaze B2</strong> gives <strong>10 GB free storage</strong>. <strong>Cloudinary</strong> provides <strong>25 credits/month</strong> for image and video transformations. <strong>Google Cloud Storage</strong> includes <strong>5 GB in its Always Free tier</strong>.</p>
+    <p>This page compares every free storage tool in our index \u2014 <strong>${storageOffers.length} tools</strong> across object storage (S3-compatible), media/image CDN, content delivery networks, file hosting/sync, and general-purpose storage utilities. Whether you need an S3 alternative or a media pipeline, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Object Storage (S3-Compatible)</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">S3-compatible object storage services for files, backups, and application data. These are the core building blocks for any cloud storage architecture \u2014 from static assets to data lakes.</p>
+${buildCards(objectStorage)}
+
+  <h2>Media &amp; Image Processing</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Image and video optimization, transformation, and delivery services. Upload once, get automatic resizing, format conversion, and CDN delivery. Essential for any app that handles user-uploaded media.</p>
+${buildCards(mediaCdn)}
+
+  <h2>CDN &amp; Content Delivery</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Content delivery networks that cache and serve your assets from edge locations worldwide. From general-purpose CDNs to specialized JavaScript/CSS delivery.</p>
+${buildCards(cdnDelivery)}
+
+  <h2>File Storage &amp; Sync</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">File hosting, synchronization, and transfer services. From encrypted cloud drives to temporary file sharing and backup solutions.</p>
+${buildCards(fileStorageSync)}
+
+${other.length > 0 ? `
+  <h2>Other Storage Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">QR code generators, data storage utilities, and other tools with free tiers that handle storage-related tasks.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free Cloud Storage Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free storage tools compared by type, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Type</th>
+        <th>Free Tier</th>
+        <th>Egress</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudflare-r2" style="color:var(--text)">Cloudflare R2</a></td>
+        <td>Object Storage</td>
+        <td>10 GB, 1M reads/mo</td>
+        <td>Free (zero egress)</td>
+        <td>S3-compatible with no egress fees</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/backblaze-b2" style="color:var(--text)">Backblaze B2</a></td>
+        <td>Object Storage</td>
+        <td>10 GB</td>
+        <td>1 GB/day free</td>
+        <td>Affordable S3-compatible storage</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/tigris" style="color:var(--text)">Tigris</a></td>
+        <td>Object Storage</td>
+        <td>5 GB, 10K requests</td>
+        <td>Included</td>
+        <td>Globally distributed, S3-compatible</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/google-cloud-storage" style="color:var(--text)">Google Cloud Storage</a></td>
+        <td>Object Storage</td>
+        <td>5 GB (US regions)</td>
+        <td>1 GB/mo free</td>
+        <td>GCP ecosystem integration</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/minio" style="color:var(--text)">MinIO</a></td>
+        <td>Object Storage</td>
+        <td>\u221e (self-hosted)</td>
+        <td>N/A (self-hosted)</td>
+        <td>Self-hosted S3-compatible, high performance</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudinary" style="color:var(--text)">Cloudinary</a></td>
+        <td>Media CDN</td>
+        <td>25 credits/mo</td>
+        <td>Included</td>
+        <td>Image/video transformations + CDN</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/imagekit" style="color:var(--text)">ImageKit</a></td>
+        <td>Media CDN</td>
+        <td>20 GB bandwidth/mo</td>
+        <td>Included</td>
+        <td>Real-time image optimization + CDN</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/uploadcare" style="color:var(--text)">Uploadcare</a></td>
+        <td>Media CDN</td>
+        <td>3K uploads, 30K transforms</td>
+        <td>Included</td>
+        <td>Upload widget + image transformations</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/fastly" style="color:var(--text)">Fastly</a></td>
+        <td>CDN</td>
+        <td>Free developer account</td>
+        <td>Included</td>
+        <td>Edge computing + CDN, Varnish-based</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/jsdelivr" style="color:var(--text)">jsDelivr</a></td>
+        <td>CDN</td>
+        <td>\u221e (open-source)</td>
+        <td>Free</td>
+        <td>npm/GitHub package CDN</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/proton-drive" style="color:var(--text)">Proton Drive</a></td>
+        <td>File Sync</td>
+        <td>1 GB</td>
+        <td>N/A</td>
+        <td>End-to-end encrypted cloud storage</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pinata-ipfs" style="color:var(--text)">Pinata IPFS</a></td>
+        <td>Decentralized</td>
+        <td>1 GB</td>
+        <td>Included</td>
+        <td>IPFS pinning for decentralized storage</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 matches on storage but charges for egress beyond 1 GB/day. For media, Cloudinary and ImageKit both offer generous transformation pipelines. MinIO is the go-to for self-hosted S3-compatible storage. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free Storage Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need S3-compatible object storage with no egress fees?</dt>
+      <dd><a href="/vendor/cloudflare-r2">Cloudflare R2</a> \u2014 10 GB free storage, 1M Class B reads/month, and zero egress fees. The best deal for read-heavy workloads like static assets, backups, or media serving.</dd>
+
+      <dt>Want affordable S3-compatible storage?</dt>
+      <dd><a href="/vendor/backblaze-b2">Backblaze B2</a> \u2014 10 GB free, simple pricing at $6/TB beyond that. Pairs well with Cloudflare CDN (Bandwidth Alliance = free egress). <a href="/vendor/tigris">Tigris</a> is a newer S3-compatible option with global distribution.</dd>
+
+      <dt>Building an image-heavy app?</dt>
+      <dd><a href="/vendor/cloudinary">Cloudinary</a> for the most mature transformation pipeline (25 credits/month free). <a href="/vendor/imagekit">ImageKit</a> for 20 GB bandwidth/month. Both handle upload, resize, format conversion, and CDN delivery.</dd>
+
+      <dt>Need a JavaScript/CSS CDN?</dt>
+      <dd><a href="/vendor/jsdelivr">jsDelivr</a> for npm packages and GitHub repos (free, no limits). <a href="/vendor/cdnjs-com">cdnjs</a> for popular open-source libraries. Both are free and widely used.</dd>
+
+      <dt>Want self-hosted object storage?</dt>
+      <dd><a href="/vendor/minio">MinIO</a> \u2014 high-performance, S3-compatible, open-source. Run it on your own infrastructure with no storage or bandwidth limits. Widely used in on-prem and Kubernetes environments.</dd>
+
+      <dt>Need encrypted file sync?</dt>
+      <dd><a href="/vendor/proton-drive">Proton Drive</a> for end-to-end encrypted cloud storage (1 GB free). <a href="/vendor/internxt-com">Internxt</a> and <a href="/vendor/sync-com">Sync.com</a> are privacy-focused alternatives. <a href="/vendor/seafile-com">Seafile</a> is self-hostable.</dd>
+
+      <dt>Hosting decentralized content?</dt>
+      <dd><a href="/vendor/pinata-ipfs">Pinata</a> for IPFS pinning (1 GB free). Ideal for NFT metadata, decentralized apps, and content-addressed storage.</dd>
+
+      <dt>Just need temporary file sharing?</dt>
+      <dd><a href="/vendor/transfernow">TransferNow</a>, <a href="/vendor/gofile-io">GoFile</a>, and <a href="/vendor/file-io">file.io</a> all offer free temporary file transfers without sign-up.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/storage">Storage</a> and <a href="/category/cdn">CDN</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get cloud storage recommendations from your AI assistant. Compare object storage, media CDNs, and file hosting services \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -9547,6 +9869,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/security-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSecurityAlternativesPage());
+  } else if (url.pathname === "/storage-alternatives" && isGetOrHead) {
+    recordApiHit("/storage-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/storage-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildStorageAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
