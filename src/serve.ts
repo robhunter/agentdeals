@@ -3760,6 +3760,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Resend",
     hubDesc: "59+ free email tools compared — transactional APIs, marketing platforms, verification services, forwarding, and email infrastructure",
   },
+  {
+    slug: "project-management-alternatives",
+    title: "Best Free Project Management & Collaboration Tools in 2026 — PM, Chat, Scheduling & Productivity Compared",
+    metaDesc: "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. Updated March 2026.",
+    contextHtml: "",
+    tag: "pm-hub",
+    primaryVendor: "Linear",
+    hubDesc: "93+ free project management tools compared — issue tracking, kanban boards, team chat, video conferencing, scheduling, and knowledge management",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -7976,6 +7985,347 @@ ${buildCards(other)}
 </html>`;
 }
 
+function buildProjectManagementAlternativesPage(): string {
+  const title = "Best Free Project Management & Collaboration Tools in 2026 — PM, Chat, Scheduling & Productivity Compared";
+  const metaDesc = "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. Updated March 2026.";
+  const slug = "project-management-alternatives";
+
+  // Get all Project Management + Team Collaboration offers
+  const pmOffers = offers.filter(o => o.category === "Project Management" || o.category === "Team Collaboration");
+  const enrichedAll = enrichOffers(pmOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by domain
+  const issueTracking = enrichedAll.filter(o =>
+    ["Linear", "Atlassian", "Plane", "Huly", "Shortcut", "clickup.com", "asana.com", "trello.com", "Basecamp", "taiga.io", "nTask", "freedcamp.com", "bitrix24.com", "teamwork.com", "Backlog", "GForge", "Tenzu", "Crosswork", "Sflow", "Kitemaker.co", "leiga.com", "Teamcamp", "titanapps.io", "Wikifactory", "RightFeature", "zenhub.com", "zenkit.com"].includes(o.vendor)
+  );
+  const kanbanBoards = enrichedAll.filter(o =>
+    ["gokanban.io", "kan.bn", "kanbanflow.com", "kanbantool.com", "MeisterTask", "Teamhood", "HeySpace", "Fizzy", "Fibery", "Hygger"].includes(o.vendor)
+  );
+  const agileScrumRetro = enrichedAll.filter(o =>
+    ["acunote.com", "Yodiz", "ScrumFast", "MeuScrum", "Teaminal", "Fibo", "easyretro.io", "teleretro.com", "planitpoker.com", "point.poker", "Zube"].includes(o.vendor)
+  );
+  const timeTracking = enrichedAll.filter(o =>
+    ["Clockify", "TimeCamp", "Toggl", "Pendulums", "Pulse.red", "Quidlo Timesheets", "Teamplify", "taskade.com", "todoist.com", "Tweek"].includes(o.vendor)
+  );
+  const teamChat = enrichedAll.filter(o =>
+    ["Chanty.com", "element.io", "flock.com", "Pumble", "Revolt.chat", "Rocket.Chat", "twist.com", "Zulip", "gitter.im", "Keybase", "Braid"].includes(o.vendor)
+  );
+  const videoMeetings = enrichedAll.filter(o =>
+    ["meet.jit.si", "talky.io", "Webex", "zoom.us", "Duckly", "Tencent RTC", "Screen Sharing via Browser", "flat.social"].includes(o.vendor)
+  );
+  const docsKnowledge = enrichedAll.filter(o =>
+    ["Notion", "Hackmd.io", "Nuclino", "Slab", "cDox", "evernote.com", "BookmarkOS.com", "Raindrop.io", "Linkinize", "Stickies", "Liveblocks", "GitDailies", "Lockitbot"].includes(o.vendor)
+  );
+  const scheduling = enrichedAll.filter(o =>
+    ["Cal.com", "Calendly", "cally.com"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    !issueTracking.includes(o) && !kanbanBoards.includes(o) && !agileScrumRetro.includes(o) && !timeTracking.includes(o) && !teamChat.includes(o) && !videoMeetings.includes(o) && !docsKnowledge.includes(o) && !scheduling.includes(o)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // PM deal changes
+  const pmChangeVendors = ["Linear", "Atlassian", "Asana", "Trello", "ClickUp", "Notion", "Jira", "Slack"];
+  const pmChanges = dealChanges.filter(c => pmChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = pmChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent PM Tool Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${pmChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: pmOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Project Management Tools</div>
+  <h1>Best Free Project Management &amp; Collaboration Tools</h1>
+
+  <div class="context">
+    <p>Project management is one of the most competitive developer tool categories. <strong>Jira</strong> dominates enterprise but its free tier caps at 10 users. <strong>Asana</strong> limits free projects to 15 collaborators. Meanwhile, open-source alternatives like <strong>Plane</strong> and <strong>Huly</strong> offer unlimited projects with self-hosting, and <strong>Linear</strong> provides a generous free tier for small teams.</p>
+    <p>This page compares every free project management and collaboration tool in our index — <strong>${pmOffers.length} tools</strong> across issue trackers, kanban boards, team chat, video conferencing, docs, and scheduling. Whether you need a Jira alternative or a free Slack replacement, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Project Management &amp; Issue Tracking</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Core project management platforms for issue tracking, sprint planning, and team coordination. Linear leads the modern PM space with a fast, keyboard-driven interface. Plane and Huly are open-source alternatives to Jira with generous free tiers.</p>
+${buildCards(issueTracking)}
+
+  <h2>Kanban Boards &amp; Visual Planning</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Visual board-based tools for workflow management. Great for teams that prefer drag-and-drop task organization over traditional issue trackers.</p>
+${buildCards(kanbanBoards)}
+
+  <h2>Agile, Scrum &amp; Retrospectives</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Tools for agile workflows — sprint management, planning poker, retrospectives, and estimation. Essential for teams running Scrum or other agile methodologies.</p>
+${buildCards(agileScrumRetro)}
+
+  <h2>Time Tracking &amp; Task Productivity</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Time trackers and personal productivity tools. Clockify offers unlimited free tracking. Toggl provides a polished interface with reporting. Todoist is a popular task manager with a generous free tier.</p>
+${buildCards(timeTracking)}
+
+  <h2>Team Chat &amp; Messaging</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Slack alternatives for team communication. Element (Matrix-based) and Rocket.Chat are open-source and self-hostable. Pumble offers unlimited message history free — unlike Slack's 90-day limit on the free plan.</p>
+${buildCards(teamChat)}
+
+  <h2>Video Conferencing &amp; Screen Sharing</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Video meeting and screen sharing tools. Jitsi Meet is fully open source with no account required. Zoom and Webex offer generous free tiers for smaller meetings.</p>
+${buildCards(videoMeetings)}
+
+  <h2>Docs, Knowledge &amp; Collaboration</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Knowledge management, documentation, and real-time collaboration tools. Notion leads with an all-in-one workspace. HackMD offers collaborative Markdown editing. Liveblocks powers real-time collaboration features in your own apps.</p>
+${buildCards(docsKnowledge)}
+
+  <h2>Scheduling &amp; Calendar</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Scheduling and calendar tools for booking meetings. Cal.com is open-source Calendly alternative with unlimited event types on the free tier.</p>
+${buildCards(scheduling)}
+
+${other.length > 0 ? `
+  <h2>More PM &amp; Collaboration Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Additional project management and collaboration tools with free tiers.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free PM Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free project management and collaboration tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/linear" style="color:var(--text)">Linear</a></td>
+        <td>Issue Tracking</td>
+        <td>250 issues, unlimited members</td>
+        <td>No</td>
+        <td>Modern, fast issue tracker for software teams</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/plane" style="color:var(--text)">Plane</a></td>
+        <td>Issue Tracking</td>
+        <td>Unlimited, self-hosted</td>
+        <td>Yes</td>
+        <td>Open-source Jira alternative with cycles and modules</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/huly" style="color:var(--text)">Huly</a></td>
+        <td>Issue Tracking</td>
+        <td>Unlimited, self-hosted</td>
+        <td>Yes</td>
+        <td>All-in-one PM with chat, docs, and HR built in</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/trello-com" style="color:var(--text)">Trello</a></td>
+        <td>Kanban</td>
+        <td>Unlimited cards, 10 boards/workspace</td>
+        <td>No</td>
+        <td>Simple, visual kanban for small teams</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/asana-com" style="color:var(--text)">Asana</a></td>
+        <td>Issue Tracking</td>
+        <td>15 collaborators, unlimited tasks</td>
+        <td>No</td>
+        <td>Versatile PM with list, board, and timeline views</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/clickup-com" style="color:var(--text)">ClickUp</a></td>
+        <td>Issue Tracking</td>
+        <td>100 MB storage, unlimited tasks</td>
+        <td>No</td>
+        <td>Feature-rich PM with docs, goals, and whiteboards</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/notion" style="color:var(--text)">Notion</a></td>
+        <td>Knowledge</td>
+        <td>Unlimited pages, 10 guests</td>
+        <td>No</td>
+        <td>All-in-one workspace for docs, wikis, and databases</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/clockify" style="color:var(--text)">Clockify</a></td>
+        <td>Time Tracking</td>
+        <td>Unlimited tracking, unlimited users</td>
+        <td>No</td>
+        <td>Free time tracking with team reports</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pumble" style="color:var(--text)">Pumble</a></td>
+        <td>Team Chat</td>
+        <td>Unlimited history, unlimited users</td>
+        <td>No</td>
+        <td>Slack alternative with unlimited message history</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/element-io" style="color:var(--text)">Element</a></td>
+        <td>Team Chat</td>
+        <td>Unlimited, Matrix protocol</td>
+        <td>Yes</td>
+        <td>Decentralized chat, self-hostable, E2E encrypted</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cal-com" style="color:var(--text)">Cal.com</a></td>
+        <td>Scheduling</td>
+        <td>Unlimited event types</td>
+        <td>Yes</td>
+        <td>Open-source Calendly alternative</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/meet-jit-si" style="color:var(--text)">Jitsi Meet</a></td>
+        <td>Video</td>
+        <td>Unlimited, no account needed</td>
+        <td>Yes</td>
+        <td>Free, open-source video conferencing</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Linear leads modern issue tracking with a fast, keyboard-driven interface and 250 free issues. Plane and Huly offer unlimited open-source PM. For team chat, Pumble provides unlimited message history free — a key advantage over Slack. Cal.com is the leading open-source scheduling tool. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free PM Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need a modern issue tracker for a dev team?</dt>
+      <dd><a href="/vendor/linear">Linear</a> — fast, keyboard-driven, 250 issues free. <a href="/vendor/shortcut">Shortcut</a> — 10 free seats with epics and iterations. <a href="/vendor/atlassian">Atlassian/Jira</a> — 10 users free, deep integrations.</dd>
+
+      <dt>Want an open-source, self-hosted PM?</dt>
+      <dd><a href="/vendor/plane">Plane</a> — open-source Jira alternative with cycles and modules. <a href="/vendor/huly">Huly</a> — all-in-one with chat, docs, and HR. <a href="/vendor/taiga-io">Taiga</a> — agile PM with Scrum and Kanban.</dd>
+
+      <dt>Need simple visual kanban boards?</dt>
+      <dd><a href="/vendor/trello-com">Trello</a> — 10 boards free with Power-Ups. <a href="/vendor/kanbanflow-com">KanbanFlow</a> — Pomodoro timer built in. <a href="/vendor/meistertask">MeisterTask</a> — visual boards with automations.</dd>
+
+      <dt>Need time tracking for your team?</dt>
+      <dd><a href="/vendor/clockify">Clockify</a> — unlimited tracking and users, free forever. <a href="/vendor/toggl">Toggl</a> — polished UI with reports, 5 users free. <a href="/vendor/timecamp">TimeCamp</a> — automatic time tracking.</dd>
+
+      <dt>Looking for a Slack alternative?</dt>
+      <dd><a href="/vendor/pumble">Pumble</a> — unlimited message history, free. <a href="/vendor/element-io">Element</a> — decentralized, E2E encrypted, self-hostable. <a href="/vendor/rocket-chat">Rocket.Chat</a> — open-source, self-hosted team chat.</dd>
+
+      <dt>Need video conferencing?</dt>
+      <dd><a href="/vendor/meet-jit-si">Jitsi Meet</a> — fully open source, no account needed. <a href="/vendor/zoom-us">Zoom</a> — 40-min free meetings, up to 100 participants. <a href="/vendor/webex">Webex</a> — 40-min meetings, 100 participants.</dd>
+
+      <dt>Need a knowledge base or wiki?</dt>
+      <dd><a href="/vendor/notion">Notion</a> — all-in-one workspace with unlimited pages. <a href="/vendor/hackmd-io">HackMD</a> — collaborative Markdown. <a href="/vendor/nuclino">Nuclino</a> — fast, lightweight team wiki.</dd>
+
+      <dt>Need scheduling/booking?</dt>
+      <dd><a href="/vendor/cal-com">Cal.com</a> — open-source Calendly alternative, unlimited event types. <a href="/vendor/calendly">Calendly</a> — 1 event type free, polished UX. <a href="/vendor/cally-com">Cally</a> — simple group scheduling.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/project-management">Project Management</a> and <a href="/category/team-collaboration">Team Collaboration</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get project management tool recommendations from your AI assistant. Compare PM tools, team chat, and scheduling — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -11594,6 +11944,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/design-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildDesignAlternativesPage());
+  } else if (url.pathname === "/project-management-alternatives" && isGetOrHead) {
+    recordApiHit("/project-management-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/project-management-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildProjectManagementAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
