@@ -2926,7 +2926,7 @@
     {
       "vendor": "Canva",
       "category": "Design",
-      "description": "2M+ templates, 4.5M+ free stock photos/graphics/elements, 5 GB cloud storage. Standard exports (PNG, JPG, PDF). No Brand Kit, no custom fonts, no transparent backgrounds",
+      "description": "2M+ templates, 1.8M+ free stock photos/graphics/elements, 5 GB cloud storage. Standard exports (PNG, JPG, PDF). 1 basic Brand Kit (3 colors). No custom fonts, no transparent backgrounds",
       "tier": "Free",
       "url": "https://www.canva.com/pricing/",
       "tags": [
@@ -2936,13 +2936,13 @@
         "image editing",
         "presentations"
       ],
-      "verifiedDate": "2026-02-26"
+      "verifiedDate": "2026-03-24"
     },
     {
       "vendor": "Penpot",
       "category": "Design",
       "description": "Open-source design platform — unlimited teams, unlimited designers/developers, unlimited design files, team libraries. Self-hostable (MPL 2.0). Cloud-hosted free tier has ~10 GB storage",
-      "tier": "Professional",
+      "tier": "Free",
       "url": "https://penpot.app/pricing",
       "tags": [
         "design",
