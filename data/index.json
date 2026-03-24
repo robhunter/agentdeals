@@ -1537,7 +1537,7 @@
     {
       "vendor": "Amplitude",
       "category": "Analytics",
-      "description": "Product analytics — 10K MTU, 10M events, 1K session replays/month, unlimited feature flags, 1-year retention, unlimited team members",
+      "description": "Product analytics — 50K MTU, 10M events, 1K session replays/month, unlimited feature flags, 1-year retention, unlimited team members",
       "tier": "Starter",
       "url": "https://amplitude.com/pricing",
       "tags": [
@@ -1547,7 +1547,7 @@
         "session replay",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-24"
     },
     {
       "vendor": "Mixpanel",
