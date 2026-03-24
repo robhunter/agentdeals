@@ -3778,6 +3778,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Visual Studio Code",
     hubDesc: "59+ free IDEs and coding tools compared — desktop editors, cloud IDEs, AI coding assistants, AI app builders, and specialized development environments",
   },
+  {
+    slug: "free-llm-apis",
+    title: "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models",
+    metaDesc: "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. Updated March 2026.",
+    contextHtml: "",
+    tag: "llm-api-hub",
+    primaryVendor: "OpenAI",
+    hubDesc: "25+ free LLM API providers compared — proprietary model APIs, open-model inference platforms, and AI gateways with exact rate limits",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -8655,6 +8664,318 @@ ${buildCards(other)}
 </html>`;
 }
 
+function buildFreeLlmApisPage(): string {
+  const title = "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models";
+  const metaDesc = "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. Updated March 2026.";
+  const slug = "free-llm-apis";
+
+  // Get LLM API offers from AI / ML category
+  const aiOffers = offers.filter(o => o.category === "AI / ML");
+  const enrichedAll = enrichOffers(aiOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by provider type
+  const providerApis = enrichedAll.filter(o =>
+    ["OpenAI", "Anthropic API", "Google Gemini API", "Mistral AI", "Cohere", "xAI"].includes(o.vendor)
+  );
+  const inferencePlatforms = enrichedAll.filter(o =>
+    ["Groq", "Cerebras", "GitHub Models", "NVIDIA NIM", "Cloudflare Workers AI", "Hugging Face", "OpenRouter", "Replicate", "Ollama Cloud"].includes(o.vendor)
+  );
+  const aiGateways = enrichedAll.filter(o =>
+    ["Baseten", "Clarifai", "Keywords AI", "Portkey", "Pollinations.AI", "Mediaworkbench.ai", "Lumenfall.ai"].includes(o.vendor)
+  );
+
+  const allLlmOffers = [...providerApis, ...inferencePlatforms, ...aiGateways];
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // LLM pricing changes
+  const llmChangeVendors = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "Cerebras", "Cohere", "xAI"];
+  const llmChanges = dealChanges.filter(c => llmChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = llmChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent LLM API Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${llmChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: allLlmOffers.length,
+    itemListElement: allLlmOffers.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free LLM APIs</div>
+  <h1>Best Free LLM APIs for Developers</h1>
+
+  <div class="context">
+    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers Llama 3.3 70B at ~30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Cerebras</strong> offers <strong>1M tokens/day</strong> free. <strong>Mistral</strong> gives access to all models including Large and Codestral at 1B tokens/month. <strong>OpenRouter</strong> aggregates ~30 free models through one OpenAI-compatible API. And <strong>GitHub Models</strong> provides 100+ models with generous daily limits.</p>
+    <p>This page compares <strong>${allLlmOffers.length} free LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Proprietary Model APIs</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">First-party APIs from the companies that train frontier models. Higher quality ceilings but typically lower free tier limits \u2014 these are the APIs behind GPT-4, Claude, Gemini, and Grok.</p>
+${buildCards(providerApis)}
+
+  <h2>Open-Model Inference Platforms</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Platforms that host open-weight models (Llama, Mistral, Qwen, Gemma) on optimized hardware. Often the most generous free tiers \u2014 you get fast inference on powerful models without paying or sharing data for training.</p>
+${buildCards(inferencePlatforms)}
+
+  <h2>AI Gateways &amp; Specialized Inference</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Model routers, observability gateways, and specialized inference platforms. These add routing, monitoring, or domain-specific capabilities on top of LLM APIs.</p>
+${buildCards(aiGateways)}
+
+  <h2>Free LLM API Rate Limit Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">The data developers actually need \u2014 exact rate limits, token quotas, and model availability for every free LLM API tier.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Type</th>
+        <th>Rate Limit</th>
+        <th>Token/Volume Quota</th>
+        <th>Top Models</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/groq" style="color:var(--text)">Groq</a></td>
+        <td>Inference</td>
+        <td>~30 RPM</td>
+        <td>Generous daily</td>
+        <td>Llama 3.3 70B, Whisper</td>
+        <td>Fastest free inference (LPU)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cerebras" style="color:var(--text)">Cerebras</a></td>
+        <td>Inference</td>
+        <td>10\u201330 RPM</td>
+        <td>1M tokens/day</td>
+        <td>Llama 3.1 8B, Qwen 3 235B</td>
+        <td>Highest free daily token quota</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
+        <td>Provider</td>
+        <td>2 RPM</td>
+        <td>1B tokens/month</td>
+        <td>Large, Codestral, Pixtral</td>
+        <td>All models free, huge monthly quota</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/openrouter" style="color:var(--text)">OpenRouter</a></td>
+        <td>Gateway</td>
+        <td>~20 RPM/model</td>
+        <td>~30 free models</td>
+        <td>DeepSeek R1, Llama 3.3, Qwen3</td>
+        <td>Multi-model router, one API key</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/github-models" style="color:var(--text)">GitHub Models</a></td>
+        <td>Inference</td>
+        <td>10\u201315 RPM</td>
+        <td>50\u2013150 req/day</td>
+        <td>100+ models, GPT-4o, Llama</td>
+        <td>Widest model selection free</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini API</a></td>
+        <td>Provider</td>
+        <td>10\u201315 RPM</td>
+        <td>Reduced (late 2025)</td>
+        <td>Flash, Flash-Lite, 1M context</td>
+        <td>Longest context window (1M tokens)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/nvidia-nim" style="color:var(--text)">NVIDIA NIM</a></td>
+        <td>Inference</td>
+        <td>~40 RPM</td>
+        <td>1,000 free credits</td>
+        <td>Llama 3.1, Mistral, NVIDIA</td>
+        <td>Enterprise-grade inference</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cloudflare-workers-ai" style="color:var(--text)">Cloudflare Workers AI</a></td>
+        <td>Inference</td>
+        <td>\u2014</td>
+        <td>10K neurons/day</td>
+        <td>Text gen, translation, STT</td>
+        <td>Edge inference, no cold starts</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI</a></td>
+        <td>Provider</td>
+        <td>3 RPM (free)</td>
+        <td>GPT-3.5 only (free)</td>
+        <td>GPT-4o (paid), GPT-3.5 (free)</td>
+        <td>Industry standard, widest ecosystem</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/anthropic-api" style="color:var(--text)">Anthropic API</a></td>
+        <td>Provider</td>
+        <td>Pay-as-you-go</td>
+        <td>No free tier</td>
+        <td>Claude Opus 4.6, Sonnet 4.6</td>
+        <td>Best for complex reasoning tasks</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hugging-face" style="color:var(--text)">Hugging Face</a></td>
+        <td>Platform</td>
+        <td>Varies</td>
+        <td>$0.10/mo credits</td>
+        <td>200+ models via providers</td>
+        <td>Model hub, community, hosting</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/xai" style="color:var(--text)">xAI</a></td>
+        <td>Provider</td>
+        <td>Pay-as-you-go</td>
+        <td>$25 free credits</td>
+        <td>Grok 4.1 series</td>
+        <td>Generous signup credits</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, 1B tokens/month at 2 RPM). OpenRouter is ideal if you want one API key for ~30 free models. GitHub Models has the widest selection (100+ models). For proprietary frontier models, most providers are pay-as-you-go with signup credits rather than ongoing free tiers. All limits verified March 2026.</p>
+
+  <h2>Which Free LLM API Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need the fastest free LLM inference?</dt>
+      <dd><a href="/vendor/groq">Groq</a> \u2014 custom LPU hardware delivers the fastest token generation, ~30 RPM free with Llama 3.3 70B. No credit card required.</dd>
+
+      <dt>Need maximum free token volume?</dt>
+      <dd><a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, ideal for batch processing. <a href="/vendor/mistral-ai">Mistral AI</a> \u2014 1B tokens/month free across all models including Large and Codestral.</dd>
+
+      <dt>Want one API key for many models?</dt>
+      <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3) through one OpenAI-compatible API, ~20 RPM per model. <a href="/vendor/github-models">GitHub Models</a> for 100+ models with daily limits.</dd>
+
+      <dt>Need a long context window?</dt>
+      <dd><a href="/vendor/google-gemini-api">Google Gemini API</a> \u2014 1M token context window on Flash models. Free tier at 10\u201315 RPM (reduced from 2025 levels).</dd>
+
+      <dt>Building AI agents and need routing/observability?</dt>
+      <dd><a href="/vendor/portkey">Portkey</a> \u2014 AI gateway with load balancing, fallbacks, and caching across providers. <a href="/vendor/keywords-ai">Keywords AI</a> for LLM monitoring and optimization.</dd>
+
+      <dt>Want to run models at the edge?</dt>
+      <dd><a href="/vendor/cloudflare-workers-ai">Cloudflare Workers AI</a> \u2014 10,000 neurons/day free, runs at the edge with no cold starts. Supports text generation, translation, and speech-to-text.</dd>
+
+      <dt>Need enterprise-grade inference?</dt>
+      <dd><a href="/vendor/nvidia-nim">NVIDIA NIM</a> \u2014 1,000 free API credits, optimized inference for Llama, Mistral, and NVIDIA models. <a href="/vendor/baseten">Baseten</a> for $30 in deployment credits.</dd>
+
+      <dt>Want completely free, self-hosted inference?</dt>
+      <dd><a href="/vendor/ollama-cloud">Ollama Cloud</a> \u2014 1 concurrent model free. Or run <a href="/vendor/hugging-face">Hugging Face</a> models locally with their inference API ($0.10/month free credits, 200+ models).</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/ai-ml">AI / ML</a> tools or see our broader <a href="/ai-ml-alternatives">AI &amp; ML tools comparison</a> covering ${aiOffers.length}+ tools including AI coding, observability, and specialized services.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get LLM API recommendations from your AI assistant. Compare rate limits, models, and pricing \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -12283,6 +12604,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ide-code-editors-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildIdeCodeEditorsAlternativesPage());
+  } else if (url.pathname === "/free-llm-apis" && isGetOrHead) {
+    recordApiHit("/free-llm-apis");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-llm-apis", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeLlmApisPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
