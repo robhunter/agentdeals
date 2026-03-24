@@ -3787,6 +3787,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "OpenAI",
     hubDesc: "25+ free LLM API providers compared — proprietary model APIs, open-model inference platforms, and AI gateways with exact rate limits",
   },
+  {
+    slug: "api-development-alternatives",
+    title: "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared",
+    metaDesc: "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. Updated March 2026.",
+    contextHtml: "",
+    tag: "api-dev-hub",
+    primaryVendor: "Postman",
+    hubDesc: "39+ free API development tools compared — REST/GraphQL clients, mocking, documentation, marketplaces, and integration platforms",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -8976,6 +8985,327 @@ ${buildCards(aiGateways)}
 </html>`;
 }
 
+// --- API Development Alternatives hub page ---
+
+function buildApiDevelopmentAlternativesPage(): string {
+  const title = "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared";
+  const metaDesc = "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. Updated March 2026.";
+  const slug = "api-development-alternatives";
+
+  // Get API Development category offers
+  const apiOffers = offers.filter(o => o.category === "API Development");
+  const enrichedAll = enrichOffers(apiOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by domain
+  const apiClients = enrichedAll.filter(o =>
+    ["Postman", "Hoppscotch", "Insomnia", "Bruno", "Thunder Client", "Apidog", "Kreya", "ReqBin", "ExtendsClass", "CurlHub", "Apollo GraphOS", "Hasura"].includes(o.vendor)
+  );
+  const apiDocs = enrichedAll.filter(o =>
+    ["Mintlify", "Stoplight", "SwaggerHub", "OpenAPI3 Designer", "apiary.io", "Bootify.io", "QuickType.io", "TinyMCE"].includes(o.vendor)
+  );
+  const apiMocking = enrichedAll.filter(o =>
+    ["Beeceptor", "MockAPI", "Mockerito", "Mockfly", "Mocko.dev", "JSONing", "Mocklets", "RequestBin.com", "mockaroo"].includes(o.vendor)
+  );
+  const apiMarketplaces = enrichedAll.filter(o =>
+    ["RapidAPI", "APILayer", "AbstractAPI", "API Ninjas", "APIVerve", "Canopy"].includes(o.vendor)
+  );
+  const apiIntegration = enrichedAll.filter(o =>
+    ["Nango", "Hook0", "Sofodata", "PDFBolt", "Treblle", "Imitate Email"].includes(o.vendor)
+  );
+
+  // Catch any uncategorized
+  const categorized = new Set([...apiClients, ...apiDocs, ...apiMocking, ...apiMarketplaces, ...apiIntegration].map(o => o.vendor));
+  const uncategorized = enrichedAll.filter(o => !categorized.has(o.vendor));
+  // Add uncategorized to integration (catch-all)
+  apiIntegration.push(...uncategorized);
+
+  const allApiOffers = [...apiClients, ...apiDocs, ...apiMocking, ...apiMarketplaces, ...apiIntegration];
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // API pricing changes
+  const apiChangeVendors = ["Postman", "Hoppscotch", "Insomnia", "RapidAPI", "Swagger", "Mintlify"];
+  const apiChanges = dealChanges.filter(c => apiChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = apiChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent API Tool Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${apiChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: allApiOffers.length,
+    itemListElement: allApiOffers.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free API Development Tools</div>
+  <h1>Best Free API Development Tools for Developers</h1>
+
+  <div class="context">
+    <p>The API development toolchain has fragmented into dozens of specialized free tools. <strong>Hoppscotch</strong> is a fully open-source (MIT) Postman alternative with REST, GraphQL, WebSocket, and MQTT support. <strong>Bruno</strong> stores API collections as files in Git \u2014 no cloud sync needed. <strong>Insomnia</strong> offers local-first API design and testing. And <strong>Mintlify</strong> generates beautiful API docs from OpenAPI specs with a free tier.</p>
+    <p>This page compares <strong>${allApiOffers.length} free API development tools</strong> \u2014 from API testing clients and GraphQL platforms to mocking services, documentation tools, API marketplaces, and integration platforms. Cross-reference with our <a href="/postman-alternatives">Postman alternatives</a> guide for deeper Postman-specific comparisons.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>API Testing &amp; Clients</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">REST, GraphQL, gRPC, and WebSocket clients for testing and debugging APIs. These tools replace or complement Postman, cURL, and browser-based testing.</p>
+${buildCards(apiClients)}
+
+  <h2>API Design &amp; Documentation</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Tools for designing OpenAPI specs, generating documentation, and building developer portals. From visual API designers to full documentation platforms.</p>
+${buildCards(apiDocs)}
+
+  <h2>API Mocking &amp; Test Data</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Mock API servers, fake data generators, and request inspection tools. Essential for frontend development, integration testing, and prototyping without a real backend.</p>
+${buildCards(apiMocking)}
+
+  <h2>API Marketplaces &amp; Data APIs</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Platforms offering curated collections of third-party APIs \u2014 from geolocation and email validation to product data and exchange rates. Most offer generous free tiers per API.</p>
+${buildCards(apiMarketplaces)}
+
+  <h2>Integration &amp; API Management</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Platforms for connecting APIs together, managing webhooks, monitoring API usage, and building integration pipelines. These handle the plumbing between your services.</p>
+${buildCards(apiIntegration)}
+
+  <h2>Free API Tool Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Side-by-side comparison of the top free API development tools \u2014 free tier limits, open-source status, and best use cases.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/postman" style="color:var(--text)">Postman</a></td>
+        <td>API Client</td>
+        <td>Free tier with testing, monitoring, environments</td>
+        <td>No</td>
+        <td>Industry standard API workspace</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hoppscotch" style="color:var(--text)">Hoppscotch</a></td>
+        <td>API Client</td>
+        <td>Free OSS (MIT), unlimited</td>
+        <td>Yes</td>
+        <td>Open-source Postman alternative</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/insomnia" style="color:var(--text)">Insomnia</a></td>
+        <td>API Client</td>
+        <td>Free with REST, GraphQL, mocking</td>
+        <td>Yes</td>
+        <td>Local-first API design &amp; testing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/bruno" style="color:var(--text)">Bruno</a></td>
+        <td>API Client</td>
+        <td>Free OSS (MIT), Git-native</td>
+        <td>Yes</td>
+        <td>Git-based API collections</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/apidog" style="color:var(--text)">Apidog</a></td>
+        <td>API Client</td>
+        <td>Free: 4 users, unlimited APIs</td>
+        <td>No</td>
+        <td>All-in-one API design + test + docs</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mintlify" style="color:var(--text)">Mintlify</a></td>
+        <td>Docs</td>
+        <td>Free: custom domain, web editor</td>
+        <td>No</td>
+        <td>Beautiful API documentation</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/swaggerhub" style="color:var(--text)">SwaggerHub</a></td>
+        <td>Design</td>
+        <td>Free: 1 seat, individual use</td>
+        <td>No</td>
+        <td>OpenAPI design &amp; hosting</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/rapidapi" style="color:var(--text)">RapidAPI</a></td>
+        <td>Marketplace</td>
+        <td>Free to browse, per-API tiers</td>
+        <td>No</td>
+        <td>API discovery &amp; marketplace</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/nango" style="color:var(--text)">Nango</a></td>
+        <td>Integration</td>
+        <td>Free: 10 connections, 600+ APIs</td>
+        <td>Yes</td>
+        <td>Unified API integration infrastructure</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/apollo-graphos" style="color:var(--text)">Apollo GraphOS</a></td>
+        <td>GraphQL</td>
+        <td>Free: 3 users, 1-day retention</td>
+        <td>Partial</td>
+        <td>GraphQL federation &amp; supergraph</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/hasura" style="color:var(--text)">Hasura</a></td>
+        <td>GraphQL</td>
+        <td>Free: 1 GB data, 3M API requests</td>
+        <td>Yes</td>
+        <td>Instant GraphQL API over any DB</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/mockapi" style="color:var(--text)">MockAPI</a></td>
+        <td>Mocking</td>
+        <td>Free: mock APIs + custom data</td>
+        <td>No</td>
+        <td>Quick REST API mocking</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Hoppscotch and Bruno lead the open-source API client space \u2014 both MIT-licensed with no vendor lock-in. Postman remains the industry standard with the largest ecosystem. For GraphQL, Apollo GraphOS handles federation while Hasura generates instant APIs. Mintlify is the top choice for modern API docs. All limits verified March 2026.</p>
+
+  <h2>Which Free API Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need a free Postman alternative?</dt>
+      <dd><a href="/vendor/hoppscotch">Hoppscotch</a> \u2014 fully open-source (MIT) with REST, GraphQL, WebSocket, SSE, Socket.IO, and MQTT support. Self-hostable. See our <a href="/postman-alternatives">Postman alternatives</a> guide for a deeper comparison.</dd>
+
+      <dt>Want Git-native API collections?</dt>
+      <dd><a href="/vendor/bruno">Bruno</a> \u2014 stores collections as files on your filesystem, version-controllable in Git. No cloud account needed. MIT licensed.</dd>
+
+      <dt>Need an all-in-one API design + test + docs platform?</dt>
+      <dd><a href="/vendor/apidog">Apidog</a> \u2014 free for up to 4 users with unlimited APIs, combining API design, debugging, testing, mocking, and documentation in one tool.</dd>
+
+      <dt>Building beautiful API documentation?</dt>
+      <dd><a href="/vendor/mintlify">Mintlify</a> \u2014 free tier includes custom domain, web editor, and API playground. <a href="/vendor/stoplight">Stoplight</a> for OpenAPI visual design. <a href="/vendor/swaggerhub">SwaggerHub</a> for Swagger/OpenAPI hosting.</dd>
+
+      <dt>Need instant GraphQL APIs?</dt>
+      <dd><a href="/vendor/hasura">Hasura</a> \u2014 generates a GraphQL API over any database instantly, 1 GB data + 3M requests free. <a href="/vendor/apollo-graphos">Apollo GraphOS</a> for GraphQL federation and supergraph management.</dd>
+
+      <dt>Need mock APIs for frontend development?</dt>
+      <dd><a href="/vendor/beeceptor">Beeceptor</a> \u2014 no-code mock APIs for REST, SOAP, and GraphQL. <a href="/vendor/mockapi">MockAPI</a> for quick REST mocking with custom data. <a href="/vendor/mockaroo">mockaroo</a> for realistic test data generation.</dd>
+
+      <dt>Looking for third-party data APIs?</dt>
+      <dd><a href="/vendor/rapidapi">RapidAPI</a> \u2014 largest API marketplace with thousands of APIs. <a href="/vendor/abstractapi">AbstractAPI</a> for geolocation, email validation, and utility APIs. <a href="/vendor/api-ninjas">API Ninjas</a> for 100+ free REST APIs.</dd>
+
+      <dt>Need to connect multiple APIs together?</dt>
+      <dd><a href="/vendor/nango">Nango</a> \u2014 integration infrastructure for 600+ APIs with unified auth and data syncing, 10 connections free. <a href="/vendor/treblle">Treblle</a> for API observability and governance.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/api-development">API Development</a> tools or <a href="/search">search</a> across all ${offers.length.toLocaleString()} tools in the AgentDeals index.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get API tool recommendations from your AI assistant. Compare free tiers, features, and alternatives \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -12609,6 +12939,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-llm-apis", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeLlmApisPage());
+  } else if (url.pathname === "/api-development-alternatives" && isGetOrHead) {
+    recordApiHit("/api-development-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api-development-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildApiDevelopmentAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);

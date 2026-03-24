@@ -2047,6 +2047,29 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /api-development-alternatives renders API development hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/api-development-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free API Development Tools"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("API Testing"), "Should have API testing section");
+    assert.ok(html.includes("API Design"), "Should have docs section");
+    assert.ok(html.includes("API Mocking"), "Should have mocking section");
+    assert.ok(html.includes("API Marketplaces"), "Should have marketplaces section");
+    assert.ok(html.includes("Integration"), "Should have integration section");
+    assert.ok(html.includes("Which Free API Tool"), "Should have decision guide");
+    assert.ok(html.includes("Postman"), "Should include Postman");
+    assert.ok(html.includes("Hoppscotch"), "Should include Hoppscotch");
+    assert.ok(html.includes("postman-alternatives"), "Should cross-link to Postman alternatives");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
