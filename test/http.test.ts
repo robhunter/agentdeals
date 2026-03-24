@@ -1851,6 +1851,31 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /testing-alternatives renders testing hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/testing-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Testing Tools"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Browser"), "Should have browser testing section");
+    assert.ok(html.includes("Visual Regression"), "Should have visual testing section");
+    assert.ok(html.includes("Load"), "Should have load testing section");
+    assert.ok(html.includes("E2E"), "Should have E2E section");
+    assert.ok(html.includes("API Testing"), "Should have API testing section");
+    assert.ok(html.includes("Local Dev"), "Should have local dev section");
+    assert.ok(html.includes("Which Free Testing Tool"), "Should have decision guide");
+    assert.ok(html.includes("Free Testing Tools Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Cypress"), "Should include Cypress");
+    assert.ok(html.includes("BrowserStack"), "Should include BrowserStack");
+    assert.ok(html.includes("Grafana k6"), "Should include k6");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
