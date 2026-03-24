@@ -3742,6 +3742,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "OpenAI",
     hubDesc: "65+ free AI/ML tools compared — LLM APIs, AI coding assistants, ML platforms, observability, and specialized AI services",
   },
+  {
+    slug: "design-alternatives",
+    title: "Best Free Design Tools for Developers in 2026 — UI Kits, Prototyping, Icons & Assets Compared",
+    metaDesc: "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. Updated March 2026.",
+    contextHtml: "",
+    tag: "design-hub",
+    primaryVendor: "Figma",
+    hubDesc: "100+ free design tools compared — UI design, prototyping, component libraries, icons, stock assets, and color tools",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -7276,6 +7285,347 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare LLM APIs, coding tools, and ML platforms \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildDesignAlternativesPage(): string {
+  const title = "Best Free Design Tools for Developers in 2026 — UI Kits, Prototyping, Icons & Assets Compared";
+  const metaDesc = "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. Updated March 2026.";
+  const slug = "design-alternatives";
+
+  // Get all Design offers
+  const designOffers = offers.filter(o => o.category === "Design");
+  const enrichedAll = enrichOffers(designOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by design domain
+  const designEditors = enrichedAll.filter(o =>
+    ["Figma", "Canva", "Penpot", "Lunacy", "Pixlr", "photopea.com", "Excalidraw", "vectr.com", "BoxySVG", "Pixelixe"].includes(o.vendor)
+  );
+  const prototyping = enrichedAll.filter(o =>
+    ["Webflow", "framer.com", "Proto.io", "Plasmic", "Webstudio", "Quant Ux", "TeleportHQ", "Unicorn Platform", "landen.co", "Grapedrop", "marvelapp.com", "Octopus.do", "Updrafts.app", "walkme.com"].includes(o.vendor)
+  );
+  const uiComponents = enrichedAll.filter(o =>
+    ["ShadcnUI", "DaisyUI", "NextUI", "Float UI", "HyperUI", "TW Elements", "Tailkits", "MDBootstrap", "Flyon UI", "Tailark", "Tailwindadmin", "Tailcolors", "Shadcn Space", "Shadcn Studio", "tweakcn", "CodedThemes", "CodeMyUI", "Ant Design Landing Page", "Backlight", "Wdrfree SVG"].includes(o.vendor)
+  );
+  const iconsIllustrations = enrichedAll.filter(o =>
+    ["Lucide", "Iconoir", "tabler-icons.io", "iconify.design", "Circum Icons", "unDraw", "storyset.com", "LottieFiles", "Rive", "Glyphs", "Icon Horse", "Logo.dev", "Calendar Icons Generator", "movingpencils.com", "NSPolygon", "Mossaik"].includes(o.vendor)
+  );
+  const stockAssets = enrichedAll.filter(o =>
+    ["unsplash.com", "pexels.com", "Nappy", "AllTheFreeStock", "freeforcommercialuse.net", "Lorem Picsum", "lensdump.com", "Mastershot", "Pravatar", "UI Avatars", "Image BG Blurer", "clevebrush.com", "Carousel Hero", "Volume", "Superdesigner", "MagicPattern", "haikei.app"].includes(o.vendor)
+  );
+  const colorCssTools = enrichedAll.filter(o =>
+    ["coolors", "ColorKit", "OKLCH", "css-gradient.com", "css.glass", "hypercolor.dev", "Gradientos", "colorr.me", "CMYK Pantone", "Branition", "Flows", "Scrollbar.app"].includes(o.vendor)
+  );
+  const mockupsWireframing = enrichedAll.filter(o =>
+    ["Zeplin", "Mockplus iDoc", "smartmockups.com", "mockupmark.com", "whimsical.com", "okso.app", "Mindmup.com", "userforge.com", "Responsively App"].includes(o.vendor)
+  );
+  const conversionTools = enrichedAll.filter(o =>
+    ["PNG to WebP Converter", "SVG Converter", "Vertopal", "cloudconvert.com", "vector.express", "resizeappicon.com"].includes(o.vendor)
+  );
+  const other = enrichedAll.filter(o =>
+    !designEditors.includes(o) && !prototyping.includes(o) && !uiComponents.includes(o) && !iconsIllustrations.includes(o) && !stockAssets.includes(o) && !colorCssTools.includes(o) && !mockupsWireframing.includes(o) && !conversionTools.includes(o)
+  );
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Design deal changes
+  const designChangeVendors = ["Figma", "Canva", "Penpot", "Webflow", "Framer", "Lucide"];
+  const designChanges = dealChanges.filter(c => designChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = designChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Design Tool Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${designChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: designOffers.length,
+    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Design Tools</div>
+  <h1>Best Free Design Tools for Developers</h1>
+
+  <div class="context">
+    <p>Design tooling has become remarkably accessible. <strong>Figma</strong> offers a generous free Starter plan with unlimited files. <strong>Penpot</strong> is a fully open-source alternative with no limits on projects or components. And the Tailwind CSS ecosystem has spawned dozens of free UI component libraries \u2014 <strong>ShadcnUI</strong>, <strong>DaisyUI</strong>, and <strong>HyperUI</strong> give you production-ready components without a design tool at all.</p>
+    <p>This page compares every free design tool in our index \u2014 <strong>${designOffers.length} tools</strong> across UI editors, prototyping platforms, component libraries, icon sets, stock assets, color tools, and more. Whether you need a Figma alternative or free icons for your next project, we have the comparison with exact free tier limits.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Design Tools &amp; Editors</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Collaborative design tools, photo editors, and vector editors. From full-featured design platforms like Figma and Penpot to lightweight editors like Photopea and Excalidraw for quick mockups and diagrams.</p>
+${buildCards(designEditors)}
+
+  <h2>Prototyping &amp; No-Code Builders</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Build interactive prototypes and websites without code. Webflow and Framer lead with visual site builders, while Proto.io and Quant UX focus on app prototyping with user testing built in.</p>
+${buildCards(prototyping)}
+
+  <h2>UI Component Libraries</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Pre-built UI components for React, Tailwind CSS, and Bootstrap. Copy-paste component libraries that let you ship polished interfaces without touching a design tool \u2014 ShadcnUI for React, DaisyUI for Tailwind, MDBootstrap for Bootstrap.</p>
+${buildCards(uiComponents)}
+
+  <h2>Icons &amp; Illustrations</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Free icon sets, illustration packs, and animation libraries. Lucide and Tabler offer thousands of MIT-licensed SVG icons. LottieFiles and Rive provide free animation tools. unDraw and Storyset offer customizable illustrations.</p>
+${buildCards(iconsIllustrations)}
+
+  <h2>Stock Assets &amp; Images</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Free photos, backgrounds, and media assets for commercial use. Unsplash and Pexels lead with millions of royalty-free photos. Specialized tools like Haikei and MagicPattern generate unique SVG backgrounds and patterns.</p>
+${buildCards(stockAssets)}
+
+  <h2>Color &amp; CSS Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Palette generators, gradient tools, and CSS utilities. Coolors generates beautiful color palettes. OKLCH provides perceptually uniform color picking. CSS Glass and Hypercolor offer ready-made gradient collections.</p>
+${buildCards(colorCssTools)}
+
+  <h2>Mockups &amp; Wireframing</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Design handoff, mockup generators, wireframing, and mind mapping tools. Zeplin bridges design-to-dev handoff. Whimsical combines wireframes, flowcharts, and mind maps. Responsively App previews responsive layouts across devices.</p>
+${buildCards(mockupsWireframing)}
+
+  <h2>File Conversion &amp; Image Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Image format conversion, optimization, and file transformation utilities. Convert between PNG, WebP, SVG, and dozens of other formats \u2014 essential for optimizing web assets.</p>
+${buildCards(conversionTools)}
+
+${other.length > 0 ? `
+  <h2>Other Design Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Additional design tools with free tiers.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free Design Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free design tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/figma" style="color:var(--text)">Figma</a></td>
+        <td>Design Editor</td>
+        <td>Starter plan, unlimited files</td>
+        <td>No</td>
+        <td>Collaborative UI/UX design, industry standard</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/penpot" style="color:var(--text)">Penpot</a></td>
+        <td>Design Editor</td>
+        <td>Unlimited, self-hostable</td>
+        <td>Yes</td>
+        <td>Open-source Figma alternative, no vendor lock-in</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/webflow" style="color:var(--text)">Webflow</a></td>
+        <td>No-Code</td>
+        <td>2 projects, 1 GB bandwidth</td>
+        <td>No</td>
+        <td>Visual website builder with CMS and hosting</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/shadcnui" style="color:var(--text)">ShadcnUI</a></td>
+        <td>Components</td>
+        <td>Completely free, copy-paste</td>
+        <td>Yes</td>
+        <td>React + Tailwind component library, fully customizable</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/daisyui" style="color:var(--text)">DaisyUI</a></td>
+        <td>Components</td>
+        <td>Completely free</td>
+        <td>Yes</td>
+        <td>Tailwind CSS component library with themes</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/lucide" style="color:var(--text)">Lucide</a></td>
+        <td>Icons</td>
+        <td>1,500+ icons, MIT license</td>
+        <td>Yes</td>
+        <td>Beautiful SVG icon library, tree-shakable</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/unsplash-com" style="color:var(--text)">Unsplash</a></td>
+        <td>Stock Photos</td>
+        <td>Unlimited, royalty-free</td>
+        <td>No</td>
+        <td>High-quality stock photos for commercial use</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/coolors" style="color:var(--text)">Coolors</a></td>
+        <td>Color Tools</td>
+        <td>Unlimited palettes</td>
+        <td>No</td>
+        <td>Color palette generator and explorer</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/lottiefiles" style="color:var(--text)">LottieFiles</a></td>
+        <td>Animation</td>
+        <td>Free animations, 10 projects</td>
+        <td>No</td>
+        <td>Lightweight animations for web and mobile</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/excalidraw" style="color:var(--text)">Excalidraw</a></td>
+        <td>Diagramming</td>
+        <td>Completely free</td>
+        <td>Yes</td>
+        <td>Hand-drawn style diagrams and wireframes</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/whimsical-com" style="color:var(--text)">Whimsical</a></td>
+        <td>Wireframing</td>
+        <td>Free tier available</td>
+        <td>No</td>
+        <td>Wireframes, flowcharts, and mind maps</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/canva" style="color:var(--text)">Canva</a></td>
+        <td>Design Editor</td>
+        <td>Free plan, 5 GB storage</td>
+        <td>No</td>
+        <td>Quick graphics, social media, and presentations</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Figma remains the industry standard for UI/UX design with a generous free Starter plan. Penpot is the leading open-source alternative with no limits. For developers who prefer code, ShadcnUI and DaisyUI eliminate the need for a design tool entirely. The icon ecosystem is especially strong \u2014 Lucide, Iconoir, and Tabler all offer 1,000+ MIT-licensed icons. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free Design Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need a full design tool for UI/UX?</dt>
+      <dd><a href="/vendor/figma">Figma</a> \u2014 industry standard, generous free Starter plan with unlimited files. <a href="/vendor/penpot">Penpot</a> \u2014 open-source alternative, self-hostable, no vendor lock-in. <a href="/vendor/lunacy">Lunacy</a> for offline-first design with built-in assets.</dd>
+
+      <dt>Building a website without code?</dt>
+      <dd><a href="/vendor/webflow">Webflow</a> \u2014 most powerful visual builder with CMS (2 projects free). <a href="/vendor/framer-com">Framer</a> for polished portfolio sites. <a href="/vendor/plasmic">Plasmic</a> for visual React development with code export.</dd>
+
+      <dt>Want pre-built UI components?</dt>
+      <dd><a href="/vendor/shadcnui">ShadcnUI</a> \u2014 copy-paste React + Tailwind components, fully customizable. <a href="/vendor/daisyui">DaisyUI</a> for Tailwind class-based components with 30+ themes. <a href="/vendor/nextui">NextUI</a> for polished React components with animations.</dd>
+
+      <dt>Need free icons for your project?</dt>
+      <dd><a href="/vendor/lucide">Lucide</a> \u2014 1,500+ MIT-licensed SVG icons, tree-shakable packages for React/Vue/Svelte. <a href="/vendor/tabler-icons-io">Tabler Icons</a> for 4,000+ free icons. <a href="/vendor/iconoir">Iconoir</a> for clean, minimal icon set.</dd>
+
+      <dt>Looking for free stock photos?</dt>
+      <dd><a href="/vendor/unsplash-com">Unsplash</a> \u2014 millions of high-quality photos, free for commercial use. <a href="/vendor/pexels-com">Pexels</a> for photos and videos. <a href="/vendor/nappy">Nappy</a> for diverse, inclusive stock photography.</dd>
+
+      <dt>Need a color palette or gradient?</dt>
+      <dd><a href="/vendor/coolors">Coolors</a> \u2014 generate and explore beautiful color palettes. <a href="/vendor/oklch">OKLCH</a> for perceptually uniform color picking. <a href="/vendor/hypercolor-dev">Hypercolor</a> for ready-made Tailwind CSS gradients.</dd>
+
+      <dt>Want mockups or wireframes?</dt>
+      <dd><a href="/vendor/excalidraw">Excalidraw</a> \u2014 completely free, open-source diagramming with hand-drawn style. <a href="/vendor/whimsical-com">Whimsical</a> for wireframes and flowcharts. <a href="/vendor/responsively-app">Responsively App</a> for responsive layout previews across devices.</dd>
+
+      <dt>Need animations for web or mobile?</dt>
+      <dd><a href="/vendor/lottiefiles">LottieFiles</a> \u2014 lightweight Lottie animations, free community library with 10 projects. <a href="/vendor/rive">Rive</a> \u2014 interactive animations with state machines, 3 files free.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/design">Design</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get design tool recommendations from your AI assistant. Compare UI kits, icons, and prototyping tools \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -10891,6 +11241,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-ml-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAiMlAlternativesPage());
+  } else if (url.pathname === "/design-alternatives" && isGetOrHead) {
+    recordApiHit("/design-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/design-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDesignAlternativesPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
