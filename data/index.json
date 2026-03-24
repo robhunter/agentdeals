@@ -21948,6 +21948,57 @@
         "free tier"
       ],
       "verifiedDate": "2026-03-24"
+    },
+    {
+      "vendor": "GitHub Models",
+      "category": "AI / ML",
+      "description": "Free access to 100+ AI models via GitHub Marketplace \u2014 GPT-4o, Llama, Mistral, Phi, and more. Free tier: 10-15 RPM, 50-150 requests/day depending on model tier. OpenAI-compatible API endpoint",
+      "tier": "Free",
+      "url": "https://github.com/marketplace/models",
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "github",
+        "free tier",
+        "openai-compatible"
+      ],
+      "verifiedDate": "2026-03-24"
+    },
+    {
+      "vendor": "NVIDIA NIM",
+      "category": "AI / ML",
+      "description": "Free serverless APIs for LLM inference \u2014 access Llama 3.1, Mistral, and NVIDIA models. Free tier: ~40 RPM, 1,000 free API credits. No credit card required for development",
+      "tier": "Free",
+      "url": "https://build.nvidia.com",
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "nvidia",
+        "gpu",
+        "free tier"
+      ],
+      "verifiedDate": "2026-03-24"
+    },
+    {
+      "vendor": "Ollama Cloud",
+      "category": "AI / ML",
+      "description": "Cloud-hosted Ollama for running open-source LLMs \u2014 free tier for light usage with 1 concurrent model. Access Llama, Mistral, Gemma, and other open models via API",
+      "tier": "Free",
+      "url": "https://ollama.com",
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "open-source",
+        "self-hosted",
+        "free tier"
+      ],
+      "verifiedDate": "2026-03-24"
     }
   ]
 }
