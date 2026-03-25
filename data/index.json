@@ -1439,7 +1439,7 @@
     {
       "vendor": "Groq",
       "category": "AI / ML",
-      "description": "Ultra-fast LLM inference on LPU hardware — free tier with ~30 RPM, access to Llama 3.3 70B, Whisper, and more. No credit card required",
+      "description": "Ultra-fast LLM inference on LPU hardware — free tier: 30 RPM, 100K-500K tokens/day depending on model. Supports Llama 4 Scout 17B, Llama 3.3 70B, Qwen3 32B, Whisper, and more. No credit card required",
       "tier": "Free",
       "url": "https://groq.com/pricing",
       "tags": [
@@ -1450,7 +1450,7 @@
         "fast",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-03-25"
     },
     {
       "vendor": "Google Gemini API",
