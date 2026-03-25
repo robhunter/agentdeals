@@ -2574,7 +2574,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     slug: "hetzner-alternatives",
     title: "Hetzner Alternatives After April 2026 Price Increase — Budget Cloud Options",
     metaDesc: "Hetzner is raising dedicated server prices 30-50% on April 1, 2026. Compare free-tier alternatives: DigitalOcean, Oracle Cloud, Render, Railway, Fly.io, Cloudflare Workers, Google Cloud.",
-    contextHtml: `<p><strong>Hetzner</strong> is increasing cloud and dedicated server prices <strong>30-50% on April 1, 2026</strong>, driven by surging DRAM costs (+171% YoY) from AI infrastructure demand. Entry-level cloud servers like the CX23 go from €2.99 to €3.99/mo (+33%). The increase applies to <strong>all regions and all customers</strong> — both new and existing.</p>
+    contextHtml: `<p><strong>Hetzner</strong> is increasing cloud and dedicated server prices <strong>30-50% on April 1, 2026</strong>, driven by surging DRAM costs (+171% YoY) from AI infrastructure demand. Entry-level cloud servers like the CX23 go from €2.99 to €3.99/mo (+33%). The increase applies to <strong>all regions and all customers</strong> — both new and existing. See our <a href="/hetzner-pricing-2026">full pricing analysis</a> for before/after tables and impact assessment.</p>
       <p>If you're looking for budget-friendly alternatives with generous free tiers or credits, here are the best options across VPS/cloud providers, managed platforms, and serverless offerings.</p>`,
     tag: "hetzner-alternative",
     primaryVendor: "Hetzner",
@@ -3804,6 +3804,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     tag: "q1-report",
     primaryVendor: "AgentDeals",
     hubDesc: "47 verified pricing changes in Q1 2026 — free tier removals, restrictions, price hikes, and expansions analyzed",
+  },
+  {
+    slug: "hetzner-pricing-2026",
+    title: "Hetzner April 2026 Pricing Analysis — Before/After, Impact & Alternatives",
+    metaDesc: "Hetzner raises cloud prices 30-50% on April 1, 2026. Before/after pricing for CX, CAX, CPX, CCX lines. Memory add-ons up 575%. Impact assessment, alternatives comparison, and industry context.",
+    contextHtml: "",
+    tag: "hetzner-pricing-analysis",
+    primaryVendor: "Hetzner",
+    hubDesc: "Hetzner April 2026 price increases analyzed — before/after tables, impact assessment, 8+ alternatives compared",
   },
 ];
 
@@ -9315,6 +9324,333 @@ ${buildCards(apiIntegration)}
 </html>`;
 }
 
+// --- Hetzner April 2026 Pricing Analysis ---
+
+function buildHetznerPricing2026Page(): string {
+  const title = "Hetzner April 2026 Pricing Analysis — Before/After, Impact & Alternatives";
+  const metaDesc = "Hetzner raises cloud prices 30-50% on April 1, 2026. Before/after pricing for CX, CAX, CPX, CCX lines. Memory add-ons up 575%. Impact assessment, alternatives comparison, and industry context.";
+  const slug = "hetzner-pricing-2026";
+  const pubDate = "2026-03-25";
+
+  // Hetzner change from our deal_changes
+  const hetznerChange = dealChanges.find(c => c.vendor === "Hetzner");
+
+  // Alternatives from our index (tagged hetzner-alternative)
+  const altOffers = offers.filter(o => (o.tags ?? []).includes("hetzner-alternative"));
+
+  // Before/after pricing data (from hetzexit.org, Hetzner pressroom, HN community data)
+  const pricingData = [
+    { product: "CX22 (2 vCPU, 4 GB)", region: "EU", before: "€3.29", after: "€4.49", pctChange: 36, impact: "high" as const },
+    { product: "CAX11 (2 Arm vCPU, 4 GB)", region: "EU", before: "€3.29", after: "€4.49", pctChange: 36, impact: "high" as const },
+    { product: "CPX11 (2 vCPU, 2 GB, AMD)", region: "EU", before: "€3.85", after: "€5.49", pctChange: 43, impact: "high" as const },
+    { product: "CCX13 (2 vCPU, 8 GB, dedicated)", region: "EU", before: "€11.99", after: "€15.99", pctChange: 33, impact: "medium" as const },
+    { product: "LB11 (Load Balancer)", region: "EU", before: "€5.39", after: "€7.49", pctChange: 39, impact: "medium" as const },
+    { product: "Object Storage (1 TB)", region: "EU", before: "€4.99", after: "€6.49", pctChange: 30, impact: "medium" as const },
+    { product: "Object Storage (1 TB)", region: "US", before: "€6.49", after: "€9.99", pctChange: 53, impact: "high" as const },
+    { product: "128 GB RAM Add-on", region: "All", before: "€45.88", after: "€264.00", pctChange: 575, impact: "high" as const },
+    { product: "AX41 Dedicated Server", region: "EU", before: "€49.73", after: "€51.22", pctChange: 3, impact: "low" as const },
+    { product: "Auction Servers", region: "EU", before: "Varies", after: "~3% increase", pctChange: 3, impact: "low" as const },
+  ];
+
+  const impactColors: Record<string, string> = { high: "#f85149", medium: "#d29922", low: "#3fb950" };
+
+  // Build pricing table rows
+  const pricingRows = pricingData.map(p => {
+    const impactColor = impactColors[p.impact];
+    return `<tr>
+      <td style="font-weight:600">${escHtmlServer(p.product)}</td>
+      <td style="font-family:var(--mono)">${escHtmlServer(p.region)}</td>
+      <td style="font-family:var(--mono);color:var(--text-muted)">${escHtmlServer(p.before)}</td>
+      <td style="font-family:var(--mono);font-weight:600">${escHtmlServer(p.after)}</td>
+      <td style="font-family:var(--mono);color:${impactColor};font-weight:700">+${p.pctChange}%</td>
+      <td><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${impactColor}22;color:${impactColor};font-weight:600">${p.impact}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Build alternatives comparison
+  const competitorPricing = [
+    { vendor: "Hetzner (post-increase)", spec: "CX22 — 2 vCPU, 4 GB", price: "€4.49/mo", region: "EU", note: "Still cheapest EU cloud" },
+    { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 1 GB", price: "$6/mo", region: "Global", note: "~3x more for less spec" },
+    { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Similar to DO pricing" },
+    { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Shared CPU tier" },
+    { vendor: "OVHcloud", spec: "Starter — 1 vCPU, 2 GB", price: "€3.50/mo", region: "EU", note: "Also raising prices 5-10%" },
+    { vendor: "AWS Lightsail", spec: "1 vCPU, 512 MB", price: "$3.50/mo", region: "US", note: "Minimal free tier" },
+    { vendor: "Oracle Cloud", spec: "Ampere — 4 OCPUs, 24 GB", price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
+    { vendor: "Railway", spec: "Hobby Plan", price: "$5 credit/mo", region: "US", note: "Free $5 monthly credit" },
+    { vendor: "Render", spec: "Free Tier", price: "Free (750h/mo)", region: "US", note: "Auto-sleep on free tier" },
+    { vendor: "Fly.io", spec: "3 shared-cpu VMs", price: "Free (limited)", region: "Global", note: "Edge deployment focus" },
+  ];
+
+  const altTableRows = competitorPricing.map(c => {
+    const vendorSlug = toSlug(c.vendor.replace(/ \(.*\)/, ""));
+    const isHetzner = c.vendor.startsWith("Hetzner");
+    return `<tr${isHetzner ? ` style="background:var(--accent-glow)"` : ""}>
+      <td style="font-weight:600">${isHetzner ? escHtmlServer(c.vendor) : `<a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a>`}</td>
+      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.spec)}</td>
+      <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
+      <td>${escHtmlServer(c.region)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}</td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["hetzner-alternatives", "hosting-alternatives", "q1-2026-developer-pricing-report"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: {
+      "@type": "Thing",
+      name: "Hetzner April 2026 pricing changes",
+      description: "Analysis of Hetzner cloud and dedicated server price increases effective April 1, 2026",
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.impact-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.impact-card h3{margin:0 0 .5rem;font-size:1rem}
+.impact-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.context-box ul{margin:.75rem 0 0 1.5rem}
+.context-box li{margin-bottom:.5rem}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Hetzner April 2026</div>
+  <h1>Hetzner April 2026 Pricing Analysis</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Effective April 1, 2026 &middot; All regions, all customers</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number red">+43%</div><div class="stat-label">CPX11 Cloud (highest)</div></div>
+    <div class="stat-card"><div class="stat-number red">+575%</div><div class="stat-label">Memory Add-ons</div></div>
+    <div class="stat-card"><div class="stat-number">+30-37%</div><div class="stat-label">Cloud Servers (avg)</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:#3fb950">+3%</div><div class="stat-label">Auction Servers</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Hetzner is raising prices across all product lines on April 1, 2026.</strong> Cloud servers increase 30-43%, object storage 30-53%, and memory add-ons a staggering 575%. The increase applies to <strong>all regions</strong> (DE, FI, US, SG) and <strong>all customers</strong> — both new and existing. No grandfathering.</p>
+    <p><strong>The root cause is hardware costs, not greed.</strong> DRAM prices surged 171% year-over-year. NAND flash is doubling. Hard drives are sold out for the year. AI infrastructure buildout is consuming global memory supply, pricing out smaller operations.</p>
+    <p><strong>The key takeaway:</strong> Even after these increases, Hetzner remains 2-3x cheaper than DigitalOcean, Linode, and Vultr for equivalent specs. The real story is the entire EU hosting market repricing — OVHcloud (+5-10%), Netcup, and others are following. There is nowhere dramatically cheaper to go.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#pricing">Before/After Pricing Table</a></li>
+      <li><a href="#why">Why Prices Are Rising</a></li>
+      <li><a href="#who">Who's Affected</a></li>
+      <li><a href="#impact">Impact Assessment</a></li>
+      <li><a href="#alternatives">Alternatives Comparison</a></li>
+      <li><a href="#industry">Industry Context</a></li>
+      <li><a href="#optimize">Optimization Strategies</a></li>
+    </ol>
+  </div>
+
+  <h2 id="pricing">1. Before/After Pricing Table</h2>
+  <p class="section-intro">Granular price breakdowns for key Hetzner products. Data sourced from Hetzner's official statement, hetzexit.org tracker, and community reports.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Product</th><th>Region</th><th>Before</th><th>After</th><th>Change</th><th>Impact</th></tr>
+      </thead>
+      <tbody>
+        ${pricingRows}
+      </tbody>
+    </table>
+  </div>
+  <p class="section-intro" style="margin-top:0"><strong>Headline number:</strong> The CPX11 (AMD shared vCPU) sees the steepest cloud increase at +43%. But the 128 GB RAM add-on at +575% (from €45.88 to €264.00, effective immediately) is the most dramatic single change — driven directly by the DRAM shortage. Notably, provisioning an AX102 dedicated server with 128 GB RAM costs only €124, exposing a pricing incoherence in add-on vs. bundled memory.</p>
+
+  <h2 id="why">2. Why Prices Are Rising</h2>
+  <div class="context-box">
+    <strong>The short answer: AI is eating the world's memory supply.</strong>
+    <ul>
+      <li><strong>DRAM prices surged 171% YoY</strong> — AI training and inference clusters consume massive amounts of HBM and DDR5, driving up prices for everyone</li>
+      <li><strong>NAND flash prices are doubling</strong> — NVMe SSDs used in cloud servers are affected by the same AI-driven supply crunch</li>
+      <li><strong>Hard drives sold out for the year</strong> — AI data storage demand has consumed available supply</li>
+      <li><strong>EU lacks domestic DRAM manufacturing</strong> — European providers like Hetzner are fully dependent on Asian semiconductor supply chains, with no buffer against global price shocks</li>
+    </ul>
+    <p style="margin-top:.75rem">Hetzner's official statement cites "significantly increased procurement costs for key hardware components" as the driver. This is an industry-wide phenomenon, not a Hetzner-specific decision.</p>
+    <p style="margin-top:.5rem">Source: <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner Press Room</a>, <a href="https://www.theregister.com/2026/02/24/ai_isnt_done_yet_memoryrelated/" target="_blank" rel="noopener">The Register</a></p>
+  </div>
+
+  <h2 id="who">3. Who's Affected</h2>
+  <p class="section-intro">Unlike some providers that grandfather existing customers, Hetzner's increase applies universally:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin:1rem 0">
+    <div class="impact-card" style="border-left-color:#f85149"><h3>New Customers</h3><p class="impact-desc">All new orders from April 1 use new pricing. No legacy rates available.</p></div>
+    <div class="impact-card" style="border-left-color:#f85149"><h3>Existing Customers</h3><p class="impact-desc">Existing servers and services transition to new pricing. No opt-out or freeze period.</p></div>
+    <div class="impact-card" style="border-left-color:#d29922"><h3>All Regions</h3><p class="impact-desc">Germany, Finland, US (Ashburn, Hillsboro), and Singapore. US and Singapore hit hardest (38-53%).</p></div>
+    <div class="impact-card" style="border-left-color:#3fb950"><h3>Auction Servers</h3><p class="impact-desc">Only ~3% increase. Community recommends auction servers as the best value post-increase.</p></div>
+  </div>
+
+  <h2 id="impact">4. Impact Assessment</h2>
+  <p class="section-intro">How much more you'll pay depends on your workload size.</p>
+  <div class="impact-card" style="border-left-color:#3fb950">
+    <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#3fb95022;color:#3fb950;font-weight:600;margin-right:.5rem">LOW</span>Hobby Projects &amp; Side Projects</h3>
+    <p class="impact-desc">Single CX22 cloud server: +€1.20/mo (€14.40/yr). Annoying but manageable. A single CX22 at €4.49/mo is still cheaper than a DigitalOcean droplet with half the specs.</p>
+  </div>
+  <div class="impact-card" style="border-left-color:#d29922">
+    <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#d2992222;color:#d29922;font-weight:600;margin-right:.5rem">MEDIUM</span>Small Teams &amp; Startups</h3>
+    <p class="impact-desc">3-5 cloud servers + load balancer + storage: +€15-30/mo (€180-360/yr). Worth reviewing your stack but likely not worth migrating — the switching cost exceeds the savings.</p>
+  </div>
+  <div class="impact-card" style="border-left-color:#f85149">
+    <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#f8514922;color:#f85149;font-weight:600;margin-right:.5rem">HIGH</span>Production Workloads &amp; Memory-Heavy Apps</h3>
+    <p class="impact-desc">Dedicated servers with RAM add-ons, US/SG object storage, large server fleets: +€50-200/mo or more. The 575% memory add-on increase alone can add €200+/mo for memory-intensive workloads. Consider dedicated servers (where RAM is bundled) or auction servers.</p>
+  </div>
+
+  <h2 id="alternatives">5. Alternatives Comparison</h2>
+  <p class="section-intro">How does Hetzner's post-increase pricing compare to competitors? We compared against ${altOffers.length} hosting alternatives from our index.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Spec</th><th>Price</th><th>Region</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${altTableRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Bottom line:</strong> Hetzner post-increase (CX22 at €4.49) is still roughly 3x cheaper than DigitalOcean ($6 for less spec). Oracle Cloud's Always Free tier (4 Ampere OCPUs, 24 GB RAM) is the only option that genuinely undercuts Hetzner on price — but with less flexibility and availability constraints. For most workloads, the migration cost exceeds the savings from switching providers.
+    <p style="margin-top:.75rem">For a full comparison of ${altOffers.length} free-tier hosting alternatives, see <a href="/hetzner-alternatives">Hetzner Alternatives</a>.</p>
+  </div>
+
+  <h2 id="industry">6. Industry Context</h2>
+  <p class="section-intro">Hetzner is not an outlier — the entire European hosting market is repricing.</p>
+  <div class="context-box">
+    <ul>
+      <li><strong>OVHcloud:</strong> Projecting 5-10% price increases (April-September 2026). Smaller than Hetzner's 30-50%, but the same root cause — DRAM and component costs.</li>
+      <li><strong>Netcup:</strong> Also raising prices. Community reports increases across VPS and dedicated server lines.</li>
+      <li><strong>US cloud providers:</strong> Already priced 3-6x higher than Hetzner. AWS, GCP, and Azure haven't announced increases yet, but their hardware costs are rising too — they have more margin to absorb it.</li>
+      <li><strong>The AI paradox:</strong> AI infrastructure buildout is making hardware more expensive for everyone. The companies building AI consume the supply that smaller operations depend on. As one HN commenter put it: "The AI bubble is pricing out smaller operations."</li>
+    </ul>
+    <p style="margin-top:.75rem"><strong>Community consensus</strong> (from <a href="https://news.ycombinator.com/item?id=47120145" target="_blank" rel="noopener">Hacker News discussion</a>): "Even after +30-50%, Hetzner is still the cheapest option. The real story is the entire hosting market repricing due to AI-driven hardware costs."</p>
+  </div>
+
+  <h2 id="optimize">7. Optimization Strategies</h2>
+  <p class="section-intro">If you're staying with Hetzner (most should), here's how to minimize the impact:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.75rem;margin:1rem 0">
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>Use Auction Servers</h3>
+      <p class="impact-desc">Only +3% increase vs +30-43% for cloud. Hetzner's server auction offers dedicated hardware at heavily discounted rates. Best value post-increase.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>Bundle RAM in Dedicated Servers</h3>
+      <p class="impact-desc">An AX102 with 128 GB RAM costs €124/mo. The same RAM as an add-on costs €264/mo. Choose servers with the RAM you need built in.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>Optimize Before Scaling</h3>
+      <p class="impact-desc">Community recommends: invest in software optimization (Rust, Go, efficient algorithms) instead of adding hardware. A €4.49 CX22 goes further with optimized code.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>Consider ARM (CAX)</h3>
+      <p class="impact-desc">Hetzner's ARM-based CAX line offers competitive performance at the same price point as Intel/AMD. Better performance-per-euro for many workloads.</p>
+    </div>
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive comparison guides for hosting alternatives and Q1 2026 pricing trends.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Pricing data sourced from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's official press statement</a>, <a href="https://news.ycombinator.com/item?id=47120145" target="_blank" rel="noopener">community reports on Hacker News</a>, and third-party trackers. Competitor pricing verified against vendor pricing pages as of March 2026. Impact ratings based on workload size and percentage increase. Alternatives drawn from our index of ${offers.length.toLocaleString()} tracked developer tools. All data can be independently verified via the source links provided.
+  </div>
+
+  <div class="search-cta">
+    <p>This analysis covers Hetzner's April 2026 price increase. For the full quarterly overview covering ${dealChanges.filter(c => c.date >= "2026-01-01" && c.date <= "2026-03-31").length} pricing changes across all developer tools, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track Hetzner pricing changes and compare hosting alternatives from your AI assistant. Get alerts on price increases and find free-tier options — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Q1 2026 Developer Pricing Report ---
 
 function buildQ1PricingReportPage(): string {
@@ -9379,7 +9715,7 @@ function buildQ1PricingReportPage(): string {
 
   // Cross-links to editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["localstack-alternatives", "postman-alternatives", "hetzner-alternatives", "firebase-alternatives", "github-actions-alternatives", "hosting-alternatives", "monitoring-alternatives", "ai-ml-alternatives", "database-alternatives"].includes(p.slug)
+    ["localstack-alternatives", "postman-alternatives", "hetzner-alternatives", "hetzner-pricing-2026", "firebase-alternatives", "github-actions-alternatives", "hosting-alternatives", "monitoring-alternatives", "ai-ml-alternatives", "database-alternatives"].includes(p.slug)
   );
 
   // JSON-LD Article schema (not ItemList — editorial content)
@@ -13176,6 +13512,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api-development-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildApiDevelopmentAlternativesPage());
+  } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
+    recordApiHit("/hetzner-pricing-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildHetznerPricing2026Page());
   } else if (url.pathname === "/q1-2026-developer-pricing-report" && isGetOrHead) {
     recordApiHit("/q1-2026-developer-pricing-report");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/q1-2026-developer-pricing-report", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

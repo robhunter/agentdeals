@@ -2107,6 +2107,38 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  // --- Hetzner April 2026 Pricing Analysis ---
+
+  it("GET /hetzner-pricing-2026 renders Hetzner pricing analysis page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/hetzner-pricing-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Hetzner April 2026 Pricing Analysis"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Before/After Pricing Table"), "Should have pricing table section");
+    assert.ok(html.includes("Why Prices Are Rising"), "Should have why section");
+    assert.ok(html.includes("Who's Affected"), "Should have who section");
+    assert.ok(html.includes("Impact Assessment"), "Should have impact section");
+    assert.ok(html.includes("Alternatives Comparison"), "Should have alternatives section");
+    assert.ok(html.includes("Industry Context"), "Should have industry context section");
+    assert.ok(html.includes("Optimization Strategies"), "Should have optimization section");
+    assert.ok(html.includes("CPX11"), "Should have specific pricing data");
+    assert.ok(html.includes("+575%"), "Should mention memory add-on increase");
+    assert.ok(html.includes("OVHcloud"), "Should mention OVH in industry context");
+    assert.ok(html.includes("DigitalOcean"), "Should include alternatives");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/hetzner-alternatives"), "Should cross-link to hetzner alternatives");
+    assert.ok(html.includes("/changes"), "Should link to changes page");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+    assert.ok(html.includes("/sitemap.xml") || html.includes("agentdeals"), "Should be a proper page");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {
