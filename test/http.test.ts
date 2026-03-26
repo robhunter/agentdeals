@@ -2309,6 +2309,34 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/changes"), "Should link to changes page");
   });
 
+  it("GET /supabase-vs-firebase renders comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/supabase-vs-firebase`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Supabase vs Firebase"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Free Tier Comparison Table"), "Should have comparison section");
+    assert.ok(html.includes("Key Differences"), "Should have differences section");
+    assert.ok(html.includes("Cost at Scale"), "Should have cost section");
+    assert.ok(html.includes("When to Choose Each"), "Should have decision guide");
+    assert.ok(html.includes("Other BaaS Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("Recent Deal Changes"), "Should have changes section");
+    assert.ok(html.includes("500 MB"), "Should include Supabase DB size");
+    assert.ok(html.includes("1 GiB"), "Should include Firebase DB size");
+    assert.ok(html.includes("50K MAU"), "Should include auth comparison");
+    assert.ok(html.includes("Appwrite") || html.includes("PocketBase"), "Should include BaaS alternatives");
+    assert.ok(html.includes("/database-alternatives"), "Should cross-link to database hub");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/vendor/supabase"), "Should link to Supabase profile");
+    assert.ok(html.includes("/vendor/firebase"), "Should link to Firebase profile");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
