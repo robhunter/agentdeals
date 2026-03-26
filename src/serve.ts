@@ -3823,6 +3823,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Slack",
     hubDesc: "60+ free team collaboration tools compared — chat, video conferencing, documentation, scheduling, and async communication",
   },
+  {
+    slug: "free-startup-stack",
+    title: "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide",
+    metaDesc: "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes. Updated March 2026.",
+    contextHtml: "",
+    tag: "startup-stack-guide",
+    primaryVendor: "Vercel",
+    hubDesc: "Complete free SaaS infrastructure stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -9661,6 +9670,329 @@ ${buildCards(other)}
 </html>`;
 }
 
+// --- Free Startup Stack Guide ---
+
+function buildFreeStartupStackPage(): string {
+  const title = "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide";
+  const metaDesc = "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes. Updated March 2026.";
+  const slug = "free-startup-stack";
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Define the stack categories with recommended picks and alternatives
+  const stackCategories = [
+    {
+      name: "Hosting & Compute",
+      icon: "🖥️",
+      recommended: { vendor: "Vercel", why: "Generous hobby tier with 100 GB bandwidth, 1M function invocations, global edge network. Great DX with Git-based deploys." },
+      alternatives: ["Railway", "Render", "Cloudflare Workers", "Cloudflare Pages", "Netlify"],
+      outgrow: "When you exceed 100 GB bandwidth/month, need always-on backend processes, or require more than 4 hrs CPU/month.",
+      relatedPage: "/hosting-alternatives",
+    },
+    {
+      name: "Database",
+      icon: "🗄️",
+      recommended: { vendor: "Supabase", why: "500 MB Postgres + auth + 1 GB storage + realtime subscriptions in one free tier. The bundled BaaS approach saves you from stitching 3 services together." },
+      alternatives: ["Neon", "CockroachDB", "Turso", "Upstash"],
+      outgrow: "When you exceed 500 MB database storage, need more than 50K MAU for auth, or project pauses become disruptive (Supabase pauses inactive projects after 1 week).",
+      relatedPage: "/database-alternatives",
+    },
+    {
+      name: "Authentication",
+      icon: "🔐",
+      recommended: { vendor: "Clerk", why: "50K monthly retained users free — the most generous auth free tier. Drop-in components for React/Next.js with social login, MFA, and user management." },
+      alternatives: ["Auth0", "Firebase"],
+      outgrow: "When you exceed 50K retained users (Clerk) or 25K MAU (Auth0). At this scale you likely have revenue to cover auth costs.",
+      relatedPage: "/auth0-alternatives",
+    },
+    {
+      name: "Email & Transactional",
+      icon: "📧",
+      recommended: { vendor: "Resend", why: "3K emails/month free with a modern, developer-first API. Clean SDK, React Email templates, and excellent deliverability." },
+      alternatives: ["Resend"],
+      outgrow: "When you exceed 3K emails/month. For high-volume transactional email, consider SendGrid or Amazon SES at scale.",
+      relatedPage: "/email-alternatives",
+    },
+    {
+      name: "Monitoring & Observability",
+      icon: "📊",
+      recommended: { vendor: "New Relic", why: "100 GB data ingest/month free — by far the most generous monitoring free tier. Full-stack observability: APM, logs, infrastructure, browser, and synthetic checks." },
+      alternatives: ["Grafana Cloud", "BetterStack", "Sentry"],
+      outgrow: "At 100 GB/month you can monitor a substantial production app. You'll likely outgrow the 1 full-platform user limit before the data limit.",
+      relatedPage: "/monitoring-alternatives",
+    },
+    {
+      name: "CI/CD",
+      icon: "🔄",
+      recommended: { vendor: "GitHub Actions", why: "2K minutes/month for private repos, unlimited for open source. Deep GitHub integration, massive marketplace of community actions, and matrix builds." },
+      alternatives: ["GitLab CI"],
+      outgrow: "When you exceed 2K minutes/month on private repos. Self-hosted runners are free (but now cost $0.002/min for private repos as of March 2026).",
+      relatedPage: "/ci-cd-alternatives",
+    },
+    {
+      name: "Object Storage",
+      icon: "💾",
+      recommended: { vendor: "Cloudflare R2", why: "10 GB storage with zero egress fees — the only major provider that doesn't charge for bandwidth. S3-compatible API." },
+      alternatives: ["Backblaze B2"],
+      outgrow: "When you exceed 10 GB storage or 1M write operations/month. R2's zero-egress model means bandwidth isn't the constraint — it's storage volume.",
+      relatedPage: "/storage-alternatives",
+    },
+    {
+      name: "Error Tracking",
+      icon: "🐛",
+      recommended: { vendor: "Sentry", why: "5K errors/month, 5M spans, 50 session replays. Best-in-class stack traces, release tracking, and performance monitoring. All major frameworks supported." },
+      alternatives: ["Bugsnag", "Rollbar"],
+      outgrow: "When you exceed 5K errors/month. At that point, you either need a paid plan or need to fix your bugs.",
+      relatedPage: "/monitoring-alternatives",
+    },
+    {
+      name: "Analytics",
+      icon: "📈",
+      recommended: { vendor: "PostHog", why: "1M events/month, 5K session replays, feature flags, and A/B testing — all free. The most comprehensive free analytics platform for product teams." },
+      alternatives: ["Umami"],
+      outgrow: "When you exceed 1M events/month. PostHog's generous free tier covers most startups through their first 10K users.",
+      relatedPage: "/analytics-alternatives",
+    },
+    {
+      name: "Search",
+      icon: "🔍",
+      recommended: { vendor: "Algolia", why: "10K search requests/month with 1M records and AI recommendations. Instant, typo-tolerant search with a polished UI library." },
+      alternatives: ["Meilisearch"],
+      outgrow: "When you exceed 10K searches/month. For self-hosted search, Meilisearch (MIT) has no limits and sub-50ms response times.",
+      relatedPage: null,
+    },
+  ];
+
+  // Resolve offer data for each vendor
+  const resolveVendor = (vendorName: string) => {
+    const offer = offers.find(o => o.vendor === vendorName);
+    if (!offer) return null;
+    const enriched = enrichOffers([offer])[0];
+    return enriched;
+  };
+
+  // Get deal changes for stack vendors
+  const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
+  const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-03-25",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  // Build category sections
+  const categorySections = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
+
+    const recCard = rec ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <div class="pick-links">
+          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>` : "";
+
+    const altCards = altVendors.length > 0 ? `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
+      </div>` : "";
+
+    const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
+
+    return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      ${recCard}
+      ${altCards}
+      <div class="outgrow-box">
+        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+      </div>
+      ${relatedLink}
+    </div>`;
+  }).join("\n");
+
+  // Build stability notes from deal changes
+  const stabilityNotes = stackChanges.length > 0 ? `
+  <h2>Stability Notes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <div class="stability-list">
+    ${stackChanges.slice(0, 12).map(c => {
+      const typeColors: Record<string, string> = {
+        free_tier_removed: "#f85149", limits_reduced: "#d29922", pricing_restructured: "#d29922",
+        restriction: "#d29922", limits_increased: "#3fb950", new_free_tier: "#3fb950",
+        pricing_postponed: "#3fb950", startup_program_expanded: "#3fb950", product_deprecated: "#f85149",
+      };
+      const color = typeColors[c.change_type] ?? "#94a3b8";
+      return `<div class="stability-item">
+        <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+      </div>`;
+    }).join("\n    ")}
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+
+  // Build comparison table
+  const tableRows = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    return `      <tr>
+        <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
+        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
+        <td>${riskBadge}</td>
+      </tr>`;
+  }).join("\n");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.cost-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
+.cost-banner .cost-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.cost-banner .cost-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
+.stack-category{border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;background:var(--bg-card)}
+.stack-category h2{margin:0 0 1rem;font-size:1.25rem}
+.cat-icon{margin-right:.5rem}
+.stack-pick{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:rgba(59,130,246,0.05);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.pick-badge{font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;background:var(--accent);color:#fff}
+.pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.pick-name:hover{color:var(--accent)}
+.pick-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.pick-why{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:.5rem}
+.pick-limits{font-family:var(--mono);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
+.pick-links a{color:var(--accent)}
+.alt-picks{margin-bottom:1rem}
+.alt-label{color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem}
+.alt-chip{display:inline-block;padding:.3rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text);margin:.25rem .25rem .25rem 0;transition:border-color .15s}
+.alt-chip:hover{border-color:var(--accent);text-decoration:none}
+.chip-tier{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-left:.25rem}
+.outgrow-box{background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.2);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.outgrow-box strong{color:var(--text)}
+.related-link{display:block;margin-top:.75rem;font-size:.85rem}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.stability-list{display:flex;flex-direction:column;gap:.5rem}
+.stability-item{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5;background:var(--bg-card)}
+.stability-item strong{color:var(--text)}
+.stability-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.1rem .4rem;border-radius:8px;margin-right:.5rem}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.cost-banner .cost-amount{font-size:2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Startup Stack</div>
+  <h1>The Complete Free Startup Stack</h1>
+
+  <div class="context">
+    <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide recommends the best free tier for each layer of a typical startup stack — <strong>10 categories</strong> from hosting to analytics — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified against live pricing pages, March 2026.</p>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
+    <div class="cost-label">Total estimated monthly cost for the complete stack below</div>
+  </div>
+
+  <h2>Stack Overview</h2>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Recommended</th>
+        <th>Key Limit</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+  </div>
+
+${categorySections}
+
+${stabilityNotes}
+
+  <h2>When You'll Outgrow Free Tiers</h2>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:1rem">Most startups can run on free tiers through their first <strong>1,000-5,000 users</strong>. Here's what typically hits limits first:</p>
+    <ol style="color:var(--text-muted);font-size:.9rem;line-height:2;padding-left:1.5rem">
+      <li><strong>Database storage</strong> (Supabase 500 MB) — usually the first constraint for data-heavy apps</li>
+      <li><strong>Email volume</strong> (Resend 3K/month) — grows linearly with user signups and transactional triggers</li>
+      <li><strong>Analytics events</strong> (PostHog 1M/month) — high-traffic apps with event-heavy tracking</li>
+      <li><strong>CI/CD minutes</strong> (GitHub Actions 2K/month) — large test suites on private repos</li>
+      <li><strong>Hosting compute</strong> (Vercel 4 hrs CPU/month) — CPU-intensive APIs or SSR-heavy sites</li>
+    </ol>
+    <p style="color:var(--text-dim);font-size:.85rem;margin-top:1rem">The good news: by the time you hit these limits, you should have enough users (and hopefully revenue) to justify paid plans. The jump from free to first paid tier is typically $5-25/month per service.</p>
+  </div>
+
+  <div class="search-cta">
+    <p>Need a specialized stack? Try our <a href="/agent-stack">AI Agent Builder's Stack</a> for agent-specific infrastructure, or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get personalized stack recommendations from your AI assistant. Compare free tiers, check stability, and plan your infrastructure — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Hetzner April 2026 Pricing Analysis ---
 
 function buildHetznerPricing2026Page(): string {
@@ -13854,6 +14186,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/team-collaboration-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildTeamCollaborationAlternativesPage());
+  } else if (url.pathname === "/free-startup-stack" && isGetOrHead) {
+    recordApiHit("/free-startup-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-startup-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeStartupStackPage());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

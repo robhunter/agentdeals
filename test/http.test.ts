@@ -2139,6 +2139,31 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/sitemap.xml") || html.includes("agentdeals"), "Should be a proper page");
   });
 
+  it("GET /free-startup-stack renders startup stack guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/free-startup-stack`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Complete Free Startup Stack"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("$0"), "Should show $0 cost");
+    assert.ok(html.includes("Hosting"), "Should have hosting category");
+    assert.ok(html.includes("Database"), "Should have database category");
+    assert.ok(html.includes("Authentication"), "Should have auth category");
+    assert.ok(html.includes("Monitoring"), "Should have monitoring category");
+    assert.ok(html.includes("Vercel"), "Should recommend Vercel");
+    assert.ok(html.includes("Supabase"), "Should recommend Supabase");
+    assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
+    assert.ok(html.includes("Stability Notes"), "Should have stability section");
+    assert.ok(html.includes("Stack Overview"), "Should have overview table");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
