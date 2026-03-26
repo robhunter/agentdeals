@@ -3886,6 +3886,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Supabase",
     hubDesc: "Deep comparison of Supabase and Firebase free tiers — database, auth, storage, functions, and scaling costs",
   },
+  {
+    slug: "vercel-vs-netlify",
+    title: "Vercel vs Netlify Free Tier Comparison — 2026 Deep Dive",
+    metaDesc: "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage — verified data, cost-at-scale analysis, and hosting alternatives. Updated March 2026.",
+    contextHtml: "",
+    tag: "vercel-vs-netlify",
+    primaryVendor: "Vercel",
+    hubDesc: "Deep comparison of Vercel and Netlify free tiers — bandwidth, functions, builds, commercial use, and scaling costs",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -4606,7 +4615,7 @@ ${mcpCtaCss()}
   ${changesHtml}
 
   <div class="context-box" style="border-left:3px solid var(--accent)">
-    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific host? See our dedicated guides: <a href="/heroku-alternatives">Heroku Alternatives</a> | <a href="/vercel-alternatives">Vercel Alternatives</a> | <a href="/hetzner-alternatives">Hetzner Alternatives</a></p>
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific host? See our dedicated guides: <a href="/vercel-vs-netlify">Vercel vs Netlify</a> | <a href="/heroku-alternatives">Heroku Alternatives</a> | <a href="/vercel-alternatives">Vercel Alternatives</a> | <a href="/hetzner-alternatives">Hetzner Alternatives</a></p>
   </div>
 
   <h2>App Platforms / PaaS</h2>
@@ -12651,6 +12660,334 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Vercel vs Netlify comparison page ---
+
+function buildVercelVsNetlifyPage(): string {
+  const title = "Vercel vs Netlify Free Tier Comparison — 2026 Deep Dive";
+  const metaDesc = "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage, commercial use — verified data, cost-at-scale analysis, and hosting alternatives. Updated March 2026.";
+  const slug = "vercel-vs-netlify";
+  const pubDate = "2026-03-26";
+
+  // Pull verified data from our index
+  const vercelOffer = offers.find(o => o.vendor === "Vercel" && o.category === "Cloud Hosting");
+  const netlifyOffer = offers.find(o => o.vendor === "Netlify" && o.category === "Cloud Hosting");
+
+  // Deal changes
+  const vercelChange = dealChanges.find(c => c.vendor === "Vercel" && c.change_type === "pricing_restructured");
+  const netlifyChange = dealChanges.find(c => c.vendor === "Netlify" && c.change_type === "pricing_restructured");
+
+  // Hosting alternatives from index
+  const hostingAlts = offers.filter(o =>
+    ["Cloudflare Pages", "Railway", "Render", "Fly.io", "Coolify", "Deno Deploy"].includes(o.vendor) && o.category === "Cloud Hosting"
+  );
+
+  // Comparison data
+  const comparisonRows = [
+    { feature: "Bandwidth", vercel: "100 GB/mo Fast Data Transfer", netlify: "300 credits/mo (10 credits/GB ≈ 30 GB)", notes: "Vercel has 3× more raw bandwidth. Netlify's credit model bundles bandwidth with deploys and compute" },
+    { feature: "Serverless Functions", vercel: "1M invocations, 4 hrs Active CPU", netlify: "Credit-based (shared pool)", notes: "Vercel has explicit function limits. Netlify shares credits across all usage" },
+    { feature: "Edge Requests", vercel: "1M/month", netlify: "Included in credits", notes: "Vercel tracks edge requests separately" },
+    { feature: "Build Minutes", vercel: "Included (no separate limit)", netlify: "300/month (15 credits/deploy)", notes: "Vercel includes builds. Netlify's 300 credits cover ~20 deploys at 15 credits each" },
+    { feature: "Storage", vercel: "1 GB Blob Storage", netlify: "Varies by add-on", notes: "Vercel includes Blob Storage. Netlify has no built-in equivalent on free tier" },
+    { feature: "Image Optimization", vercel: "5K transformations/month", netlify: "Add-on (not free)", notes: "Vercel includes image optimization. Netlify requires paid add-on" },
+    { feature: "Team Members", vercel: "1 (Hobby = personal)", netlify: "1 (Starter = personal)", notes: "Both free tiers are single-developer" },
+    { feature: "Commercial Use", vercel: "Non-commercial only", netlify: "Commercial OK", notes: "Critical difference: Vercel Hobby prohibits commercial use. Netlify Starter allows it" },
+  ];
+
+  const comparisonTableRows = comparisonRows.map(r => `<tr>
+      <td style="font-weight:600;white-space:nowrap">${escHtmlServer(r.feature)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">${escHtmlServer(r.vercel)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.netlify)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Key differences
+  const differences = [
+    { title: "Pricing Model: Usage-Based vs. Credit-Based", desc: "Vercel uses per-resource usage limits (100 GB bandwidth, 1M invocations, etc.) — each metric tracked independently. Netlify uses a unified credit pool (300 credits/month) shared across deploys, bandwidth, and compute. Vercel is more predictable; Netlify's credits can be confusing but offer flexibility." },
+    { title: "Framework Support: Next.js-Native vs. Framework-Agnostic", desc: "Vercel is built by the Next.js team — you get the deepest integration, fastest builds, and latest features first. Netlify supports any framework equally well (Astro, SvelteKit, Nuxt, Remix, Hugo, 11ty) and doesn't favor any specific framework. Choose Vercel for Next.js, Netlify for everything else." },
+    { title: "Commercial Use: The Biggest Free Tier Difference", desc: "Vercel's Hobby plan explicitly prohibits commercial use — your side project with ads or a paid SaaS on the free tier violates the TOS. Netlify's Starter plan allows commercial use. If you're building anything that makes money, Netlify is the free choice; Vercel requires upgrading to Pro ($20/member/mo)." },
+    { title: "Credit Exhaustion vs. Hard Limits", desc: "When Netlify credits run out, sites pause (no overage charges). When Vercel limits are hit on the Hobby plan, requests may be throttled. Neither charges overages on free tiers, but the failure modes differ — Netlify stops serving entirely, Vercel degrades." },
+  ];
+
+  // Cost at scale
+  const scalingComparison = [
+    { metric: "Starter paid plan", vercel: "$20/member/mo (Pro)", netlify: "$19/member/mo (Pro)", notes: "Nearly identical price. Both per-seat billing" },
+    { metric: "Bandwidth at 1 TB", vercel: "$20/mo + $40 overage (1 TB included in Pro)", netlify: "$19/mo + usage (100 GB base)", notes: "Vercel Pro includes 1 TB. Netlify Pro includes less, so overages kick in sooner" },
+    { metric: "Build minutes", vercel: "Included in Pro", netlify: "25K min/mo in Pro", notes: "Both generous. Netlify has an explicit cap" },
+    { metric: "Serverless compute", vercel: "1,000 GB-hrs in Pro", netlify: "Credits pool in Pro", notes: "Vercel more predictable. Netlify credits blur compute vs bandwidth" },
+    { metric: "Enterprise SSO/SAML", vercel: "$20/mo Pro (included)", netlify: "$99/member/mo (Business)", notes: "Vercel includes SAML in Pro. Netlify requires 5× the price for SSO" },
+    { metric: "Spending protection", vercel: "Spend management, alerts, hard limits", netlify: "Credit-based (auto-pause on free, alerts on Pro)", notes: "Both offer protection. Vercel's spend management is more granular" },
+  ];
+
+  const scalingRows = scalingComparison.map(r => `<tr>
+      <td style="font-weight:600;font-size:.85rem">${escHtmlServer(r.metric)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">${escHtmlServer(r.vercel)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.netlify)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Hosting alternative rows
+  const altRows = hostingAlts.map(o => {
+    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    return `<tr>
+      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["hosting-alternatives", "heroku-alternatives", "hetzner-alternatives", "free-frontend-stack", "free-startup-stack", "supabase-vs-firebase"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: [
+      { "@type": "SoftwareApplication", name: "Vercel", url: "https://vercel.com" },
+      { "@type": "SoftwareApplication", name: "Netlify", url: "https://www.netlify.com" },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.vs-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600}
+.vs-vercel{background:rgba(59,130,246,0.15);color:#60a5fa}
+.vs-netlify{background:rgba(63,185,80,0.15);color:#3fb950}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Hosting</a> &rsaquo; Vercel vs Netlify</div>
+  <h1>Vercel vs Netlify — Free Tier Comparison</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">100 GB</div><div class="stat-label">Vercel Bandwidth</div></div>
+    <div class="stat-card"><div class="stat-number green">300 credits</div><div class="stat-label">Netlify Monthly</div></div>
+    <div class="stat-card"><div class="stat-number">$20/mo</div><div class="stat-label">Vercel Pro</div></div>
+    <div class="stat-card"><div class="stat-number green">$19/mo</div><div class="stat-label">Netlify Pro</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> Choose <strong>Vercel</strong> if you're building with Next.js and don't need commercial use on the free tier. Choose <strong>Netlify</strong> if you want framework flexibility and commercial use allowed on the free plan.</p>
+    <p><strong>On free tiers:</strong> Vercel offers more generous explicit limits — 100 GB bandwidth, 1M function invocations, 1 GB Blob Storage, and 5K image optimizations. Netlify's credit-based model (300 credits/month) is harder to compare directly but covers roughly 30 GB bandwidth or ~20 deploys before credits run out.</p>
+    <p><strong>The big difference:</strong> Vercel's Hobby plan is <strong>non-commercial only</strong> — if your site earns revenue (ads, subscriptions, paid features), you need Pro at $20/member/mo. Netlify's Starter plan allows commercial use. This is the single most important distinction for most developers.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#comparison">Free Tier Comparison Table</a></li>
+      <li><a href="#differences">Key Differences</a></li>
+      <li><a href="#scale">Cost at Scale</a></li>
+      <li><a href="#when">When to Choose Each</a></li>
+      <li><a href="#alternatives">Other Hosting Alternatives</a></li>
+      <li><a href="#changes">Recent Deal Changes</a></li>
+    </ol>
+  </div>
+
+  <h2 id="comparison">1. Free Tier Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-vercel">Vercel</span> and <span class="vs-badge vs-netlify">Netlify</span> free tiers as of March 2026.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Feature</th><th style="color:#60a5fa">Vercel Hobby</th><th style="color:#3fb950">Netlify Starter</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${comparisonTableRows}
+      </tbody>
+    </table>
+  </div>
+  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${escHtmlServer(vercelOffer.description)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
+  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${escHtmlServer(netlifyOffer.description)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
+
+  <h2 id="differences">2. Key Differences</h2>
+  <p class="section-intro">Beyond the raw numbers, these structural differences matter for your hosting choice.</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${differences.map((d, i) => `<div class="diff-card" style="border-left-color:${i % 2 === 0 ? "var(--accent)" : "#3fb950"}">
+      <h3>${escHtmlServer(d.title)}</h3>
+      <p class="diff-desc">${escHtmlServer(d.desc)}</p>
+    </div>`).join("\n    ")}
+  </div>
+
+  <h2 id="scale">3. Cost at Scale</h2>
+  <p class="section-intro">What happens when you outgrow the free tier? Vercel Pro ($20/member/mo) vs Netlify Pro ($19/member/mo).</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Metric</th><th style="color:#60a5fa">Vercel</th><th style="color:#3fb950">Netlify</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${scalingRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Bottom line on scaling:</strong> Both Pro plans are nearly identical at $19-20/member/month. The key differentiator is that Vercel Pro includes SAML SSO (a $99/member feature on Netlify Business) and 1 TB bandwidth. If your team needs SSO, Vercel is 5× cheaper. For solo developers, the pricing difference is negligible — the commercial use restriction on Vercel's free tier matters more than the $1/mo Pro difference.
+  </div>
+
+  <h2 id="when">4. When to Choose Each</h2>
+  <div class="verdict-box">
+    <h3>Decision Guide</h3>
+    <div class="verdict-item">
+      <strong>Choose Vercel if:</strong>
+      <p>You're building with Next.js (deepest integration, fastest builds, latest features first), your free tier project is non-commercial (personal blog, portfolio, learning project), or your team needs SAML SSO on Pro. Best for: Next.js apps, personal projects, teams requiring enterprise SSO.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Choose Netlify if:</strong>
+      <p>You need commercial use on the free tier (side projects with ads, SaaS landing pages, paid products), you use non-Next.js frameworks (Astro, SvelteKit, Hugo, 11ty, Nuxt), or you prefer a framework-agnostic platform. Best for: commercial side projects, multi-framework teams, static sites.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider Cloudflare Pages if:</strong>
+      <p>You want the most generous free tier overall — unlimited bandwidth, 500 builds/month, 100K Workers invocations/day, and commercial use allowed. The main trade-off is a smaller ecosystem and fewer framework-specific optimizations. See <a href="/vendor/cloudflare-pages">Cloudflare Pages profile</a>.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider self-hosting if:</strong>
+      <p>You need full control — try <a href="/vendor/coolify">Coolify</a> (open-source Vercel/Netlify alternative, self-hosted) or deploy directly to <a href="/vendor/railway">Railway</a> ($5 free credit, any framework, Docker support). See alternatives below.</p>
+    </div>
+  </div>
+
+  <h2 id="alternatives">5. Other Hosting Alternatives</h2>
+  <p class="section-intro">If neither Vercel nor Netlify fits, these hosting platforms offer competitive free tiers.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Tier</th><th>Free Tier Details</th></tr>
+      </thead>
+      <tbody>
+        ${altRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Notable mentions:</strong> <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> offers unlimited bandwidth and commercial use on the free tier — the most generous option if you don't need Vercel/Netlify's framework-specific features. <a href="/vendor/railway">Railway</a> gives you $5/month free credit with Docker support. <a href="/vendor/render">Render</a> offers free static sites and web services (with spin-down). See our <a href="/hosting-alternatives">full hosting comparison</a> for 30+ options.
+  </div>
+
+  <h2 id="changes">6. Recent Deal Changes</h2>
+  <p class="section-intro">Both platforms have restructured their pricing recently. From our deal change tracker:</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${vercelChange ? `<div class="diff-card" style="border-left-color:#d29922">
+      <h3>Vercel — ${escHtmlServer(vercelChange.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(vercelChange.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(vercelChange.impact)} &middot; <a href="${escHtmlServer(vercelChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
+    </div>` : ""}
+    ${netlifyChange ? `<div class="diff-card" style="border-left-color:#f85149">
+      <h3>Netlify — ${escHtmlServer(netlifyChange.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(netlifyChange.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(netlifyChange.impact)} &middot; <a href="${escHtmlServer(netlifyChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
+    </div>` : ""}
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive guides for hosting selection and free tier infrastructure.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Vercel data verified against <a href="https://vercel.com/pricing" target="_blank" rel="noopener">vercel.com/pricing</a> (${vercelOffer?.verifiedDate ?? "2026-03"}). Netlify data verified against <a href="https://www.netlify.com/pricing/" target="_blank" rel="noopener">netlify.com/pricing</a> (${netlifyOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
+  </div>
+
+  <div class="search-cta">
+    <p>This comparison covers Vercel vs Netlify free tiers as of March 2026. For more hosting options, see our <a href="/hosting-alternatives">full hosting comparison</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Compare Vercel, Netlify, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -16319,6 +16656,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/supabase-vs-firebase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSupabaseVsFirebasePage());
+  } else if (url.pathname === "/vercel-vs-netlify" && isGetOrHead) {
+    recordApiHit("/vercel-vs-netlify");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vercel-vs-netlify", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildVercelVsNetlifyPage());
   } else if (url.pathname === "/google-developer-program-2026" && isGetOrHead) {
     recordApiHit("/google-developer-program-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/google-developer-program-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

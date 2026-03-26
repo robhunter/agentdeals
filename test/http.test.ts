@@ -2337,6 +2337,34 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/vendor/firebase"), "Should link to Firebase profile");
   });
 
+  it("GET /vercel-vs-netlify renders comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/vercel-vs-netlify`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Vercel vs Netlify"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Free Tier Comparison Table"), "Should have comparison section");
+    assert.ok(html.includes("Key Differences"), "Should have differences section");
+    assert.ok(html.includes("Cost at Scale"), "Should have cost section");
+    assert.ok(html.includes("When to Choose Each"), "Should have decision guide");
+    assert.ok(html.includes("Other Hosting Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("Recent Deal Changes"), "Should have changes section");
+    assert.ok(html.includes("100 GB"), "Should include Vercel bandwidth");
+    assert.ok(html.includes("300 credits"), "Should include Netlify credits");
+    assert.ok(html.includes("Non-commercial only"), "Should highlight commercial use restriction");
+    assert.ok(html.includes("Cloudflare Pages") || html.includes("Railway"), "Should include hosting alternatives");
+    assert.ok(html.includes("/hosting-alternatives"), "Should cross-link to hosting hub");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/vendor/vercel"), "Should link to Vercel profile");
+    assert.ok(html.includes("/vendor/netlify"), "Should link to Netlify profile");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
