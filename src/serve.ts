@@ -3895,6 +3895,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Vercel",
     hubDesc: "Deep comparison of Vercel and Netlify free tiers — bandwidth, functions, builds, commercial use, and scaling costs",
   },
+  {
+    slug: "neon-vs-supabase",
+    title: "Neon vs Supabase Free Tier Comparison — 2026 Deep Dive",
+    metaDesc: "Compare Neon and Supabase free tiers side-by-side. Storage, compute, branching, auth, edge functions — verified data, cost-at-scale analysis, and database alternatives. Updated March 2026.",
+    contextHtml: "",
+    tag: "neon-vs-supabase",
+    primaryVendor: "Neon",
+    hubDesc: "Deep comparison of Neon and Supabase free tiers — database-only vs full platform, branching, auth, storage, and scaling costs",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -4959,7 +4968,7 @@ ${mcpCtaCss()}
   ${changesHtml}
 
   <div class="context-box" style="border-left:3px solid var(--accent)">
-    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific database? See our dedicated guides: <a href="/supabase-vs-firebase">Supabase vs Firebase</a> | <a href="/mongodb-alternatives">MongoDB Alternatives</a> | <a href="/redis-alternatives">Redis Alternatives</a> | <a href="/firebase-alternatives">Firebase Alternatives</a></p>
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific database? See our dedicated guides: <a href="/neon-vs-supabase">Neon vs Supabase</a> | <a href="/supabase-vs-firebase">Supabase vs Firebase</a> | <a href="/mongodb-alternatives">MongoDB Alternatives</a> | <a href="/redis-alternatives">Redis Alternatives</a> | <a href="/firebase-alternatives">Firebase Alternatives</a></p>
   </div>
 
   <h2>Relational SQL Databases</h2>
@@ -12988,6 +12997,334 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function buildNeonVsSupabasePage(): string {
+  const title = "Neon vs Supabase Free Tier Comparison — 2026 Deep Dive";
+  const metaDesc = "Compare Neon and Supabase free tiers side-by-side. Storage, compute, branching, auth, edge functions, realtime — verified data, cost-at-scale analysis, and database alternatives. Updated March 2026.";
+  const slug = "neon-vs-supabase";
+  const pubDate = "2026-03-26";
+
+  // Pull verified data from our index
+  const neonOffer = offers.find(o => o.vendor === "Neon" && o.category === "Databases");
+  const supabaseOffer = offers.find(o => o.vendor === "Supabase" && o.category === "Databases");
+
+  // Deal changes
+  const neonChange = dealChanges.find(c => c.vendor === "Neon" && c.change_type === "pricing_restructured");
+  const supabaseChange = dealChanges.find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
+
+  // Database alternatives from index
+  const dbAlts = offers.filter(o =>
+    ["CockroachDB", "Turso", "Railway", "Xata Lite", "Convex"].includes(o.vendor) && o.category === "Databases"
+  );
+
+  // Comparison data
+  const comparisonRows = [
+    { feature: "Database Storage", neon: "0.5 GB per project", supabase: "500 MB", notes: "Similar raw limits. Neon is per-project (up to 100 projects = potential 50 GB total), Supabase is total across 2 projects" },
+    { feature: "Projects", neon: "100", supabase: "2", notes: "Neon allows 50× more projects — ideal for microservices, multi-tenant apps, or per-client databases" },
+    { feature: "Compute", neon: "100 CU-hours/month, up to 2 CU (8 GB RAM)", supabase: "Shared compute (limited resources)", notes: "Neon offers explicit compute hours with auto-scaling. Supabase shared compute has no published limits" },
+    { feature: "Branching", neon: "10 branches per project", supabase: "Paid only (Pro+)", notes: "Neon's killer feature — database branching for dev/test workflows. Supabase requires paid plan" },
+    { feature: "Auth (MAU)", neon: "60K MAU (Neon Auth)", supabase: "50K MAU (Supabase Auth)", notes: "Both generous. Neon Auth is newer (added Jan 2026). Supabase Auth is battle-tested with more features" },
+    { feature: "File Storage", neon: "None", supabase: "1 GB", notes: "Supabase includes file storage with CDN. Neon is database-only — use a separate storage service" },
+    { feature: "Edge Functions", neon: "None", supabase: "500K invocations/month", notes: "Supabase includes serverless functions. Neon focuses purely on the database layer" },
+    { feature: "Realtime", neon: "None", supabase: "200 concurrent connections", notes: "Supabase includes realtime subscriptions. Neon requires external pub/sub" },
+    { feature: "Scale-to-Zero", neon: "Yes (5 min idle timeout)", supabase: "Pauses after 1 week inactivity", notes: "Neon scales to zero quickly and resumes in ~1s. Supabase pauses entirely after a week — requires manual unpause" },
+    { feature: "Connection Pooling", neon: "10K connections via pooler", supabase: "Pooler included (Supavisor)", notes: "Both include connection pooling. Neon's 10K limit is generous for serverless workloads" },
+  ];
+
+  const comparisonTableRows = comparisonRows.map(r => `<tr>
+      <td style="font-weight:600;white-space:nowrap">${escHtmlServer(r.feature)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">${escHtmlServer(r.neon)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.supabase)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Key differences
+  const differences = [
+    { title: "Database-Only vs. Full Platform", desc: "Neon is a pure serverless Postgres service — it does one thing (database) and does it well. Supabase is a full BaaS platform that bundles Postgres with Auth, Storage, Realtime, Edge Functions, and a dashboard. Choose Neon if you want to pick your own auth/storage/functions stack; choose Supabase if you want everything integrated out of the box." },
+    { title: "Project Limits: 100 vs. 2", desc: "Neon's 100 free projects is the standout difference. Each project gets its own 0.5 GB storage and 100 CU-hours/month. This makes Neon ideal for per-client databases, microservices architectures, or agencies managing multiple sites. Supabase's 2-project limit means you'll hit the paid tier quickly if you need more than a couple apps." },
+    { title: "Branching: Dev Workflows vs. Production-First", desc: "Neon's database branching (10 branches per project) lets you create instant copy-on-write database copies for development, testing, and previews. This is transformative for CI/CD — branch your database like you branch your code. Supabase doesn't offer branching on the free tier (it's a Pro feature), so testing against production-like data requires manual setup." },
+    { title: "Scale-to-Zero vs. Inactivity Pausing", desc: "Neon scales to zero after 5 minutes of idle and resumes in ~1 second — designed for intermittent workloads. Supabase pauses projects entirely after 1 week of inactivity (tightened Feb 2026), requiring manual unpause from the dashboard. For always-on projects this doesn't matter, but for side projects you check weekly, Neon's approach is significantly better." },
+  ];
+
+  // Cost at scale
+  const scalingComparison = [
+    { metric: "Starter paid plan", neon: "Launch: $19/mo", supabase: "Pro: $25/mo", notes: "Neon is $6/mo cheaper at the entry paid tier" },
+    { metric: "Storage included", neon: "10 GB (Launch)", supabase: "8 GB database + 100 GB file storage (Pro)", notes: "Supabase Pro includes file storage. Neon is database-only" },
+    { metric: "Compute", neon: "300 CU-hours/mo (Launch)", supabase: "Dedicated compute (Pro)", notes: "Neon bills per compute-hour. Supabase provides always-on compute" },
+    { metric: "Branching", neon: "Included on all plans", supabase: "Pro+ only", notes: "Neon branching is free-tier-up. Supabase gates it behind Pro" },
+    { metric: "Scale-to-zero", neon: "All plans", supabase: "Not available (always-on)", notes: "Neon saves money by scaling down when idle. Supabase bills for always-on compute" },
+    { metric: "Spending protection", neon: "Usage-based billing, per-project caps", supabase: "$25/mo base + usage, spend caps available", notes: "Both offer billing alerts. Supabase has a fixed base; Neon is fully usage-based" },
+  ];
+
+  const scalingRows = scalingComparison.map(r => `<tr>
+      <td style="font-weight:600;font-size:.85rem">${escHtmlServer(r.metric)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">${escHtmlServer(r.neon)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.supabase)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Database alternative rows
+  const altRows = dbAlts.map(o => {
+    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    return `<tr>
+      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["database-alternatives", "supabase-vs-firebase", "mongodb-alternatives", "firebase-alternatives", "free-startup-stack", "free-ai-stack"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: [
+      { "@type": "SoftwareApplication", name: "Neon", url: "https://neon.com" },
+      { "@type": "SoftwareApplication", name: "Supabase", url: "https://supabase.com" },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.vs-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600}
+.vs-neon{background:rgba(59,130,246,0.15);color:#60a5fa}
+.vs-supabase{background:rgba(63,185,80,0.15);color:#3fb950}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/database-alternatives">Databases</a> &rsaquo; Neon vs Supabase</div>
+  <h1>Neon vs Supabase — Free Tier Comparison</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">100</div><div class="stat-label">Neon Projects</div></div>
+    <div class="stat-card"><div class="stat-number green">2</div><div class="stat-label">Supabase Projects</div></div>
+    <div class="stat-card"><div class="stat-number">$19/mo</div><div class="stat-label">Neon Launch</div></div>
+    <div class="stat-card"><div class="stat-number green">$25/mo</div><div class="stat-label">Supabase Pro</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> Choose <strong>Neon</strong> for pure serverless Postgres with database branching, scale-to-zero, and 100 free projects. Choose <strong>Supabase</strong> for a one-stop BaaS platform with auth, file storage, realtime, and edge functions bundled alongside Postgres.</p>
+    <p><strong>On free tiers:</strong> Neon gives you 100 projects with 0.5 GB storage each, 100 CU-hours/month compute, 10 branches per project, and scale-to-zero. Supabase gives you 2 projects with 500 MB storage, 50K auth MAU, 1 GB file storage, 500K edge function invocations, and 200 realtime connections.</p>
+    <p><strong>The core trade-off:</strong> Neon is a <strong>database-only</strong> service — you get the best serverless Postgres experience with branching and scale-to-zero, but you need separate services for auth, storage, and functions. Supabase is a <strong>full platform</strong> — less flexible at the database layer, but everything you need to build an app is included.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#comparison">Free Tier Comparison Table</a></li>
+      <li><a href="#differences">Key Differences</a></li>
+      <li><a href="#scale">Cost at Scale</a></li>
+      <li><a href="#when">When to Choose Each</a></li>
+      <li><a href="#alternatives">Other Database Alternatives</a></li>
+      <li><a href="#changes">Recent Deal Changes</a></li>
+    </ol>
+  </div>
+
+  <h2 id="comparison">1. Free Tier Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-neon">Neon</span> and <span class="vs-badge vs-supabase">Supabase</span> free tiers as of March 2026.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Feature</th><th style="color:#60a5fa">Neon Free</th><th style="color:#3fb950">Supabase Free</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${comparisonTableRows}
+      </tbody>
+    </table>
+  </div>
+  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${escHtmlServer(neonOffer.description)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${escHtmlServer(supabaseOffer.description)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
+
+  <h2 id="differences">2. Key Differences</h2>
+  <p class="section-intro">Beyond the raw numbers, these architectural differences shape which platform fits your use case.</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${differences.map((d, i) => `<div class="diff-card" style="border-left-color:${i % 2 === 0 ? "var(--accent)" : "#3fb950"}">
+      <h3>${escHtmlServer(d.title)}</h3>
+      <p class="diff-desc">${escHtmlServer(d.desc)}</p>
+    </div>`).join("\n    ")}
+  </div>
+
+  <h2 id="scale">3. Cost at Scale</h2>
+  <p class="section-intro">What happens when you outgrow the free tier? Neon Launch ($19/mo) vs Supabase Pro ($25/mo).</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Metric</th><th style="color:#60a5fa">Neon</th><th style="color:#3fb950">Supabase</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${scalingRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Bottom line on scaling:</strong> Neon Launch ($19/mo) is cheaper than Supabase Pro ($25/mo), but the comparison isn't apples-to-apples. Supabase Pro includes auth, file storage (100 GB), edge functions, and realtime — services you'd need to source separately with Neon. If you only need a database, Neon is the better value. If you need the full BaaS stack, Supabase's $25/mo covers everything in one bill.
+  </div>
+
+  <h2 id="when">4. When to Choose Each</h2>
+  <div class="verdict-box">
+    <h3>Decision Guide</h3>
+    <div class="verdict-item">
+      <strong>Choose Neon if:</strong>
+      <p>You need pure Postgres with branching for dev/test workflows, you're running many small projects or microservices (100 free projects), you want scale-to-zero for intermittent workloads, or you prefer picking your own auth/storage/functions stack. Best for: serverless apps, microservices, CI/CD-heavy teams, agencies.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Choose Supabase if:</strong>
+      <p>You want a complete BaaS platform with auth, storage, realtime, and edge functions included alongside Postgres. Best for: MVPs, prototypes, full-stack apps that need auth and file uploads, teams that want one platform instead of assembling services.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider both together:</strong>
+      <p>Some teams use Neon for the primary database (branching + scale-to-zero) and Supabase for auth and storage. This hybrid approach gives you the best database experience with the best BaaS features. Both are Postgres — your SQL skills transfer directly.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider alternatives if:</strong>
+      <p>For embedded/edge databases, try <a href="/vendor/turso">Turso</a> (SQLite at the edge, 100 databases free). For a self-hosted BaaS, try <a href="/vendor/appwrite">Appwrite</a> or <a href="/vendor/pocketbase">PocketBase</a>. For a managed Postgres with generous storage, check <a href="/vendor/cockroachdb">CockroachDB</a> (10 GB free). See alternatives below.</p>
+    </div>
+  </div>
+
+  <h2 id="alternatives">5. Other Database Alternatives</h2>
+  <p class="section-intro">If neither Neon nor Supabase fits, these database platforms offer competitive free tiers.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Tier</th><th>Free Tier Details</th></tr>
+      </thead>
+      <tbody>
+        ${altRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Notable mentions:</strong> <a href="/vendor/cockroachdb">CockroachDB</a> offers 10 GB free storage with multi-region support — great for distributed Postgres. <a href="/vendor/turso">Turso</a> gives 100 databases with 5 GB storage for SQLite-at-the-edge workloads. For a Firebase-like self-hosted experience, see <a href="/supabase-vs-firebase">Supabase vs Firebase</a>. See our <a href="/database-alternatives">full database comparison</a> for 30+ options.
+  </div>
+
+  <h2 id="changes">6. Recent Deal Changes</h2>
+  <p class="section-intro">Both platforms have restructured their pricing recently. From our deal change tracker:</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${neonChange ? `<div class="diff-card" style="border-left-color:#d29922">
+      <h3>Neon — ${escHtmlServer(neonChange.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(neonChange.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(neonChange.impact)} &middot; <a href="${escHtmlServer(neonChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
+    </div>` : ""}
+    ${supabaseChange ? `<div class="diff-card" style="border-left-color:#f85149">
+      <h3>Supabase — ${escHtmlServer(supabaseChange.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(supabaseChange.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(supabaseChange.impact)} &middot; <a href="${escHtmlServer(supabaseChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
+    </div>` : ""}
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive guides for database selection and free tier infrastructure.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Neon data verified against <a href="https://neon.com/pricing" target="_blank" rel="noopener">neon.com/pricing</a> (${neonOffer?.verifiedDate ?? "2026-03"}). Supabase data verified against <a href="https://supabase.com/pricing" target="_blank" rel="noopener">supabase.com/pricing</a> (${supabaseOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
+  </div>
+
+  <div class="search-cta">
+    <p>This comparison covers Neon vs Supabase free tiers as of March 2026. For more database options, see our <a href="/database-alternatives">full database comparison</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Compare Neon, Supabase, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -16661,6 +16998,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vercel-vs-netlify", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildVercelVsNetlifyPage());
+  } else if (url.pathname === "/neon-vs-supabase" && isGetOrHead) {
+    recordApiHit("/neon-vs-supabase");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/neon-vs-supabase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildNeonVsSupabasePage());
   } else if (url.pathname === "/google-developer-program-2026" && isGetOrHead) {
     recordApiHit("/google-developer-program-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/google-developer-program-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
