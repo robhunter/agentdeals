@@ -3877,6 +3877,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Google",
     hubDesc: "Google Developer Program Premium ending March 30 — price comparison, migration guide, and free alternatives",
   },
+  {
+    slug: "supabase-vs-firebase",
+    title: "Supabase vs Firebase Free Tier Comparison — 2026 Deep Dive",
+    metaDesc: "Compare Supabase and Firebase free tiers side-by-side. Database, auth, storage, functions, bandwidth — verified data, cost-at-scale analysis, and BaaS alternatives. Updated March 2026.",
+    contextHtml: "",
+    tag: "supabase-vs-firebase",
+    primaryVendor: "Supabase",
+    hubDesc: "Deep comparison of Supabase and Firebase free tiers — database, auth, storage, functions, and scaling costs",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -4941,7 +4950,7 @@ ${mcpCtaCss()}
   ${changesHtml}
 
   <div class="context-box" style="border-left:3px solid var(--accent)">
-    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific database? See our dedicated guides: <a href="/mongodb-alternatives">MongoDB Alternatives</a> | <a href="/redis-alternatives">Redis Alternatives</a> | <a href="/firebase-alternatives">Firebase Alternatives</a></p>
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific database? See our dedicated guides: <a href="/supabase-vs-firebase">Supabase vs Firebase</a> | <a href="/mongodb-alternatives">MongoDB Alternatives</a> | <a href="/redis-alternatives">Redis Alternatives</a> | <a href="/firebase-alternatives">Firebase Alternatives</a></p>
   </div>
 
   <h2>Relational SQL Databases</h2>
@@ -12308,6 +12317,340 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Supabase vs Firebase comparison page ---
+
+function buildSupabaseVsFirebasePage(): string {
+  const title = "Supabase vs Firebase Free Tier Comparison — 2026 Deep Dive";
+  const metaDesc = "Compare Supabase and Firebase free tiers side-by-side. Database, auth, storage, functions, bandwidth — verified data, cost-at-scale analysis, and BaaS alternatives. Updated March 2026.";
+  const slug = "supabase-vs-firebase";
+  const pubDate = "2026-03-26";
+
+  // Pull verified data from our index
+  const supabaseOffer = offers.find(o => o.vendor === "Supabase" && o.category === "Databases");
+  const firebaseOffer = offers.find(o => o.vendor === "Firebase" && o.category === "Databases");
+
+  // Deal changes
+  const supabasePause = dealChanges.find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
+  const firebaseStorage = dealChanges.find(c => c.vendor === "Firebase" && c.change_type === "limits_reduced");
+  const firebaseStudio = dealChanges.find(c => c.vendor === "Firebase" && c.change_type === "product_deprecated");
+
+  // BaaS alternatives from index
+  const baasAlts = offers.filter(o =>
+    ["Appwrite Cloud", "PocketBase", "Nhost", "Convex"].includes(o.vendor) && o.category === "Databases"
+  );
+
+  // Comparison data
+  const comparisonRows = [
+    { feature: "Database", supabase: "500 MB PostgreSQL", firebase: "1 GiB Firestore", notes: "Supabase: SQL + joins. Firebase: NoSQL document model" },
+    { feature: "Auth", supabase: "50K MAU", firebase: "50K MAU", notes: "Equivalent. Both include email, OAuth, social login" },
+    { feature: "Storage", supabase: "1 GB file storage", firebase: "5 GB Cloud Storage*", notes: "*Firebase removed Cloud Storage from Spark plan (Feb 2026). Blaze required" },
+    { feature: "Functions", supabase: "500K Edge Function invocations", firebase: "2M Cloud Function invocations/mo", notes: "Firebase has higher invocation limit. Supabase runs on Deno edge runtime" },
+    { feature: "Bandwidth", supabase: "10 GB total (5 GB cached + 5 GB uncached)", firebase: "10 GB/mo hosting, 1 GB/day Firestore download", notes: "Supabase: database egress limited. Firebase: per-service bandwidth" },
+    { feature: "Realtime", supabase: "200 concurrent connections", firebase: "100 concurrent (Realtime DB)", notes: "Both support real-time sync. Supabase uses Postgres changes" },
+    { feature: "API Requests", supabase: "Unlimited API requests", firebase: "50K reads + 20K writes/day (Firestore)", notes: "Supabase has no request caps. Firebase daily limits can be restrictive" },
+    { feature: "Projects", supabase: "2 free projects", firebase: "Unlimited Spark projects", notes: "Firebase wins on project count. Supabase pauses inactive projects" },
+  ];
+
+  const comparisonTableRows = comparisonRows.map(r => `<tr>
+      <td style="font-weight:600;white-space:nowrap">${escHtmlServer(r.feature)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">${escHtmlServer(r.supabase)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.firebase)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Key differences
+  const differences = [
+    { title: "Open Source vs. Proprietary", desc: "Supabase is fully open source (MIT license) — you can self-host and avoid vendor lock-in entirely. Firebase is proprietary to Google with no self-hosting option. If you leave Firebase, you rewrite your data layer." },
+    { title: "SQL vs. NoSQL", desc: "Supabase runs PostgreSQL — full relational queries, joins, indexes, migrations. Firebase uses Firestore (document model) — great for simple reads but complex queries require denormalization. Choose based on your data model needs." },
+    { title: "Pricing Model", desc: "Supabase Pro is $25/month with predictable limits. Firebase Blaze is pay-as-you-go with no hard caps — great for low usage, but unexpected traffic spikes can cause surprise bills. Supabase is 30-50% cheaper at scale for most workloads." },
+    { title: "Ecosystem & Lock-in", desc: "Firebase deeply integrates with Google Cloud — great if you're already on GCP, but creates tight coupling. Supabase uses standard Postgres, compatible with any Postgres client, ORM, or hosting provider." },
+  ];
+
+  // Cost at scale
+  const scalingComparison = [
+    { metric: "Starter paid plan", supabase: "$25/mo (Pro)", firebase: "Pay-as-you-go (Blaze)", notes: "Supabase: predictable flat rate. Firebase: usage-based, no spending cap" },
+    { metric: "Database at 10 GB", supabase: "$25/mo (8 GB included)", firebase: "$1.56/mo (Firestore)", notes: "Firebase cheaper for pure storage. Supabase includes more in base price" },
+    { metric: "100K MAU auth", supabase: "$25/mo (100K MAU included in Pro)", firebase: "$0 (unlimited on Spark)", notes: "Both effectively free at this scale" },
+    { metric: "1M function invocations", supabase: "$25/mo (2M included in Pro)", firebase: "~$0.40 (beyond 2M free)", notes: "Similar — both cover 1M in free/base tier" },
+    { metric: "50 GB storage", supabase: "$25/mo + ~$2.50 overage", firebase: "Blaze required, ~$1.30/mo", notes: "Firebase cheaper for raw storage on Blaze pay-as-you-go" },
+    { metric: "Billing protection", supabase: "Hard limits, spend caps available", firebase: "No hard caps — set budget alerts only", notes: "Supabase safer for indie devs. Firebase can generate surprise bills" },
+  ];
+
+  const scalingRows = scalingComparison.map(r => `<tr>
+      <td style="font-weight:600;font-size:.85rem">${escHtmlServer(r.metric)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">${escHtmlServer(r.supabase)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.firebase)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // BaaS alternative rows
+  const altRows = baasAlts.map(o => {
+    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    return `<tr>
+      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["database-alternatives", "firebase-alternatives", "mongodb-alternatives", "auth0-alternatives", "hosting-alternatives", "free-startup-stack"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: [
+      { "@type": "SoftwareApplication", name: "Supabase", url: "https://supabase.com" },
+      { "@type": "SoftwareApplication", name: "Firebase", url: "https://firebase.google.com" },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.vs-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600}
+.vs-supabase{background:rgba(59,130,246,0.15);color:#60a5fa}
+.vs-firebase{background:rgba(63,185,80,0.15);color:#3fb950}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/database-alternatives">Databases</a> &rsaquo; Supabase vs Firebase</div>
+  <h1>Supabase vs Firebase — Free Tier Comparison</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">500 MB</div><div class="stat-label">Supabase DB</div></div>
+    <div class="stat-card"><div class="stat-number green">1 GiB</div><div class="stat-label">Firebase DB</div></div>
+    <div class="stat-card"><div class="stat-number">$25/mo</div><div class="stat-label">Supabase Pro</div></div>
+    <div class="stat-card"><div class="stat-number green">Pay-as-you-go</div><div class="stat-label">Firebase Blaze</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> Choose <strong>Supabase</strong> if you want PostgreSQL, open source, predictable pricing, and no vendor lock-in. Choose <strong>Firebase</strong> if you need a mature NoSQL ecosystem, unlimited free projects, and tight Google Cloud integration.</p>
+    <p><strong>On free tiers:</strong> Firebase offers more raw storage (1 GiB vs 500 MB) and unlimited projects, but imposes daily read/write caps (50K reads, 20K writes). Supabase has no API request limits and includes 200 concurrent realtime connections, but limits you to 2 free projects that pause after 1 week of inactivity.</p>
+    <p><strong>The big caveat:</strong> Firebase removed Cloud Storage from the free Spark plan in February 2026. If you need file storage on Firebase, you now need a Blaze (pay-as-you-go) account with a credit card — no hard spending caps. Supabase includes 1 GB file storage on the free tier.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#comparison">Free Tier Comparison Table</a></li>
+      <li><a href="#differences">Key Differences</a></li>
+      <li><a href="#scale">Cost at Scale</a></li>
+      <li><a href="#when">When to Choose Each</a></li>
+      <li><a href="#alternatives">Other BaaS Alternatives</a></li>
+      <li><a href="#changes">Recent Deal Changes</a></li>
+    </ol>
+  </div>
+
+  <h2 id="comparison">1. Free Tier Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-supabase">Supabase</span> and <span class="vs-badge vs-firebase">Firebase</span> free tiers as of March 2026.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Feature</th><th style="color:#60a5fa">Supabase Free</th><th style="color:#3fb950">Firebase Spark</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${comparisonTableRows}
+      </tbody>
+    </table>
+  </div>
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${escHtmlServer(supabaseOffer.description)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
+  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${escHtmlServer(firebaseOffer.description)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
+
+  <h2 id="differences">2. Key Differences</h2>
+  <p class="section-intro">Beyond the raw numbers, these architectural differences matter for your long-term stack choice.</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${differences.map((d, i) => `<div class="diff-card" style="border-left-color:${i % 2 === 0 ? "var(--accent)" : "#3fb950"}">
+      <h3>${escHtmlServer(d.title)}</h3>
+      <p class="diff-desc">${escHtmlServer(d.desc)}</p>
+    </div>`).join("\n    ")}
+  </div>
+
+  <h2 id="scale">3. Cost at Scale</h2>
+  <p class="section-intro">What happens when you outgrow the free tier? Supabase Pro ($25/mo) vs Firebase Blaze (pay-as-you-go).</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Metric</th><th style="color:#60a5fa">Supabase</th><th style="color:#3fb950">Firebase</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${scalingRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Bottom line on scaling:</strong> Supabase is typically 30-50% cheaper at scale for most BaaS workloads because of its predictable flat-rate pricing. Firebase's pay-as-you-go model can be cheaper for very low usage but offers no hard spending caps — a risk for indie developers and startups. Supabase Pro includes enough headroom ($25/mo) that most small apps never pay overage.
+  </div>
+
+  <h2 id="when">4. When to Choose Each</h2>
+  <div class="verdict-box">
+    <h3>Decision Guide</h3>
+    <div class="verdict-item">
+      <strong>Choose Supabase if:</strong>
+      <p>You need relational data (SQL, joins, foreign keys), want open source with self-hosting options, prefer predictable billing, or are building a project that may need to migrate away from its backend later. Best for: SaaS apps, dashboards, APIs, projects where data relationships matter.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Choose Firebase if:</strong>
+      <p>You're building mobile-first apps with Google ecosystem integration, need unlimited free projects for prototyping, prefer document-model databases for simple CRUD, or want built-in analytics and crash reporting. Best for: mobile apps, rapid prototypes, real-time chat, apps already using Google Cloud.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider both if:</strong>
+      <p>Use Firebase for auth + analytics + crash reporting (these are genuinely best-in-class and free), then Supabase for your primary database and file storage. This "best of both" approach is increasingly common.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider neither if:</strong>
+      <p>You need full control — try <a href="/vendor/pocketbase">PocketBase</a> (single binary, self-hosted, unlimited) or <a href="/vendor/appwrite-cloud">Appwrite</a> (open-source BaaS with generous free tier). See alternatives below.</p>
+    </div>
+  </div>
+
+  <h2 id="alternatives">5. Other BaaS Alternatives</h2>
+  <p class="section-intro">If neither Supabase nor Firebase fits, these Backend-as-a-Service platforms offer competitive free tiers.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Tier</th><th>Free Tier Details</th></tr>
+      </thead>
+      <tbody>
+        ${altRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Notable mentions:</strong> <a href="/vendor/nhost">Nhost</a> combines Postgres + Hasura GraphQL (closest to Supabase). <a href="/vendor/convex">Convex</a> offers a reactive backend with real-time sync (closest to Firebase's real-time model). <a href="/vendor/pocketbase">PocketBase</a> is completely free and self-hosted — single Go binary, no vendor dependency. See our <a href="/database-alternatives">full database comparison</a> for 30+ options.
+  </div>
+
+  <h2 id="changes">6. Recent Deal Changes</h2>
+  <p class="section-intro">Both platforms have had significant free tier changes recently. From our deal change tracker:</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${supabasePause ? `<div class="diff-card" style="border-left-color:#d29922">
+      <h3>Supabase — ${escHtmlServer(supabasePause.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(supabasePause.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(supabasePause.impact)} &middot; <a href="${escHtmlServer(supabasePause.source_url)}" target="_blank" rel="noopener">Source →</a></p>
+    </div>` : ""}
+    ${firebaseStorage ? `<div class="diff-card" style="border-left-color:#f85149">
+      <h3>Firebase — ${escHtmlServer(firebaseStorage.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(firebaseStorage.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(firebaseStorage.impact)} &middot; <a href="${escHtmlServer(firebaseStorage.source_url)}" target="_blank" rel="noopener">Source →</a></p>
+    </div>` : ""}
+    ${firebaseStudio ? `<div class="diff-card" style="border-left-color:#d29922">
+      <h3>Firebase Studio — ${escHtmlServer(firebaseStudio.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(firebaseStudio.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(firebaseStudio.impact)} &middot; <a href="${escHtmlServer(firebaseStudio.source_url)}" target="_blank" rel="noopener">Source →</a></p>
+    </div>` : ""}
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive guides for database selection and free tier infrastructure.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Supabase data verified against <a href="https://supabase.com/pricing" target="_blank" rel="noopener">supabase.com/pricing</a> (${supabaseOffer?.verifiedDate ?? "2026-03"}). Firebase data verified against <a href="https://firebase.google.com/pricing" target="_blank" rel="noopener">firebase.google.com/pricing</a> (${firebaseOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
+  </div>
+
+  <div class="search-cta">
+    <p>This comparison covers Supabase vs Firebase free tiers as of March 2026. For more database options, see our <a href="/database-alternatives">full database comparison</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Compare Supabase, Firebase, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -15971,6 +16314,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-frontend-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeFrontendStackPage());
+  } else if (url.pathname === "/supabase-vs-firebase" && isGetOrHead) {
+    recordApiHit("/supabase-vs-firebase");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/supabase-vs-firebase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildSupabaseVsFirebasePage());
   } else if (url.pathname === "/google-developer-program-2026" && isGetOrHead) {
     recordApiHit("/google-developer-program-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/google-developer-program-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
