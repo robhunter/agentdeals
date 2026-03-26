@@ -3913,6 +3913,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Railway",
     hubDesc: "Deep comparison of Railway and Render free tiers — usage-based vs fixed pricing, databases, sleep behavior, and scaling costs",
   },
+  {
+    slug: "datadog-vs-new-relic",
+    title: "Datadog vs New Relic Free Tier Comparison — 2026 Deep Dive",
+    metaDesc: "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, retention, synthetics — verified data, cost-at-scale analysis, and monitoring alternatives. Updated March 2026.",
+    contextHtml: "",
+    tag: "datadog-vs-new-relic",
+    primaryVendor: "Datadog",
+    hubDesc: "Deep comparison of Datadog and New Relic free tiers — per-host vs per-GB pricing, APM, logs, synthetics, and scaling costs",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -5489,7 +5498,7 @@ ${buildCards(startupPrograms)}
       <dd><a href="/vendor/prometheus">Prometheus</a> (metrics), <a href="/vendor/jaeger">Jaeger</a> (tracing), <a href="/vendor/sentry">Sentry</a> (errors, self-hosted option), and <a href="/vendor/netdata-cloud">Netdata</a> (real-time dashboards) form a comprehensive OSS monitoring stack. All CNCF projects or Apache-licensed.</dd>
 
       <dt>Coming from Datadog on a budget?</dt>
-      <dd>See our dedicated <a href="/datadog-alternatives">Datadog Alternatives</a> guide. TL;DR: <a href="/vendor/new-relic">New Relic</a> has 20x the free data ingest, <a href="/vendor/grafana-cloud">Grafana Cloud</a> eliminates vendor lock-in, and <a href="/vendor/axiom">Axiom</a> offers the best free log storage.</dd>
+      <dd>See our dedicated <a href="/datadog-alternatives">Datadog Alternatives</a> guide or our <a href="/datadog-vs-new-relic">Datadog vs New Relic</a> deep comparison. TL;DR: <a href="/vendor/new-relic">New Relic</a> has 20x the free data ingest, <a href="/vendor/grafana-cloud">Grafana Cloud</a> eliminates vendor lock-in, and <a href="/vendor/axiom">Axiom</a> offers the best free log storage.</dd>
     </dl>
   </div>
 
@@ -13666,6 +13675,333 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Datadog vs New Relic comparison page ---
+
+function buildDatadogVsNewRelicPage(): string {
+  const title = "Datadog vs New Relic — Free Tier Comparison (2026)";
+  const metaDesc = "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, synthetics, retention, alerting — verified data from 1,500+ developer tools. Per-host pricing vs per-GB pricing.";
+  const slug = "datadog-vs-new-relic";
+  const pubDate = "2026-03-26";
+
+  // Pull verified data from our index
+  const datadogOffer = offers.find(o => o.vendor === "Datadog" && o.category === "Monitoring");
+  const newRelicOffer = offers.find(o => o.vendor === "New Relic" && o.category === "Monitoring");
+
+  // Deal changes
+  const datadogChanges = dealChanges.filter(c => c.vendor === "Datadog");
+  const newRelicChanges = dealChanges.filter(c => c.vendor === "New Relic");
+  const relatedChanges = [...datadogChanges, ...newRelicChanges];
+
+  // Monitoring alternatives from index
+  const monitoringAlts = offers.filter(o =>
+    ["Grafana Cloud", "Sentry", "Axiom", "BetterStack", "Middleware.io"].includes(o.vendor) && o.category === "Monitoring"
+  );
+
+  // Comparison data
+  const comparisonRows = [
+    { feature: "Pricing Model", datadog: "Per-host", newrelic: "Per-GB data ingest", notes: "Fundamental architectural difference. Datadog charges per monitored host. New Relic charges per GB of data sent." },
+    { feature: "Free Hosts/Agents", datadog: "5 hosts", newrelic: "Unlimited", notes: "New Relic has no host limit on free tier. Datadog caps at 5 infrastructure hosts." },
+    { feature: "Data Ingest", datadog: "N/A (host-based)", newrelic: "100 GB/month", notes: "New Relic's 100 GB/mo covers all telemetry: metrics, events, logs, traces" },
+    { feature: "Metric Retention", datadog: "1 day", newrelic: "8+ days", notes: "Datadog's 1-day retention is very short for debugging. New Relic retains 8+ days on free tier" },
+    { feature: "APM / Tracing", datadog: "Not included (paid)", newrelic: "Included (all 50+ capabilities)", notes: "New Relic includes APM free. Datadog APM starts at $31/host/mo" },
+    { feature: "Log Management", datadog: "Not included (paid)", newrelic: "Included (within 100 GB)", notes: "New Relic includes logs free. Datadog log management starts at $0.10/GB ingested" },
+    { feature: "Synthetics", datadog: "Not included (paid)", newrelic: "500 checks/month", notes: "New Relic includes 500 synthetic checks. Datadog Synthetics starts at $5/1K API tests" },
+    { feature: "Infrastructure Monitoring", datadog: "Included (5 hosts)", newrelic: "Included (unlimited hosts)", notes: "Both include infra monitoring on free tier, but very different host limits" },
+    { feature: "Alerting", datadog: "Basic (5 hosts)", newrelic: "Full alerting + AI-powered", notes: "New Relic includes AIOps and anomaly detection. Datadog alerting scales with hosts" },
+    { feature: "Users", datadog: "Up to 5", newrelic: "1 full + unlimited basic", notes: "Datadog allows 5 users. New Relic gives 1 full-access user + unlimited basic (read-only) users" },
+    { feature: "Integrations", datadog: "750+ (limited on free)", newrelic: "650+ (all included)", notes: "Datadog has more total integrations but many require paid products. New Relic includes all on free tier" },
+  ];
+
+  const comparisonTableRows = comparisonRows.map(r => `<tr>
+      <td style="font-weight:600;white-space:nowrap">${escHtmlServer(r.feature)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#a855f7">${escHtmlServer(r.datadog)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.newrelic)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Key differences
+  const differences = [
+    { title: "Pricing Philosophy: Per-Host vs. Per-GB", desc: "Datadog charges per monitored host — costs scale linearly with infrastructure size regardless of data volume. New Relic charges per GB of data ingested — costs scale with observability depth regardless of host count. For teams with many hosts but low data volume, Datadog gets expensive fast. For teams ingesting massive logs/traces from few hosts, New Relic's per-GB model costs more." },
+    { title: "Free Tier Scope: Products vs. Platform", desc: "Datadog's free tier includes only infrastructure monitoring (5 hosts, 1-day retention) and feature flags. APM, logs, synthetics, RUM, security — all paid add-ons. New Relic's free tier includes ALL 50+ platform capabilities (APM, logs, infra, synthetics, browser, mobile, serverless, AIOps) — just capped at 100 GB/mo data. For startups wanting full observability without paying, New Relic is dramatically more generous." },
+    { title: "Data Retention: 1 Day vs. 8+ Days", desc: "Datadog's free tier retains metrics for only 1 day — barely enough to spot immediate issues, useless for trend analysis or debugging intermittent problems. New Relic retains data for 8+ days on the free tier, enough to compare week-over-week patterns and investigate issues after a weekend. This is one of the most impactful practical differences." },
+    { title: "Enterprise vs. Developer Experience", desc: "Datadog is widely considered the gold standard for enterprise observability — best-in-class per-product tools, deep AWS/GCP/Azure integrations, and mature compliance features. New Relic has repositioned as developer-friendly — the free tier is designed to get individual developers and startups using the platform with zero friction. Datadog sells to ops teams; New Relic sells to developers." },
+  ];
+
+  // Cost at scale — break-even analysis
+  const scalingComparison = [
+    { metric: "Cheapest paid plan", datadog: "Pro $15/host/mo (infra only)", newrelic: "Standard $0.30/GB over 100 GB", notes: "Datadog per-product pricing. New Relic charges only for data above free 100 GB" },
+    { metric: "10 hosts, light usage", datadog: "~$150/mo (Pro infra only)", newrelic: "$0/mo (under 100 GB)", notes: "New Relic free tier covers this. Datadog requires Pro at $15/host/mo" },
+    { metric: "10 hosts + APM", datadog: "~$460/mo ($15 infra + $31 APM/host)", newrelic: "$0-50/mo (depends on data volume)", notes: "Datadog APM at $31/host is a major cost multiplier. New Relic includes APM free" },
+    { metric: "50 hosts + full stack", datadog: "~$3,000-5,000/mo", newrelic: "~$300-1,000/mo (data-dependent)", notes: "At scale, Datadog's per-host model compounds across products. New Relic scales with data volume only" },
+    { metric: "Additional full user", datadog: "Included (up to 5 free)", newrelic: "$99/mo per full platform user", notes: "New Relic's per-user cost for full platform access is significant for larger teams" },
+    { metric: "Enterprise features", datadog: "Enterprise $23/host/mo + add-ons", newrelic: "Pro $0.50/GB + $349/user/mo", notes: "Both get expensive at enterprise scale but through different levers" },
+  ];
+
+  const scalingRows = scalingComparison.map(r => `<tr>
+      <td style="font-weight:600;font-size:.85rem">${escHtmlServer(r.metric)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#a855f7">${escHtmlServer(r.datadog)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.newrelic)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Monitoring alternative rows
+  const altRows = monitoringAlts.map(o => {
+    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    return `<tr>
+      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["monitoring-alternatives", "datadog-alternatives", "free-devops-stack", "free-startup-stack", "railway-vs-render"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: [
+      { "@type": "SoftwareApplication", name: "Datadog", url: "https://www.datadoghq.com" },
+      { "@type": "SoftwareApplication", name: "New Relic", url: "https://newrelic.com" },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:#a855f7}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.vs-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600}
+.vs-datadog{background:rgba(168,85,247,0.15);color:#a855f7}
+.vs-newrelic{background:rgba(63,185,80,0.15);color:#3fb950}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/monitoring-alternatives">Monitoring</a> &rsaquo; Datadog vs New Relic</div>
+  <h1>Datadog vs New Relic — Free Tier Comparison</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">5 hosts</div><div class="stat-label">Datadog Free</div></div>
+    <div class="stat-card"><div class="stat-number green">100 GB/mo</div><div class="stat-label">New Relic Free</div></div>
+    <div class="stat-card"><div class="stat-number">1 day</div><div class="stat-label">Datadog Retention</div></div>
+    <div class="stat-card"><div class="stat-number green">8+ days</div><div class="stat-label">New Relic Retention</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> Choose <strong>Datadog</strong> if you already use its ecosystem and need best-in-class per-product tooling with enterprise support. Choose <strong>New Relic</strong> if you want full-stack observability for free — APM, logs, synthetics, and 50+ capabilities included in the free tier.</p>
+    <p><strong>On free tiers:</strong> New Relic's free tier is dramatically more generous in scope. Datadog gives you 5 hosts with 1-day metric retention and infrastructure monitoring only. New Relic gives you 100 GB/month data ingest, unlimited hosts, 1 full platform user, and access to every product on the platform — APM, logs, browser, synthetics, AIOps, and more.</p>
+    <p><strong>The key framing:</strong> Datadog uses <strong>per-host pricing</strong> — costs scale with infrastructure size. New Relic uses <strong>per-GB pricing</strong> — costs scale with data volume. This fundamental difference determines which is cheaper at every scale point.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#comparison">Free Tier Comparison Table</a></li>
+      <li><a href="#differences">Key Differences</a></li>
+      <li><a href="#scale">Cost at Scale</a></li>
+      <li><a href="#when">When to Choose Each</a></li>
+      <li><a href="#alternatives">Other Monitoring Alternatives</a></li>
+      <li><a href="#changes">Recent Deal Changes</a></li>
+    </ol>
+  </div>
+
+  <h2 id="comparison">1. Free Tier Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-datadog">Datadog</span> and <span class="vs-badge vs-newrelic">New Relic</span> free tiers as of March 2026.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Feature</th><th style="color:#a855f7">Datadog Free</th><th style="color:#3fb950">New Relic Free</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${comparisonTableRows}
+      </tbody>
+    </table>
+  </div>
+  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${escHtmlServer(datadogOffer.description)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
+  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${escHtmlServer(newRelicOffer.description)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
+
+  <h2 id="differences">2. Key Differences</h2>
+  <p class="section-intro">Beyond the raw numbers, these structural differences define the Datadog vs New Relic choice.</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${differences.map((d, i) => `<div class="diff-card" style="border-left-color:${i % 2 === 0 ? "#a855f7" : "#3fb950"}">
+      <h3>${escHtmlServer(d.title)}</h3>
+      <p class="diff-desc">${escHtmlServer(d.desc)}</p>
+    </div>`).join("\n    ")}
+  </div>
+
+  <h2 id="scale">3. Cost at Scale</h2>
+  <p class="section-intro">Datadog Pro ($15/host/mo for infra) vs New Relic Standard ($0.30/GB over free 100 GB). Per-host vs per-GB — the economics diverge dramatically at scale.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Metric</th><th style="color:#a855f7">Datadog</th><th style="color:#3fb950">New Relic</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${scalingRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Break-even analysis:</strong> For small teams (under 10 hosts, moderate data volume), New Relic's free tier covers full observability at zero cost — Datadog would require $150+/mo for equivalent coverage. As host count grows, Datadog's per-host model compounds across each product (infra + APM + logs = $50-80/host/mo). New Relic scales with data volume instead, so teams generating less than 100 GB/mo of telemetry pay nothing regardless of host count. The crossover point where Datadog becomes cheaper is rare — it typically only happens for very large teams (100+ hosts) with very high data volumes where New Relic's per-GB costs exceed Datadog's per-host pricing. For most startups and mid-size teams, New Relic is significantly cheaper.
+  </div>
+
+  <h2 id="when">4. When to Choose Each</h2>
+  <div class="verdict-box">
+    <h3>Decision Guide</h3>
+    <div class="verdict-item">
+      <strong>Choose Datadog if:</strong>
+      <p>You have budget for best-in-class per-product tools and want deep AWS/GCP/Azure integrations, you need enterprise compliance features (HIPAA, SOC 2, FedRAMP), your team already uses the Datadog ecosystem, or you need specific Datadog-only capabilities like Continuous Profiler, Database Monitoring, or Network Performance Monitoring.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Choose New Relic if:</strong>
+      <p>You want full-stack observability for free (100 GB/mo covers most small-to-medium apps), you need APM + logs + synthetics without paying for each separately, you have many hosts but moderate data volumes, or you are a startup wanting enterprise-grade monitoring at zero cost. Best for: startups, indie developers, small teams, and anyone cost-conscious.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider Grafana Cloud if:</strong>
+      <p>You want an open-source observability stack (Prometheus, Loki, Tempo) with no vendor lock-in. Free tier includes 10K metric series, 50 GB logs, and 50 GB traces with 14-day retention. Great for Kubernetes-native teams already using Prometheus. See <a href="/vendor/grafana-cloud">Grafana Cloud profile</a>.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider self-hosted Prometheus + Grafana if:</strong>
+      <p>You need unlimited metrics with zero cost and full control. Prometheus (CNCF graduated) handles metrics collection, Grafana provides dashboards, and Jaeger or Tempo handles distributed tracing. No data caps, no vendor lock-in — but you manage the infrastructure. See our <a href="/monitoring-alternatives">monitoring comparison</a> for all options.</p>
+    </div>
+  </div>
+
+  <h2 id="alternatives">5. Other Monitoring Alternatives</h2>
+  <p class="section-intro">If neither Datadog nor New Relic fits, these platforms offer competitive free tiers for observability.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Tier</th><th>Free Tier Details</th></tr>
+      </thead>
+      <tbody>
+        ${altRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Notable mentions:</strong> <a href="/vendor/grafana-cloud">Grafana Cloud</a> offers the best open-source observability stack with 10K metric series and 50 GB logs free. <a href="/vendor/sentry">Sentry</a> excels at error tracking with 5K errors/mo and performance tracing. <a href="/vendor/axiom">Axiom</a> offers the most generous log storage at 500 GB/mo ingest. See our <a href="/monitoring-alternatives">full monitoring comparison</a> for 70+ options.
+  </div>
+
+  <h2 id="changes">6. Recent Deal Changes</h2>
+  <p class="section-intro">Pricing context from our deal change tracker. Monitoring is one of the most actively evolving pricing categories.</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${relatedChanges.length > 0 ? relatedChanges.map(c => `<div class="diff-card" style="border-left-color:#d29922">
+      <h3>${escHtmlServer(c.vendor)} — ${escHtmlServer(c.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(c.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(c.impact)} &middot; <a href="${escHtmlServer(c.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
+    </div>`).join("\n    ") : `<div class="context-box">No recent pricing changes tracked for Datadog or New Relic. Both vendors have maintained stable free tier limits through early 2026. Check our <a href="/changes">full pricing timeline</a> for all vendor changes.</div>`}
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive guides for monitoring and observability selection.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Datadog data verified against <a href="https://www.datadoghq.com/pricing/" target="_blank" rel="noopener">datadoghq.com/pricing</a> (${datadogOffer?.verifiedDate ?? "2026-03"}). New Relic data verified against <a href="https://newrelic.com/pricing" target="_blank" rel="noopener">newrelic.com/pricing</a> (${newRelicOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
+  </div>
+
+  <div class="search-cta">
+    <p>This comparison covers Datadog vs New Relic free tiers as of March 2026. For more monitoring options, see our <a href="/monitoring-alternatives">full monitoring comparison</a> with 70+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Compare Datadog, New Relic, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -17349,6 +17685,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/railway-vs-render", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildRailwayVsRenderPage());
+  } else if (url.pathname === "/datadog-vs-new-relic" && isGetOrHead) {
+    recordApiHit("/datadog-vs-new-relic");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/datadog-vs-new-relic", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDatadogVsNewRelicPage());
   } else if (url.pathname === "/google-developer-program-2026" && isGetOrHead) {
     recordApiHit("/google-developer-program-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/google-developer-program-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
