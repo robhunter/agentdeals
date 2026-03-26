@@ -3841,6 +3841,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Groq",
     hubDesc: "Complete free AI/ML development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
+  {
+    slug: "q2-pricing-preview-2026",
+    title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
+    metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
+    contextHtml: "",
+    tag: "q2-preview",
+    primaryVendor: "Hetzner",
+    hubDesc: "Q2 2026 pricing preview — upcoming changes, deadlines, impact analysis, and what to watch",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -10905,6 +10914,239 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Q2 2026 Pricing Preview ---
+
+function buildQ2PricingPreview2026Page(): string {
+  const title = "Q2 2026 Developer Pricing Preview — What's Changing April–June";
+  const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.";
+  const slug = "q2-pricing-preview-2026";
+  const pubDate = "2026-03-25";
+
+  // Confirmed Q2 changes from our deal_changes data
+  const q2Changes = dealChanges.filter(c => c.date >= "2026-04-01" && c.date <= "2026-06-30");
+  // Late Q1 changes with Q2 impact
+  const lateQ1Changes = dealChanges.filter(c => c.date >= "2026-03-25" && c.date < "2026-04-01");
+  // All timeline entries
+  const timelineChanges = [...lateQ1Changes, ...q2Changes].sort((a, b) => a.date.localeCompare(b.date));
+
+  const impactColors: Record<string, string> = { high: "#f85149", medium: "#d29922", low: "#3fb950" };
+  const changeTypeLabels: Record<string, string> = {
+    free_tier_removed: "Free Tier Removed",
+    limits_reduced: "Limits Reduced",
+    restriction: "Restriction Added",
+    pricing_restructured: "Pricing Restructured",
+    limits_increased: "Limits Increased",
+    new_free_tier: "New Free Tier",
+    startup_program_expanded: "Startup Program Expanded",
+    pricing_postponed: "Pricing Postponed",
+    product_deprecated: "Product Deprecated",
+    open_source_killed: "Open Source Killed",
+    pricing_model_change: "Pricing Model Change",
+  };
+
+  const buildChangeCard = (c: typeof dealChanges[0]) => {
+    const impactColor = impactColors[c.impact] ?? "#94a3b8";
+    const typeLabel = changeTypeLabels[c.change_type] ?? c.change_type.replace(/_/g, " ");
+    const vendorSlug = toSlug(c.vendor);
+    const hasEditorial = editorialByVendor.has(c.vendor.toLowerCase());
+    const editorialLink = hasEditorial ? ` <a href="/${editorialByVendor.get(c.vendor.toLowerCase())!.slug}" style="font-size:.75rem;color:var(--accent)">[alternatives guide]</a>` : "";
+    return `<div class="change-card" style="border-left-color:${impactColor}">
+      <div class="change-header">
+        <a href="/vendor/${vendorSlug}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
+        <span class="change-date">${c.date}</span>
+        <span class="change-impact" style="color:${impactColor}">${c.impact}</span>
+      </div>
+      <span class="change-type-badge" style="background:${impactColor}22;color:${impactColor}">${typeLabel}</span>${editorialLink}
+      <p class="change-summary">${escHtmlServer(c.summary)}</p>
+      <div class="change-states">
+        <div class="change-before"><strong>Before:</strong> ${escHtmlServer(c.previous_state)}</div>
+        <div class="change-after"><strong>After:</strong> ${escHtmlServer(c.current_state)}</div>
+      </div>
+      <a href="${escHtmlServer(c.source_url)}" target="_blank" rel="noopener" class="change-source">Source &nearr;</a>
+    </div>`;
+  };
+
+  const highImpact = timelineChanges.filter(c => c.impact === "high").length;
+  const uniqueVendors = new Set(timelineChanges.map(c => c.vendor)).size;
+
+  // "What to Watch" items — signals not yet confirmed as deal changes
+  const watchItems = [
+    { vendor: "GitHub Actions", signal: "Self-hosted runners now $0.002/min in private repos (started March 1). Q2 is the first full quarter of impact — watch for community migration patterns to alternatives like GitLab CI or Dagger.", impact: "medium" as const },
+    { vendor: "Microsoft 365", signal: "E3 price increase to $39.60/user/mo announced March 24. Takes effect in Q2. Not a developer tool per se, but signals broader Microsoft pricing trends that could affect Azure and GitHub.", impact: "medium" as const },
+    { vendor: "OpenAI", signal: "Assistants API deprecated with full shutdown August 26, 2026. Q2 is the migration window — developers must move to Responses API + Conversations API before the deadline.", impact: "high" as const },
+    { vendor: "AI API Providers", signal: "Competition intensifying: Groq, Cerebras, and OpenRouter offering generous free tiers while incumbents (OpenAI, Anthropic) focus on paid plans. Expect more free tier launches from challengers in Q2.", impact: "low" as const },
+    { vendor: "Cloud Providers", signal: "DRAM prices up 171% YoY driving Hetzner's increase. OVHcloud, Netcup also raising prices. AWS, GCP, Azure haven't announced increases yet, but memory-heavy instances may follow.", impact: "medium" as const },
+  ];
+
+  // Cross-links to related pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["q1-2026-developer-pricing-report", "hetzner-pricing-2026", "hosting-alternatives", "ci-cd-alternatives", "ai-ml-alternatives", "free-llm-apis"].includes(p.slug)
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: {
+      "@type": "Thing",
+      name: "Developer tool pricing changes Q2 2026",
+      description: `Forward-looking preview of ${timelineChanges.length} confirmed pricing changes plus signals to watch`,
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.change-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.change-card:hover{border-color:var(--accent)}
+.change-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.change-vendor{font-size:1.05rem;font-weight:600;color:var(--text)}
+.change-vendor:hover{color:var(--accent)}
+.change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
+.change-impact{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.change-type-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600;margin-bottom:.5rem}
+.change-summary{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem;line-height:1.6}
+.change-states{font-size:.8rem;color:var(--text-dim);margin-bottom:.5rem;line-height:1.6}
+.change-before,.change-after{margin-bottom:.25rem}
+.change-source{font-size:.75rem;color:var(--text-dim)}
+.change-source:hover{color:var(--accent)}
+.timeline-item{display:flex;gap:1rem;margin-bottom:1rem;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)}
+.timeline-date{flex:0 0 auto;font-family:var(--mono);font-size:.85rem;color:var(--accent);font-weight:600;min-width:90px}
+.timeline-content{flex:1}
+.timeline-vendor{font-weight:600;color:var(--text)}
+.timeline-summary{color:var(--text-muted);font-size:.85rem;margin-top:.25rem;line-height:1.5}
+.timeline-impact{font-size:.65rem;font-weight:600;padding:.1rem .35rem;border-radius:8px;margin-left:.5rem}
+.watch-item{padding:1rem 1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.watch-vendor{font-weight:600;color:var(--text);font-size:.95rem}
+.watch-signal{color:var(--text-muted);font-size:.9rem;margin-top:.25rem;line-height:1.6}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.timeline-item{flex-direction:column;gap:.25rem}.timeline-date{min-width:auto}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Q2 2026 Preview</div>
+  <h1>Q2 2026 Developer Pricing Preview</h1>
+  <p class="pub-date">Published ${pubDate} &middot; ${timelineChanges.length} confirmed changes + ${watchItems.length} signals to watch</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">${timelineChanges.length}</div><div class="stat-label">Confirmed Changes</div></div>
+    <div class="stat-card"><div class="stat-number">${highImpact}</div><div class="stat-label">High Impact</div></div>
+    <div class="stat-card"><div class="stat-number">${uniqueVendors}</div><div class="stat-label">Vendors Affected</div></div>
+    <div class="stat-card"><div class="stat-number">${watchItems.length}</div><div class="stat-label">Signals to Watch</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Q2 2026 brings infrastructure cost pressure.</strong> The biggest confirmed change is Hetzner's 30-50% price increase on April 1 — driven by DRAM costs up 171% YoY and AI-fueled chip demand. Google shuts down the Tenor GIF API on June 30. Several Q1-end changes (odrive removal, HCP Terraform migration, Google Developer Program restructuring) take full effect as Q2 begins.</p>
+    <p><strong>The broader trend:</strong> Cloud infrastructure costs are rising across Europe (OVHcloud, Netcup also raising prices). Meanwhile, AI API challengers (Groq, Cerebras, OpenRouter) are expanding free tiers to compete with incumbents. The gap between "cheap to prototype" and "expensive to scale" continues to widen.</p>
+    <p><strong>Key action item:</strong> If you're on Hetzner, evaluate alternatives or optimize before April 1. If you're using OpenAI Assistants API, start migration planning — the August shutdown deadline is within the Q2 planning window.</p>
+  </div>
+
+  <h2>Timeline</h2>
+  <p class="section-intro">Chronological view of confirmed pricing changes and deadlines in Q2 2026.</p>
+  ${timelineChanges.map(c => {
+    const impactColor = impactColors[c.impact] ?? "#94a3b8";
+    return `<div class="timeline-item">
+      <div class="timeline-date">${c.date}</div>
+      <div class="timeline-content">
+        <span class="timeline-vendor"><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></span>
+        <span class="timeline-impact" style="background:${impactColor}22;color:${impactColor}">${c.impact}</span>
+        <div class="timeline-summary">${escHtmlServer(c.summary.length > 180 ? c.summary.substring(0, 177) + "..." : c.summary)}</div>
+      </div>
+    </div>`;
+  }).join("\n  ")}
+
+  <h2>Impact Analysis</h2>
+  <p class="section-intro">Detailed breakdown of each confirmed change — who's affected, what to do, and alternatives.</p>
+  ${timelineChanges.map(buildChangeCard).join("\n  ")}
+
+  <h2>What to Watch in Q2</h2>
+  <p class="section-intro">Signals and trends that haven't materialized as confirmed changes yet, but could impact developer infrastructure costs.</p>
+  ${watchItems.map(w => {
+    const impactColor = impactColors[w.impact] ?? "#94a3b8";
+    return `<div class="watch-item" style="border-left-color:${impactColor}">
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <span class="watch-vendor">${escHtmlServer(w.vendor)}</span>
+        <span class="timeline-impact" style="background:${impactColor}22;color:${impactColor}">${w.impact}</span>
+      </div>
+      <p class="watch-signal">${escHtmlServer(w.signal)}</p>
+    </div>`;
+  }).join("\n  ")}
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive pages for tools and categories affected by Q2 changes.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  <div class="search-cta">
+    <p>This preview covers Q2 2026 (April–June). For the Q1 2026 retrospective, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. For the full timeline of all ${dealChanges.length} tracked changes, visit <a href="/changes">/changes</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track pricing changes from your AI assistant. Get alerts on free tier removals, limit reductions, and new deals — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -14568,6 +14810,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/q1-2026-developer-pricing-report", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildQ1PricingReportPage());
+  } else if (url.pathname === "/q2-pricing-preview-2026" && isGetOrHead) {
+    recordApiHit("/q2-pricing-preview-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/q2-pricing-preview-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildQ2PricingPreview2026Page());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
