@@ -3851,6 +3851,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Complete free DevOps infrastructure stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
   {
+    slug: "free-frontend-stack",
+    title: "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development",
+    metaDesc: "Build and ship frontend projects on free tiers. 10 categories — hosting, CDN, CMS, forms, analytics, error tracking, image optimization, and more. Exact limits, scaling guidance. Updated March 2026.",
+    contextHtml: "",
+    tag: "frontend-stack-guide",
+    primaryVendor: "Cloudflare Pages",
+    hubDesc: "Complete free frontend/Jamstack development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
+  },
+  {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
     metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
@@ -10727,6 +10736,359 @@ ${ossAlternatives.map(oss => `      <tr>
 </html>`;
 }
 
+// --- Free Frontend Stack Guide ---
+
+function buildFreeFrontendStackPage(): string {
+  const title = "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development";
+  const metaDesc = "Build and ship frontend projects on free tiers. 10 categories — hosting, CDN, CMS, forms, analytics, error tracking, image optimization, and more. Exact limits, scaling guidance. Updated March 2026.";
+  const slug = "free-frontend-stack";
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  const stackCategories = [
+    {
+      name: "Static & Edge Hosting",
+      icon: "🌐",
+      recommended: { vendor: "Cloudflare Pages", why: "Unlimited bandwidth, 500 builds/month, 1 build at a time. Automatic edge deployment to 300+ locations. Git integration, preview deploys, and serverless Functions included. The most generous free hosting for static and Jamstack sites." },
+      alternatives: ["Vercel", "Netlify", "GitHub Pages"],
+      outgrow: "When you need more than 500 builds/month or concurrent builds. Vercel offers 100 GB bandwidth with serverless functions. Netlify gives 100 GB bandwidth and 300 build minutes. GitHub Pages is unlimited bandwidth for public repos but static-only.",
+      relatedPage: "/hosting-alternatives",
+    },
+    {
+      name: "CDN & Edge Network",
+      icon: "⚡",
+      recommended: { vendor: "Cloudflare", why: "Unlimited bandwidth, global CDN across 300+ locations, DDoS protection, SSL, and caching — all free. No bandwidth caps, no request limits. The industry default for frontend delivery." },
+      alternatives: ["Fastly", "KeyCDN", "BunnyCDN"],
+      outgrow: "When you need advanced features like image optimization, video delivery, or custom caching rules beyond the free tier. Fastly offers free CDN for open-source projects. BunnyCDN starts at $0.01/GB with a 14-day trial.",
+      relatedPage: "/storage-alternatives",
+    },
+    {
+      name: "Headless CMS",
+      icon: "📝",
+      recommended: { vendor: "Sanity", why: "Free Spark plan: 100K API requests/month, 500K API CDN requests, 10 GB bandwidth, 5 GB assets. Real-time collaborative editing, GROQ query language, and a customizable Studio. Generous enough for most content sites." },
+      alternatives: ["Strapi", "Contentful", "Hygraph"],
+      outgrow: "When you exceed 100K API requests/month or need more than 3 non-admin users. Strapi is self-hosted and completely free (unlimited everything). Contentful offers 25K records and 2M API calls. Hygraph gives 1M API operations/month on its free plan.",
+      relatedPage: null,
+    },
+    {
+      name: "Forms & User Input",
+      icon: "📋",
+      recommended: { vendor: "Tally", why: "Unlimited forms, unlimited submissions, no branding on the free tier. Conditional logic, file uploads, payment collection, and integrations. The most generous free form builder — no per-submission caps." },
+      alternatives: ["Formspree", "Google Forms", "Typeform"],
+      outgrow: "When you need custom domains, team collaboration, or advanced integrations beyond webhooks. Formspree offers 50 submissions/month with API access. Typeform gives 10 responses/month with beautiful conversational forms.",
+      relatedPage: null,
+    },
+    {
+      name: "Frontend Analytics",
+      icon: "📊",
+      recommended: { vendor: "PostHog", why: "1 million events/month free, with product analytics, session replay (5K recordings), feature flags, A/B testing, and surveys. The most complete analytics platform on a free tier — replaces 3-4 separate tools." },
+      alternatives: ["Plausible", "Umami", "Google Analytics"],
+      outgrow: "When you exceed 1M events/month or need more than 5K session replays. Plausible CE is self-hosted and unlimited. Umami is another self-hosted option with a simpler dashboard. Google Analytics is free at any scale but privacy-invasive.",
+      relatedPage: "/analytics-alternatives",
+    },
+    {
+      name: "Error & Performance Monitoring",
+      icon: "🐛",
+      recommended: { vendor: "Sentry", why: "Developer tier: 5K errors/month, 5M spans/month, 50 session replays, 5 GB attachments. Real-time error tracking with stack traces, source maps, breadcrumbs, and release tracking. 1 user free." },
+      alternatives: ["Highlight.io", "LogRocket", "Bugsnag"],
+      outgrow: "When you exceed 5K errors/month or need more than 1 user. Highlight.io offers 500 sessions + 1K errors + 1M logs bundled. LogRocket gives 1K sessions/month with full session replay and performance monitoring.",
+      relatedPage: "/monitoring-alternatives",
+    },
+    {
+      name: "Image Optimization & Media",
+      icon: "🖼️",
+      recommended: { vendor: "Cloudinary", why: "25 credits/month (roughly 25K transformations or 25 GB managed storage). On-the-fly image and video transformations, responsive delivery, lazy loading, and format optimization. The standard for frontend media delivery." },
+      alternatives: ["imgix", "TinyPNG", "Cloudflare Images"],
+      outgrow: "When you exceed 25 credits/month or need video streaming. imgix offers 1K master images free for open source. TinyPNG API has 500 free compressions/month. Cloudflare Images starts at $5/month for 100K images stored.",
+      relatedPage: null,
+    },
+    {
+      name: "Email & Newsletters",
+      icon: "✉️",
+      recommended: { vendor: "Resend", why: "3,000 emails/month, 100 emails/day on the free tier. Modern developer-first email API with React Email support, deliverability insights, and simple SDK. Perfect for transactional emails and small newsletters." },
+      alternatives: ["Buttondown", "Mailchimp", "Brevo"],
+      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 500 contacts with marketing automation. Brevo offers 300 emails/day with no subscriber limits.",
+      relatedPage: "/email-alternatives",
+    },
+    {
+      name: "Design & Prototyping",
+      icon: "🎨",
+      recommended: { vendor: "Figma", why: "Free for up to 3 Figma files and 3 FigJam files. Real-time collaboration, components, auto-layout, Dev Mode preview. The industry standard for UI design and handoff — most component libraries ship Figma files." },
+      alternatives: ["Penpot", "Canva", "Framer"],
+      outgrow: "When you need more than 3 active files or team libraries. Penpot is open-source with unlimited files — self-hosted or free cloud. Canva offers free design with templates. Framer provides free website publishing with its design tool.",
+      relatedPage: "/design-alternatives",
+    },
+    {
+      name: "Feature Flags & A/B Testing",
+      icon: "🚩",
+      recommended: { vendor: "PostHog", why: "1 million API requests/month for feature flags, plus built-in A/B testing and multivariate experiments. No separate tool needed — same platform as your analytics. Includes targeting by user properties, percentages, and cohorts." },
+      alternatives: ["Flagsmith", "Unleash", "LaunchDarkly"],
+      outgrow: "When you exceed 1M feature flag requests/month or need advanced targeting. Flagsmith offers 50K requests/month with a self-hosted option. Unleash is open-source for self-hosting. LaunchDarkly's free Developer tier supports 1K MAU.",
+      relatedPage: null,
+    },
+  ];
+
+  const resolveVendor = (vendorName: string) => {
+    const offer = offers.find(o => o.vendor === vendorName);
+    if (!offer) return null;
+    return enrichOffers([offer])[0];
+  };
+
+  const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
+  const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-03-26",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const categorySections = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
+
+    const recCard = rec ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <div class="pick-links">
+          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>` : "";
+
+    const altCards = altVendors.length > 0 ? `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
+      </div>` : "";
+
+    const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
+
+    return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      ${recCard}
+      ${altCards}
+      <div class="outgrow-box">
+        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+      </div>
+      ${relatedLink}
+    </div>`;
+  }).join("\n");
+
+  const stabilityNotes = stackChanges.length > 0 ? `
+  <h2>Stability Notes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <div class="stability-list">
+    ${stackChanges.slice(0, 12).map(c => {
+      const typeColors: Record<string, string> = {
+        free_tier_removed: "#f85149", limits_reduced: "#d29922", pricing_restructured: "#d29922",
+        restriction: "#d29922", limits_increased: "#3fb950", new_free_tier: "#3fb950",
+        pricing_postponed: "#3fb950", startup_program_expanded: "#3fb950", product_deprecated: "#f85149",
+      };
+      const color = typeColors[c.change_type] ?? "#94a3b8";
+      return `<div class="stability-item">
+        <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+      </div>`;
+    }).join("\n    ")}
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+
+  const tableRows = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    return `      <tr>
+        <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
+        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
+        <td>${riskBadge}</td>
+      </tr>`;
+  }).join("\n");
+
+  const ossAlternatives = [
+    { category: "Hosting", tool: "Hugo / Astro", desc: "Static site generators — build locally, deploy anywhere. Hugo is the fastest SSG; Astro supports React/Vue/Svelte islands." },
+    { category: "CDN", tool: "Caddy + Varnish", desc: "Self-hosted reverse proxy with automatic HTTPS (Caddy) and HTTP cache (Varnish). Full CDN behavior on your own infrastructure." },
+    { category: "CMS", tool: "Strapi", desc: "Open-source headless CMS. Self-hosted, unlimited content types and entries. REST and GraphQL APIs. Full admin panel." },
+    { category: "Forms", tool: "Formio", desc: "Open-source form builder with drag-and-drop UI, conditional logic, and submissions management. Self-hosted, unlimited forms." },
+    { category: "Analytics", tool: "Plausible CE / Umami", desc: "Privacy-first self-hosted analytics. No cookies, GDPR-compliant, lightweight script. Unlimited pageviews and sites." },
+    { category: "Error Tracking", tool: "Sentry (self-hosted)", desc: "Full Sentry platform self-hosted. Unlimited errors, users, and projects. Docker Compose deployment." },
+    { category: "Images", tool: "imgproxy", desc: "On-the-fly image processing server. Resize, crop, convert formats. Tiny memory footprint, fast Go implementation." },
+    { category: "Design", tool: "Penpot", desc: "Open-source design and prototyping platform. Real-time collaboration, SVG-native, no file limits. Self-hosted or free cloud." },
+  ];
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.cost-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
+.cost-banner .cost-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.cost-banner .cost-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
+.stack-category{border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;background:var(--bg-card)}
+.stack-category h2{margin:0 0 1rem;font-size:1.25rem}
+.cat-icon{margin-right:.5rem}
+.stack-pick{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:rgba(59,130,246,0.05);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.pick-badge{font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;background:var(--accent);color:#fff}
+.pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.pick-name:hover{color:var(--accent)}
+.pick-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.pick-why{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:.5rem}
+.pick-limits{font-family:var(--mono);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
+.pick-links a{color:var(--accent)}
+.alt-picks{margin-bottom:1rem}
+.alt-label{color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem}
+.alt-chip{display:inline-block;padding:.3rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text);margin:.25rem .25rem .25rem 0;transition:border-color .15s}
+.alt-chip:hover{border-color:var(--accent);text-decoration:none}
+.chip-tier{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-left:.25rem}
+.outgrow-box{background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.2);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.outgrow-box strong{color:var(--text)}
+.related-link{display:block;margin-top:.75rem;font-size:.85rem}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.stability-list{display:flex;flex-direction:column;gap:.5rem}
+.stability-item{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5;background:var(--bg-card)}
+.stability-item strong{color:var(--text)}
+.stability-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.1rem .4rem;border-radius:8px;margin-right:.5rem}
+.oss-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.oss-table th,.oss-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.oss-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.oss-table tr:hover{background:var(--accent-glow)}
+.oss-table td:first-child{font-weight:600;color:var(--text)}
+.oss-tool{color:var(--accent);font-weight:600}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.oss-table{font-size:.75rem}.oss-table th,.oss-table td{padding:.4rem .5rem}.cost-banner .cost-amount{font-size:2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Frontend Stack</div>
+  <h1>The Complete Free Frontend Stack</h1>
+
+  <div class="context">
+    <p>Everything you need to build, deploy, and ship frontend projects — without spending a dollar. This guide recommends the best free tier for each layer of a frontend/Jamstack stack — <strong>10 categories</strong> from static hosting to feature flags — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Designed for solo developers, freelancers, and small teams building websites, web apps, and Jamstack projects. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified March 2026.</p>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
+    <div class="cost-label">Total estimated monthly cost for a personal site or small project</div>
+  </div>
+
+  <h2>Stack Overview</h2>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Recommended</th>
+        <th>Key Limit</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+  </div>
+
+${categorySections}
+
+${stabilityNotes}
+
+  <h2>Open-Source Self-Hosted Alternatives</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">For each category, there's an open-source option you can run on your own hardware — no limits, no vendor lock-in, complete control over your stack.</p>
+  <div style="overflow-x:auto">
+  <table class="oss-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Tool</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+${ossAlternatives.map(oss => `      <tr>
+        <td>${escHtmlServer(oss.category)}</td>
+        <td class="oss-tool">${escHtmlServer(oss.tool)}</td>
+        <td style="color:var(--text-muted)">${escHtmlServer(oss.desc)}</td>
+      </tr>`).join("\n")}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>When You'll Outgrow Free Tiers</h2>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:1rem">Most personal sites, portfolios, and small projects can run their entire frontend stack on free tiers indefinitely. Here's what typically hits limits first:</p>
+    <ol style="color:var(--text-muted);font-size:.9rem;line-height:2;padding-left:1.5rem">
+      <li><strong>Build minutes</strong> (Cloudflare Pages 500/month) — frequent deploys and large sites burn through builds fast</li>
+      <li><strong>CMS content</strong> (Sanity 100K API requests) — high-traffic content sites with many pages and API calls</li>
+      <li><strong>Analytics events</strong> (PostHog 1M/month) — high-traffic sites with detailed event tracking</li>
+      <li><strong>Error volume</strong> (Sentry 5K/month) — production apps with noisy error reporting</li>
+      <li><strong>Image transformations</strong> (Cloudinary 25 credits) — media-heavy sites with many image variants</li>
+    </ol>
+    <p style="color:var(--text-dim);font-size:.85rem;margin-top:1rem">The good news: bandwidth is rarely the bottleneck. Cloudflare Pages and Cloudflare CDN offer unlimited bandwidth on free tiers. The self-hosted alternatives above have no limits at all.</p>
+  </div>
+
+  <div class="search-cta">
+    <p>Need backend infrastructure too? See our <a href="/free-startup-stack">Free Startup Stack</a> for databases, auth, and backend hosting. Building DevOps? Check the <a href="/free-devops-stack">Free DevOps Stack</a>. Or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get personalized frontend stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your Jamstack infrastructure — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Hetzner April 2026 Pricing Analysis ---
 
 function buildHetznerPricing2026Page(): string {
@@ -15168,6 +15530,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-devops-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeDevopsStackPage());
+  } else if (url.pathname === "/free-frontend-stack" && isGetOrHead) {
+    recordApiHit("/free-frontend-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-frontend-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeFrontendStackPage());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

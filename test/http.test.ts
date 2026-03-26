@@ -2242,6 +2242,39 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /free-frontend-stack renders frontend stack guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/free-frontend-stack`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Complete Free Frontend Stack"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("$0"), "Should show $0 cost");
+    assert.ok(html.includes("Static"), "Should have hosting category");
+    assert.ok(html.includes("CDN"), "Should have CDN category");
+    assert.ok(html.includes("Headless CMS"), "Should have CMS category");
+    assert.ok(html.includes("Forms"), "Should have forms category");
+    assert.ok(html.includes("Analytics"), "Should have analytics category");
+    assert.ok(html.includes("Error"), "Should have error tracking category");
+    assert.ok(html.includes("Image"), "Should have image optimization category");
+    assert.ok(html.includes("Email"), "Should have email category");
+    assert.ok(html.includes("Design"), "Should have design category");
+    assert.ok(html.includes("Feature Flags"), "Should have feature flags category");
+    assert.ok(html.includes("Cloudflare Pages"), "Should recommend Cloudflare Pages");
+    assert.ok(html.includes("PostHog"), "Should recommend PostHog");
+    assert.ok(html.includes("Sentry"), "Should recommend Sentry");
+    assert.ok(html.includes("Cloudinary"), "Should recommend Cloudinary");
+    assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
+    assert.ok(html.includes("Open-Source Self-Hosted"), "Should have OSS section");
+    assert.ok(html.includes("Stack Overview"), "Should have overview table");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
