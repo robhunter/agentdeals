@@ -2423,6 +2423,34 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/vercel-vs-netlify"), "Should cross-link to Vercel vs Netlify");
   });
 
+  it("GET /datadog-vs-new-relic renders comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/datadog-vs-new-relic`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Datadog vs New Relic"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Free Tier Comparison Table"), "Should have comparison section");
+    assert.ok(html.includes("Key Differences"), "Should have differences section");
+    assert.ok(html.includes("Cost at Scale"), "Should have cost section");
+    assert.ok(html.includes("When to Choose Each"), "Should have decision guide");
+    assert.ok(html.includes("Other Monitoring Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("Recent Deal Changes"), "Should have changes section");
+    assert.ok(html.includes("5 hosts"), "Should include Datadog host limit");
+    assert.ok(html.includes("100 GB"), "Should include New Relic data ingest");
+    assert.ok(html.includes("1 day"), "Should highlight Datadog retention");
+    assert.ok(html.includes("Grafana Cloud") || html.includes("Sentry"), "Should include monitoring alternatives");
+    assert.ok(html.includes("/monitoring-alternatives"), "Should cross-link to monitoring hub");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/vendor/datadog"), "Should link to Datadog profile");
+    assert.ok(html.includes("/vendor/new-relic"), "Should link to New Relic profile");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
