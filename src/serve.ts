@@ -3842,6 +3842,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Complete free AI/ML development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
   {
+    slug: "free-devops-stack",
+    title: "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops",
+    metaDesc: "Build and run infrastructure on free tiers. 10 DevOps categories — CI/CD, monitoring, logging, container registries, secrets management, and more. Exact limits, scaling guidance. Updated March 2026.",
+    contextHtml: "",
+    tag: "devops-stack-guide",
+    primaryVendor: "GitHub Actions",
+    hubDesc: "Complete free DevOps infrastructure stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
+  },
+  {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
     metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
@@ -10364,6 +10373,360 @@ ${ossAlternatives.map(oss => `      <tr>
 </html>`;
 }
 
+// --- Free DevOps Stack Guide ---
+
+function buildFreeDevopsStackPage(): string {
+  const title = "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops";
+  const metaDesc = "Build and run infrastructure on free tiers. 10 DevOps categories — CI/CD, monitoring, logging, container registries, secrets management, and more. Exact limits, scaling guidance. Updated March 2026.";
+  const slug = "free-devops-stack";
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  const stackCategories = [
+    {
+      name: "CI/CD Pipeline",
+      icon: "🔄",
+      recommended: { vendor: "GitHub Actions", why: "Unlimited minutes for public repos, 2,000 min/month for private repos. Native GitHub integration with 19,000+ marketplace actions. The default CI/CD for most open-source and private projects." },
+      alternatives: ["GitLab CI", "CircleCI", "Harness CI", "Buildkite"],
+      outgrow: "When you exceed 2,000 private-repo minutes/month or need more than 20 concurrent jobs. GitLab CI (400 min/month) is a solid alternative with built-in container registry.",
+      relatedPage: "/ci-cd-alternatives",
+    },
+    {
+      name: "Monitoring & APM",
+      icon: "📊",
+      recommended: { vendor: "Grafana Cloud", why: "10K metric series, 50 GB logs, 50 GB traces with 14-day retention. 3 users free. The most generous free observability stack — dashboards, alerting, and tracing in one platform." },
+      alternatives: ["New Relic", "Datadog", "Sentry", "AppSignal"],
+      outgrow: "When you exceed 10K active metric series or need longer retention than 14 days. New Relic offers 100 GB data ingest/month with 1 full platform user — better for single-operator setups.",
+      relatedPage: "/monitoring-alternatives",
+    },
+    {
+      name: "Uptime Monitoring",
+      icon: "🟢",
+      recommended: { vendor: "BetterStack", why: "10 uptime monitors with 3-minute checks, incident management, and status pages. Plus 3 GB logs and 100K exceptions/month. Best all-in-one uptime + incident platform on a free tier." },
+      alternatives: ["UptimeRobot", "StatusCake", "Healthchecks.io", "Cronitor"],
+      outgrow: "When you need more than 10 monitors or sub-minute check intervals. UptimeRobot offers 50 monitors free but with 5-minute intervals. Healthchecks.io is ideal for cron job monitoring specifically.",
+      relatedPage: "/monitoring-alternatives",
+    },
+    {
+      name: "Logging & Log Management",
+      icon: "📝",
+      recommended: { vendor: "Axiom", why: "500 GB ingest/month with 30-day retention — orders of magnitude more than competitors. SQL-compatible queries, dashboards, and alerting. 2 users free." },
+      alternatives: ["Grafana Cloud", "Papertrail", "Highlight.io", "Baselime"],
+      outgrow: "When you need more than 2 users or longer than 30-day retention. Grafana Cloud's 50 GB logs integrate with its metrics and traces — better if you're already using Grafana for monitoring.",
+      relatedPage: null,
+    },
+    {
+      name: "Incident Management",
+      icon: "🚨",
+      recommended: { vendor: "PagerDuty", why: "Free for up to 5 users with 1 on-call schedule, 1 escalation policy, and 100 integrations. The industry standard for on-call — integrates with everything." },
+      alternatives: ["incident.io", "BetterStack"],
+      outgrow: "When you need more than 1 on-call schedule or more than 5 users. incident.io's free plan includes Slack-native incident workflows. BetterStack bundles uptime monitoring with on-call.",
+      relatedPage: "/monitoring-alternatives",
+    },
+    {
+      name: "Container Registry",
+      icon: "📦",
+      recommended: { vendor: "GitHub Container Registry", why: "Unlimited public container images, free for public repos. Tight integration with GitHub Actions for CI/CD pipelines. No pull rate limits for authenticated users." },
+      alternatives: ["Docker Hub", "Quay.io", "Amazon ECR Public"],
+      outgrow: "When you need private container images beyond GitHub's included storage. Docker Hub allows 1 free private repo with 200 pulls per 6-hour window. For high-volume pulls, Amazon ECR Public offers 500 GB/month bandwidth.",
+      relatedPage: null,
+    },
+    {
+      name: "Cloud Hosting & PaaS",
+      icon: "🖥️",
+      recommended: { vendor: "Railway", why: "$5/month Hobby plan with $5 credit included — effectively free for small workloads. 48 GB RAM, 48 vCPU available. Simple Git-based deploys with managed Postgres, Redis, and cron." },
+      alternatives: ["Render", "Cloudflare Workers", "Koyeb", "Fly.io"],
+      outgrow: "When your workloads exceed the $5 credit. Render's free web services (512 MB RAM, 0.1 CPU) are truly free but spin down on inactivity. Cloudflare Workers offers 100K requests/day for edge compute.",
+      relatedPage: "/hosting-alternatives",
+    },
+    {
+      name: "Infrastructure as Code",
+      icon: "🏗️",
+      recommended: { vendor: "HCP Terraform", why: "HashiCorp-managed Terraform with enhanced free tier: 500 managed resources, remote state, VCS integration, and run tasks. The standard for multi-cloud infrastructure provisioning." },
+      alternatives: ["Pulumi", "Spacelift", "Scalr"],
+      outgrow: "When you exceed 500 managed resources or need team collaboration features. Pulumi's free Individual plan offers unlimited projects with state management. Spacelift adds policy-as-code and drift detection.",
+      relatedPage: null,
+    },
+    {
+      name: "Secrets Management",
+      icon: "🔐",
+      recommended: { vendor: "Doppler", why: "Up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations with all major platforms. The simplest secrets management with automatic rotation and sync." },
+      alternatives: ["Infisical", "HashiCorp Vault", "Google Secret Manager"],
+      outgrow: "When you exceed 3 users or 10 projects. Infisical offers 5 identities and 3 projects free with K8s operator. HashiCorp Vault (self-hosted) is unlimited but requires ops investment.",
+      relatedPage: null,
+    },
+    {
+      name: "Error Tracking",
+      icon: "🐛",
+      recommended: { vendor: "Sentry", why: "Developer tier: 5K errors/month, 5M spans/month, 50 session replays, 5 GB attachments. Real-time error tracking with stack traces, breadcrumbs, and release tracking. 1 user free." },
+      alternatives: ["Highlight.io", "BetterStack", "AppSignal"],
+      outgrow: "When you exceed 5K errors/month or need more than 1 user. Highlight.io offers 500 sessions + 1K errors + 1M logs bundled. BetterStack includes 100K exceptions/month in its free tier.",
+      relatedPage: "/monitoring-alternatives",
+    },
+  ];
+
+  const resolveVendor = (vendorName: string) => {
+    const offer = offers.find(o => o.vendor === vendorName);
+    if (!offer) return null;
+    return enrichOffers([offer])[0];
+  };
+
+  const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
+  const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-03-25",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const categorySections = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
+
+    const recCard = rec ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <div class="pick-links">
+          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>` : "";
+
+    const altCards = altVendors.length > 0 ? `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
+      </div>` : "";
+
+    const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
+
+    return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      ${recCard}
+      ${altCards}
+      <div class="outgrow-box">
+        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+      </div>
+      ${relatedLink}
+    </div>`;
+  }).join("\n");
+
+  const stabilityNotes = stackChanges.length > 0 ? `
+  <h2>Stability Notes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <div class="stability-list">
+    ${stackChanges.slice(0, 12).map(c => {
+      const typeColors: Record<string, string> = {
+        free_tier_removed: "#f85149", limits_reduced: "#d29922", pricing_restructured: "#d29922",
+        restriction: "#d29922", limits_increased: "#3fb950", new_free_tier: "#3fb950",
+        pricing_postponed: "#3fb950", startup_program_expanded: "#3fb950", product_deprecated: "#f85149",
+      };
+      const color = typeColors[c.change_type] ?? "#94a3b8";
+      return `<div class="stability-item">
+        <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+      </div>`;
+    }).join("\n    ")}
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+
+  const tableRows = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    return `      <tr>
+        <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
+        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
+        <td>${riskBadge}</td>
+      </tr>`;
+  }).join("\n");
+
+  // Open-source self-hosted alternatives
+  const ossAlternatives = [
+    { category: "CI/CD", tool: "Gitea Actions", desc: "GitHub Actions-compatible CI/CD built into Gitea. Self-host for unlimited minutes and runners." },
+    { category: "Monitoring", tool: "Prometheus + Grafana", desc: "Industry-standard metrics collection and visualization. Unlimited metrics, retention, and users." },
+    { category: "Uptime", tool: "Uptime Kuma", desc: "Beautiful self-hosted uptime monitoring. Unlimited monitors, 1-second intervals, notification integrations." },
+    { category: "Logging", tool: "ELK Stack", desc: "Elasticsearch + Logstash + Kibana. Unlimited log ingestion, powerful full-text search, custom dashboards." },
+    { category: "Incident Management", tool: "Grafana OnCall", desc: "Open-source on-call management. Integrates with Grafana, Slack, PagerDuty. Unlimited users and schedules." },
+    { category: "Container Registry", tool: "Harbor", desc: "CNCF graduated container registry. RBAC, vulnerability scanning, image signing, replication. Unlimited storage." },
+    { category: "IaC", tool: "OpenTofu", desc: "Open-source Terraform fork (MPL 2.0). Drop-in compatible, community-driven, no vendor lock-in." },
+    { category: "Secrets", tool: "HashiCorp Vault (OSS)", desc: "Self-hosted secrets management. Dynamic secrets, encryption as a service, identity-based access." },
+  ];
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.cost-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
+.cost-banner .cost-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.cost-banner .cost-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
+.stack-category{border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;background:var(--bg-card)}
+.stack-category h2{margin:0 0 1rem;font-size:1.25rem}
+.cat-icon{margin-right:.5rem}
+.stack-pick{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:rgba(59,130,246,0.05);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.pick-badge{font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;background:var(--accent);color:#fff}
+.pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.pick-name:hover{color:var(--accent)}
+.pick-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.pick-why{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:.5rem}
+.pick-limits{font-family:var(--mono);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
+.pick-links a{color:var(--accent)}
+.alt-picks{margin-bottom:1rem}
+.alt-label{color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem}
+.alt-chip{display:inline-block;padding:.3rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text);margin:.25rem .25rem .25rem 0;transition:border-color .15s}
+.alt-chip:hover{border-color:var(--accent);text-decoration:none}
+.chip-tier{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-left:.25rem}
+.outgrow-box{background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.2);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.outgrow-box strong{color:var(--text)}
+.related-link{display:block;margin-top:.75rem;font-size:.85rem}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.stability-list{display:flex;flex-direction:column;gap:.5rem}
+.stability-item{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5;background:var(--bg-card)}
+.stability-item strong{color:var(--text)}
+.stability-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.1rem .4rem;border-radius:8px;margin-right:.5rem}
+.oss-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.oss-table th,.oss-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.oss-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.oss-table tr:hover{background:var(--accent-glow)}
+.oss-table td:first-child{font-weight:600;color:var(--text)}
+.oss-tool{color:var(--accent);font-weight:600}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.oss-table{font-size:.75rem}.oss-table th,.oss-table td{padding:.4rem .5rem}.cost-banner .cost-amount{font-size:2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free DevOps Stack</div>
+  <h1>The Complete Free DevOps Stack</h1>
+
+  <div class="context">
+    <p>Everything you need to build, deploy, and operate software infrastructure — without spending a dollar. This guide recommends the best free tier for each layer of a DevOps stack — <strong>10 categories</strong> from CI/CD pipelines to secrets management — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Designed for solo developers, small teams, and startups setting up their first production infrastructure. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified March 2026.</p>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
+    <div class="cost-label">Total estimated monthly cost for a solo developer or small team</div>
+  </div>
+
+  <h2>Stack Overview</h2>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Recommended</th>
+        <th>Key Limit</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+  </div>
+
+${categorySections}
+
+${stabilityNotes}
+
+  <h2>Open-Source Self-Hosted Alternatives</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">For each category, there's an open-source option you can run on your own hardware — no limits, no vendor lock-in, complete control over your infrastructure.</p>
+  <div style="overflow-x:auto">
+  <table class="oss-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Tool</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+${ossAlternatives.map(oss => `      <tr>
+        <td>${escHtmlServer(oss.category)}</td>
+        <td class="oss-tool">${escHtmlServer(oss.tool)}</td>
+        <td style="color:var(--text-muted)">${escHtmlServer(oss.desc)}</td>
+      </tr>`).join("\n")}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>When You'll Outgrow Free Tiers</h2>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:1rem">Most solo developers and small teams can run their entire DevOps stack on free tiers. Here's what typically hits limits first:</p>
+    <ol style="color:var(--text-muted);font-size:.9rem;line-height:2;padding-left:1.5rem">
+      <li><strong>CI/CD build minutes</strong> (GitHub Actions 2,000 min/month) — large test suites and frequent deploys burn through minutes fast</li>
+      <li><strong>Monitoring metric series</strong> (Grafana Cloud 10K) — microservice architectures with many custom metrics</li>
+      <li><strong>Log retention</strong> (Axiom 30 days) — compliance requirements or debugging long-running issues need longer retention</li>
+      <li><strong>Error volume</strong> (Sentry 5K/month) — high-traffic applications with noisy error reporting</li>
+      <li><strong>User seats</strong> (PagerDuty 5 users) — growing teams that need shared on-call rotations</li>
+    </ol>
+    <p style="color:var(--text-dim);font-size:.85rem;margin-top:1rem">The good news: the open-source alternatives above have no limits. Gitea Actions + Prometheus + Grafana + ELK Stack + Uptime Kuma gives you a complete self-hosted DevOps stack at zero ongoing cost.</p>
+  </div>
+
+  <div class="search-cta">
+    <p>Need application infrastructure too? See our <a href="/free-startup-stack">Free Startup Stack</a> for databases, auth, and email. Building AI? Check the <a href="/free-ai-stack">Free AI/ML Stack</a>. Or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get personalized DevOps stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Hetzner April 2026 Pricing Analysis ---
 
 function buildHetznerPricing2026Page(): string {
@@ -14800,6 +15163,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-ai-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeAiStackPage());
+  } else if (url.pathname === "/free-devops-stack" && isGetOrHead) {
+    recordApiHit("/free-devops-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-devops-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeDevopsStackPage());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
