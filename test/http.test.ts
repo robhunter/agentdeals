@@ -2164,6 +2164,32 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /free-ai-stack renders AI/ML stack guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/free-ai-stack`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Complete Free AI/ML Stack"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("$0"), "Should show $0 cost");
+    assert.ok(html.includes("LLM API"), "Should have LLM API category");
+    assert.ok(html.includes("Vector Database"), "Should have vector DB category");
+    assert.ok(html.includes("Experiment Tracking"), "Should have experiment tracking");
+    assert.ok(html.includes("Observability"), "Should have observability category");
+    assert.ok(html.includes("Groq"), "Should recommend Groq");
+    assert.ok(html.includes("Pinecone"), "Should recommend Pinecone");
+    assert.ok(html.includes("Langfuse"), "Should recommend Langfuse");
+    assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
+    assert.ok(html.includes("Open-Source Self-Hosted"), "Should have OSS section");
+    assert.ok(html.includes("Stack Overview"), "Should have overview table");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 

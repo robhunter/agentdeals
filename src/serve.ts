@@ -3832,6 +3832,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Vercel",
     hubDesc: "Complete free SaaS infrastructure stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
+  {
+    slug: "free-ai-stack",
+    title: "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure",
+    metaDesc: "Build AI apps on free tiers. 10 AI/ML infrastructure categories — LLM APIs, vector databases, experiment tracking, observability, and more. Exact limits, scaling guidance. Updated March 2026.",
+    contextHtml: "",
+    tag: "ai-stack-guide",
+    primaryVendor: "Groq",
+    hubDesc: "Complete free AI/ML development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -9993,6 +10002,359 @@ ${stabilityNotes}
 </html>`;
 }
 
+// --- Free AI/ML Stack Guide ---
+
+function buildFreeAiStackPage(): string {
+  const title = "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure";
+  const metaDesc = "Build AI apps on free tiers. 10 AI/ML infrastructure categories — LLM APIs, vector databases, experiment tracking, observability, and more. Exact limits, scaling guidance. Updated March 2026.";
+  const slug = "free-ai-stack";
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  const stackCategories = [
+    {
+      name: "LLM API Access",
+      icon: "🧠",
+      recommended: { vendor: "Groq", why: "Ultra-fast inference on LPU hardware — 30 RPM with 100K-500K tokens/day free. Supports Llama 3.3 70B, Mixtral, Gemma 2. Best balance of speed, limits, and model quality for prototyping." },
+      alternatives: ["Google Gemini API", "Cerebras", "Mistral AI", "Cohere", "OpenRouter"],
+      outgrow: "When you exceed 30 RPM or 500K tokens/day. At that point, Cerebras (1M tokens/day) or OpenRouter (~30 free models) extend the free runway. Production apps typically need paid tiers for reliability SLAs.",
+      relatedPage: "/free-llm-apis",
+    },
+    {
+      name: "AI Coding Assistant",
+      icon: "💻",
+      recommended: { vendor: "GitHub Copilot", why: "2,000 completions/month + 50 chat messages free. VS Code native with deep GitHub integration. The simplest on-ramp to AI-assisted development." },
+      alternatives: ["Cursor", "Amazon Q Developer", "Cline", "Aider"],
+      outgrow: "When you exceed 2,000 completions/month or need unlimited chat. Cline and Aider are free with your own API keys — no completion limits, just API costs.",
+      relatedPage: "/ide-code-editors-alternatives",
+    },
+    {
+      name: "Vector Database",
+      icon: "📐",
+      recommended: { vendor: "Pinecone", why: "2 GB storage with 5 indexes and 2M write units/month on the Starter plan. Serverless architecture means zero ops. The most popular vector DB with excellent SDK support." },
+      alternatives: ["Qdrant"],
+      outgrow: "When you exceed 2 GB storage or need more than 5 indexes. Qdrant's 1 GB free forever cluster is a solid alternative with unlimited requests.",
+      relatedPage: "/ai-ml-alternatives",
+    },
+    {
+      name: "ML Experiment Tracking",
+      icon: "📊",
+      recommended: { vendor: "Weights & Biases", why: "Unlimited experiments with 100 GB storage free. Industry-standard experiment tracking with hyperparameter sweeps, model registry, and team dashboards." },
+      alternatives: ["Comet ML", "Neptune.ai"],
+      outgrow: "When you need more than 100 GB storage or team collaboration features beyond 1 user. Neptune.ai offers 200 GB metadata storage for individuals.",
+      relatedPage: "/ai-ml-alternatives",
+    },
+    {
+      name: "Model Hosting & Inference",
+      icon: "🚀",
+      recommended: { vendor: "Hugging Face", why: "Free inference API with $0.10/month credits and access to 200+ models. The largest open-source model hub — deploy models, share datasets, and collaborate on ML projects." },
+      alternatives: ["Replicate"],
+      outgrow: "When you need dedicated endpoints or higher throughput. Free inference API has rate limits and cold starts — production apps need Inference Endpoints ($0.06/hr+).",
+      relatedPage: "/ai-ml-alternatives",
+    },
+    {
+      name: "Compute & Training",
+      icon: "⚡",
+      recommended: { vendor: "Kaggle", why: "30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU — entirely free. No credit card needed. Integrated datasets and community notebooks." },
+      alternatives: ["Google Colab"],
+      outgrow: "When you need longer sessions (Kaggle limits to 9 hrs), more VRAM (T4 = 16 GB), or persistent storage. Google Colab offers T4 free but with session time limits.",
+      relatedPage: "/ai-ml-alternatives",
+    },
+    {
+      name: "Data Labeling & Annotation",
+      icon: "🏷️",
+      recommended: { vendor: "Roboflow", why: "250,000 images free with 10 projects, 2 users, and $60/month compute credits. Best for computer vision projects with built-in model training and deployment." },
+      alternatives: ["Labelbox", "Scale AI", "Clarifai"],
+      outgrow: "When you exceed 250K images or need more than 2 users. Labelbox offers 500 LBUs/month. Scale AI gives 1,000 annotation units free.",
+      relatedPage: "/ai-ml-alternatives",
+    },
+    {
+      name: "AI Observability & Evaluation",
+      icon: "🔍",
+      recommended: { vendor: "Langfuse", why: "50K observations/month with all features, open-source. Trace LLM calls, evaluate outputs, manage prompts, and debug chains — the emerging standard for LLM ops." },
+      alternatives: ["Langtrace", "Braintrust", "LangWatch", "Portkey"],
+      outgrow: "When you exceed 50K observations/month. Langtrace (50K traces/month) and LangWatch (1K traces/month) are alternatives. For production, self-host Langfuse (open-source) for unlimited traces.",
+      relatedPage: "/ai-ml-alternatives",
+    },
+    {
+      name: "AI Gateway & Routing",
+      icon: "🔀",
+      recommended: { vendor: "Portkey", why: "10,000 requests/month free. AI gateway with load balancing, fallbacks, semantic caching, and 200+ LLM providers. Route between models for cost optimization." },
+      alternatives: ["Keywords AI", "Composio"],
+      outgrow: "When you exceed 10K requests/month. Keywords AI also offers 10K requests/month free. For self-hosted, LiteLLM (open-source) has no limits.",
+      relatedPage: "/ai-ml-alternatives",
+    },
+    {
+      name: "Speech & Audio AI",
+      icon: "🎙️",
+      recommended: { vendor: "Deepgram", why: "$200 free credits on signup (~43K minutes transcription). Industry-leading speech-to-text accuracy with real-time streaming, multiple languages, and speaker diarization." },
+      alternatives: ["AssemblyAI"],
+      outgrow: "When you exhaust $200 credits. AssemblyAI offers $50 free credits (~185 hrs). For ongoing free usage, Whisper (open-source) can run locally via Hugging Face.",
+      relatedPage: "/ai-ml-alternatives",
+    },
+  ];
+
+  const resolveVendor = (vendorName: string) => {
+    const offer = offers.find(o => o.vendor === vendorName);
+    if (!offer) return null;
+    return enrichOffers([offer])[0];
+  };
+
+  const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
+  const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-03-25",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const categorySections = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
+
+    const recCard = rec ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <div class="pick-links">
+          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>` : "";
+
+    const altCards = altVendors.length > 0 ? `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
+      </div>` : "";
+
+    const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
+
+    return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      ${recCard}
+      ${altCards}
+      <div class="outgrow-box">
+        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+      </div>
+      ${relatedLink}
+    </div>`;
+  }).join("\n");
+
+  const stabilityNotes = stackChanges.length > 0 ? `
+  <h2>Stability Notes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <div class="stability-list">
+    ${stackChanges.slice(0, 12).map(c => {
+      const typeColors: Record<string, string> = {
+        free_tier_removed: "#f85149", limits_reduced: "#d29922", pricing_restructured: "#d29922",
+        restriction: "#d29922", limits_increased: "#3fb950", new_free_tier: "#3fb950",
+        pricing_postponed: "#3fb950", startup_program_expanded: "#3fb950", product_deprecated: "#f85149",
+      };
+      const color = typeColors[c.change_type] ?? "#94a3b8";
+      return `<div class="stability-item">
+        <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+      </div>`;
+    }).join("\n    ")}
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+
+  const tableRows = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    return `      <tr>
+        <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
+        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
+        <td>${riskBadge}</td>
+      </tr>`;
+  }).join("\n");
+
+  // Open-source self-hosted alternatives
+  const ossAlternatives = [
+    { category: "LLM Inference", tool: "Ollama", desc: "Run Llama, Mistral, Gemma locally — no API limits, complete privacy. GPU recommended." },
+    { category: "Experiment Tracking", tool: "MLflow", desc: "Apache-licensed ML lifecycle platform. Self-host for unlimited experiments and model registry." },
+    { category: "Vector Database", tool: "Chroma", desc: "Open-source embedding database. Run locally in Python with zero configuration." },
+    { category: "AI Observability", tool: "Langfuse (self-hosted)", desc: "Same Langfuse, no observation limits. Deploy via Docker or Kubernetes." },
+    { category: "Data Labeling", tool: "Label Studio", desc: "Open-source annotation tool. Unlimited projects, all data types (text, image, audio, video)." },
+    { category: "AI Gateway", tool: "LiteLLM", desc: "Open-source proxy to 100+ LLMs. Unified API, load balancing, spend tracking. No request limits." },
+    { category: "Compute", tool: "Ollama + llama.cpp", desc: "Run quantized models on consumer hardware. M-series Macs run 7B-13B models at usable speeds." },
+  ];
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.cost-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
+.cost-banner .cost-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.cost-banner .cost-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
+.stack-category{border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;background:var(--bg-card)}
+.stack-category h2{margin:0 0 1rem;font-size:1.25rem}
+.cat-icon{margin-right:.5rem}
+.stack-pick{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:rgba(59,130,246,0.05);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.pick-badge{font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;background:var(--accent);color:#fff}
+.pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.pick-name:hover{color:var(--accent)}
+.pick-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.pick-why{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:.5rem}
+.pick-limits{font-family:var(--mono);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
+.pick-links a{color:var(--accent)}
+.alt-picks{margin-bottom:1rem}
+.alt-label{color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem}
+.alt-chip{display:inline-block;padding:.3rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text);margin:.25rem .25rem .25rem 0;transition:border-color .15s}
+.alt-chip:hover{border-color:var(--accent);text-decoration:none}
+.chip-tier{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-left:.25rem}
+.outgrow-box{background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.2);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.outgrow-box strong{color:var(--text)}
+.related-link{display:block;margin-top:.75rem;font-size:.85rem}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.stability-list{display:flex;flex-direction:column;gap:.5rem}
+.stability-item{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5;background:var(--bg-card)}
+.stability-item strong{color:var(--text)}
+.stability-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.1rem .4rem;border-radius:8px;margin-right:.5rem}
+.oss-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.oss-table th,.oss-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.oss-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.oss-table tr:hover{background:var(--accent-glow)}
+.oss-table td:first-child{font-weight:600;color:var(--text)}
+.oss-tool{color:var(--accent);font-weight:600}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.oss-table{font-size:.75rem}.oss-table th,.oss-table td{padding:.4rem .5rem}.cost-banner .cost-amount{font-size:2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free AI/ML Stack</div>
+  <h1>The Complete Free AI/ML Stack</h1>
+
+  <div class="context">
+    <p>Everything you need to build, train, and deploy AI applications — without spending a dollar. This guide recommends the best free tier for each layer of an AI/ML development stack — <strong>10 categories</strong> from LLM APIs to speech AI — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Designed for solo AI developers, indie hackers, and startup teams prototyping AI features. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified March 2026.</p>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
+    <div class="cost-label">Total estimated monthly cost for prototyping and experimentation</div>
+  </div>
+
+  <h2>Stack Overview</h2>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Recommended</th>
+        <th>Key Limit</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+  </div>
+
+${categorySections}
+
+${stabilityNotes}
+
+  <h2>Open-Source Self-Hosted Alternatives</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">For each category, there's an open-source option you can run on your own hardware — no API limits, no vendor lock-in, complete data privacy.</p>
+  <div style="overflow-x:auto">
+  <table class="oss-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Tool</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+${ossAlternatives.map(oss => `      <tr>
+        <td>${escHtmlServer(oss.category)}</td>
+        <td class="oss-tool">${escHtmlServer(oss.tool)}</td>
+        <td style="color:var(--text-muted)">${escHtmlServer(oss.desc)}</td>
+      </tr>`).join("\n")}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>When You'll Outgrow Free Tiers</h2>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:1rem">Most AI projects can prototype entirely on free tiers. Here's what typically hits limits first:</p>
+    <ol style="color:var(--text-muted);font-size:.9rem;line-height:2;padding-left:1.5rem">
+      <li><strong>GPU compute time</strong> (Kaggle 30 hrs/week) — fine-tuning and training sessions eat GPU hours fast</li>
+      <li><strong>LLM API rate limits</strong> (Groq 30 RPM) — production apps with concurrent users need higher throughput</li>
+      <li><strong>Vector storage</strong> (Pinecone 2 GB) — RAG applications with large document corpora</li>
+      <li><strong>Speech credits</strong> (Deepgram $200 one-time) — real-time transcription burns through credits quickly</li>
+      <li><strong>Observability volume</strong> (Langfuse 50K obs/month) — high-traffic AI apps with detailed tracing</li>
+    </ol>
+    <p style="color:var(--text-dim);font-size:.85rem;margin-top:1rem">The good news: the open-source alternatives above have no limits. Ollama + Chroma + MLflow + Langfuse (self-hosted) gives you a complete local AI stack at zero ongoing cost.</p>
+  </div>
+
+  <div class="search-cta">
+    <p>Need general SaaS infrastructure too? See our <a href="/free-startup-stack">Free Startup Stack</a> for hosting, databases, auth, and more. Or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get personalized AI stack recommendations from your AI assistant. Compare free tiers, check model limits, and plan your AI infrastructure — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Hetzner April 2026 Pricing Analysis ---
 
 function buildHetznerPricing2026Page(): string {
@@ -14191,6 +14553,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-startup-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeStartupStackPage());
+  } else if (url.pathname === "/free-ai-stack" && isGetOrHead) {
+    recordApiHit("/free-ai-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-ai-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeAiStackPage());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
