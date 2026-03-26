@@ -13324,19 +13324,6 @@
       "verifiedDate": "2026-03-20"
     },
     {
-      "vendor": "Turso by ChiselStrike",
-      "category": "Databases",
-      "description": "Turso is SQLite Developer Experience in an Edge Database. Turso provides a Free Forever starter plan, 9 GB of total storage, Up to 500 databases, Up to 3 locations, 1 billion row reads per month, and Local development support with SQLite.",
-      "tier": "Free",
-      "url": "https://chiselstrike.com/",
-      "tags": [
-        "database",
-        "data",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
       "vendor": "Xata Lite",
       "category": "Databases",
       "description": "Xata Lite is a serverless database with built-in powerful search and analytics. One API, multiple type-safe client libraries, and optimized for your development workflow. The free plan provides 10 branches and 15 GB of storage without pausing or cold starts.",
