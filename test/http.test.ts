@@ -2212,6 +2212,36 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /free-devops-stack renders DevOps stack guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/free-devops-stack`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Complete Free DevOps Stack"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("$0"), "Should show $0 cost");
+    assert.ok(html.includes("CI/CD Pipeline"), "Should have CI/CD category");
+    assert.ok(html.includes("Monitoring"), "Should have monitoring category");
+    assert.ok(html.includes("Uptime Monitoring"), "Should have uptime category");
+    assert.ok(html.includes("Logging"), "Should have logging category");
+    assert.ok(html.includes("Incident Management"), "Should have incident management");
+    assert.ok(html.includes("Container Registry"), "Should have container registry");
+    assert.ok(html.includes("Secrets Management"), "Should have secrets category");
+    assert.ok(html.includes("GitHub Actions"), "Should recommend GitHub Actions");
+    assert.ok(html.includes("Grafana Cloud"), "Should recommend Grafana Cloud");
+    assert.ok(html.includes("Axiom"), "Should recommend Axiom");
+    assert.ok(html.includes("Doppler"), "Should recommend Doppler");
+    assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
+    assert.ok(html.includes("Open-Source Self-Hosted"), "Should have OSS section");
+    assert.ok(html.includes("Stack Overview"), "Should have overview table");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
