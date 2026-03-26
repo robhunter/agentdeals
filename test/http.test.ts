@@ -2451,6 +2451,34 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/vendor/new-relic"), "Should link to New Relic profile");
   });
 
+  it("GET /free-tier-risk renders risk index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/free-tier-risk`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Free Tier Risk Index"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("How We Score Risk"), "Should have methodology section");
+    assert.ok(html.includes("Low Risk"), "Should have low risk section");
+    assert.ok(html.includes("Medium Risk"), "Should have medium risk section");
+    assert.ok(html.includes("High Risk"), "Should have high risk section");
+    assert.ok(html.includes("Already Changed"), "Should have already changed section");
+    assert.ok(html.includes("Cloudflare"), "Should include Cloudflare as low risk");
+    assert.ok(html.includes("Heroku"), "Should include Heroku as high risk");
+    assert.ok(html.includes("PlanetScale"), "Should include PlanetScale as dead");
+    assert.ok(html.includes("What To Do About It"), "Should have advice section");
+    assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
+    assert.ok(html.includes("/alternatives"), "Should cross-link to alternatives hub");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("Full Scoring Table"), "Should have full scoring table");
+    assert.ok(html.includes("/free-startup-stack"), "Should cross-link to startup stack");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
