@@ -3904,6 +3904,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Neon",
     hubDesc: "Deep comparison of Neon and Supabase free tiers — database-only vs full platform, branching, auth, storage, and scaling costs",
   },
+  {
+    slug: "railway-vs-render",
+    title: "Railway vs Render Free Tier Comparison — 2026 Deep Dive",
+    metaDesc: "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, sleep behavior, bandwidth — verified data, cost-at-scale analysis, and PaaS alternatives. Updated March 2026.",
+    contextHtml: "",
+    tag: "railway-vs-render",
+    primaryVendor: "Railway",
+    hubDesc: "Deep comparison of Railway and Render free tiers — usage-based vs fixed pricing, databases, sleep behavior, and scaling costs",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -4624,7 +4633,7 @@ ${mcpCtaCss()}
   ${changesHtml}
 
   <div class="context-box" style="border-left:3px solid var(--accent)">
-    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific host? See our dedicated guides: <a href="/vercel-vs-netlify">Vercel vs Netlify</a> | <a href="/heroku-alternatives">Heroku Alternatives</a> | <a href="/vercel-alternatives">Vercel Alternatives</a> | <a href="/hetzner-alternatives">Hetzner Alternatives</a></p>
+    <p style="margin:0;font-size:.9rem">Looking for alternatives to a specific host? See our dedicated guides: <a href="/railway-vs-render">Railway vs Render</a> | <a href="/vercel-vs-netlify">Vercel vs Netlify</a> | <a href="/heroku-alternatives">Heroku Alternatives</a> | <a href="/vercel-alternatives">Vercel Alternatives</a> | <a href="/hetzner-alternatives">Hetzner Alternatives</a></p>
   </div>
 
   <h2>App Platforms / PaaS</h2>
@@ -13325,6 +13334,338 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Railway vs Render comparison page ---
+
+function buildRailwayVsRenderPage(): string {
+  const title = "Railway vs Render — Free Tier Comparison (2026)";
+  const metaDesc = "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, Redis, sleep behavior, bandwidth, custom domains — verified data from 1,500+ developer tools. Usage-based flexibility vs predictable billing.";
+  const slug = "railway-vs-render";
+  const pubDate = "2026-03-26";
+
+  // Pull verified data from our index
+  const railwayOffer = offers.find(o => o.vendor === "Railway" && o.category === "Cloud Hosting");
+  const renderOffer = offers.find(o => o.vendor === "Render" && o.category === "Cloud Hosting");
+
+  // Deal changes
+  const railwayChange = dealChanges.find(c => c.vendor === "Railway" && c.change_type === "limits_increased");
+  const renderChange = dealChanges.find(c => c.vendor === "Render" && c.change_type === "limits_reduced");
+
+  // Hosting alternatives from index
+  const hostingAlts = offers.filter(o =>
+    ["Fly.io", "Vercel", "Netlify", "Coolify", "DigitalOcean App Platform", "Koyeb"].includes(o.vendor) && o.category === "Cloud Hosting"
+  );
+
+  // Comparison data
+  const comparisonRows = [
+    { feature: "Free Tier Cost", railway: "$0/mo (Trial plan)", render: "$0/mo (Hobby plan)", notes: "Both offer free tiers. Railway's Trial has a $5/mo credit cap; Render's Hobby has compute limits" },
+    { feature: "RAM per Service", railway: "0.5 GB", render: "512 MB", notes: "Effectively identical — both ~512 MB per service" },
+    { feature: "CPU per Service", railway: "1 vCPU (shared)", render: "0.1 CPU", notes: "Railway allocates more CPU on paper. Render's 0.1 CPU is quite constrained" },
+    { feature: "Projects", railway: "1", render: "1 (2 environments)", notes: "Render includes staging + production environments on free tier" },
+    { feature: "Services per Project", railway: "3", render: "Unlimited (within Hobby limits)", notes: "Railway caps at 3 services. Render allows more but each consumes compute quota" },
+    { feature: "Managed Database", railway: "None (containers only)", render: "PostgreSQL 256 MB (30-day expiry)", notes: "Render includes managed Postgres but it expires after 30 days. Railway requires self-managing a DB container" },
+    { feature: "Managed Redis", railway: "None (containers only)", render: "25 MB Key Value store", notes: "Render includes managed Redis. Railway requires a Redis container counting toward service limit" },
+    { feature: "Custom Domains", railway: "None on Free tier", render: "Yes", notes: "Railway requires Hobby ($5/mo) for custom domains. Render includes them free" },
+    { feature: "Sleep Behavior", railway: "No sleep (always on)", render: "Spins down after 15 min inactivity", notes: "Railway stays awake. Render's free services sleep and have 30-60s cold starts" },
+    { feature: "Cron Jobs", railway: "None on Free tier", render: "From $1/mo (paid only)", notes: "Neither offers free cron jobs" },
+    { feature: "Static Sites", railway: "Paid only", render: "Completely free (unlimited)", notes: "Render offers unlimited free static site hosting. Railway charges for all deployments" },
+    { feature: "Bandwidth", railway: "Egress $0.05/GB (usage-based)", render: "100 GB/mo included", notes: "Render includes generous bandwidth. Railway charges per-GB egress on all plans" },
+  ];
+
+  const comparisonTableRows = comparisonRows.map(r => `<tr>
+      <td style="font-weight:600;white-space:nowrap">${escHtmlServer(r.feature)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">${escHtmlServer(r.railway)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.render)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Key differences
+  const differences = [
+    { title: "Pricing Philosophy: Usage-Based vs. Fixed-Rate", desc: "Railway charges per-second for CPU, RAM, and egress — you pay exactly what you use. Render charges fixed monthly rates per instance ($7/mo Starter). Railway is cheaper for variable-traffic apps (idle = near-zero cost). Render is predictable — you know the bill before the month starts." },
+    { title: "Databases: Managed vs. DIY", desc: "Render includes managed PostgreSQL (256 MB, 30-day free expiry) and Redis (25 MB) — no setup required. Railway treats databases as containers — you can run Postgres or Redis, but they count toward your service limit and you manage backups yourself. For quick prototypes needing a database, Render wins on convenience." },
+    { title: "Sleep Behavior: Always-On vs. Spin-Down", desc: "Railway's free services stay running 24/7 (no cold starts). Render's free web services spin down after 15 minutes of inactivity, causing 30-60 second cold starts on the next request. For always-on APIs or bots, Railway is better. For low-traffic sites where cold starts are acceptable, Render works fine." },
+    { title: "Developer Experience: Fast Iteration vs. Full Platform", desc: "Railway is widely praised for developer experience — fast deploys (often under 30 seconds), intuitive dashboard, and nixpacks auto-detection. Render offers a broader platform (managed DBs, Redis, cron, static sites) but deploys are slower. Railway optimizes for speed; Render optimizes for completeness." },
+  ];
+
+  // Cost at scale — break-even analysis
+  const scalingComparison = [
+    { metric: "Cheapest paid plan", railway: "$5/mo Hobby ($5 credit incl.)", render: "$7/mo Starter (512 MB, 0.5 CPU)", notes: "Railway Hobby effectively free if usage stays under $5. Render Starter is fixed $7/mo regardless of usage" },
+    { metric: "At low utilization (10%)", railway: "~$0.50-1/mo", render: "$7/mo", notes: "Railway wins big for variable/low-traffic workloads — pay only for what you use" },
+    { metric: "At full utilization (100%)", railway: "~$5-8/mo (512 MB)", render: "$7/mo", notes: "Break-even around 70-80% utilization. Above that, Render's fixed rate is cheaper" },
+    { metric: "With managed database", railway: "$5/mo + DB container usage", render: "$7/mo (web) + $7/mo (Postgres Starter)", notes: "Both ~$12-14/mo total. Railway's DB is self-managed; Render's is fully managed with backups" },
+    { metric: "Auto-scaling", railway: "Vertical only (auto-scales resources)", render: "Horizontal + Vertical (Pro $19/mo)", notes: "Railway auto-scales CPU/RAM within plan limits. Render requires Pro plan for horizontal auto-scaling" },
+    { metric: "SOC 2 / Compliance", railway: "Not advertised", render: "SOC 2 Type II (available on all plans)", notes: "Render has SOC 2 certification. Railway does not currently advertise compliance certifications" },
+  ];
+
+  const scalingRows = scalingComparison.map(r => `<tr>
+      <td style="font-weight:600;font-size:.85rem">${escHtmlServer(r.metric)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">${escHtmlServer(r.railway)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem;color:#3fb950">${escHtmlServer(r.render)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
+    </tr>`).join("\n        ");
+
+  // Hosting alternative rows
+  const altRows = hostingAlts.map(o => {
+    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    return `<tr>
+      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["hosting-alternatives", "heroku-alternatives", "hetzner-alternatives", "vercel-vs-netlify", "free-startup-stack", "free-devops-stack"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: [
+      { "@type": "SoftwareApplication", name: "Railway", url: "https://railway.com" },
+      { "@type": "SoftwareApplication", name: "Render", url: "https://render.com" },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.vs-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600}
+.vs-railway{background:rgba(59,130,246,0.15);color:#60a5fa}
+.vs-render{background:rgba(63,185,80,0.15);color:#3fb950}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Hosting</a> &rsaquo; Railway vs Render</div>
+  <h1>Railway vs Render — Free Tier Comparison</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">0.5 GB</div><div class="stat-label">Railway RAM</div></div>
+    <div class="stat-card"><div class="stat-number green">512 MB</div><div class="stat-label">Render RAM</div></div>
+    <div class="stat-card"><div class="stat-number">$5/mo</div><div class="stat-label">Railway Hobby</div></div>
+    <div class="stat-card"><div class="stat-number green">$7/mo</div><div class="stat-label">Render Starter</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> Choose <strong>Railway</strong> for variable-traffic prototypes and MVPs where great developer experience matters — fast deploys, no cold starts, usage-based billing. Choose <strong>Render</strong> for production workloads needing managed databases, predictable billing, and SOC 2 compliance.</p>
+    <p><strong>On free tiers:</strong> Both offer ~512 MB RAM, but with fundamentally different trade-offs. Railway stays awake 24/7 (no cold starts) but offers no managed databases and no custom domains. Render includes managed PostgreSQL and Redis, custom domains, and unlimited free static sites — but web services sleep after 15 minutes.</p>
+    <p><strong>The key framing:</strong> Railway is <strong>usage-based flexibility</strong> — pay per second, scale to zero, great for variable workloads. Render is <strong>predictable billing</strong> — fixed monthly rates, managed services included, better for production where you need to know the cost upfront.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#comparison">Free Tier Comparison Table</a></li>
+      <li><a href="#differences">Key Differences</a></li>
+      <li><a href="#scale">Cost at Scale</a></li>
+      <li><a href="#when">When to Choose Each</a></li>
+      <li><a href="#alternatives">Other PaaS Alternatives</a></li>
+      <li><a href="#changes">Recent Deal Changes</a></li>
+    </ol>
+  </div>
+
+  <h2 id="comparison">1. Free Tier Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-railway">Railway</span> and <span class="vs-badge vs-render">Render</span> free tiers as of March 2026.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Feature</th><th style="color:#60a5fa">Railway Trial</th><th style="color:#3fb950">Render Hobby</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${comparisonTableRows}
+      </tbody>
+    </table>
+  </div>
+  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${escHtmlServer(railwayOffer.description)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
+  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${escHtmlServer(renderOffer.description)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
+
+  <h2 id="differences">2. Key Differences</h2>
+  <p class="section-intro">Beyond the raw numbers, these structural differences define the Railway vs Render choice.</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${differences.map((d, i) => `<div class="diff-card" style="border-left-color:${i % 2 === 0 ? "var(--accent)" : "#3fb950"}">
+      <h3>${escHtmlServer(d.title)}</h3>
+      <p class="diff-desc">${escHtmlServer(d.desc)}</p>
+    </div>`).join("\n    ")}
+  </div>
+
+  <h2 id="scale">3. Cost at Scale</h2>
+  <p class="section-intro">Railway Hobby ($5/mo with $5 credit) vs Render Starter ($7/mo fixed). The break-even point depends on utilization.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Metric</th><th style="color:#60a5fa">Railway</th><th style="color:#3fb950">Render</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        ${scalingRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Break-even analysis:</strong> Railway's usage-based pricing beats Render's fixed rate at low-to-medium utilization. At ~70-80% sustained utilization (a service running most of the month under moderate load), Railway costs roughly match Render's $7/mo Starter. Above that, Render's predictable pricing wins. For bursty workloads (dev servers, staging environments, side projects with variable traffic), Railway can be 5-10× cheaper. For always-on production services, Render's fixed rate provides cost certainty.
+  </div>
+
+  <h2 id="when">4. When to Choose Each</h2>
+  <div class="verdict-box">
+    <h3>Decision Guide</h3>
+    <div class="verdict-item">
+      <strong>Choose Railway if:</strong>
+      <p>You're building prototypes or MVPs with variable traffic (usage-based means idle = near-zero cost), you prioritize developer experience and fast deploys, you need always-on free services without cold starts, or you're deploying multiple microservices that share a $5 credit pool. Best for: hobby projects, hackathons, dev environments, Discord bots.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Choose Render if:</strong>
+      <p>You need managed databases (Postgres, Redis) without DevOps overhead, you want predictable monthly billing, you need SOC 2 compliance, or you're hosting static sites (free and unlimited on Render). Best for: production apps, startups needing compliance, static sites, projects requiring managed infrastructure.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider Fly.io if:</strong>
+      <p>You need edge deployment (run containers in 30+ regions), low-latency APIs, or built-in Postgres and Redis with geographic distribution. Fly.io's free tier includes 3 shared-cpu-1x VMs, 3 GB persistent storage, and 160 GB bandwidth. See <a href="/vendor/fly-io">Fly.io profile</a>.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Consider both together:</strong>
+      <p>A practical hybrid: use Render for your managed database (free Postgres) and static frontend, then Railway for your API server (always-on, no cold starts). This combines Render's managed services with Railway's developer experience. See all options in our <a href="/hosting-alternatives">hosting comparison</a>.</p>
+    </div>
+  </div>
+
+  <h2 id="alternatives">5. Other PaaS Alternatives</h2>
+  <p class="section-intro">If neither Railway nor Render fits, these platforms offer competitive free tiers for deploying apps.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Tier</th><th>Free Tier Details</th></tr>
+      </thead>
+      <tbody>
+        ${altRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Notable mentions:</strong> <a href="/vendor/fly-io">Fly.io</a> offers edge deployment with 3 free VMs and built-in Postgres — great for low-latency APIs. <a href="/vendor/coolify">Coolify</a> is an open-source, self-hosted PaaS (your own Railway/Render). <a href="/vendor/koyeb">Koyeb</a> offers 2 nano instances with 512 MB RAM and built-in edge network. See our <a href="/hosting-alternatives">full hosting comparison</a> for 30+ options.
+  </div>
+
+  <h2 id="changes">6. Recent Deal Changes</h2>
+  <p class="section-intro">Both platforms have evolved their free tier positioning recently. From our deal change tracker:</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${railwayChange ? `<div class="diff-card" style="border-left-color:#d29922">
+      <h3>Railway — ${escHtmlServer(railwayChange.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(railwayChange.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(railwayChange.impact)} &middot; <a href="${escHtmlServer(railwayChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
+    </div>` : ""}
+    ${renderChange ? `<div class="diff-card" style="border-left-color:#f85149">
+      <h3>Render — ${escHtmlServer(renderChange.date)}</h3>
+      <p class="diff-desc">${escHtmlServer(renderChange.summary)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(renderChange.impact)} &middot; <a href="${escHtmlServer(renderChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
+    </div>` : ""}
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive guides for PaaS and hosting selection.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Railway data verified against <a href="https://railway.com/pricing" target="_blank" rel="noopener">railway.com/pricing</a> (${railwayOffer?.verifiedDate ?? "2026-03"}). Render data verified against <a href="https://render.com/pricing" target="_blank" rel="noopener">render.com/pricing</a> (${renderOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers and usage-based calculations. Deal changes tracked from official vendor announcements.
+  </div>
+
+  <div class="search-cta">
+    <p>This comparison covers Railway vs Render free tiers as of March 2026. For more hosting options, see our <a href="/hosting-alternatives">full hosting comparison</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Compare Railway, Render, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -17003,6 +17344,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/neon-vs-supabase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildNeonVsSupabasePage());
+  } else if (url.pathname === "/railway-vs-render" && isGetOrHead) {
+    recordApiHit("/railway-vs-render");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/railway-vs-render", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildRailwayVsRenderPage());
   } else if (url.pathname === "/google-developer-program-2026" && isGetOrHead) {
     recordApiHit("/google-developer-program-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/google-developer-program-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

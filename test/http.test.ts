@@ -2394,6 +2394,35 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/supabase-vs-firebase"), "Should cross-link to Supabase vs Firebase");
   });
 
+  it("GET /railway-vs-render renders comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/railway-vs-render`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Railway vs Render"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Free Tier Comparison Table"), "Should have comparison section");
+    assert.ok(html.includes("Key Differences"), "Should have differences section");
+    assert.ok(html.includes("Cost at Scale"), "Should have cost section");
+    assert.ok(html.includes("When to Choose Each"), "Should have decision guide");
+    assert.ok(html.includes("Other PaaS Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("Recent Deal Changes"), "Should have changes section");
+    assert.ok(html.includes("0.5 GB"), "Should include Railway RAM");
+    assert.ok(html.includes("512 MB"), "Should include Render RAM");
+    assert.ok(html.includes("15 min"), "Should highlight Render sleep behavior");
+    assert.ok(html.includes("Fly.io") || html.includes("Coolify"), "Should include hosting alternatives");
+    assert.ok(html.includes("/hosting-alternatives"), "Should cross-link to hosting hub");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/vendor/railway"), "Should link to Railway profile");
+    assert.ok(html.includes("/vendor/render"), "Should link to Render profile");
+    assert.ok(html.includes("/vercel-vs-netlify"), "Should cross-link to Vercel vs Netlify");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
