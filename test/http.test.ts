@@ -2139,6 +2139,30 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/sitemap.xml") || html.includes("agentdeals"), "Should be a proper page");
   });
 
+  it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/team-collaboration-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Team Collaboration Tools"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Communication &amp; Chat"), "Should have chat section");
+    assert.ok(html.includes("Video Conferencing"), "Should have video section");
+    assert.ok(html.includes("Documentation &amp; Knowledge"), "Should have docs section");
+    assert.ok(html.includes("Scheduling &amp; Calendar"), "Should have scheduling section");
+    assert.ok(html.includes("Feedback &amp; Review"), "Should have feedback section");
+    assert.ok(html.includes("Which Free Collaboration Tool"), "Should have decision guide");
+    assert.ok(html.includes("Slack"), "Should include Slack");
+    assert.ok(html.includes("Pumble"), "Should include Pumble");
+    assert.ok(html.includes("Jitsi"), "Should include Jitsi");
+    assert.ok(html.includes("project-management-alternatives"), "Should cross-link to PM hub");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   // --- Search page ---
 
   it("GET /search renders search page with search box", async () => {

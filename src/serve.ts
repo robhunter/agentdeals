@@ -3814,6 +3814,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Hetzner",
     hubDesc: "Hetzner April 2026 price increases analyzed — before/after tables, impact assessment, 8+ alternatives compared",
   },
+  {
+    slug: "team-collaboration-alternatives",
+    title: "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared",
+    metaDesc: "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. Updated March 2026.",
+    contextHtml: "",
+    tag: "collab-hub",
+    primaryVendor: "Slack",
+    hubDesc: "60+ free team collaboration tools compared — chat, video conferencing, documentation, scheduling, and async communication",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -9324,6 +9333,334 @@ ${buildCards(apiIntegration)}
 </html>`;
 }
 
+// --- Team Collaboration Hub ---
+
+function buildTeamCollaborationAlternativesPage(): string {
+  const title = "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared";
+  const metaDesc = "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. Updated March 2026.";
+  const slug = "team-collaboration-alternatives";
+
+  // Get Team Collaboration + Communication + Video offers (excluding startup programs)
+  const collabOffers = offers.filter(o =>
+    (o.category === "Team Collaboration" || o.category === "Communication" || o.category === "Video") &&
+    o.tier !== "Startup Program"
+  );
+  const enrichedAll = enrichOffers(collabOffers);
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  // Group by domain
+  const chatMessaging = enrichedAll.filter(o =>
+    ["Slack API", "Discord API", "Rocket.Chat", "Pumble", "Chanty.com", "element.io", "Revolt.chat", "Zulip", "flock.com", "gitter.im", "Keybase", "Braid", "twist.com", "Telegram", "Tawk.to", "Crisp", "Helploom"].includes(o.vendor)
+  );
+  const videoMeetings = enrichedAll.filter(o =>
+    ["meet.jit.si", "zoom.us", "Webex", "Daily.co", "Whereby", "Tencent RTC", "talky.io", "LiveKit", "Mux", "wistia.com", "flat.social", "Duckly", "Screen Sharing via Browser"].includes(o.vendor)
+  );
+  const docsKnowledge = enrichedAll.filter(o =>
+    ["Notion", "Hackmd.io", "Nuclino", "Slab", "cDox", "evernote.com", "BookmarkOS.com", "Raindrop.io", "Linkinize", "Liveblocks", "GitDailies"].includes(o.vendor)
+  );
+  const scheduling = enrichedAll.filter(o =>
+    ["Cal.com", "Calendly", "cally.com"].includes(o.vendor)
+  );
+  const feedbackReview = enrichedAll.filter(o =>
+    ["ruttl.com", "SiteDots", "Webvizio", "GraphComment", "Remarkbox", "IntenseDebate", "Utterances"].includes(o.vendor)
+  );
+
+  // Catch uncategorized
+  const categorized = new Set([...chatMessaging, ...videoMeetings, ...docsKnowledge, ...scheduling, ...feedbackReview].map(o => o.vendor));
+  const other = enrichedAll.filter(o => !categorized.has(o.vendor));
+
+  const allCollabOffers = [...chatMessaging, ...videoMeetings, ...docsKnowledge, ...scheduling, ...feedbackReview, ...other];
+
+  // Build cards helper
+  const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          ${riskBadge}
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Collaboration deal changes
+  const collabChangeVendors = ["Slack", "Discord", "Zoom", "Notion", "Jitsi", "Webex", "Loom"];
+  const collabChanges = dealChanges.filter(c => collabChangeVendors.some(v => c.vendor.includes(v)));
+  const changesHtml = collabChanges.length > 0 ? `
+  <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
+    <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Collaboration Tool Pricing Changes</div>
+    <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
+      ${collabChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+  </div>` : "";
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: allCollabOffers.length,
+    itemListElement: allCollabOffers.slice(0, 30).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: o.vendor,
+        description: o.description,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        url: o.url,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted)}
+.alt-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
+.alt-card:hover{border-color:var(--accent)}
+.alt-card-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.alt-card-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.alt-card-name:hover{color:var(--accent)}
+.alt-card-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.alt-card-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.alt-card-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.5rem}
+.alt-card-links a{color:var(--accent);text-decoration:none}
+.alt-card-links a:hover{text-decoration:underline}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+.decision-guide{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0}
+.decision-guide dt{font-weight:600;color:var(--text);margin-top:1rem}
+.decision-guide dt:first-child{margin-top:0}
+.decision-guide dd{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0 0;line-height:1.6}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Team Collaboration Tools</div>
+  <h1>Best Free Team Collaboration Tools for Developers</h1>
+
+  <div class="context">
+    <p>Team collaboration tools have become essential developer infrastructure. <strong>Slack</strong> dominates team chat but limits free plans to 90 days of message history. <strong>Zoom</strong> caps free meetings at 40 minutes. Meanwhile, open-source alternatives like <strong>Rocket.Chat</strong> and <strong>Jitsi Meet</strong> offer unlimited usage with self-hosting, and tools like <strong>Pumble</strong> provide unlimited message history free.</p>
+    <p>This page compares every free team collaboration tool in our index — <strong>${collabOffers.length} tools</strong> across chat, video conferencing, documentation, scheduling, and async communication. For project management-specific tools (issue trackers, kanban boards, time tracking), see our <a href="/project-management-alternatives">Project Management hub</a>.</p>
+  </div>
+
+  ${changesHtml}
+
+  <h2>Communication &amp; Chat</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Team messaging platforms for real-time communication. Slack dominates but its free tier limits message history to 90 days. Pumble, Element, and Rocket.Chat offer unlimited history — Element and Rocket.Chat are also self-hostable and open source.</p>
+${buildCards(chatMessaging)}
+
+  <h2>Video Conferencing &amp; Meetings</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Video calling tools for team meetings, standups, and pair programming. Jitsi Meet is fully open source with no account required. Daily.co and Whereby offer embeddable video APIs with generous free tiers for building video into your own apps.</p>
+${buildCards(videoMeetings)}
+
+  <h2>Documentation &amp; Knowledge</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Knowledge management and collaborative editing tools. Notion leads with an all-in-one workspace. HackMD offers real-time collaborative Markdown. Liveblocks powers real-time collaboration features you can embed in your own applications.</p>
+${buildCards(docsKnowledge)}
+
+  <h2>Scheduling &amp; Calendar</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Meeting scheduling tools. Cal.com is an open-source Calendly alternative with unlimited event types and calendar connections on the free tier.</p>
+${buildCards(scheduling)}
+
+  <h2>Feedback &amp; Review</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Website feedback, comment systems, and review collaboration tools. Useful for design reviews, content collaboration, and collecting user feedback directly on web pages.</p>
+${buildCards(feedbackReview)}
+
+${other.length > 0 ? `
+  <h2>More Collaboration Tools</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Additional free team collaboration tools with unique capabilities.</p>
+${buildCards(other)}
+` : ""}
+
+  <h2>Free Collaboration Tools Comparison</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free team collaboration tools compared by domain, free tier limits, and best use case.</p>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Domain</th>
+        <th>Free Tier</th>
+        <th>OSS</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/slack-api" style="color:var(--text)">Slack</a></td>
+        <td>Chat</td>
+        <td>90-day history, 10 integrations</td>
+        <td>No</td>
+        <td>Industry-standard team messaging</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/pumble" style="color:var(--text)">Pumble</a></td>
+        <td>Chat</td>
+        <td>Unlimited history, unlimited users</td>
+        <td>No</td>
+        <td>Slack alternative with unlimited message history</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/rocket-chat" style="color:var(--text)">Rocket.Chat</a></td>
+        <td>Chat</td>
+        <td>Unlimited, self-hosted</td>
+        <td>Yes</td>
+        <td>Self-hosted team chat with omnichannel</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/element-io" style="color:var(--text)">Element</a></td>
+        <td>Chat</td>
+        <td>Unlimited, Matrix protocol</td>
+        <td>Yes</td>
+        <td>Decentralized, E2E encrypted chat</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/discord-api" style="color:var(--text)">Discord</a></td>
+        <td>Chat</td>
+        <td>Free API, unlimited messages</td>
+        <td>No</td>
+        <td>Community chat with voice channels</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/zulip" style="color:var(--text)">Zulip</a></td>
+        <td>Chat</td>
+        <td>10K messages, self-hosted unlimited</td>
+        <td>Yes</td>
+        <td>Threaded chat for async-first teams</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/meet-jit-si" style="color:var(--text)">Jitsi Meet</a></td>
+        <td>Video</td>
+        <td>Unlimited, no account needed</td>
+        <td>Yes</td>
+        <td>Free, open-source video conferencing</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/zoom-us" style="color:var(--text)">Zoom</a></td>
+        <td>Video</td>
+        <td>40-min meetings, 100 participants</td>
+        <td>No</td>
+        <td>Reliable video meetings with recording</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/daily-co" style="color:var(--text)">Daily.co</a></td>
+        <td>Video</td>
+        <td>10K minutes/mo, 200 participants</td>
+        <td>No</td>
+        <td>Embeddable video API for developers</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/notion" style="color:var(--text)">Notion</a></td>
+        <td>Knowledge</td>
+        <td>Unlimited pages, 10 guests</td>
+        <td>No</td>
+        <td>All-in-one workspace for docs and wikis</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/cal-com" style="color:var(--text)">Cal.com</a></td>
+        <td>Scheduling</td>
+        <td>Unlimited event types</td>
+        <td>Yes</td>
+        <td>Open-source Calendly alternative</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600"><a href="/vendor/liveblocks" style="color:var(--text)">Liveblocks</a></td>
+        <td>Collaboration</td>
+        <td>Unlimited MAU, 500 active rooms</td>
+        <td>No</td>
+        <td>Real-time collaboration infrastructure</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Pumble leads for free team chat with unlimited message history — a key advantage over Slack's 90-day limit. For video, Jitsi Meet is completely free and open source. Cal.com is the leading open-source scheduling tool. All limits verified against live pricing pages, March 2026.</p>
+
+  <h2>Which Free Collaboration Tool Should I Use?</h2>
+  <div class="decision-guide">
+    <dl>
+      <dt>Need a free Slack alternative?</dt>
+      <dd><a href="/vendor/pumble">Pumble</a> — unlimited message history, free forever. <a href="/vendor/element-io">Element</a> — decentralized, E2E encrypted, self-hostable. <a href="/vendor/rocket-chat">Rocket.Chat</a> — open-source with omnichannel support.</dd>
+
+      <dt>Need free video conferencing?</dt>
+      <dd><a href="/vendor/meet-jit-si">Jitsi Meet</a> — fully open source, no account required, unlimited. <a href="/vendor/zoom-us">Zoom</a> — 40-min meetings, most widely adopted. <a href="/vendor/webex">Webex</a> — 40-min meetings with 100 participants.</dd>
+
+      <dt>Want to embed video in your app?</dt>
+      <dd><a href="/vendor/daily-co">Daily.co</a> — 10K free minutes/month, up to 200 participants. <a href="/vendor/whereby">Whereby</a> — 2K minutes/month, embeddable rooms. <a href="/vendor/livekit">LiveKit</a> — 5K WebRTC minutes, open-source infrastructure.</dd>
+
+      <dt>Need a team knowledge base?</dt>
+      <dd><a href="/vendor/notion">Notion</a> — all-in-one workspace with unlimited pages. <a href="/vendor/hackmd-io">HackMD</a> — real-time collaborative Markdown. <a href="/vendor/nuclino">Nuclino</a> — fast, lightweight team wiki.</dd>
+
+      <dt>Need meeting scheduling?</dt>
+      <dd><a href="/vendor/cal-com">Cal.com</a> — open-source, unlimited event types. <a href="/vendor/calendly">Calendly</a> — 1 event type free, polished UX. <a href="/vendor/cally-com">Cally</a> — simple group scheduling.</dd>
+
+      <dt>Need async-first team communication?</dt>
+      <dd><a href="/vendor/zulip">Zulip</a> — email-like threading model, great for distributed teams. <a href="/vendor/twist-com">Twist</a> — async conversations that stay organized. <a href="/vendor/loom" style="color:var(--text-muted)">Loom</a> — async video messaging (check current free tier).</dd>
+
+      <dt>Need website feedback or comments?</dt>
+      <dd><a href="/vendor/utterances">Utterances</a> — GitHub Issues-powered comments, free and lightweight. <a href="/vendor/graphcomment">GraphComment</a> — community comment platform. <a href="/vendor/ruttl-com">ruttl</a> — visual feedback on live websites.</dd>
+
+      <dt>Need project management too?</dt>
+      <dd>See our dedicated <a href="/project-management-alternatives">Project Management hub</a> — 93+ tools for issue tracking, kanban, time tracking, and agile workflows.</dd>
+    </dl>
+  </div>
+
+  <div class="search-cta">
+    <p>Looking for more? Browse all <a href="/category/team-collaboration">Team Collaboration</a> and <a href="/category/communication">Communication</a> tools in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get team collaboration tool recommendations from your AI assistant. Compare chat, video, and scheduling tools — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Hetzner April 2026 Pricing Analysis ---
 
 function buildHetznerPricing2026Page(): string {
@@ -13512,6 +13849,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api-development-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildApiDevelopmentAlternativesPage());
+  } else if (url.pathname === "/team-collaboration-alternatives" && isGetOrHead) {
+    recordApiHit("/team-collaboration-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/team-collaboration-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildTeamCollaborationAlternativesPage());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
