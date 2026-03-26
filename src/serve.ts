@@ -3868,6 +3868,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Hetzner",
     hubDesc: "Q2 2026 pricing preview — upcoming changes, deadlines, impact analysis, and what to watch",
   },
+  {
+    slug: "google-developer-program-2026",
+    title: "Google Developer Program 2026 — Premium Ending, Migration Guide & Alternatives",
+    metaDesc: "Google Developer Program Premium ($299/year) ends March 30, 2026. Compare GDP Premium vs AI Pro ($19.99/mo) vs AI Ultra ($249.99/mo). Migration steps, free alternatives for Cloud credits, Gemini API, Firebase. Updated March 2026.",
+    contextHtml: "",
+    tag: "gdp-pricing-analysis",
+    primaryVendor: "Google",
+    hubDesc: "Google Developer Program Premium ending March 30 — price comparison, migration guide, and free alternatives",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -11872,6 +11881,433 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Google Developer Program 2026 Pricing Analysis ---
+
+function buildGoogleDeveloperProgram2026Page(): string {
+  const title = "Google Developer Program 2026 — Premium Ending, Migration Guide & Alternatives";
+  const metaDesc = "Google Developer Program Premium ($299/year) ends March 30, 2026. Compare GDP Premium vs AI Pro ($19.99/mo) vs AI Ultra ($249.99/mo). Migration steps, free alternatives for Cloud credits, Gemini API, Firebase. Updated March 2026.";
+  const slug = "google-developer-program-2026";
+  const pubDate = "2026-03-26";
+
+  // Google-related changes from our deal_changes
+  const gdpChange = dealChanges.find(c => c.vendor === "Google" && c.change_type === "pricing_restructured" && c.date === "2026-03-30");
+  const geminiChange = dealChanges.find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
+
+  // Free alternatives from our index
+  const cloudOffers = offers.filter(o =>
+    o.category === "Cloud IaaS" && o.tier !== "Credits" && o.tier !== "Portfolio" &&
+    ["AWS", "Azure", "Oracle Cloud", "DigitalOcean", "Google Cloud Run", "Google Compute Engine"].includes(o.vendor)
+  );
+  const aiOffers = offers.filter(o =>
+    o.category === "AI / ML" && o.tags && o.tags.includes("llm") &&
+    ["Groq", "OpenRouter", "Cerebras", "Mistral AI", "GitHub Models", "Cohere"].includes(o.vendor)
+  );
+  const baasOffers = offers.filter(o =>
+    ["Supabase", "Appwrite Cloud", "Firebase"].includes(o.vendor) && o.category === "Databases"
+  );
+
+  // Price comparison data
+  const planComparison = [
+    { plan: "GDP Premium (ending)", price: "$299/year (~$24.92/mo)", credits: "$500/year (~$41.67/mo)", gemini: "API access included", firebase: "Premium perks", community: "Exclusive events + badges", status: "ending" as const },
+    { plan: "Google AI Pro", price: "$19.99/mo ($239.88/yr)", credits: "$10/mo ($120/yr)", gemini: "Gemini Advanced + API", firebase: "Standard quotas", community: "None", status: "new" as const },
+    { plan: "Google AI Ultra", price: "$249.99/mo ($2,999.88/yr)", credits: "$100/mo ($1,200/yr)", gemini: "Full API + priority", firebase: "Enhanced quotas", community: "None", status: "new" as const },
+    { plan: "Monthly Developer Plan", price: "$24.99/mo", credits: "Vertex AI credits", gemini: "Gemini Code Assist Std", firebase: "30 Firebase Studio Workspaces", community: "None", status: "new" as const },
+  ];
+
+  const statusColors: Record<string, string> = { ending: "#f85149", new: "#3fb950" };
+
+  const planRows = planComparison.map(p => {
+    const statusColor = statusColors[p.status];
+    return `<tr${p.status === "ending" ? ` style="background:rgba(248,81,73,0.08)"` : ""}>
+      <td style="font-weight:600">${escHtmlServer(p.plan)}</td>
+      <td style="font-family:var(--mono);font-weight:600">${escHtmlServer(p.price)}</td>
+      <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(p.credits)}</td>
+      <td>${escHtmlServer(p.gemini)}</td>
+      <td>${escHtmlServer(p.firebase)}</td>
+      <td><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${statusColor}22;color:${statusColor};font-weight:600">${p.status === "ending" ? "ENDING" : "NEW"}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Cloud credit alternatives
+  const creditAlternatives = [
+    { vendor: "AWS Free Tier", credits: "12 months free + always-free services", highlight: "750h EC2 t2.micro, 5GB S3, 1M Lambda requests", link: "/vendor/aws" },
+    { vendor: "Azure Free Account", credits: "$200 credits (30 days) + 12 months free", highlight: "750h B1s VM, 5GB Blob Storage, 250GB SQL", link: "/vendor/azure" },
+    { vendor: "Oracle Cloud", credits: "Always Free — no expiry", highlight: "4 Ampere OCPUs, 24GB RAM, 200GB block storage", link: "/vendor/oracle-cloud" },
+    { vendor: "DigitalOcean", credits: "$200 credits (60 days)", highlight: "Good for testing, then $4/mo droplets", link: "/vendor/digitalocean" },
+    { vendor: "Google Cloud (direct)", credits: "$300 credits (90 days) + always-free tier", highlight: "Same GCP services, no subscription needed", link: "/vendor/google-cloud-run" },
+    { vendor: "Railway", credits: "$5/mo free credit", highlight: "No sleep, GitHub deploy, usage-based", link: "/vendor/railway" },
+  ];
+
+  const creditAltRows = creditAlternatives.map(c => `<tr>
+      <td style="font-weight:600"><a href="${c.link}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.credits)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}</td>
+    </tr>`).join("\n        ");
+
+  // LLM API alternatives
+  const llmAlternatives = [
+    { vendor: "Groq", free: "30 RPM, 100K-500K tokens/day", models: "Llama 3, Mixtral, Gemma", link: "/vendor/groq" },
+    { vendor: "OpenRouter", free: "Free models available", models: "100+ models aggregated", link: "/vendor/openrouter" },
+    { vendor: "Cerebras", free: "Free tier available", models: "Llama 3, fast inference", link: "/vendor/cerebras" },
+    { vendor: "Mistral AI", free: "Experiment tier", models: "Mistral, Mixtral, Codestral", link: "/vendor/mistral-ai" },
+    { vendor: "GitHub Models", free: "Free for GitHub users", models: "GPT-4o, Llama, Phi, Mistral", link: "/vendor/github-models" },
+    { vendor: "Cohere", free: "Trial key available", models: "Command, Embed, Rerank", link: "/vendor/cohere" },
+  ];
+
+  const llmAltRows = llmAlternatives.map(c => `<tr>
+      <td style="font-weight:600"><a href="${c.link}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.free)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.models)}</td>
+    </tr>`).join("\n        ");
+
+  // Firebase alternatives
+  const firebaseAlternatives = [
+    { vendor: "Supabase", free: "500MB DB, 1GB storage, 50K auth users", highlight: "Postgres-based, real-time, auth included", link: "/vendor/supabase" },
+    { vendor: "Appwrite Cloud", free: "75K+ requests, 10GB bandwidth", highlight: "Self-hostable, auth, DB, storage, functions", link: "/vendor/appwrite-cloud" },
+    { vendor: "Firebase (direct)", free: "Spark plan free forever", highlight: "1GB Firestore, 5GB Storage, 50K reads/day", link: "/vendor/firebase" },
+    { vendor: "PocketBase", free: "Self-hosted, unlimited", highlight: "Single binary, SQLite-based, auth+storage", link: "/search?q=pocketbase" },
+  ];
+
+  const firebaseAltRows = firebaseAlternatives.map(c => `<tr>
+      <td style="font-weight:600"><a href="${c.link}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.free)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}</td>
+    </tr>`).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["free-ai-stack", "free-startup-stack", "free-llm-apis", "ai-ml-alternatives", "hosting-alternatives", "q2-pricing-preview-2026"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: {
+      "@type": "Thing",
+      name: "Google Developer Program Premium discontinuation",
+      description: "Analysis of Google Developer Program Premium ending March 30, 2026 and migration to AI Pro/Ultra subscriptions",
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.impact-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.impact-card h3{margin:0 0 .5rem;font-size:1rem}
+.impact-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.context-box ul{margin:.75rem 0 0 1.5rem}
+.context-box li{margin-bottom:.5rem}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.migration-step{display:flex;gap:1rem;margin-bottom:1rem;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)}
+.step-number{flex-shrink:0;width:2rem;height:2rem;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+.step-content{flex:1}
+.step-content h3{margin:0 0 .25rem;font-size:.95rem}
+.step-content p{color:var(--text-muted);font-size:.85rem;margin:0}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.migration-step{flex-direction:column;gap:.5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Google Developer Program 2026</div>
+  <h1>Google Developer Program Premium — What's Ending &amp; What Replaces It</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Deadline: March 30, 2026 &middot; Affects all GDP Premium subscribers</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number red">Mar 30</div><div class="stat-label">Premium Ends</div></div>
+    <div class="stat-card"><div class="stat-number">$299/yr</div><div class="stat-label">→ $19.99/mo</div></div>
+    <div class="stat-card"><div class="stat-number red">−76%</div><div class="stat-label">Cloud Credits Cut</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:#3fb950">6+</div><div class="stat-label">Free Alternatives</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Google Developer Program Premium ($299/year) stops auto-renewing on March 30, 2026.</strong> Developer benefits are migrating to consumer AI subscriptions: <strong>Google AI Pro</strong> ($19.99/mo) and <strong>AI Ultra</strong> ($249.99/mo). A new monthly Developer Plan at $24.99/mo is also available.</p>
+    <p><strong>The headline loss: Cloud credits drop 76%.</strong> GDP Premium included $500/year (~$41.67/mo) in GCP credits. AI Pro includes just $10/mo ($120/yr). To match the old credit level, you'd need AI Ultra at $249.99/mo — a 10x price increase for roughly equivalent cloud credits.</p>
+    <p><strong>Who's most affected:</strong> Indie developers, students, and small teams who relied on GDP Premium for cheap GCP access and Gemini API usage. The AI Pro tier is adequate for light Gemini users, but the Cloud credits reduction is significant for anyone running workloads on GCP.</p>
+    <p><strong>The silver lining:</strong> Google's free tiers for individual services (Cloud Run, Firebase Spark, BigQuery) are unchanged. You can replace most GDP Premium benefits by combining free tiers directly — no subscription needed.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#timeline">What's Changing &amp; Timeline</a></li>
+      <li><a href="#comparison">Price Comparison Table</a></li>
+      <li><a href="#affected">Who's Affected</a></li>
+      <li><a href="#migration">Migration Guide</a></li>
+      <li><a href="#cloud-alts">Free Cloud Alternatives</a></li>
+      <li><a href="#ai-alts">Free AI/LLM API Alternatives</a></li>
+      <li><a href="#firebase-alts">Firebase Alternatives</a></li>
+      <li><a href="#cost">Cost Analysis</a></li>
+      <li><a href="#verdict">Verdict &amp; Recommendation</a></li>
+    </ol>
+  </div>
+
+  <h2 id="timeline">1. What's Changing &amp; Timeline</h2>
+  <p class="section-intro">Google announced the transition in January 2026. Here's the timeline:</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    <div class="impact-card" style="border-left-color:#d29922">
+      <h3>January 27, 2026 — Announcement</h3>
+      <p class="impact-desc">Google announces GDP Premium is being folded into AI Pro and AI Ultra subscriptions. Developer benefits move from a standalone program to consumer AI products.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#f85149">
+      <h3>March 30, 2026 — Premium Ends</h3>
+      <p class="impact-desc">GDP Premium stops auto-renewing for @gmail.com accounts. Existing subscribers lose access to Premium benefits. Must migrate to AI Pro, AI Ultra, or the new monthly plan.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>Ongoing — Free Tiers Unchanged</h3>
+      <p class="impact-desc">Google's per-service free tiers (Cloud Run, Firebase Spark, BigQuery, Cloud Build) continue unchanged. The free Google Developer Program (non-Premium) also continues.</p>
+    </div>
+  </div>
+  ${gdpChange ? `<div class="context-box"><strong>From our change tracker:</strong> ${escHtmlServer(gdpChange.summary)}<br><a href="${escHtmlServer(gdpChange.source_url)}" target="_blank" rel="noopener">Source →</a></div>` : ""}
+
+  <h2 id="comparison">2. Price Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of what you're losing and what replaces it.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Plan</th><th>Price</th><th>Cloud Credits</th><th>Gemini</th><th>Firebase</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        ${planRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Key takeaway:</strong> GDP Premium gave you $500/year in Cloud credits for $299/year — effectively a 40% discount on GCP. AI Pro gives you $120/year in credits for $239.88/year — you're paying more than you get back in credits. The value proposition has shifted from "cheap Cloud access" to "Gemini API access with a small credit bonus."
+  </div>
+
+  <h2 id="affected">3. Who's Affected</h2>
+  <p class="section-intro">The impact varies significantly by use case.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin:1rem 0">
+    <div class="impact-card" style="border-left-color:#f85149"><h3>Heavy GCP Users</h3><p class="impact-desc">Anyone using the full $500/year credits for Cloud Run, Compute Engine, or GKE loses the most. AI Pro's $120/yr covers a fraction of the same workloads.</p></div>
+    <div class="impact-card" style="border-left-color:#f85149"><h3>Students &amp; Learners</h3><p class="impact-desc">GDP Premium was popular for learning GCP at low cost. $19.99/mo is steep for students when Oracle and AWS free tiers exist.</p></div>
+    <div class="impact-card" style="border-left-color:#d29922"><h3>Gemini API Users</h3><p class="impact-desc">Mixed: Gemini API free tier was already reduced 50-80% in late 2025. AI Pro's Gemini access may be better than the degraded free tier.</p></div>
+    <div class="impact-card" style="border-left-color:#3fb950"><h3>Firebase-Only Devs</h3><p class="impact-desc">Firebase Spark plan (free) is unchanged. If you only used GDP Premium for Firebase, you don't need AI Pro — the free tier covers most use cases.</p></div>
+  </div>
+
+  <h2 id="migration">4. Migration Guide</h2>
+  <p class="section-intro">Steps to take before March 30, 2026:</p>
+  <div style="margin:1.5rem 0">
+    <div class="migration-step">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <h3>Check Your Current Usage</h3>
+        <p>Visit <a href="https://console.cloud.google.com/billing" target="_blank" rel="noopener">Google Cloud Console → Billing</a> to see how much of your $500/year credits you actually use. If you use less than $120/year, AI Pro covers you.</p>
+      </div>
+    </div>
+    <div class="migration-step">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <h3>Evaluate AI Pro vs. AI Ultra</h3>
+        <p><strong>AI Pro ($19.99/mo)</strong> — best for light GCP usage + Gemini access. <strong>AI Ultra ($249.99/mo)</strong> — only if you need $100/mo in Cloud credits and priority Gemini API. Most developers should start with AI Pro or skip both.</p>
+      </div>
+    </div>
+    <div class="migration-step">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <h3>Audit Your GCP Dependencies</h3>
+        <p>List services you run on GCP credits. For each, check if there's a free tier available directly (Cloud Run free tier, BigQuery 1TB/mo, Cloud Build 120 min/day). You may not need credits at all.</p>
+      </div>
+    </div>
+    <div class="migration-step">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <h3>Set Up Alternatives Before March 30</h3>
+        <p>Create accounts on alternative platforms now while you still have GDP Premium access. Test your workloads on Oracle Cloud (Always Free), AWS Free Tier, or Railway before your credits expire.</p>
+      </div>
+    </div>
+    <div class="migration-step">
+      <div class="step-number">5</div>
+      <div class="step-content">
+        <h3>Subscribe or Switch</h3>
+        <p>If staying with Google: subscribe to AI Pro or the monthly Developer Plan before March 30 to avoid service interruption. If switching: migrate workloads to alternative platforms and cancel.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="cloud-alts">5. Free Cloud Credit Alternatives</h2>
+  <p class="section-intro">If you relied on GDP Premium's $500/year GCP credits, these free tiers can replace or supplement them.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Free Credits / Tier</th><th>Highlights</th></tr>
+      </thead>
+      <tbody>
+        ${creditAltRows}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>Best strategy:</strong> Oracle Cloud's Always Free tier (4 Ampere OCPUs, 24GB RAM) provides more compute than GDP Premium's credits ever could — and it never expires. Combine with AWS and Azure free tiers for a multi-cloud setup that costs $0/month. See our <a href="/free-startup-stack">Free Startup Stack</a> guide for a complete infrastructure setup.
+  </div>
+
+  <h2 id="ai-alts">6. Free AI/LLM API Alternatives</h2>
+  <p class="section-intro">GDP Premium included Gemini API access, but Google already reduced free Gemini limits 50-80% in late 2025. These alternatives often offer more generous free tiers.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Free Tier</th><th>Models</th></tr>
+      </thead>
+      <tbody>
+        ${llmAltRows}
+      </tbody>
+    </table>
+  </div>
+  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${escHtmlServer(geminiChange.summary)} This means the Gemini API access in AI Pro may not be significantly better than what's available for free via other providers. See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
+
+  <h2 id="firebase-alts">7. Firebase Alternatives</h2>
+  <p class="section-intro">Firebase's Spark (free) plan is unchanged by the GDP Premium discontinuation. But if you're re-evaluating your stack, these BaaS alternatives offer competitive free tiers.</p>
+  <div style="overflow-x:auto">
+    <table class="pricing-table">
+      <thead>
+        <tr><th>Provider</th><th>Free Tier</th><th>Highlights</th></tr>
+      </thead>
+      <tbody>
+        ${firebaseAltRows}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="cost">8. Cost Analysis</h2>
+  <p class="section-intro">Is AI Pro or AI Ultra worth it compared to direct Google Cloud pay-as-you-go?</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    <div class="impact-card" style="border-left-color:#d29922">
+      <h3>AI Pro ($19.99/mo) — Break-Even Analysis</h3>
+      <p class="impact-desc">You pay $19.99 and get $10 in Cloud credits. Net cost for non-credit benefits: <strong>$9.99/mo</strong>. You're essentially paying $9.99/mo for Gemini Advanced access. Worth it only if you actively use Gemini beyond the free tier limits. Most developers can use Groq or OpenRouter free tiers instead.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#f85149">
+      <h3>AI Ultra ($249.99/mo) — Break-Even Analysis</h3>
+      <p class="impact-desc">You pay $249.99 and get $100 in Cloud credits. Net cost: <strong>$149.99/mo for Gemini priority access</strong>. Only makes sense for enterprise use cases or heavy Gemini API usage. For most developers, this is dramatically overpaying.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>$0/mo Alternative — Free Tier Stack</h3>
+      <p class="impact-desc">Oracle Cloud (compute) + AWS (services) + Groq (LLM API) + Firebase Spark (BaaS) + GitHub Actions (CI/CD) = $0/month. Covers 90%+ of what GDP Premium provided. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
+    </div>
+  </div>
+
+  <h2 id="verdict">9. Verdict &amp; Recommendation</h2>
+  <div class="verdict-box">
+    <h3>Who Should Do What</h3>
+    <div class="verdict-item">
+      <strong>If you use &lt;$10/mo in GCP credits:</strong>
+      <p>Subscribe to AI Pro ($19.99/mo) if you want Gemini Advanced. Otherwise, skip it entirely and use GCP's per-service free tiers directly.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>If you relied on the full $500/year credits:</strong>
+      <p>Switch to a multi-cloud free tier strategy (Oracle + AWS + Azure). You'll get more compute for $0 than GDP Premium provided for $299. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>If you used GDP Premium primarily for Gemini API:</strong>
+      <p>The free Gemini tier was already gutted in late 2025. Try <a href="/vendor/groq">Groq</a> (30 RPM free) or <a href="/vendor/openrouter">OpenRouter</a> (free models) before paying for AI Pro. See our <a href="/free-llm-apis">Free LLM APIs</a> guide.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>If you're a student or learning:</strong>
+      <p>Don't pay for AI Pro. Use <a href="/vendor/oracle-cloud">Oracle Cloud Always Free</a> (4 OCPUs, 24GB RAM — more than GDP Premium ever offered), <a href="/vendor/firebase">Firebase Spark</a>, and free LLM APIs. Total cost: $0.</p>
+    </div>
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">Deep-dive guides for building on free tiers and tracking pricing changes.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Pricing data sourced from <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/" target="_blank" rel="noopener">Google's official blog post</a>, <a href="https://developers.google.com/profile/help/benefits" target="_blank" rel="noopener">Developer Program benefits page</a>, and <a href="https://ai.google.dev/pricing" target="_blank" rel="noopener">Google AI pricing page</a>. Alternative pricing verified against vendor pages as of March 2026. Cloud credit comparisons use official free tier limits from our index of ${offers.length.toLocaleString()} tracked developer tools.
+  </div>
+
+  <div class="search-cta">
+    <p>This analysis covers Google Developer Program Premium ending March 30, 2026. For the full Q2 outlook including Hetzner, Tenor API, and more, see the <a href="/q2-pricing-preview-2026">Q2 2026 Pricing Preview</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track Google pricing changes and find free alternatives from your AI assistant. Get alerts on free tier removals and discover $0/month infrastructure options — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -15535,6 +15971,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-frontend-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeFrontendStackPage());
+  } else if (url.pathname === "/google-developer-program-2026" && isGetOrHead) {
+    recordApiHit("/google-developer-program-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/google-developer-program-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildGoogleDeveloperProgram2026Page());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

@@ -2275,6 +2275,40 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /google-developer-program-2026 renders GDP pricing analysis page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/google-developer-program-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Google Developer Program Premium"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("March 30, 2026"), "Should mention deadline");
+    assert.ok(html.includes("Price Comparison Table"), "Should have comparison section");
+    assert.ok(html.includes("Who&#x27;s Affected") || html.includes("Who's Affected"), "Should have who section");
+    assert.ok(html.includes("Migration Guide"), "Should have migration section");
+    assert.ok(html.includes("Free Cloud"), "Should have cloud alternatives section");
+    assert.ok(html.includes("Free AI/LLM"), "Should have AI alternatives section");
+    assert.ok(html.includes("Firebase Alternatives"), "Should have Firebase section");
+    assert.ok(html.includes("Cost Analysis"), "Should have cost analysis section");
+    assert.ok(html.includes("Verdict"), "Should have verdict section");
+    assert.ok(html.includes("AI Pro"), "Should mention AI Pro");
+    assert.ok(html.includes("AI Ultra"), "Should mention AI Ultra");
+    assert.ok(html.includes("$299"), "Should mention old price");
+    assert.ok(html.includes("$19.99"), "Should mention AI Pro price");
+    assert.ok(html.includes("Oracle Cloud"), "Should include Oracle as alternative");
+    assert.ok(html.includes("Groq"), "Should include Groq as LLM alternative");
+    assert.ok(html.includes("Supabase"), "Should include Supabase as Firebase alternative");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/free-startup-stack"), "Should cross-link to free startup stack");
+    assert.ok(html.includes("/free-llm-apis"), "Should cross-link to free LLM APIs");
+    assert.ok(html.includes("/changes"), "Should link to changes page");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
