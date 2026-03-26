@@ -2365,6 +2365,35 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/vendor/netlify"), "Should link to Netlify profile");
   });
 
+  it("GET /neon-vs-supabase renders comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/neon-vs-supabase`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Neon vs Supabase"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Free Tier Comparison Table"), "Should have comparison section");
+    assert.ok(html.includes("Key Differences"), "Should have differences section");
+    assert.ok(html.includes("Cost at Scale"), "Should have cost section");
+    assert.ok(html.includes("When to Choose Each"), "Should have decision guide");
+    assert.ok(html.includes("Other Database Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("Recent Deal Changes"), "Should have changes section");
+    assert.ok(html.includes("100 CU-hours"), "Should include Neon compute");
+    assert.ok(html.includes("500 MB"), "Should include Supabase storage");
+    assert.ok(html.includes("10 branches per project"), "Should highlight Neon branching");
+    assert.ok(html.includes("Turso") || html.includes("CockroachDB"), "Should include database alternatives");
+    assert.ok(html.includes("/database-alternatives"), "Should cross-link to database hub");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/vendor/neon"), "Should link to Neon profile");
+    assert.ok(html.includes("/vendor/supabase"), "Should link to Supabase profile");
+    assert.ok(html.includes("/supabase-vs-firebase"), "Should cross-link to Supabase vs Firebase");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
