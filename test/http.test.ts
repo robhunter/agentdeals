@@ -2107,6 +2107,28 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
+  it("GET /q2-pricing-preview-2026 renders Q2 pricing preview page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/q2-pricing-preview-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Q2 2026 Developer Pricing Preview"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Timeline"), "Should have timeline section");
+    assert.ok(html.includes("Impact Analysis"), "Should have impact analysis");
+    assert.ok(html.includes("What to Watch"), "Should have watch section");
+    assert.ok(html.includes("Hetzner"), "Should mention Hetzner");
+    assert.ok(html.includes("Related Guides"), "Should have related guides");
+    assert.ok(html.includes("/changes"), "Should link to changes page");
+    assert.ok(html.includes("/q1-2026-developer-pricing-report"), "Should link to Q1 report");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+  });
+
   // --- Hetzner April 2026 Pricing Analysis ---
 
   it("GET /hetzner-pricing-2026 renders Hetzner pricing analysis page", async () => {
