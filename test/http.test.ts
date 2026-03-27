@@ -2479,6 +2479,33 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-startup-stack"), "Should cross-link to startup stack");
   });
 
+  it("GET /hcp-terraform-migration renders migration guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/hcp-terraform-migration`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("HCP Terraform Migration Guide"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("What's Changing on March 31"), "Should have what's changing section");
+    assert.ok(html.includes("Who's Affected"), "Should have who's affected section");
+    assert.ok(html.includes("Migration Paths"), "Should have migration paths section");
+    assert.ok(html.includes("Decision Matrix"), "Should have decision matrix section");
+    assert.ok(html.includes("Step-by-Step Migration"), "Should have migration steps section");
+    assert.ok(html.includes("Spacelift"), "Should include Spacelift as alternative");
+    assert.ok(html.includes("Scalr"), "Should include Scalr as alternative");
+    assert.ok(html.includes("OpenTofu"), "Should include OpenTofu as alternative");
+    assert.ok(html.includes("Terragrunt Scale"), "Should include Terragrunt Scale");
+    assert.ok(html.includes("500"), "Should mention 500 resource cap");
+    assert.ok(html.includes("/terraform-alternatives"), "Should cross-link to terraform alternatives");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("March 31"), "Should mention the deadline");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
