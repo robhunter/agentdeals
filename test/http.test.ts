@@ -2506,6 +2506,33 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("March 31"), "Should mention the deadline");
   });
 
+  it("GET /gemini-api-pricing-2026 renders Gemini API pricing analysis page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/gemini-api-pricing-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Gemini API Pricing Changes"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("What's Changing April 1"), "Should have what's changing section");
+    assert.ok(html.includes("Timeline of Gemini API Changes"), "Should have timeline section");
+    assert.ok(html.includes("Who's Affected"), "Should have who's affected section");
+    assert.ok(html.includes("Free LLM API Comparison"), "Should have comparison section");
+    assert.ok(html.includes("What to Do"), "Should have what to do section");
+    assert.ok(html.includes("Groq"), "Should include Groq as alternative");
+    assert.ok(html.includes("OpenRouter"), "Should include OpenRouter as alternative");
+    assert.ok(html.includes("Cerebras"), "Should include Cerebras as alternative");
+    assert.ok(html.includes("50-80%"), "Should mention rate limit reduction");
+    assert.ok(html.includes("Spend Caps"), "Should mention spend caps");
+    assert.ok(html.includes("/free-llm-apis"), "Should cross-link to free LLM APIs");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("April 1"), "Should mention the deadline");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
