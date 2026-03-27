@@ -2590,6 +2590,37 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-startup-stack"), "Should cross-link to free startup stack");
   });
 
+  it("GET /ai-coding-pricing-2026 renders AI coding pricing guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/ai-coding-pricing-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("AI Coding Tools Pricing"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Cursor"), "Should include Cursor");
+    assert.ok(html.includes("Windsurf"), "Should include Windsurf");
+    assert.ok(html.includes("GitHub Copilot"), "Should include GitHub Copilot");
+    assert.ok(html.includes("Gemini Code Assist"), "Should include Gemini Code Assist");
+    assert.ok(html.includes("Amazon Q Developer"), "Should include Amazon Q");
+    assert.ok(html.includes("Claude Code"), "Should include Claude Code");
+    assert.ok(html.includes("Augment Code"), "Should include Augment Code");
+    assert.ok(html.includes("Cline"), "Should include Cline");
+    assert.ok(html.includes("Aider"), "Should include Aider");
+    assert.ok(html.includes("$20/mo"), "Should show $20/mo price point");
+    assert.ok(html.includes("$200/mo"), "Should show $200/mo power tier");
+    assert.ok(html.includes("What You Actually Get for Free"), "Should have free tier section");
+    assert.ok(html.includes("Recent Pricing Changes"), "Should have changes section");
+    assert.ok(html.includes("Which Tool for Which Developer"), "Should have recommendations");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
+    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
