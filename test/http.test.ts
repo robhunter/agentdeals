@@ -2648,6 +2648,34 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
   });
 
+  it("GET /gcp-free-tier-2026 renders GCP free tier guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/gcp-free-tier-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("GCP Free Tier Complete Guide"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Always Free Products"), "Should have always free section");
+    assert.ok(html.includes("Free Trial"), "Should have trial section");
+    assert.ok(html.includes("BigQuery"), "Should include BigQuery");
+    assert.ok(html.includes("Cloud Run"), "Should include Cloud Run");
+    assert.ok(html.includes("e2-micro"), "Should include e2-micro VM");
+    assert.ok(html.includes("Firestore"), "Should include Firestore");
+    assert.ok(html.includes("Hidden Costs"), "Should have gotchas section");
+    assert.ok(html.includes("GCP vs AWS"), "Should have alternatives comparison");
+    assert.ok(html.includes("Best Picks by Use Case"), "Should have stacks section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
+    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+    assert.ok(html.includes("/aws-free-tier-2026"), "Should cross-link to AWS guide");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 

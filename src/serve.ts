@@ -3986,6 +3986,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "AWS",
     hubDesc: "Complete AWS free tier guide — every free service, real limits, hidden costs, and Aurora PostgreSQL Serverless (new March 2026)",
   },
+  {
+    slug: "gcp-free-tier-2026",
+    title: "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
+    metaDesc: "Comprehensive guide to every Google Cloud free tier service in 2026. 30+ Always Free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.",
+    contextHtml: "",
+    tag: "gcp-free-tier-2026",
+    primaryVendor: "Google Cloud",
+    hubDesc: "Complete GCP free tier guide — 30+ always-free products, $300 trial, hidden costs, and comparison with AWS and Azure",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -17093,6 +17102,431 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- GCP Free Tier guide page ---
+
+function buildGcpFreeTier2026Page(): string {
+  const title = "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
+  const metaDescGcp = "Comprehensive guide to every Google Cloud free tier service in 2026. 30+ Always Free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.";
+  const slug = "gcp-free-tier-2026";
+  const pubDate = "2026-03-27";
+
+  // Pull GCP-related offers from our index
+  const gcpOffers = offers.filter(o =>
+    o.vendor === "Google Cloud" || o.vendor.startsWith("Google Cloud") || o.vendor.startsWith("Google ") ||
+    o.vendor === "Firebase" || o.tags?.some((t: string) => t === "gcp" || t === "google-cloud")
+  );
+
+  // Deal changes related to GCP
+  const gcpChanges = dealChanges.filter((c: any) =>
+    c.vendor === "Google Cloud" || c.vendor.startsWith("Google") || c.vendor === "Firebase" ||
+    c.vendor.includes("Gemini")
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Always Free services (no expiration)
+  interface GcpService {
+    name: string;
+    slug: string;
+    limits: string;
+    category: string;
+    highlight?: boolean;
+  }
+
+  const alwaysFreeServices: GcpService[] = [
+    { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute" },
+    { name: "Cloud Run", slug: "google-cloud-run", limits: "2M requests/month, 360K GiB-seconds memory, 180K vCPU-seconds", category: "Compute" },
+    { name: "Cloud Functions", slug: "google-cloud", limits: "2M invocations/month, 400K GB-seconds, 200K GHz-seconds", category: "Compute" },
+    { name: "App Engine", slug: "google-cloud", limits: "28 instance-hours/day (F1 instances), 1 GB egress/day", category: "Compute" },
+    { name: "GKE Autopilot", slug: "google-cloud", limits: "1 free zonal cluster (no cluster management fee, pay for pods only)", category: "Containers" },
+    { name: "Cloud Shell", slug: "google-cloud-shell", limits: "5 GB persistent home directory, web-based terminal with built-in tools", category: "Dev Tools" },
+    { name: "BigQuery", slug: "google-cloud-bigquery", limits: "1 TiB queries/month, 10 GiB storage, ML model creation included", category: "Analytics" },
+    { name: "Firestore", slug: "firebase", limits: "1 GiB storage, 50K reads/day, 20K writes/day, 20K deletes/day", category: "Database" },
+    { name: "Cloud Storage", slug: "google-cloud-storage", limits: "5 GB-months Standard (us-west1, us-central1, us-east1), 5K Class A ops, 50K Class B ops", category: "Storage" },
+    { name: "Pub/Sub", slug: "google-cloud-pub-sub", limits: "10 GiB messages/month", category: "Messaging" },
+    { name: "Cloud Build", slug: "google-cloud-build", limits: "2,500 build-minutes/day (e1-small), 120 builds/day", category: "CI/CD" },
+    { name: "Artifact Registry", slug: "google-artifact-registry", limits: "500 MB storage", category: "Containers" },
+    { name: "Cloud Logging", slug: "google-cloud-logging", limits: "50 GiB logs ingestion/month, 30-day retention", category: "Logging" },
+    { name: "Cloud Monitoring", slug: "google-cloud-monitoring", limits: "All GCP metrics, 500 custom metrics, alerting included", category: "Monitoring" },
+    { name: "Secret Manager", slug: "google-secret-manager", limits: "6 active secret versions, 10K access operations/month", category: "Security" },
+    { name: "Cloud Source Repositories", slug: "google-cloud", limits: "Up to 5 users, 50 GiB storage, 50 GiB egress", category: "Source Control" },
+    { name: "Cloud Vision API", slug: "google-cloud", limits: "1,000 units/month (label detection, face detection, OCR, etc.)", category: "AI/ML" },
+    { name: "Cloud Natural Language API", slug: "google-cloud", limits: "5,000 units/month (sentiment analysis, entity extraction)", category: "AI/ML" },
+    { name: "Cloud Speech-to-Text", slug: "google-cloud", limits: "60 minutes/month audio transcription", category: "AI/ML" },
+    { name: "Cloud Video Intelligence API", slug: "google-cloud", limits: "1,000 units/month (label detection, shot detection)", category: "AI/ML" },
+    { name: "Cloud Translation API", slug: "google-cloud", limits: "500K characters/month translation", category: "AI/ML" },
+    { name: "Workflows", slug: "google-cloud", limits: "5,000 internal steps/month (external steps free)", category: "Integration" },
+    { name: "Application Integration", slug: "google-cloud", limits: "400 executions/month, 2 active connectors", category: "Integration" },
+    { name: "reCAPTCHA Enterprise", slug: "google-cloud", limits: "10,000 assessments/month", category: "Security" },
+    { name: "Cloud KMS", slug: "google-cloud", limits: "100 active key versions (software keys)", category: "Security" },
+    { name: "Cloud Scheduler", slug: "google-cloud", limits: "3 free jobs per billing account", category: "Scheduling" },
+    { name: "Firebase Auth", slug: "firebase", limits: "50,000 MAUs (phone auth: 10K verifications/month)", category: "Auth" },
+    { name: "Firebase Hosting", slug: "firebase", limits: "10 GiB storage, 360 MB/day transfer, custom domain + SSL", category: "Hosting" },
+    { name: "Firebase Realtime Database", slug: "firebase", limits: "1 GB storage, 10 GB/month transfer, 100 simultaneous connections", category: "Database" },
+    { name: "Firebase Remote Config", slug: "firebase", limits: "Unlimited, including A/B testing", category: "Feature Flags" },
+    { name: "Google Cloud Armor", slug: "google-cloud", limits: "WAF rules evaluated per policy (standard tier free)", category: "Security" },
+  ];
+
+  const trialServices: GcpService[] = [
+    { name: "$300 Free Trial Credit", slug: "google-cloud", limits: "$300 credit for 90 days, full access to all GCP services, credit card required", category: "Trial" },
+    { name: "Vertex AI (Gemini)", slug: "google-gemini-api", limits: "Free tier: Gemini 2.5 Flash 500 req/day, Gemini 2.5 Pro 25 req/day", category: "AI/ML", highlight: true },
+    { name: "Gemini Code Assist", slug: "google-gemini-code-assist", limits: "Free individual tier: code completions, chat, multi-file editing (VS Code, JetBrains)", category: "AI Coding", highlight: true },
+    { name: "Google Colab", slug: "google-colab", limits: "Free tier: T4 GPU (limited), standard RAM, 12-hour session limit", category: "AI/ML" },
+    { name: "AlloyDB Omni", slug: "google-cloud", limits: "Free to download and run locally (PostgreSQL-compatible, columnar engine)", category: "Database" },
+    { name: "Looker Studio", slug: "google-cloud", limits: "Free for individual use (unlimited reports, 10 data sources)", category: "Analytics" },
+  ];
+
+  interface GotchaItem {
+    title: string;
+    desc: string;
+    cost: string;
+  }
+
+  const gotchas: GotchaItem[] = [
+    { title: "Egress charges", desc: "All GCP services charge for data leaving Google's network. First 200 GiB/month to worldwide destinations (excl. China/Australia) free on Premium Tier. After that, $0.12/GiB for Americas/EMEA. Internal cross-region transfers also charged.", cost: "$0.12/GiB" },
+    { title: "e2-micro region restriction", desc: "The free e2-micro VM is only free in us-west1, us-central1, and us-east1. Launching in any other region (including Europe, Asia) will incur standard Compute Engine charges.", cost: "~$7/mo wrong region" },
+    { title: "Cloud Storage class operations", desc: "Class A operations (writes, lists) cost more than Class B (reads). The free tier covers 5K Class A and 50K Class B/month. Heavy write workloads (logging, backups) can exceed this quickly.", cost: "$0.05/10K Class A" },
+    { title: "Firestore daily limits", desc: "Firestore free tier is generous on storage (1 GiB) but tight on operations: 50K reads, 20K writes, 20K deletes per day. A moderately active app can hit read limits easily.", cost: "$0.06/100K reads" },
+    { title: "Free trial credit expiration", desc: "The $300 credit expires after 90 days, regardless of balance. When it expires or is exhausted, your account pauses and requires upgrade to paid. No automatic billing (but you lose access).", cost: "Service pause" },
+    { title: "Load balancer costs", desc: "Google Cloud load balancers are never free. Minimum ~$18/month for a global external load balancer + $0.008-0.012/GB processed. Cloud Run and App Engine include their own load balancing for free.", cost: "$18+/mo" },
+    { title: "Persistent disk snapshots", desc: "Persistent disk storage is free (30 GB), but snapshots are not. Each snapshot costs $0.026/GB/month. Automatic snapshot schedules can accumulate costs quietly.", cost: "$0.026/GB/mo" },
+    { title: "BigQuery streaming inserts", desc: "BigQuery queries are free up to 1 TiB/month, but streaming inserts cost $0.01/200 MB. Batch loading is free. If your app streams data in real-time, costs can add up.", cost: "$0.05/GB streamed" },
+  ];
+
+  // Alternative cloud providers comparison
+  interface CloudAlt {
+    name: string;
+    slug: string;
+    freeTier: string;
+    strength: string;
+    bestFor: string;
+  }
+
+  const cloudAlts: CloudAlt[] = [
+    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 12-month EC2/RDS", strength: "Broadest service catalog, most enterprise adoption", bestFor: "Enterprise workloads, serverless (Lambda)" },
+    { name: "Azure", slug: "azure", freeTier: "12-month: VMs, SQL, Cosmos DB (1K RU/s + 25 GB). $200 credit", strength: "Best .NET/Windows integration, hybrid cloud", bestFor: "Microsoft stack teams, enterprise" },
+    { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB (zero egress), D1 5 GB, Pages unlimited", strength: "Zero egress on R2, global edge network", bestFor: "Edge computing, static sites, storage" },
+    { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
+    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS, Heroku replacement", bestFor: "Small web apps, side projects" },
+    { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
+    { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
+    { name: "Neon", slug: "neon", freeTier: "512 MiB storage, 190 compute hours, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Database-only needs with branching" },
+  ];
+
+  const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
+      <td style="font-weight:600">${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const trialRows = trialServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
+      <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const gotchaCards = gotchas.map(g => `<div class="diff-card" style="border-left-color:#f85149">
+      <h3>${escHtmlServer(g.title)} <span style="font-size:.75rem;color:#f85149;font-weight:400">${escHtmlServer(g.cost)}</span></h3>
+      <p class="diff-desc">${escHtmlServer(g.desc)}</p>
+    </div>`).join("\n    ");
+
+  const altRows = cloudAlts.map(a => `<tr>
+      <td style="font-weight:600"><a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a></td>
+      <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
+      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
+    </tr>`).join("\n        ");
+
+  const changeTimelineRows = gcpChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["aws-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescGcp,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: { "@type": "Organization", name: "Google Cloud" },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescGcp)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescGcp)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCP Free Tier 2026</div>
+  <h1>GCP Free Tier Complete Guide 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${gcpOffers.length} GCP entries tracked</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
+    <div class="stat-card"><div class="stat-number green">$300</div><div class="stat-label">Trial Credit</div></div>
+    <div class="stat-card"><div class="stat-number">1 TiB</div><div class="stat-label">BigQuery Free</div></div>
+    <div class="stat-card"><div class="stat-number green">2M</div><div class="stat-label">Cloud Run Req/Mo</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Three tiers, different rules.</strong> GCP bundles its free offerings into three categories. <strong>Always Free</strong> products have permanent monthly quotas — Cloud Run (2M requests), BigQuery (1 TiB), and 29 other services stay free forever within limits. The <strong>$300 Free Trial</strong> gives 90 days of full GCP access (credit card required, but won't auto-charge). <strong>AI &amp; ML tools</strong> have their own free tiers with daily rate limits. Most "GCP free tier" guides conflate these. We separate them.</p>
+    <p><strong>GCP's unique strength:</strong> The Always Free e2-micro VM is the only major cloud provider offering a permanent free virtual machine. Combined with 30 GB persistent disk, you can run a real server 24/7 forever. AWS and Azure don't match this — their free VMs expire after 12 months.</p>
+    <p><strong>The hidden costs:</strong> GCP's free tier has traps — the free VM is region-restricted, egress charges apply everywhere, Firestore daily operation limits are tight, and load balancers are never free. We cover all gotchas below.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#always-free">Always Free Products (${alwaysFreeServices.length} services)</a></li>
+      <li><a href="#trial-ai">Free Trial &amp; AI/ML Tools</a></li>
+      <li><a href="#stacks">Best Picks by Use Case</a></li>
+      <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
+      <li><a href="#alternatives">GCP vs AWS vs Others</a></li>
+      <li><a href="#changes">Recent GCP Changes</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="always-free">Always Free Products</h2>
+  <p class="section-intro">These products remain free indefinitely within their monthly (or daily) quotas. No expiration, no trial period. GCP has the most generous always-free compute tier of any major cloud provider.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${alwaysFreeRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Cloud Run + Firestore is GCP's killer combo.</strong> 2M requests/month on Cloud Run + 1 GiB Firestore storage + Firebase Auth (50K MAUs) gives you a complete serverless backend — API, database, and auth — forever free. Add Cloud Build (2,500 min/day!) for CI/CD and Cloud Logging (50 GiB) for observability. This is the most generous serverless stack available from any major cloud provider.
+  </div>
+
+  <h2 id="trial-ai">Free Trial &amp; AI/ML Tools</h2>
+  <p class="section-intro">The $300 trial gives full access to every GCP service for 90 days. AI/ML tools have their own always-free tiers with daily rate limits. Gemini Code Assist is new in late 2025.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${trialRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Gemini Code Assist is a strong free-tier AI coding option.</strong> Launched December 2025, it includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro — all free for individual developers. Available in VS Code, JetBrains, and Cloud Shell. See our <a href="/ai-coding-pricing-2026">AI Coding Tools comparison</a> for how it stacks up against Copilot, Cursor, and others.
+  </div>
+
+  <h2 id="stacks">Best Picks by Use Case</h2>
+  <p class="section-intro">Common developer use cases and which GCP free services to combine. All stacks below can run at zero cost within free tier limits.</p>
+
+  <div class="verdict-box">
+    <h3>Recommended Free Stacks</h3>
+
+    <div class="verdict-item">
+      <strong>Hobby API backend</strong>
+      <p>Cloud Run (2M req/mo) + Firestore (1 GiB) + Firebase Auth (50K MAUs) + Cloud Logging. Serverless, auto-scales to zero, always free. Best for REST/GraphQL APIs with moderate traffic.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Always-on server</strong>
+      <p>e2-micro VM (us-central1) + 30 GB persistent disk + Cloud Monitoring. The only major cloud offering a permanent free VM. Great for bots, cron jobs, small web servers. Add Cloud Shell for web-based SSH access.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Data analytics</strong>
+      <p>BigQuery (1 TiB queries/mo + 10 GiB storage) + Looker Studio (unlimited reports). Query terabytes of public datasets or your own data — completely free. Use Cloud Functions to load data on a schedule.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>AI/ML prototyping</strong>
+      <p>Vertex AI Gemini (free tier) + Cloud Functions + Cloud Storage. Or use Google Colab for notebook-based experimentation with T4 GPU access. For speech, vision, or NLP, the AI APIs have generous monthly free quotas. See our <a href="/ai-ml-alternatives">AI/ML tools guide</a> for more options.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Static site with Firebase</strong>
+      <p>Firebase Hosting (10 GiB storage, custom domain + SSL) + Firebase Auth + Firestore. Or use <a href="/vendor/cloudflare">Cloudflare Pages</a> (unlimited bandwidth, always free) as an alternative. See our <a href="/firebase-alternatives">Firebase alternatives</a> comparison.</p>
+    </div>
+  </div>
+
+  <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
+  <p class="section-intro">GCP's free tier is generous, but these costs catch developers off guard. The #1 surprise is region restrictions on the free VM, followed by egress charges across all services.</p>
+
+    ${gotchaCards}
+
+  <div class="context-box">
+    <strong>Pro tip:</strong> Set up budget alerts immediately. Go to Billing &rarr; Budgets &amp; alerts &rarr; Create Budget &rarr; set target to $1. You'll get notified at 50%, 90%, and 100% of the threshold. Also enable <strong>Recommender</strong> for cost optimization suggestions. Unlike AWS, GCP's $300 trial won't auto-charge when exhausted — your account pauses instead.
+  </div>
+
+  <h2 id="alternatives">GCP vs AWS vs Others</h2>
+  <p class="section-intro">GCP has the most generous always-free compute (permanent VM, Cloud Run 2M req/mo), while AWS has more services overall. Here's how they compare for developers building side projects or MVPs. See our <a href="/aws-free-tier-2026">AWS Free Tier guide</a> for the full AWS breakdown.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Key Free Tier</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${altRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>The trade-off:</strong> GCP wins on always-free compute (permanent e2-micro VM, Cloud Run 2M req/mo) and analytics (BigQuery 1 TiB). AWS wins on service breadth (30+ always-free services) and serverless (Lambda 1M req/mo + DynamoDB 25 GB). For a complete free-tier stack combining the best of multiple providers, see our <a href="/free-startup-stack">Free Startup Stack</a> guide.
+  </div>
+
+  <h2 id="changes">Recent GCP &amp; Google Changes</h2>
+  <p class="section-intro">GCP and Google pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes across all providers.</p>
+
+  ${gcpChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Service</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No GCP-specific pricing changes tracked yet.</p>`}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>Powered by AgentDeals.</strong> All free tier data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official GCP pricing pages. We track ${gcpOffers.length} Google Cloud-related entries and ${gcpChanges.length} GCP/Google pricing changes. Data is updated continuously as Google announces changes.<br><br>
+    <strong>Query GCP data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for GCP services, compare with alternatives, or track pricing changes from your AI coding assistant.
+  </div>
+
+  ${buildMcpCta("Search GCP free tier services, compare with alternatives, and track pricing changes — all from your AI coding assistant.")}
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -20847,6 +21281,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAwsFreeTier2026Page());
+  } else if (url.pathname === "/gcp-free-tier-2026" && isGetOrHead) {
+    recordApiHit("/gcp-free-tier-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gcp-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildGcpFreeTier2026Page());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
