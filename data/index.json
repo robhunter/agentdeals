@@ -22043,6 +22043,23 @@
         "free tier"
       ],
       "verifiedDate": "2026-03-26"
+    },
+    {
+      "vendor": "DeepSeek API",
+      "category": "AI / ML",
+      "description": "Among the cheapest LLM APIs available. DeepSeek V4: $0.30/M input, $0.50/M output (1M context). DeepSeek R1 (reasoning): $0.55/M input, $2.19/M output. Cache hits 90% cheaper. Off-peak discounts up to 75% off. 5M free tokens for new accounts (30-day validity). China-based.",
+      "tier": "Free Credits + Pay-as-you-go",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "api",
+        "deepseek",
+        "reasoning"
+      ],
+      "verifiedDate": "2026-03-27"
     }
   ]
 }
