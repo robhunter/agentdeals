@@ -2563,6 +2563,33 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Methodology"), "Should have methodology section");
   });
 
+  it("GET /startup-credits renders startup credits directory page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/startup-credits`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Startup Credits"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Google Cloud"), "Should include Google Cloud");
+    assert.ok(html.includes("$350K"), "Should include Google credit amount");
+    assert.ok(html.includes("Cloudflare"), "Should include Cloudflare");
+    assert.ok(html.includes("$250K"), "Should include Cloudflare credit amount");
+    assert.ok(html.includes("Microsoft Founders Hub"), "Should include Microsoft");
+    assert.ok(html.includes("AWS Activate"), "Should include AWS");
+    assert.ok(html.includes("DigitalOcean"), "Should include DigitalOcean");
+    assert.ok(html.includes("Tier 1"), "Should have Tier 1 section");
+    assert.ok(html.includes("Tier 2"), "Should have Tier 2 section");
+    assert.ok(html.includes("Tier 3"), "Should have Tier 3 section");
+    assert.ok(html.includes("Credit Stacking Strategy"), "Should have stacking strategy");
+    assert.ok(html.includes("Bottom Line"), "Should have verdict box");
+    assert.ok(html.includes("/free-startup-stack"), "Should cross-link to free startup stack");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
