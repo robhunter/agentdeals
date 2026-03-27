@@ -1039,19 +1039,21 @@
     {
       "vendor": "Bright Data MCP Server",
       "category": "Web Scraping",
-      "description": "MCP-native web scraping infrastructure — 5,000 requests/month free tier. Search, scrape-to-markdown, and structured data extraction via MCP protocol. Notable as an early MCP-native developer tool with a free tier",
+      "description": "MCP-native web data provider — 5,000 requests/month free in Rapid mode. Two MCP tools: search_engine (search results) and scrape_as_markdown (web page fetching). Handles JS-rendered pages and CAPTCHAs. First MCP-native web data provider with a free tier.",
       "tier": "Free",
-      "url": "https://brightdata.com/products/web-scraper",
+      "url": "https://brightdata.com/pricing/mcp-server",
       "tags": [
         "scraping",
         "mcp",
         "data",
-        "web",
+        "web-scraping",
+        "proxy",
         "api",
+        "ai",
         "free tier",
         "mcp-server"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-03-27"
     },
     {
       "vendor": "Firecrawl",
@@ -1163,6 +1165,23 @@
         "iac"
       ],
       "verifiedDate": "2026-03-24"
+    },
+    {
+      "vendor": "Fingerprint",
+      "category": "Security",
+      "description": "Device identification and fraud prevention — 1,000 API calls/month free. Browser fingerprinting, bot detection, and account fraud prevention. Useful for auth flows, anti-fraud, and bot detection in apps.",
+      "tier": "Free",
+      "url": "https://fingerprint.com/pricing/",
+      "tags": [
+        "security",
+        "fraud",
+        "device-identification",
+        "auth",
+        "api",
+        "bot-detection",
+        "free tier"
+      ],
+      "verifiedDate": "2026-03-27"
     },
     {
       "vendor": "SonarCloud",
