@@ -3977,6 +3977,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Cursor",
     hubDesc: "AI coding tools pricing comparison — free tiers, pro plans, power tiers, and recent March 2026 pricing changes",
   },
+  {
+    slug: "aws-free-tier-2026",
+    title: "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
+    metaDesc: "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.",
+    contextHtml: "",
+    tag: "aws-free-tier-2026",
+    primaryVendor: "AWS",
+    hubDesc: "Complete AWS free tier guide — every free service, real limits, hidden costs, and Aurora PostgreSQL Serverless (new March 2026)",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -16638,6 +16647,452 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- AWS Free Tier 2026 guide page ---
+
+function buildAwsFreeTier2026Page(): string {
+  const title = "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
+  const metaDesc = "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.";
+  const slug = "aws-free-tier-2026";
+  const pubDate = "2026-03-27";
+
+  // Pull AWS-related offers from our index
+  const awsOffers = offers.filter(o =>
+    o.vendor === "AWS" || o.vendor.startsWith("Amazon ") || o.vendor.startsWith("AWS ") ||
+    o.tags?.some((t: string) => t === "aws")
+  );
+
+  // Deal changes related to AWS
+  const awsChanges = dealChanges.filter((c: any) =>
+    c.vendor === "AWS" || c.vendor.startsWith("Amazon ") || c.vendor.startsWith("AWS ") ||
+    c.vendor === "GitHub Actions"
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Always Free services (no expiration)
+  interface AwsService {
+    name: string;
+    slug: string;
+    limits: string;
+    category: string;
+    highlight?: boolean;
+  }
+
+  const alwaysFreeServices: AwsService[] = [
+    { name: "AWS Lambda", slug: "aws", limits: "1M requests/month, 400K GB-seconds compute", category: "Compute" },
+    { name: "Amazon DynamoDB", slug: "aws", limits: "25 GB storage, 25 WCU/RCU provisioned capacity", category: "Database" },
+    { name: "Amazon S3", slug: "aws", limits: "5 GB standard storage, 20K GET, 2K PUT requests/month (12-month)", category: "Storage" },
+    { name: "Amazon SNS", slug: "aws", limits: "1M publishes, 100K HTTP deliveries, 1K email deliveries/month", category: "Messaging" },
+    { name: "Amazon SQS", slug: "aws", limits: "1M requests/month", category: "Messaging" },
+    { name: "Amazon CloudWatch", slug: "aws", limits: "10 custom metrics, 10 alarms, 1M API requests/month", category: "Monitoring" },
+    { name: "Amazon ECR Public", slug: "amazon-ecr-public", limits: "50 GB storage, unlimited public image pulls", category: "Containers" },
+    { name: "AWS CloudFormation", slug: "aws", limits: "Unlimited for AWS resources (third-party charges may apply)", category: "IaC" },
+    { name: "Amazon Cognito", slug: "aws", limits: "50K MAUs (Monthly Active Users)", category: "Auth" },
+    { name: "AWS CodeCommit", slug: "aws", limits: "5 active users, 50 GB storage, 10K Git requests/month", category: "DevOps" },
+    { name: "AWS CodePipeline", slug: "aws", limits: "1 free active pipeline/month", category: "DevOps" },
+    { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small)", category: "DevOps" },
+    { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring" },
+    { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute" },
+    { name: "Amazon SES", slug: "aws", limits: "3,000 free messages/month when sent from EC2 (62K/month total with SES)", category: "Email" },
+  ];
+
+  const twelveMonthServices: AwsService[] = [
+    { name: "Amazon EC2", slug: "aws", limits: "750 hrs/month t2.micro or t3.micro (Linux/Windows)", category: "Compute" },
+    { name: "Amazon RDS", slug: "aws", limits: "750 hrs/month db.t2.micro or db.t3.micro, 20 GB storage", category: "Database" },
+    { name: "Aurora PostgreSQL Serverless", slug: "amazon-aurora-postgresql", limits: "Up to 4 ACUs per cluster, 1 GB storage (NEW — March 2026)", category: "Database", highlight: true },
+    { name: "Amazon S3", slug: "aws", limits: "5 GB standard storage, 20K GET, 2K PUT requests/month", category: "Storage" },
+    { name: "Amazon CloudFront", slug: "aws", limits: "1 TB data transfer out, 10M HTTP/HTTPS requests/month", category: "CDN" },
+    { name: "Amazon ElastiCache", slug: "aws", limits: "750 hrs/month cache.t2.micro or cache.t3.micro", category: "Database" },
+    { name: "Amazon OpenSearch", slug: "aws", limits: "750 hrs/month t2.small.search or t3.small.search", category: "Search" },
+    { name: "Amazon Redshift", slug: "amazon-redshift", limits: "750 hrs/month dc2.large node, 2 months free trial", category: "Data Warehouse" },
+    { name: "AWS Amplify Hosting", slug: "aws", limits: "1K build minutes/month, 15 GB served, 5 GB storage", category: "Hosting" },
+  ];
+
+  const trialServices: AwsService[] = [
+    { name: "Amazon SageMaker", slug: "aws", limits: "250 hrs/month ml.t3.medium for Studio notebooks (2 months)", category: "AI/ML" },
+    { name: "Amazon Bedrock", slug: "aws", limits: "Select foundation models with limited free inference (varies by model)", category: "AI/ML" },
+    { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)", category: "AI Coding" },
+    { name: "Amazon AppStream 2.0", slug: "aws", limits: "40 hrs/month stream.standard.small (first 12 months)", category: "Desktop" },
+    { name: "Amazon Lightsail", slug: "aws", limits: "750 hrs/month of 512 MB instance (3 months free)", category: "Hosting" },
+  ];
+
+  interface GotchaItem {
+    title: string;
+    desc: string;
+    cost: string;
+  }
+
+  const gotchas: GotchaItem[] = [
+    { title: "Data transfer out", desc: "First 100 GB/month free to internet, then $0.09/GB. Transfers between regions always charged. This is the #1 surprise cost.", cost: "$0.09/GB" },
+    { title: "NAT Gateway", desc: "If your Lambda/ECS needs internet access in a VPC, NAT Gateway costs $0.045/hr + $0.045/GB. Running 24/7 = $32/month before data.", cost: "$32+/mo" },
+    { title: "Elastic IP addresses", desc: "Free when attached to a running instance. Charged $0.005/hr (~$3.60/month) when idle or unattached. Easy to forget.", cost: "$3.60/mo idle" },
+    { title: "CloudWatch detailed monitoring", desc: "Basic monitoring is free (5-minute intervals). Detailed monitoring (1-minute) costs $2.10/metric/month. EC2 auto-enables it in some launch configs.", cost: "$2.10/metric" },
+    { title: "EBS volumes on stopped instances", desc: "You pay for EBS storage even when EC2 instances are stopped. 30 GB gp3 = $2.40/month sitting idle.", cost: "$0.08/GB-mo" },
+    { title: "Free tier expiration", desc: "12-month services silently convert to paid after year one. No warning email by default. Set a billing alarm on day one.", cost: "Varies" },
+    { title: "S3 request costs", desc: "Storage is cheap but requests add up. PUT/COPY/POST at $0.005/1K requests. A deployment pipeline doing thousands of S3 operations can cost more in requests than storage.", cost: "$0.005/1K PUT" },
+    { title: "Multi-AZ deployments", desc: "RDS Multi-AZ doubles your cost. The free tier only covers single-AZ. Some tutorials default to Multi-AZ.", cost: "2× RDS cost" },
+  ];
+
+  // Alternative cloud providers comparison
+  interface CloudAlt {
+    name: string;
+    slug: string;
+    freeTier: string;
+    strength: string;
+    bestFor: string;
+  }
+
+  const cloudAlts: CloudAlt[] = [
+    { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, 1 TiB BigQuery, Cloud Run 2M req/mo", strength: "Most generous always-free compute", bestFor: "Side projects needing a persistent VM" },
+    { name: "Azure", slug: "azure", freeTier: "12-month: VMs, SQL, Cosmos DB (1K RU/s + 25 GB). $200 credit", strength: "Enterprise integration, .NET ecosystem", bestFor: "Teams already on Microsoft stack" },
+    { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
+    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
+    { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
+    { name: "Neon", slug: "neon", freeTier: "512 MiB storage, 190 compute hours, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Database-only needs with branching" },
+    { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
+    { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
+  ];
+
+  const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
+      <td style="font-weight:600">${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const twelveMonthRows = twelveMonthServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
+      <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const trialRows = trialServices.map(s => `<tr>
+      <td style="font-weight:600">${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const gotchaCards = gotchas.map(g => `<div class="diff-card" style="border-left-color:#f85149">
+      <h3>${escHtmlServer(g.title)} <span style="font-size:.75rem;color:#f85149;font-weight:400">${escHtmlServer(g.cost)}</span></h3>
+      <p class="diff-desc">${escHtmlServer(g.desc)}</p>
+    </div>`).join("\n    ");
+
+  const altRows = cloudAlts.map(a => `<tr>
+      <td style="font-weight:600"><a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a></td>
+      <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
+      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
+    </tr>`).join("\n        ");
+
+  const changeTimelineRows = awsChanges.slice(0, 10).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: { "@type": "Organization", name: "Amazon Web Services" },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.new-badge{display:inline-block;background:#3fb950;color:#0f172a;font-size:.65rem;font-weight:700;padding:.15rem .4rem;border-radius:4px;vertical-align:middle;margin-left:.35rem;letter-spacing:.03em}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier 2026</div>
+  <h1>AWS Free Tier Complete Guide 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${awsOffers.length} AWS entries tracked</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
+    <div class="stat-card"><div class="stat-number">${twelveMonthServices.length}</div><div class="stat-label">12-Month Free</div></div>
+    <div class="stat-card"><div class="stat-number">${trialServices.length}</div><div class="stat-label">Trials</div></div>
+    <div class="stat-card"><div class="stat-number green">Aurora PG</div><div class="stat-label">New March 2026</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Three tiers, very different rules.</strong> AWS bundles "free tier" into three categories that work completely differently. <strong>Always Free</strong> services never expire — Lambda, DynamoDB, and SNS stay free forever within limits. <strong>12-Month Free</strong> services (EC2, RDS, S3) expire silently after your first year and start billing. <strong>Short-Term Trials</strong> give limited access to premium services. Most "AWS free tier" guides conflate these. We don't.</p>
+    <p><strong>What's new:</strong> Aurora PostgreSQL Serverless was added to the AWS Free Tier in March 2026 — the first time AWS's flagship managed PostgreSQL has been available at no cost. New accounts also get $100&ndash;$200 in credits.</p>
+    <p><strong>The hidden costs:</strong> AWS's free tier is generous but has well-known traps — data transfer charges, NAT Gateway fees, idle Elastic IPs, and EBS volumes on stopped instances. We cover all of them below.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#always-free">Always Free Services</a></li>
+      <li><a href="#twelve-month">12-Month Free Tier</a></li>
+      <li><a href="#trials">Short-Term Trials</a></li>
+      <li><a href="#stacks">Developer-Focused Stacks</a></li>
+      <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
+      <li><a href="#alternatives">AWS vs Alternatives</a></li>
+      <li><a href="#changes">Recent Changes</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="always-free">Always Free Services</h2>
+  <p class="section-intro">These services remain free indefinitely within their monthly limits. No expiration, no credit card surprises after 12 months. This is the safest tier for long-running side projects.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${alwaysFreeRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Lambda + DynamoDB is the killer combo.</strong> 1M Lambda invocations/month + 25 GB DynamoDB is enough to run a real API backend indefinitely at zero cost. Add SNS/SQS for async processing and CloudWatch for monitoring — all always free. This is why AWS dominates the serverless side project space.
+  </div>
+
+  <h2 id="twelve-month">12-Month Free Tier</h2>
+  <p class="section-intro">Available for 12 months from account creation. After that, standard pricing applies with <strong>no automatic notification</strong>. Set a billing alarm on day one.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${twelveMonthRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Aurora PostgreSQL Serverless is the headline addition.</strong><span class="new-badge">NEW</span> Previously paid-only (starting ~$0.08/ACU-hour), Aurora PostgreSQL is now available on the AWS Free Tier with up to 4 ACUs per cluster and 1 GB storage. This gives you a managed, auto-scaling PostgreSQL database — the same engine that powers production workloads at scale — for free. Compare this to <a href="/vendor/neon">Neon</a> (512 MiB always-free) or <a href="/vendor/supabase">Supabase</a> (500 MB always-free but no expiration).
+  </div>
+
+  <h2 id="trials">Short-Term Trials</h2>
+  <p class="section-intro">Limited-time trials for premium services. Useful for evaluation, not for ongoing projects.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${trialRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="stacks">Developer-Focused Stacks</h2>
+  <p class="section-intro">Common use cases and which free services to combine. All stacks below can run at zero cost within AWS free tier limits.</p>
+
+  <div class="verdict-box">
+    <h3>Recommended Free Stacks</h3>
+
+    <div class="verdict-item">
+      <strong>Side project API backend</strong>
+      <p>Lambda + DynamoDB + API Gateway + S3 + CloudFront. Serverless, scales to zero, always free within limits. Best for REST/GraphQL APIs serving &lt;1M requests/month.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Testing a database</strong>
+      <p><strong>Aurora PostgreSQL Serverless</strong> (NEW) for managed PostgreSQL with auto-scaling. <strong>RDS PostgreSQL</strong> (750 hrs t3.micro) for traditional single-instance. <strong>DynamoDB</strong> (25 GB always free) for NoSQL. See our <a href="/neon-vs-supabase">Neon vs Supabase</a> comparison for PostgreSQL alternatives.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>CI/CD pipeline</strong>
+      <p>CodeBuild (100 min/month) + CodePipeline (1 free pipeline) + ECR Public (50 GB). Enough for a small team's build/deploy workflow. For more capacity, see <a href="/ci-cd-alternatives">CI/CD alternatives</a>.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>AI/ML experimentation</strong>
+      <p>SageMaker Studio Lab (free, no AWS account needed) + Bedrock free tier models + Amazon Q Developer (free individual tier). For more options, see our <a href="/ai-ml-alternatives">AI/ML tools guide</a>.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Static website with CDN</strong>
+      <p>S3 (5 GB) + CloudFront (1 TB transfer/month) + Route 53 (not free — $0.50/hosted zone). Or use <a href="/vendor/cloudflare">Cloudflare Pages</a> (unlimited, always free) as an alternative.</p>
+    </div>
+  </div>
+
+  <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
+  <p class="section-intro">AWS's free tier is generous, but these costs catch almost every new user. The #1 cause of surprise AWS bills isn't usage — it's infrastructure that runs when you're not looking.</p>
+
+    ${gotchaCards}
+
+  <div class="context-box">
+    <strong>Pro tip:</strong> Create a billing alarm immediately. Go to CloudWatch &rarr; Alarms &rarr; Create Alarm &rarr; Billing &rarr; Total Estimated Charge &gt; $0. You'll get an email the moment anything starts costing money. Also enable AWS Cost Anomaly Detection (free) for ML-based alerts on unusual spending patterns.
+  </div>
+
+  <h2 id="alternatives">AWS vs Alternatives</h2>
+  <p class="section-intro">AWS has the broadest free tier, but smaller providers often offer more generous limits for specific use cases. Here's how they compare for developers building side projects or MVPs.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Key Free Tier</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${altRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>The trade-off:</strong> AWS gives you the most services under one roof — 30+ always-free offerings — but each has tight limits and hidden costs. Smaller providers like <a href="/vendor/cloudflare">Cloudflare</a>, <a href="/vendor/supabase">Supabase</a>, and <a href="/vendor/vercel">Vercel</a> offer fewer services but with more generous per-service limits and simpler pricing. For a complete free-tier stack, see our <a href="/free-startup-stack">Free Startup Stack</a> guide.
+  </div>
+
+  <h2 id="changes">Recent AWS Changes</h2>
+  <p class="section-intro">AWS free tier changes we've tracked. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes across all providers.</p>
+
+  ${awsChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Service</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No AWS-specific pricing changes tracked yet.</p>`}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>Powered by AgentDeals.</strong> All free tier data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official AWS pricing pages. We track ${awsOffers.length} AWS-related entries and ${awsChanges.length} AWS pricing changes. Data is updated continuously as AWS announces changes.<br><br>
+    <strong>Query AWS data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for AWS services, compare with alternatives, or track pricing changes from your AI coding assistant.
+  </div>
+
+  ${buildMcpCta("Search AWS free tier services, compare with alternatives, and track pricing changes — all from your AI coding assistant.")}
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -20387,6 +20842,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-coding-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAiCodingPricing2026Page());
+  } else if (url.pathname === "/aws-free-tier-2026" && isGetOrHead) {
+    recordApiHit("/aws-free-tier-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAwsFreeTier2026Page());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);

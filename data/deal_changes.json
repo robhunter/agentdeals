@@ -1202,6 +1202,23 @@
         "Cursor",
         "Cline"
       ]
+    },
+    {
+      "vendor": "Amazon Aurora PostgreSQL",
+      "change_type": "new_free_tier",
+      "date": "2026-03-25",
+      "summary": "Aurora PostgreSQL Serverless added to AWS Free Tier — managed PostgreSQL-compatible database now available at no cost with up to 4 ACUs per cluster and 1 GB storage. Part of AWS Free Plan (6 months + credits)",
+      "previous_state": "No free tier — Aurora was paid-only, starting at ~$0.08/ACU-hour",
+      "current_state": "Free plan with up to 4 ACUs per cluster, 1 GB storage, $100–200 in credits for new accounts",
+      "impact": "high",
+      "source_url": "https://aws.amazon.com/rds/aurora/pricing/",
+      "category": "Databases",
+      "alternatives": [
+        "Neon",
+        "Supabase",
+        "CockroachDB",
+        "PlanetScale"
+      ]
     }
   ]
 }
