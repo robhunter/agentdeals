@@ -373,7 +373,7 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -394,6 +394,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/agent-stack", label: "Agent Stacks", section: "agent-stack" },
     { href: "/trends", label: "Trends", section: "trends" },
     { href: "/alternatives", label: "Alternatives", section: "alternatives" },
+    { href: "/guides", label: "Guides", section: "guides" },
     { href: "/compare", label: "Compare", section: "compare" },
     { href: "/digest", label: "Digest", section: "digest" },
     { href: "/changes", label: "Changes", section: "changes" },
@@ -4275,6 +4276,171 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Get personalized migration advice from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Guides hub page ---
+
+type GuideContentType = "pricing" | "comparison" | "stack" | "alternatives" | "report";
+
+function classifyGuide(slug: string): GuideContentType {
+  if (slug.includes("-vs-")) return "comparison";
+  if (slug.startsWith("free-") && slug.endsWith("-stack")) return "stack";
+  if (slug.includes("pricing") || slug.includes("report") || slug.includes("preview")) return "pricing";
+  if (slug.endsWith("-alternatives") || slug === "ai-free-tiers" || slug === "free-llm-apis" || slug === "api-development-alternatives") return "alternatives";
+  return "report";
+}
+
+const guideContentTypeLabels: Record<GuideContentType, string> = {
+  pricing: "Pricing",
+  comparison: "Comparison",
+  stack: "Stack Guide",
+  alternatives: "Alternatives",
+  report: "Report",
+};
+
+const guideContentTypeColors: Record<GuideContentType, string> = {
+  pricing: "#f59e0b",
+  comparison: "#8b5cf6",
+  stack: "#10b981",
+  alternatives: "#3b82f6",
+  report: "#ef4444",
+};
+
+const guideSectionOrder: { type: GuideContentType; heading: string; description: string }[] = [
+  { type: "pricing", heading: "Pricing Guides", description: "In-depth pricing analysis, quarterly reports, and cost comparisons for developer tools." },
+  { type: "comparison", heading: "Vendor Comparisons", description: "Side-by-side free tier comparisons between popular developer tools." },
+  { type: "stack", heading: "Stack Guides", description: "Complete free-tier infrastructure stacks for different use cases." },
+  { type: "alternatives", heading: "Category Alternatives", description: "Comprehensive guides to free alternatives across every developer tool category." },
+  { type: "report", heading: "Special Reports", description: "Free tier risk analysis, migration guides, startup credits, and market tracking." },
+];
+
+function buildGuidesPage(): string {
+  const title = "Developer Tool Guides & Analysis";
+  const metaDesc = `${ALTERNATIVES_PAGES.length} in-depth guides — free tier comparisons, pricing analysis, migration guides, and stack recommendations. Powered by data from ${offers.length.toLocaleString()} verified deals.`;
+
+  const grouped = new Map<GuideContentType, AlternativesPageConfig[]>();
+  for (const section of guideSectionOrder) grouped.set(section.type, []);
+  for (const page of ALTERNATIVES_PAGES) {
+    const type = classifyGuide(page.slug);
+    grouped.get(type)!.push(page);
+  }
+
+  const allItems = ALTERNATIVES_PAGES.map((p, i) => ({
+    "@type": "ListItem" as const,
+    position: i + 1,
+    item: {
+      "@type": "Article" as const,
+      name: p.title,
+      description: p.hubDesc,
+      url: `${BASE_URL}/${p.slug}`,
+    },
+  }));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: title,
+    description: metaDesc,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: ALTERNATIVES_PAGES.length,
+      itemListElement: allItems,
+    },
+  };
+
+  const sections = guideSectionOrder.map(section => {
+    const pages = grouped.get(section.type) ?? [];
+    if (pages.length === 0) return "";
+    const cards = pages.map(p => {
+      const shortTitle = p.title.split(" — ")[0];
+      const type = classifyGuide(p.slug);
+      const badgeColor = guideContentTypeColors[type];
+      const badgeLabel = guideContentTypeLabels[type];
+      return `<a href="/${p.slug}" class="guide-card">
+        <div class="guide-card-header">
+          <h3>${escHtmlServer(shortTitle)}</h3>
+          <span class="guide-badge" style="background:${badgeColor}20;color:${badgeColor};border:1px solid ${badgeColor}40">${badgeLabel}</span>
+        </div>
+        <p>${escHtmlServer(p.hubDesc)}</p>
+      </a>`;
+    }).join("\n      ");
+    return `<section class="guide-section">
+      <h2>${escHtmlServer(section.heading)}</h2>
+      <p class="section-desc">${escHtmlServer(section.description)}</p>
+      <div class="guide-cards">${cards}</div>
+    </section>`;
+  }).join("\n  ");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/guides">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:url" content="${BASE_URL}/guides">
+<meta property="og:type" content="website">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+:root{--bg:#0f172a;--bg-card:#1e293b;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.08);--border:#334155;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--serif:'Georgia',serif;--mono:'SF Mono','Fira Code',monospace}
+*{box-sizing:border-box}body{font-family:var(--sans);background:var(--bg);color:var(--text);margin:0;padding:0;line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:1.5rem}
+.breadcrumb{font-size:.85rem;color:var(--text-dim);margin-bottom:1.5rem}.breadcrumb a{color:var(--accent);text-decoration:none}.breadcrumb a:hover{text-decoration:underline}
+h1{font-family:var(--serif);font-size:2rem;margin:0 0 .5rem}
+.subtitle{color:var(--text-muted);font-size:1rem;margin:0 0 .5rem;line-height:1.5}
+.guide-stats{display:flex;gap:1.5rem;flex-wrap:wrap;margin:0 0 2rem;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)}
+.guide-stat{text-align:center;flex:1;min-width:100px}
+.guide-stat .stat-num{font-size:1.5rem;font-weight:700;color:var(--accent);display:block}
+.guide-stat .stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
+.guide-section{margin:0 0 2.5rem}
+.guide-section h2{font-family:var(--serif);font-size:1.4rem;margin:0 0 .25rem;color:var(--text)}
+.section-desc{color:var(--text-muted);font-size:.9rem;margin:0 0 1rem}
+.guide-cards{display:grid;grid-template-columns:1fr;gap:.75rem}
+.guide-card{display:block;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s,background .15s}
+.guide-card:hover{border-color:var(--accent);background:var(--accent-glow)}
+.guide-card-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem}
+.guide-card h3{margin:0;font-size:1rem;color:var(--accent);font-family:var(--serif);flex:1}
+.guide-badge{font-size:.7rem;padding:.15rem .5rem;border-radius:4px;font-weight:600;white-space:nowrap}
+.guide-card p{margin:0;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.guide-stats{flex-direction:column;gap:.75rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Guides</div>
+  <h1>${escHtmlServer(title)}</h1>
+  <p class="subtitle">Free tier comparisons, pricing analysis, migration guides, and stack recommendations &mdash; powered by data from ${offers.length.toLocaleString()} verified deals.</p>
+
+  <div class="guide-stats">
+    <div class="guide-stat"><span class="stat-num">${ALTERNATIVES_PAGES.length}</span><span class="stat-label">Guides</span></div>
+    <div class="guide-stat"><span class="stat-num">${(grouped.get("pricing") ?? []).length}</span><span class="stat-label">Pricing</span></div>
+    <div class="guide-stat"><span class="stat-num">${(grouped.get("comparison") ?? []).length}</span><span class="stat-label">Comparisons</span></div>
+    <div class="guide-stat"><span class="stat-num">${(grouped.get("stack") ?? []).length}</span><span class="stat-label">Stack Guides</span></div>
+    <div class="guide-stat"><span class="stat-num">${(grouped.get("alternatives") ?? []).length}</span><span class="stat-label">Alternatives</span></div>
+    <div class="guide-stat"><span class="stat-num">${(grouped.get("report") ?? []).length}</span><span class="stat-label">Reports</span></div>
+  </div>
+
+  ${sections}
+
+  <div style="text-align:center;margin:2rem 0;font-size:.9rem;color:var(--text-muted)">
+    <p>Looking for a specific tool? <a href="/search" style="color:var(--accent)">Search</a> our full index of ${offers.length.toLocaleString()}+ developer deals, or <a href="/alternatives" style="color:var(--accent)">browse alternatives guides</a>.</p>
+  </div>
+
+  ${buildMcpCta("Get personalized recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -19827,6 +19993,12 @@ ${ALTERNATIVES_PAGES.map(p => `  <url>
     <priority>0.9</priority>
   </url>`).join("\n")}
   <url>
+    <loc>${BASE_URL}/guides</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/alternatives</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
@@ -19991,6 +20163,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/search", params: { q: query, category: categoryFilter, page: String(page) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" });
     res.end(buildSearchPage(query, categoryFilter, page));
+  } else if (url.pathname === "/guides" && isGetOrHead) {
+    recordApiHit("/guides");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/guides", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: ALTERNATIVES_PAGES.length });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildGuidesPage());
   } else if (url.pathname === "/alternatives" && isGetOrHead) {
     recordApiHit("/alternatives");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: ALTERNATIVES_PAGES.length });
