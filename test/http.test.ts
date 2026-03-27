@@ -2533,6 +2533,36 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("April 1"), "Should mention the deadline");
   });
 
+  it("GET /free-tier-tracker renders free tier tracker page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/free-tier-tracker`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Free Tier Tracker"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Free Tiers Removed"), "Should have removed section");
+    assert.ok(html.includes("Free Tiers Expanded"), "Should have expanded section");
+    assert.ok(html.includes("Trend Analysis"), "Should have trend analysis section");
+    assert.ok(html.includes("All Q1 2026 Changes"), "Should have all changes table");
+    assert.ok(html.includes("LocalStack"), "Should include LocalStack");
+    assert.ok(html.includes("Postman"), "Should include Postman");
+    assert.ok(html.includes("Brave Search API"), "Should include Brave Search");
+    assert.ok(html.includes("HCP Terraform"), "Should include HCP Terraform");
+    assert.ok(html.includes("Windsurf"), "Should include Windsurf");
+    assert.ok(html.includes("Gemini Code Assist"), "Should include Gemini Code Assist expansion");
+    assert.ok(html.includes("Cloudflare Startup Program"), "Should include Cloudflare expansion");
+    assert.ok(html.includes("Terragrunt Scale"), "Should include Terragrunt Scale");
+    assert.ok(html.includes("Open-core"), "Should have trend pattern");
+    assert.ok(html.includes("/free-tier-risk"), "Should cross-link to risk index");
+    assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
