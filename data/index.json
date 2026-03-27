@@ -22079,6 +22079,23 @@
         "reasoning"
       ],
       "verifiedDate": "2026-03-27"
+    },
+    {
+      "vendor": "Amazon Aurora PostgreSQL",
+      "category": "Databases",
+      "description": "Aurora PostgreSQL Serverless on AWS Free Tier — managed PostgreSQL-compatible database with automatic scaling. Free plan: up to 4 ACUs per cluster, 1 GB storage. New accounts also get $100–200 in AWS credits for 12 months",
+      "tier": "Free Tier",
+      "url": "https://aws.amazon.com/rds/aurora/pricing/",
+      "tags": [
+        "database",
+        "postgresql",
+        "aws",
+        "serverless",
+        "managed",
+        "aurora",
+        "rds"
+      ],
+      "verifiedDate": "2026-03-27"
     }
   ]
 }

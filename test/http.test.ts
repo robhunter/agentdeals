@@ -2621,6 +2621,33 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
+  it("GET /aws-free-tier-2026 renders AWS free tier guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/aws-free-tier-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("AWS Free Tier Complete Guide"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Always Free Services"), "Should have always free section");
+    assert.ok(html.includes("12-Month Free Tier"), "Should have 12-month section");
+    assert.ok(html.includes("Short-Term Trials"), "Should have trials section");
+    assert.ok(html.includes("Aurora PostgreSQL"), "Should highlight Aurora PostgreSQL");
+    assert.ok(html.includes("Hidden Costs"), "Should have gotchas section");
+    assert.ok(html.includes("AWS vs Alternatives"), "Should have alternatives comparison");
+    assert.ok(html.includes("Lambda"), "Should include Lambda");
+    assert.ok(html.includes("DynamoDB"), "Should include DynamoDB");
+    assert.ok(html.includes("Developer-Focused Stacks"), "Should have stacks section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
+    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 
