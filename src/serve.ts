@@ -3940,6 +3940,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "HCP Terraform",
     hubDesc: "Step-by-step HCP Terraform migration guide — decision matrix, 5 migration paths, March 31 deadline",
   },
+  {
+    slug: "gemini-api-pricing-2026",
+    title: "Gemini API Pricing Changes April 2026 — Spend Caps, Rate Limits & Free Alternatives",
+    metaDesc: "Google enforces billing-account spend caps on Gemini API April 1, 2026. Free tier rate limits slashed 50-80% in late 2025. Compare Gemini vs Claude vs GPT-4 vs Groq vs open-source alternatives. Updated March 2026.",
+    contextHtml: "",
+    tag: "gemini-api-pricing-2026",
+    primaryVendor: "Google Gemini API",
+    hubDesc: "Gemini API spend caps enforced April 1 — rate limit cuts, new tier structure, and free LLM API alternatives",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -9116,7 +9125,7 @@ ${buildCards(aiGateways)}
   </div>
 
   <div class="search-cta">
-    <p>Looking for more? Browse all <a href="/category/ai-ml">AI / ML</a> tools or see our broader <a href="/ai-ml-alternatives">AI &amp; ML tools comparison</a> covering ${aiOffers.length}+ tools including AI coding, observability, and specialized services.</p>
+    <p>Looking for more? Browse all <a href="/category/ai-ml">AI / ML</a> tools or see our broader <a href="/ai-ml-alternatives">AI &amp; ML tools comparison</a> covering ${aiOffers.length}+ tools including AI coding, observability, and specialized services. See also: <a href="/gemini-api-pricing-2026">Gemini API Pricing Changes April 2026</a> — spend caps, rate limit cuts, and migration guidance.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -14454,6 +14463,337 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function buildGeminiApiPricing2026Page(): string {
+  const title = "Gemini API Pricing Changes April 2026 — Spend Caps, Rate Limits & Free Alternatives";
+  const metaDesc = "Google enforces billing-account spend caps on Gemini API April 1, 2026. Free tier rate limits slashed 50-80% in late 2025. Compare Gemini vs Claude vs GPT-4 vs Groq vs open-source alternatives. Updated March 2026.";
+  const slug = "gemini-api-pricing-2026";
+  const pubDate = "2026-03-26";
+
+  // Gemini deal changes from our tracker
+  const rateLimitChange = dealChanges.find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
+  const deprecationChange = dealChanges.find(c => c.vendor === "Google Gemini 2.0 Flash" && c.change_type === "product_deprecated");
+  const spendCapChange = dealChanges.find(c => c.vendor === "Google Gemini API" && c.change_type === "restriction");
+
+  // LLM API competitors for comparison table
+  const llmProviders = [
+    { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, 2.5 Pro (limited)", notes: "Spend caps enforced April 1. Pro free tier removed.", risk: "high" },
+    { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "200K tokens", models: "Opus 4.6, Sonnet 4.6, Haiku 4.5", notes: "No free tier — $5/$25 per MTok (Opus). Batch API at 50% off.", risk: "none" },
+    { name: "OpenAI API", freeLimit: "GPT-3.5 only, 3 RPM", context: "128K tokens", models: "GPT-3.5 Turbo (free), GPT-4o (paid)", notes: "Free trial credits discontinued mid-2025. Very limited free access.", risk: "medium" },
+    { name: "Groq", freeLimit: "30 RPM, 100K-500K tokens/day", context: "128K tokens", models: "Llama 4, Qwen3, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed.", risk: "low" },
+    { name: "Mistral AI", freeLimit: "2 RPM, 1B tokens/month", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Highest free token volume among proprietary providers.", risk: "low" },
+    { name: "OpenRouter", freeLimit: "~20 RPM per model, ~30 free models", context: "Varies by model", models: "DeepSeek R1, Llama 3.3, Qwen3, Gemma 3", notes: "One API key for many models. Best model variety on free tier.", risk: "low" },
+    { name: "Cerebras", freeLimit: "10-30 RPM, 1M tokens/day", context: "128K tokens", models: "Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B", notes: "Fastest inference speeds. 1M tokens/day is very generous.", risk: "low" },
+    { name: "DeepSeek", freeLimit: "Pay-as-you-go, very low pricing", context: "128K tokens", models: "DeepSeek-V3, DeepSeek-R1", notes: "$0.27/$1.10 per MTok. Cheapest frontier-class API.", risk: "low" },
+  ];
+
+  const riskColors: Record<string, string> = { low: "#3fb950", medium: "#d29922", high: "#f85149", none: "#64748b" };
+
+  // Related pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["free-llm-apis", "ai-ml-alternatives", "free-ai-stack", "free-tier-risk", "google-developer-program-2026", "q2-pricing-preview-2026"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: {
+      "@type": "Thing",
+      name: "Google Gemini API pricing changes April 2026",
+      description: "Analysis of Gemini API spend caps, rate limit reductions, and free tier alternatives",
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.impact-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.impact-card h3{margin:0 0 .5rem;font-size:1rem}
+.impact-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.context-box ul{margin:.75rem 0 0 1.5rem}
+.context-box li{margin-bottom:.5rem}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.timeline-item{display:flex;gap:1rem;margin-bottom:1rem;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)}
+.timeline-date{flex-shrink:0;width:5rem;font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:600;padding-top:.15rem}
+.timeline-content{flex:1}
+.timeline-content h3{margin:0 0 .25rem;font-size:.95rem}
+.timeline-content p{color:var(--text-muted);font-size:.85rem;margin:0}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.timeline-item{flex-direction:column;gap:.5rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing 2026</div>
+  <h1>Gemini API Pricing Changes — April 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Spend caps enforced: April 1, 2026 &middot; 3 tracked Gemini changes</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number red">Apr 1</div><div class="stat-label">Spend Caps Enforced</div></div>
+    <div class="stat-card"><div class="stat-number red">50-80%</div><div class="stat-label">Rate Limit Cuts</div></div>
+    <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Tracked Changes</div></div>
+    <div class="stat-card"><div class="stat-number">${llmProviders.length}</div><div class="stat-label">Providers Compared</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Google is enforcing billing-account-level spend caps on the Gemini API starting April 1, 2026.</strong> When a tier's aggregate spend hits its cap, all API requests under that billing account pause until the next billing cycle. This follows late 2025's <strong>50-80% rate limit cuts</strong> and the removal of the Pro model free tier.</p>
+    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>Pro is no longer free, Flash went from ~250 to 20-50 requests/day, and now spend caps add another constraint for paid users.</strong> Below we cover what's changing, who's affected, and which alternatives offer better free access.</p>
+    ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${escHtmlServer(rateLimitChange.summary)}</p>` : ""}
+  </div>
+
+  <div class="toc">
+    <h3>In This Guide</h3>
+    <ol>
+      <li><a href="#whats-changing">What's Changing April 1</a></li>
+      <li><a href="#timeline">Timeline of Gemini API Changes</a></li>
+      <li><a href="#who-affected">Who's Affected</a></li>
+      <li><a href="#new-tiers">New Tier Structure &amp; Spend Caps</a></li>
+      <li><a href="#comparison">Free LLM API Comparison</a></li>
+      <li><a href="#what-to-do">What to Do</a></li>
+    </ol>
+  </div>
+
+  <h2 id="whats-changing">1. What's Changing April 1</h2>
+  <p class="section-intro">Google is introducing billing-account-level spend caps that automatically pause API requests when your tier's cap is reached. Combined with rate limit reductions already in effect, this is the third major Gemini API pricing change in six months.</p>
+
+  <table class="pricing-table">
+    <thead>
+      <tr><th>What Changed</th><th>Before</th><th>After</th><th>Impact</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style="font-weight:600">Free tier rate limits</td><td>Flash: ~250 RPD, Pro: available</td><td style="font-weight:600">Flash: 10 RPM (~20-50 RPD). Pro: removed</td><td style="color:#f85149;font-weight:600">50-80% reduction</td></tr>
+      <tr><td style="font-weight:600">Gemini 2.0 Flash</td><td>Available, standard limits</td><td style="font-weight:600">Deprecated, scheduled for retirement</td><td style="color:#f85149;font-weight:600">Must migrate to 2.5</td></tr>
+      <tr><td style="font-weight:600">Spend caps (Apr 1)</td><td>No hard caps — billed without pausing</td><td style="font-weight:600">Tier-level caps, requests pause when hit</td><td style="color:#d29922;font-weight:600">New constraint</td></tr>
+      <tr><td style="font-weight:600">Context window</td><td>1M tokens</td><td>1M tokens</td><td style="color:var(--text-dim)">Unchanged</td></tr>
+      <tr><td style="font-weight:600">Flash-Lite limits</td><td>Generous (unspecified)</td><td style="font-weight:600">15 RPM</td><td style="color:#f85149;font-weight:600">Reduced</td></tr>
+    </tbody>
+  </table>
+
+  ${spendCapChange ? `<div class="context-box">
+    <strong>Spend cap details:</strong> ${escHtmlServer(spendCapChange.summary)} Developers on pay-as-you-go plans should set project-level budget alerts in Google Cloud Console to avoid unexpected pausing.
+  </div>` : ""}
+
+  <h2 id="timeline">2. Timeline of Gemini API Changes</h2>
+  <p class="section-intro">Three significant changes in six months — a pattern of tightening that started with rate limits and is now extending to spend controls.</p>
+
+  <div class="timeline-item">
+    <div class="timeline-date">Dec 2025</div>
+    <div class="timeline-content">
+      <h3 style="color:#f85149">Rate Limits Slashed 50-80%</h3>
+      <p>${rateLimitChange ? escHtmlServer(rateLimitChange.summary) : "Gemini API free tier rate limits reduced dramatically. Flash went from ~250 RPD to 20-50 RPD. Pro model free tier removed entirely."}</p>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-date">Mar 2026</div>
+    <div class="timeline-content">
+      <h3 style="color:#d29922">Gemini 2.0 Flash Deprecated</h3>
+      <p>${deprecationChange ? escHtmlServer(deprecationChange.summary) : "Gemini 2.0 Flash and Flash-Lite deprecated. Developers must migrate to 2.5 series models."}</p>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-date">Apr 2026</div>
+    <div class="timeline-content">
+      <h3 style="color:#f85149">Spend Caps Enforced</h3>
+      <p>${spendCapChange ? escHtmlServer(spendCapChange.summary) : "Billing-account-level spend caps enforced. API requests pause when tier cap is reached until next billing month."}</p>
+    </div>
+  </div>
+
+  <h2 id="who-affected">3. Who's Affected</h2>
+  <p class="section-intro">The impact depends on how you use the Gemini API and when you started building on it.</p>
+
+  <div class="impact-card" style="border-left-color:#f85149">
+    <h3 style="color:#f85149">Free tier developers (most affected)</h3>
+    <p class="impact-desc">If you built on Gemini's generous early free tier (250+ RPD Flash, free Pro access), your application likely broke when limits dropped 50-80% in late 2025. Flash is now 10 RPM, Pro is paid-only. <strong>Consider switching to <a href="/vendor/groq">Groq</a> (30 RPM free) or <a href="/vendor/openrouter">OpenRouter</a> (~30 free models).</strong></p>
+  </div>
+  <div class="impact-card" style="border-left-color:#d29922">
+    <h3 style="color:#d29922">Pay-as-you-go developers</h3>
+    <p class="impact-desc">The April 1 spend caps affect you directly. If your billing account hits its tier's spend cap, <strong>requests pause until the next billing month</strong> — not just rate-limited, but fully paused. Set project-level budget alerts now. Teams sharing a billing account are especially vulnerable since all projects count toward the same cap.</p>
+  </div>
+  <div class="impact-card" style="border-left-color:#3fb950">
+    <h3 style="color:#3fb950">Low-volume / hobby developers</h3>
+    <p class="impact-desc">If you're making fewer than 10 requests per minute on Flash, the free tier still works — just with less headroom. The 1M token context window remains Gemini's key differentiator. For occasional use, the impact is minimal.</p>
+  </div>
+
+  <h2 id="new-tiers">4. New Tier Structure &amp; Spend Caps</h2>
+  <p class="section-intro">Google revamped the Gemini API billing structure with automatic tier upgrades based on spend level. Each tier has a corresponding spend cap that pauses requests when reached.</p>
+
+  <table class="pricing-table">
+    <thead>
+      <tr><th>Tier</th><th>Free Rate Limits</th><th>Paid Rate Limits</th><th>Key Constraint</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style="font-weight:600">Free</td><td style="font-family:var(--mono)">Flash: 10 RPM, Flash-Lite: 15 RPM</td><td>N/A</td><td style="color:#f85149">No Pro access. Heavily limited.</td></tr>
+      <tr><td style="font-weight:600">Pay-as-you-go</td><td style="font-family:var(--mono)">Same as free</td><td>Higher RPM per model</td><td style="color:#d29922">Spend cap pauses requests at billing account level</td></tr>
+      <tr><td style="font-weight:600">Scale (auto-upgrade)</td><td style="font-family:var(--mono)">Same as free</td><td>Even higher RPM</td><td>Auto-upgraded at spend threshold — higher cap</td></tr>
+    </tbody>
+  </table>
+
+  <div class="context-box">
+    <strong>What "spend cap" means in practice:</strong> Unlike rate limits (which reject individual requests), spend caps <em>pause all requests</em> for the remainder of the billing month once the tier's aggregate spend limit is reached. This is a billing-account-level control — all projects under the same billing account share the cap. Google added project-level caps on March 16, 2026 as a mitigation tool.
+  </div>
+
+  <h2 id="comparison">5. Free LLM API Comparison</h2>
+  <p class="section-intro">How Gemini's free tier compares to alternatives. Sorted by free tier generosity — several providers offer significantly more free access than Gemini post-cuts.</p>
+
+  <table class="pricing-table">
+    <thead>
+      <tr><th>Provider</th><th>Free Tier Limits</th><th>Context</th><th>Key Models</th><th>Risk</th></tr>
+    </thead>
+    <tbody>
+      ${llmProviders.map(p => `<tr>
+        <td style="font-weight:600"><a href="/vendor/${p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "")}" style="color:var(--text)">${escHtmlServer(p.name)}</a></td>
+        <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.freeLimit)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.context)}</td>
+        <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(p.models)}</td>
+        <td><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[p.risk]}22;color:${riskColors[p.risk]};font-weight:600">${p.risk}</span></td>
+      </tr>`).join("\n      ")}
+    </tbody>
+  </table>
+
+  <div class="context-box">
+    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a> offers 30 RPM free (3x Gemini Flash) with ultra-fast inference. <a href="/vendor/cerebras">Cerebras</a> gives 1M tokens/day free. <a href="/vendor/mistral-ai">Mistral AI</a> offers 1B tokens/month free. <a href="/vendor/openrouter">OpenRouter</a> provides ~30 free models through one API. All are more generous than Gemini's post-cut free tier. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
+  </div>
+
+  <h2 id="what-to-do">6. What to Do</h2>
+  <p class="section-intro">Practical steps depending on your situation, from monitoring spend to migrating to alternatives.</p>
+
+  <div class="impact-card" style="border-left-color:var(--accent)">
+    <h3>If you're staying on Gemini</h3>
+    <p class="impact-desc">
+      <strong>1. Set project-level budget caps</strong> in Google Cloud Console (available since March 16). This prevents one project from consuming the entire billing account's spend cap.<br>
+      <strong>2. Monitor usage</strong> via the Gemini API usage dashboard. Set billing alerts before you hit the spend cap.<br>
+      <strong>3. Migrate to 2.5 models</strong> — Gemini 2.0 Flash is deprecated and will be retired. Update your API calls to use <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-2.5-flash</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-2.5-pro</code>.<br>
+      <strong>4. Separate billing accounts</strong> if you run multiple projects — spend caps are per billing account, not per project.
+    </p>
+  </div>
+  <div class="impact-card" style="border-left-color:#8b5cf6">
+    <h3>If you're evaluating alternatives</h3>
+    <p class="impact-desc">
+      <strong>1. For maximum free requests:</strong> <a href="/vendor/groq">Groq</a> — 30 RPM, no credit card, ultra-fast inference.<br>
+      <strong>2. For maximum free tokens:</strong> <a href="/vendor/cerebras">Cerebras</a> (1M tokens/day) or <a href="/vendor/mistral-ai">Mistral AI</a> (1B tokens/month).<br>
+      <strong>3. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — ~30 free models through one OpenAI-compatible API.<br>
+      <strong>4. For long context:</strong> Gemini's 1M context window is still the largest free option. If context is your key requirement, stay on Gemini and manage the rate limits.<br>
+      <strong>5. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic Claude</a> or <a href="/vendor/openai">OpenAI</a> offer more predictable pricing without surprise pausing.
+    </p>
+  </div>
+
+  <div class="verdict-box">
+    <h3>Bottom Line</h3>
+    <div class="verdict-item">
+      <strong>If you need a free LLM API today:</strong>
+      <p><a href="/vendor/groq">Groq</a> and <a href="/vendor/openrouter">OpenRouter</a> offer more generous free tiers than Gemini post-cuts. Switch for better rate limits and no spend cap worries.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>If you need the 1M context window:</strong>
+      <p>Stay on Gemini Flash — no other free tier offers this context length. Set budget alerts and migrate to 2.5 models before the 2.0 retirement.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>If you're a paying Gemini customer:</strong>
+      <p>Set project-level caps immediately (available since March 16). Separate billing accounts for production vs. development. Monitor the <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a> for tier details.</p>
+    </div>
+  </div>
+
+  <h2>Related Guides</h2>
+  <p class="section-intro">More resources for evaluating LLM APIs and tracking pricing changes.</p>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+    </a>
+  </div>
+
+  <div class="methodology">
+    <strong>Methodology:</strong> Gemini API pricing details sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google's Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. Rate limit reductions verified via our <a href="/changes">deal change tracker</a> (3 Gemini changes tracked since December 2025). Alternative provider limits verified against their pricing pages as of March 2026. Risk assessments based on pricing history and free tier stability from our index of ${offers.length.toLocaleString()} tracked developer tools.
+  </div>
+
+  <div class="search-cta">
+    <p>This guide covers Gemini API pricing changes through April 2026. For the full LLM API comparison, see <a href="/free-llm-apis">Free LLM APIs</a>. For Gemini alternatives, see <a href="/alternative-to/google-gemini-api">/alternative-to/google-gemini-api</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track Gemini API pricing changes and compare free LLM APIs from your AI assistant. Get alerts on rate limit changes and find alternatives — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 function buildFreeTierRiskPage(): string {
   const title = "Free Tier Risk Index — Which Developer Free Tiers Are Safe to Build On?";
   const metaDesc = "Risk scores for 30+ developer tool free tiers based on pricing history, financial signals, and competitive pressure. Data-driven analysis using 72 tracked deal changes. Updated March 2026.";
@@ -18543,6 +18883,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-tier-risk", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeTierRiskPage());
+  } else if (url.pathname === "/gemini-api-pricing-2026" && isGetOrHead) {
+    recordApiHit("/gemini-api-pricing-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gemini-api-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildGeminiApiPricing2026Page());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
