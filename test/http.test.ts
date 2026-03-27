@@ -2621,6 +2621,33 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
+  it("GET /guides renders guides hub page with all editorial content", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${PORT}/guides`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Developer Tool Guides"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"CollectionPage"'), "Should use CollectionPage schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/guides"), "Should have canonical URL");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Pricing Guides"), "Should have pricing section");
+    assert.ok(html.includes("Vendor Comparisons"), "Should have comparisons section");
+    assert.ok(html.includes("Stack Guides"), "Should have stack guides section");
+    assert.ok(html.includes("Category Alternatives"), "Should have alternatives section");
+    assert.ok(html.includes("Special Reports"), "Should have reports section");
+    assert.ok(html.includes("/ai-coding-pricing-2026"), "Should link to AI coding pricing");
+    assert.ok(html.includes("/supabase-vs-firebase"), "Should link to vendor comparison");
+    assert.ok(html.includes("/free-startup-stack"), "Should link to stack guide");
+    assert.ok(html.includes("/database-alternatives"), "Should link to category hub");
+    assert.ok(html.includes("/free-tier-risk"), "Should link to special report");
+    assert.ok(html.includes("guide-badge"), "Should have content type badges");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+  });
+
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
@@ -2713,6 +2740,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('href="/best"'), "Nav should link to Best Of");
     assert.ok(html.includes('href="/trends"'), "Nav should link to Trends");
     assert.ok(html.includes('href="/alternatives"'), "Nav should link to Alternatives");
+    assert.ok(html.includes('href="/guides"'), "Nav should link to Guides");
     assert.ok(html.includes('href="/compare"'), "Nav should link to Compare");
     assert.ok(html.includes('href="/digest"'), "Nav should link to Digest");
     assert.ok(html.includes('href="/api/docs"'), "Nav should link to API");
