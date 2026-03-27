@@ -3949,6 +3949,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Google Gemini API",
     hubDesc: "Gemini API spend caps enforced April 1 — rate limit cuts, new tier structure, and free LLM API alternatives",
   },
+  {
+    slug: "free-tier-tracker",
+    title: "Free Tier Tracker — Q1 2026 Developer Tool Pricing Changes",
+    metaDesc: "Systematic tracker of developer tool free tiers removed, reduced, or expanded in Q1 2026. Postman, LocalStack, Brave Search, HCP Terraform, Windsurf, and more. Powered by AgentDeals deal_changes data.",
+    contextHtml: "",
+    tag: "free-tier-tracker",
+    primaryVendor: "LocalStack",
+    hubDesc: "Q1 2026 free tier erosion report — which developer free tiers were removed, reduced, or expanded",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -15165,6 +15174,472 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Free Tier Erosion Tracker page ---
+
+function buildFreeTierTrackerPage(): string {
+  const title = "Free Tier Tracker — Q1 2026 Developer Tool Pricing Changes";
+  const metaDesc = "Systematic tracker of developer tool free tiers removed, reduced, or expanded in Q1 2026. Postman, LocalStack, Brave Search, HCP Terraform, Windsurf, and more. Powered by AgentDeals deal_changes data.";
+  const slug = "free-tier-tracker";
+  const pubDate = "2026-03-27";
+
+  // Categorize Q1 2026 changes (Jan-Mar 2026)
+  const q1Start = "2026-01-01";
+  const q1End = "2026-03-31";
+  const q1Changes = dealChanges.filter(c => c.date >= q1Start && c.date <= q1End);
+
+  const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "pricing_model_change", "pricing_restructured", "product_deprecated"];
+  const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
+
+  // Separate negative and positive
+  const removedOrReduced = q1Changes.filter(c => ["free_tier_removed", "open_source_killed"].includes(c.change_type));
+  const limitsReduced = q1Changes.filter(c => ["limits_reduced", "restriction"].includes(c.change_type));
+  const restructured = q1Changes.filter(c => ["pricing_restructured", "pricing_model_change", "product_deprecated"].includes(c.change_type));
+  const expanded = q1Changes.filter(c => positiveTypes.includes(c.change_type));
+
+  const totalNegative = q1Changes.filter(c => negativeTypes.includes(c.change_type)).length;
+  const totalPositive = expanded.length;
+
+  // Key erosion events for featured section
+  interface ErosionEntry {
+    vendor: string;
+    slug: string;
+    date: string;
+    oneLiner: string;
+    changeType: string;
+    impact: string;
+    detail: string;
+    alternatives: string[];
+  }
+
+  const featuredRemovals: ErosionEntry[] = [
+    {
+      vendor: "LocalStack",
+      slug: "localstack",
+      date: "2026-03-23",
+      oneLiner: "Open-source Community Edition discontinued",
+      changeType: "free_tier_removed",
+      impact: "high",
+      detail: "LocalStack dropped its open-source Community Edition entirely. The unified image now requires an auth token. Free tier replaced with non-commercial-only registration. Commercial use starts at $39/month. OSS projects, students, and nonprofits get free access.",
+      alternatives: ["Moto (open-source AWS mock)", "Testcontainers", "AWS Free Tier"],
+    },
+    {
+      vendor: "Postman",
+      slug: "postman",
+      date: "2026-03-01",
+      oneLiner: "Free team collaboration killed — single-user only",
+      changeType: "restriction",
+      impact: "high",
+      detail: "Postman's free plan is now single-user only. Team collaboration (shared workspaces, collection sharing, team roles) requires the Team plan at $19/user/month. Previously, up to 3 users could collaborate for free.",
+      alternatives: ["Bruno", "Hoppscotch", "Insomnia", "Thunder Client"],
+    },
+    {
+      vendor: "Brave Search API",
+      slug: "brave-search-api",
+      date: "2026-02-12",
+      oneLiner: "Free plan (5,000 queries/mo) replaced with metered billing",
+      changeType: "free_tier_removed",
+      impact: "high",
+      detail: "Brave Search API's free plan (5,000 queries/month) was replaced with metered billing at $5/1,000 requests. A $5 monthly credit offsets ~1,000 queries, but credit cards are now actively charged with no spending cap.",
+      alternatives: ["SerpAPI", "Google Custom Search"],
+    },
+    {
+      vendor: "HCP Terraform",
+      slug: "hcp-terraform",
+      date: "2026-03-31",
+      oneLiner: "Legacy free plan ending March 31",
+      changeType: "pricing_restructured",
+      impact: "high",
+      detail: "HashiCorp's legacy free plan for HCP Terraform ends March 31, 2026. Users are auto-migrated to an enhanced free tier with 500 managed resources (previously unlimited for small teams), plus SSO and policy as code.",
+      alternatives: ["Spacelift", "env0", "Scalr", "Terragrunt Scale"],
+    },
+    {
+      vendor: "Windsurf",
+      slug: "windsurf",
+      date: "2026-03-01",
+      oneLiner: "Credits replaced with hard quotas, Pro price +33%",
+      changeType: "pricing_restructured",
+      impact: "medium",
+      detail: "Windsurf replaced its flexible credits-based system with fixed monthly quotas and raised Pro pricing from $15 to $20/month. Free tier went from credits (flexible allocation) to hard limits on completions and chat messages.",
+      alternatives: ["Cursor", "GitHub Copilot", "Cline"],
+    },
+    {
+      vendor: "MinIO",
+      slug: "minio",
+      date: "2026-02-12",
+      oneLiner: "Open-source GitHub repository archived",
+      changeType: "open_source_killed",
+      impact: "high",
+      detail: "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. Only case-by-case critical security fixes.",
+      alternatives: ["Ceph", "SeaweedFS", "GarageHQ"],
+    },
+    {
+      vendor: "X API (Twitter)",
+      slug: "x-api-twitter-",
+      date: "2026-02-09",
+      oneLiner: "Free tier eliminated — pay-per-use only",
+      changeType: "free_tier_removed",
+      impact: "high",
+      detail: "X/Twitter API eliminated its free tier, replacing it with pay-per-use credit model. Active free-tier users receive a $0 voucher. 'For-good' utility apps remain free. Basic fixed tier remains at $200/month.",
+      alternatives: ["Bluesky AT Protocol", "Mastodon API"],
+    },
+    {
+      vendor: "Logz.io",
+      slug: "logz-io",
+      date: "2026-03-02",
+      oneLiner: "Free Community plan removed — trial only",
+      changeType: "free_tier_removed",
+      impact: "medium",
+      detail: "Logz.io removed its Free Community plan (1 GB/day, 1-day retention, 10 alerts). Only a 14-day free trial remains. Consumption-based pricing starts at $0.92/ingested GB/day.",
+      alternatives: ["Grafana Cloud", "BetterStack", "Axiom"],
+    },
+  ];
+
+  const featuredExpansions: ErosionEntry[] = [
+    {
+      vendor: "Gemini Code Assist",
+      slug: "gemini-code-assist",
+      date: "2025-12-18",
+      oneLiner: "Free tier launched for individual developers",
+      changeType: "new_free_tier",
+      impact: "high",
+      detail: "Google launched Gemini Code Assist free tier for individual developers. Includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro. Available in VS Code, JetBrains, and Cloud Shell.",
+      alternatives: ["GitHub Copilot Free", "Cursor", "Cline"],
+    },
+    {
+      vendor: "Cloudflare Startup Program",
+      slug: "cloudflare",
+      date: "2026-02-01",
+      oneLiner: "Expanded to $250K in credits across 4 tiers",
+      changeType: "startup_program_expanded",
+      impact: "high",
+      detail: "Cloudflare revamped its startup program to 4 tiers with up to $250,000 in credits. Tiers: Bootstrapped $5K, Up-and-Coming $25K, Seed-Funded $100K, High Growth $250K. Credits cover Workers, R2, Workers AI, and Stream.",
+      alternatives: ["AWS Activate", "Google for Startups", "Azure for Startups"],
+    },
+    {
+      vendor: "Terragrunt Scale",
+      slug: "terragrunt-scale",
+      date: "2025-12-15",
+      oneLiner: "Free tier launched as HCP Terraform alternative",
+      changeType: "new_free_tier",
+      impact: "medium",
+      detail: "Gruntwork launched a free tier for Terragrunt Scale IaC orchestration, positioned as the HCP Terraform alternative. Includes GitOps, drift detection, and module update automation with 500+ managed resources.",
+      alternatives: ["Spacelift", "env0", "Scalr"],
+    },
+    {
+      vendor: "Neon",
+      slug: "neon",
+      date: "2026-01-15",
+      oneLiner: "Projects increased 10x (10\u219270→100), storage per-project",
+      changeType: "pricing_restructured",
+      impact: "medium",
+      detail: "Post-Databricks acquisition, Neon restructured pricing with both expansions and changes. Projects increased from 10 to 100, storage became per-project (0.5 GB each, up to 5 GB total), and Neon Auth added at 60K MAU.",
+      alternatives: ["Supabase", "CockroachDB", "Turso"],
+    },
+    {
+      vendor: "GitHub Copilot",
+      slug: "github-copilot",
+      date: "2025-12-18",
+      oneLiner: "New free tier: 2K completions + 50 chat messages/mo",
+      changeType: "new_free_tier",
+      impact: "high",
+      detail: "GitHub launched a free tier for Copilot: 2,000 code completions and 50 chat messages per month. Available in VS Code, Visual Studio, JetBrains, and Neovim. Strategic move to compete with Cursor and Claude.",
+      alternatives: ["Gemini Code Assist", "Cursor", "Cline"],
+    },
+    {
+      vendor: "Unity DevOps",
+      slug: "unity-devops",
+      date: "2026-03-01",
+      oneLiner: "Storage 5x increase, per-seat charges removed",
+      changeType: "limits_increased",
+      impact: "medium",
+      detail: "Unity DevOps (formerly Plastic SCM) expanded free tier significantly: storage increased 5x to 25 GB, 100 GB egress added (new), and per-seat charges removed.",
+      alternatives: ["Git LFS", "Perforce", "GitHub"],
+    },
+  ];
+
+  // Trend patterns
+  const patterns = [
+    {
+      name: "Open-core \u2192 Paid",
+      description: "Companies that built on open-source are closing the source. MinIO archived its repo. LocalStack killed Community Edition. HashiCorp's BSL license change (2023) continues to ripple.",
+      examples: "MinIO, LocalStack, HashiCorp/HCP Terraform",
+    },
+    {
+      name: "Credits \u2192 Hard Quotas",
+      description: "Flexible credit systems are being replaced by fixed monthly quotas. This makes 'free' more predictable but less useful — you can't burst when you need to.",
+      examples: "Windsurf, Netlify, Vercel",
+    },
+    {
+      name: "Free Team \u2192 Single-User",
+      description: "Team collaboration features are being paywalled while individual use stays free. The message: work alone for free, pay to collaborate.",
+      examples: "Postman, Docker Hub (commercial use restrictions)",
+    },
+    {
+      name: "API Monetization Wave",
+      description: "APIs that were free for years are adding billing. Some add credits, some go straight to metered billing. The $0 API era is ending.",
+      examples: "X API, Brave Search API, Amazon SP-API, Xero API, Spotify API",
+    },
+  ];
+
+  const changeTypeColors: Record<string, string> = {
+    free_tier_removed: "#f85149",
+    open_source_killed: "#f85149",
+    restriction: "#d29922",
+    limits_reduced: "#d29922",
+    pricing_restructured: "#d29922",
+    pricing_model_change: "#d29922",
+    product_deprecated: "#f85149",
+    new_free_tier: "#3fb950",
+    limits_increased: "#3fb950",
+    startup_program_expanded: "#3fb950",
+    pricing_postponed: "#3fb950",
+  };
+
+  const changeTypeLabels: Record<string, string> = {
+    free_tier_removed: "Removed",
+    open_source_killed: "OSS Killed",
+    restriction: "Restricted",
+    limits_reduced: "Reduced",
+    pricing_restructured: "Restructured",
+    pricing_model_change: "Model Change",
+    product_deprecated: "Deprecated",
+    new_free_tier: "New Free Tier",
+    limits_increased: "Expanded",
+    startup_program_expanded: "Program Expanded",
+    pricing_postponed: "Postponed",
+  };
+
+  const buildEntryCard = (e: ErosionEntry, borderColor: string) => `
+    <div style="padding:1.25rem;border:1px solid var(--border);border-left:3px solid ${borderColor};border-radius:8px;background:var(--bg-card);margin-bottom:.75rem">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem">
+        <a href="/vendor/${e.slug}" style="font-size:1.1rem;font-weight:600;color:var(--text);text-decoration:none">${escHtmlServer(e.vendor)}</a>
+        <span style="font-family:var(--mono);font-size:.75rem;padding:.15rem .5rem;border-radius:10px;background:${borderColor}22;color:${borderColor};font-weight:600">${changeTypeLabels[e.changeType] ?? e.changeType}</span>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${escHtmlServer(e.date)}</span>
+        ${e.impact === "high" ? '<span style="font-size:.7rem;padding:.1rem .4rem;border-radius:8px;background:rgba(248,81,73,0.15);color:#f85149;font-weight:600">HIGH IMPACT</span>' : ""}
+      </div>
+      <p style="color:var(--text);font-size:.95rem;font-weight:500;margin-bottom:.5rem">${escHtmlServer(e.oneLiner)}</p>
+      <p style="color:var(--text-muted);font-size:.85rem;line-height:1.6;margin-bottom:.5rem">${escHtmlServer(e.detail)}</p>
+      ${e.alternatives.length ? `<p style="font-size:.8rem;color:var(--text-dim)"><strong style="color:var(--text-muted)">Still free:</strong> ${e.alternatives.map(a => {
+        const aSlug = a.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        return `<a href="/vendor/${aSlug}" style="color:var(--accent)">${escHtmlServer(a)}</a>`;
+      }).join(", ")}</p>` : ""}
+    </div>`;
+
+  // Build all Q1 changes table
+  const buildChangeRow = (c: typeof dealChanges[0]) => {
+    const color = changeTypeColors[c.change_type] ?? "var(--text-dim)";
+    const label = changeTypeLabels[c.change_type] ?? c.change_type;
+    const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    return `<tr>
+      <td style="font-weight:600;white-space:nowrap"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+      <td style="white-space:nowrap"><span style="color:${color};font-weight:600;font-size:.8rem">${label}</span></td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim);white-space:nowrap">${escHtmlServer(c.date)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(c.summary.length > 120 ? c.summary.slice(0, 117) + "..." : c.summary)}</td>
+    </tr>`;
+  };
+
+  // Sort Q1 changes by date descending
+  const sortedQ1 = [...q1Changes].sort((a, b) => b.date.localeCompare(a.date));
+
+  // Related editorial pages
+  const relatedSlugs = ["free-tier-risk", "q1-2026-developer-pricing-report", "q2-pricing-preview-2026", "localstack-alternatives", "postman-alternatives", "hcp-terraform-migration", "free-startup-stack"];
+  const relatedPages = ALTERNATIVES_PAGES.filter(p => relatedSlugs.includes(p.slug));
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:1060px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono)}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.changes-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.changes-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.changes-table td{padding:.5rem;border-bottom:1px solid var(--border)}
+.changes-table tr:hover{background:var(--accent-glow)}
+.pattern-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-bottom:.75rem}
+.pattern-card h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}
+.pattern-card p{color:var(--text-muted);font-size:.9rem;line-height:1.6;margin-bottom:.25rem}
+.pattern-examples{font-size:.8rem;color:var(--text-dim);font-style:italic}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.changes-table{font-size:.75rem}.changes-table td,.changes-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Free Tier Tracker</div>
+  <h1>Free Tier Tracker &mdash; Q1 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Tracking ${dealChanges.length} pricing changes across ${offers.length.toLocaleString()} developer tools</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number" style="color:#f85149">${removedOrReduced.length}</div><div class="stat-label">Free Tiers Removed</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:#d29922">${limitsReduced.length + restructured.length}</div><div class="stat-label">Reduced / Restructured</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:#3fb950">${totalPositive}</div><div class="stat-label">Expanded / New</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--accent)">${q1Changes.length}</div><div class="stat-label">Total Q1 Changes</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>${removedOrReduced.length} developer tool free tiers were removed in Q1 2026. ${limitsReduced.length + restructured.length} more were reduced or restructured. Here&rsquo;s what changed and what&rsquo;s still free.</strong></p>
+    <p>March 2026 saw an unprecedented wave of free tier removals in a single month: <strong>Postman</strong> killed team collaboration on its free plan, <strong>LocalStack</strong> discontinued its open-source Community Edition (212 points on Hacker News), <strong>Brave Search API</strong> replaced its free tier with metered billing, <strong>HCP Terraform</strong> is ending its legacy free plan March 31, and <strong>Windsurf</strong> replaced credits with hard quotas while raising prices 33%.</p>
+    <p>But it&rsquo;s not all erosion. <strong>Gemini Code Assist</strong> launched a free tier, <strong>Cloudflare</strong> expanded its startup program to $250K, <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#removed">Free Tiers Removed &amp; Reduced</a></li>
+      <li><a href="#expanded">Free Tiers Expanded &amp; New</a></li>
+      <li><a href="#patterns">Trend Analysis</a></li>
+      <li><a href="#all-changes">All Q1 2026 Changes</a></li>
+      <li><a href="#methodology">Data Source &amp; Methodology</a></li>
+    </ol>
+  </div>
+
+  <h2 id="removed">Free Tiers Removed &amp; Reduced</h2>
+  <p class="section-intro">These are the most impactful free tier removals, reductions, and restrictions from Q1 2026. Each entry links to the vendor profile and lists free alternatives that still work.</p>
+
+  ${featuredRemovals.map(e => buildEntryCard(e, changeTypeColors[e.changeType] ?? "#d29922")).join("\n  ")}
+
+  <h2 id="expanded">Free Tiers Expanded &amp; New</h2>
+  <p class="section-intro">Not everything is shrinking. These vendors expanded their free tiers or launched new ones in Q1 2026 &mdash; often in direct response to competitor removals.</p>
+
+  ${featuredExpansions.map(e => buildEntryCard(e, "#3fb950")).join("\n  ")}
+
+  <h2 id="patterns">Trend Analysis &mdash; What&rsquo;s Driving Free Tier Erosion?</h2>
+  <p class="section-intro">Four clear patterns emerge from the ${q1Changes.length} changes we tracked in Q1 2026:</p>
+
+  ${patterns.map(p => `
+    <div class="pattern-card">
+      <h3>${escHtmlServer(p.name)}</h3>
+      <p>${escHtmlServer(p.description)}</p>
+      <p class="pattern-examples">Examples: ${escHtmlServer(p.examples)}</p>
+    </div>`).join("\n  ")}
+
+  <div class="verdict-box">
+    <h3>What This Means for Developers</h3>
+    <div class="verdict-item">
+      <strong>For side projects &amp; prototyping:</strong>
+      <p>Stick with vendors that have a strategic reason to stay free &mdash; Cloudflare, GitHub, Grafana Cloud. See our <a href="/free-tier-risk">Free Tier Risk Index</a> for stability scores.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>For production workloads:</strong>
+      <p>If you&rsquo;re building on a free tier, have a migration plan. The vendors that removed free tiers in Q1 gave between 0 days (MinIO) and 6 months (HCP Terraform) of notice. Budget for paid tiers or self-hosted alternatives.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>For startups:</strong>
+      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare">Cloudflare $250K</a>, <a href="/vendor/google-cloud">Google Cloud $350K</a>, <a href="/vendor/digitalocean">DigitalOcean $100K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
+    </div>
+  </div>
+
+  <h2 id="all-changes">All Q1 2026 Changes</h2>
+  <p class="section-intro">${q1Changes.length} pricing changes tracked between January 1 and March 31, 2026. Sorted by date (newest first).</p>
+
+  <div style="overflow-x:auto">
+  <table class="changes-table">
+    <thead>
+      <tr>
+        <th>Vendor</th>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Summary</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${sortedQ1.map(buildChangeRow).join("\n      ")}
+    </tbody>
+  </table>
+  </div>
+
+  <div id="methodology" class="methodology">
+    <p><strong>Data Source &amp; Methodology</strong></p>
+    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${dealChanges.length} verified pricing changes across ${offers.length.toLocaleString()} developer tools. Each change is manually verified against the vendor&rsquo;s pricing page or official announcement. Change types: <em>free_tier_removed</em>, <em>limits_reduced</em>, <em>restriction</em>, <em>open_source_killed</em>, <em>pricing_restructured</em>, <em>new_free_tier</em>, <em>limits_increased</em>, <em>startup_program_expanded</em>.</p>
+    <p>Impact is scored as high (affects thousands of developers or eliminates a widely-used free tier), medium (meaningful change to limits or pricing structure), or low (minor adjustments). Sources linked for each entry.</p>
+    <p>Missing a change? <a href="https://github.com/robhunter/agentdeals/issues">File an issue</a> and we&rsquo;ll add it.</p>
+  </div>
+
+  <div class="search-cta">
+    <p>This tracker covers Q1 2026 changes. For real-time tracking of all ${dealChanges.length}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
+    <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">For risk scores on specific vendors, see the <a href="/free-tier-risk">Free Tier Risk Index</a>.</p>
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link"><div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div><div class="link-desc">${escHtmlServer(p.hubDesc)}</div></a>`).join("\n    ")}
+  </div>
+
+  ${buildMcpCta("Track free tier changes across 1,500+ developer tools from your AI assistant. Get pricing alerts, change history, and migration recommendations — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -18878,6 +19353,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hcp-terraform-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildHcpTerraformMigrationPage());
+  } else if (url.pathname === "/free-tier-tracker" && isGetOrHead) {
+    recordApiHit("/free-tier-tracker");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-tier-tracker", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeTierTrackerPage());
   } else if (url.pathname === "/free-tier-risk" && isGetOrHead) {
     recordApiHit("/free-tier-risk");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-tier-risk", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

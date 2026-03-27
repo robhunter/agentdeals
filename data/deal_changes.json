@@ -1170,6 +1170,38 @@
         "Anthropic Claude API",
         "OpenAI API"
       ]
+    },
+    {
+      "vendor": "Windsurf",
+      "change_type": "pricing_restructured",
+      "date": "2026-03-01",
+      "summary": "Windsurf replaced credits-based free tier with fixed monthly quotas and raised Pro pricing from $15 to $20/month. Free tier went from credits (flexible use) to hard quotas (limited completions + chat messages). Pro plan price increased 33%",
+      "previous_state": "Credits-based system allowing flexible allocation between completions and chat. Pro plan $15/month",
+      "current_state": "Fixed quotas: free tier gets limited completions and chat messages per month. Pro plan $20/month (+33%). Credits replaced by hard limits",
+      "impact": "medium",
+      "source_url": "https://windsurf.com/pricing",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "GitHub Copilot",
+        "Cline"
+      ]
+    },
+    {
+      "vendor": "Gemini Code Assist",
+      "change_type": "new_free_tier",
+      "date": "2025-12-18",
+      "summary": "Google launched Gemini Code Assist free tier for individual developers. Includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro. Available in VS Code, JetBrains, and Cloud Shell",
+      "previous_state": "No free tier — enterprise-only at $19/user/month",
+      "current_state": "Free individual tier with code completions, chat, and multi-file editing. Enterprise tier remains at $19/user/month",
+      "impact": "high",
+      "source_url": "https://cloud.google.com/gemini/docs/codeassist/overview",
+      "category": "AI Coding",
+      "alternatives": [
+        "GitHub Copilot Free",
+        "Cursor",
+        "Cline"
+      ]
     }
   ]
 }
