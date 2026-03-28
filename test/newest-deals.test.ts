@@ -116,7 +116,7 @@ describe("get_newest_deals MCP tool via stdio", () => {
 });
 
 describe("get_newest_deals REST endpoint", () => {
-  const PORT = 3466;
+  let serverPort = 0;
   let proc: ChildProcess | null = null;
 
   function startHttpServer(): Promise<ChildProcess> {
@@ -124,11 +124,12 @@ describe("get_newest_deals REST endpoint", () => {
       const serverPath = path.join(__dirname, "..", "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: String(PORT) },
+        env: { ...process.env, PORT: "0" },
       });
       const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 5000);
       p.stderr!.on("data", (data: Buffer) => {
-        if (data.toString().includes("running on http")) { clearTimeout(timeout); resolve(p); }
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) { serverPort = parseInt(match[1], 10); clearTimeout(timeout); resolve(p); }
       });
       p.on("error", (err) => { clearTimeout(timeout); reject(err); });
     });
@@ -143,7 +144,7 @@ describe("get_newest_deals REST endpoint", () => {
   });
 
   it("GET /api/newest returns newest deals", async () => {
-    const response = await fetch(`http://localhost:${PORT}/api/newest?since=2020-01-01&limit=5`);
+    const response = await fetch(`http://localhost:${serverPort}/api/newest?since=2020-01-01&limit=5`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
     const body = await response.json() as any;
@@ -156,7 +157,7 @@ describe("get_newest_deals REST endpoint", () => {
   });
 
   it("GET /api/newest with invalid since returns 400", async () => {
-    const response = await fetch(`http://localhost:${PORT}/api/newest?since=not-a-date`);
+    const response = await fetch(`http://localhost:${serverPort}/api/newest?since=not-a-date`);
     assert.strictEqual(response.status, 400);
     const body = await response.json() as any;
     assert.ok(body.error.includes("Invalid"), "Should return error about invalid date");

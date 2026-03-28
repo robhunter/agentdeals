@@ -7,19 +7,22 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Start a local HTTP server so stdio MCP tests hit local data (not production API)
-const LOCAL_API_PORT = 13590;
-const LOCAL_API_URL = `http://localhost:${LOCAL_API_PORT}`;
+let LOCAL_API_PORT = 0;
+let LOCAL_API_URL = "";
 
 const httpServerPath = path.join(__dirname, "..", "dist", "serve.js");
 const httpServer: ChildProcess = spawn("node", [httpServerPath], {
-  env: { ...process.env, PORT: String(LOCAL_API_PORT) },
+  env: { ...process.env, PORT: "0" },
   stdio: ["pipe", "pipe", "pipe"],
 });
 
 await new Promise<void>((resolve, reject) => {
   const timeout = setTimeout(() => reject(new Error("HTTP server start timeout")), 5000);
   httpServer.stderr!.on("data", (chunk: Buffer) => {
-    if (chunk.toString().includes("running on")) {
+    const match = chunk.toString().match(/running on http:\/\/localhost:(\d+)/);
+    if (match) {
+      LOCAL_API_PORT = parseInt(match[1], 10);
+      LOCAL_API_URL = `http://localhost:${LOCAL_API_PORT}`;
       clearTimeout(timeout);
       resolve();
     }

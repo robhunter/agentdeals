@@ -8,18 +8,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const serverPath = path.join(__dirname, "..", "dist", "serve.js");
 
 // Start local HTTP server and wait for it to be ready
-async function startHttpServer(port: number): Promise<ChildProcess> {
+async function startHttpServer(): Promise<{ proc: ChildProcess; port: number }> {
   const proc = spawn("node", [serverPath], {
-    env: { ...process.env, PORT: String(port) },
+    env: { ...process.env, PORT: "0" },
     stdio: ["pipe", "pipe", "pipe"],
   });
 
-  await new Promise<void>((resolve, reject) => {
+  const port = await new Promise<number>((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error("Server start timeout")), 10000);
     proc.stderr!.on("data", (chunk: Buffer) => {
-      if (chunk.toString().includes("running on")) {
+      const match = chunk.toString().match(/running on http:\/\/localhost:(\d+)/);
+      if (match) {
         clearTimeout(timeout);
-        resolve();
+        resolve(parseInt(match[1], 10));
       }
     });
     proc.on("error", (err) => {
@@ -28,16 +29,16 @@ async function startHttpServer(port: number): Promise<ChildProcess> {
     });
   });
 
-  return proc;
+  return { proc, port };
 }
 
 describe("api-client against local HTTP server", () => {
-  const PORT = 13579;
   let proc: ChildProcess;
 
   before(async () => {
-    proc = await startHttpServer(PORT);
-    process.env.AGENTDEALS_API_URL = `http://localhost:${PORT}`;
+    const server = await startHttpServer();
+    proc = server.proc;
+    process.env.AGENTDEALS_API_URL = `http://localhost:${server.port}`;
   });
 
   after(() => {
