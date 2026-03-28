@@ -5,13 +5,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 13592; // Unique port to avoid conflicts
+let serverPort = 0;
 
 // Start a single HTTP server for all query-log tests
 const serverPath = path.join(__dirname, "..", "dist", "serve.js");
 const proc: ChildProcess = spawn("node", [serverPath], {
   stdio: ["pipe", "pipe", "pipe"],
-  env: { ...process.env, PORT: String(PORT) },
+  env: { ...process.env, PORT: "0" },
 });
 
 await new Promise<void>((resolve, reject) => {
@@ -21,7 +21,9 @@ await new Promise<void>((resolve, reject) => {
   }, 5000);
 
   proc.stderr!.on("data", (data: Buffer) => {
-    if (data.toString().includes("running on")) {
+    const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+    if (match) {
+      serverPort = parseInt(match[1], 10);
       clearTimeout(timeout);
       resolve();
     }
@@ -39,7 +41,7 @@ after(() => {
 
 describe("query-log endpoint", () => {
   it("GET /api/query-log returns entries array and count", async () => {
-    const response = await fetch(`http://localhost:${PORT}/api/query-log`);
+    const response = await fetch(`http://localhost:${serverPort}/api/query-log`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
@@ -50,7 +52,7 @@ describe("query-log endpoint", () => {
   });
 
   it("GET /api/query-log accepts limit parameter", async () => {
-    const response = await fetch(`http://localhost:${PORT}/api/query-log?limit=5`);
+    const response = await fetch(`http://localhost:${serverPort}/api/query-log?limit=5`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(Array.isArray(body.entries));
@@ -60,11 +62,11 @@ describe("query-log endpoint", () => {
 
   it("GET /api/query-log clamps limit to 1-200 range", async () => {
     // Negative limit should be clamped to 1
-    const resp1 = await fetch(`http://localhost:${PORT}/api/query-log?limit=-10`);
+    const resp1 = await fetch(`http://localhost:${serverPort}/api/query-log?limit=-10`);
     assert.strictEqual(resp1.status, 200);
 
     // Large limit should be clamped to 200
-    const resp2 = await fetch(`http://localhost:${PORT}/api/query-log?limit=999`);
+    const resp2 = await fetch(`http://localhost:${serverPort}/api/query-log?limit=999`);
     assert.strictEqual(resp2.status, 200);
   });
 });

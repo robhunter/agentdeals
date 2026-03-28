@@ -134,7 +134,7 @@ describe("audit_stack MCP tool via stdio", () => {
 });
 
 describe("audit_stack REST endpoint", () => {
-  const PORT = 3464;
+  let serverPort = 0;
   let proc: ChildProcess | null = null;
 
   function startHttpServer(): Promise<ChildProcess> {
@@ -142,11 +142,12 @@ describe("audit_stack REST endpoint", () => {
       const serverPath = path.join(__dirname, "..", "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: String(PORT) },
+        env: { ...process.env, PORT: "0" },
       });
       const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 5000);
       p.stderr!.on("data", (data: Buffer) => {
-        if (data.toString().includes("running on http")) { clearTimeout(timeout); resolve(p); }
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) { serverPort = parseInt(match[1], 10); clearTimeout(timeout); resolve(p); }
       });
       p.on("error", (err) => { clearTimeout(timeout); reject(err); });
     });
@@ -158,7 +159,7 @@ describe("audit_stack REST endpoint", () => {
 
   it("GET /api/audit-stack returns audit results", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/api/audit-stack?services=Vercel,Supabase`);
+    const response = await fetch(`http://localhost:${serverPort}/api/audit-stack?services=Vercel,Supabase`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
     const body = await response.json() as any;
@@ -172,7 +173,7 @@ describe("audit_stack REST endpoint", () => {
 
   it("GET /api/audit-stack returns 400 without services parameter", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/api/audit-stack`);
+    const response = await fetch(`http://localhost:${serverPort}/api/audit-stack`);
     assert.strictEqual(response.status, 400);
     const body = await response.json() as any;
     assert.ok(body.error.includes("services"));

@@ -5,14 +5,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 3456; // Use non-default port to avoid conflicts
+let serverPort = 0;
 
 function startHttpServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: String(PORT), BASE_URL: `http://localhost:${PORT}` },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
     });
 
     const timeout = setTimeout(() => {
@@ -21,7 +21,9 @@ function startHttpServer(): Promise<ChildProcess> {
     }, 5000);
 
     proc.stderr!.on("data", (data: Buffer) => {
-      if (data.toString().includes("running on http")) {
+      const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+      if (match) {
+        serverPort = parseInt(match[1], 10);
         clearTimeout(timeout);
         resolve(proc);
       }
@@ -47,7 +49,7 @@ async function mcpRequest(
     headers["Mcp-Session-Id"] = sessionId;
   }
 
-  const response = await fetch(`http://localhost:${PORT}${path}`, {
+  const response = await fetch(`http://localhost:${serverPort}${path}`, {
     method: "POST",
     headers,
     body: JSON.stringify(body),
@@ -87,7 +89,7 @@ describe("HTTP transport", () => {
   it("responds to health check", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/health`);
+    const response = await fetch(`http://localhost:${serverPort}/health`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.strictEqual(body.status, "ok");
@@ -277,7 +279,7 @@ describe("HTTP transport", () => {
   it("serves /.well-known/glama.json from repo file", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/.well-known/glama.json`);
+    const response = await fetch(`http://localhost:${serverPort}/.well-known/glama.json`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     const body = await response.json() as any;
@@ -291,7 +293,7 @@ describe("HTTP transport", () => {
   it("serves /AGENTS.md with text/markdown content type", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/AGENTS.md`);
+    const response = await fetch(`http://localhost:${serverPort}/AGENTS.md`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "text/markdown; charset=utf-8");
     const body = await response.text();
@@ -303,7 +305,7 @@ describe("HTTP transport", () => {
   it("serves /.well-known/mcp.json server card", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/.well-known/mcp.json`);
+    const response = await fetch(`http://localhost:${serverPort}/.well-known/mcp.json`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     assert.strictEqual(response.headers.get("cache-control"), "public, max-age=3600");
@@ -333,7 +335,7 @@ describe("HTTP transport", () => {
   it("serves /.well-known/mcp/server-card.json as alias", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/.well-known/mcp/server-card.json`);
+    const response = await fetch(`http://localhost:${serverPort}/.well-known/mcp/server-card.json`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     const body = await response.json() as any;
@@ -344,7 +346,7 @@ describe("HTTP transport", () => {
   it("serves /setup page with client configs and HowTo schema", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/setup`);
+    const response = await fetch(`http://localhost:${serverPort}/setup`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -361,7 +363,7 @@ describe("HTTP transport", () => {
   it("serves landing page at root URL", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/`);
+    const response = await fetch(`http://localhost:${serverPort}/`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -376,7 +378,7 @@ describe("HTTP transport", () => {
   it("GET /api/offers returns offers with pagination", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/offers?limit=3&offset=0`);
+    const response = await fetch(`http://localhost:${serverPort}/api/offers?limit=3&offset=0`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     const body = await response.json() as any;
@@ -396,7 +398,7 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Filter by category
-    const catResp = await fetch(`http://localhost:${PORT}/api/offers?category=Databases&limit=100`);
+    const catResp = await fetch(`http://localhost:${serverPort}/api/offers?category=Databases&limit=100`);
     const catBody = await catResp.json() as any;
     assert.ok(catBody.total > 0);
     for (const o of catBody.offers) {
@@ -404,7 +406,7 @@ describe("HTTP transport", () => {
     }
 
     // Filter by query
-    const qResp = await fetch(`http://localhost:${PORT}/api/offers?q=postgres&limit=100`);
+    const qResp = await fetch(`http://localhost:${serverPort}/api/offers?q=postgres&limit=100`);
     const qBody = await qResp.json() as any;
     assert.ok(qBody.total > 0);
     for (const o of qBody.offers) {
@@ -416,7 +418,7 @@ describe("HTTP transport", () => {
   it("GET /api/categories returns categories with counts", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/categories`);
+    const response = await fetch(`http://localhost:${serverPort}/api/categories`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(Array.isArray(body.categories));
@@ -431,7 +433,7 @@ describe("HTTP transport", () => {
   it("returns 404 for unknown paths", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/unknown`);
+    const response = await fetch(`http://localhost:${serverPort}/unknown`);
     assert.strictEqual(response.status, 404);
   });
 
@@ -439,7 +441,7 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Initially 0 sessions
-    const health0 = await fetch(`http://localhost:${PORT}/health`);
+    const health0 = await fetch(`http://localhost:${serverPort}/health`);
     const body0 = await health0.json() as any;
     assert.strictEqual(body0.status, "ok");
     assert.strictEqual(body0.sessions, 0);
@@ -465,7 +467,7 @@ describe("HTTP transport", () => {
     });
 
     // Now 1 session
-    const health1 = await fetch(`http://localhost:${PORT}/health`);
+    const health1 = await fetch(`http://localhost:${serverPort}/health`);
     const body1 = await health1.json() as any;
     assert.strictEqual(body1.sessions, 1);
 
@@ -482,7 +484,7 @@ describe("HTTP transport", () => {
     });
 
     // Now 2 sessions
-    const health2 = await fetch(`http://localhost:${PORT}/health`);
+    const health2 = await fetch(`http://localhost:${serverPort}/health`);
     const body2 = await health2.json() as any;
     assert.strictEqual(body2.sessions, 2);
 
@@ -494,24 +496,24 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Record initial stats
-    const h0 = await fetch(`http://localhost:${PORT}/health`);
+    const h0 = await fetch(`http://localhost:${serverPort}/health`);
     const s0 = (await h0.json() as any).stats;
     const initialApiOffers = s0.api_hits["/api/offers"];
     const initialApiCats = s0.api_hits["/api/categories"];
     const initialPageViews = s0.landing_page_views;
 
     // Hit /api/offers twice
-    await fetch(`http://localhost:${PORT}/api/offers?limit=1`);
-    await fetch(`http://localhost:${PORT}/api/offers?q=test&limit=1`);
+    await fetch(`http://localhost:${serverPort}/api/offers?limit=1`);
+    await fetch(`http://localhost:${serverPort}/api/offers?q=test&limit=1`);
 
     // Hit /api/categories once
-    await fetch(`http://localhost:${PORT}/api/categories`);
+    await fetch(`http://localhost:${serverPort}/api/categories`);
 
     // Hit landing page once
-    await fetch(`http://localhost:${PORT}/`);
+    await fetch(`http://localhost:${serverPort}/`);
 
     // Check stats incremented
-    const h1 = await fetch(`http://localhost:${PORT}/health`);
+    const h1 = await fetch(`http://localhost:${serverPort}/health`);
     const s1 = (await h1.json() as any).stats;
 
     assert.strictEqual(s1.api_hits["/api/offers"], initialApiOffers + 2);
@@ -524,7 +526,7 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Check initial stats
-    const resp0 = await fetch(`http://localhost:${PORT}/api/stats`);
+    const resp0 = await fetch(`http://localhost:${serverPort}/api/stats`);
     assert.strictEqual(resp0.status, 200);
     assert.strictEqual(resp0.headers.get("content-type"), "application/json");
     const stats0 = await resp0.json() as any;
@@ -552,7 +554,7 @@ describe("HTTP transport", () => {
     });
 
     // Stats should reflect the new session
-    const resp1 = await fetch(`http://localhost:${PORT}/api/stats`);
+    const resp1 = await fetch(`http://localhost:${serverPort}/api/stats`);
     const stats1 = await resp1.json() as any;
     assert.strictEqual(stats1.activeSessions, 1);
     assert.strictEqual(stats1.totalSessionsAllTime, initialAllTime + 1);
@@ -566,7 +568,7 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Get initial client counts
-    const resp0 = await fetch(`http://localhost:${PORT}/api/stats`);
+    const resp0 = await fetch(`http://localhost:${serverPort}/api/stats`);
     const stats0 = await resp0.json() as any;
     const initialClaude = stats0.clients?.["claude-desktop"] ?? 0;
     const initialCursor = stats0.clients?.["cursor"] ?? 0;
@@ -603,7 +605,7 @@ describe("HTTP transport", () => {
       },
     });
 
-    const resp = await fetch(`http://localhost:${PORT}/api/stats`);
+    const resp = await fetch(`http://localhost:${serverPort}/api/stats`);
     const stats = await resp.json() as any;
     assert.ok(typeof stats.clients === "object");
     assert.strictEqual(stats.clients["claude-desktop"], initialClaude + 2);
@@ -641,7 +643,7 @@ describe("HTTP transport", () => {
     // We need to check what was already written to stdout
     // Since stdout is piped, we should have captured the session_open log
     // Let's verify by checking the health endpoint that the session exists
-    const health = await fetch(`http://localhost:${PORT}/health`);
+    const health = await fetch(`http://localhost:${serverPort}/health`);
     const body = await health.json() as any;
     assert.strictEqual(body.sessions, 1);
   });
@@ -649,7 +651,7 @@ describe("HTTP transport", () => {
   it("GET /api/changes returns deal changes", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/changes`);
+    const response = await fetch(`http://localhost:${serverPort}/api/changes`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     const body = await response.json() as any;
@@ -662,19 +664,19 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Get all changes (use a very old date to get everything)
-    const allResp = await fetch(`http://localhost:${PORT}/api/changes?since=2020-01-01`);
+    const allResp = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01`);
     const allBody = await allResp.json() as any;
     assert.ok(allBody.total > 0, "Should have deal changes with since=2020-01-01");
 
     // Filter by type
-    const typeResp = await fetch(`http://localhost:${PORT}/api/changes?since=2020-01-01&type=free_tier_removed`);
+    const typeResp = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01&type=free_tier_removed`);
     const typeBody = await typeResp.json() as any;
     for (const c of typeBody.changes) {
       assert.strictEqual(c.change_type, "free_tier_removed");
     }
 
     // Filter by vendor
-    const vendorResp = await fetch(`http://localhost:${PORT}/api/changes?since=2020-01-01&vendor=Google`);
+    const vendorResp = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01&vendor=Google`);
     const vendorBody = await vendorResp.json() as any;
     for (const c of vendorBody.changes) {
       assert.ok(c.vendor.toLowerCase().includes("google"));
@@ -684,7 +686,7 @@ describe("HTTP transport", () => {
   it("GET /api/changes returns 400 for invalid since param", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/changes?since=not-a-date`);
+    const response = await fetch(`http://localhost:${serverPort}/api/changes?since=not-a-date`);
     assert.strictEqual(response.status, 400);
     const body = await response.json() as any;
     assert.ok(body.error.includes("Invalid"));
@@ -693,7 +695,7 @@ describe("HTTP transport", () => {
   it("GET /api/changes filters by vendors (comma-separated)", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/changes?since=2020-01-01&vendors=Netlify,OpenAI`);
+    const response = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01&vendors=Netlify,OpenAI`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(body.total >= 2, `Expected at least 2 changes for Netlify+OpenAI, got ${body.total}`);
@@ -710,11 +712,11 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Get a known vendor from /api/offers
-    const offersResp = await fetch(`http://localhost:${PORT}/api/offers?limit=1`);
+    const offersResp = await fetch(`http://localhost:${serverPort}/api/offers?limit=1`);
     const offersBody = await offersResp.json() as any;
     const vendorName = offersBody.offers[0].vendor;
 
-    const response = await fetch(`http://localhost:${PORT}/api/details/${encodeURIComponent(vendorName)}`);
+    const response = await fetch(`http://localhost:${serverPort}/api/details/${encodeURIComponent(vendorName)}`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(body.offer);
@@ -726,11 +728,11 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Get a known vendor
-    const offersResp = await fetch(`http://localhost:${PORT}/api/offers?limit=1`);
+    const offersResp = await fetch(`http://localhost:${serverPort}/api/offers?limit=1`);
     const offersBody = await offersResp.json() as any;
     const vendorName = offersBody.offers[0].vendor;
 
-    const response = await fetch(`http://localhost:${PORT}/api/details/${encodeURIComponent(vendorName)}?alternatives=true`);
+    const response = await fetch(`http://localhost:${serverPort}/api/details/${encodeURIComponent(vendorName)}?alternatives=true`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(body.offer);
@@ -741,7 +743,7 @@ describe("HTTP transport", () => {
   it("GET /api/details/:vendor returns 404 for unknown vendor", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/details/${encodeURIComponent("NonExistentVendor12345")}`);
+    const response = await fetch(`http://localhost:${serverPort}/api/details/${encodeURIComponent("NonExistentVendor12345")}`);
     assert.strictEqual(response.status, 404);
     const body = await response.json() as any;
     assert.ok(body.error.includes("not found"));
@@ -751,13 +753,13 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Get a known vendor
-    const offersResp = await fetch(`http://localhost:${PORT}/api/offers?limit=1`);
+    const offersResp = await fetch(`http://localhost:${serverPort}/api/offers?limit=1`);
     const offersBody = await offersResp.json() as any;
     const vendorName = offersBody.offers[0].vendor;
 
     // Request with different casing
     const lowerName = vendorName.toLowerCase();
-    const response = await fetch(`http://localhost:${PORT}/api/details/${encodeURIComponent(lowerName)}`);
+    const response = await fetch(`http://localhost:${serverPort}/api/details/${encodeURIComponent(lowerName)}`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(body.offer);
@@ -792,7 +794,7 @@ describe("HTTP transport", () => {
     await new Promise((r) => setTimeout(r, 100));
 
     // Delete the session
-    await fetch(`http://localhost:${PORT}/mcp`, {
+    await fetch(`http://localhost:${serverPort}/mcp`, {
       method: "DELETE",
       headers: { "Mcp-Session-Id": sessionId },
     });
@@ -822,7 +824,7 @@ describe("HTTP transport", () => {
     assert.ok(closeEvent.durationMs >= 0);
 
     // Verify session was cleaned up
-    const health = await fetch(`http://localhost:${PORT}/health`);
+    const health = await fetch(`http://localhost:${serverPort}/health`);
     const body = await health.json() as any;
     assert.strictEqual(body.sessions, 0);
   });
@@ -830,7 +832,7 @@ describe("HTTP transport", () => {
   it("GET /api/openapi.json returns valid OpenAPI 3.0 spec", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/openapi.json`);
+    const response = await fetch(`http://localhost:${serverPort}/api/openapi.json`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
@@ -865,7 +867,7 @@ describe("HTTP transport", () => {
   it("GET /api redirects to /api/docs", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${serverPort}/api`, { redirect: "manual" });
     assert.strictEqual(response.status, 301);
     assert.strictEqual(response.headers.get("location"), "/api/docs");
   });
@@ -873,7 +875,7 @@ describe("HTTP transport", () => {
   it("GET /feed.xml returns valid Atom XML", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/feed.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/feed.xml`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("application/atom+xml"));
     const body = await response.text();
@@ -889,7 +891,7 @@ describe("HTTP transport", () => {
   it("GET /api/feed also serves Atom feed", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/feed`);
+    const response = await fetch(`http://localhost:${serverPort}/api/feed`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("application/atom+xml"));
     const body = await response.text();
@@ -900,7 +902,7 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     for (const path of ["/rss", "/feed", "/atom"]) {
-      const response = await fetch(`http://localhost:${PORT}${path}`, { redirect: "manual" });
+      const response = await fetch(`http://localhost:${serverPort}${path}`, { redirect: "manual" });
       assert.strictEqual(response.status, 301, `${path} should 301`);
       assert.strictEqual(response.headers.get("location"), "/feed.xml", `${path} should redirect to /feed.xml`);
     }
@@ -911,7 +913,7 @@ describe("HTTP transport", () => {
     const atomLink = 'type="application/atom+xml"';
     const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack"];
     for (const path of pages) {
-      const response = await fetch(`http://localhost:${PORT}${path}`);
+      const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
       assert.ok(html.includes(atomLink), `${path} should have RSS auto-discovery link`);
     }
@@ -1029,7 +1031,7 @@ describe("HTTP transport", () => {
   it("GET /category/:slug returns server-rendered category page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/category/databases`);
+    const response = await fetch(`http://localhost:${serverPort}/category/databases`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1045,7 +1047,7 @@ describe("HTTP transport", () => {
   it("GET /category/:slug returns 404 for unknown category", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/category/nonexistent-category`);
+    const response = await fetch(`http://localhost:${serverPort}/category/nonexistent-category`);
     assert.strictEqual(response.status, 404);
     const html = await response.text();
     assert.ok(html.includes("404"), "Should show 404 message");
@@ -1055,7 +1057,7 @@ describe("HTTP transport", () => {
   it("sitemap.xml includes category pages and comparison pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     assert.strictEqual(response.status, 200);
     const xml = await response.text();
     assert.ok(xml.includes("/category/databases"), "Sitemap should include databases category");
@@ -1072,7 +1074,7 @@ describe("HTTP transport", () => {
   it("GET /compare returns comparison index page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/compare`);
+    const response = await fetch(`http://localhost:${serverPort}/compare`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1086,7 +1088,7 @@ describe("HTTP transport", () => {
   it("GET /compare/:slug renders comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/compare/netlify-vs-vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/compare/netlify-vs-vercel`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1104,7 +1106,7 @@ describe("HTTP transport", () => {
   it("GET /compare/:slug redirects reversed URLs", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/compare/vercel-vs-netlify`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${serverPort}/compare/vercel-vs-netlify`, { redirect: "manual" });
     assert.strictEqual(response.status, 301);
     assert.ok(response.headers.get("location")?.includes("/compare/netlify-vs-vercel"), "Should redirect to canonical URL");
   });
@@ -1112,7 +1114,7 @@ describe("HTTP transport", () => {
   it("GET /compare/:slug returns 404 for invalid pairs", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/compare/nonexistent-vs-also-nonexistent`);
+    const response = await fetch(`http://localhost:${serverPort}/compare/nonexistent-vs-also-nonexistent`);
     assert.strictEqual(response.status, 404);
     const html = await response.text();
     assert.ok(html.includes("404"), "Should show 404");
@@ -1122,7 +1124,7 @@ describe("HTTP transport", () => {
   it("GET /digest redirects to current week", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/digest`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${serverPort}/digest`, { redirect: "manual" });
     assert.strictEqual(response.status, 302);
     const location = response.headers.get("location") ?? "";
     assert.ok(location.match(/\/digest\/\d{4}-w\d{2}/), `Should redirect to week URL, got: ${location}`);
@@ -1131,7 +1133,7 @@ describe("HTTP transport", () => {
   it("GET /digest/archive lists weeks with changes", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/digest/archive`);
+    const response = await fetch(`http://localhost:${serverPort}/digest/archive`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1147,7 +1149,7 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     // Use 2026-w11 which has deal changes (March 2026)
-    const response = await fetch(`http://localhost:${PORT}/digest/2026-w11`);
+    const response = await fetch(`http://localhost:${serverPort}/digest/2026-w11`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1160,7 +1162,7 @@ describe("HTTP transport", () => {
   it("GET /digest/:week shows empty state for weeks with no changes", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/digest/2026-w50`);
+    const response = await fetch(`http://localhost:${serverPort}/digest/2026-w50`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("No pricing changes tracked this week"), "Should show empty message");
@@ -1170,7 +1172,7 @@ describe("HTTP transport", () => {
   it("GET /digest/:week returns 404 for invalid format", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/digest/invalid-format`);
+    const response = await fetch(`http://localhost:${serverPort}/digest/invalid-format`);
     assert.strictEqual(response.status, 404);
     const html = await response.text();
     assert.ok(html.includes("404"), "Should show 404");
@@ -1179,7 +1181,7 @@ describe("HTTP transport", () => {
   it("sitemap.xml includes digest pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/digest/archive"), "Sitemap should include digest archive");
     const digestCount = (xml.match(/\/digest\//g) || []).length;
@@ -1189,7 +1191,7 @@ describe("HTTP transport", () => {
   it("GET /vendor returns vendor index page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/vendor`);
+    const response = await fetch(`http://localhost:${serverPort}/vendor`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1203,7 +1205,7 @@ describe("HTTP transport", () => {
   it("GET /vendor/:slug renders vendor profile page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1220,7 +1222,7 @@ describe("HTTP transport", () => {
   it("GET /vendor/:slug returns 404 for unknown vendor", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/vendor/nonexistent-vendor`);
+    const response = await fetch(`http://localhost:${serverPort}/vendor/nonexistent-vendor`);
     assert.strictEqual(response.status, 404);
     const html = await response.text();
     assert.ok(html.includes("404"), "Should show 404");
@@ -1231,7 +1233,7 @@ describe("HTTP transport", () => {
   it("sitemap.xml includes vendor pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/vendor/vercel"), "Sitemap should include vendor pages");
     const vendorCount = (xml.match(/\/vendor\//g) || []).length;
@@ -1241,7 +1243,7 @@ describe("HTTP transport", () => {
   it("category page links vendors to profile pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/category/cloud-hosting`);
+    const response = await fetch(`http://localhost:${serverPort}/category/cloud-hosting`);
     const html = await response.text();
     assert.ok(html.includes('href="/vendor/'), "Category page should link vendors to profile pages");
   });
@@ -1249,7 +1251,7 @@ describe("HTTP transport", () => {
   it("GET /trends returns trends index page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/trends`);
+    const response = await fetch(`http://localhost:${serverPort}/trends`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1263,7 +1265,7 @@ describe("HTTP transport", () => {
   it("GET /trends/:slug renders category trends page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/trends/cloud-hosting`);
+    const response = await fetch(`http://localhost:${serverPort}/trends/cloud-hosting`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1276,7 +1278,7 @@ describe("HTTP transport", () => {
   it("GET /trends/:slug returns 404 for unknown category", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/trends/nonexistent-category`);
+    const response = await fetch(`http://localhost:${serverPort}/trends/nonexistent-category`);
     assert.strictEqual(response.status, 404);
     const html = await response.text();
     assert.ok(html.includes("404"), "Should show 404");
@@ -1286,7 +1288,7 @@ describe("HTTP transport", () => {
   it("sitemap.xml includes trends pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/trends/cloud-hosting"), "Sitemap should include trends pages");
     const trendsCount = (xml.match(/\/trends\//g) || []).length;
@@ -1298,7 +1300,7 @@ describe("HTTP transport", () => {
   it("GET /alternative-to returns alternatives index page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/alternative-to`);
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("<title>Free Alternatives to Popular Tools"), "Should have alternatives index title");
@@ -1309,7 +1311,7 @@ describe("HTTP transport", () => {
   it("GET /alternative-to/:slug renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/alternative-to/vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/vercel`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("Free Alternatives to Vercel"), "Should have vendor-specific title");
@@ -1322,7 +1324,7 @@ describe("HTTP transport", () => {
   it("GET /alternative-to/:slug returns 404 for unknown vendor", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/alternative-to/nonexistent-vendor`);
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/nonexistent-vendor`);
     assert.strictEqual(response.status, 404);
     const html = await response.text();
     assert.ok(html.includes("nonexistent-vendor"), "Should show the invalid slug");
@@ -1332,7 +1334,7 @@ describe("HTTP transport", () => {
   it("sitemap.xml includes alternative-to pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/alternative-to"), "Sitemap should include alternatives index");
     assert.ok(xml.includes("/alternative-to/vercel"), "Sitemap should include vendor alternatives");
@@ -1345,7 +1347,7 @@ describe("HTTP transport", () => {
   it("GET /expiring renders expiring deals timeline page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/expiring`);
+    const response = await fetch(`http://localhost:${serverPort}/expiring`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1363,7 +1365,7 @@ describe("HTTP transport", () => {
   it("GET /changes renders deal change timeline page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/changes`);
+    const response = await fetch(`http://localhost:${serverPort}/changes`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1380,7 +1382,7 @@ describe("HTTP transport", () => {
   it("GET /agent-stack renders agent stack guide page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/agent-stack`);
+    const response = await fetch(`http://localhost:${serverPort}/agent-stack`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1404,7 +1406,7 @@ describe("HTTP transport", () => {
   it("GET /freshness renders data freshness dashboard page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/freshness`);
+    const response = await fetch(`http://localhost:${serverPort}/freshness`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1424,7 +1426,7 @@ describe("HTTP transport", () => {
   it("GET /api/freshness returns freshness metrics", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/freshness`);
+    const response = await fetch(`http://localhost:${serverPort}/api/freshness`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     const body = await response.json() as any;
@@ -1450,7 +1452,7 @@ describe("HTTP transport", () => {
   it("GET /api/offers includes days_since_verified", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/offers?q=vercel&limit=1`);
+    const response = await fetch(`http://localhost:${serverPort}/api/offers?q=vercel&limit=1`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(body.offers.length > 0, "Should have at least one offer");
@@ -1463,7 +1465,7 @@ describe("HTTP transport", () => {
   it("GET /localstack-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/localstack-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/localstack-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1478,7 +1480,7 @@ describe("HTTP transport", () => {
   it("GET /postman-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/postman-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/postman-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1495,7 +1497,7 @@ describe("HTTP transport", () => {
   it("GET /terraform-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/terraform-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/terraform-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1510,7 +1512,7 @@ describe("HTTP transport", () => {
   it("GET /hetzner-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/hetzner-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/hetzner-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1525,7 +1527,7 @@ describe("HTTP transport", () => {
   it("GET /freshping-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/freshping-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/freshping-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1541,7 +1543,7 @@ describe("HTTP transport", () => {
   it("GET /firebase-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/firebase-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/firebase-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1559,7 +1561,7 @@ describe("HTTP transport", () => {
   it("GET /cursor-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/cursor-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/cursor-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1579,7 +1581,7 @@ describe("HTTP transport", () => {
   it("GET /github-actions-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/github-actions-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/github-actions-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1597,7 +1599,7 @@ describe("HTTP transport", () => {
   it("GET /datadog-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/datadog-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/datadog-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1617,7 +1619,7 @@ describe("HTTP transport", () => {
   it("GET /vercel-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/vercel-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/vercel-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1637,7 +1639,7 @@ describe("HTTP transport", () => {
   it("GET /auth0-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/auth0-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/auth0-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1657,7 +1659,7 @@ describe("HTTP transport", () => {
   it("GET /mongodb-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/mongodb-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/mongodb-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1677,7 +1679,7 @@ describe("HTTP transport", () => {
   it("GET /redis-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/redis-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/redis-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1697,7 +1699,7 @@ describe("HTTP transport", () => {
   it("GET /email-service-alternatives renders email alternatives page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/email-service-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/email-service-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1716,7 +1718,7 @@ describe("HTTP transport", () => {
   it("GET /ai-free-tiers renders AI free tiers editorial page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/ai-free-tiers`);
+    const response = await fetch(`http://localhost:${serverPort}/ai-free-tiers`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1734,7 +1736,7 @@ describe("HTTP transport", () => {
   it("GET /alternatives renders hub page with all editorial guides", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1763,7 +1765,7 @@ describe("HTTP transport", () => {
   it("GET /database-alternatives renders database hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/database-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/database-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1786,7 +1788,7 @@ describe("HTTP transport", () => {
   it("GET /ci-cd-alternatives renders CI/CD hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/ci-cd-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/ci-cd-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1809,7 +1811,7 @@ describe("HTTP transport", () => {
   it("GET /security-alternatives renders security hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/security-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/security-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1832,7 +1834,7 @@ describe("HTTP transport", () => {
   it("GET /storage-alternatives renders storage hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/storage-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/storage-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1854,7 +1856,7 @@ describe("HTTP transport", () => {
   it("GET /testing-alternatives renders testing hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/testing-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/testing-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1879,7 +1881,7 @@ describe("HTTP transport", () => {
   it("GET /analytics-alternatives renders analytics hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/analytics-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/analytics-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1903,7 +1905,7 @@ describe("HTTP transport", () => {
   it("GET /ai-ml-alternatives renders AI/ML hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/ai-ml-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/ai-ml-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1927,7 +1929,7 @@ describe("HTTP transport", () => {
   it("GET /design-alternatives renders design hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/design-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/design-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1953,7 +1955,7 @@ describe("HTTP transport", () => {
   it("GET /email-alternatives renders email hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/email-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/email-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -1977,7 +1979,7 @@ describe("HTTP transport", () => {
   it("GET /project-management-alternatives renders PM hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/project-management-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/project-management-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2004,7 +2006,7 @@ describe("HTTP transport", () => {
   it("GET /ide-code-editors-alternatives renders IDE hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/ide-code-editors-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/ide-code-editors-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2028,7 +2030,7 @@ describe("HTTP transport", () => {
   it("GET /free-llm-apis renders LLM API hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/free-llm-apis`);
+    const response = await fetch(`http://localhost:${serverPort}/free-llm-apis`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2050,7 +2052,7 @@ describe("HTTP transport", () => {
   it("GET /api-development-alternatives renders API development hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api-development-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/api-development-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2073,7 +2075,7 @@ describe("HTTP transport", () => {
   it("editorial alternatives pages cross-link to other guides", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/localstack-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/localstack-alternatives`);
     const html = await response.text();
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links section");
     assert.ok(html.includes("/firebase-alternatives"), "Should link to Firebase alternatives");
@@ -2087,7 +2089,7 @@ describe("HTTP transport", () => {
   it("GET /q1-2026-developer-pricing-report renders quarterly pricing report", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/q1-2026-developer-pricing-report`);
+    const response = await fetch(`http://localhost:${serverPort}/q1-2026-developer-pricing-report`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2110,7 +2112,7 @@ describe("HTTP transport", () => {
   it("GET /q2-pricing-preview-2026 renders Q2 pricing preview page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/q2-pricing-preview-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/q2-pricing-preview-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2134,7 +2136,7 @@ describe("HTTP transport", () => {
   it("GET /hetzner-pricing-2026 renders Hetzner pricing analysis page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/hetzner-pricing-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/hetzner-pricing-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2164,7 +2166,7 @@ describe("HTTP transport", () => {
   it("GET /free-startup-stack renders startup stack guide page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/free-startup-stack`);
+    const response = await fetch(`http://localhost:${serverPort}/free-startup-stack`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2189,7 +2191,7 @@ describe("HTTP transport", () => {
   it("GET /free-ai-stack renders AI/ML stack guide page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/free-ai-stack`);
+    const response = await fetch(`http://localhost:${serverPort}/free-ai-stack`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2215,7 +2217,7 @@ describe("HTTP transport", () => {
   it("GET /free-devops-stack renders DevOps stack guide page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/free-devops-stack`);
+    const response = await fetch(`http://localhost:${serverPort}/free-devops-stack`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2245,7 +2247,7 @@ describe("HTTP transport", () => {
   it("GET /free-frontend-stack renders frontend stack guide page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/free-frontend-stack`);
+    const response = await fetch(`http://localhost:${serverPort}/free-frontend-stack`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2278,7 +2280,7 @@ describe("HTTP transport", () => {
   it("GET /google-developer-program-2026 renders GDP pricing analysis page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/google-developer-program-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/google-developer-program-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2312,7 +2314,7 @@ describe("HTTP transport", () => {
   it("GET /supabase-vs-firebase renders comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/supabase-vs-firebase`);
+    const response = await fetch(`http://localhost:${serverPort}/supabase-vs-firebase`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2340,7 +2342,7 @@ describe("HTTP transport", () => {
   it("GET /vercel-vs-netlify renders comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/vercel-vs-netlify`);
+    const response = await fetch(`http://localhost:${serverPort}/vercel-vs-netlify`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2368,7 +2370,7 @@ describe("HTTP transport", () => {
   it("GET /neon-vs-supabase renders comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/neon-vs-supabase`);
+    const response = await fetch(`http://localhost:${serverPort}/neon-vs-supabase`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2397,7 +2399,7 @@ describe("HTTP transport", () => {
   it("GET /railway-vs-render renders comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/railway-vs-render`);
+    const response = await fetch(`http://localhost:${serverPort}/railway-vs-render`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2426,7 +2428,7 @@ describe("HTTP transport", () => {
   it("GET /datadog-vs-new-relic renders comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/datadog-vs-new-relic`);
+    const response = await fetch(`http://localhost:${serverPort}/datadog-vs-new-relic`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2454,7 +2456,7 @@ describe("HTTP transport", () => {
   it("GET /free-tier-risk renders risk index page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/free-tier-risk`);
+    const response = await fetch(`http://localhost:${serverPort}/free-tier-risk`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2482,7 +2484,7 @@ describe("HTTP transport", () => {
   it("GET /hcp-terraform-migration renders migration guide page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/hcp-terraform-migration`);
+    const response = await fetch(`http://localhost:${serverPort}/hcp-terraform-migration`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2509,7 +2511,7 @@ describe("HTTP transport", () => {
   it("GET /gemini-api-pricing-2026 renders Gemini API pricing analysis page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/gemini-api-pricing-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/gemini-api-pricing-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2536,7 +2538,7 @@ describe("HTTP transport", () => {
   it("GET /free-tier-tracker renders free tier tracker page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/free-tier-tracker`);
+    const response = await fetch(`http://localhost:${serverPort}/free-tier-tracker`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2566,7 +2568,7 @@ describe("HTTP transport", () => {
   it("GET /startup-credits renders startup credits directory page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/startup-credits`);
+    const response = await fetch(`http://localhost:${serverPort}/startup-credits`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2593,7 +2595,7 @@ describe("HTTP transport", () => {
   it("GET /ai-coding-pricing-2026 renders AI coding pricing guide", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/ai-coding-pricing-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/ai-coding-pricing-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2624,7 +2626,7 @@ describe("HTTP transport", () => {
   it("GET /aws-free-tier-2026 renders AWS free tier guide", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/aws-free-tier-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/aws-free-tier-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2651,7 +2653,7 @@ describe("HTTP transport", () => {
   it("GET /gcp-free-tier-2026 renders GCP free tier guide", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/gcp-free-tier-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/gcp-free-tier-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2679,7 +2681,7 @@ describe("HTTP transport", () => {
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/guides`);
+    const response = await fetch(`http://localhost:${serverPort}/guides`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2706,7 +2708,7 @@ describe("HTTP transport", () => {
   it("GET /team-collaboration-alternatives renders team collaboration hub page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/team-collaboration-alternatives`);
+    const response = await fetch(`http://localhost:${serverPort}/team-collaboration-alternatives`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2732,7 +2734,7 @@ describe("HTTP transport", () => {
   it("GET /search renders search page with search box", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/search`);
+    const response = await fetch(`http://localhost:${serverPort}/search`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("<title>Search Free Developer Tools"), "Should have search title");
@@ -2744,7 +2746,7 @@ describe("HTTP transport", () => {
   it("GET /search?q=database returns server-rendered results", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/search?q=database`);
+    const response = await fetch(`http://localhost:${serverPort}/search?q=database`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("database"), "Should contain search query");
@@ -2755,7 +2757,7 @@ describe("HTTP transport", () => {
   it("GET /search?q=database&category=Databases filters by category", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/search?q=database&category=Databases`);
+    const response = await fetch(`http://localhost:${serverPort}/search?q=database&category=Databases`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("result-card"), "Should have result cards");
@@ -2765,7 +2767,7 @@ describe("HTTP transport", () => {
   it("GET /search?q=xyznonexistent shows empty state", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/search?q=xyznonexistent`);
+    const response = await fetch(`http://localhost:${serverPort}/search?q=xyznonexistent`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("No results found"), "Should show empty state");
@@ -2775,7 +2777,7 @@ describe("HTTP transport", () => {
   it("GET /search has category filter pills", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/search`);
+    const response = await fetch(`http://localhost:${serverPort}/search`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("cat-filter"), "Should have category filter pills");
@@ -2787,7 +2789,7 @@ describe("HTTP transport", () => {
   it("landing page has global navigation with all section links", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/`);
+    const response = await fetch(`http://localhost:${serverPort}/`);
     const html = await response.text();
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes('href="/search"'), "Nav should link to Search");
@@ -2804,7 +2806,7 @@ describe("HTTP transport", () => {
   it("category page nav highlights Categories as active", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/category/databases`);
+    const response = await fetch(`http://localhost:${serverPort}/category/databases`);
     const html = await response.text();
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes('class="nav-link active">Categories'), "Categories should be active");
@@ -2813,7 +2815,7 @@ describe("HTTP transport", () => {
   it("search page nav highlights Search as active", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/search`);
+    const response = await fetch(`http://localhost:${serverPort}/search`);
     const html = await response.text();
     assert.ok(html.includes('class="nav-link active">Search'), "Search should be active");
   });
@@ -2823,7 +2825,7 @@ describe("HTTP transport", () => {
 
     const pages = ["/", "/category/databases", "/best", "/search", "/trends", "/compare", "/alternative-to", "/digest/archive"];
     for (const page of pages) {
-      const response = await fetch(`http://localhost:${PORT}${page}`);
+      const response = await fetch(`http://localhost:${serverPort}${page}`);
       const html = await response.text();
       assert.ok(html.includes("global-nav"), `${page} should have global nav`);
       assert.ok(html.includes("global-nav-home"), `${page} should have AgentDeals home link`);
@@ -2835,7 +2837,7 @@ describe("HTTP transport", () => {
   it("vendor page has FAQ structured data and visible FAQ section", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     const html = await response.text();
     assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
     assert.ok(html.includes("faq-item"), "Should have visible FAQ items");
@@ -2846,7 +2848,7 @@ describe("HTTP transport", () => {
   it("alternative-to page has FAQ structured data and visible FAQ section", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/alternative-to/vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/vercel`);
     const html = await response.text();
     assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
     assert.ok(html.includes("faq-item"), "Should have visible FAQ items");
@@ -2857,7 +2859,7 @@ describe("HTTP transport", () => {
   it("landing page has recent pricing changes section", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/`);
+    const response = await fetch(`http://localhost:${serverPort}/`);
     const html = await response.text();
     assert.ok(html.includes('id="recent-changes"'), "Should have recent-changes section");
     assert.ok(html.includes("rc-entry"), "Should have change entries");
@@ -2869,7 +2871,7 @@ describe("HTTP transport", () => {
   it("landing page has changing soon section with upcoming deal changes", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/`);
+    const response = await fetch(`http://localhost:${serverPort}/`);
     const html = await response.text();
     assert.ok(html.includes('id="changing-soon"'), "Should have changing-soon section");
     assert.ok(html.includes("cs-entry"), "Should have change entries");
@@ -2880,7 +2882,7 @@ describe("HTTP transport", () => {
 
   it("serves og-image.png at /og-image.png", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/og-image.png`);
+    const response = await fetch(`http://localhost:${serverPort}/og-image.png`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "image/png");
     assert.ok(response.headers.get("cache-control")?.includes("public"));
@@ -2899,7 +2901,7 @@ describe("HTTP transport", () => {
 
   it("landing page has OG image and Twitter card meta tags", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/`);
+    const response = await fetch(`http://localhost:${serverPort}/`);
     const html = await response.text();
     assert.ok(html.includes('property="og:image"'), "Should have og:image tag");
     assert.ok(html.includes("/og-image.png"), "og:image should point to /og-image.png");
@@ -2911,7 +2913,7 @@ describe("HTTP transport", () => {
 
   it("category page has OG image meta tags", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/category/databases`);
+    const response = await fetch(`http://localhost:${serverPort}/category/databases`);
     const html = await response.text();
     assert.ok(html.includes('property="og:image"'), "Should have og:image tag");
     assert.ok(html.includes("/og-image.png"), "og:image should point to /og-image.png");
@@ -2920,7 +2922,7 @@ describe("HTTP transport", () => {
 
   it("vendor page has OG image meta tags", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     const html = await response.text();
     assert.ok(html.includes('property="og:image"'), "Should have og:image tag");
     assert.ok(html.includes("/og-image.png"), "og:image should point to /og-image.png");
@@ -2929,7 +2931,7 @@ describe("HTTP transport", () => {
 
   it("expiring page has OG image meta tags", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/expiring`);
+    const response = await fetch(`http://localhost:${serverPort}/expiring`);
     const html = await response.text();
     assert.ok(html.includes('property="og:image"'), "Should have og:image tag");
     assert.ok(html.includes("/og-image.png"), "og:image should point to /og-image.png");
@@ -2937,14 +2939,14 @@ describe("HTTP transport", () => {
   });
 });
 
-const REDIRECT_PORT = 3458;
+let redirectPort = 0;
 
 function startRedirectServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: String(REDIRECT_PORT), BASE_URL: "https://agentdeals.dev" },
+      env: { ...process.env, PORT: "0", BASE_URL: "https://agentdeals.dev" },
     });
 
     const timeout = setTimeout(() => {
@@ -2953,7 +2955,9 @@ function startRedirectServer(): Promise<ChildProcess> {
     }, 5000);
 
     proc.stderr!.on("data", (data: Buffer) => {
-      if (data.toString().includes("running on http")) {
+      const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+      if (match) {
+        redirectPort = parseInt(match[1], 10);
         clearTimeout(timeout);
         resolve(proc);
       }
@@ -2979,7 +2983,7 @@ describe("best-of pages", () => {
   it("GET /best returns best-of index page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/best`);
+    const response = await fetch(`http://localhost:${serverPort}/best`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2994,7 +2998,7 @@ describe("best-of pages", () => {
   it("GET /best/free-databases returns best-of detail page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/best/free-databases`);
+    const response = await fetch(`http://localhost:${serverPort}/best/free-databases`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -3013,7 +3017,7 @@ describe("best-of pages", () => {
   it("GET /best/free-nonexistent returns 404", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/best/free-nonexistent`);
+    const response = await fetch(`http://localhost:${serverPort}/best/free-nonexistent`);
     assert.strictEqual(response.status, 404);
     const html = await response.text();
     assert.ok(html.includes("404"), "Should show 404 message");
@@ -3022,7 +3026,7 @@ describe("best-of pages", () => {
   it("sitemap.xml includes best-of pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/best"), "Sitemap should include best-of index");
     assert.ok(xml.includes("/best/free-databases"), "Sitemap should include best-of detail pages");
@@ -3033,7 +3037,7 @@ describe("best-of pages", () => {
   it("best-of page nav highlights Best Of as active", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/best/free-databases`);
+    const response = await fetch(`http://localhost:${serverPort}/best/free-databases`);
     const html = await response.text();
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes('class="nav-link active">Best Of'), "Best Of should be active");
@@ -3052,7 +3056,7 @@ describe("MCP install CTA banner", () => {
 
   it("CTA appears on category page", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/category/databases`);
+    const response = await fetch(`http://localhost:${serverPort}/category/databases`);
     const html = await response.text();
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
     assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
@@ -3061,7 +3065,7 @@ describe("MCP install CTA banner", () => {
 
   it("CTA appears on vendor page", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     const html = await response.text();
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
     assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
@@ -3069,7 +3073,7 @@ describe("MCP install CTA banner", () => {
 
   it("CTA appears on comparison page", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/compare/netlify-vs-vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/compare/netlify-vs-vercel`);
     const html = await response.text();
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
     assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
@@ -3077,7 +3081,7 @@ describe("MCP install CTA banner", () => {
 
   it("CTA appears on best-of page", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/best/free-databases`);
+    const response = await fetch(`http://localhost:${serverPort}/best/free-databases`);
     const html = await response.text();
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
     assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
@@ -3085,7 +3089,7 @@ describe("MCP install CTA banner", () => {
 
   it("CTA appears on alternative-to page", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/alternative-to/vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/vercel`);
     const html = await response.text();
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA banner");
     assert.ok(html.includes("claude mcp add agentdeals"), "Should have install command");
@@ -3093,14 +3097,14 @@ describe("MCP install CTA banner", () => {
 
   it("CTA does NOT appear on landing page", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/`);
+    const response = await fetch(`http://localhost:${serverPort}/`);
     const html = await response.text();
     assert.ok(!html.includes("mcp-cta"), "Landing page should NOT have MCP CTA banner");
   });
 
   it("CTA includes copy button", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     const html = await response.text();
     assert.ok(html.includes("copyCta"), "Should have copy button handler");
     assert.ok(html.includes("copy-btn"), "Should have copy button");
@@ -3119,7 +3123,7 @@ describe("page view tracking", () => {
 
   it("GET /api/pageviews returns page view data", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/api/pageviews`);
+    const response = await fetch(`http://localhost:${serverPort}/api/pageviews`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("application/json"));
     const data = await response.json() as Record<string, unknown>;
@@ -3135,8 +3139,8 @@ describe("page view tracking", () => {
   it("page_views_today appears in stats response", async () => {
     proc = await startHttpServer();
     // Visit a page first to increment counter
-    await fetch(`http://localhost:${PORT}/category/databases`);
-    const response = await fetch(`http://localhost:${PORT}/api/stats`);
+    await fetch(`http://localhost:${serverPort}/category/databases`);
+    const response = await fetch(`http://localhost:${serverPort}/api/stats`);
     const text = await response.text();
     // The getStats export isn't used by /api/stats (it uses getConnectionStats),
     // but page_views_today may be in the response if getStats is used elsewhere
@@ -3146,13 +3150,13 @@ describe("page view tracking", () => {
   it("page views increment on page visit", async () => {
     proc = await startHttpServer();
     // Get initial count
-    const before = await fetch(`http://localhost:${PORT}/api/pageviews`);
+    const before = await fetch(`http://localhost:${serverPort}/api/pageviews`);
     const dataBefore = await before.json() as { today: { total: number } };
     const initialTotal = dataBefore.today.total;
     // Visit a page
-    await fetch(`http://localhost:${PORT}/vendor/vercel`);
+    await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     // Check count increased
-    const after = await fetch(`http://localhost:${PORT}/api/pageviews`);
+    const after = await fetch(`http://localhost:${serverPort}/api/pageviews`);
     const dataAfter = await after.json() as { today: { total: number } };
     assert.ok(dataAfter.today.total >= initialTotal, "Page views should not decrease after visit");
   });
@@ -3173,40 +3177,40 @@ describe("301 canonical hostname redirect", () => {
   });
 
   it("redirects HTML pages to canonical domain with 301", async () => {
-    const response = await fetch(`http://localhost:${REDIRECT_PORT}/vendor/supabase?ref=foo`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${redirectPort}/vendor/supabase?ref=foo`, { redirect: "manual" });
     assert.strictEqual(response.status, 301);
     assert.strictEqual(response.headers.get("location"), "https://agentdeals.dev/vendor/supabase?ref=foo");
   });
 
   it("redirects landing page to canonical domain", async () => {
-    const response = await fetch(`http://localhost:${REDIRECT_PORT}/`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${redirectPort}/`, { redirect: "manual" });
     assert.strictEqual(response.status, 301);
     assert.strictEqual(response.headers.get("location"), "https://agentdeals.dev/");
   });
 
   it("does NOT redirect /api/* endpoints", async () => {
-    const response = await fetch(`http://localhost:${REDIRECT_PORT}/api/stats`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${redirectPort}/api/stats`, { redirect: "manual" });
     assert.strictEqual(response.status, 200);
   });
 
   it("does NOT redirect /mcp endpoint", async () => {
     // GET /mcp without session returns 400, but should NOT be 301
-    const response = await fetch(`http://localhost:${REDIRECT_PORT}/mcp`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${redirectPort}/mcp`, { redirect: "manual" });
     assert.notStrictEqual(response.status, 301, "MCP should not redirect");
   });
 
   it("does NOT redirect /health endpoint", async () => {
-    const response = await fetch(`http://localhost:${REDIRECT_PORT}/health`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${redirectPort}/health`, { redirect: "manual" });
     assert.strictEqual(response.status, 200);
   });
 
   it("does NOT redirect /.well-known/* endpoints", async () => {
-    const response = await fetch(`http://localhost:${REDIRECT_PORT}/.well-known/glama.json`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${redirectPort}/.well-known/glama.json`, { redirect: "manual" });
     assert.notStrictEqual(response.status, 301, ".well-known should not redirect");
   });
 
   it("does NOT redirect favicon", async () => {
-    const response = await fetch(`http://localhost:${REDIRECT_PORT}/favicon.png`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${redirectPort}/favicon.png`, { redirect: "manual" });
     assert.strictEqual(response.status, 200);
   });
 
@@ -3216,7 +3220,7 @@ describe("301 canonical hostname redirect", () => {
     let proc: ChildProcess | null = null;
     try {
       proc = await startHttpServer();
-      const response = await fetch(`http://localhost:${PORT}/`, { redirect: "manual" });
+      const response = await fetch(`http://localhost:${serverPort}/`, { redirect: "manual" });
       assert.strictEqual(response.status, 200);
     } finally {
       if (proc) proc.kill();
@@ -3290,7 +3294,7 @@ describe("IndexNow integration", () => {
     let proc: ChildProcess | null = null;
     try {
       proc = await startHttpServer();
-      const response = await fetch(`http://localhost:${PORT}/.txt`);
+      const response = await fetch(`http://localhost:${serverPort}/.txt`);
       assert.strictEqual(response.status, 404);
     } finally {
       if (proc) proc.kill();

@@ -141,7 +141,7 @@ describe("check_vendor_risk MCP tool via stdio", () => {
 });
 
 describe("check_vendor_risk REST endpoint", () => {
-  const PORT = 3463;
+  let serverPort = 0;
   let proc: ChildProcess | null = null;
 
   function startHttpServer(): Promise<ChildProcess> {
@@ -149,11 +149,12 @@ describe("check_vendor_risk REST endpoint", () => {
       const serverPath = path.join(__dirname, "..", "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: String(PORT) },
+        env: { ...process.env, PORT: "0" },
       });
       const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 5000);
       p.stderr!.on("data", (data: Buffer) => {
-        if (data.toString().includes("running on http")) { clearTimeout(timeout); resolve(p); }
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) { serverPort = parseInt(match[1], 10); clearTimeout(timeout); resolve(p); }
       });
       p.on("error", (err) => { clearTimeout(timeout); reject(err); });
     });
@@ -165,7 +166,7 @@ describe("check_vendor_risk REST endpoint", () => {
 
   it("GET /api/vendor-risk/:vendor returns risk assessment", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/api/vendor-risk/Vercel`);
+    const response = await fetch(`http://localhost:${serverPort}/api/vendor-risk/Vercel`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
     const body = await response.json() as any;
@@ -179,7 +180,7 @@ describe("check_vendor_risk REST endpoint", () => {
 
   it("GET /api/vendor-risk/:vendor returns 404 for unknown vendor", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/api/vendor-risk/NonExistentVendor123`);
+    const response = await fetch(`http://localhost:${serverPort}/api/vendor-risk/NonExistentVendor123`);
     assert.strictEqual(response.status, 404);
     const body = await response.json() as any;
     assert.ok(body.error.includes("not found"));
