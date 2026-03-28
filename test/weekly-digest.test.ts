@@ -82,7 +82,7 @@ describe("getWeeklyDigest logic", () => {
 });
 
 describe("get_weekly_digest REST endpoint", () => {
-  const PORT = 3465;
+  let serverPort = 0;
   let proc: ChildProcess | null = null;
 
   function startHttpServer(): Promise<ChildProcess> {
@@ -90,11 +90,12 @@ describe("get_weekly_digest REST endpoint", () => {
       const serverPath = path.join(__dirname, "..", "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: String(PORT) },
+        env: { ...process.env, PORT: "0" },
       });
       const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 5000);
       p.stderr!.on("data", (data: Buffer) => {
-        if (data.toString().includes("running on http")) { clearTimeout(timeout); resolve(p); }
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) { serverPort = parseInt(match[1], 10); clearTimeout(timeout); resolve(p); }
       });
       p.on("error", (err) => { clearTimeout(timeout); reject(err); });
     });
@@ -106,7 +107,7 @@ describe("get_weekly_digest REST endpoint", () => {
 
   it("GET /api/digest returns weekly digest", async () => {
     proc = await startHttpServer();
-    const res = await fetch(`http://localhost:${PORT}/api/digest`);
+    const res = await fetch(`http://localhost:${serverPort}/api/digest`);
     assert.strictEqual(res.status, 200);
     assert.strictEqual(res.headers.get("content-type"), "application/json");
     assert.strictEqual(res.headers.get("access-control-allow-origin"), "*");

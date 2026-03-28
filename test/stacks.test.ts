@@ -88,7 +88,7 @@ describe("stack recommendation logic", () => {
 });
 
 describe("stack REST endpoint", () => {
-  const PORT = 3461;
+  let serverPort = 0;
   let proc: ChildProcess | null = null;
 
   function startHttpServer(): Promise<ChildProcess> {
@@ -96,11 +96,12 @@ describe("stack REST endpoint", () => {
       const serverPath = path.join(__dirname, "..", "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: String(PORT) },
+        env: { ...process.env, PORT: "0" },
       });
       const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 5000);
       p.stderr!.on("data", (data: Buffer) => {
-        if (data.toString().includes("running on http")) { clearTimeout(timeout); resolve(p); }
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) { serverPort = parseInt(match[1], 10); clearTimeout(timeout); resolve(p); }
       });
       p.on("error", (err) => { clearTimeout(timeout); reject(err); });
     });
@@ -112,7 +113,7 @@ describe("stack REST endpoint", () => {
 
   it("GET /api/stack returns stack recommendation", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/api/stack?use_case=SaaS+web+app`);
+    const response = await fetch(`http://localhost:${serverPort}/api/stack?use_case=SaaS+web+app`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
     const body = await response.json() as any;
@@ -125,7 +126,7 @@ describe("stack REST endpoint", () => {
 
   it("GET /api/stack returns 400 without use_case", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/api/stack`);
+    const response = await fetch(`http://localhost:${serverPort}/api/stack`);
     assert.strictEqual(response.status, 400);
     const body = await response.json() as any;
     assert.ok(body.error.includes("use_case"));
@@ -133,7 +134,7 @@ describe("stack REST endpoint", () => {
 
   it("GET /api/stack accepts requirements parameter", async () => {
     proc = await startHttpServer();
-    const response = await fetch(`http://localhost:${PORT}/api/stack?use_case=my+app&requirements=database,auth,monitoring`);
+    const response = await fetch(`http://localhost:${serverPort}/api/stack?use_case=my+app&requirements=database,auth,monitoring`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.strictEqual(body.stack.length, 3);
