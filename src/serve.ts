@@ -21299,7 +21299,8 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
 });
 
 httpServer.listen(PORT, () => {
-  console.error(`agentdeals MCP server running on http://localhost:${PORT}/mcp`);
+  const actualPort = (httpServer.address() as import("net").AddressInfo).port;
+  console.error(`agentdeals MCP server running on http://localhost:${actualPort}/mcp`);
 });
 
 // IndexNow + sitemap ping on startup (fire-and-forget, no impact on server readiness)
