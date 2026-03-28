@@ -5,7 +5,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 3457;
 
 function sendMcpMessages(
   serverProcess: ReturnType<typeof spawn>,
@@ -163,12 +162,14 @@ describe("search_deals with since param (new offers)", () => {
 describe("GET /api/new REST endpoint", () => {
   let proc: ChildProcess | null = null;
 
+  let serverPort = 0;
+
   function startHttpServer(): Promise<ChildProcess> {
     return new Promise((resolve, reject) => {
       const serverPath = path.join(__dirname, "..", "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: String(PORT) },
+        env: { ...process.env, PORT: "0" },
       });
 
       const timeout = setTimeout(() => {
@@ -177,7 +178,10 @@ describe("GET /api/new REST endpoint", () => {
       }, 5000);
 
       p.stderr!.on("data", (data: Buffer) => {
-        if (data.toString().includes("running on http")) {
+        const msg = data.toString();
+        const match = msg.match(/running on http:\/\/localhost:(\d+)/);
+        if (match) {
+          serverPort = parseInt(match[1], 10);
           clearTimeout(timeout);
           resolve(p);
         }
@@ -200,7 +204,7 @@ describe("GET /api/new REST endpoint", () => {
   it("returns new offers with default 7-day window", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/new`);
+    const response = await fetch(`http://localhost:${serverPort}/api/new`);
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
@@ -214,7 +218,7 @@ describe("GET /api/new REST endpoint", () => {
   it("accepts days query parameter", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${PORT}/api/new?days=30`);
+    const response = await fetch(`http://localhost:${serverPort}/api/new?days=30`);
     assert.strictEqual(response.status, 200);
 
     const body = await response.json() as any;
