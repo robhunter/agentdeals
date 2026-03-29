@@ -11,7 +11,7 @@ function sendMcpRequest(
   request: object
 ): Promise<object> {
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error("Timeout")), 5000);
+    const timeout = setTimeout(() => reject(new Error("Timeout")), 10000);
     let buffer = "";
 
     const onData = (data: Buffer) => {
