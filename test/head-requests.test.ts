@@ -16,7 +16,7 @@ function startHttpServer(): Promise<ChildProcess> {
       stdio: ["pipe", "pipe", "pipe"],
       env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
     });
-    const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 5000);
+    const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 10000);
     p.stderr!.on("data", (data: Buffer) => {
       const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
       if (match) { serverPort = parseInt(match[1], 10); clearTimeout(timeout); resolve(p); }

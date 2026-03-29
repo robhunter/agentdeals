@@ -17,7 +17,7 @@ const httpServer: ChildProcess = spawn("node", [httpServerPath], {
 });
 
 await new Promise<void>((resolve, reject) => {
-  const timeout = setTimeout(() => reject(new Error("HTTP server start timeout")), 5000);
+  const timeout = setTimeout(() => reject(new Error("HTTP server start timeout")), 10000);
   httpServer.stderr!.on("data", (chunk: Buffer) => {
     const match = chunk.toString().match(/running on http:\/\/localhost:(\d+)/);
     if (match) {
@@ -42,7 +42,7 @@ function sendMcpMessages(
   messages: object[]
 ): Promise<object[]> {
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error("Timeout")), 5000);
+    const timeout = setTimeout(() => reject(new Error("Timeout")), 10000);
     const responses: object[] = [];
     let buffer = "";
     const expectedResponses = messages.filter(

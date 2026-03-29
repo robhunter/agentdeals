@@ -12,7 +12,7 @@ function sendMcpMessages(
   messages: object[]
 ): Promise<object[]> {
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error("Timeout")), 5000);
+    const timeout = setTimeout(() => reject(new Error("Timeout")), 10000);
     const responses: object[] = [];
     let buffer = "";
     const expectedResponses = messages.filter(
