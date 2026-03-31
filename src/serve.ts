@@ -3995,6 +3995,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Google Cloud",
     hubDesc: "Complete GCP free tier guide — 30+ always-free products, $300 trial, hidden costs, and comparison with AWS and Azure",
   },
+  {
+    slug: "azure-free-tier-2026",
+    title: "Azure Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
+    metaDesc: "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services, $200 trial credit, 12-month free VMs and SQL. Cosmos DB lifetime free tier, Azure Functions 1M req/mo, and hidden costs explained.",
+    contextHtml: "",
+    tag: "azure-free-tier-2026",
+    primaryVendor: "Azure",
+    hubDesc: "Complete Azure free tier guide — 65+ always-free services, $200 trial, Cosmos DB lifetime free tier, and comparison with AWS and GCP",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -16802,7 +16811,7 @@ function buildAwsFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+    ["gcp-free-tier-2026", "azure-free-tier-2026", "database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -17247,7 +17256,7 @@ function buildGcpFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["aws-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
+    ["aws-free-tier-2026", "azure-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -17504,6 +17513,474 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Search GCP free tier services, compare with alternatives, and track pricing changes — all from your AI coding assistant.")}
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Azure Free Tier guide page ---
+
+function buildAzureFreeTier2026Page(): string {
+  const title = "Azure Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
+  const metaDescAzure = "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services, $200 trial credit, 12-month free VMs and SQL. Cosmos DB lifetime free tier, Azure Functions 1M req/mo, and hidden costs explained.";
+  const slug = "azure-free-tier-2026";
+  const pubDate = "2026-03-31";
+
+  // Pull Azure-related offers from our index
+  const azureOffers = offers.filter(o =>
+    o.vendor === "Azure" || o.vendor.startsWith("Azure ") || o.vendor.startsWith("Microsoft ") ||
+    o.tags?.some((t: string) => t === "azure" || t === "microsoft")
+  );
+
+  // Deal changes related to Azure
+  const azureChanges = dealChanges.filter((c: any) =>
+    c.vendor === "Azure" || c.vendor.startsWith("Azure ") || c.vendor.startsWith("Microsoft ") ||
+    c.vendor.includes("Azure")
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Always Free services (no expiration)
+  interface AzureService {
+    name: string;
+    slug: string;
+    limits: string;
+    category: string;
+    highlight?: boolean;
+  }
+
+  const alwaysFreeServices: AzureService[] = [
+    { name: "Azure Functions", slug: "azure", limits: "1M executions/month, 400K GB-seconds compute", category: "Compute", highlight: true },
+    { name: "Azure Cosmos DB", slug: "azure", limits: "1,000 RU/s throughput + 25 GB storage (lifetime)", category: "Database", highlight: true },
+    { name: "App Service", slug: "azure", limits: "10 web/mobile/API apps (F1 tier), 1 GB storage, 60 min/day compute", category: "Compute" },
+    { name: "Azure DevOps", slug: "azure", limits: "5 users, unlimited private repos, 1 free parallel CI/CD pipeline (1,800 min/mo)", category: "DevOps" },
+    { name: "Azure Active Directory (Entra ID)", slug: "azure", limits: "50,000 stored objects, SSO for all apps", category: "Identity" },
+    { name: "Azure Storage (Blob)", slug: "azure", limits: "5 GB LRS hot block blob storage, 20K read / 10K write operations", category: "Storage" },
+    { name: "Azure Cognitive Search", slug: "azure", limits: "3 indexes, 50 MB storage per service (F tier)", category: "Search" },
+    { name: "Bandwidth", slug: "azure", limits: "100 GB outbound data transfer/month (5 GB first 12 months is separate)", category: "Networking" },
+    { name: "Azure Maps", slug: "azure", limits: "250K mapping transactions/month", category: "Location" },
+    { name: "Azure IoT Hub", slug: "azure", limits: "8,000 messages/day (F1 tier)", category: "IoT" },
+    { name: "Notification Hubs", slug: "azure", limits: "1M push notifications, unlimited namespaces (free tier)", category: "Messaging" },
+    { name: "Visual Studio Code", slug: "azure", limits: "Free IDE with Azure extensions, GitHub Copilot free tier", category: "Dev Tools" },
+    { name: "Azure Advisor", slug: "azure", limits: "Unlimited cost, security, reliability, performance recommendations", category: "Management" },
+    { name: "Azure Policy", slug: "azure", limits: "Unlimited policy assignments and evaluations", category: "Governance" },
+    { name: "Azure Resource Manager", slug: "azure", limits: "Unlimited template deployments, tags, resource groups", category: "IaC" },
+  ];
+
+  const twelveMonthServices: AzureService[] = [
+    { name: "Azure Virtual Machines", slug: "azure", limits: "750 hrs/month B1S (Linux or Windows), two VMs simultaneously", category: "Compute" },
+    { name: "Azure SQL Database", slug: "azure", limits: "100K vCore seconds/month, 32 GB storage (S0 serverless)", category: "Database" },
+    { name: "Managed Disks", slug: "azure", limits: "2× 64 GB P6 SSD managed disks, 1 GB snapshots, 2M I/O ops", category: "Storage" },
+    { name: "Azure Blob Storage", slug: "azure", limits: "5 GB LRS hot storage, 20K read / 10K write operations", category: "Storage" },
+    { name: "Azure Files", slug: "azure", limits: "100 GB file storage (LRS), 2M transactions", category: "Storage" },
+    { name: "Container Apps", slug: "azure", limits: "180K vCPU-seconds, 360K GiB-seconds memory/month", category: "Containers" },
+    { name: "Azure AI Services (multi-service)", slug: "azure", limits: "5K transactions/month for Text Analytics, Translator, Computer Vision, etc.", category: "AI/ML" },
+    { name: "Azure Cache for Redis", slug: "azure", limits: "250 MB C0 Basic instance", category: "Database" },
+    { name: "Azure Service Bus", slug: "azure", limits: "750 hrs/month Basic namespace", category: "Messaging" },
+  ];
+
+  const trialServices: AzureService[] = [
+    { name: "$200 Azure Credit", slug: "azure", limits: "$200 credit for any service, valid for 30 days", category: "Credits", highlight: true },
+    { name: "Azure AI Studio", slug: "azure", limits: "Access to GPT-4o, Phi-3, Llama models with credit", category: "AI/ML" },
+    { name: "Azure Kubernetes Service (AKS)", slug: "azure", limits: "Free cluster management, pay only for VMs (use with $200 credit)", category: "Containers" },
+    { name: "Microsoft Fabric", slug: "azure", limits: "Free trial capacity for data analytics and AI workloads", category: "Analytics" },
+    { name: "Azure OpenAI Service", slug: "azure", limits: "GPT-4o, GPT-4o mini, Whisper with trial credit", category: "AI/ML" },
+  ];
+
+  interface GotchaItem {
+    title: string;
+    desc: string;
+    cost: string;
+  }
+
+  const gotchas: GotchaItem[] = [
+    { title: "Log Analytics default ingestion", desc: "Every Azure subscription gets a Log Analytics workspace. By default, it ingests platform logs that count toward the 5 GB/day free tier, then charges $2.76/GB. Activity and diagnostic logs pile up silently.", cost: "$2.76/GB after 5 GB" },
+    { title: "No automatic throttling", desc: "Unlike GCP's $300 trial (which pauses when exhausted), Azure's free tier services start billing the moment you exceed limits. There's no built-in spend cap. Set budget alerts on day one.", cost: "Varies — immediate" },
+    { title: "App Service F1 limitations", desc: "The F1 tier gives 60 minutes of compute/day, no custom domain SSL, no always-on. Apps sleep after 20 min idle. For persistent hosting, B1S (12-month free) is better.", cost: "60 min/day limit" },
+    { title: "Cosmos DB RU throttling", desc: "1,000 RU/s sounds generous, but a single complex query can consume 50+ RUs. Exceed the limit and requests get HTTP 429 throttled. Monitor RU consumption from day one.", cost: "429 errors at limit" },
+    { title: "Data transfer between regions", desc: "Outbound data transfer within Azure (cross-region) is charged even with a free tier subscription. Keep resources in the same region.", cost: "$0.01-0.05/GB" },
+    { title: "Free tier expiration", desc: "12-month services silently convert to paid pricing. No automatic notification. Azure sends emails but they're easy to miss. Set a calendar reminder for your anniversary date.", cost: "Varies" },
+    { title: "VMs running when stopped (not deallocated)", desc: "Stopping a VM from the OS doesn't deallocate it — you still pay. You must 'Stop (Deallocate)' from the Azure Portal or CLI to stop billing. Public IP charges continue separately.", cost: "Full VM hourly rate" },
+    { title: "Managed disk charges on deallocated VMs", desc: "Even when a VM is deallocated, you pay for its managed disks. A 64 GB P6 SSD costs ~$9.60/month. Delete disks you don't need.", cost: "$9.60/mo per P6 disk" },
+  ];
+
+  // Alternative cloud providers comparison
+  interface CloudAlt {
+    name: string;
+    slug: string;
+    freeTier: string;
+    strength: string;
+    bestFor: string;
+  }
+
+  const cloudAlts: CloudAlt[] = [
+    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 30+ services", strength: "Most services under one roof", bestFor: "Serverless backends, broadest ecosystem" },
+    { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, BigQuery 1 TiB, Cloud Run 2M req/mo", strength: "Most generous always-free compute", bestFor: "Side projects needing a persistent VM" },
+    { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
+    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
+    { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
+    { name: "Neon", slug: "neon", freeTier: "512 MiB storage, 190 compute hours, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Database-only needs with branching" },
+    { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
+    { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
+  ];
+
+  const alwaysFreeRows = alwaysFreeServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
+      <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const twelveMonthRows = twelveMonthServices.map(s => `<tr>
+      <td style="font-weight:600">${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const trialRows = trialServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
+      <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const gotchaCards = gotchas.map(g => `<div class="diff-card" style="border-left-color:#f85149">
+      <h3>${escHtmlServer(g.title)} <span style="font-size:.75rem;color:#f85149;font-weight:400">${escHtmlServer(g.cost)}</span></h3>
+      <p class="diff-desc">${escHtmlServer(g.desc)}</p>
+    </div>`).join("\n    ");
+
+  const altRows = cloudAlts.map(a => `<tr>
+      <td style="font-weight:600"><a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a></td>
+      <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
+      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
+    </tr>`).join("\n        ");
+
+  const changeTimelineRows = azureChanges.slice(0, 10).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["aws-free-tier-2026", "gcp-free-tier-2026", "database-alternatives", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescAzure,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: { "@type": "Organization", name: "Microsoft Azure" },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescAzure)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescAzure)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier 2026</div>
+  <h1>Azure Free Tier Complete Guide 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${azureOffers.length} Azure entries tracked</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
+    <div class="stat-card"><div class="stat-number">${twelveMonthServices.length}</div><div class="stat-label">12-Month Free</div></div>
+    <div class="stat-card"><div class="stat-number green">$200</div><div class="stat-label">Trial Credit</div></div>
+    <div class="stat-card"><div class="stat-number green">Cosmos DB</div><div class="stat-label">Lifetime Free Tier</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Three tiers, different rules.</strong> Azure's free offering splits into three categories. <strong>Always Free</strong> services never expire — Azure Functions (1M executions/month), Cosmos DB (1,000 RU/s + 25 GB), and App Service stay free forever within limits. <strong>12-Month Free</strong> services (B1S VMs, SQL Database, Managed Disks) expire after your first year. <strong>$200 Trial Credit</strong> gives 30-day access to any Azure service.</p>
+    <p><strong>Azure's unique advantage:</strong> Cosmos DB's always-free tier (1,000 RU/s + 25 GB) is the most generous lifetime-free managed database from any major cloud provider. It's multi-model (document, graph, key-value, column-family) and globally distributable — no equivalent exists on AWS or GCP's always-free tiers.</p>
+    <p><strong>The hidden costs:</strong> Azure has no automatic spend cap — once you exceed free limits, charges start immediately. Log Analytics ingestion, managed disk charges on deallocated VMs, and App Service F1 compute limits catch the most developers. We cover all of them below.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#always-free">Always Free Services</a></li>
+      <li><a href="#twelve-month">12-Month Free Tier</a></li>
+      <li><a href="#trial">$200 Trial Credit</a></li>
+      <li><a href="#stacks">Best Picks by Use Case</a></li>
+      <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
+      <li><a href="#alternatives">Azure vs Alternatives</a></li>
+      <li><a href="#startups">Azure for Startups</a></li>
+      <li><a href="#changes">Recent Changes</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="always-free">Always Free Services</h2>
+  <p class="section-intro">These services remain free indefinitely within their monthly limits. No expiration, no surprise bills after 12 months. This is the safest tier for long-running projects.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${alwaysFreeRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Cosmos DB is the standout.</strong> Azure's always-free Cosmos DB tier (1,000 RU/s + 25 GB) is unique among major cloud providers. AWS DynamoDB offers 25 GB always-free storage but with lower throughput (25 WCU/RCU). GCP Firestore offers 1 GiB with daily operation limits. Cosmos DB gives you a globally-distributed, multi-model database — document, graph, key-value, column-family — at no cost. Pair it with Azure Functions (1M executions/month) for a complete serverless backend.
+  </div>
+
+  <h2 id="twelve-month">12-Month Free Tier</h2>
+  <p class="section-intro">Available for 12 months from account creation. After that, standard pricing applies. Azure sends renewal emails but they're easy to miss — set a calendar reminder.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${twelveMonthRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>B1S VMs are the most flexible 12-month offering.</strong> You get 750 hours/month of B1S burstable instances — enough to run two VMs simultaneously (one Linux, one Windows). Compare with AWS (t3.micro, 750 hrs total) and GCP (e2-micro always-free but single region only). Azure SQL Database's serverless option auto-pauses when idle, making it genuinely free for intermittent workloads.
+  </div>
+
+  <h2 id="trial">$200 Trial Credit</h2>
+  <p class="section-intro">New accounts get $200 in Azure credits valid for 30 days. Unlike GCP's $300/90-day trial, Azure's credit expires faster but works with every service including premium GPU instances and Azure OpenAI.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${trialRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="stacks">Best Picks by Use Case</h2>
+  <p class="section-intro">Common developer use cases and which Azure free services to combine. All stacks below can run at zero cost within free tier limits.</p>
+
+  <div class="verdict-box">
+    <h3>Recommended Free Stacks</h3>
+
+    <div class="verdict-item">
+      <strong>Serverless API backend</strong>
+      <p>Azure Functions (1M executions/mo) + Cosmos DB (1,000 RU/s + 25 GB) + Azure Storage (5 GB). Serverless, scales to zero, always free within limits. The Cosmos DB integration with Functions is first-class — input/output bindings make it seamless.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Full-stack web app</strong>
+      <p>App Service F1 (10 apps) or B1S VM (12-month) + Azure SQL Database (serverless) + Azure Storage (Blob). For persistent hosting, use the B1S VM. For hobby apps that can sleep, App Service F1 works. See our <a href="/hosting-alternatives">hosting alternatives</a> for more options.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Enterprise identity &amp; auth</strong>
+      <p>Azure Active Directory / Entra ID (50K objects) + App Service for SSO. Azure AD's free tier is the most generous managed identity service among cloud providers — compare with AWS Cognito (50K MAUs) and Firebase Auth (50K MAUs). Includes SAML, OIDC, and MFA.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>AI/ML experimentation</strong>
+      <p>Azure AI Services (5K transactions/mo, 12-month) + Azure OpenAI (with $200 credit) + Azure Functions for inference endpoints. Or use <a href="/vendor/azure">Azure AI Studio</a> for a managed playground. See our <a href="/ai-ml-alternatives">AI/ML tools guide</a> for more options.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>DevOps pipeline</strong>
+      <p>Azure DevOps (5 users, 1 free parallel pipeline, 1,800 min/mo) + Azure Container Apps (12-month) + Azure Container Registry. A complete CI/CD pipeline with hosted agents, boards, and artifact feeds — free for small teams. See our <a href="/ci-cd-alternatives">CI/CD alternatives</a> for comparison.</p>
+    </div>
+  </div>
+
+  <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
+  <p class="section-intro">Azure's free tier is generous, but these costs catch developers off guard. The #1 issue is the lack of automatic spend caps — unlike GCP, Azure starts billing immediately when limits are exceeded.</p>
+
+    ${gotchaCards}
+
+  <div class="context-box">
+    <strong>Pro tip:</strong> Set up budget alerts immediately. Go to Cost Management &rarr; Budgets &rarr; Add &rarr; set threshold to $1. You'll get alerts at 50%, 80%, and 100%. Also enable <strong>Azure Advisor</strong> (always free) for cost optimization recommendations. Consider using <strong>Azure Cost Management + Billing</strong> to set spending limits on your subscription — this is the closest Azure has to an automatic spend cap.
+  </div>
+
+  <h2 id="alternatives">Azure vs Alternatives</h2>
+  <p class="section-intro">Azure excels in enterprise features (Active Directory, DevOps, .NET ecosystem) and has the best lifetime-free database (Cosmos DB). Here's how it compares for developers. See our <a href="/aws-free-tier-2026">AWS Free Tier guide</a> and <a href="/gcp-free-tier-2026">GCP Free Tier guide</a> for full breakdowns of each.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Key Free Tier</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${altRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>The trade-off:</strong> Azure wins on enterprise features (AD/Entra ID, DevOps, .NET tooling) and the best lifetime-free database (Cosmos DB). AWS wins on service breadth (30+ always-free services) and serverless ecosystem. GCP wins on always-free compute (permanent e2-micro VM, Cloud Run 2M req/mo). For a complete free-tier stack combining multiple providers, see our <a href="/free-startup-stack">Free Startup Stack</a> guide.
+  </div>
+
+  <h2 id="startups">Azure for Startups</h2>
+  <p class="section-intro">Microsoft offers some of the most generous startup programs in the industry.</p>
+
+  <div class="verdict-box">
+    <h3>Microsoft Founders Hub</h3>
+
+    <div class="verdict-item">
+      <strong>Up to $150K in Azure credits</strong>
+      <p>Free to join, no funding required. Startups get $1K&ndash;$150K in Azure credits (tiered by stage), plus access to OpenAI models, GitHub Enterprise, and Microsoft 365. The most accessible startup program among cloud providers — no pitch deck, no revenue requirements.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>GitHub &amp; developer tools</strong>
+      <p>Includes GitHub Enterprise, Visual Studio Enterprise subscriptions, and Azure DevOps. Combined with the free tier services above, this gives startups a complete development platform at zero cost.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>How it compares</strong>
+      <p>AWS Activate: up to $100K credits (requires VC backing for higher tiers). GCP for Startups: up to $100K credits (requires accelerator or VC affiliation). Microsoft Founders Hub: up to $150K with no funding requirements. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
+    </div>
+  </div>
+
+  <h2 id="changes">Recent Azure Changes</h2>
+  <p class="section-intro">Azure pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes across all providers.</p>
+
+  ${azureChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Service</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No Azure-specific pricing changes tracked yet. We're actively expanding our Azure coverage — check back soon or <a href="/changes">browse all provider changes</a>.</p>`}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>Powered by AgentDeals.</strong> All free tier data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official Azure pricing pages. We track ${azureOffers.length} Azure-related entries and ${azureChanges.length} Azure pricing changes. Data is updated continuously as Microsoft announces changes.<br><br>
+    <strong>Query Azure data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for Azure services, compare with alternatives, or track pricing changes from your AI coding assistant.
+  </div>
+
+  ${buildMcpCta("Search Azure free tier services, compare with alternatives, and track pricing changes — all from your AI coding assistant.")}
 
   <h2>Related Guides</h2>
   <div class="related-pages">
@@ -21286,6 +21763,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gcp-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildGcpFreeTier2026Page());
+  } else if (url.pathname === "/azure-free-tier-2026" && isGetOrHead) {
+    recordApiHit("/azure-free-tier-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/azure-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAzureFreeTier2026Page());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);

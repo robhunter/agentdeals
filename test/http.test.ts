@@ -2678,6 +2678,38 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/aws-free-tier-2026"), "Should cross-link to AWS guide");
   });
 
+  it("GET /azure-free-tier-2026 renders Azure free tier guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/azure-free-tier-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Azure Free Tier Complete Guide"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Always Free Services"), "Should have always free section");
+    assert.ok(html.includes("12-Month Free Tier"), "Should have 12-month section");
+    assert.ok(html.includes("$200 Trial Credit"), "Should have trial section");
+    assert.ok(html.includes("Azure Functions"), "Should include Azure Functions");
+    assert.ok(html.includes("Cosmos DB"), "Should include Cosmos DB");
+    assert.ok(html.includes("App Service"), "Should include App Service");
+    assert.ok(html.includes("Azure SQL Database"), "Should include Azure SQL");
+    assert.ok(html.includes("Hidden Costs"), "Should have gotchas section");
+    assert.ok(html.includes("Azure vs Alternatives"), "Should have alternatives comparison");
+    assert.ok(html.includes("Best Picks by Use Case"), "Should have stacks section");
+    assert.ok(html.includes("Azure for Startups"), "Should have startups section");
+    assert.ok(html.includes("Founders Hub"), "Should include Founders Hub");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
+    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+    assert.ok(html.includes("/aws-free-tier-2026"), "Should cross-link to AWS guide");
+    assert.ok(html.includes("/gcp-free-tier-2026"), "Should cross-link to GCP guide");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 

@@ -185,7 +185,7 @@
     {
       "vendor": "Azure",
       "category": "Cloud IaaS",
-      "description": "Always-free tier includes Azure Functions (1M req/mo), Cosmos DB (1K RU/s + 25 GB). New accounts get 12-month free VMs and SQL",
+      "description": "65+ always-free services: Functions (1M req/mo), Cosmos DB (1K RU/s + 25 GB lifetime), App Service (10 apps), AD/Entra ID (50K objects), DevOps (5 users + CI/CD). 12-month: B1S VMs (750 hrs), SQL Database, Managed Disks. $200 trial credit (30 days). Founders Hub: up to $150K credits for startups",
       "tier": "Free Tier",
       "url": "https://azure.microsoft.com/en-us/pricing/free-services/",
       "tags": [
@@ -193,9 +193,11 @@
         "iaas",
         "serverless",
         "credits",
-        "startup"
+        "startup",
+        "azure",
+        "microsoft"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-31"
     },
     {
       "vendor": "DigitalOcean",
