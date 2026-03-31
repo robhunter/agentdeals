@@ -202,7 +202,7 @@
     {
       "vendor": "DigitalOcean",
       "category": "Cloud IaaS",
-      "description": "$200 credit for 60 days for new accounts. Free static sites (up to 3) and functions (90K GiB-seconds/mo). Note: managed databases are not included in free tier (start at $15/mo)",
+      "description": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD — 20% price cut Jan 2026). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 25,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
       "tier": "Credits",
       "url": "https://www.digitalocean.com/pricing",
       "tags": [
@@ -212,10 +212,17 @@
         "startup",
         "free tier",
         "hetzner-alternative",
-        "heroku-alternative"
+        "heroku-alternative",
+        "digitalocean-free-tier-2026"
       ],
-      "verifiedDate": "2026-03-21",
-      "expires_date": "2026-06-30"
+      "verifiedDate": "2026-03-31",
+      "expires_date": "2026-06-30",
+      "free_tier_limits": {
+        "credits": "$200 for 60 days",
+        "static_sites": "3 apps, 1 GiB outbound/mo each",
+        "functions": "25,000 GiB-seconds/mo",
+        "droplets_from": "$4/mo (1 vCPU, 512 MB, 10 GB SSD)"
+      }
     },
     {
       "vendor": "Oracle Cloud",
@@ -21414,9 +21421,10 @@
       "url": "https://docs.digitalocean.com/products/networking/dns/details/pricing/",
       "tags": [
         "dns",
-        "cloud"
+        "cloud",
+        "digitalocean-free-tier-2026"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-31"
     },
     {
       "vendor": "Vultr DNS",
