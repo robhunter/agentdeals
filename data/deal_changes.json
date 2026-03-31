@@ -1023,6 +1023,22 @@
     },
     {
       "vendor": "DigitalOcean",
+      "change_type": "limits_increased",
+      "date": "2026-01-01",
+      "summary": "20% price cut on Basic Droplets (cheapest now $4/mo from $5/mo). Per-second billing introduced (minimum 60 seconds or $0.01). Functions free tier increased to 25,000 GiB-seconds/mo",
+      "previous_state": "Basic Droplets from $5/mo, hourly billing, Functions 90K GiB-seconds/mo free",
+      "current_state": "Basic Droplets from $4/mo (1 vCPU, 512 MB, 10 GB SSD). Per-second billing (min 60s/$0.01). Functions 25,000 GiB-seconds/mo free",
+      "impact": "medium",
+      "source_url": "https://www.digitalocean.com/pricing/droplets",
+      "category": "Cloud IaaS",
+      "alternatives": [
+        "Hetzner",
+        "Vultr",
+        "Linode"
+      ]
+    },
+    {
+      "vendor": "DigitalOcean",
       "change_type": "restriction",
       "date": "2026-03-21",
       "summary": "Managed databases are not part of the free tier. Pricing starts at $15/month. Previous listing incorrectly included '1 basic cluster' as a free tier benefit",
