@@ -4004,6 +4004,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Azure",
     hubDesc: "Complete Azure free tier guide — 65+ always-free services, $200 trial, Cosmos DB lifetime free tier, and comparison with AWS and GCP",
   },
+  {
+    slug: "digitalocean-free-tier-2026",
+    title: "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs",
+    metaDesc: "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits, App Platform free static sites, 20% Droplet price cuts, per-second billing, and comparison with AWS, GCP, and Azure.",
+    contextHtml: "",
+    tag: "digitalocean-free-tier-2026",
+    primaryVendor: "DigitalOcean",
+    hubDesc: "Complete DigitalOcean guide — $200 free credits, 20% Droplet price cuts, App Platform free tier, per-second billing, and Big Three comparison",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -16811,7 +16820,7 @@ function buildAwsFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["gcp-free-tier-2026", "azure-free-tier-2026", "database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+    ["gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -17256,7 +17265,7 @@ function buildGcpFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["aws-free-tier-2026", "azure-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
+    ["aws-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -17682,7 +17691,7 @@ function buildAzureFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["aws-free-tier-2026", "gcp-free-tier-2026", "database-alternatives", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+    ["aws-free-tier-2026", "gcp-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -17981,6 +17990,454 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Search Azure free tier services, compare with alternatives, and track pricing changes — all from your AI coding assistant.")}
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- DigitalOcean Free Tier 2026 guide ---
+
+function buildDigitalOceanFreeTier2026Page(): string {
+  const title = "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs";
+  const metaDescDO = "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits for 60 days, App Platform free static sites, 20% Droplet price cuts, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.";
+  const slug = "digitalocean-free-tier-2026";
+  const pubDate = "2026-03-31";
+
+  // Pull DO-related offers from our index
+  const doOffers = offers.filter(o =>
+    o.vendor === "DigitalOcean" || o.vendor.startsWith("DigitalOcean ") ||
+    o.tags?.some((t: string) => t === "digitalocean-free-tier-2026")
+  );
+
+  // Deal changes related to DigitalOcean
+  const doChanges = dealChanges.filter((c: any) =>
+    c.vendor === "DigitalOcean" || c.vendor.startsWith("DigitalOcean ") ||
+    c.vendor.includes("DigitalOcean")
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Free services (permanent)
+  interface DOService {
+    name: string;
+    slug: string;
+    limits: string;
+    category: string;
+    highlight?: boolean;
+  }
+
+  const freeServices: DOService[] = [
+    { name: "App Platform (Static Sites)", slug: "digitalocean", limits: "3 static site apps, 1 GiB outbound transfer/month each, automatic HTTPS", category: "Hosting", highlight: true },
+    { name: "Functions (Serverless)", slug: "digitalocean", limits: "25,000 GiB-seconds/month, 90,000 GiB-seconds included with any paid resource", category: "Compute", highlight: true },
+    { name: "DNS Management", slug: "digitalocean", limits: "Up to ~50 domains, no active Droplet required, free for all accounts", category: "Networking" },
+    { name: "Monitoring & Alerting", slug: "digitalocean", limits: "Built-in metrics, uptime checks, and alerting for all resources — no extra charge", category: "Monitoring" },
+    { name: "VPC (Virtual Private Cloud)", slug: "digitalocean", limits: "Free private networking between resources in same datacenter", category: "Networking" },
+    { name: "Cloud Firewalls", slug: "digitalocean", limits: "Free inbound traffic filtering rules for Droplets", category: "Security" },
+    { name: "Container Registry", slug: "digitalocean", limits: "Starter plan: 1 repo, 500 MB storage (free with account)", category: "Containers" },
+  ];
+
+  // Paid services with competitive pricing (2026 price cuts)
+  interface PaidService {
+    name: string;
+    price: string;
+    specs: string;
+    note: string;
+  }
+
+  const paidHighlights: PaidService[] = [
+    { name: "Basic Droplet", price: "$4/mo", specs: "1 vCPU, 512 MB RAM, 10 GB SSD, 500 GB transfer", note: "20% price cut Jan 2026 (was $5)" },
+    { name: "Basic Droplet", price: "$6/mo", specs: "1 vCPU, 1 GB RAM, 25 GB SSD, 1 TB transfer", note: "20% cut (was $6, from $7)" },
+    { name: "Basic Droplet", price: "$12/mo", specs: "1 vCPU, 2 GB RAM, 50 GB SSD, 2 TB transfer", note: "20% cut (was $15)" },
+    { name: "Spaces Object Storage", price: "$5/mo", specs: "250 GB storage + 1 TB outbound transfer", note: "S3-compatible, CDN included" },
+    { name: "Managed Database (PostgreSQL)", price: "$15/mo", specs: "1 vCPU, 1 GB RAM, 10 GB storage", note: "Not free tier — starts at $15" },
+    { name: "Managed Kubernetes", price: "$12/mo", specs: "Free control plane + $4/mo per worker node (Basic)", note: "Per-second billing applies" },
+    { name: "App Platform (Web Service)", price: "$5/mo", specs: "1 container, 512 MB RAM, auto-deploy from Git", note: "Static sites are free" },
+  ];
+
+  interface GotchaItem {
+    title: string;
+    desc: string;
+    cost: string;
+  }
+
+  const gotchas: GotchaItem[] = [
+    { title: "No perpetual free compute", desc: "Unlike AWS (Lambda 1M req/mo), GCP (e2-micro VM), or Azure (Functions 1M executions), DigitalOcean has no always-free compute tier. The $200 credit expires after 60 days. After that, even the cheapest Droplet is $4/month.", cost: "$4/mo minimum" },
+    { title: "Bandwidth overage charges", desc: "Droplet plans include transfer allowances (500 GB–10 TB). Excess bandwidth costs $0.01/GiB for outbound. Inbound is free. This adds up fast for media-heavy apps.", cost: "$0.01/GiB overage" },
+    { title: "Per-second billing minimum", desc: "Per-second billing sounds great, but there's a 60-second minimum charge ($0.01). Creating and destroying Droplets rapidly still costs money — each creation incurs at least $0.01.", cost: "$0.01 minimum" },
+    { title: "App Platform build minutes", desc: "Free static sites don't include build minutes for dynamic apps. Web service builds consume resources and the free tier only covers static content. Dynamic apps start at $5/mo.", cost: "$5/mo for dynamic" },
+    { title: "Spaces CDN bandwidth", desc: "Spaces includes 1 TB outbound transfer, but CDN bandwidth beyond that is $0.01/GiB. If you're serving files through the CDN, monitor your transfer usage.", cost: "$0.01/GiB overage" },
+    { title: "Managed database is never free", desc: "Despite the free credits, managed databases (PostgreSQL, MySQL, Redis, MongoDB, Kafka) start at $15/month with no free tier. This is the #1 gotcha — AWS, GCP, and Azure all offer always-free database options.", cost: "$15/mo minimum" },
+    { title: "Backups cost extra", desc: "Droplet backups cost 20% of the Droplet price. A $4/mo Droplet's backup is $0.80/mo. Snapshots are $0.06/GiB/mo. Neither is included in the base price.", cost: "20% of Droplet price" },
+    { title: "Credit card required for free credits", desc: "You need a valid credit card or PayPal to claim the $200 free credits. If you forget to cancel or exceed limits during the trial, charges begin immediately.", cost: "Immediate billing" },
+  ];
+
+  // Alternative cloud providers comparison
+  interface CloudAlt {
+    name: string;
+    slug: string;
+    freeTier: string;
+    strength: string;
+    bestFor: string;
+  }
+
+  const cloudAlts: CloudAlt[] = [
+    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 30+ services", strength: "Most services, broadest free tier", bestFor: "Enterprise, serverless, broadest ecosystem" },
+    { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, BigQuery 1 TiB, Cloud Run 2M req/mo", strength: "Free persistent VM, generous compute", bestFor: "Side projects needing always-free compute" },
+    { name: "Azure", slug: "azure", freeTier: "Always Free: Functions 1M req/mo, Cosmos DB 25 GB, 65+ services", strength: "Best free database (Cosmos DB), enterprise identity", bestFor: ".NET apps, enterprise auth, Cosmos DB" },
+    { name: "Hetzner", slug: "hetzner", freeTier: "No free tier — cheapest VPS at €4.51/mo (2 vCPU, 4 GB)", strength: "Best price/performance ratio in Europe", bestFor: "European hosting, raw compute power" },
+    { name: "Vultr", slug: "vultr", freeTier: "$250 free credit (30 days), cheapest VPS at $2.50/mo", strength: "Global locations, competitive pricing", bestFor: "Low-cost VPS, multiple regions" },
+    { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best DX, instant deploys from Git", bestFor: "Quick prototypes, hobby projects" },
+    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS, free hobby tier", bestFor: "Heroku replacement, small apps" },
+    { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first, zero egress on R2", bestFor: "Edge computing, static sites, storage" },
+  ];
+
+  const freeRows = freeServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
+      <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
+    </tr>`).join("\n        ");
+
+  const paidRows = paidHighlights.map(s => `<tr>
+      <td style="font-weight:600">${escHtmlServer(s.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:#3fb950">${escHtmlServer(s.price)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.specs)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.note)}</td>
+    </tr>`).join("\n        ");
+
+  const gotchaCards = gotchas.map(g => `<div class="diff-card" style="border-left-color:#f85149">
+      <h3>${escHtmlServer(g.title)} <span style="font-size:.75rem;color:#f85149;font-weight:400">${escHtmlServer(g.cost)}</span></h3>
+      <p class="diff-desc">${escHtmlServer(g.desc)}</p>
+    </div>`).join("\n    ");
+
+  const altRows = cloudAlts.map(a => `<tr>
+      <td style="font-weight:600"><a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a></td>
+      <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
+      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
+    </tr>`).join("\n        ");
+
+  const changeTimelineRows = doChanges.slice(0, 10).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "hosting-alternatives", "database-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescDO,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: { "@type": "Organization", name: "DigitalOcean" },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescDO)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescDO)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; DigitalOcean Free Tier 2026</div>
+  <h1>DigitalOcean Free Tier Complete Guide 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${doOffers.length} DigitalOcean entries tracked</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number green">$200</div><div class="stat-label">Free Credits (60 days)</div></div>
+    <div class="stat-card"><div class="stat-number">${freeServices.length}</div><div class="stat-label">Free Services</div></div>
+    <div class="stat-card"><div class="stat-number green">20%</div><div class="stat-label">Droplet Price Cut</div></div>
+    <div class="stat-card"><div class="stat-number amber">$4/mo</div><div class="stat-label">Cheapest Droplet</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Different model than the Big Three.</strong> Unlike AWS, GCP, and Azure which offer always-free compute tiers, DigitalOcean's free offering is limited to <strong>$200 in trial credits (60 days)</strong>, <strong>3 free static sites</strong> on App Platform, <strong>serverless Functions</strong> (25,000 GiB-seconds/month), and <strong>free DNS management</strong>. There is no perpetual free compute — after credits expire, the cheapest Droplet is $4/month.</p>
+    <p><strong>The value proposition is simplicity and price.</strong> DigitalOcean's 2026 pricing changes made it significantly more competitive: a <strong>20% price cut</strong> on Basic Droplets (cheapest now $4/month from $5) and <strong>per-second billing</strong> (minimum 60 seconds or $0.01). For developers who want straightforward cloud infrastructure without the complexity of AWS/GCP/Azure, DigitalOcean trades free-tier generosity for operational simplicity.</p>
+    <p><strong>Best for:</strong> Developers who value simplicity over free tiers, small-to-medium projects that outgrow free hosting, teams that want managed infrastructure without enterprise complexity. Not ideal for bootstrapped projects that need to stay at $0/month indefinitely.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#free-credits">$200 Free Credits</a></li>
+      <li><a href="#free-services">Free Services</a></li>
+      <li><a href="#pricing">2026 Pricing Highlights</a></li>
+      <li><a href="#stacks">Best Use Cases</a></li>
+      <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
+      <li><a href="#alternatives">DigitalOcean vs Alternatives</a></li>
+      <li><a href="#startups">For Startups</a></li>
+      <li><a href="#changes">Recent Changes</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="free-credits">$200 Free Credits</h2>
+  <p class="section-intro">New DigitalOcean accounts get $200 in free credits valid for 60 days. This is more generous than Azure ($200/30 days) but less than GCP ($300/90 days). Credits work with all services including Droplets, Managed Databases, and Kubernetes.</p>
+
+  <div class="context-box">
+    <strong>How to maximize the trial.</strong> The 60-day window is tight. Focus on evaluating the services you'd actually use long-term — spin up a Droplet, test App Platform deployment, try Managed PostgreSQL. Don't waste credits on services you won't continue paying for. Set a calendar reminder for day 55 to clean up or convert to paid. Credit card required at signup, so charges begin immediately after credits expire.
+  </div>
+
+  <h2 id="free-services">Free Services (Permanent)</h2>
+  <p class="section-intro">These services are free forever, no credit card trial involved. DigitalOcean's permanent free tier is narrower than the Big Three but covers static hosting, serverless, and DNS.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Limits</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${freeRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>App Platform static sites are the standout.</strong> 3 free static sites with automatic HTTPS, global CDN, and Git-based deployments. This competes directly with Vercel, Netlify, and Cloudflare Pages — all of which also offer generous free static hosting. The key difference: DigitalOcean limits outbound transfer to 1 GiB/month per app, while Cloudflare Pages and Netlify offer 100 GB+.
+  </div>
+
+  <h2 id="pricing">2026 Pricing Highlights</h2>
+  <p class="section-intro">DigitalOcean cut Basic Droplet prices by 20% in January 2026 and introduced per-second billing. Here are the key price points developers should know.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Price</th>
+        <th>Specs</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${paidRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Per-second billing changes the math.</strong> Before January 2026, DigitalOcean billed hourly. Now it's per-second with a 60-second minimum ($0.01). This matters for ephemeral workloads — CI/CD build servers, batch processing, dev environments. A Droplet running for 5 minutes costs ~$0.005 instead of a full hour. Combined with the 20% price cut, DigitalOcean is now price-competitive with Hetzner for basic VPS workloads.
+  </div>
+
+  <h2 id="stacks">Best Use Cases</h2>
+  <p class="section-intro">Where DigitalOcean shines compared to the Big Three clouds. These recommendations combine free and paid services for the best value.</p>
+
+  <div class="verdict-box">
+    <h3>Recommended Stacks</h3>
+
+    <div class="verdict-item">
+      <strong>Static site + API backend</strong>
+      <p>App Platform free static site + $4/mo Basic Droplet for API. Total: $4/mo. Simple, Git-based deploys for both frontend and backend. Compare with: Vercel free + Railway $5/mo, or Cloudflare Pages + Workers (free).</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Full-stack web app</strong>
+      <p>$6/mo Droplet (1 GB RAM) + $15/mo Managed PostgreSQL + free DNS. Total: $21/mo. One-click app marketplace for WordPress, Ghost, Node.js, Django. Compare with: Railway (~$10/mo), Render ($7/mo + $7/mo DB).</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Kubernetes cluster</strong>
+      <p>Free DOKS control plane + 3× $12/mo Droplet workers. Total: $36/mo. Managed Kubernetes with free control plane is unique — AWS EKS charges $72/mo for the control plane alone. See our <a href="/hosting-alternatives">hosting alternatives</a> for more options.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Object storage + CDN</strong>
+      <p>Spaces at $5/mo (250 GB + 1 TB transfer, S3-compatible, built-in CDN). Compare with: AWS S3 ($0.023/GB, no bundled CDN), Cloudflare R2 (10 GB free, zero egress). Spaces is simpler but less flexible than S3.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Serverless functions</strong>
+      <p>DigitalOcean Functions: 25,000 GiB-seconds/mo free. For light workloads (webhooks, cron jobs, API endpoints). Compare with: AWS Lambda (1M req/mo free), Cloudflare Workers (100K req/day free). DO Functions is newer and less mature but integrated with App Platform.</p>
+    </div>
+  </div>
+
+  <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
+  <p class="section-intro">DigitalOcean is simpler than AWS/GCP/Azure, but these costs still catch developers off guard. The biggest issue: no perpetual free compute tier means you can't run a project at $0/month after the trial ends.</p>
+
+    ${gotchaCards}
+
+  <div class="context-box">
+    <strong>Pro tip:</strong> Enable billing alerts immediately. Go to Settings &rarr; Billing &rarr; Alerts &rarr; set a threshold at $5 or $10. DigitalOcean sends email alerts when you hit 50%, 80%, and 100% of your alert threshold. Also consider <strong>reserved Droplets</strong> for long-running workloads — they offer ~20% savings over on-demand pricing with 1-year commitments.
+  </div>
+
+  <h2 id="alternatives">DigitalOcean vs Alternatives</h2>
+  <p class="section-intro">DigitalOcean's strength is simplicity and competitive pricing, not free tier generosity. Here's how it compares. See our <a href="/aws-free-tier-2026">AWS</a>, <a href="/gcp-free-tier-2026">GCP</a>, and <a href="/azure-free-tier-2026">Azure</a> free tier guides for detailed breakdowns of each.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Key Free Tier</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${altRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>The trade-off:</strong> If you need to run at $0/month indefinitely, DigitalOcean isn't the answer — choose AWS, GCP, Azure, or Cloudflare. If you need simple, predictable pricing with excellent documentation and a clean UI, DigitalOcean is hard to beat at $4-12/month. The 20% price cut and per-second billing make it competitive with budget providers like Hetzner and Vultr. For a complete comparison of free tiers, see our <a href="/free-startup-stack">Free Startup Stack</a> guide.
+  </div>
+
+  <h2 id="startups">For Startups</h2>
+  <p class="section-intro">DigitalOcean's Hatch startup program is one of the most accessible cloud startup programs available.</p>
+
+  <div class="verdict-box">
+    <h3>DigitalOcean Hatch</h3>
+
+    <div class="verdict-item">
+      <strong>Up to $100K in compute credits</strong>
+      <p>12-month credit allocation for eligible startups. Plus up to 3 months free GPU access (H100 at ~$1.90/hr vs $3.39 standard) for AI/ML workloads. 15 months of Standard support included.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Partner perks</strong>
+      <p>Additional credits and discounts from Cloudflare, Stripe, Retool, HubSpot, and other partner companies. Combined value can exceed the compute credits alone.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Eligibility</strong>
+      <p>Series A or less (max $10M raised), new DigitalOcean customer, affiliated with an approved accelerator, incubator, or VC. Product startup (not service-based). More accessible than AWS Activate's higher tiers but still requires VC/accelerator affiliation. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>How it compares</strong>
+      <p>AWS Activate: up to $100K (requires VC backing for higher tiers). GCP for Startups: up to $100K + $2K AI credits. Azure Founders Hub: up to $150K (no funding required). DigitalOcean Hatch: up to $100K + GPU access. Microsoft's program is the easiest to qualify for; DigitalOcean's GPU perk is unique.</p>
+    </div>
+  </div>
+
+  <h2 id="changes">Recent DigitalOcean Changes</h2>
+  <p class="section-intro">DigitalOcean pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes across all providers.</p>
+
+  ${doChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Service</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No DigitalOcean-specific pricing changes tracked yet. Check the <a href="/changes">full timeline</a> for all provider changes.</p>`}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official DigitalOcean pricing pages. We track ${doOffers.length} DigitalOcean-related entries and ${doChanges.length} DigitalOcean pricing changes. Data is updated continuously as DigitalOcean announces changes.<br><br>
+    <strong>Query DigitalOcean data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for DigitalOcean services, compare with alternatives, or track pricing changes from your AI coding assistant.
+  </div>
+
+  ${buildMcpCta("Search DigitalOcean services, compare with alternatives, and track pricing changes — all from your AI coding assistant.")}
 
   <h2>Related Guides</h2>
   <div class="related-pages">
@@ -21768,6 +22225,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/azure-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAzureFreeTier2026Page());
+  } else if (url.pathname === "/digitalocean-free-tier-2026" && isGetOrHead) {
+    recordApiHit("/digitalocean-free-tier-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digitalocean-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDigitalOceanFreeTier2026Page());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
