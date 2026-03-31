@@ -106,6 +106,22 @@
       ]
     },
     {
+      "vendor": "Netlify",
+      "change_type": "restriction",
+      "date": "2026-03-01",
+      "summary": "Every repo committer is now charged as a full Pro seat ($19/mo) when using Netlify CMS or Identity with a private repo. Previously only users who logged into the Netlify dashboard counted as seats",
+      "previous_state": "Only Netlify dashboard users counted as billable seats",
+      "current_state": "All repo committers to connected private repos count as Pro seats ($19/mo each) when using CMS or Identity features",
+      "impact": "high",
+      "source_url": "https://www.netlify.com/pricing/",
+      "category": "Hosting",
+      "alternatives": [
+        "Vercel",
+        "Cloudflare Pages",
+        "GitHub Pages"
+      ]
+    },
+    {
       "vendor": "Supabase",
       "change_type": "limits_reduced",
       "date": "2026-02-01",
@@ -1190,10 +1206,10 @@
     {
       "vendor": "Windsurf",
       "change_type": "pricing_restructured",
-      "date": "2026-03-01",
-      "summary": "Windsurf replaced credits-based free tier with fixed monthly quotas and raised Pro pricing from $15 to $20/month. Free tier went from credits (flexible use) to hard quotas (limited completions + chat messages). Pro plan price increased 33%",
+      "date": "2026-03-19",
+      "summary": "Windsurf replaced credits-based pricing with daily/weekly quotas (Mar 19, 2026). New tiers: Pro $20/mo (was $15), Ultimate $40/mo, Team $200/mo/seat. Free tier changed from flexible credits to hard quotas. Existing Pro subscribers grandfathered at $15/mo",
       "previous_state": "Credits-based system allowing flexible allocation between completions and chat. Pro plan $15/month",
-      "current_state": "Fixed quotas: free tier gets limited completions and chat messages per month. Pro plan $20/month (+33%). Credits replaced by hard limits",
+      "current_state": "Daily/weekly quotas replace credits. Pro $20/mo (existing subs grandfathered at $15), Ultimate $40/mo, Team $200/mo/seat. Free tier gets limited daily completions and chat messages",
       "impact": "medium",
       "source_url": "https://windsurf.com/pricing",
       "category": "AI Coding",
