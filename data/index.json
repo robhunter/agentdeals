@@ -51,7 +51,7 @@
     {
       "vendor": "Netlify",
       "category": "Cloud Hosting",
-      "description": "300 credits/month (deploys at 15 credits each, bandwidth at 10 credits/GB, compute at 5 credits/GB-hour). Legacy accounts (pre-Sep 2025) keep 100GB bandwidth + 300 build minutes",
+      "description": "300 credits/month (deploys at 15 credits each, bandwidth at 10 credits/GB, compute at 5 credits/GB-hour). Legacy accounts (pre-Sep 2025) keep 100GB bandwidth + 300 build minutes. Gotcha: every repo committer is charged as a full Pro seat ($19/mo) when using Netlify CMS or Identity with a private repo",
       "tier": "Free",
       "url": "https://www.netlify.com/pricing/",
       "tags": [
@@ -60,9 +60,10 @@
         "edge",
         "deployment",
         "jamstack",
-        "vercel-alternative"
+        "vercel-alternative",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-31"
     },
     {
       "vendor": "Cloudflare Pages",
@@ -1099,7 +1100,7 @@
     {
       "vendor": "Windsurf",
       "category": "IDE & Code Editors",
-      "description": "AI coding assistant (formerly Codeium) — 25 prompt credits/month, unlimited previews and deploys, all premium models",
+      "description": "AI coding assistant (formerly Codeium). Free tier: daily/weekly quotas for completions and chat (replaced credits Mar 2026). Pro $20/mo, Ultimate $40/mo, Team $200/mo. Existing Pro subscribers grandfathered at $15/mo",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -1107,9 +1108,10 @@
         "ai",
         "code completion",
         "ide",
-        "free tier"
+        "free tier",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-31"
     },
     {
       "vendor": "GitHub Copilot",
@@ -2263,7 +2265,7 @@
         "deal-change",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-31"
     },
     {
       "vendor": "Directus",
@@ -4640,7 +4642,7 @@
     {
       "vendor": "Unity DevOps",
       "category": "CI/CD",
-      "description": "Version control + build automation — 25 GB storage, 100 GB egress, no seat charges. Build: 200 Windows + 100 Mac minutes/month. Includes Plastic SCM for version control. Expanded free tier as of March 2026",
+      "description": "Version control + build automation — 25 GB storage (5x increase Mar 2026), 100 GB egress (new Mar 2026), no seat charges (removed Mar 2026). Build: 200 Windows + 100 Mac minutes/month. Includes Plastic SCM for version control. No egress charges through April 2026",
       "tier": "Free",
       "url": "https://unity.com/products/unity-devops",
       "tags": [
@@ -4648,9 +4650,10 @@
         "cd",
         "version-control",
         "build-automation",
-        "game-dev"
+        "game-dev",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-31"
     },
     {
       "vendor": "SurrealDB Cloud",
@@ -21621,7 +21624,7 @@
     {
       "vendor": "Windsurf",
       "category": "AI Coding",
-      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: basic Cascade AI flow access, limited premium action credits, code completions, AI chat. Pro plan $15/mo (unlimited flows, more credits). Team and Enterprise tiers available.",
+      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: daily/weekly quotas for Cascade AI flows, code completions, AI chat (quotas replaced credits Mar 2026). Pro $20/mo (was $15, existing subscribers grandfathered), Ultimate $40/mo, Team $200/mo/seat. All tiers include premium models",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -21630,9 +21633,10 @@
         "ide",
         "code completion",
         "developer tools",
-        "cursor-alternative"
+        "cursor-alternative",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-31"
     },
     {
       "vendor": "Augment Code",
