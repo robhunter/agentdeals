@@ -4040,6 +4040,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "GitHub Actions",
     hubDesc: "Side-by-side comparison of 10+ CI/CD free tiers — build minutes, concurrency, runners, storage, and hidden costs compared",
   },
+  {
+    slug: "serverless-free-tier-comparison-2026",
+    title: "Serverless Free Tier Comparison 2026 — AWS Lambda vs Cloud Functions vs Azure Functions vs Workers",
+    metaDesc: "Side-by-side comparison of 10+ serverless free tiers in 2026. Compare AWS Lambda, Google Cloud Functions, Azure Functions, Cloudflare Workers, Deno Deploy, Cloud Run, Val Town, and more — invocations, compute, cold starts, and billing models.",
+    contextHtml: "",
+    tag: "serverless-free-tier-comparison-2026",
+    primaryVendor: "Cloudflare Workers",
+    hubDesc: "Side-by-side comparison of 10+ serverless free tiers — invocations, compute time, cold starts, billing models, and hidden costs compared",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -18521,7 +18530,7 @@ function buildCloudFreeTierComparison2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits", "free-devops-stack"].includes(p.slug)
+    ["aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits", "free-devops-stack", "serverless-free-tier-comparison-2026"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -20407,6 +20416,645 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Compare CI/CD free tiers, track pricing changes, and plan your DevOps stack — all from your AI coding assistant.")}
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function buildServerlessFreeTierComparison2026Page(): string {
+  const title = "Serverless Free Tier Comparison 2026 — AWS Lambda vs Cloud Functions vs Azure Functions vs Workers";
+  const metaDescServerless = "Side-by-side comparison of 10+ serverless free tiers in 2026. Compare AWS Lambda, Google Cloud Functions, Azure Functions, Cloudflare Workers, Deno Deploy, Cloud Run, Val Town, and more — invocations, compute, cold starts, and billing models.";
+  const slug = "serverless-free-tier-comparison-2026";
+  const pubDate = "2026-04-01";
+
+  // Collect serverless-related deal changes
+  const serverlessVendorKeywords = ["Vercel", "Cloudflare Workers", "Cloudflare Durable Objects", "Cloudflare Queues", "Deno Deploy", "Val Town", "Google Cloud", "AWS", "Azure", "Cloud Run", "Lambda", "Cloud Functions", "Azure Functions", "DBOS", "Inngest", "Trigger.dev"];
+  const serverlessChanges = dealChanges.filter((c: any) =>
+    serverlessVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("serverless") || c.summary.toLowerCase().includes("function") || c.summary.toLowerCase().includes("lambda") || c.summary.toLowerCase().includes("worker")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = serverlessChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["hosting-alternatives", "cloud-free-tier-comparison-2026", "database-free-tier-comparison-2026", "free-tier-risk", "free-devops-stack", "free-ai-stack", "cicd-free-tier-comparison-2026"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = serverlessChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No serverless-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescServerless,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescServerless)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescServerless)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Serverless Free Tier Comparison</div>
+  <h1>Serverless Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 10+ serverless platforms compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">10+</div><div class="stat-label">Serverless Platforms</div></div>
+    <div class="stat-card"><div class="stat-number green">Workers</div><div class="stat-label">Best Edge / Low Latency</div></div>
+    <div class="stat-card"><div class="stat-number green">Lambda</div><div class="stat-label">Most Invocations Free</div></div>
+    <div class="stat-card"><div class="stat-number green">Cloud Run</div><div class="stat-label">Most Generous Overall</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>AWS Lambda</strong> leads on raw invocation count (1M/month free) and has the largest ecosystem. <strong>Google Cloud Run</strong> is the most generous overall with 2M requests, 360K GB-seconds, and 1 GB free egress. <strong>Cloudflare Workers</strong> dominates edge computing with 100K requests/day, sub-5ms cold starts, and the unique advantage of <strong>CPU-time billing</strong> (you don&rsquo;t pay for I/O waits). <strong>Azure Functions</strong> matches Lambda at 1M requests/month with a consumption-based model.</p>
+    <p><strong>The critical distinction most developers miss:</strong> Cloudflare Workers bills by <strong>CPU time</strong> while AWS Lambda, Google Cloud Functions, and Azure Functions bill by <strong>wall-clock time</strong> (including time spent waiting for network I/O, database queries, and external API calls). For I/O-heavy workloads, this can mean 10-50x cheaper effective compute on Workers. This single billing model difference matters more than headline invocation counts.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#traditional-faas">Traditional FaaS (Lambda, Cloud Functions, Azure Functions)</a></li>
+      <li><a href="#edge-compute">Edge Compute (Workers, Vercel Edge, Deno Deploy)</a></li>
+      <li><a href="#full-service">Full-Service Serverless (Cloud Run, App Runner)</a></li>
+      <li><a href="#specialized">Specialized Serverless (Val Town, DBOS, Inngest, Trigger.dev)</a></li>
+      <li><a href="#billing-gotcha">The Billing Gotcha: CPU-Time vs Wall-Clock-Time</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top serverless free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Free Invocations</th>
+        <th>Free Compute</th>
+        <th>Memory / CPU</th>
+        <th>Timeout</th>
+        <th>Billing Model</th>
+        <th>Cold Start</th>
+        <th>Always Free?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/aws" style="color:var(--text)">AWS Lambda</a> <span class="winner-badge">MOST INVOCATIONS</span></td>
+        <td style="font-family:var(--mono)">1M / month</td>
+        <td style="font-family:var(--mono)">400K GB-sec/mo</td>
+        <td>128 MB &ndash; 10 GB</td>
+        <td>15 min max</td>
+        <td>Wall-clock time</td>
+        <td>100&ndash;500ms (cold)</td>
+        <td style="color:#3fb950">Yes (Always Free)</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Functions</a></td>
+        <td style="font-family:var(--mono)">2M / month</td>
+        <td style="font-family:var(--mono)">400K GB-sec + 200K GHz-sec</td>
+        <td>128 MB &ndash; 32 GB</td>
+        <td>9 min (1st gen) / 60 min (2nd gen)</td>
+        <td>Wall-clock time</td>
+        <td>200&ndash;800ms (cold)</td>
+        <td style="color:#3fb950">Yes (Always Free)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/azure" style="color:var(--text)">Azure Functions</a></td>
+        <td style="font-family:var(--mono)">1M / month</td>
+        <td style="font-family:var(--mono)">400K GB-sec/mo</td>
+        <td>1.5 GB max (Consumption)</td>
+        <td>5 min (default) / 10 min (max)</td>
+        <td>Wall-clock time</td>
+        <td>200&ndash;1000ms (cold)</td>
+        <td style="color:#3fb950">Yes (Always Free)</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Run</a> <span class="winner-badge">MOST GENEROUS</span></td>
+        <td style="font-family:var(--mono)">2M / month</td>
+        <td style="font-family:var(--mono)">360K GB-sec + 180K vCPU-sec</td>
+        <td>Up to 32 GB / 8 vCPU</td>
+        <td>60 min max</td>
+        <td>Wall-clock time (request-based)</td>
+        <td>100&ndash;500ms (cold)</td>
+        <td style="color:#3fb950">Yes (Always Free)</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/cloudflare-workers" style="color:var(--text)">Cloudflare Workers</a> <span class="winner-badge">BEST EDGE</span></td>
+        <td style="font-family:var(--mono)">100K / day (~3M/mo)</td>
+        <td style="font-family:var(--mono)">10ms CPU time / invocation</td>
+        <td>128 MB RAM</td>
+        <td>30s (HTTP) / 15 min (Cron)</td>
+        <td><strong style="color:#3fb950">CPU time only</strong></td>
+        <td>&lt;5ms (near-zero)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/vercel" style="color:var(--text)">Vercel Edge Functions</a></td>
+        <td style="font-family:var(--mono)">1M edge requests/mo</td>
+        <td style="font-family:var(--mono)">4 hrs Active CPU/mo</td>
+        <td>128 MB (Edge) / 1 GB (Serverless)</td>
+        <td>25s (Hobby)</td>
+        <td>Wall-clock time (credit-based)</td>
+        <td>&lt;5ms (Edge) / 250ms (Serverless)</td>
+        <td style="color:#3fb950">Yes (Hobby)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
+        <td style="font-family:var(--mono)">1M / month</td>
+        <td style="font-family:var(--mono)">15 hrs CPU time/mo</td>
+        <td>512 MB RAM</td>
+        <td>No hard limit</td>
+        <td>CPU time</td>
+        <td>&lt;10ms (near-zero)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/val-town" style="color:var(--text)">Val Town</a></td>
+        <td style="font-family:var(--mono)">100K runs/day</td>
+        <td style="font-family:var(--mono)">1 min wall clock / run</td>
+        <td>Managed (V8 isolates)</td>
+        <td>1 min per run</td>
+        <td>Run-based</td>
+        <td>&lt;50ms</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/dbos" style="color:var(--text)">DBOS</a></td>
+        <td style="font-family:var(--mono)">1M service calls/mo</td>
+        <td style="font-family:var(--mono)">1 microVM (512 MB, 1 vCPU)</td>
+        <td>512 MB / 1 vCPU</td>
+        <td>No hard limit</td>
+        <td>Service call-based</td>
+        <td>Scale-to-zero (seconds)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Inngest</td>
+        <td style="font-family:var(--mono)">50K executions/mo</td>
+        <td style="font-family:var(--mono)">100K events/mo</td>
+        <td>Runs on your serverless</td>
+        <td>Configurable retries</td>
+        <td>Execution-based</td>
+        <td>Depends on host</td>
+        <td style="color:#3fb950">Yes (Hobby)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Trigger.dev</td>
+        <td style="font-family:var(--mono)">$5 free compute/mo</td>
+        <td style="font-family:var(--mono)">20 concurrent runs</td>
+        <td>Managed compute</td>
+        <td>No hard limit</td>
+        <td>Compute time-based</td>
+        <td>Warm pool available</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Key takeaway:</strong> The main comparison table reveals two distinct models. <strong>Traditional FaaS</strong> (Lambda, Cloud Functions, Azure Functions) bills by wall-clock time with generous monthly invocation counts. <strong>Edge platforms</strong> (Workers, Deno Deploy) bill by CPU time with near-zero cold starts. <strong>Cloud Run</strong> bridges the gap as a container-based serverless with the most generous free tier overall. For background jobs, <strong>Inngest</strong> and <strong>Trigger.dev</strong> offer serverless workflow orchestration rather than raw compute.
+  </div>
+
+  <h2 id="traditional-faas">Traditional FaaS</h2>
+  <p class="section-intro">The big three cloud providers&rsquo; serverless compute offerings. These are the most mature platforms with the largest ecosystems, but they all bill by wall-clock time.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Invocations</th>
+        <th>Free Compute</th>
+        <th>Ecosystem</th>
+        <th>Languages</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">AWS Lambda <span class="winner-badge">LARGEST ECOSYSTEM</span></td>
+        <td style="font-family:var(--mono)">1M / month</td>
+        <td style="font-family:var(--mono)">400K GB-sec</td>
+        <td>API Gateway, DynamoDB, S3, SQS, SNS, EventBridge</td>
+        <td>Node.js, Python, Go, Java, .NET, Rust, Ruby</td>
+        <td>AWS-native backends, event-driven architectures</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Google Cloud Functions <span class="winner-badge">MOST FREE INVOCATIONS</span></td>
+        <td style="font-family:var(--mono)">2M / month</td>
+        <td style="font-family:var(--mono)">400K GB-sec + 200K GHz-sec</td>
+        <td>Cloud Run, Firestore, Pub/Sub, Cloud Storage</td>
+        <td>Node.js, Python, Go, Java, .NET, Ruby, PHP</td>
+        <td>GCP-native, Firebase integrations</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure Functions</td>
+        <td style="font-family:var(--mono)">1M / month</td>
+        <td style="font-family:var(--mono)">400K GB-sec</td>
+        <td>Cosmos DB, Service Bus, Event Grid, Storage</td>
+        <td>Node.js, Python, Java, .NET, PowerShell</td>
+        <td>Microsoft/.NET shops, enterprise integrations</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>AWS Lambda vs Google Cloud Functions vs Azure Functions:</strong> All three offer similar free compute (400K GB-seconds). <strong>Google Cloud Functions</strong> leads on invocations (2M vs 1M). <strong>AWS Lambda</strong> has the largest ecosystem and most third-party integrations. <strong>Azure Functions</strong> is the natural choice for .NET/Microsoft shops. <strong>Important:</strong> All three charge for <strong>API Gateway</strong> separately — Lambda invocations are free, but the API Gateway to expose them adds $3.50/million requests (AWS). Google Cloud Functions includes HTTP triggers for free; Azure Functions uses Azure Functions Premium for custom domains.
+  </div>
+
+  <h2 id="edge-compute">Edge Compute</h2>
+  <p class="section-intro">Serverless platforms that run code at the edge (CDN PoPs worldwide). Near-zero cold starts, global distribution, but more constrained runtimes.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Cold Start</th>
+        <th>Runtime</th>
+        <th>Storage</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Cloudflare Workers <span class="winner-badge">BEST EDGE</span></td>
+        <td>100K req/day, 10ms CPU/req</td>
+        <td>&lt;5ms</td>
+        <td>V8 isolates (JS/TS/Wasm)</td>
+        <td>KV: 1 GB, D1: 5 GB, R2: 10 GB</td>
+        <td>APIs, edge logic, full-stack apps</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Vercel Edge Functions</td>
+        <td>1M edge req/mo, 4 hrs CPU</td>
+        <td>&lt;5ms</td>
+        <td>V8 isolates (JS/TS)</td>
+        <td>Blob: 1 GB, KV: via Vercel KV</td>
+        <td>Next.js middleware, edge API routes</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Deno Deploy</td>
+        <td>1M req/mo, 15 hrs CPU, 100 GB egress</td>
+        <td>&lt;10ms</td>
+        <td>Deno runtime (JS/TS, Web APIs)</td>
+        <td>KV: 1 GB (450K reads/mo)</td>
+        <td>Deno/Fresh apps, Web API-native code</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Cloudflare Workers leads the edge:</strong> The combination of 100K daily requests, near-zero cold starts, and integrated storage (KV, D1, R2, Durable Objects, Queues) makes Workers the most complete edge platform. <strong>Vercel Edge Functions</strong> are ideal if you&rsquo;re already on Vercel/Next.js. <strong>Deno Deploy</strong> offers the most developer-friendly experience with native TypeScript, Web APIs, and built-in KV storage. All three use V8 isolates for instant startup — a fundamentally different architecture from container-based FaaS.
+  </div>
+
+  <h2 id="full-service">Full-Service Serverless</h2>
+  <p class="section-intro">Container-based serverless that runs any Docker image — more flexibility than FaaS, with scale-to-zero on the free tier.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Container Support</th>
+        <th>Concurrency</th>
+        <th>Egress</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Google Cloud Run <span class="winner-badge">BEST CONTAINER SERVERLESS</span></td>
+        <td>2M req/mo, 360K GB-sec, 180K vCPU-sec</td>
+        <td class="check">Any Docker image</td>
+        <td>Up to 1000 concurrent per instance</td>
+        <td>1 GB North America free</td>
+        <td>Containerized APIs, microservices</td>
+      </tr>
+      <tr>
+        <td class="provider-col">AWS App Runner</td>
+        <td>No always-free tier (trial credits only)</td>
+        <td class="check">Any Docker image or source code</td>
+        <td>Configurable</td>
+        <td>Standard AWS egress</td>
+        <td>Simple container deployments on AWS</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Cloud Run is the clear winner here</strong> — it&rsquo;s the only container-based serverless with a genuinely generous always-free tier. You can run any Docker image, handle up to 1000 concurrent requests per instance, and the 2M requests/month free tier is competitive with any FaaS. <strong>AWS App Runner</strong> doesn&rsquo;t have an always-free tier, making it a non-starter for free-tier comparisons. For containerized workloads that need more than FaaS constraints allow, Cloud Run is the answer.
+  </div>
+
+  <h2 id="specialized">Specialized Serverless</h2>
+  <p class="section-intro">Purpose-built serverless platforms for specific workloads — scripting, durable workflows, background jobs, and orchestration.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Specialty</th>
+        <th>Durability</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Val Town</td>
+        <td>100K runs/day, unlimited public vals</td>
+        <td>Script-as-a-service, shareable functions</td>
+        <td>SQLite storage, blob storage</td>
+        <td>Quick scripts, prototypes, public APIs, MCP servers</td>
+      </tr>
+      <tr>
+        <td class="provider-col">DBOS</td>
+        <td>1M service calls/mo, 1 microVM</td>
+        <td>Durable workflow orchestration</td>
+        <td class="check">Built-in (transactional, exactly-once)</td>
+        <td>Transactional workflows, reliable background processing</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Inngest</td>
+        <td>50K executions/mo, 100K events</td>
+        <td>Event-driven workflow orchestration</td>
+        <td class="check">Built-in retries, step functions</td>
+        <td>Background jobs, scheduled tasks, event-driven workflows</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Trigger.dev</td>
+        <td>$5 free compute/mo, 20 concurrent</td>
+        <td>Background jobs with managed compute</td>
+        <td class="check">Durable execution, retries</td>
+        <td>Long-running background jobs, scheduled tasks</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Cloudflare Durable Objects</td>
+        <td>100K requests/day (on Workers free)</td>
+        <td>Stateful serverless compute</td>
+        <td class="check">Strongly consistent, WebSocket hibernation</td>
+        <td>Real-time collaboration, stateful edge computing</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Val Town</strong> is the easiest way to get serverless functions running — write a function, get a URL, share it with anyone. Great for prototyping and small tools. <strong>DBOS</strong> solves a hard problem: durable, exactly-once execution with transactional guarantees. <strong>Inngest</strong> and <strong>Trigger.dev</strong> both handle background jobs but with different models — Inngest is event-driven (runs on your serverless), Trigger.dev provides managed compute. <strong>Cloudflare Durable Objects</strong> uniquely enables stateful serverless at the edge.
+  </div>
+
+  <h2 id="billing-gotcha">The Billing Gotcha: CPU-Time vs Wall-Clock-Time</h2>
+  <p class="section-intro">This is the most important and least understood difference between serverless platforms. It can change your effective cost by 10-50x.</p>
+
+  <div class="diff-card" style="border-left-color:#3fb950">
+    <h3>Wall-clock-time billing (AWS Lambda, Cloud Functions, Azure Functions, Cloud Run)</h3>
+    <p class="diff-desc">You pay for the <strong>total elapsed time</strong> of your function, including time spent <strong>waiting</strong> for database queries, HTTP requests, file I/O, and external API responses. A function that takes 500ms but spends 480ms waiting for a database query still costs 500ms of compute.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#3b82f6">
+    <h3>CPU-time billing (Cloudflare Workers, Deno Deploy)</h3>
+    <p class="diff-desc">You pay only for <strong>actual CPU cycles</strong> used. Time spent waiting for I/O is <strong>free</strong>. That same function that takes 500ms but only uses 20ms of CPU time costs only 20ms. For I/O-heavy workloads (most web APIs), this is dramatically cheaper.</p>
+  </div>
+
+  <div class="context-box">
+    <strong>Concrete example:</strong> An API endpoint that queries a database (200ms), calls an external API (150ms), and does 10ms of processing:<br><br>
+    &bull; <strong>AWS Lambda:</strong> Billed for ~360ms wall-clock time at 128 MB = 0.000046 GB-seconds<br>
+    &bull; <strong>Cloudflare Workers:</strong> Billed for ~10ms CPU time only<br><br>
+    At scale (1M requests/month), this difference is significant. The Lambda function uses ~46 GB-seconds per million requests. The Workers function uses ~10,000ms (10 seconds) of total CPU per million requests — well within the free tier&rsquo;s 10ms-per-request limit. <strong>For I/O-heavy APIs, Workers can be effectively 10-50x cheaper than Lambda.</strong>
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>When to Pick Each Serverless Platform</h3>
+
+    <div class="verdict-item">
+      <strong>API backends (high traffic) &rarr; AWS Lambda or Google Cloud Run</strong>
+      <p>Lambda for event-driven microservices in the AWS ecosystem. Cloud Run for containerized APIs with the most generous free tier (2M req/month). Both handle production-scale traffic. <a href="/cloud-free-tier-comparison-2026">Cloud comparison &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Edge / low-latency APIs &rarr; Cloudflare Workers</strong>
+      <p>100K requests/day with sub-5ms cold starts, globally distributed. CPU-time billing makes I/O-heavy workloads dramatically cheaper. Integrated KV, D1, R2, and Durable Objects storage. <a href="/vendor/cloudflare-workers">View Workers details &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Quick scripts and prototypes &rarr; Val Town or Deno Deploy</strong>
+      <p>Val Town: write a function, get a URL. 100K runs/day free with MCP integration. Deno Deploy: full TypeScript runtime with Web APIs, 1M requests/month. Both offer instant deployment with no build step.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Next.js / Vercel projects &rarr; Vercel Edge Functions</strong>
+      <p>Seamless integration with Next.js middleware and edge API routes. 1M edge requests/month on the Hobby plan. Use Vercel&rsquo;s serverless functions for Node.js APIs, edge functions for latency-sensitive routes.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Existing cloud customers &rarr; Match your IaaS</strong>
+      <p>On AWS? Use Lambda. On GCP? Use Cloud Functions or Cloud Run. On Azure? Use Azure Functions. The free tiers are similar enough that ecosystem integration and team expertise matter more than marginal differences in invocation limits.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Background jobs and workflows &rarr; Inngest or Trigger.dev</strong>
+      <p>Inngest: event-driven workflow orchestration with 50K executions/month free. Trigger.dev: managed compute for long-running background jobs with $5 free compute/month. Both handle retries, scheduling, and durable execution. <a href="/hosting-alternatives">Hosting alternatives &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Durable / transactional workflows &rarr; DBOS</strong>
+      <p>1M service calls/month with exactly-once execution guarantees. Ideal for payment processing, multi-step workflows, and anything where partial failure is unacceptable. Open-source DBOS Transact library available for TypeScript, Python, Go, Java, Kotlin.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Stateful edge computing &rarr; Cloudflare Durable Objects</strong>
+      <p>Strongly consistent state at the edge with WebSocket hibernation. 100K requests/day on the free Workers plan. Unique capability — no other edge platform offers per-object consistency guarantees.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+  <p class="section-intro">Serverless free tiers have several non-obvious costs that can surprise you. Here&rsquo;s what to watch for.</p>
+
+  <div class="diff-card" style="border-left-color:#f85149">
+    <h3>API Gateway fees (AWS Lambda)</h3>
+    <p class="diff-desc"><strong>AWS Lambda</strong> invocations are free, but exposing them via <strong>API Gateway</strong> costs $3.50 per million requests (REST API) or $1.00 per million (HTTP API). For 1M Lambda invocations/month, the API Gateway bill can exceed $1-3.50. <strong>Google Cloud Functions</strong> and <strong>Azure Functions</strong> include HTTP triggers at no extra cost — a significant advantage over Lambda for HTTP workloads.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>Egress charges</h3>
+    <p class="diff-desc">Most serverless platforms charge for outbound data transfer beyond free tiers. <strong>AWS:</strong> 100 GB free (first 12 months), then $0.09/GB. <strong>GCP:</strong> 1 GB/month free (North America). <strong>Azure:</strong> 100 GB/month free. <strong>Cloudflare Workers:</strong> Unlimited egress (no bandwidth charges). <strong>Deno Deploy:</strong> 100 GB/month free. For bandwidth-heavy workloads, Workers&rsquo; unlimited egress is a major differentiator.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>Cold start mitigation costs</h3>
+    <p class="diff-desc"><strong>AWS Lambda</strong> Provisioned Concurrency eliminates cold starts but costs $0.015/GB-hour — not free tier eligible. <strong>Azure Functions Premium</strong> keeps instances warm but starts at ~$0.173/vCPU-hour. <strong>Edge platforms</strong> (Workers, Deno Deploy) avoid this entirely with V8 isolate architecture — cold starts under 5ms without any warm-up configuration.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>Vercel credit-based pricing complexity</h3>
+    <p class="diff-desc"><strong>Vercel</strong> restructured to a credit-based model in 2026. The Hobby plan includes 4 hours Active CPU and 360 GB-hours Provisioned Memory — but understanding how credits map to actual usage requires monitoring the Vercel dashboard. Serverless functions and edge functions consume credits differently, and overage charges apply automatically. <a href="/vendor/vercel">Vercel details &rarr;</a></p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#3fb950">
+    <h3>Workers CPU-time limit per invocation</h3>
+    <p class="diff-desc"><strong>Cloudflare Workers</strong> free tier limits each invocation to <strong>10ms CPU time</strong>. This is CPU time, not wall-clock time, so I/O waits don&rsquo;t count — but CPU-intensive tasks (heavy JSON parsing, image processing, crypto) can hit this limit. Paid Workers ($5/month) increases to 30 seconds CPU time per invocation. For most API workloads, 10ms CPU is sufficient.</p>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent serverless-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official pricing pages. We track pricing changes across all major serverless providers. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Related guides:</strong> <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> &middot; <a href="/hosting-alternatives">Hosting Alternatives</a> &middot; <a href="/free-devops-stack">Free DevOps Stack</a> &middot; <a href="/free-tier-risk">Free Tier Risk Index</a><br><br>
+    <strong>Query serverless pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare serverless providers, track pricing changes, or plan your infrastructure stack from your AI coding assistant.
+  </div>
+
+  ${buildMcpCta("Compare serverless free tiers, track pricing changes, and plan your infrastructure stack — all from your AI coding assistant.")}
 
   <h2>Related Guides</h2>
   <div class="related-pages">
@@ -24201,6 +24849,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cicd-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCicdFreeTierComparison2026Page());
+  } else if (url.pathname === "/serverless-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/serverless-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/serverless-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildServerlessFreeTierComparison2026Page());
   } else if (url.pathname === "/database-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/database-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
