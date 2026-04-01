@@ -4022,6 +4022,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "AWS",
     hubDesc: "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers — compute, databases, serverless, storage, startup credits, and hidden costs",
   },
+  {
+    slug: "database-free-tier-comparison-2026",
+    title: "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale",
+    metaDesc: "Side-by-side comparison of 10+ database free tiers in 2026. Compare Supabase, Neon, Firebase, Turso, MongoDB, CockroachDB, Upstash, Cloudflare D1, and more — storage, compute, connections, and lock-in risk.",
+    contextHtml: "",
+    tag: "database-free-tier-comparison-2026",
+    primaryVendor: "Supabase",
+    hubDesc: "Side-by-side comparison of 10+ database free tiers — Postgres, BaaS, edge, key-value, and vector databases compared",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -5246,6 +5255,7 @@ ${mcpCtaCss()}
   <div class="context">
     <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: in 2026, there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong> and <strong>CockroachDB's 10 GiB</strong>.</p>
     <p>This page compares every free database in our index, organized by type, with exact limits verified against live pricing pages. Whether you need a Postgres database, a Redis cache, an edge SQLite store, or a vector database for RAG — we've got the comparison.</p>
+    <p><strong>New:</strong> See our <a href="/database-free-tier-comparison-2026">Database Free Tier Comparison 2026</a> for a focused side-by-side matrix of the top 10 databases with use-case recommendations and the PlanetScale cautionary tale.</p>
   </div>
 
   ${changesHtml}
@@ -19043,7 +19053,7 @@ ${mcpCtaCss()}
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
     <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official cloud provider pricing pages. We track pricing changes across all 4 major clouds. Data is updated continuously as providers announce changes.<br><br>
-    <strong>Deep-dive guides:</strong> <a href="/aws-free-tier-2026">AWS</a> &middot; <a href="/gcp-free-tier-2026">GCP</a> &middot; <a href="/azure-free-tier-2026">Azure</a> &middot; <a href="/digitalocean-free-tier-2026">DigitalOcean</a><br><br>
+    <strong>Deep-dive guides:</strong> <a href="/aws-free-tier-2026">AWS</a> &middot; <a href="/gcp-free-tier-2026">GCP</a> &middot; <a href="/azure-free-tier-2026">Azure</a> &middot; <a href="/digitalocean-free-tier-2026">DigitalOcean</a> &middot; <a href="/database-free-tier-comparison-2026">Databases</a><br><br>
     <strong>Query cloud pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare cloud services, track pricing changes, or plan your infrastructure stack from your AI coding assistant.
   </div>
 
@@ -19055,6 +19065,682 @@ ${mcpCtaCss()}
       <div class="link-title">${escHtmlServer(p.title)}</div>
       <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
     </a>`).join("\n    ")}
+  </div>
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Database Free Tier Comparison 2026 ---
+
+function buildDatabaseFreeTierComparison2026Page(): string {
+  const title = "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale";
+  const metaDescDb = "Side-by-side comparison of 10+ database free tiers in 2026. Compare Supabase, Neon, Firebase, Turso, MongoDB, CockroachDB, Upstash, Cloudflare D1, and more — storage, compute, connections, and lock-in risk.";
+  const slug = "database-free-tier-comparison-2026";
+  const pubDate = "2026-03-31";
+
+  // Collect database-related deal changes
+  const dbVendorKeywords = ["Supabase", "Neon", "Firebase", "Turso", "PlanetScale", "MongoDB", "CockroachDB", "Upstash", "Cloudflare D1", "Redis", "Appwrite", "Convex", "Weaviate", "Zilliz", "Aiven", "Aurora", "Neo4j", "Hasura"];
+  const dbChanges = dealChanges.filter((c: any) =>
+    dbVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = dbChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["database-alternatives", "neon-vs-supabase", "supabase-vs-firebase", "cloud-free-tier-comparison-2026", "free-tier-risk", "free-startup-stack", "firebase-alternatives", "mongodb-alternatives", "redis-alternatives"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = dbChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No database-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescDb,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescDb)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescDb)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Database Free Tier Comparison</div>
+  <h1>Database Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 44 database services compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">44</div><div class="stat-label">Database Services</div></div>
+    <div class="stat-card"><div class="stat-number green">Supabase</div><div class="stat-label">Most Generous All-in-One</div></div>
+    <div class="stat-card"><div class="stat-number green">Neon</div><div class="stat-label">Best Pure Postgres</div></div>
+    <div class="stat-card"><div class="stat-number red">PlanetScale</div><div class="stat-label">Free Tier Removed</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>Supabase</strong> wins for most developers — 500 MB Postgres, auth, storage, and real-time in one package. <strong>Neon</strong> is better for pure Postgres needs — scale-to-zero, branching, and 0.5 GB storage per project with up to 100 projects. <strong>Firebase</strong> has the largest ecosystem (auth, hosting, Cloud Functions) but locks you into Google. <strong>Turso</strong> is the edge play — SQLite with embedded replicas for ultra-low-latency reads. <strong>PlanetScale</strong> removed its free tier in April 2024, making it a cautionary tale for relying on free database hosting.</p>
+    <p><strong>The database landscape has shifted:</strong> Serverless Postgres (Neon, Supabase) has won the developer mindshare battle. Edge databases (Turso, Cloudflare D1) are the new frontier. Traditional managed databases (RDS, Cloud SQL) are being replaced by platform-specific alternatives. And the PlanetScale free tier removal showed that even popular free tiers can disappear overnight.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#postgres">Postgres-Compatible</a></li>
+      <li><a href="#baas">Firebase / BaaS</a></li>
+      <li><a href="#edge">Edge / Embedded</a></li>
+      <li><a href="#kv">Key-Value / Cache</a></li>
+      <li><a href="#vector">Vector Databases</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#planetscale">The PlanetScale Cautionary Tale</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top 10 database free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Database</th>
+        <th>Type</th>
+        <th>Free Storage</th>
+        <th>Compute / Connections</th>
+        <th>Special Limits</th>
+        <th>Branching</th>
+        <th>Always Free?</th>
+        <th>Lock-in Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase</a> <span class="winner-badge">BEST ALL-IN-ONE</span></td>
+        <td>Postgres + BaaS</td>
+        <td style="font-family:var(--mono)">500 MB</td>
+        <td>Unlimited API requests, pooled connections</td>
+        <td>50K MAU, 1 GB file storage, 2 GB egress</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+        <td style="color:#3fb950">Low (standard Postgres)</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/neon" style="color:var(--text)">Neon</a> <span class="winner-badge">BEST POSTGRES</span></td>
+        <td>Serverless Postgres</td>
+        <td style="font-family:var(--mono)">0.5 GB/project</td>
+        <td>100 CU-hours/mo, scale-to-zero</td>
+        <td>100 projects, 10 branches/project</td>
+        <td class="check">Yes (10/project)</td>
+        <td style="color:#3fb950">Yes</td>
+        <td style="color:#3fb950">Low (standard Postgres)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/firebase" style="color:var(--text)">Firebase</a></td>
+        <td>NoSQL (Firestore) + BaaS</td>
+        <td style="font-family:var(--mono)">1 GiB</td>
+        <td>50K reads/day, 20K writes/day</td>
+        <td>50K MAU auth, 2M Cloud Functions</td>
+        <td class="cross">No</td>
+        <td style="color:#d29922">Mostly (Storage removed Feb 2026)</td>
+        <td style="color:#f85149">High (proprietary)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/turso" style="color:var(--text)">Turso</a></td>
+        <td>Edge SQLite</td>
+        <td style="font-family:var(--mono)">5 GB</td>
+        <td>500M rows read/mo, 10M rows written/mo</td>
+        <td>100 databases</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+        <td style="color:#d29922">Medium (libSQL fork)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/mongodb-atlas" style="color:var(--text)">MongoDB Atlas</a></td>
+        <td>Document NoSQL</td>
+        <td style="font-family:var(--mono)">512 MB</td>
+        <td>Shared cluster (M0), 100 connections</td>
+        <td>AWS/Azure/GCP regions</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+        <td style="color:#d29922">Medium (MongoDB query language)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/cockroachdb" style="color:var(--text)">CockroachDB</a></td>
+        <td>Distributed SQL</td>
+        <td style="font-family:var(--mono)">10 GiB</td>
+        <td>50M Request Units/mo</td>
+        <td>Scales to zero, single region</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+        <td style="color:#3fb950">Low (Postgres-compatible)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/cloudflare-d1" style="color:var(--text)">Cloudflare D1</a></td>
+        <td>Edge SQLite</td>
+        <td style="font-family:var(--mono)">5 GB</td>
+        <td>5M rows read/day, 100K rows written/day</td>
+        <td>Resets daily at midnight UTC</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+        <td style="color:#d29922">Medium (Cloudflare ecosystem)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/upstash" style="color:var(--text)">Upstash</a></td>
+        <td>Serverless Redis + KV</td>
+        <td style="font-family:var(--mono)">256 MB</td>
+        <td>500K commands/mo</td>
+        <td>QStash: 1K messages/day</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+        <td style="color:#3fb950">Low (Redis-compatible)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/convex" style="color:var(--text)">Convex</a></td>
+        <td>Reactive backend</td>
+        <td style="font-family:var(--mono)">0.5 GB</td>
+        <td>1M function calls/mo</td>
+        <td>1 GB file storage, real-time sync</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+        <td style="color:#f85149">High (proprietary)</td>
+      </tr>
+      <tr style="background:rgba(248,81,73,0.08)">
+        <td class="provider-col"><span style="color:var(--text-dim);text-decoration:line-through">PlanetScale</span> <span class="removed-badge">REMOVED</span></td>
+        <td>Serverless MySQL</td>
+        <td style="font-family:var(--mono);color:var(--text-dim)">Was 5 GB</td>
+        <td style="color:var(--text-dim)">Was 1B row reads/mo</td>
+        <td style="color:var(--text-dim)">Removed April 2024</td>
+        <td style="color:var(--text-dim)">Was included</td>
+        <td style="color:#f85149">No (removed)</td>
+        <td style="color:#f85149">High (proprietary Vitess)</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Storage leaders:</strong> CockroachDB (10 GiB) and Turso/Cloudflare D1 (5 GB each) offer the most free storage. <strong>Supabase</strong> has the most complete free package (Postgres + auth + storage + real-time). <strong>Neon</strong> lets you create up to 100 projects with 0.5 GB each — ideal for microservices or per-client databases. PlanetScale's removal in April 2024 was one of the most impactful free tier changes in developer tooling history.
+  </div>
+
+  <h2 id="postgres">Postgres-Compatible Databases</h2>
+  <p class="section-intro">Postgres is the developer favorite for relational data. Four major managed Postgres options offer free tiers with very different trade-offs.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Storage</th>
+        <th>Compute</th>
+        <th>Branching</th>
+        <th>Scale-to-Zero</th>
+        <th>Extra Features</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Supabase <span class="winner-badge">MOST COMPLETE</span></td>
+        <td style="font-family:var(--mono)">500 MB</td>
+        <td>Shared instance, always-on</td>
+        <td class="cross">No</td>
+        <td class="partial">Pauses after 1 week inactive</td>
+        <td>Auth (50K MAU), Storage (1 GB), Real-time, Edge Functions</td>
+        <td>Full-stack apps</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Neon <span class="winner-badge">BEST DX</span></td>
+        <td style="font-family:var(--mono)">0.5 GB/project</td>
+        <td>100 CU-hours/mo, auto-scales</td>
+        <td class="check">10 branches/project</td>
+        <td class="check">Yes (instant resume)</td>
+        <td>Database branching, point-in-time restore, connection pooling</td>
+        <td>Postgres purists, CI/CD preview DBs</td>
+      </tr>
+      <tr>
+        <td class="provider-col">CockroachDB</td>
+        <td style="font-family:var(--mono)">10 GiB</td>
+        <td>50M Request Units/mo</td>
+        <td class="cross">No</td>
+        <td class="check">Yes</td>
+        <td>Distributed SQL, automatic failover, Postgres wire protocol</td>
+        <td>Startups needing horizontal scale</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Nile</td>
+        <td style="font-family:var(--mono)">1 GB</td>
+        <td>50M query tokens, 500 max connections</td>
+        <td class="cross">No</td>
+        <td class="cross">Always-on (no cold starts)</td>
+        <td>Built-in multi-tenancy, unlimited tenant DBs</td>
+        <td>SaaS / multi-tenant apps</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Supabase vs Neon:</strong> The most common comparison. Choose <strong>Supabase</strong> if you want a Firebase-like experience with auth, storage, and real-time built in. Choose <strong>Neon</strong> if you want the best pure Postgres experience with branching and scale-to-zero. Supabase projects pause after 1 week of inactivity; Neon scales to zero but resumes instantly. See our detailed <a href="/neon-vs-supabase">Neon vs Supabase comparison</a>.
+  </div>
+
+  <h2 id="baas">Firebase / BaaS Databases</h2>
+  <p class="section-intro">Backend-as-a-Service platforms bundle a database with auth, hosting, and serverless functions. Great for getting started fast, but watch for lock-in.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Database Type</th>
+        <th>Free Storage</th>
+        <th>Auth</th>
+        <th>Functions</th>
+        <th>Real-time</th>
+        <th>Lock-in</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Firebase <span class="caution-badge">ECOSYSTEM LOCK-IN</span></td>
+        <td>Firestore (document)</td>
+        <td style="font-family:var(--mono)">1 GiB</td>
+        <td class="check">50K MAU</td>
+        <td class="check">2M invocations/mo</td>
+        <td class="check">Yes</td>
+        <td style="color:#f85149">High — proprietary API, hard to migrate</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Supabase <span class="winner-badge">OPEN SOURCE</span></td>
+        <td>Postgres (relational)</td>
+        <td style="font-family:var(--mono)">500 MB</td>
+        <td class="check">50K MAU</td>
+        <td class="check">Edge Functions</td>
+        <td class="check">Yes</td>
+        <td style="color:#3fb950">Low — standard Postgres, self-hostable</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Appwrite Cloud</td>
+        <td>Document-based</td>
+        <td style="font-family:var(--mono)">2 GB</td>
+        <td class="check">75K MAU</td>
+        <td class="check">750K executions/mo</td>
+        <td class="check">Yes</td>
+        <td style="color:#3fb950">Low — fully open-source, self-hostable</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Convex</td>
+        <td>Reactive document</td>
+        <td style="font-family:var(--mono)">0.5 GB</td>
+        <td class="partial">Via Clerk/Auth0 integration</td>
+        <td class="check">1M calls/mo</td>
+        <td class="check">Yes (built-in)</td>
+        <td style="color:#f85149">High — proprietary query language</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Firebase had major free tier changes in early 2026:</strong> Cloud Storage was removed from the Spark (free) plan in February 2026, and Firebase Studio (formerly Project IDX) was discontinued in March. If you're starting new, <strong>Supabase</strong> gives you a similar feature set on standard Postgres with no lock-in. <strong>Appwrite</strong> has the most generous free tier (75K MAU) and is fully open-source. See our <a href="/supabase-vs-firebase">Supabase vs Firebase comparison</a>.
+  </div>
+
+  <h2 id="edge">Edge / Embedded Databases</h2>
+  <p class="section-intro">Edge databases replicate data close to users for ultra-low-latency reads. The new frontier in database architecture.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Engine</th>
+        <th>Free Storage</th>
+        <th>Read Limits</th>
+        <th>Write Limits</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Turso <span class="winner-badge">BEST EDGE DB</span></td>
+        <td>libSQL (SQLite fork)</td>
+        <td style="font-family:var(--mono)">5 GB</td>
+        <td>500M rows/mo</td>
+        <td>10M rows/mo</td>
+        <td>Multi-region reads, mobile/IoT</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Cloudflare D1</td>
+        <td>SQLite</td>
+        <td style="font-family:var(--mono)">5 GB</td>
+        <td>5M rows/day</td>
+        <td>100K rows/day</td>
+        <td>Cloudflare Workers ecosystem</td>
+      </tr>
+      <tr>
+        <td class="provider-col">PocketBase</td>
+        <td>SQLite</td>
+        <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td>Single-binary backend, hobby projects</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Turso leads edge databases</strong> with 5 GB storage and 500M rows read/month on the free tier. Cloudflare D1 matches on storage but has daily read/write resets (useful for batch workloads, limiting for sustained traffic). PocketBase is free and unlimited but requires self-hosting — it's a single Go binary with SQLite, auth, and real-time built in.
+  </div>
+
+  <h2 id="kv">Key-Value / Cache Databases</h2>
+  <p class="section-intro">For caching, session storage, rate limiting, and real-time counters. Redis-compatible options dominate this category.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Engine</th>
+        <th>Free Storage</th>
+        <th>Free Operations</th>
+        <th>Persistence</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Upstash <span class="winner-badge">BEST SERVERLESS</span></td>
+        <td>Redis-compatible</td>
+        <td style="font-family:var(--mono)">256 MB</td>
+        <td>500K commands/mo</td>
+        <td class="check">Yes</td>
+        <td>Serverless apps, rate limiting</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Cloudflare KV</td>
+        <td>Key-value</td>
+        <td style="font-family:var(--mono)">1 GB</td>
+        <td>100K reads/day, 1K writes/day</td>
+        <td class="check">Yes (eventually consistent)</td>
+        <td>Edge config, feature flags</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Momento</td>
+        <td>Cache + pub/sub</td>
+        <td style="font-family:var(--mono)">5 GB transfer/mo</td>
+        <td>Unlimited (within transfer limit)</td>
+        <td class="cross">Cache only</td>
+        <td>High-throughput caching</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Redis Cloud</td>
+        <td>Redis</td>
+        <td style="font-family:var(--mono)">30 MB</td>
+        <td>Unlimited (shared)</td>
+        <td class="check">Yes</td>
+        <td>Dev/test Redis instances</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Upstash is the standout</strong> for serverless Redis — 256 MB data and 500K commands/month with true pay-per-request pricing beyond the free tier. Cloudflare KV has more storage (1 GB) but very low write limits (1K/day) making it best for read-heavy config data. Redis Cloud's 30 MB free tier is tiny but useful for development. <strong>Note:</strong> Redis switched to a non-open-source license (SSPL/RSALv2) in March 2024 — Valkey and Dragonfly are now the leading open-source alternatives.
+  </div>
+
+  <h2 id="vector">Vector Databases</h2>
+  <p class="section-intro">Essential for AI/ML workloads — similarity search, RAG pipelines, and embedding storage. The fastest-growing database category in 2026.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Vectors</th>
+        <th>Free Storage</th>
+        <th>Deployment</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Weaviate</td>
+        <td>Unlimited (self-hosted)</td>
+        <td>Unlimited (self-hosted)</td>
+        <td>OSS: free. Cloud: 14-day sandbox</td>
+        <td>Self-hosted vector search</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Zilliz Cloud</td>
+        <td style="font-family:var(--mono)">Up to 5 collections</td>
+        <td style="font-family:var(--mono)">5 GB</td>
+        <td>Free tier, no credit card</td>
+        <td>Managed Milvus, large-scale vector search</td>
+      </tr>
+      <tr>
+        <td class="provider-col">LanceDB</td>
+        <td>Unlimited (embedded)</td>
+        <td>Unlimited (embedded)</td>
+        <td>OSS: free. Cloud: $100 credits</td>
+        <td>Embedded vector search, local development</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Upstash Vector</td>
+        <td style="font-family:var(--mono)">10K vectors</td>
+        <td>1536 dimensions</td>
+        <td>Serverless, no credit card</td>
+        <td>Lightweight RAG, serverless apps</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>For self-hosted:</strong> Weaviate and LanceDB are both fully open-source with no limits. <strong>For managed:</strong> Zilliz Cloud has the most generous free tier (5 GB storage, 5 collections). Upstash Vector is the simplest to set up (serverless, 10K vectors free) but limited for production workloads. If you're building RAG pipelines, Zilliz or self-hosted Weaviate are the strongest options.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>When to Pick Each Database</h3>
+
+    <div class="verdict-item">
+      <strong>Side project / hobby app &rarr; Supabase</strong>
+      <p>Most complete free package: Postgres + auth (50K MAU) + file storage (1 GB) + real-time + Edge Functions. Everything you need in one service with standard Postgres underneath. <a href="/vendor/supabase">View Supabase details &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Pure Postgres / CI preview DBs &rarr; Neon</strong>
+      <p>Best developer experience for Postgres. Branching lets you create instant database copies for CI/CD preview environments. Scale-to-zero means you only pay compute when queries run. Up to 100 free projects. <a href="/neon-vs-supabase">Neon vs Supabase comparison &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Real-time mobile app &rarr; Firebase</strong>
+      <p>Unmatched mobile SDK ecosystem. Firestore real-time sync, Firebase Auth, Cloud Messaging, and Crashlytics — all free tier. Just be aware of the proprietary lock-in and the Feb 2026 Storage removal from Spark plan. <a href="/supabase-vs-firebase">Supabase vs Firebase comparison &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Edge / low-latency reads &rarr; Turso</strong>
+      <p>5 GB storage with embedded replicas for reads at the edge. libSQL (SQLite fork) means familiar SQL with no ORM required. Best for apps where read latency matters more than write throughput. <a href="/vendor/turso">View Turso details &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>AI / vector workloads &rarr; Zilliz Cloud or Weaviate</strong>
+      <p>Zilliz Cloud: 5 GB free managed Milvus with up to 5 collections. Weaviate: unlimited self-hosted. For simple RAG prototypes, Upstash Vector (10K vectors) gets you started fastest. <a href="/ai-ml-alternatives">AI/ML tools guide &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Startup scaling to production &rarr; CockroachDB or Neon</strong>
+      <p>CockroachDB: 10 GiB free, distributed SQL, automatic failover — start free and scale horizontally. Neon: serverless Postgres with usage-based pricing beyond free tier. Both have Postgres-compatible wire protocols for easy migration.</p>
+    </div>
+  </div>
+
+  <h2 id="planetscale">The PlanetScale Cautionary Tale</h2>
+  <p class="section-intro">In April 2024, PlanetScale removed its free Hobby plan — one of the most impactful free tier removals in developer tooling history.</p>
+
+  <div class="diff-card" style="border-left-color:#f85149">
+    <h3>What happened <span style="font-size:.75rem;color:#f85149;font-weight:400">April 2024</span></h3>
+    <p class="diff-desc">PlanetScale shut down all free Hobby plan databases after a 30-day grace period. The free tier had been generous: 5 GB storage, 1 billion row reads/month, 10 million row writes/month, and database branching. Thousands of developers had to migrate overnight.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>Why it matters</h3>
+    <p class="diff-desc">PlanetScale's free tier was widely recommended in tutorials, courses, and starter templates. Its removal broke thousands of hobby projects and forced a mass migration to Neon, Supabase, and Turso. It demonstrated that <strong>even popular, well-funded companies can eliminate free tiers</strong> when business priorities shift.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#3fb950">
+    <h3>Lessons for choosing a database</h3>
+    <p class="diff-desc"><strong>1. Prefer standard Postgres.</strong> If you use standard SQL, migration is straightforward. PlanetScale's Vitess-based MySQL with custom branching was harder to migrate from.<br>
+    <strong>2. Check our <a href="/free-tier-risk">Free Tier Risk Index</a></strong> — we score 38 vendors by free tier sustainability risk.<br>
+    <strong>3. Have a migration plan.</strong> Export your schema and data regularly. Test imports on your backup database provider.<br>
+    <strong>4. Watch for signals:</strong> funding changes, pricing restructuring, reduced limits. We track all of these in our <a href="/changes">pricing changes timeline</a>.</p>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent database-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers across 44 database services, verified against official pricing pages. We track pricing changes across all major database providers. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Related guides:</strong> <a href="/database-alternatives">Database Alternatives</a> &middot; <a href="/neon-vs-supabase">Neon vs Supabase</a> &middot; <a href="/supabase-vs-firebase">Supabase vs Firebase</a> &middot; <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a><br><br>
+    <strong>Query database pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare databases, track pricing changes, or plan your data stack from your AI coding assistant.
+  </div>
+
+  ${buildMcpCta("Compare database free tiers, track pricing changes, and plan your data stack — all from your AI coding assistant.")}
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
   </div>
 
   <div class="search-cta">
@@ -22840,6 +23526,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digitalocean-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildDigitalOceanFreeTier2026Page());
+  } else if (url.pathname === "/database-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/database-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDatabaseFreeTierComparison2026Page());
   } else if (url.pathname === "/cloud-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/cloud-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cloud-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

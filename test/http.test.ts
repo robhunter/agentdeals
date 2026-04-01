@@ -2774,6 +2774,39 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
+  it("GET /database-free-tier-comparison-2026 renders database comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/database-free-tier-comparison-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Database Free Tier Comparison 2026"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Supabase"), "Should mention Supabase");
+    assert.ok(html.includes("Neon"), "Should mention Neon");
+    assert.ok(html.includes("Firebase"), "Should mention Firebase");
+    assert.ok(html.includes("Turso"), "Should mention Turso");
+    assert.ok(html.includes("PlanetScale"), "Should mention PlanetScale");
+    assert.ok(html.includes("Postgres-Compatible"), "Should have Postgres section");
+    assert.ok(html.includes("Firebase / BaaS"), "Should have BaaS section");
+    assert.ok(html.includes("Edge / Embedded"), "Should have edge section");
+    assert.ok(html.includes("Key-Value / Cache"), "Should have KV section");
+    assert.ok(html.includes("Vector Databases"), "Should have vector section");
+    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("PlanetScale Cautionary Tale"), "Should have PlanetScale section");
+    assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/neon-vs-supabase"), "Should cross-link to Neon vs Supabase");
+    assert.ok(html.includes("/supabase-vs-firebase"), "Should cross-link to Supabase vs Firebase");
+    assert.ok(html.includes("/database-alternatives"), "Should cross-link to database alternatives");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 
