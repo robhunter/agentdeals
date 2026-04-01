@@ -4085,6 +4085,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Cloudflare R2",
     hubDesc: "Side-by-side comparison of 12+ object storage free tiers — storage limits, egress fees, S3 compatibility, operations costs, and the egress cost trap at scale",
   },
+  {
+    slug: "analytics-free-tier-comparison-2026",
+    title: "Analytics & Product Analytics Free Tier Comparison 2026 — PostHog vs Mixpanel vs Amplitude vs Plausible",
+    metaDesc: "Side-by-side comparison of 15+ analytics free tiers in 2026. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.",
+    contextHtml: "",
+    tag: "analytics-free-tier-comparison-2026",
+    primaryVendor: "PostHog",
+    hubDesc: "Side-by-side comparison of 15+ analytics free tiers — event limits, session replays, feature flags, data retention, and the analytics cost trap at scale",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -24162,6 +24171,682 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function buildAnalyticsFreeTierComparison2026Page(): string {
+  const title = "Analytics & Product Analytics Free Tier Comparison 2026 — PostHog vs Mixpanel vs Amplitude vs Plausible";
+  const metaDescAnalytics = "Side-by-side comparison of 15+ analytics free tiers in 2026. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.";
+  const slug = "analytics-free-tier-comparison-2026";
+  const pubDate = "2026-04-01";
+
+  // Collect analytics-related deal changes
+  const analyticsVendorKeywords = ["PostHog", "Mixpanel", "Amplitude", "Plausible", "Google Analytics", "Umami", "Matomo", "Heap", "June", "Countly", "Fathom", "Simple Analytics", "Pirsch", "Pendo"];
+  const analyticsChanges = dealChanges.filter((c: any) =>
+    analyticsVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("analytics") || c.summary.toLowerCase().includes("event tracking") || c.summary.toLowerCase().includes("session replay")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = analyticsChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["analytics-alternatives", "monitoring-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk", "free-ai-stack"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = analyticsChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No analytics-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescAnalytics,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescAnalytics)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescAnalytics)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.growth-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-table .cheapest{color:#3fb950;font-weight:700}
+.growth-table .expensive{color:#f85149;font-weight:700}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Analytics Free Tier Comparison</div>
+  <h1>Analytics &amp; Product Analytics Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ analytics services compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Analytics Services Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">PostHog Free Events/mo</div></div>
+    <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">Mixpanel Free Events/mo</div></div>
+    <div class="stat-card"><div class="stat-number amber">10K</div><div class="stat-label">Amplitude Free MTUs</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>PostHog</strong> is the most generous all-in-one platform &mdash; 1M events/month free plus 5K session replays, 1M feature flag evaluations, and experiments. <strong>Mixpanel</strong> matches with 1M events/month on a polished behavioral analytics UI. <strong>Amplitude</strong> is the most restrictive of the big three at 10K MTUs free but offers enterprise-grade governance. <strong>Google Analytics</strong> is unlimited and free but comes with privacy trade-offs and data sampling. For privacy-focused analytics, <strong>Plausible</strong> and <strong>Umami</strong> are the leading options (self-hosted free, cloud plans paid).</p>
+    <p><strong>The all-in-one shift:</strong> PostHog has redefined the category by bundling analytics, session replays, feature flags, experiments, and surveys into one platform with a generous free tier. Mixpanel and Amplitude remain focused on behavioral analytics, while the privacy-focused segment (Plausible, Fathom, Umami) targets teams that need GDPR compliance without cookie banners.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#product-analytics">Product Analytics</a></li>
+      <li><a href="#web-analytics">Web Analytics</a></li>
+      <li><a href="#privacy-focused">Privacy-Focused Analytics</a></li>
+      <li><a href="#all-in-one">All-in-One Platforms</a></li>
+      <li><a href="#self-hosted">Self-Hosted Analytics</a></li>
+      <li><a href="#cost-trap">The Analytics Cost Trap</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top analytics free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Tier Limit</th>
+        <th>Session Replay</th>
+        <th>Feature Flags</th>
+        <th>Data Retention</th>
+        <th>Self-Hosted</th>
+        <th>Privacy / GDPR</th>
+        <th>Permanent Free</th>
+        <th>API Access</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">PostHog<span class="winner-badge">MOST GENEROUS</span></td>
+        <td>1M events/mo</td>
+        <td class="check">&#10003; 5K/mo</td>
+        <td class="check">&#10003; 1M evals/mo</td>
+        <td>1 year</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; EU hosting</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Mixpanel</td>
+        <td>1M events/mo</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>Unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; EU residency</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Amplitude<span class="caution-badge">LOW FREE LIMIT</span></td>
+        <td>10K MTUs/mo</td>
+        <td class="partial">&#9679; 1K/mo (add-on)</td>
+        <td class="partial">&#9679; Limited</td>
+        <td>Unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Google Analytics<span class="caution-badge">PRIVACY TRADE-OFF</span></td>
+        <td>Unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>14 months</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007; Data shared</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Heap (Contentsquare)</td>
+        <td>10K sessions/mo</td>
+        <td class="check">&#10003; Included</td>
+        <td class="cross">&#10007;</td>
+        <td>6 months</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">June.so</td>
+        <td>1K MAUs</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>12 months</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; EU hosting</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Plausible<span class="winner-badge">BEST PRIVACY</span></td>
+        <td>Self-hosted: unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; No cookies</td>
+        <td class="partial">&#9679; Self-hosted only</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Umami<span class="winner-badge">BEST SELF-HOSTED</span></td>
+        <td>Cloud: 100K events/mo</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; No cookies</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Fathom</td>
+        <td>No free tier</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>Unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; No cookies</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Simple Analytics</td>
+        <td>No free tier</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>Unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; No cookies</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Matomo</td>
+        <td>Self-hosted: unlimited</td>
+        <td class="check">&#10003; Self-hosted</td>
+        <td class="cross">&#10007;</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Full control</td>
+        <td class="partial">&#9679; Self-hosted only</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Countly</td>
+        <td>Community: unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Full control</td>
+        <td class="partial">&#9679; Self-hosted only</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Pirsch</td>
+        <td>10K pageviews/mo</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>Unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; No cookies</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="product-analytics">Product Analytics</h2>
+  <p class="section-intro">Behavioral analytics platforms for understanding user actions, funnels, retention, and product usage patterns.</p>
+
+  <div class="diff-card">
+    <h3>PostHog <span class="winner-badge">MOST GENEROUS</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month, 5K session replays, 1M feature flag evaluations, unlimited experiments and surveys. Open-source, self-hostable. The only platform that bundles analytics, session replay, feature flags, A/B testing, and surveys into a single free tier. EU and US cloud hosting. Transparent usage-based pricing beyond free tier ($0.00031/event). The free tier resets monthly and unused quota doesn't roll over. Best for teams that want a single platform for product analytics + experimentation.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Mixpanel</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month. Polished UI focused on behavioral analytics: funnels, retention, cohorts, user flows. Unlimited data retention on the free plan. No session replay (they partner with other tools). Changed pricing from MTU-based to event-based, simplifying the model. EU data residency available. Powerful query builder and segmentation. Best for teams that want focused behavioral analytics with a refined UI.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Amplitude <span class="caution-badge">LOW FREE LIMIT</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10K Monthly Tracked Users (MTUs). The MTU metric means one active user generating 100 events counts as 1 MTU, making it cheaper per-user but the 10K limit is very restrictive for growing products. Session replay available as an add-on (1K replays free). Unlimited data retention. Enterprise-grade governance features even on the free plan. Best for enterprise-leaning teams that value governance and don't expect rapid user growth on the free tier.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Heap (Contentsquare)</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10K monthly sessions. Unique auto-capture approach &mdash; automatically tracks every click, form submission, and page view without manual instrumentation. Session replay included. 6-month data retention on free plan. Acquired by Contentsquare in 2023. Best for teams that want retroactive analytics without needing to instrument every event upfront.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>June.so</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1K Monthly Active Users. Auto-generated product analytics reports &mdash; activation, retention, active users delivered to your inbox. Segment integration. Built specifically for B2B SaaS with company-level analytics. EU hosting available. Best for early-stage B2B startups that want automated reporting without configuration.</div>
+  </div>
+
+  <h2 id="web-analytics">Web Analytics</h2>
+  <p class="section-intro">Page-view and visitor analytics for websites. Simpler than product analytics &mdash; focused on traffic, referrers, and engagement metrics.</p>
+
+  <div class="diff-card">
+    <h3>Google Analytics <span class="caution-badge">PRIVACY TRADE-OFF</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Unlimited events and users. The most widely used analytics platform. GA4 is event-based with 14-month data retention on free plan (vs unlimited on GA360 at $150K+/year). Data sampling kicks in at high volumes. <strong>The privacy trade-off:</strong> Google uses your analytics data to build advertising profiles. Multiple EU DPAs have ruled GA transfers to US servers non-compliant with GDPR. Requires cookie consent banners in the EU. Many privacy-focused sites are migrating away. Best for teams that prioritize comprehensive free analytics and accept Google's data practices.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Pirsch</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10K pageviews/month. Privacy-friendly, cookie-free web analytics. GDPR compliant out of the box. Clean dashboard with referrers, UTM parameters, and conversion goals. Built as a simpler alternative to Google Analytics. Server-side tracking option available. Best for small sites that want basic privacy-friendly analytics without self-hosting.</div>
+  </div>
+
+  <h2 id="privacy-focused">Privacy-Focused Analytics</h2>
+  <p class="section-intro">Analytics tools designed for GDPR/CCPA compliance without cookie consent banners. No personal data collection, no cross-site tracking.</p>
+
+  <div class="diff-card">
+    <h3>Plausible <span class="winner-badge">BEST PRIVACY</span></h3>
+    <div class="diff-desc"><strong>Pricing:</strong> Cloud plans from $9/month (10K pageviews). Self-hosted Community Edition is free and open-source (AGPL). No cookies, no personal data, GDPR compliant without consent banners. Lightweight script (&lt;1KB). Dashboard is clean and intentionally simple. Built-in goal and event tracking. Revenue tracking available. EU-owned and operated (Estonia). Best for privacy-conscious teams that want simple, compliant analytics. Self-host for free or pay for the cloud convenience.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Fathom</h3>
+    <div class="diff-desc"><strong>Pricing:</strong> From $15/month (100K pageviews). No free tier. Privacy-first, cookie-free. Lightweight script. Intelligent bot filtering. EU isolation available. The dashboard is minimal and focused on the metrics that matter. Notable for extreme simplicity &mdash; no funnels, no cohorts, just traffic and engagement. Best for businesses willing to pay for premium privacy analytics with zero complexity.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Simple Analytics</h3>
+    <div class="diff-desc"><strong>Pricing:</strong> From $9/month (100K pageviews). No free tier. Cookie-free, GDPR compliant. Mini websites for each referrer source. Tweet analytics for social tracking. AI-powered insights. Notable for transparency &mdash; their own dashboard is public. Best for teams that want privacy analytics with social media tracking integration.</div>
+  </div>
+
+  <h2 id="all-in-one">All-in-One Platforms</h2>
+  <p class="section-intro">Platforms that bundle analytics with session replays, feature flags, experiments, and more. The "platform play" that's reshaping the analytics market.</p>
+
+  <div class="diff-card">
+    <h3>PostHog &mdash; The All-in-One Standard</h3>
+    <div class="diff-desc">PostHog is the only platform offering <strong>analytics + session replays + feature flags + A/B testing + surveys</strong> in a single free tier. This is its defining advantage. Instead of stitching together Mixpanel (analytics) + FullStory (replays) + LaunchDarkly (flags) + Optimizely (experiments), PostHog does it all. The trade-off: each individual module may not be best-in-class (Mixpanel's behavioral analytics UI is more polished, FullStory's replays are richer), but the integration advantage is substantial. One SDK, one data model, one billing meter.</div>
+  </div>
+
+  <div class="context-box">
+    <strong>The bundling advantage:</strong> Using separate tools for analytics, replays, and flags typically costs $500&ndash;$2,000+/month at growth stage. PostHog's free tier covers all three up to 1M events + 5K replays + 1M flag evaluations. Even the paid tier is dramatically cheaper than buying each tool separately. The catch: you're betting on PostHog's execution across multiple product categories.
+  </div>
+
+  <h2 id="self-hosted">Self-Hosted Analytics</h2>
+  <p class="section-intro">Run analytics on your own infrastructure. Unlimited data, full privacy control, zero vendor fees &mdash; if you have the ops capacity.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>License</th>
+        <th>Analytics Type</th>
+        <th>Session Replay</th>
+        <th>Ease of Setup</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Umami<span class="winner-badge">EASIEST</span></td>
+        <td>MIT</td>
+        <td>Web analytics</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; Docker/Vercel</td>
+        <td>Simple GA alternative</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Plausible CE</td>
+        <td>AGPL v3</td>
+        <td>Web analytics</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; Docker</td>
+        <td>Privacy-first simple analytics</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Matomo</td>
+        <td>GPL v3</td>
+        <td>Full web analytics</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">&#9679; PHP + MySQL</td>
+        <td>GA replacement with full features</td>
+      </tr>
+      <tr>
+        <td class="provider-col">PostHog</td>
+        <td>MIT (core)</td>
+        <td>Product analytics</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">&#9679; Docker/K8s</td>
+        <td>Full product analytics suite</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Countly</td>
+        <td>AGPL v3</td>
+        <td>Mobile + web</td>
+        <td class="cross">&#10007;</td>
+        <td class="partial">&#9679; Docker</td>
+        <td>Mobile app analytics</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="diff-card">
+    <h3>Umami <span class="winner-badge">EASIEST SELF-HOSTED</span></h3>
+    <div class="diff-desc"><strong>License:</strong> MIT (most permissive). A clean, fast, privacy-focused alternative to Google Analytics. Deploys in minutes via Docker or one-click to Vercel/Netlify/Railway. PostgreSQL or MySQL backend. Under 10KB tracking script. Cloud version available with 100K events/month free tier. The easiest self-hosted analytics setup available. Best for developers who want simple web analytics without complexity.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Matomo</h3>
+    <div class="diff-desc"><strong>License:</strong> GPL v3. The most mature Google Analytics alternative. Full-featured: goals, funnels, heatmaps (plugin), session recordings (plugin), SEO reports, ecommerce tracking. PHP + MySQL stack (traditional LAMP deployment). Cloud version exists but has no free tier. 100% data ownership. Used by governments and enterprises for GDPR compliance. Best for organizations that need a full-featured GA replacement with complete data sovereignty.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Countly</h3>
+    <div class="diff-desc"><strong>License:</strong> AGPL v3 (Community Edition). Multi-platform analytics: mobile (iOS, Android, React Native), web, and desktop. Push notifications, crash analytics, user profiles. Strong mobile SDK support. Enterprise edition adds advanced features (revenue analytics, user flows). Best for mobile app analytics with a self-hosted requirement.</div>
+  </div>
+
+  <h2 id="cost-trap">The Analytics Cost Trap</h2>
+  <p class="section-intro">Analytics costs look manageable until your product grows. Here's how costs scale from free to enterprise.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Usage Scenario</th>
+        <th>PostHog</th>
+        <th>Mixpanel</th>
+        <th>Amplitude</th>
+        <th>Google Analytics</th>
+        <th>Plausible Cloud</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>500K events/mo</strong></td>
+        <td class="cheapest">$0 (free)</td>
+        <td class="cheapest">$0 (free)</td>
+        <td>Varies by MTUs</td>
+        <td class="cheapest">$0 (free)</td>
+        <td>~$9/mo</td>
+      </tr>
+      <tr>
+        <td><strong>2M events/mo</strong></td>
+        <td>~$31</td>
+        <td>~$24</td>
+        <td>Custom pricing</td>
+        <td class="cheapest">$0 (free, sampled)</td>
+        <td>~$19/mo</td>
+      </tr>
+      <tr>
+        <td><strong>10M events/mo</strong></td>
+        <td>~$450</td>
+        <td class="expensive">~$1,000+</td>
+        <td class="expensive">Custom ($1,500+)</td>
+        <td class="cheapest">$0 (free, heavily sampled)</td>
+        <td>~$69/mo</td>
+      </tr>
+      <tr>
+        <td><strong>50M events/mo</strong></td>
+        <td>~$1,400</td>
+        <td class="expensive">Custom ($5,000+)</td>
+        <td class="expensive">Custom ($8,000+)</td>
+        <td class="cheapest">$0 (free, data quality issues)</td>
+        <td>~$199/mo</td>
+      </tr>
+      <tr>
+        <td><strong>100M events/mo</strong></td>
+        <td>~$2,000</td>
+        <td class="expensive">Custom ($10,000+)</td>
+        <td class="expensive">Custom ($15,000+)</td>
+        <td>$0 or GA360 ($150K+/yr)</td>
+        <td>~$399/mo</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>The MTU vs event pricing trap:</strong> Amplitude charges by Monthly Tracked Users (MTUs), while PostHog and Mixpanel charge by events. One power user generating 100 events counts as 1 MTU on Amplitude but 100 events on PostHog/Mixpanel. For apps with high engagement per user, Amplitude's MTU model is cheaper. For apps with many low-engagement users (e.g., content sites), event-based pricing wins. <strong>Know your engagement pattern before choosing.</strong>
+  </div>
+
+  <div class="context-box">
+    <strong>The session replay add-on trap:</strong> Session replay is increasingly essential for debugging and UX research. PostHog includes 5K replays free. Amplitude offers 1K free but charges for more. Mixpanel doesn't offer replay at all &mdash; you'd need a separate tool like FullStory ($300+/mo), Hotjar ($80+/mo), or LogRocket ($99+/mo). At growth stage, buying analytics + replay separately typically costs 2&ndash;3x what PostHog charges for both bundled.
+  </div>
+
+  <div class="context-box">
+    <strong>The Google Analytics "free" trap:</strong> GA is free in dollars but costs you in data quality and privacy. Data sampling begins at 500K sessions per property for ad-hoc queries. You don't own the data &mdash; Google uses it for advertising. EU regulators have ruled GA non-compliant. The real cost is the cookie consent banner (reducing opt-in rates by 20&ndash;40%), compliance risk, and data sampling at scale. "Free" analytics that samples your data isn't really free.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by Use Case</h3>
+
+    <div class="verdict-item">
+      <strong>Most generous free tier &rarr; PostHog</strong>
+      <p>1M events + 5K replays + 1M feature flags free. No other platform matches this breadth. Open-source, self-hostable. The clear winner for startups that want analytics + experimentation in one tool.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best behavioral analytics &rarr; Mixpanel</strong>
+      <p>1M events free with unlimited retention. The most polished UI for funnels, retention, and cohort analysis. Focused on doing behavioral analytics exceptionally well rather than bundling everything.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Unlimited basic web analytics &rarr; Google Analytics</strong>
+      <p>Free and unlimited, with the caveat that you're giving Google your data. Best for content sites and marketing teams that need basic traffic analytics and accept the privacy trade-off.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best privacy-focused &rarr; Plausible or Umami</strong>
+      <p>No cookies, no personal data, GDPR compliant without consent banners. Plausible CE and Umami are both free to self-host. Umami also offers 100K events/month free cloud. For paid cloud: Plausible from $9/mo.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best self-hosted &rarr; Umami</strong>
+      <p>MIT license, deploys to Docker/Vercel in minutes, under 10KB script. The easiest path to self-hosted analytics. For full GA replacement: Matomo (more features, more complex).</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Enterprise-ready free start &rarr; Amplitude</strong>
+      <p>10K MTUs free with enterprise governance, SSO, and unlimited retention. The free limit is low, but the enterprise features are unmatched. Best for companies that know they'll scale to paid and want enterprise governance from day one.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Startup-friendly auto-reports &rarr; June.so</strong>
+      <p>1K MAUs free with auto-generated reports. Built for B2B SaaS with company-level analytics delivered to your inbox. Best for early-stage startups that want insights without configuration.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+
+  <div class="diff-card">
+    <h3>Google Analytics free = Google owns your data</h3>
+    <div class="diff-desc">GA is free because your analytics data feeds Google's advertising platform. Multiple EU data protection authorities (Austria, France, Italy, Denmark) have ruled GA transfers to US servers non-compliant with GDPR. Using GA requires cookie consent banners in the EU, which typically reduce opt-in rates by 20&ndash;40% &mdash; meaning you lose data on the most privacy-conscious users.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Amplitude's 10K MTU limit is very restrictive</h3>
+    <div class="diff-desc">10K Monthly Tracked Users sounds generous until your product grows. A B2C app that goes viral can burn through 10K MTUs in days. Beyond the free tier, Amplitude's pricing is opaque (custom quotes), and customers report $50K&ndash;$200K+/year contracts. The jump from free to paid is one of the steepest in analytics.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Mixpanel has changed pricing models multiple times</h3>
+    <div class="diff-desc">Mixpanel previously charged by MTU, then switched to event-based pricing. These changes required customers to re-evaluate their analytics strategy. While the current 1M events/month free is generous, the history of pricing model changes is worth noting for long-term planning. Data portability matters.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>PostHog's generous free tier requires self-serve</h3>
+    <div class="diff-desc">PostHog's free tier comes with community support only &mdash; no dedicated account manager, no SLAs, no priority support. For production-critical analytics, this means you're on your own for debugging data discrepancies, SDK issues, or pipeline problems. The paid plan starts at custom pricing for dedicated support.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Self-hosted "free" = your infrastructure costs + maintenance</h3>
+    <div class="diff-desc">Self-hosting Matomo, PostHog, or Umami is free in licensing but not in total cost. PostHog self-hosted requires significant infrastructure (ClickHouse, Kafka, PostgreSQL). Matomo needs PHP + MySQL. Even Umami needs a PostgreSQL database. At 10M+ events/month, infrastructure costs can exceed managed service pricing. Factor in engineering time for updates, backups, and monitoring.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Data retention limits on free plans</h3>
+    <div class="diff-desc">PostHog retains data for 1 year on the free plan. Heap retains for 6 months. GA4 retains for 14 months (adjustable to 2 or 14 months only). After the retention period, your historical data is gone. Mixpanel and Amplitude offer unlimited retention on free plans, which is a significant advantage for long-term trend analysis.</div>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent analytics pricing changes tracked in our index.</p>
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All analytics service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  ${buildMcpCta("analytics-free-tier-comparison-2026")}
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -27941,6 +28626,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/storage-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildStorageFreeTierComparison2026Page());
+  } else if (url.pathname === "/analytics-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/analytics-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/analytics-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAnalyticsFreeTierComparison2026Page());
   } else if (url.pathname === "/email-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/email-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
