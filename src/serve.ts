@@ -4013,6 +4013,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "DigitalOcean",
     hubDesc: "Complete DigitalOcean guide — $200 free credits, 20% Droplet price cuts, App Platform free tier, per-second billing, and Big Three comparison",
   },
+  {
+    slug: "cloud-free-tier-comparison-2026",
+    title: "Cloud Free Tier Comparison 2026 — AWS vs GCP vs Azure vs DigitalOcean",
+    metaDesc: "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers in 2026. Compare always-free compute, databases, serverless, storage, startup credits, and hidden costs across all 4 major clouds.",
+    contextHtml: "",
+    tag: "cloud-free-tier-comparison-2026",
+    primaryVendor: "AWS",
+    hubDesc: "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers — compute, databases, serverless, storage, startup credits, and hidden costs",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -4324,7 +4333,7 @@ ${mcpCtaCss()}
 type GuideContentType = "pricing" | "comparison" | "stack" | "alternatives" | "report";
 
 function classifyGuide(slug: string): GuideContentType {
-  if (slug.includes("-vs-")) return "comparison";
+  if (slug.includes("-vs-") || slug.includes("-comparison-")) return "comparison";
   if (slug.startsWith("free-") && slug.endsWith("-stack")) return "stack";
   if (slug.includes("pricing") || slug.includes("report") || slug.includes("preview")) return "pricing";
   if (slug.endsWith("-alternatives") || slug === "ai-free-tiers" || slug === "free-llm-apis" || slug === "api-development-alternatives") return "alternatives";
@@ -16820,7 +16829,7 @@ function buildAwsFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+    ["cloud-free-tier-comparison-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -16930,6 +16939,7 @@ ${mcpCtaCss()}
     <p><strong>Three tiers, very different rules.</strong> AWS bundles "free tier" into three categories that work completely differently. <strong>Always Free</strong> services never expire — Lambda, DynamoDB, and SNS stay free forever within limits. <strong>12-Month Free</strong> services (EC2, RDS, S3) expire silently after your first year and start billing. <strong>Short-Term Trials</strong> give limited access to premium services. Most "AWS free tier" guides conflate these. We don't.</p>
     <p><strong>What's new:</strong> Aurora PostgreSQL Serverless was added to the AWS Free Tier in March 2026 — the first time AWS's flagship managed PostgreSQL has been available at no cost. New accounts also get $100&ndash;$200 in credits.</p>
     <p><strong>The hidden costs:</strong> AWS's free tier is generous but has well-known traps — data transfer charges, NAT Gateway fees, idle Elastic IPs, and EBS volumes on stopped instances. We cover all of them below.</p>
+    <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
   <div class="toc">
@@ -17265,7 +17275,7 @@ function buildGcpFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["aws-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
+    ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -17374,6 +17384,7 @@ ${mcpCtaCss()}
     <p><strong>Three tiers, different rules.</strong> GCP bundles its free offerings into three categories. <strong>Always Free</strong> products have permanent monthly quotas — Cloud Run (2M requests), BigQuery (1 TiB), and 29 other services stay free forever within limits. The <strong>$300 Free Trial</strong> gives 90 days of full GCP access (credit card required, but won't auto-charge). <strong>AI &amp; ML tools</strong> have their own free tiers with daily rate limits. Most "GCP free tier" guides conflate these. We separate them.</p>
     <p><strong>GCP's unique strength:</strong> The Always Free e2-micro VM is the only major cloud provider offering a permanent free virtual machine. Combined with 30 GB persistent disk, you can run a real server 24/7 forever. AWS and Azure don't match this — their free VMs expire after 12 months.</p>
     <p><strong>The hidden costs:</strong> GCP's free tier has traps — the free VM is region-restricted, egress charges apply everywhere, Firestore daily operation limits are tight, and load balancers are never free. We cover all gotchas below.</p>
+    <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
   <div class="toc">
@@ -17691,7 +17702,7 @@ function buildAzureFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["aws-free-tier-2026", "gcp-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+    ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "gcp-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -17800,6 +17811,7 @@ ${mcpCtaCss()}
     <p><strong>Three tiers, different rules.</strong> Azure's free offering splits into three categories. <strong>Always Free</strong> services never expire — Azure Functions (1M executions/month), Cosmos DB (1,000 RU/s + 25 GB), and App Service stay free forever within limits. <strong>12-Month Free</strong> services (B1S VMs, SQL Database, Managed Disks) expire after your first year. <strong>$200 Trial Credit</strong> gives 30-day access to any Azure service.</p>
     <p><strong>Azure's unique advantage:</strong> Cosmos DB's always-free tier (1,000 RU/s + 25 GB) is the most generous lifetime-free managed database from any major cloud provider. It's multi-model (document, graph, key-value, column-family) and globally distributable — no equivalent exists on AWS or GCP's always-free tiers.</p>
     <p><strong>The hidden costs:</strong> Azure has no automatic spend cap — once you exceed free limits, charges start immediately. Log Analytics ingestion, managed disk charges on deallocated VMs, and App Service F1 compute limits catch the most developers. We cover all of them below.</p>
+    <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
   <div class="toc">
@@ -18144,7 +18156,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "hosting-alternatives", "database-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
+    ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "hosting-alternatives", "database-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
   // JSON-LD Article schema
@@ -18253,6 +18265,7 @@ ${mcpCtaCss()}
     <p><strong>Different model than the Big Three.</strong> Unlike AWS, GCP, and Azure which offer always-free compute tiers, DigitalOcean's free offering is limited to <strong>$200 in trial credits (60 days)</strong>, <strong>3 free static sites</strong> on App Platform, <strong>serverless Functions</strong> (25,000 GiB-seconds/month), and <strong>free DNS management</strong>. There is no perpetual free compute — after credits expire, the cheapest Droplet is $4/month.</p>
     <p><strong>The value proposition is simplicity and price.</strong> DigitalOcean's 2026 pricing changes made it significantly more competitive: a <strong>20% price cut</strong> on Basic Droplets (cheapest now $4/month from $5) and <strong>per-second billing</strong> (minimum 60 seconds or $0.01). For developers who want straightforward cloud infrastructure without the complexity of AWS/GCP/Azure, DigitalOcean trades free-tier generosity for operational simplicity.</p>
     <p><strong>Best for:</strong> Developers who value simplicity over free tiers, small-to-medium projects that outgrow free hosting, teams that want managed infrastructure without enterprise complexity. Not ideal for bootstrapped projects that need to stay at $0/month indefinitely.</p>
+    <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
   <div class="toc">
@@ -18438,6 +18451,603 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Search DigitalOcean services, compare with alternatives, and track pricing changes — all from your AI coding assistant.")}
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Cloud Free Tier Comparison 2026 ---
+
+function buildCloudFreeTierComparison2026Page(): string {
+  const title = "Cloud Free Tier Comparison 2026 — AWS vs GCP vs Azure vs DigitalOcean";
+  const metaDescComp = "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers in 2026. Compare always-free compute, databases, serverless, storage, startup credits, and hidden costs across all 4 major clouds.";
+  const slug = "cloud-free-tier-comparison-2026";
+  const pubDate = "2026-03-31";
+
+  // Collect cloud-related deal changes
+  const cloudChanges = dealChanges.filter((c: any) =>
+    ["AWS", "Amazon", "Google Cloud", "GCP", "Azure", "DigitalOcean"].some(v =>
+      c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)
+    )
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = cloudChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits", "free-devops-stack"].includes(p.slug)
+  );
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescComp,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescComp)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescComp)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Cloud Free Tier Comparison</div>
+  <h1>Cloud Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 4 cloud providers compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Clouds Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">GCP</div><div class="stat-label">Most Free Services</div></div>
+    <div class="stat-card"><div class="stat-number amber">$200&ndash;300</div><div class="stat-label">Trial Credits Range</div></div>
+    <div class="stat-card"><div class="stat-number">$550K+</div><div class="stat-label">Max Startup Credits</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>GCP</strong> wins for side projects — it's the only provider with a permanent free VM (e2-micro) and the most generous always-free limits (Cloud Run 2M req/mo, BigQuery 1 TiB). <strong>AWS</strong> has the broadest service catalog and the best serverless stack (Lambda + DynamoDB). <strong>Azure</strong> has the strongest enterprise play (Active Directory, Cosmos DB lifetime free tier, .NET ecosystem). <strong>DigitalOcean</strong> doesn't compete on free tiers but wins on simplicity and competitive paid pricing ($4/mo Droplets after Jan 2026 price cuts).</p>
+    <p><strong>The catch:</strong> Every cloud hides costs differently. AWS charges for data transfer and NAT gateways. GCP charges for egress and has confusing Firestore pricing tiers. Azure has no spending cap on pay-as-you-go. DigitalOcean has minimal free services but the fewest gotchas. We compare all of them below.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#trial-credits">Free Trial Credits</a></li>
+      <li><a href="#compute">Always-Free Compute</a></li>
+      <li><a href="#databases">Always-Free Databases</a></li>
+      <li><a href="#serverless">Serverless Functions</a></li>
+      <li><a href="#storage">Storage &amp; CDN</a></li>
+      <li><a href="#startup-credits">Startup Credit Programs</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs Comparison</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="trial-credits">Free Trial Credits</h2>
+  <p class="section-intro">Every major cloud offers trial credits to new accounts. The amounts, durations, and restrictions vary significantly.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Credit Amount</th>
+        <th>Duration</th>
+        <th>Restrictions</th>
+        <th>Credit Card Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col"><a href="/aws-free-tier-2026" style="color:var(--text)">AWS</a></td>
+        <td style="font-family:var(--mono)">None (service-level free tiers)</td>
+        <td>N/A</td>
+        <td>Each service has individual limits; no blanket credit</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/gcp-free-tier-2026" style="color:var(--text)">GCP</a></td>
+        <td style="font-family:var(--mono);color:#3fb950">$300</td>
+        <td>90 days</td>
+        <td>Cannot use GPUs or create &gt;8 vCPU VMs during trial</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/azure-free-tier-2026" style="color:var(--text)">Azure</a></td>
+        <td style="font-family:var(--mono)">$200</td>
+        <td>30 days</td>
+        <td>Shorter window than GCP; transitions to pay-as-you-go</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/digitalocean-free-tier-2026" style="color:var(--text)">DigitalOcean</a></td>
+        <td style="font-family:var(--mono)">$200</td>
+        <td>60 days</td>
+        <td>New accounts only; good middle ground on duration</td>
+        <td>Yes</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>GCP offers the most generous trial:</strong> $300 over 90 days vs Azure's $200/30 days. AWS doesn't offer a blanket credit — instead each service has its own free tier. DigitalOcean's $200/60 days is a solid middle ground. All require a credit card.
+  </div>
+
+  <h2 id="compute">Always-Free Compute</h2>
+  <p class="section-intro">Persistent compute is the most valuable free tier category. Only GCP and AWS offer always-free compute options.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>VM / Instance</th>
+        <th>Limits</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">AWS</td>
+        <td>EC2 t2/t3.micro</td>
+        <td>750 hrs/mo, 1 vCPU, 1 GB RAM</td>
+        <td style="color:#d29922">12 months only</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">GCP <span class="winner-badge">WINNER</span></td>
+        <td>e2-micro VM</td>
+        <td>2 shared vCPU, 1 GB RAM, 30 GB disk, us-* regions</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure</td>
+        <td>B1S VM</td>
+        <td>750 hrs/mo, 1 vCPU, 1 GB RAM</td>
+        <td style="color:#d29922">12 months only</td>
+      </tr>
+      <tr>
+        <td class="provider-col">DigitalOcean</td>
+        <td class="cross">No free compute</td>
+        <td>Cheapest: $4/mo Droplet (512 MB RAM)</td>
+        <td class="cross">Paid only</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>GCP is the only provider with a permanent free VM.</strong> AWS and Azure offer 12-month free instances that silently convert to paid. If you need a persistent server that costs nothing, GCP's e2-micro is the only option among the Big Four. DigitalOcean doesn't offer any free compute but starts at just $4/mo after the Jan 2026 price cut.
+  </div>
+
+  <h2 id="databases">Always-Free Databases</h2>
+  <p class="section-intro">Free managed databases are critical for side projects. The offerings vary dramatically between providers.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Database</th>
+        <th>Type</th>
+        <th>Free Limits</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">AWS</td>
+        <td>DynamoDB</td>
+        <td>NoSQL (key-value)</td>
+        <td>25 GB, 25 WCU/RCU</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr>
+        <td class="provider-col">AWS</td>
+        <td>RDS (MySQL/PostgreSQL)</td>
+        <td>Relational</td>
+        <td>750 hrs/mo db.t3.micro, 20 GB</td>
+        <td style="color:#d29922">12 months</td>
+      </tr>
+      <tr>
+        <td class="provider-col">AWS</td>
+        <td>Aurora PostgreSQL Serverless</td>
+        <td>Relational (serverless)</td>
+        <td>4 ACUs, 1 GB storage</td>
+        <td style="color:#d29922">12 months (new Mar 2026)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">GCP</td>
+        <td>Firestore</td>
+        <td>NoSQL (document)</td>
+        <td>1 GiB storage, 50K reads/day, 20K writes/day</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr>
+        <td class="provider-col">GCP</td>
+        <td>BigQuery</td>
+        <td>Data warehouse</td>
+        <td>1 TiB queries/month, 10 GB storage</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Azure <span class="winner-badge">BEST SQL</span></td>
+        <td>Cosmos DB</td>
+        <td>Multi-model NoSQL</td>
+        <td>1,000 RU/s, 25 GB storage</td>
+        <td style="color:#3fb950">Lifetime free</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure</td>
+        <td>SQL Database</td>
+        <td>Relational</td>
+        <td>100K vCore seconds/mo, 32 GB</td>
+        <td style="color:#d29922">12 months</td>
+      </tr>
+      <tr>
+        <td class="provider-col">DigitalOcean</td>
+        <td class="cross" colspan="4">No free managed databases — cheapest: $15/mo for managed PostgreSQL/MySQL</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Azure's Cosmos DB lifetime free tier is the best always-free managed database.</strong> 1,000 RU/s and 25 GB with no expiration. AWS has DynamoDB (always free, 25 GB) and the new Aurora PostgreSQL Serverless (12-month). GCP has Firestore for document storage and BigQuery for analytics. DigitalOcean offers no free databases.
+  </div>
+
+  <h2 id="serverless">Serverless Functions</h2>
+  <p class="section-intro">Serverless compute is where free tiers shine — you only pay for what you use, and the free tiers are generous.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Service</th>
+        <th>Free Requests</th>
+        <th>Free Compute</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">AWS <span class="winner-badge">BEST ECOSYSTEM</span></td>
+        <td>Lambda</td>
+        <td>1M requests/mo</td>
+        <td>400K GB-seconds</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">GCP <span class="winner-badge">MOST GENEROUS</span></td>
+        <td>Cloud Functions</td>
+        <td>2M invocations/mo</td>
+        <td>400K GB-seconds, 200K GHz-seconds</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr>
+        <td class="provider-col">GCP</td>
+        <td>Cloud Run</td>
+        <td>2M requests/mo</td>
+        <td>360K vCPU-seconds, 180K GiB-seconds</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure</td>
+        <td>Functions</td>
+        <td>1M executions/mo</td>
+        <td>400K GB-seconds</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr>
+        <td class="provider-col">DigitalOcean</td>
+        <td>Functions</td>
+        <td>Included with paid resources</td>
+        <td>25K GiB-seconds (90K with any paid resource)</td>
+        <td style="color:#d29922">Limited</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>GCP leads with 2M invocations/month</strong> on Cloud Functions plus 2M req/mo on Cloud Run (container-based serverless). AWS Lambda (1M req) has the best ecosystem integration — pair it with DynamoDB and API Gateway for a fully serverless backend at $0. Azure matches AWS on limits. DigitalOcean's serverless is minimal and tied to paid resources.
+  </div>
+
+  <h2 id="storage">Storage &amp; CDN</h2>
+  <p class="section-intro">Object storage and CDN are essential infrastructure. All four providers offer some free storage, but with very different limits.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Object Storage</th>
+        <th>CDN / Data Transfer</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">AWS</td>
+        <td>S3: 5 GB standard</td>
+        <td>CloudFront: 1 TB transfer, 10M requests/mo</td>
+        <td style="color:#d29922">12 months (S3 &amp; CF)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">GCP</td>
+        <td>Cloud Storage: 5 GB regional</td>
+        <td>1 GB egress to NA/EU; Cloud CDN not free</td>
+        <td style="color:#3fb950">Always free (storage)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure</td>
+        <td>Blob Storage: 5 GB LRS hot</td>
+        <td>Azure CDN not free-tier; 15 GB outbound</td>
+        <td style="color:#d29922">12 months</td>
+      </tr>
+      <tr>
+        <td class="provider-col">DigitalOcean</td>
+        <td>Spaces: $5/mo (250 GB + CDN)</td>
+        <td>Included with Spaces; no free tier</td>
+        <td class="cross">Paid only</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>For free storage, consider alternatives:</strong> <a href="/vendor/cloudflare">Cloudflare R2</a> (10 GB, zero egress fees) and <a href="/vendor/supabase">Supabase</a> (1 GB storage) often beat the Big Four for developer-scale storage. AWS's S3 + CloudFront is the most complete free CDN package but expires after 12 months.
+  </div>
+
+  <h2 id="startup-credits">Startup Credit Programs</h2>
+  <p class="section-intro">All four clouds offer startup credit programs, but eligibility requirements and credit amounts vary significantly. See our <a href="/startup-credits">complete startup credits guide</a> for full details.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Program</th>
+        <th>Max Credits</th>
+        <th>Duration</th>
+        <th>Key Requirement</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">AWS</td>
+        <td>Activate</td>
+        <td style="font-family:var(--mono)">Up to $100K</td>
+        <td>1&ndash;2 years</td>
+        <td>VC-backed or accelerator member (higher tiers)</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">GCP <span class="winner-badge">LARGEST CREDITS</span></td>
+        <td>Google for Startups</td>
+        <td style="font-family:var(--mono);color:#3fb950">Up to $200K</td>
+        <td>1&ndash;2 years</td>
+        <td>Series A or earlier + approved partner</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure</td>
+        <td>Founders Hub</td>
+        <td style="font-family:var(--mono)">Up to $150K</td>
+        <td>1 year</td>
+        <td>No funding requirement (easiest to qualify)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">DigitalOcean</td>
+        <td>Hatch</td>
+        <td style="font-family:var(--mono)">Up to $100K</td>
+        <td>12 months</td>
+        <td>Series A or less + accelerator/incubator</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Azure Founders Hub is the easiest to qualify for</strong> — no funding requirement, up to $150K in credits plus OpenAI API access. GCP offers the largest credits ($200K) but requires an approved partner. AWS Activate's higher tiers need VC backing. DigitalOcean Hatch adds unique GPU credits (H100 access) for AI/ML startups.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>When to Pick Each Cloud</h3>
+
+    <div class="verdict-item">
+      <strong>Side project / hobby &rarr; GCP</strong>
+      <p>Only provider with a permanent free VM (e2-micro). Cloud Run's 2M req/mo and Firestore give you a complete stack at $0 indefinitely. <a href="/gcp-free-tier-2026">Read the full GCP guide &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Serverless backend &rarr; AWS</strong>
+      <p>Lambda + DynamoDB + API Gateway is the gold standard for serverless. 1M requests/month + 25 GB always-free database. Nothing else matches this ecosystem. <a href="/aws-free-tier-2026">Read the full AWS guide &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Startup (easiest qualification) &rarr; Azure</strong>
+      <p>Founders Hub requires no funding — just a startup idea. Up to $150K credits, OpenAI API access, and the only lifetime-free managed database (Cosmos DB). <a href="/azure-free-tier-2026">Read the full Azure guide &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Startup (largest credits) &rarr; GCP</strong>
+      <p>Google for Startups offers up to $200K — the biggest credit pool. Plus $2K in AI/ML credits (Vertex AI, BigQuery ML). Requires an approved partner though.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Simple VPS / paid hosting &rarr; DigitalOcean</strong>
+      <p>If you need predictable pricing, clean docs, and a simple UI, DO's $4/mo Droplets (after Jan 2026 cuts) beat the complexity of AWS/GCP/Azure. Per-second billing means you only pay for uptime. <a href="/digitalocean-free-tier-2026">Read the full DigitalOcean guide &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Enterprise / Microsoft ecosystem &rarr; Azure</strong>
+      <p>Active Directory (50K objects always free), .NET native support, seamless Office 365 integration. Azure DevOps (5 users, unlimited repos) makes it a natural fit for Microsoft shops.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs Comparison</h2>
+  <p class="section-intro">Every cloud has surprise costs that catch new users. Here's what to watch for on each provider.</p>
+
+  <div class="diff-card" style="border-left-color:#f85149">
+    <h3>AWS <span style="font-size:.75rem;color:#f85149;font-weight:400">Most gotchas</span></h3>
+    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>12-month silent conversion:</strong> No warning when free tier expires. Set a billing alarm on day one.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>GCP <span style="font-size:.75rem;color:#d29922;font-weight:400">Moderate gotchas</span></h3>
+    <p class="diff-desc"><strong>Egress charges:</strong> $0.12/GB to internet (higher than AWS). <strong>Firestore pricing confusion:</strong> Native mode vs Datastore mode have different pricing and limits. <strong>Region restrictions:</strong> Free e2-micro VM only in us-west1, us-central1, us-east1. <strong>Cloud SQL not free:</strong> Managed PostgreSQL/MySQL starts at $7/mo — use Firestore or an external DB.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>Azure <span style="font-size:.75rem;color:#d29922;font-weight:400">One major trap</span></h3>
+    <p class="diff-desc"><strong>No spending cap:</strong> Once your $200 trial expires, there's no automatic stop — charges accumulate on pay-as-you-go. <strong>Log Analytics ingestion:</strong> 5 GB/mo free, then $2.76/GB — logging can cost more than compute. <strong>App Service F1 limits:</strong> 60 CPU-min/day with 1 GB RAM — apps sleep after the quota. <strong>VM deallocation:</strong> You must "deallocate" (not just "stop") VMs to stop charges.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#3fb950">
+    <h3>DigitalOcean <span style="font-size:.75rem;color:#3fb950;font-weight:400">Fewest gotchas</span></h3>
+    <p class="diff-desc"><strong>Minimal free tier:</strong> The biggest "gotcha" is that there's almost nothing free — but what you do pay for is predictable. <strong>Bandwidth overage:</strong> $0.01/GB beyond your Droplet's allocation (much cheaper than AWS/GCP). <strong>Backups:</strong> 20% surcharge if enabled. <strong>Floating IPs:</strong> Free when attached, $4/mo when unattached.</p>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent pricing changes we've tracked across all 4 cloud providers. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+
+  ${cloudChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No cloud-specific pricing changes tracked yet.</p>`}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official cloud provider pricing pages. We track pricing changes across all 4 major clouds. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Deep-dive guides:</strong> <a href="/aws-free-tier-2026">AWS</a> &middot; <a href="/gcp-free-tier-2026">GCP</a> &middot; <a href="/azure-free-tier-2026">Azure</a> &middot; <a href="/digitalocean-free-tier-2026">DigitalOcean</a><br><br>
+    <strong>Query cloud pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare cloud services, track pricing changes, or plan your infrastructure stack from your AI coding assistant.
+  </div>
+
+  ${buildMcpCta("Compare cloud free tiers, track pricing changes, and plan your infrastructure stack — all from your AI coding assistant.")}
 
   <h2>Related Guides</h2>
   <div class="related-pages">
@@ -22230,6 +22840,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digitalocean-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildDigitalOceanFreeTier2026Page());
+  } else if (url.pathname === "/cloud-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/cloud-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cloud-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildCloudFreeTierComparison2026Page());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
