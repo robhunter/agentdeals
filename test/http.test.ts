@@ -2871,6 +2871,39 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
+  it("GET /auth-free-tier-comparison-2026 renders auth comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/auth-free-tier-comparison-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Auth Free Tier Comparison 2026"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Auth0"), "Should mention Auth0");
+    assert.ok(html.includes("Clerk"), "Should mention Clerk");
+    assert.ok(html.includes("Supabase Auth"), "Should mention Supabase Auth");
+    assert.ok(html.includes("Firebase Auth"), "Should mention Firebase Auth");
+    assert.ok(html.includes("Keycloak"), "Should mention Keycloak");
+    assert.ok(html.includes("FusionAuth"), "Should mention FusionAuth");
+    assert.ok(html.includes("WorkOS"), "Should mention WorkOS");
+    assert.ok(html.includes("Managed Auth"), "Should have managed auth section");
+    assert.ok(html.includes("BaaS-Integrated Auth"), "Should have BaaS auth section");
+    assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
+    assert.ok(html.includes("Specialized"), "Should have specialized section");
+    assert.ok(html.includes("Growth Cost Trap"), "Should have growth cost trap section");
+    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
+    assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/supabase-vs-firebase"), "Should cross-link to Supabase vs Firebase");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 
