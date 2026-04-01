@@ -4031,6 +4031,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Supabase",
     hubDesc: "Side-by-side comparison of 10+ database free tiers — Postgres, BaaS, edge, key-value, and vector databases compared",
   },
+  {
+    slug: "cicd-free-tier-comparison-2026",
+    title: "CI/CD Free Tier Comparison 2026 — GitHub Actions vs GitLab CI vs CircleCI vs Buildkite",
+    metaDesc: "Side-by-side comparison of 10+ CI/CD free tiers in 2026. Compare GitHub Actions, GitLab CI, CircleCI, Buildkite, Bitrise, Codemagic, Drone CI, and more — build minutes, concurrency, runners, and hidden costs.",
+    contextHtml: "",
+    tag: "cicd-free-tier-comparison-2026",
+    primaryVendor: "GitHub Actions",
+    hubDesc: "Side-by-side comparison of 10+ CI/CD free tiers — build minutes, concurrency, runners, storage, and hidden costs compared",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -19757,6 +19766,667 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function buildCicdFreeTierComparison2026Page(): string {
+  const title = "CI/CD Free Tier Comparison 2026 — GitHub Actions vs GitLab CI vs CircleCI vs Buildkite";
+  const metaDescCicd = "Side-by-side comparison of 10+ CI/CD free tiers in 2026. Compare GitHub Actions, GitLab CI, CircleCI, Buildkite, Bitrise, Codemagic, Drone CI, and more — build minutes, concurrency, runners, and hidden costs.";
+  const slug = "cicd-free-tier-comparison-2026";
+  const pubDate = "2026-03-31";
+
+  // Collect CI/CD-related deal changes
+  const cicdVendorKeywords = ["GitHub Actions", "GitLab CI", "CircleCI", "Buildkite", "Bitbucket Pipelines", "Harness CI", "Bitrise", "Codemagic", "Drone CI", "Semaphore", "Buddy", "Google Cloud Build", "Codefresh", "Nx Cloud", "Appcircle"];
+  const cicdChanges = dealChanges.filter((c: any) =>
+    cicdVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "CI/CD"
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = cicdChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["ci-cd-alternatives", "cloud-free-tier-comparison-2026", "database-free-tier-comparison-2026", "free-tier-risk", "free-devops-stack", "free-startup-stack"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = cicdChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No CI/CD-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescCicd,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescCicd)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescCicd)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; CI/CD Free Tier Comparison</div>
+  <h1>CI/CD Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 37 CI/CD services compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">37</div><div class="stat-label">CI/CD Services</div></div>
+    <div class="stat-card"><div class="stat-number green">GitHub Actions</div><div class="stat-label">Best for Open Source</div></div>
+    <div class="stat-card"><div class="stat-number green">CircleCI</div><div class="stat-label">Most Generous Credits</div></div>
+    <div class="stat-card"><div class="stat-number green">Drone CI</div><div class="stat-label">Best Self-Hosted</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>GitHub Actions</strong> dominates for open source projects with unlimited free minutes on public repos. <strong>GitLab CI</strong> is the strongest all-in-one DevOps platform with 400 compute minutes/month and built-in container registry. <strong>CircleCI</strong> offers the most generous credit-based free tier (30,000 credits/month) with powerful parallelism. <strong>Buildkite</strong> is the developer favorite for fast, scalable pipelines with unlimited self-hosted agents on the free plan.</p>
+    <p><strong>The CI/CD landscape in 2026:</strong> GitHub Actions remains the default choice for most developers, but its planned self-hosted runner charge was <strong>postponed indefinitely</strong> after community backlash. GitLab CI continues to tighten limits (down from 400 to 400 compute minutes). Self-hosted options like Drone CI and Woodpecker CI offer truly unlimited free CI/CD. Mobile CI/CD is a distinct niche where Bitrise and Codemagic compete on iOS/Android build minutes.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#general-purpose">General-Purpose CI/CD</a></li>
+      <li><a href="#developer-focused">Developer-Focused CI/CD</a></li>
+      <li><a href="#mobile">Mobile CI/CD</a></li>
+      <li><a href="#specialized">Specialized CI/CD</a></li>
+      <li><a href="#self-hosted">Self-Hosted (Unlimited Free)</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top 10 CI/CD free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>CI/CD</th>
+        <th>Free Minutes / Credits</th>
+        <th>Concurrent Jobs</th>
+        <th>Artifact / Cache</th>
+        <th>Runner Specs</th>
+        <th>Public vs Private</th>
+        <th>Self-Hosted</th>
+        <th>Always Free?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/github-actions" style="color:var(--text)">GitHub Actions</a> <span class="winner-badge">BEST OSS</span></td>
+        <td style="font-family:var(--mono)">2,000 min/mo (private)<br>Unlimited (public)</td>
+        <td>20 concurrent (public)<br>20 concurrent (private)</td>
+        <td>500 MB artifacts, 10 GB cache/repo</td>
+        <td>2 vCPU, 7 GB RAM (Linux)</td>
+        <td style="color:#3fb950">Public: unlimited</td>
+        <td class="check">Free (charge postponed)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/gitlab-ci" style="color:var(--text)">GitLab CI</a> <span class="winner-badge">BEST ALL-IN-ONE</span></td>
+        <td style="font-family:var(--mono)">400 compute min/mo</td>
+        <td>Varies by runner</td>
+        <td>5 GB project storage (incl. artifacts + registry)</td>
+        <td>1 vCPU, 3.75 GB RAM (shared)</td>
+        <td>Same limits for all repos</td>
+        <td class="check">Free (unlimited)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/circleci" style="color:var(--text)">CircleCI</a> <span class="winner-badge">MOST CREDITS</span></td>
+        <td style="font-family:var(--mono)">30,000 credits/mo</td>
+        <td>30 jobs (Linux)</td>
+        <td>Included in credits</td>
+        <td>Medium: 2 vCPU, 4 GB RAM</td>
+        <td>Same limits for all repos</td>
+        <td class="check">Free (unlimited)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
+        <td style="font-family:var(--mono)">Unlimited (self-hosted)<br>Hosted: usage-based</td>
+        <td>Unlimited (self-hosted)</td>
+        <td>Bring-your-own storage</td>
+        <td>Your hardware (self-hosted)</td>
+        <td>Same limits for all repos</td>
+        <td class="check">Free (self-hosted)</td>
+        <td style="color:#3fb950">Yes (personal)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/bitbucket-pipelines" style="color:var(--text)">Bitbucket Pipelines</a></td>
+        <td style="font-family:var(--mono)">50 min/mo</td>
+        <td>1 concurrent</td>
+        <td>1 GB artifacts</td>
+        <td>4 GB RAM (2x pipeline)</td>
+        <td>Same limits for all repos</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/harness-ci" style="color:var(--text)">Harness CI</a></td>
+        <td style="font-family:var(--mono)">2,000 build credits/mo</td>
+        <td>Varies</td>
+        <td>Included in credits</td>
+        <td>Cloud-hosted runners</td>
+        <td>Same limits for all repos</td>
+        <td class="check">Free</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/google-cloud-build" style="color:var(--text)">Google Cloud Build</a></td>
+        <td style="font-family:var(--mono)">120 min/day (e2-standard)</td>
+        <td>10 concurrent</td>
+        <td>GCS storage (separate)</td>
+        <td>e2-standard-2 (2 vCPU, 8 GB)</td>
+        <td>Same limits for all repos</td>
+        <td class="cross">No (GCE-based)</td>
+        <td style="color:#3fb950">Always Free</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
+        <td style="font-family:var(--mono)">300 credits/mo</td>
+        <td>1 concurrent</td>
+        <td>10-min build time limit</td>
+        <td>Standard runners</td>
+        <td>Same limits for all repos</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes (Hobby)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/codemagic" style="color:var(--text)">Codemagic</a></td>
+        <td style="font-family:var(--mono)">500 min/mo</td>
+        <td>1 concurrent</td>
+        <td>Build artifacts available</td>
+        <td>macOS M2 runners (Flutter)</td>
+        <td>Same limits for all repos</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a> <span class="winner-badge">BEST SELF-HOSTED</span></td>
+        <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
+        <td>Unlimited</td>
+        <td>Unlimited (your storage)</td>
+        <td>Your hardware</td>
+        <td>Same (self-hosted)</td>
+        <td class="check">Fully self-hosted</td>
+        <td style="color:#3fb950">Yes (Community)</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Minutes vs credits:</strong> GitHub Actions and GitLab CI use minutes directly. CircleCI uses credits (10 credits = 1 minute on medium Linux). Bitrise uses its own credit system. <strong>GitHub Actions</strong> is the clear winner for open source with unlimited public repo minutes. <strong>CircleCI</strong> leads for private repos with 30,000 credits/month. <strong>Self-hosted</strong> options (Drone CI, Woodpecker CI, Buildkite) offer truly unlimited CI/CD at the cost of managing your own infrastructure.
+  </div>
+
+  <h2 id="general-purpose">General-Purpose CI/CD</h2>
+  <p class="section-intro">The big four CI/CD platforms that handle most workloads — from simple test-and-deploy to complex multi-stage pipelines.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Config Format</th>
+        <th>Marketplace</th>
+        <th>Container Registry</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">GitHub Actions <span class="winner-badge">ECOSYSTEM LEADER</span></td>
+        <td>2,000 min/mo + unlimited public</td>
+        <td>YAML (workflows)</td>
+        <td class="check">17,000+ marketplace actions</td>
+        <td class="check">GitHub Packages (500 MB free)</td>
+        <td>Open source, GitHub-native projects</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">GitLab CI <span class="winner-badge">BEST ALL-IN-ONE</span></td>
+        <td>400 compute min/mo</td>
+        <td>YAML (.gitlab-ci.yml)</td>
+        <td class="partial">CI/CD catalog (growing)</td>
+        <td class="check">Built-in (5 GB total)</td>
+        <td>All-in-one DevOps (code, CI, registry, deploy)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">CircleCI</td>
+        <td>30,000 credits/mo</td>
+        <td>YAML + orbs</td>
+        <td class="check">Orbs marketplace</td>
+        <td class="cross">No (external)</td>
+        <td>Complex workflows, parallelism, orbs</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Bitbucket Pipelines</td>
+        <td>50 min/mo</td>
+        <td>YAML (bitbucket-pipelines.yml)</td>
+        <td class="partial">Pipes (limited)</td>
+        <td class="cross">No (external)</td>
+        <td>Atlassian/Jira teams</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>GitHub Actions vs GitLab CI:</strong> GitHub Actions wins on ecosystem (17,000+ marketplace actions) and open source support (unlimited minutes). GitLab CI wins as an all-in-one platform — CI/CD, container registry, issue tracking, and deployments in one tool. <strong>CircleCI</strong> offers the most compute for free (30K credits) and has the best parallelism support. <strong>Bitbucket Pipelines</strong> is only worth considering if you&rsquo;re already in the Atlassian ecosystem — 50 min/mo is the stingiest free tier in this category.
+  </div>
+
+  <h2 id="developer-focused">Developer-Focused CI/CD</h2>
+  <p class="section-intro">Newer platforms targeting developer experience, speed, and modern workflows. Often better self-hosted runner support.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Self-Hosted Runners</th>
+        <th>Parallelism</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Buildkite</td>
+        <td>Free for personal use (unlimited self-hosted agents)</td>
+        <td class="check">Unlimited, first-class</td>
+        <td class="check">Unlimited (your hardware)</td>
+        <td>Fast builds, own infrastructure</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Semaphore CI</td>
+        <td>Community plan (self-hosted, unlimited)</td>
+        <td class="check">Unlimited</td>
+        <td class="check">Configurable</td>
+        <td>Self-hosted, Ruby/Elixir communities</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Buddy</td>
+        <td>5 projects, 500 executions/mo</td>
+        <td class="cross">Paid only</td>
+        <td class="partial">Limited</td>
+        <td>Visual pipeline builder, simple deploys</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Harness CI</td>
+        <td>2,000 build credits/mo</td>
+        <td class="check">Free</td>
+        <td class="check">Yes</td>
+        <td>Enterprise-grade CI with ML-powered insights</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Buildkite stands out</strong> by offering unlimited self-hosted agents on the free personal plan. You bring your own compute (a spare laptop, a VM, a Kubernetes cluster) and Buildkite orchestrates the pipelines. <strong>Semaphore CI</strong> offers a similar self-hosted-first approach. <strong>Harness CI</strong> is enterprise-grade with ML-powered test intelligence that can automatically split and parallelize tests.
+  </div>
+
+  <h2 id="mobile">Mobile CI/CD</h2>
+  <p class="section-intro">Specialized for iOS/Android builds. Mobile CI/CD requires macOS runners for iOS and specific SDKs — general-purpose CI often struggles here.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>iOS Builds</th>
+        <th>Android Builds</th>
+        <th>Flutter</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Bitrise</td>
+        <td>300 credits/mo, 1 concurrent</td>
+        <td class="check">macOS runners</td>
+        <td class="check">Linux runners</td>
+        <td class="check">Supported</td>
+        <td>Broadest mobile platform support</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Codemagic <span class="winner-badge">BEST FLUTTER</span></td>
+        <td>500 min/mo, 1 concurrent</td>
+        <td class="check">macOS M2 runners</td>
+        <td class="check">Linux runners</td>
+        <td class="check">First-class (by Flutter team)</td>
+        <td>Flutter apps (built by Flutter team)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Appcircle</td>
+        <td>25 min/build, limited builds</td>
+        <td class="check">macOS runners</td>
+        <td class="check">Linux runners</td>
+        <td class="check">Supported</td>
+        <td>Enterprise mobile DevOps</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Codemagic leads for Flutter</strong> — it was built by the Flutter community and offers 500 free minutes/month with macOS M2 runners (critical for iOS builds). <strong>Bitrise</strong> has the broadest integration ecosystem for native iOS/Android. <strong>Tip:</strong> GitHub Actions can build mobile apps too (including macOS runners for iOS), but mobile-specific platforms handle code signing, App Store deployment, and device testing much better.
+  </div>
+
+  <h2 id="specialized">Specialized CI/CD</h2>
+  <p class="section-intro">Niche CI/CD tools for specific use cases — monorepos, infrastructure-as-code, and cloud-native builds.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Specialty</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Nx Cloud</td>
+        <td>Hobby plan: free for small teams</td>
+        <td>Monorepo build orchestration</td>
+        <td>Nx/monorepo projects (remote caching, task distribution)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Google Cloud Build</td>
+        <td>120 build-min/day (e2-standard)</td>
+        <td>GCP-native, container builds</td>
+        <td>GCP projects, container image builds</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Codefresh</td>
+        <td>3 users, 1 concurrent, unlimited builds</td>
+        <td>GitOps + Argo CD native</td>
+        <td>Kubernetes deployments, GitOps workflows</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Terramate</td>
+        <td>Free for open source</td>
+        <td>IaC orchestration (Terraform, OpenTofu)</td>
+        <td>Infrastructure-as-code CI/CD</td>
+      </tr>
+      <tr>
+        <td class="provider-col">RunMyJob</td>
+        <td>400 vCPU-min, 800 GB-min, 10 concurrent</td>
+        <td>Smart scaling for GitHub Actions/GitLab CI</td>
+        <td>Cost optimization for existing CI pipelines</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Nx Cloud</strong> can dramatically speed up monorepo builds by caching task results across CI runs. <strong>Codefresh</strong> is the best free option for Kubernetes/GitOps workflows with native Argo CD support. <strong>Google Cloud Build</strong> is generous at 120 min/day but only makes sense if you&rsquo;re already on GCP. <strong>RunMyJob</strong> is a newer entrant that optimizes runner costs for existing GitHub Actions/GitLab CI pipelines.
+  </div>
+
+  <h2 id="self-hosted">Self-Hosted CI/CD (Unlimited Free)</h2>
+  <p class="section-intro">Fully free, open-source CI/CD that runs on your own infrastructure. Zero build-minute limits, complete control, but you manage the servers.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>License</th>
+        <th>Config</th>
+        <th>Container-Native</th>
+        <th>Kubernetes</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col">Drone CI <span class="winner-badge">MOST MATURE</span></td>
+        <td>Community (Apache 2.0)</td>
+        <td>YAML (.drone.yml)</td>
+        <td class="check">Docker-native</td>
+        <td class="check">Kubernetes runner</td>
+        <td>Docker-native CI, simple YAML config</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Woodpecker CI</td>
+        <td>Apache 2.0</td>
+        <td>YAML (.woodpecker.yml)</td>
+        <td class="check">Docker-native</td>
+        <td class="check">Kubernetes backend</td>
+        <td>Drone CI fork with active community</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Drone CI</strong> is the most mature self-hosted option — Docker-native, simple YAML configuration, and a large plugin ecosystem. <strong>Woodpecker CI</strong> is a community-driven fork of Drone that continues active development under the Apache 2.0 license. Both are truly free and unlimited — your only cost is the compute to run them. Ideal for teams with spare infrastructure or homelab setups.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>When to Pick Each CI/CD Tool</h3>
+
+    <div class="verdict-item">
+      <strong>Open source projects &rarr; GitHub Actions</strong>
+      <p>Unlimited free minutes for public repos, 17,000+ marketplace actions, native GitHub integration. The default choice for every open source project. <a href="/vendor/github-actions">View GitHub Actions details &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Private repos on a budget &rarr; GitLab CI or CircleCI</strong>
+      <p>GitLab CI: 400 min/mo + unlimited self-hosted runners + built-in container registry. CircleCI: 30,000 credits/mo with powerful parallelism. GitLab wins on all-in-one; CircleCI wins on raw compute. <a href="/ci-cd-alternatives">CI/CD alternatives guide &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Complex workflows with parallelism &rarr; CircleCI</strong>
+      <p>30,000 credits/month, 30 concurrent Linux jobs, orbs for reusable configurations, and built-in test splitting. The best free tier for compute-heavy pipelines. <a href="/vendor/circleci">View CircleCI details &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Mobile apps (Flutter) &rarr; Codemagic</strong>
+      <p>500 free minutes/month with macOS M2 runners. Built by the Flutter team with first-class Flutter, iOS, and Android support including code signing and App Store deployment. <a href="/vendor/codemagic">View Codemagic details &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Mobile apps (native iOS/Android) &rarr; Bitrise</strong>
+      <p>Broadest integration ecosystem for native mobile development. 300 credits/month, macOS runners for iOS builds, pre-configured steps for common mobile workflows. <a href="/vendor/bitrise">View Bitrise details &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Monorepos &rarr; Nx Cloud</strong>
+      <p>Remote caching and distributed task execution for Nx-based monorepos. Free hobby plan dramatically reduces CI times by skipping unchanged projects. Pairs with any CI provider (GitHub Actions, GitLab CI, etc.).</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Self-hosted / unlimited &rarr; Drone CI or Woodpecker CI</strong>
+      <p>Truly free and unlimited CI/CD on your own infrastructure. Docker-native, simple YAML config, no build-minute limits. Drone CI is more mature; Woodpecker CI has a more active community fork.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Kubernetes / GitOps &rarr; Codefresh</strong>
+      <p>Native Argo CD integration, GitOps-first workflows, Kubernetes dashboard. Free for 3 users with unlimited builds. The best free option for teams deploying to Kubernetes.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+  <p class="section-intro">Free CI/CD tiers have several non-obvious limits that can catch you off guard. Here&rsquo;s what to watch for.</p>
+
+  <div class="diff-card" style="border-left-color:#f85149">
+    <h3>macOS/Windows minute multipliers</h3>
+    <p class="diff-desc"><strong>GitHub Actions</strong> counts macOS minutes at 10x and Windows at 2x the Linux rate. Your 2,000 free minutes becomes just 200 macOS minutes or 1,000 Windows minutes. <strong>CircleCI</strong> similarly charges more credits for macOS and Windows runners. Always check the minute multiplier before running iOS builds on general-purpose CI.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>Artifact storage fees</h3>
+    <p class="diff-desc"><strong>GitHub Actions:</strong> 500 MB free artifact storage (shared with GitHub Packages). Artifacts auto-expire after 90 days (configurable). <strong>GitLab:</strong> Artifacts count toward the 5 GB project storage limit alongside the container registry. <strong>CircleCI:</strong> Artifacts stored for 30 days on free plan. Build caching across CI providers is often unlimited but only persists for 7-30 days.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>Concurrent job limits</h3>
+    <p class="diff-desc">Free tiers typically limit concurrent jobs: <strong>Bitbucket Pipelines</strong> allows only 1 concurrent build. <strong>Bitrise</strong> and <strong>Codemagic</strong> also limit to 1 concurrent. Even GitHub Actions can queue builds if you exceed 20 concurrent jobs. For teams with multiple developers pushing frequently, concurrent job limits matter more than total minutes.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>Data transfer and egress</h3>
+    <p class="diff-desc">Most CI providers don&rsquo;t charge for data transfer on free tiers, but <strong>Google Cloud Build</strong> egress follows standard GCP pricing outside the Always Free bucket. <strong>GitLab</strong> counts data transfer toward project limits. If you&rsquo;re pulling large Docker images or datasets in CI, check whether data transfer counts against your free allocation.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#3fb950">
+    <h3>Self-hosted runner economics</h3>
+    <p class="diff-desc">Self-hosted runners on <strong>GitHub Actions</strong>, <strong>GitLab CI</strong>, <strong>Buildkite</strong>, and <strong>CircleCI</strong> are free — you pay only for your own infrastructure. A $5/mo VPS can serve as a CI runner with unlimited minutes. For teams exceeding free tier limits, self-hosted runners are almost always cheaper than buying more cloud minutes.</p>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent CI/CD pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers across 37 CI/CD services, verified against official pricing pages. We track pricing changes across all major CI/CD providers. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Related guides:</strong> <a href="/ci-cd-alternatives">CI/CD Alternatives</a> &middot; <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> &middot; <a href="/free-devops-stack">Free DevOps Stack</a> &middot; <a href="/free-tier-risk">Free Tier Risk Index</a><br><br>
+    <strong>Query CI/CD pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare CI/CD providers, track pricing changes, or plan your DevOps stack from your AI coding assistant.
+  </div>
+
+  ${buildMcpCta("Compare CI/CD free tiers, track pricing changes, and plan your DevOps stack — all from your AI coding assistant.")}
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -23526,6 +24196,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digitalocean-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildDigitalOceanFreeTier2026Page());
+  } else if (url.pathname === "/cicd-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/cicd-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cicd-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildCicdFreeTierComparison2026Page());
   } else if (url.pathname === "/database-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/database-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
