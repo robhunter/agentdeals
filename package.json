@@ -44,7 +44,7 @@
     "build:mcpb": "npm run build && npx @anthropic-ai/mcpb pack ."
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "swagger-ui-dist": "^5.32.0",
     "zod": "^3.25.0"
   },
