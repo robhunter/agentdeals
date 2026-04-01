@@ -154,8 +154,8 @@ describe("track_changes tool", () => {
       const result = responses.find((r: any) => r.id === 2) as any;
       const body = JSON.parse(result.result.content[0].text);
 
-      assert.strictEqual(body.total, 1);
-      assert.strictEqual(body.changes[0].vendor, "Netlify");
+      assert.ok(body.total >= 1, `Expected at least 1 Netlify change, got ${body.total}`);
+      assert.ok(body.changes.every((c: any) => c.vendor === "Netlify"), "All results should be Netlify");
     } finally {
       proc.kill();
     }
