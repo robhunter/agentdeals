@@ -4094,6 +4094,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "PostHog",
     hubDesc: "Side-by-side comparison of 15+ analytics free tiers — event limits, session replays, feature flags, data retention, and the analytics cost trap at scale",
   },
+  {
+    slug: "testing-free-tier-comparison-2026",
+    title: "Testing & QA Tools Free Tier Comparison 2026 — Cypress vs Playwright vs BrowserStack vs k6",
+    metaDesc: "Side-by-side comparison of 15+ testing free tiers in 2026. Compare Playwright, Cypress Cloud, BrowserStack, Chromatic, k6, Checkly, Codecov, and more — test runs, minutes, snapshots, and scaling costs.",
+    contextHtml: "",
+    tag: "testing-free-tier-comparison-2026",
+    primaryVendor: "Playwright",
+    hubDesc: "Side-by-side comparison of 15+ testing tool free tiers — E2E, visual regression, load testing, API testing, local dev, and the testing cost trap at scale",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -24171,6 +24180,668 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function buildTestingFreeTierComparison2026Page(): string {
+  const title = "Testing & QA Tools Free Tier Comparison 2026 — Cypress vs Playwright vs BrowserStack vs k6";
+  const metaDescTesting = "Side-by-side comparison of 15+ testing free tiers in 2026. Compare Playwright, Cypress Cloud, BrowserStack, Chromatic, k6, Checkly, Codecov, and more — test runs, minutes, snapshots, and scaling costs.";
+  const slug = "testing-free-tier-comparison-2026";
+  const pubDate = "2026-04-01";
+
+  // Collect testing-related deal changes
+  const testingVendorKeywords = ["Cypress", "Playwright", "BrowserStack", "Checkly", "Chromatic", "Codecov", "Postman", "LocalStack", "Testcontainers", "Percy", "Katalon", "Selenium", "Sauce Labs", "LambdaTest", "Applitools", "k6", "Grafana k6", "Artillery", "Gatling", "Locust", "BlazeMeter", "Argos", "BugBug", "Bencher"];
+  const testingChanges = dealChanges.filter((c: any) =>
+    testingVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("testing") || c.summary.toLowerCase().includes("test result") || c.summary.toLowerCase().includes("browser automation")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = testingChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["testing-alternatives", "cicd-free-tier-comparison-2026", "monitoring-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = testingChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No testing-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescTesting,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescTesting)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescTesting)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-card .diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.growth-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-table .cheapest{color:#3fb950;font-weight:700}
+.growth-table .expensive{color:#f85149;font-weight:700}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Testing Free Tier Comparison</div>
+  <h1>Testing &amp; QA Tools Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ testing services compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Testing Tools Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">$0</div><div class="stat-label">Playwright (Fully OSS)</div></div>
+    <div class="stat-card"><div class="stat-number green">500</div><div class="stat-label">Cypress Cloud Free Results/mo</div></div>
+    <div class="stat-card"><div class="stat-number amber">5K</div><div class="stat-label">Chromatic Free Snapshots/mo</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>Playwright</strong> is the best free E2E framework &mdash; fully open-source with no cloud lock-in, parallel execution, and multi-browser support. <strong>Checkly</strong> offers the most generous cloud testing free tier (50K API check runs + 10 browser checks/month). <strong>Grafana k6 Cloud</strong> leads for load testing (500 VU hours free). <strong>Chromatic</strong> wins visual regression (5K snapshots/month free). <strong>Postman</strong> is the default for API testing but now single-user only on free plans.</p>
+    <p><strong>The open-source advantage:</strong> Testing is uniquely favourable for open-source tools. Playwright, Selenium, k6, Locust, Gatling, Artillery, Testcontainers, and LocalStack are all free with no usage limits when self-hosted. The cost conversation in testing is really about <em>cloud execution platforms</em> &mdash; CI minutes, parallel sessions, and hosted dashboards &mdash; not the testing frameworks themselves.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#e2e-browser">E2E &amp; Browser Testing</a></li>
+      <li><a href="#visual-regression">Visual Regression Testing</a></li>
+      <li><a href="#load-performance">Load &amp; Performance Testing</a></li>
+      <li><a href="#api-testing">API Testing</a></li>
+      <li><a href="#local-dev">Local Development &amp; Emulation</a></li>
+      <li><a href="#code-quality">Code Quality &amp; Coverage</a></li>
+      <li><a href="#cost-trap">The Testing Cost Trap</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top testing tool free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Tier Limit</th>
+        <th>Open Source</th>
+        <th>Cloud/Hosted</th>
+        <th>CI/CD Integration</th>
+        <th>Self-Hosted</th>
+        <th>Permanent Free</th>
+        <th>API Access</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Playwright<span class="winner-badge">BEST FREE E2E</span></td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; Apache 2.0</td>
+        <td class="partial">&#9679; Via third-party</td>
+        <td class="check">&#10003; Native</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Cypress Cloud<span class="caution-badge">500 RESULTS/MO</span></td>
+        <td>500 test results/mo, 3 users</td>
+        <td class="partial">&#9679; Framework OSS, Cloud proprietary</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="partial">&#9679; Framework only</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">BrowserStack<span class="caution-badge">OSS ONLY</span></td>
+        <td>Free for open source</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; OSS projects</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Selenium Grid</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; Apache 2.0</td>
+        <td class="partial">&#9679; Via third-party</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Checkly<span class="winner-badge">BEST CLOUD FREE</span></td>
+        <td>50K API checks + 10 browser/mo</td>
+        <td class="partial">&#9679; CLI OSS</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Chromatic<span class="winner-badge">BEST VISUAL</span></td>
+        <td>5K snapshots/mo</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">BrowserStack Percy</td>
+        <td>5K screenshots/mo</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Grafana k6 Cloud<span class="winner-badge">BEST LOAD TEST</span></td>
+        <td>500 VU hours/mo</td>
+        <td class="check">&#10003; AGPL (CLI)</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="check">&#10003; CLI</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Postman<span class="caution-badge">SINGLE USER</span></td>
+        <td>25 collection runs/mo, 1 user</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Codecov</td>
+        <td>Free for public repos, 1 user private</td>
+        <td class="partial">&#9679; Sentry-owned</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">LocalStack</td>
+        <td>30+ AWS services (auth required)</td>
+        <td class="partial">&#9679; Auth token required</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Testcontainers</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; Apache 2.0</td>
+        <td class="partial">&#9679; Cloud available</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Sauce Labs</td>
+        <td>Free for open source</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; OSS projects</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Argos</td>
+        <td>5K screenshots/mo</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Artillery</td>
+        <td>CLI unlimited, Cloud 600 VU mins/mo</td>
+        <td class="check">&#10003; MPL 2.0</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">LambdaTest</td>
+        <td>60 mins/mo live, 10 screenshot tests</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Native</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="e2e-browser">E2E &amp; Browser Testing</h2>
+  <p class="section-intro">End-to-end testing frameworks and cloud browser testing platforms. The frameworks are free; the cloud platforms charge for parallel execution and cross-browser coverage.</p>
+
+  <div class="diff-card">
+    <h3>Playwright <span class="winner-badge">BEST FREE E2E</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (Apache 2.0), unlimited use. Microsoft-backed. Supports Chromium, Firefox, and WebKit. Built-in parallel execution, auto-waiting, codegen, trace viewer, and test generator. Native CI/CD integration with GitHub Actions, GitLab CI, and more. No cloud account required &mdash; everything runs locally or in your own CI. The only cost is your own CI compute minutes. Best for teams that want a modern, batteries-included E2E framework with zero vendor lock-in.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Cypress Cloud <span class="caution-badge">500 RESULTS/MO</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 500 test results/month, 3 users, 30-day data retention. The Cypress framework itself is open-source (MIT), but Cypress Cloud (dashboard, parallelization, analytics) is proprietary. Parallelization on the free tier is included but limited to the 500 result cap. The framework is excellent for component + E2E testing with time-travel debugging and automatic waiting. However, the 500 test result limit is tight for teams running larger suites &mdash; a 50-test suite run on every PR would burn through the monthly quota in 10 PRs.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>BrowserStack <span class="caution-badge">OSS ONLY</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free for open-source projects with unlimited testing on 3,000+ real browsers and devices. Commercial projects require paid plans starting at $29/month. The platform provides real device testing (not emulators), Selenium/Playwright/Cypress integration, and visual testing via Percy. The OSS-vs-commercial distinction is important: your public GitHub repo qualifies, but your company's private repo does not.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Selenium Grid</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (Apache 2.0). The original browser automation framework. Self-hosted grid for parallel testing across browsers. Requires infrastructure setup and maintenance. Selenium 4 added native Chrome DevTools Protocol support. Largest ecosystem of any testing framework with bindings for Java, Python, C#, Ruby, JavaScript. Best for teams with existing Selenium test suites or those needing maximum language flexibility.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Katalon</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free community edition with limited test executions. Low-code/no-code test creation with record-and-playback. Supports web, mobile, API, and desktop testing. Built on Selenium and Appium. Best for QA teams that prefer visual test creation over code-first approaches.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>BugBug</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Unlimited local test runs, cloud runs require paid plan. Lightweight browser extension for recording and running tests. No coding required. Best for small teams or non-developers who need simple automated browser testing without complex setup.</div>
+  </div>
+
+  <h2 id="visual-regression">Visual Regression Testing</h2>
+  <p class="section-intro">Tools that detect unintended visual changes by comparing screenshots across builds. Critical for component libraries, design systems, and UI-heavy applications.</p>
+
+  <div class="diff-card">
+    <h3>Chromatic <span class="winner-badge">BEST VISUAL</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5,000 snapshots/month, Chrome-only (Firefox/Safari on paid). Built by the Storybook team &mdash; the tightest integration with Storybook of any visual testing tool. Turbosnap optimization skips unchanged components, stretching the free tier further. Snapshots include interaction testing (click, type, hover) and accessibility checks. Best for teams using Storybook who want native visual regression without additional tooling.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>BrowserStack Percy</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5,000 screenshots/month, unlimited users and projects. Cross-browser visual testing across Chrome, Firefox, Safari, and Edge. Framework-agnostic &mdash; works with Playwright, Cypress, Selenium, Storybook, and more. Responsive testing across configurable viewport widths. Best for teams that need cross-browser visual regression and are already using BrowserStack for functional testing.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Argos</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5,000 screenshots/month for open-source projects. Open-source visual testing with Playwright, Cypress, and Storybook integrations. GitHub/GitLab PR integration for visual review. Smart pixel comparison with configurable thresholds. Best for open-source projects or teams wanting a simpler visual regression tool without enterprise complexity.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Applitools Eyes</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 100 visual checkpoints/month, 1 user. AI-powered visual testing that uses Visual AI to detect meaningful visual differences while ignoring acceptable rendering variations. Supports Playwright, Cypress, Selenium, Storybook, and more. The AI approach reduces false positives compared to pixel-based tools. The 100-checkpoint limit is restrictive for production use.</div>
+  </div>
+
+  <h2 id="load-performance">Load &amp; Performance Testing</h2>
+  <p class="section-intro">Tools for simulating concurrent users and measuring application performance under load. Open-source CLIs are fully free; cloud platforms charge for distributed execution.</p>
+
+  <div class="diff-card">
+    <h3>Grafana k6 Cloud <span class="winner-badge">BEST LOAD TEST</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 500 virtual user hours (VUh)/month on Grafana Cloud, 14-day test result retention. The k6 CLI is open-source (AGPL) with no limits when self-hosted. JavaScript-based scripting with built-in protocols (HTTP, WebSocket, gRPC, browser). Grafana Cloud integration for results visualization. VU hours can be consumed quickly with complex scenarios &mdash; 100 VUs for 5 hours = 500 VUh (entire monthly quota). Best for teams already in the Grafana ecosystem or wanting a developer-friendly load testing tool.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Artillery</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> CLI is open-source (MPL 2.0, unlimited). Artillery Cloud has a free tier with 600 VU minutes/month. YAML-based test configuration with JavaScript/TypeScript hooks. Supports HTTP, WebSocket, Socket.io, and more. Built-in Playwright integration for browser-based load testing. Best for teams that prefer YAML configuration and need socket protocol support.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Locust</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (MIT), unlimited use. Python-based load testing with a web UI for real-time monitoring. Write test scenarios as Python code &mdash; full language flexibility. Built-in distributed mode for scaling across multiple machines. No cloud platform (fully self-hosted). Best for Python teams or those who want maximum scriptability in load test scenarios.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Gatling</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Community Edition is open-source (Apache 2.0). Self-hosted with no limits. Scala/Java/Kotlin DSL for test scenarios. Enterprise edition adds Gatling Cloud for distributed execution. Highly efficient &mdash; can simulate thousands of concurrent users on a single machine. Best for JVM teams or those needing high-performance load generation with minimal infrastructure.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Bencher</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free for public projects. Continuous benchmarking tool that catches performance regressions in CI. Tracks benchmark results over time with statistical analysis. GitHub integration for PR comments. Best for library authors and teams that need to prevent performance regressions across releases.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>BlazeMeter</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 50 max virtual users, 10 tests/month, 20-minute max test duration. Supports JMeter, Gatling, Selenium, and custom scripts. Cloud-based distributed testing. The free tier limits are restrictive for serious load testing but useful for small-scale validation. Best for teams with existing JMeter test suites that want cloud execution.</div>
+  </div>
+
+  <h2 id="api-testing">API Testing</h2>
+  <p class="section-intro">Tools for testing REST, GraphQL, and gRPC APIs. Includes manual exploration, automated test suites, and synthetic monitoring.</p>
+
+  <div class="diff-card">
+    <h3>Postman <span class="caution-badge">SINGLE USER</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 25 collection runs/month on cloud, single user only (since March 2026). Unlimited collections, environments, and manual requests. The desktop app remains powerful for API exploration and ad-hoc testing. However, the March 2026 change to single-user-only on the free plan eliminates team collaboration &mdash; shared workspaces, collection sharing, and team features now require a paid plan ($14/user/month). Many teams are migrating to open-source alternatives.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Checkly <span class="winner-badge">BEST CLOUD FREE</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 50,000 API check runs/month + 10 browser check runs/month. The Checkly CLI is open-source. Monitoring-as-code approach &mdash; define checks in JavaScript/TypeScript and deploy via CI. Built-in Playwright support for browser-based API testing. Alerting via Slack, PagerDuty, and more. Best for teams that want synthetic monitoring alongside API testing, or those wanting a more generous free tier than Postman.</div>
+  </div>
+
+  <h2 id="local-dev">Local Development &amp; Emulation</h2>
+  <p class="section-intro">Tools for testing cloud services locally without incurring cloud costs. Emulate AWS, run containers, and mock external dependencies.</p>
+
+  <div class="diff-card">
+    <h3>LocalStack</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 30+ AWS services emulated locally. <strong>Important change (March 2026):</strong> LocalStack dropped the open-source Community Edition and now requires an auth token for all usage. The free tier still covers 30+ core services (S3, DynamoDB, Lambda, SQS, SNS, API Gateway, and more) but requires registration. Pro features (additional services, persistence, CI integration) require paid plans. Best for teams developing AWS applications that want fast local iteration without AWS charges.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Testcontainers</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (Apache 2.0), unlimited. Libraries for Java, Python, Node.js, Go, .NET, and Rust that spin up throwaway Docker containers for integration testing. Pre-built modules for 50+ technologies (PostgreSQL, MySQL, Redis, Kafka, Elasticsearch, and more). Testcontainers Cloud is available as a paid service for cloud-based container execution. Acquired by Docker (via AtomicJar) in 2024. Best for integration testing with real databases and services instead of mocks.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Moto</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Fully open-source, unlimited. Python library that mocks 100+ AWS services for testing. Can run as a standalone server or as a Python decorator/context manager. No Docker required (unlike LocalStack). Best for Python teams that need lightweight AWS mocking in unit tests without starting containers.</div>
+  </div>
+
+  <h2 id="code-quality">Code Quality &amp; Coverage</h2>
+  <p class="section-intro">Code coverage reporting and continuous quality analysis tools.</p>
+
+  <div class="diff-card">
+    <h3>Codecov</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free for public repositories with unlimited users. Developer plan for private repos: 1 user, unlimited repositories. Owned by Sentry. Coverage reporting with PR comments, diff coverage, flags for monorepos, and coverage trend tracking. Supports all major languages and CI providers. The private repo limitation (1 user on free) pushes teams toward paid plans at $5/user/month. Best for open-source projects or individual developers tracking coverage on private repos.</div>
+  </div>
+
+  <h2 id="cost-trap">The Testing Cost Trap</h2>
+  <p class="section-intro">How testing costs scale from free to enterprise. The frameworks are free &mdash; the cloud platforms are where costs accelerate.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Scenario</th>
+        <th>Playwright (self-hosted)</th>
+        <th>Cypress Cloud</th>
+        <th>BrowserStack</th>
+        <th>Chromatic</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Small team (500 test runs/mo)</td>
+        <td class="cheapest">$0 (CI cost only)</td>
+        <td>$0 (within free tier)</td>
+        <td>$29/mo</td>
+        <td>$0 (within free tier)</td>
+      </tr>
+      <tr>
+        <td>Growing team (5K test runs/mo)</td>
+        <td class="cheapest">$0 (CI cost only)</td>
+        <td>$75/mo</td>
+        <td>$29+/mo</td>
+        <td>$0 (within snapshots)</td>
+      </tr>
+      <tr>
+        <td>Mid-size (25K test runs/mo)</td>
+        <td class="cheapest">$0 (CI cost only)</td>
+        <td>$300/mo</td>
+        <td>$199+/mo</td>
+        <td>$149/mo</td>
+      </tr>
+      <tr>
+        <td>Large team (100K test runs/mo)</td>
+        <td class="cheapest">$0 (CI cost only)</td>
+        <td class="expensive">Custom pricing</td>
+        <td class="expensive">$399+/mo</td>
+        <td class="expensive">Custom pricing</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Parallel execution is the hidden cost multiplier.</strong> Most free tiers limit parallel sessions (Cypress Cloud: included but capped at 500 results; BrowserStack: varies by plan). Running a 200-test suite across 4 browsers with 3 parallel workers turns a 10-minute run into 200 &times; 4 = 800 test results per CI run. At 2 runs/day, you burn through Cypress Cloud's monthly free tier in just over 3 days.
+  </div>
+
+  <div class="context-box">
+    <strong>CI compute is the real cost of &ldquo;free&rdquo; frameworks.</strong> Playwright and Selenium are free, but they still need CI minutes to run. A typical Playwright suite takes 5&ndash;15 minutes on GitHub Actions. At $0.008/min (Linux), running tests 50 times/month costs ~$2&ndash;6. That's still dramatically cheaper than cloud testing platforms, but it's not literally zero. For larger suites, self-hosted runners or caching strategies reduce costs further.
+  </div>
+
+  <div class="context-box">
+    <strong>Visual regression scales linearly with components.</strong> A design system with 200 components &times; 3 viewports &times; 2 themes = 1,200 snapshots per build. Chromatic's free tier (5K) covers ~4 builds/month at that scale. Beyond that, costs are $149/mo for 35K snapshots. Percy and Argos have similar scaling dynamics. Turbosnap (Chromatic) and smart diffing (Percy) help by skipping unchanged components.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by Use Case</h3>
+
+    <div class="verdict-item">
+      <strong>Best E2E framework (free) &rarr; Playwright</strong>
+      <p>Fully open-source with no cloud lock-in. Multi-browser (Chromium, Firefox, WebKit), parallel execution, auto-waiting, codegen, and trace viewer all built in. Microsoft-backed with rapid development pace. The clear winner for new E2E projects.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best cloud testing free tier &rarr; Checkly</strong>
+      <p>50K API check runs + 10 browser checks per month. Monitoring-as-code with Playwright support. The most generous cloud testing free tier by a wide margin. Best for teams that want synthetic monitoring integrated with their testing workflow.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best visual regression &rarr; Chromatic</strong>
+      <p>5K snapshots/month free with Storybook-native integration. Turbosnap optimization stretches the free tier further. The Storybook team built it, so the integration is unmatched. Argos and Percy are strong alternatives with similar free tiers.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best load testing &rarr; Grafana k6 Cloud</strong>
+      <p>500 VU hours/month on Grafana Cloud, plus the fully open-source CLI for unlimited local testing. JavaScript-based scripting with native Grafana integration. The best balance of free cloud capacity and open-source flexibility.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for API testing &rarr; Postman (or open-source alternatives)</strong>
+      <p>Postman's desktop app remains excellent for API exploration. But the March 2026 single-user restriction means teams should evaluate alternatives: Bruno (open-source, Git-friendly), Hoppscotch (web-based, open-source), or Insomnia (Kong, open-source core). For automated API monitoring, Checkly is the better choice.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best local AWS emulation &rarr; LocalStack</strong>
+      <p>30+ AWS services emulated locally. Despite the March 2026 change requiring auth tokens, the free tier still covers core services (S3, DynamoDB, Lambda, SQS, SNS). For Python-only teams, Moto is a lighter alternative that doesn't require Docker.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for open-source projects &rarr; BrowserStack + Sauce Labs</strong>
+      <p>Both offer unlimited free testing for open-source projects across real browsers and devices. BrowserStack covers 3,000+ browser/device combinations. Sauce Labs adds 3 parallel sessions across 900+ platform configurations. Combined, they give OSS projects enterprise-grade cross-browser testing at zero cost.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+
+  <div class="diff-card">
+    <h3>Cypress Cloud's 500 test result limit catches teams fast</h3>
+    <div class="diff-desc">500 test results/month sounds reasonable until you calculate: a 50-test suite run on every PR (2 PRs/day &times; 20 working days = 40 runs) generates 2,000 results. You'll hit the free tier limit in the first week. The paid plan jumps to $75/month for 5,000 results. Teams running larger suites or more frequent CI can easily reach $300+/month.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>BrowserStack's commercial vs. open-source distinction</h3>
+    <div class="diff-desc">BrowserStack's free tier is exclusively for open-source projects. Your company's private repository does not qualify, even if you're a startup. The cheapest commercial plan starts at $29/month (1 parallel test, 1 user). Cross-browser testing at scale requires higher tiers. Make sure your project genuinely qualifies for OSS access before building workflows around it.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>k6 Cloud VU hours can spike with complex scenarios</h3>
+    <div class="diff-desc">500 VU hours sounds generous, but consumption depends heavily on scenario complexity. A simple HTTP test with 100 VUs for 5 hours = 500 VUh (entire monthly quota in one test). Browser-based k6 tests consume VU hours faster due to higher resource usage. The open-source CLI has no limits, so teams doing serious load testing should run locally or on self-hosted infrastructure and use Cloud only for distributed geographic testing.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Postman's March 2026 single-user restriction</h3>
+    <div class="diff-desc">Postman's free plan is now single-user only. Team collaboration (shared workspaces, collection sharing, team features) requires a paid plan at $14/user/month. Teams that were sharing collections for free must now either pay or migrate to alternatives. This is a significant change for teams that adopted Postman as a shared API testing tool.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>LocalStack's March 2026 auth token requirement</h3>
+    <div class="diff-desc">LocalStack dropped its open-source Community Edition in March 2026. All usage now requires a free auth token from localstack.cloud. While the free tier still covers 30+ services, the dependency on an auth token means CI pipelines need the token configured as a secret, and air-gapped environments can't use LocalStack at all. Consider Moto (Python AWS mocking) or Testcontainers for environments where external auth isn't acceptable.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Free E2E frameworks still need CI compute</h3>
+    <div class="diff-desc">Playwright and Selenium are free, but they need a CI runner to execute. GitHub Actions charges $0.008/min (Linux) beyond the free tier (2,000 min/month for free accounts, 3,000 for Pro). A 15-minute E2E suite running 100 times/month = 1,500 minutes. On a free GitHub account, that's 75% of your monthly CI budget consumed by tests alone. Factor CI costs into your total testing budget.</div>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent testing tool pricing changes tracked in our index.</p>
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All testing service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  ${buildMcpCta("testing-free-tier-comparison-2026")}
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 function buildAnalyticsFreeTierComparison2026Page(): string {
   const title = "Analytics & Product Analytics Free Tier Comparison 2026 — PostHog vs Mixpanel vs Amplitude vs Plausible";
   const metaDescAnalytics = "Side-by-side comparison of 15+ analytics free tiers in 2026. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.";
@@ -28626,6 +29297,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/storage-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildStorageFreeTierComparison2026Page());
+  } else if (url.pathname === "/testing-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/testing-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/testing-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildTestingFreeTierComparison2026Page());
   } else if (url.pathname === "/analytics-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/analytics-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/analytics-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
