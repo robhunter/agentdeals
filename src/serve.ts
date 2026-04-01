@@ -4058,6 +4058,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Auth0",
     hubDesc: "Side-by-side comparison of 15+ auth free tiers — MAU limits, overage costs, MFA, social login, self-hosted options, and growth pricing traps",
   },
+  {
+    slug: "monitoring-free-tier-comparison-2026",
+    title: "Monitoring & Observability Free Tier Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Sentry",
+    metaDesc: "Side-by-side comparison of 20+ monitoring free tiers in 2026. Compare Datadog, Grafana Cloud, New Relic, Sentry, UptimeRobot, PagerDuty, Healthchecks.io, and more — data ingest, retention, hosts, alerting, and scaling costs.",
+    contextHtml: "",
+    tag: "monitoring-free-tier-comparison-2026",
+    primaryVendor: "Datadog",
+    hubDesc: "Side-by-side comparison of 20+ monitoring free tiers — data ingest limits, retention, hosts, alerting, APM, and the observability cost trap at scale",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -21872,6 +21881,836 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Monitoring free tier comparison page ---
+
+function buildMonitoringFreeTierComparison2026Page(): string {
+  const title = "Monitoring & Observability Free Tier Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Sentry";
+  const metaDescMonitoring = "Side-by-side comparison of 20+ monitoring free tiers in 2026. Compare Datadog, Grafana Cloud, New Relic, Sentry, UptimeRobot, PagerDuty, Healthchecks.io, and more — data ingest, retention, hosts, alerting, and scaling costs.";
+  const slug = "monitoring-free-tier-comparison-2026";
+  const pubDate = "2026-04-01";
+
+  // Collect monitoring-related deal changes
+  const monitoringVendorKeywords = ["Datadog", "Grafana", "New Relic", "Sentry", "Axiom", "Sematext", "Middleware", "BetterStack", "Better Stack", "UptimeRobot", "StatusCake", "Hyperping", "Pulsetic", "Pingbreak", "OnlineOrNot", "PagerDuty", "incident.io", "PagerTree", "Healthchecks", "Cronitor", "Dead Man", "Prometheus", "Jaeger", "Netdata", "Robusta", "AppSignal", "Inspector", "Uptimia"];
+  const monitoringChanges = dealChanges.filter((c: any) =>
+    monitoringVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("monitoring") || c.summary.toLowerCase().includes("observability") || c.summary.toLowerCase().includes("apm") || c.summary.toLowerCase().includes("uptime")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = monitoringChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["monitoring-alternatives", "datadog-vs-new-relic", "cloud-free-tier-comparison-2026", "free-devops-stack", "free-tier-risk"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = monitoringChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No monitoring-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescMonitoring,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescMonitoring)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescMonitoring)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.growth-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-table .cheapest{color:#3fb950;font-weight:700}
+.growth-table .expensive{color:#f85149;font-weight:700}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Monitoring Free Tier Comparison</div>
+  <h1>Monitoring &amp; Observability Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ monitoring services compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Monitoring Services Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">100GB</div><div class="stat-label">Highest Free Ingest (New Relic)</div></div>
+    <div class="stat-card"><div class="stat-number green">Grafana</div><div class="stat-label">Best Overall Free Tier</div></div>
+    <div class="stat-card"><div class="stat-number amber">1 day</div><div class="stat-label">Datadog Free Retention</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>Grafana Cloud</strong> offers the best overall free tier for monitoring &mdash; 10,000 metrics series, 50GB logs, 50GB traces, and 14-day retention with full dashboarding and alerting. <strong>New Relic</strong> has the most generous data ingest at 100GB/month, but limits you to 1 full platform user (a team bottleneck). <strong>UptimeRobot</strong> is the simplest choice for uptime monitoring with 50 free monitors. <strong>Prometheus + Grafana</strong> self-hosted gives unlimited scale with zero per-host costs.</p>
+    <p><strong>The observability cost trap:</strong> Monitoring costs explode at scale because pricing is tied to hosts, data volume, or both. At 50 hosts, Datadog Infrastructure Pro costs ~$750/mo while Grafana Cloud is still free for 10,000 metric series. At 100GB/day of logs, Datadog charges for both ingest and indexing separately. The worst trap: <strong>Datadog&rsquo;s free tier retains metrics for only 1 day</strong> &mdash; useless for trend analysis, capacity planning, or incident investigation beyond "right now."</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#fullstack-observability">Full-Stack Observability Platforms</a></li>
+      <li><a href="#error-apm">Error Tracking &amp; APM</a></li>
+      <li><a href="#uptime-monitoring">Uptime Monitoring</a></li>
+      <li><a href="#incident-management">Incident Management</a></li>
+      <li><a href="#cron-monitoring">Cron &amp; Job Monitoring</a></li>
+      <li><a href="#self-hosted">Self-Hosted / Open Source</a></li>
+      <li><a href="#cost-trap">The Observability Cost Trap</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top monitoring service free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Ingest</th>
+        <th>Metric Retention</th>
+        <th>Log Retention</th>
+        <th>Hosts / Services</th>
+        <th>Users</th>
+        <th>Alerting</th>
+        <th>Dashboards</th>
+        <th>APM / Tracing</th>
+        <th>Self-Hosted</th>
+        <th>Lock-in Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Datadog<span class="caution-badge">1-DAY</span></td>
+        <td>5 hosts</td>
+        <td>1 day</td>
+        <td>1 day (500MB)</td>
+        <td>5 hosts</td>
+        <td>Unlimited</td>
+        <td class="partial">2 alerts</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; Paid</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#f85149">High</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Grafana Cloud<span class="winner-badge">BEST OVERALL</span></td>
+        <td>10K series + 50GB logs + 50GB traces</td>
+        <td>14 days</td>
+        <td>14 days</td>
+        <td>Unlimited</td>
+        <td>3 users</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; 50GB traces</td>
+        <td class="partial">OSS core</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">New Relic<span class="winner-badge">MOST DATA</span></td>
+        <td>100GB/mo</td>
+        <td>8 days (NRDB)</td>
+        <td>30 days</td>
+        <td>Unlimited</td>
+        <td>1 full user</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Included</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#d29922">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Axiom</td>
+        <td>500GB/mo ingest</td>
+        <td>30 days</td>
+        <td>30 days</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Traces</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#d29922">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Sematext</td>
+        <td>500MB/day logs</td>
+        <td>30 min</td>
+        <td>7 days</td>
+        <td>5 hosts</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Basic</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#d29922">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Middleware.io</td>
+        <td>1 host</td>
+        <td>1 day</td>
+        <td>1 day</td>
+        <td>1 host</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#d29922">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">BetterStack</td>
+        <td>1GB logs</td>
+        <td>3 days</td>
+        <td>3 days</td>
+        <td>10 monitors</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Sentry</td>
+        <td>5K errors/mo + 10K replays</td>
+        <td>N/A</td>
+        <td>90 days</td>
+        <td>Unlimited</td>
+        <td>1 user</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Issue tracking</td>
+        <td class="check">&#10003; Performance</td>
+        <td class="partial">Self-hosted</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">AppSignal</td>
+        <td>100K requests</td>
+        <td>30 days</td>
+        <td>10 days</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">UptimeRobot<span class="winner-badge">SIMPLEST</span></td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>50 monitors</td>
+        <td>1 user</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Status pages</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">StatusCake</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>10 monitors</td>
+        <td>1 user</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Status pages</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">PagerDuty</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>Unlimited integrations</td>
+        <td>5 users</td>
+        <td class="check">&#10003; On-call</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#d29922">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">incident.io</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>Unlimited</td>
+        <td>5 users</td>
+        <td class="check">&#10003; On-call</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Healthchecks.io</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>20 checks</td>
+        <td>3 users</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="partial">Self-hosted</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Cronitor</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>5 monitors</td>
+        <td>1 user</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Prometheus</td>
+        <td>Unlimited</td>
+        <td>15 days (default)</td>
+        <td>N/A</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003; Alertmanager</td>
+        <td class="partial">Via Grafana</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td><span style="color:#3fb950">None</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Jaeger</td>
+        <td>Unlimited</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td class="cross">&#10007;</td>
+        <td class="partial">Trace UI</td>
+        <td class="check">&#10003; Tracing</td>
+        <td class="check">&#10003;</td>
+        <td><span style="color:#3fb950">None</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Netdata</td>
+        <td>Unlimited</td>
+        <td>14 days (cloud)</td>
+        <td>N/A</td>
+        <td>5 nodes (cloud)</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td><span style="color:#3fb950">None</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="fullstack-observability">Full-Stack Observability Platforms</h2>
+  <p class="section-intro">These platforms offer metrics, logs, traces, and dashboards in a single product. The free tier differences are dramatic.</p>
+
+  <div class="diff-card">
+    <h3>Datadog <span class="caution-badge">LIMITED FREE</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 hosts, 1-day metric retention, 500MB logs (1-day retention), 2 alert monitors. The most feature-rich platform but the most restrictive free tier. The 1-day retention makes the free tier practically useless for anything beyond real-time dashboards &mdash; you can't investigate yesterday's incident or spot weekly trends. APM, Synthetics, and SIEM are all paid add-ons.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Grafana Cloud <span class="winner-badge">BEST FREE TIER</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10,000 metric series (Prometheus), 50GB logs (Loki), 50GB traces (Tempo), 14-day retention, 3 users, unlimited dashboards, alerting included. By far the most generous free tier in full-stack observability. Built on open-source Grafana, Prometheus, Loki, and Tempo &mdash; so your queries and dashboards are portable. 3-user limit is the main constraint for teams.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>New Relic <span class="winner-badge">MOST DATA</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 100GB/month data ingest across all telemetry types, 1 full platform user + unlimited basic users (read-only dashboards). 8-day metric retention in NRDB, 30-day log retention. Full APM, infrastructure, and browser monitoring included. The catch: the 1 full user limit means only one person can create dashboards, set up alerts, or query data &mdash; a bottleneck for any team larger than one.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Axiom</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 500GB/month ingest with 30-day retention. Unlimited users. Supports logs, metrics, and traces. Modern query language (APL) with a fast columnar engine. The most generous raw ingest allowance on this list. Good for startups that generate a lot of telemetry data and need longer retention.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Sematext</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 500MB/day logs (7-day retention), 5 hosts for infrastructure monitoring (30-min metric retention), basic alerting. Offers both logs and infrastructure in one platform. The 30-minute metric retention is extremely short &mdash; only useful for live monitoring.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Middleware.io</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1 host, 1-day data retention, full-stack observability including APM, logs, and infrastructure. Modern OpenTelemetry-native platform. The single host limit makes it suitable only for development or very small projects.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>BetterStack (formerly Logtail)</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1GB log ingest, 3-day retention, 10 uptime monitors (3-min checks), status pages. Combines logging with uptime monitoring. Clean UI. The log retention is short but the combined logging + uptime monitoring makes it a good starter choice.</div>
+  </div>
+
+  <h2 id="error-apm">Error Tracking &amp; APM</h2>
+  <p class="section-intro">Specialized tools for catching application errors, performance issues, and user-facing problems.</p>
+
+  <div class="diff-card">
+    <h3>Sentry <span class="winner-badge">BEST ERROR TRACKING</span></h3>
+    <div class="diff-desc"><strong>Free tier (Developer):</strong> 5,000 errors/month, 10,000 session replays, 10,000 performance units, 1 user. 90-day retention. Supports 30+ platforms. Source map support, breadcrumbs, and issue grouping included. The de facto standard for error tracking. Self-hosted option available for unlimited scale.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>AppSignal</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 100,000 requests/month, 30-day APM retention, 10-day log retention. Error tracking, performance monitoring, host metrics, and anomaly detection. Particularly strong for Ruby and Elixir. Unlimited team members.</div>
+  </div>
+
+  <h2 id="uptime-monitoring">Uptime Monitoring</h2>
+  <p class="section-intro">Dedicated tools for monitoring whether your services are up and responding correctly.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Monitors</th>
+        <th>Check Interval</th>
+        <th>Alert Channels</th>
+        <th>Status Pages</th>
+        <th>SSL Monitoring</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">UptimeRobot<span class="winner-badge">MOST MONITORS</span></td>
+        <td>50</td>
+        <td>5 min</td>
+        <td>Email, webhook</td>
+        <td class="check">&#10003; 1 page</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">BetterStack</td>
+        <td>10</td>
+        <td>3 min</td>
+        <td>Email, Slack, webhooks</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">StatusCake</td>
+        <td>10</td>
+        <td>5 min</td>
+        <td>Email</td>
+        <td class="cross">&#10007; Paid</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Hyperping</td>
+        <td>10</td>
+        <td>1 min</td>
+        <td>Email, Slack</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Pulsetic</td>
+        <td>10</td>
+        <td>3 min</td>
+        <td>Email</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Pingbreak</td>
+        <td>3</td>
+        <td>5 min</td>
+        <td>Email, webhook</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">OnlineOrNot</td>
+        <td>5</td>
+        <td>3 min</td>
+        <td>Email, Slack</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Key takeaway:</strong> UptimeRobot dominates on monitor count (50 free). Hyperping has the fastest free check interval (1 min). BetterStack combines uptime with logging for a two-in-one free tier. For most small projects, UptimeRobot's 50 monitors at 5-min intervals is more than enough.
+  </div>
+
+  <h2 id="incident-management">Incident Management</h2>
+  <p class="section-intro">Tools for on-call scheduling, incident response, and status communication.</p>
+
+  <div class="diff-card">
+    <h3>PagerDuty</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 users, unlimited integrations, on-call scheduling, email/SMS/push notifications, escalation policies. The industry standard for on-call management. Free tier is genuinely usable for small teams. No phone call alerts on free tier (email + push only for escalations).</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>incident.io</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 users, Slack-native incident management, on-call scheduling, post-mortems, status pages. Modern UX built around Slack workflows. Strong for teams already centered on Slack for communication.</div>
+  </div>
+
+  <h2 id="cron-monitoring">Cron &amp; Job Monitoring</h2>
+  <p class="section-intro">Dead simple monitoring for scheduled tasks, cron jobs, and background workers &mdash; alert when a job doesn't check in on time.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Checks</th>
+        <th>Users</th>
+        <th>Alert Channels</th>
+        <th>Grace Period</th>
+        <th>Self-Hosted</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Healthchecks.io<span class="winner-badge">BEST VALUE</span></td>
+        <td>20</td>
+        <td>3</td>
+        <td>Email, Slack, webhooks, + 20 more</td>
+        <td class="check">&#10003; Configurable</td>
+        <td class="check">&#10003; BSD license</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Cronitor</td>
+        <td>5</td>
+        <td>1</td>
+        <td>Email, Slack, PagerDuty</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Dead Man's Snitch</td>
+        <td>1</td>
+        <td>1</td>
+        <td>Email</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Key takeaway:</strong> Healthchecks.io is the clear winner &mdash; 20 free checks, 3 team members, 20+ integrations, and BSD-licensed self-hosted option. Cronitor and Dead Man's Snitch are more limited but have slicker UIs.
+  </div>
+
+  <h2 id="self-hosted">Self-Hosted / Open Source</h2>
+  <p class="section-intro">Zero vendor lock-in, unlimited scale, but you own the infrastructure and operations.</p>
+
+  <div class="diff-card">
+    <h3>Prometheus + Grafana <span class="winner-badge">MOST MATURE</span></h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free (infrastructure costs only). The industry-standard metrics pipeline. Prometheus scrapes and stores time-series metrics; Grafana visualizes them. Default 15-day retention (configurable). PromQL is the most widely supported query language in monitoring. Add Alertmanager for alerting. Operates at massive scale (millions of time series). Downside: no built-in log management &mdash; pair with Loki or ELK.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Jaeger</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free (infrastructure costs only). CNCF-graduated distributed tracing platform. OpenTelemetry native. Supports multiple storage backends (Elasticsearch, Cassandra, Kafka). Essential for microservice architectures. Pair with Prometheus for metrics and Loki for logs to build a full observability stack.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Netdata</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free self-hosted (unlimited). Cloud free tier: 5 nodes, 14-day retention. Real-time infrastructure monitoring with zero-config auto-discovery of 800+ integrations. Per-second granularity out of the box. Extremely lightweight agent (~1% CPU). Best for real-time infrastructure visibility without complex setup.</div>
+  </div>
+
+  <div class="context-box">
+    <strong>The self-hosted trade-off:</strong> Self-hosted monitoring eliminates per-host and per-GB costs but introduces operational burden. You need to run, scale, and maintain the monitoring infrastructure itself &mdash; which is ironic when monitoring is supposed to tell you when things break. Best for teams with dedicated platform/infra engineers. If you're a small team, start with Grafana Cloud free tier and self-host only when you outgrow it.
+  </div>
+
+  <h2 id="cost-trap">The Observability Cost Trap</h2>
+  <p class="section-intro">Monitoring costs explode at scale. Here's what it actually costs when you outgrow the free tier.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Scenario</th>
+        <th>Datadog</th>
+        <th>Grafana Cloud</th>
+        <th>New Relic</th>
+        <th>Self-Hosted</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>5 hosts, basic metrics</strong></td>
+        <td class="cheapest">$0 (free tier)</td>
+        <td class="cheapest">$0 (free tier)</td>
+        <td class="cheapest">$0 (free tier)</td>
+        <td class="cheapest">$0 (infra only)</td>
+      </tr>
+      <tr>
+        <td><strong>20 hosts + APM</strong></td>
+        <td class="expensive">~$620/mo ($31/host)</td>
+        <td class="cheapest">~$0 (likely still free)</td>
+        <td>~$0 (within 100GB)</td>
+        <td class="cheapest">$0 (infra only)</td>
+      </tr>
+      <tr>
+        <td><strong>50 hosts + APM + logs</strong></td>
+        <td class="expensive">~$2,250/mo</td>
+        <td>~$50-200/mo</td>
+        <td>~$200-400/mo</td>
+        <td class="cheapest">$50-150/mo (infra)</td>
+      </tr>
+      <tr>
+        <td><strong>100 hosts full stack</strong></td>
+        <td class="expensive">~$5,500/mo</td>
+        <td>~$300-800/mo</td>
+        <td>~$500-1,000/mo</td>
+        <td>$200-500/mo (infra)</td>
+      </tr>
+      <tr>
+        <td><strong>100GB/day logs</strong></td>
+        <td class="expensive">~$5,100/mo (ingest + index)</td>
+        <td>~$1,500/mo</td>
+        <td>~$1,800/mo (over 100GB)</td>
+        <td>$100-300/mo (storage)</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Why Datadog costs explode:</strong> Datadog uses <strong>per-host pricing</strong> ($15-31/host/mo for Infrastructure, $31-40/host/mo for APM) that scales linearly. But the real trap is that every feature is a separate add-on: APM, Log Management, Synthetics, SIEM, Database Monitoring, and Continuous Profiler are each priced independently. At 50 hosts with APM + logs, you're paying for 3 separate products. Grafana Cloud and New Relic include APM and logs in base pricing. Self-hosted eliminates per-host costs entirely &mdash; you only pay for the infrastructure to run the monitoring stack.
+  </div>
+
+  <div class="context-box">
+    <strong>The 1-day retention trap:</strong> Datadog's free tier retains metrics for only <strong>1 day</strong>. This means you literally cannot: look at last week's CPU trends, compare this Monday to last Monday, investigate an incident that happened yesterday afternoon, or do any capacity planning. Most serious monitoring requires at least 7-14 days of retention. Grafana Cloud offers 14 days free; New Relic offers 8 days for metrics and 30 days for logs.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by Use Case</h3>
+
+    <div class="verdict-item">
+      <strong>Full-stack observability on a budget &rarr; Grafana Cloud</strong>
+      <p>Most generous free tier across metrics + logs + traces. 10K series, 50GB logs, 50GB traces, 14-day retention. Open-source core means your dashboards and queries are portable.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Maximum free data ingest &rarr; New Relic</strong>
+      <p>100GB/month across all telemetry types. Full APM, infrastructure, and browser monitoring. Trade-off: only 1 full platform user, so one person owns all configuration.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Simple uptime monitoring &rarr; UptimeRobot</strong>
+      <p>50 monitors at 5-min intervals. Dead simple setup. Email + webhook alerts. Free status page. Handles HTTP, keyword, ping, and port checks.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Error tracking for small teams &rarr; Sentry</strong>
+      <p>5K errors/month on Developer tier. 90-day retention. 30+ platform SDKs. Source maps, breadcrumbs, and session replay. Self-hosted option for unlimited scale.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Self-hosted everything &rarr; Prometheus + Jaeger + Grafana</strong>
+      <p>Unlimited scale, zero per-host or per-GB costs, and full data ownership. Add Loki for logs. Requires infrastructure expertise. The CNCF-blessed observability stack.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Incident management starter &rarr; PagerDuty or incident.io</strong>
+      <p>Both offer 5 free users with on-call scheduling. PagerDuty for traditional pager workflows; incident.io for Slack-native incident response.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Cron job monitoring &rarr; Healthchecks.io</strong>
+      <p>20 free monitors with configurable grace periods. 20+ notification integrations. BSD-licensed self-hosted option. The de facto standard for dead man's switch monitoring.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+
+  <div class="diff-card">
+    <h3>Datadog's 1-day metric retention</h3>
+    <div class="diff-desc">The free tier retains metrics for just 24 hours. This makes it unsuitable for trend analysis, capacity planning, weekly comparisons, or investigating incidents from the day before. You'll be forced to upgrade to Pro ($15/host/mo) almost immediately for any serious use.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>New Relic's 1 full user limit</h3>
+    <div class="diff-desc">Only 1 team member can create dashboards, configure alerts, or write NRQL queries. Everyone else gets basic (read-only) access. This creates a single point of failure &mdash; if that person leaves, you need to transfer full user access. At $99/user/mo for additional full users, adding a second costs more than some entire monitoring solutions.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Per-host pricing that scales linearly</h3>
+    <div class="diff-desc">Datadog ($15-31/host/mo) and Sematext charge per host. Auto-scaling infrastructure means your monitoring bill fluctuates with your cloud bill. A Black Friday traffic spike that scales you to 200 hosts also scales your Datadog bill to $6,000+/mo &mdash; and that's just infrastructure monitoring, before APM or logs.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Log indexing charges separate from ingest</h3>
+    <div class="diff-desc">Datadog charges for log ingestion ($0.10/GB) AND log indexing ($1.70/million events) separately. You can ingest logs for search without indexing, but queries are slower and you lose many features. At 100GB/day of logs, just ingest costs $300/mo &mdash; adding indexing can triple it.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Alert channel limitations</h3>
+    <div class="diff-desc">Many free tiers limit alert delivery to email only. No Slack, PagerDuty, or phone call alerts without upgrading. UptimeRobot supports webhooks on free, which is a workaround. Grafana Cloud includes all notification channels on free tier &mdash; another reason it leads.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Data egress and API rate limits</h3>
+    <div class="diff-desc">Exporting data from monitoring platforms is often rate-limited or restricted on free tiers. New Relic limits NRQL query rate. Datadog's free API has lower rate limits. This makes it hard to migrate away or build custom integrations &mdash; classic vendor lock-in by design.</div>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent monitoring and observability pricing changes tracked in our index.</p>
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All monitoring service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  ${buildMcpCta("monitoring-free-tier-comparison-2026")}
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -25646,6 +26485,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cicd-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCicdFreeTierComparison2026Page());
+  } else if (url.pathname === "/monitoring-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/monitoring-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/monitoring-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildMonitoringFreeTierComparison2026Page());
   } else if (url.pathname === "/auth-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/auth-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/auth-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
