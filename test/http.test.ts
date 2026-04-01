@@ -3067,6 +3067,38 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
   });
 
+  it("GET /api-development-free-tier-comparison-2026 renders API development comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api-development-free-tier-comparison-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("API Development"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Postman"), "Should mention Postman");
+    assert.ok(html.includes("Bruno"), "Should mention Bruno");
+    assert.ok(html.includes("Hoppscotch"), "Should mention Hoppscotch");
+    assert.ok(html.includes("Insomnia"), "Should mention Insomnia");
+    assert.ok(html.includes("Thunder Client"), "Should mention Thunder Client");
+    assert.ok(html.includes("Mockoon"), "Should mention Mockoon");
+    assert.ok(html.includes("Full-Featured API Clients"), "Should have full-featured section");
+    assert.ok(html.includes("Open Source"), "Should have open source section");
+    assert.ok(html.includes("Web-Based"), "Should have web-based section");
+    assert.ok(html.includes("IDE Extensions"), "Should have IDE extensions section");
+    assert.ok(html.includes("API Design"), "Should have API design section");
+    assert.ok(html.includes("Mock Servers"), "Should have mock servers section");
+    assert.ok(html.includes("API Tool Migration Trap"), "Should have migration trap section");
+    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
+    assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 
