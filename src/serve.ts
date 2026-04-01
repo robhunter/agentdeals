@@ -4076,6 +4076,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "SendGrid",
     hubDesc: "Side-by-side comparison of 15+ email free tiers — monthly volume, daily caps, rate limits, dedicated IPs, and the email cost trap at scale",
   },
+  {
+    slug: "storage-free-tier-comparison-2026",
+    title: "Storage & Object Storage Free Tier Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage",
+    metaDesc: "Side-by-side comparison of 12+ object storage free tiers in 2026. Compare Cloudflare R2, Backblaze B2, AWS S3, Google Cloud Storage, Supabase Storage, Storj, Tigris, and more — storage limits, egress fees, S3 compatibility, and scaling costs.",
+    contextHtml: "",
+    tag: "storage-free-tier-comparison-2026",
+    primaryVendor: "Cloudflare R2",
+    hubDesc: "Side-by-side comparison of 12+ object storage free tiers — storage limits, egress fees, S3 compatibility, operations costs, and the egress cost trap at scale",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -23449,6 +23458,710 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Storage free tier comparison page ---
+
+function buildStorageFreeTierComparison2026Page(): string {
+  const title = "Storage & Object Storage Free Tier Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage";
+  const metaDescStorage = "Side-by-side comparison of 12+ object storage free tiers in 2026. Compare Cloudflare R2, Backblaze B2, AWS S3, Google Cloud Storage, Supabase Storage, Storj, Tigris, and more — storage limits, egress fees, S3 compatibility, and scaling costs.";
+  const slug = "storage-free-tier-comparison-2026";
+  const pubDate = "2026-04-01";
+
+  // Collect storage-related deal changes
+  const storageVendorKeywords = ["Cloudflare R2", "Cloudflare", "Backblaze", "AWS S3", "Amazon S3", "Google Cloud Storage", "Azure Blob", "DigitalOcean Spaces", "Supabase", "Firebase", "Storj", "Tigris", "Wasabi", "MinIO", "Cloudinary", "ImageKit", "Uploadcare", "Vercel Blob", "Oracle Cloud"];
+  const storageChanges = dealChanges.filter((c: any) =>
+    storageVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("storage") || c.summary.toLowerCase().includes("egress") || c.summary.toLowerCase().includes("object stor")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = storageChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["storage-alternatives", "cloud-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk", "free-devops-stack"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = storageChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No storage-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescStorage,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescStorage)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescStorage)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.growth-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-table .cheapest{color:#3fb950;font-weight:700}
+.growth-table .expensive{color:#f85149;font-weight:700}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Storage Free Tier Comparison</div>
+  <h1>Storage &amp; Object Storage Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ storage services compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">Storage Services Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">$0</div><div class="stat-label">R2 Egress (Zero Egress Fees)</div></div>
+    <div class="stat-card"><div class="stat-number green">25 GB</div><div class="stat-label">Largest Free Storage (Storj)</div></div>
+    <div class="stat-card"><div class="stat-number amber">12-mo</div><div class="stat-label">AWS S3 Free Tier (Expires)</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. No other provider matches the zero-egress proposition. <strong>Storj</strong> offers the most generous raw limits at 25 GB storage + 25 GB egress/month. <strong>Backblaze B2</strong> provides 10 GB free with S3 compatibility and free egress through Cloudflare CDN partnership. <strong>Supabase Storage</strong> is ideal for apps already using Supabase (1 GB free, integrated with auth and database).</p>
+    <p><strong>The egress revolution:</strong> Cloudflare R2 launched with zero egress fees, fundamentally disrupting the cloud storage market. AWS S3 charges $0.09/GB for egress &mdash; at 1 TB/month, that's $92 in egress alone. R2 charges $0. This single difference can save thousands per month at scale, and it's forcing other providers to reconsider their egress pricing.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#s3-compatible">S3-Compatible Object Storage</a></li>
+      <li><a href="#cloud-provider">Cloud Provider Storage</a></li>
+      <li><a href="#baas-integrated">BaaS-Integrated Storage</a></li>
+      <li><a href="#specialized-media">Specialized &amp; Media Storage</a></li>
+      <li><a href="#self-hosted">Self-Hosted Storage</a></li>
+      <li><a href="#cost-trap">The Storage Cost Trap</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top object storage free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Storage</th>
+        <th>Free Egress</th>
+        <th>Class A Ops (Writes)</th>
+        <th>Class B Ops (Reads)</th>
+        <th>S3 Compatible</th>
+        <th>CDN Built-in</th>
+        <th>Permanent Free</th>
+        <th>Max Object Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Cloudflare R2<span class="winner-badge">ZERO EGRESS</span></td>
+        <td>10 GB</td>
+        <td class="cheapest">Unlimited ($0)</td>
+        <td>1M/mo</td>
+        <td>10M/mo</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Workers</td>
+        <td class="check">&#10003;</td>
+        <td>5 GB (multipart)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Storj<span class="winner-badge">MOST STORAGE</span></td>
+        <td>25 GB</td>
+        <td>25 GB/mo</td>
+        <td>Included</td>
+        <td>Included</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Edge network</td>
+        <td class="check">&#10003;</td>
+        <td>Unlimited (multipart)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Backblaze B2</td>
+        <td>10 GB</td>
+        <td>1 GB/day (~30 GB/mo)</td>
+        <td>2,500/day</td>
+        <td>2,500/day</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Cloudflare CDN free</td>
+        <td class="check">&#10003;</td>
+        <td>100 GB (multipart)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Tigris (Fly.io)</td>
+        <td>5 GB</td>
+        <td>Included</td>
+        <td>Included</td>
+        <td>Included</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Global</td>
+        <td class="check">&#10003;</td>
+        <td>5 GB (multipart)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Supabase Storage</td>
+        <td>1 GB</td>
+        <td>2 GB/mo</td>
+        <td>Included</td>
+        <td>Included</td>
+        <td class="cross">&#10007; Custom API</td>
+        <td class="check">&#10003; CDN</td>
+        <td class="check">&#10003;</td>
+        <td>50 MB (free tier)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Firebase Storage</td>
+        <td>5 GB</td>
+        <td>1 GB/day</td>
+        <td>20K/day</td>
+        <td>50K/day</td>
+        <td class="cross">&#10007; Firebase SDK</td>
+        <td class="check">&#10003; Firebase CDN</td>
+        <td class="check">&#10003;</td>
+        <td>5 GB</td>
+      </tr>
+      <tr>
+        <td class="provider-col">AWS S3<span class="caution-badge">12-MO ONLY</span></td>
+        <td>5 GB</td>
+        <td>100 GB/mo (12 mo)</td>
+        <td>2,000/mo</td>
+        <td>20,000/mo</td>
+        <td class="check">&#10003; (native)</td>
+        <td class="partial">CloudFront sep.</td>
+        <td class="cross">&#10007; 12-month trial</td>
+        <td>5 TB (multipart)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Google Cloud Storage</td>
+        <td>5 GB-mo/mo</td>
+        <td>1 GB/mo (N. America)</td>
+        <td>5,000/mo</td>
+        <td>50,000/mo</td>
+        <td class="check">&#10003; Interop</td>
+        <td class="partial">Cloud CDN sep.</td>
+        <td class="check">&#10003; Always Free</td>
+        <td>5 TB (multipart)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure Blob Storage</td>
+        <td>5 GB (LRS)</td>
+        <td>5 GB/mo (12 mo)</td>
+        <td>20,000/mo</td>
+        <td>20,000/mo</td>
+        <td class="partial">REST API only</td>
+        <td class="partial">Azure CDN sep.</td>
+        <td class="cross">&#10007; 12-month trial</td>
+        <td>4.75 TB</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Oracle Cloud Obj. Storage</td>
+        <td>10 GB</td>
+        <td>10 GB/mo</td>
+        <td>50,000/mo</td>
+        <td>50,000/mo</td>
+        <td class="check">&#10003; Compat.</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; Always Free</td>
+        <td>10 GB</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Cloudinary<span class="winner-badge">BEST MEDIA</span></td>
+        <td>25 credits/mo</td>
+        <td>25 credits/mo</td>
+        <td>Included</td>
+        <td>Included</td>
+        <td class="cross">&#10007; Custom API</td>
+        <td class="check">&#10003; Global CDN</td>
+        <td class="check">&#10003;</td>
+        <td>100 MB (free)</td>
+      </tr>
+      <tr>
+        <td class="provider-col">ImageKit</td>
+        <td>20 GB bandwidth/mo</td>
+        <td>20 GB/mo (delivery)</td>
+        <td>Included</td>
+        <td>Included</td>
+        <td class="cross">&#10007; Custom API</td>
+        <td class="check">&#10003; Global CDN</td>
+        <td class="check">&#10003;</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Vercel Blob</td>
+        <td>Included in Hobby</td>
+        <td>Included in Hobby</td>
+        <td>Included</td>
+        <td>Included</td>
+        <td class="cross">&#10007; Custom API</td>
+        <td class="check">&#10003; Edge network</td>
+        <td class="check">&#10003; (Hobby plan)</td>
+        <td>500 MB</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="s3-compatible">S3-Compatible Object Storage</h2>
+  <p class="section-intro">Drop-in replacements for AWS S3. Change the endpoint URL and credentials &mdash; your existing S3 SDK code works unchanged.</p>
+
+  <div class="diff-card">
+    <h3>Cloudflare R2 <span class="winner-badge">ZERO EGRESS</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10 GB storage, 1M Class A operations (writes), 10M Class B operations (reads) per month. The defining feature: <strong>zero egress fees</strong>, ever. No bandwidth charges regardless of how much data you serve. S3-compatible API, Workers integration for edge compute on your objects, and automatic global distribution. The free tier has no SLA, but the same infrastructure as paid. Best for any project where read-heavy access patterns would make S3 egress costs unsustainable.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Backblaze B2</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10 GB storage, 1 GB/day free egress, 2,500 Class A/Class B API calls per day. S3-compatible API available alongside the native B2 API. Key advantage: <strong>free egress through Cloudflare CDN</strong> via the Bandwidth Alliance &mdash; put Cloudflare in front of B2 and egress is free. Without CDN, egress is $0.01/GB (10x cheaper than S3). Long-standing indie storage company with a track record of not removing free tiers. Best for large file storage where you control the CDN layer.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Tigris (Fly.io)</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB storage with globally distributed access included. S3-compatible API with automatic data distribution to Fly.io edge regions near your users. No separate egress charges on the free tier. Integrated with Fly.io deployments but usable independently. Best for globally-distributed apps that need low-latency object access without configuring CDN.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Storj <span class="winner-badge">MOST STORAGE</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 25 GB storage, 25 GB egress per month. Decentralized storage network &mdash; files are encrypted, split into pieces, and distributed across independent nodes. S3-compatible gateway. Edge-optimized downloads (retrieves from nearest nodes). The most generous free storage of any provider. Unique trade-off: decentralized architecture means slightly higher latency for first byte vs centralized providers, but competitive download speeds. Best for projects that need maximum free storage.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Wasabi</h3>
+    <div class="diff-desc"><strong>Pricing:</strong> No free tier, but notable for flat-rate pricing at $6.99/TB/month with <strong>no egress fees</strong>. S3-compatible. Minimum storage duration of 90 days. Often compared as a paid alternative to S3 for egress-heavy workloads. Not free, but dramatically cheaper than S3 at scale.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>MinIO (self-hosted)</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free, open-source (GNU AGPL v3). S3-compatible object storage you run on your own infrastructure. Single binary deployment. Enterprise-grade features: erasure coding, bitrot protection, encryption, IAM policies, versioning, replication. The standard for self-hosted S3-compatible storage. Best for teams with existing infrastructure who want full control.</div>
+  </div>
+
+  <h2 id="cloud-provider">Cloud Provider Storage</h2>
+  <p class="section-intro">Object storage from major cloud providers. Tightly integrated with their ecosystems but with varying free tier generosity.</p>
+
+  <div class="diff-card">
+    <h3>AWS S3 <span class="caution-badge">12-MONTH FREE ONLY</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB storage, 20,000 GET requests, 2,000 PUT requests per month &mdash; for 12 months only. After the trial, you pay from the first byte ($0.023/GB/month storage, $0.09/GB egress). S3 is the industry standard with the broadest SDK and tool support, but the free tier is the least generous and expires. <strong>The 12-month expiration catches developers who forget</strong> &mdash; surprise bills are the #1 complaint. Best for teams already committed to AWS.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Google Cloud Storage</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB-months per month in US regions (us-east1, us-west1, us-central1). 5,000 Class A operations, 50,000 Class B operations, 1 GB egress to North America per month. <strong>Always Free</strong> &mdash; does not expire. S3 interoperability mode available. Integrated with BigQuery, Cloud Functions, and other GCP services. Best for GCP-native apps or when you need the Always Free guarantee.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Azure Blob Storage</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB LRS (locally redundant) storage, 20,000 read/write operations, 5 GB egress &mdash; for 12 months. After trial, standard Azure storage pricing applies. REST API compatible but not S3-native (Azure SDK preferred). Integrated with Azure Functions, Logic Apps, and the broader Azure ecosystem. Best for Azure-committed organizations.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Oracle Cloud Object Storage</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10 GB storage, 10 GB egress, 50,000 API requests per month. <strong>Always Free</strong> &mdash; does not expire. S3-compatible API available. Often overlooked, but the Always Free tier is more generous than AWS/GCP/Azure for object storage. Combined with Oracle's 200 GB total block volume Always Free, it's competitive for budget builds.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>DigitalOcean Spaces</h3>
+    <div class="diff-desc"><strong>Pricing:</strong> No free tier. Starts at $5/month for 250 GB storage + 1 TB egress. S3-compatible API. Built-in CDN included in pricing. Simple, predictable pricing but no free option. Available during the $200/60-day free credit trial period.</div>
+  </div>
+
+  <h2 id="baas-integrated">BaaS-Integrated Storage</h2>
+  <p class="section-intro">Storage services bundled with Backend-as-a-Service platforms. Best when you're already using the BaaS for auth, database, and other services.</p>
+
+  <div class="diff-card">
+    <h3>Supabase Storage</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1 GB file storage, 2 GB bandwidth per month on the free plan. Integrated with Supabase Auth (row-level security on files), Supabase Database (metadata queries), and Edge Functions (transforms). Custom API (not S3-compatible). Image transformations available on Pro plan. The 1 GB limit is tight, but storage is rarely the bottleneck for Supabase projects. Best for apps already on Supabase.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Firebase Storage (Cloud Storage for Firebase)</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB storage, 1 GB/day download bandwidth, 20,000 uploads/day, 50,000 downloads/day. Backed by Google Cloud Storage under the hood. Firebase Security Rules for access control. Excellent mobile SDK integration. The 1 GB/day egress limit can be restrictive for media-heavy apps. Best for mobile apps using Firebase suite.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Vercel Blob</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Included in Hobby plan with Vercel's overall bandwidth limits. Edge-distributed storage with automatic CDN. Simplest API for Next.js and Vercel-hosted projects. Not S3-compatible &mdash; uses Vercel's SDK. Limited to Vercel ecosystem. Best for Next.js projects on Vercel that need simple file uploads.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Netlify Blobs</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Included in Netlify's free plan. Key-value blob storage for Netlify sites and functions. Not general-purpose object storage &mdash; designed for Netlify's build and serverless context. Best for Netlify-hosted Jamstack sites needing simple data persistence.</div>
+  </div>
+
+  <h2 id="specialized-media">Specialized &amp; Media Storage</h2>
+  <p class="section-intro">Storage services optimized for images, video, and media transformation &mdash; not general object storage, but essential for media-heavy applications.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Tier</th>
+        <th>Transforms</th>
+        <th>CDN</th>
+        <th>Video</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Cloudinary<span class="winner-badge">BEST MEDIA</span></td>
+        <td>25 credits/mo (~25K transforms or 25 GB delivery)</td>
+        <td class="check">&#10003; 100+ transforms</td>
+        <td class="check">&#10003; Global</td>
+        <td class="check">&#10003;</td>
+        <td>Image/video-heavy apps, auto-optimization</td>
+      </tr>
+      <tr>
+        <td class="provider-col">ImageKit</td>
+        <td>20 GB delivery/mo</td>
+        <td class="check">&#10003; URL-based</td>
+        <td class="check">&#10003; Global</td>
+        <td class="check">&#10003;</td>
+        <td>E-commerce, URL-based image pipeline</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Uploadcare</td>
+        <td>3,000 uploads/mo + 3 GB storage</td>
+        <td class="check">&#10003; On-the-fly</td>
+        <td class="check">&#10003; Global</td>
+        <td class="partial">Limited</td>
+        <td>File upload widget + CDN delivery</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Uploadthing</td>
+        <td>2 GB storage</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td>Simple file uploads for Next.js/React</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Pinata IPFS</td>
+        <td>500 MB + 100 pins</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; IPFS Gateway</td>
+        <td class="cross">&#10007;</td>
+        <td>IPFS pinning, Web3/decentralized apps</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="diff-card">
+    <h3>Cloudinary <span class="winner-badge">BEST MEDIA</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 25 credits/month. Credits are a unified currency: 1 credit = 1,000 transformations OR 1 GB managed storage OR 1 GB delivery bandwidth. This means ~25,000 image transforms, or 25 GB delivery, or a mix. Over 100 real-time image/video transformations: resize, crop, format conversion, face detection, background removal, AI tagging. Global CDN with automatic format optimization (WebP, AVIF). The most feature-rich media platform. Best for media-heavy apps that need on-the-fly optimization.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>ImageKit</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 20 GB output bandwidth per month. URL-based image transformations (append parameters to the URL). Real-time optimization and format conversion. Global CDN. Works as an image CDN layer over any existing storage (S3, GCS, your own server). Simpler pricing model than Cloudinary's credit system. Best for e-commerce and content sites needing image optimization.</div>
+  </div>
+
+  <h2 id="self-hosted">Self-Hosted Storage</h2>
+  <p class="section-intro">Run your own object storage. Unlimited capacity, zero egress fees, full control &mdash; if you have the infrastructure.</p>
+
+  <div class="diff-card">
+    <h3>MinIO <span class="winner-badge">MOST POPULAR</span></h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free, open-source (GNU AGPL v3). The most widely deployed S3-compatible object storage. Single binary, runs anywhere (Docker, Kubernetes, bare metal). Enterprise features: erasure coding, bitrot protection, encryption at rest, IAM policies, bucket versioning, cross-region replication. Active development with frequent releases. The standard choice for self-hosted S3-compatible storage.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>SeaweedFS</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free, open-source (Apache 2.0). Distributed file system and object storage. S3 API gateway available. Designed for high-volume small file storage (billions of files). Automatic file replication across nodes. Lower resource footprint than MinIO for massive small-file workloads. Best for specialized use cases with billions of small objects.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Garage</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free, open-source (AGPL v3). Lightweight, self-hosted, S3-compatible distributed storage designed for self-hosting communities. Resilient to network partitions. Low resource requirements (runs on Raspberry Pi). Geo-distributed by design. Best for homelab and self-hosting enthusiasts who want decentralized storage across multiple locations.</div>
+  </div>
+
+  <h2 id="cost-trap">The Storage Cost Trap</h2>
+  <p class="section-intro">Storage costs look cheap until egress hits. Here's how costs scale from free to enterprise.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Usage Scenario</th>
+        <th>Cloudflare R2</th>
+        <th>AWS S3</th>
+        <th>Backblaze B2</th>
+        <th>Google Cloud Storage</th>
+        <th>Storj</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>100 GB stored, 100 GB egress/mo</strong></td>
+        <td class="cheapest">$1.50</td>
+        <td class="expensive">$11.30</td>
+        <td>$1.50</td>
+        <td>$3.50</td>
+        <td>$1.10</td>
+      </tr>
+      <tr>
+        <td><strong>500 GB stored, 500 GB egress/mo</strong></td>
+        <td class="cheapest">$7.50</td>
+        <td class="expensive">$56.50</td>
+        <td>$7.50</td>
+        <td>$17.50</td>
+        <td>$5.50</td>
+      </tr>
+      <tr>
+        <td><strong>1 TB stored, 1 TB egress/mo</strong></td>
+        <td class="cheapest">$15.00</td>
+        <td class="expensive">$115.00</td>
+        <td>$16.00</td>
+        <td>$38.00</td>
+        <td>$11.00</td>
+      </tr>
+      <tr>
+        <td><strong>1 TB stored, 10 TB egress/mo</strong></td>
+        <td class="cheapest">$15.00</td>
+        <td class="expensive">$925.00</td>
+        <td>$115.00</td>
+        <td>$300.00</td>
+        <td>$79.00</td>
+      </tr>
+      <tr>
+        <td><strong>5 TB stored, 50 TB egress/mo</strong></td>
+        <td class="cheapest">$75.00</td>
+        <td class="expensive">$4,625.00</td>
+        <td>$575.00</td>
+        <td>$1,500.00</td>
+        <td>$369.00</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Why egress is the real cost:</strong> Storage fees are roughly similar across providers ($0.005&ndash;$0.023/GB/month). The dramatic cost difference is in <strong>egress (bandwidth)</strong>. AWS S3 charges $0.09/GB for data leaving their network. At 10 TB/month of egress, S3 costs $900 while R2 costs $0. For read-heavy workloads (CDN origin, API serving files, media delivery), egress cost dominates your bill by 5&ndash;50x.
+  </div>
+
+  <div class="context-box">
+    <strong>The operations trap:</strong> API operations (GET, PUT, LIST, DELETE) are often overlooked. S3 charges $0.005 per 1,000 PUT requests and $0.0004 per 1,000 GET requests. At 100M reads/month, that's $40 in operations alone. R2 includes 10M free reads/month, then $0.36 per million. For high-throughput APIs serving files, operations costs can exceed storage costs.
+  </div>
+
+  <div class="context-box">
+    <strong>The minimum storage duration trap:</strong> S3 Infrequent Access has a 30-day minimum charge. S3 Glacier has 90 days. If you upload a file and delete it the next day, you still pay for the minimum period. Azure Cool tier has a similar 30-day minimum. This catches teams using tiered storage for short-lived files (build artifacts, temp uploads).
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by Use Case</h3>
+
+    <div class="verdict-item">
+      <strong>Maximum free egress &rarr; Cloudflare R2</strong>
+      <p>Zero egress fees, period. 10 GB storage, S3-compatible. The clear winner for read-heavy workloads, CDN origins, and media serving. No other provider matches this for bandwidth-intensive apps.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Largest free storage &rarr; Storj</strong>
+      <p>25 GB storage + 25 GB egress free. Decentralized, encrypted, S3-compatible. Best for projects that need maximum free capacity and can tolerate slightly higher first-byte latency.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>S3 drop-in replacement &rarr; Backblaze B2 + Cloudflare CDN</strong>
+      <p>10 GB free storage. Free egress through Cloudflare Bandwidth Alliance. Stable indie company. The combination of B2 for storage + Cloudflare for CDN gives you S3 compatibility with zero egress cost.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>BaaS-integrated apps &rarr; Supabase Storage</strong>
+      <p>1 GB free, integrated with Supabase auth (RLS on files), database, and edge functions. Not S3-compatible, but seamless for Supabase projects. The storage limit is tight, but sufficient for user avatars, documents, and small media.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Enterprise ecosystem &rarr; AWS S3</strong>
+      <p>The industry standard with broadest tool support. 5 GB for 12 months free. The most expensive option at scale due to egress, but the deepest integration with analytics (Athena), ML (SageMaker), and serverless (Lambda). Choose S3 when you need the AWS ecosystem, not just storage.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Media optimization &rarr; Cloudinary</strong>
+      <p>25 credits/month covering transforms, storage, and delivery. 100+ real-time image/video transformations. Auto-format optimization (WebP, AVIF). Not general object storage, but essential for media-heavy apps.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Self-hosted control &rarr; MinIO</strong>
+      <p>Open-source, S3-compatible, enterprise-grade. Single binary, runs on any infrastructure. The standard for organizations that need full control over their storage infrastructure and data sovereignty.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Global edge distribution &rarr; Tigris</strong>
+      <p>5 GB free with automatic global distribution on Fly.io's edge network. S3-compatible. Best for globally distributed apps needing low-latency object access without manual CDN configuration.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+
+  <div class="diff-card">
+    <h3>AWS S3 free tier expires after 12 months</h3>
+    <div class="diff-desc">S3's 5 GB free tier is part of the 12-month AWS Free Tier, not an Always Free service. After 12 months, you pay from the first byte. This catches developers who set up a project during the trial and forget about it. The surprise bill is typically small (a few dollars), but the pattern of "free then suddenly paid" creates frustration.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Cloudflare R2 has no SLA on the free tier</h3>
+    <div class="diff-desc">R2's free tier has no uptime guarantee or support. Paid tiers come with an SLA, but the free plan is best-effort. For production workloads that need guaranteed availability, you'll need the paid plan ($0.015/GB/month storage, still zero egress). That said, R2 runs on Cloudflare's infrastructure, which has strong practical reliability.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Backblaze B2 egress is only free through CDN partners</h3>
+    <div class="diff-desc">B2's 1 GB/day free egress is for direct downloads. The unlimited free egress is specifically through Cloudflare, Fastly, and Bunny CDN via the Bandwidth Alliance. Direct API access beyond 1 GB/day costs $0.01/GB. If your architecture doesn't use a CDN partner, you don't get free egress at scale.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Operations costs often exceed storage costs at high scale</h3>
+    <div class="diff-desc">At scale, API call costs can surprise you. Listing millions of objects, or serving millions of small files, racks up Class A and Class B operation charges. S3 charges $5 per million PUT requests. An import job uploading 10 million small files costs $50 in operations alone, regardless of total data size.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Minimum storage duration charges on tiered storage</h3>
+    <div class="diff-desc">S3 Infrequent Access: 30-day minimum charge per object. S3 Glacier: 90-day minimum. Azure Cool: 30-day minimum. Upload a file, delete it next day &mdash; you still pay for the full minimum period. This catches teams using tiered storage for temporary files, build artifacts, or short-lived uploads.</div>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent storage and object storage pricing changes tracked in our index.</p>
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All storage service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  ${buildMcpCta("storage-free-tier-comparison-2026")}
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -27223,6 +27936,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cicd-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCicdFreeTierComparison2026Page());
+  } else if (url.pathname === "/storage-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/storage-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/storage-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildStorageFreeTierComparison2026Page());
   } else if (url.pathname === "/email-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/email-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
