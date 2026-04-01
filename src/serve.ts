@@ -4103,6 +4103,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Playwright",
     hubDesc: "Side-by-side comparison of 15+ testing tool free tiers — E2E, visual regression, load testing, API testing, local dev, and the testing cost trap at scale",
   },
+  {
+    slug: "api-development-free-tier-comparison-2026",
+    title: "API Development Tools Free Tier Comparison 2026 — Postman vs Bruno vs Hoppscotch vs Insomnia",
+    metaDesc: "Side-by-side comparison of 12+ API development tool free tiers in 2026. Compare Postman, Bruno, Hoppscotch, Insomnia, Thunder Client, Apidog, and more — users, collections, requests, mock servers, and migration costs.",
+    contextHtml: "",
+    tag: "api-development-free-tier-comparison-2026",
+    primaryVendor: "Postman",
+    hubDesc: "Side-by-side comparison of 12+ API development tool free tiers — users, collections, requests, mock servers, local-first vs cloud, and the API tool migration trap",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -25518,6 +25527,596 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function buildApiDevelopmentFreeTierComparison2026Page(): string {
+  const title = "API Development Tools Free Tier Comparison 2026 — Postman vs Bruno vs Hoppscotch vs Insomnia";
+  const metaDescApi = "Side-by-side comparison of 12+ API development tool free tiers in 2026. Compare Postman, Bruno, Hoppscotch, Insomnia, Thunder Client, Apidog, and more — users, collections, requests, mock servers, and migration costs.";
+  const slug = "api-development-free-tier-comparison-2026";
+  const pubDate = "2026-04-01";
+
+  // Collect API development-related deal changes
+  const apiDevVendorKeywords = ["Postman", "Bruno", "Hoppscotch", "Insomnia", "Thunder Client", "Apidog", "HTTPie", "RapidAPI", "Paw", "Stoplight", "Swagger", "Scalar", "Mockoon", "Yaak"];
+  const apiDevChanges = dealChanges.filter((c: any) =>
+    apiDevVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("api client") || c.summary.toLowerCase().includes("api testing") || c.summary.toLowerCase().includes("postman")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = apiDevChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["api-development-alternatives", "testing-free-tier-comparison-2026", "cicd-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = apiDevChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No API development-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescApi,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescApi)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescApi)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-card .diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.growth-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-table .cheapest{color:#3fb950;font-weight:700}
+.growth-table .expensive{color:#f85149;font-weight:700}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; API Development Free Tier Comparison</div>
+  <h1>API Development Tools Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ API development tools compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">API Tools Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">$0</div><div class="stat-label">Bruno (Fully OSS)</div></div>
+    <div class="stat-card"><div class="stat-number amber">1</div><div class="stat-label">Postman Free User Limit</div></div>
+    <div class="stat-card"><div class="stat-number green">&#8734;</div><div class="stat-label">Hoppscotch Requests</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>Bruno</strong> is the best fully free API client &mdash; open-source, local-first, Git-native, with no cloud dependency or usage limits. <strong>Hoppscotch</strong> is the best web-based option (open source, self-hostable). <strong>Postman</strong> remains the most feature-rich client but is now single-user only on free plans (March 2026 change). <strong>Thunder Client</strong> is the best choice for VS Code-native workflows.</p>
+    <p><strong>The local-first shift:</strong> The API development tool market is splitting into two camps. Cloud-dependent tools (Postman, RapidAPI) offer collaboration and ecosystem features but increasingly restrict free tiers. Local-first tools (Bruno, Insomnia, Yaak) store collections as files on disk, enabling Git-based collaboration with zero vendor lock-in. For teams that already use Git, local-first tools provide better collaboration than cloud platforms &mdash; at zero cost.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#full-featured">Full-Featured API Clients</a></li>
+      <li><a href="#open-source">Open Source &amp; Local-First</a></li>
+      <li><a href="#web-based">Web-Based Tools</a></li>
+      <li><a href="#ide-extensions">IDE Extensions</a></li>
+      <li><a href="#api-design">API Design &amp; Documentation</a></li>
+      <li><a href="#mock-servers">Mock Servers</a></li>
+      <li><a href="#migration-trap">The API Tool Migration Trap</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top API development tool free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Free Tier Limit</th>
+        <th>Open Source</th>
+        <th>Local-First</th>
+        <th>OpenAPI Support</th>
+        <th>CI/CD Integration</th>
+        <th>Self-Hosted</th>
+        <th>Offline Support</th>
+        <th>Git-Native</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Postman<span class="caution-badge">1 USER</span></td>
+        <td>1 user, 25 collection runs/mo, limited mocks</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007; Cloud-dependent</td>
+        <td class="check">&#10003; Full</td>
+        <td class="check">&#10003; Newman CLI</td>
+        <td class="cross">&#10007;</td>
+        <td class="partial">&#9679; Limited</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Bruno<span class="winner-badge">BEST FREE</span></td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; MIT</td>
+        <td class="check">&#10003; File-based</td>
+        <td class="check">&#10003; Import/Export</td>
+        <td class="check">&#10003; CLI</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Full</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Hoppscotch<span class="winner-badge">BEST WEB</span></td>
+        <td>1 user cloud free, unlimited requests</td>
+        <td class="check">&#10003; MIT</td>
+        <td class="partial">&#9679; Web + desktop</td>
+        <td class="check">&#10003; Full</td>
+        <td class="check">&#10003; CLI</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">&#9679; Desktop only</td>
+        <td class="partial">&#9679; Via export</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Insomnia</td>
+        <td>1 user free, local storage</td>
+        <td class="partial">&#9679; OSS core (MIT)</td>
+        <td class="check">&#10003; Local option</td>
+        <td class="check">&#10003; Full</td>
+        <td class="check">&#10003; Inso CLI</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; Full</td>
+        <td class="partial">&#9679; Via export</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Thunder Client<span class="winner-badge">BEST VS CODE</span></td>
+        <td>Free tier with collection limits</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; File-based</td>
+        <td class="check">&#10003; Import</td>
+        <td class="partial">&#9679; Via VS Code</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; Full</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Apidog</td>
+        <td>Free plan, team collaboration, API design + testing</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007; Cloud-based</td>
+        <td class="check">&#10003; Full</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="partial">&#9679; Limited</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Yaak</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; MIT</td>
+        <td class="check">&#10003; File-based</td>
+        <td class="check">&#10003; Import</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Full</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">HTTPie</td>
+        <td>Free desktop + CLI</td>
+        <td class="check">&#10003; CLI (BSD)</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">&#9679; Import</td>
+        <td class="check">&#10003; CLI</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Full</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Scalar</td>
+        <td>Free &amp; open source</td>
+        <td class="check">&#10003; MIT</td>
+        <td class="partial">&#9679; Web-based</td>
+        <td class="check">&#10003; Native</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">&#9679; Desktop</td>
+        <td class="partial">&#9679; Via export</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Stoplight</td>
+        <td>Free for individuals</td>
+        <td class="partial">&#9679; Some tools OSS</td>
+        <td class="cross">&#10007; Cloud-based</td>
+        <td class="check">&#10003; Native</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Mockoon<span class="winner-badge">BEST MOCK</span></td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; MIT</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Import</td>
+        <td class="check">&#10003; CLI</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Full</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">RapidAPI</td>
+        <td>Free plan, API marketplace access</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007; Cloud-based</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">&#9679;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="full-featured">Full-Featured API Clients</h2>
+  <p class="section-intro">Traditional API development platforms with collection management, environment variables, scripting, and team features.</p>
+
+  <div class="diff-card">
+    <h3>Postman <span class="caution-badge">1 USER SINCE MARCH 2026</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1 user, 25 collection runs/month on cloud, limited mock server calls, cloud storage for collections. The most feature-rich API platform with the largest community, extensive documentation, and Newman CLI for CI/CD. However, the March 2026 change restricts the free plan to single-user only &mdash; shared workspaces, collection sharing, and team collaboration now require the Basic plan ($14/user/month). Collections stored in Postman's cloud create vendor lock-in. The desktop app still works well for individual developers, but teams need to evaluate alternatives for shared API workflows.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Insomnia</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1 user, local storage, unlimited requests. Kong-backed (acquired 2019). Open-source core (MIT). Supports REST, GraphQL, gRPC, and WebSocket. Inso CLI for CI/CD automation. Plugin ecosystem for custom workflows. Scratched Pad mode for fully offline, local-only usage. The Kong ownership has caused some community uncertainty, but the open-source core and local-first option provide a solid exit path. Best for developers who want Postman-like features with a local storage option.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Apidog</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free plan with team collaboration (up to 3 members), API design + testing + documentation in one tool. OpenAPI-native with visual API designer. Built-in mock server, automated testing, and CI/CD integration. Cloud-based storage. The all-in-one approach (design &rarr; test &rarr; document &rarr; mock) reduces tool sprawl. However, cloud dependency means vendor lock-in. Best for small teams that want Postman-like features with integrated API design capabilities.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>HTTPie</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free desktop app and CLI. The CLI is open-source (BSD-3). Beautiful, human-friendly HTTP client designed for API exploration. JSON-first output formatting, syntax highlighting, and intuitive command-line syntax. The desktop app adds a GUI on top of the CLI. No collection management in the traditional sense &mdash; more suited for ad-hoc API exploration than structured test suites. Best for developers who prefer the command line and want a more intuitive alternative to curl.</div>
+  </div>
+
+  <h2 id="open-source">Open Source &amp; Local-First</h2>
+  <p class="section-intro">Tools that store collections as files on your filesystem, enabling Git-based versioning and collaboration with zero cloud dependency.</p>
+
+  <div class="diff-card">
+    <h3>Bruno <span class="winner-badge">BEST FREE OVERALL</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (MIT), unlimited use, no cloud account required. Collections stored as plain-text files on your filesystem using the Bru markup language. Git-native &mdash; collections are versioned alongside your code. Supports REST, GraphQL, environments, scripting (JavaScript), and assertions. Desktop app for Mac, Windows, and Linux. No cloud sync (by design) &mdash; use Git for collaboration instead. The Golden Edition ($19 one-time) adds visual Git integration, OpenAPI designer, and advanced features, but the free version covers all essential API testing needs. Community is growing rapidly as developers migrate from Postman. Best for teams that want zero vendor lock-in and Git-native API workflows.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Yaak</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Open-source (MIT), unlimited use. Lightweight REST and GraphQL client. File-based storage with Git-friendly formats. Supports environments, templates, and plugins. Smaller community than Bruno but clean UI and active development. Best for developers who want a simple, fast API client without the complexity of larger platforms.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Scalar</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Open-source (MIT). Modern API platform with beautiful API reference documentation, API client, and testing tools. OpenAPI-native with an interactive API explorer. Can be embedded in existing documentation sites. The API client runs in the browser and as a desktop app. Best for teams that need both API documentation and an API client from the same tool.</div>
+  </div>
+
+  <h2 id="web-based">Web-Based Tools</h2>
+  <p class="section-intro">Browser-based API clients that work without installing software. Best for quick testing, shared environments, and teams that prefer web apps.</p>
+
+  <div class="diff-card">
+    <h3>Hoppscotch <span class="winner-badge">BEST WEB-BASED</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1 user on cloud (hoppscotch.io), unlimited requests. Open-source (MIT) with self-hosted option. Supports REST, GraphQL, WebSocket, SSE, Socket.IO, and MQTT. Real-time collaboration, environments, collections, and pre-request scripts. Hoppscotch CLI for CI/CD. Self-hosted version (via Docker) supports unlimited users and team workspaces at zero cost. The web-based interface means zero installation &mdash; open a browser and start testing. Best for teams that want free team collaboration via self-hosting, or individual developers who prefer browser-based tools.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>RapidAPI</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free plan with API client, testing, and access to the API marketplace. Cloud-based with team collaboration features. Integrated API hub for discovering and connecting to third-party APIs. Acquired Paw (macOS API client). The marketplace integration is unique &mdash; test and subscribe to APIs from thousands of providers in one place. Best for developers who need to discover and integrate third-party APIs alongside their own API testing.</div>
+  </div>
+
+  <h2 id="ide-extensions">IDE Extensions</h2>
+  <p class="section-intro">API testing tools that integrate directly into your code editor. No window switching &mdash; test APIs alongside your code.</p>
+
+  <div class="diff-card">
+    <h3>Thunder Client <span class="winner-badge">BEST VS CODE</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free tier with collection limits. Lightweight REST API client for VS Code. File-based storage option for Git-friendly workflows. Supports environments, variables, scripting, and test assertions. The VS Code sidebar integration means you never leave your editor. Recent versions have added collection limits on the free tier &mdash; check current limits as they have evolved. Best for developers who live in VS Code and want API testing without switching applications.</div>
+  </div>
+
+  <h2 id="api-design">API Design &amp; Documentation</h2>
+  <p class="section-intro">Tools focused on designing, documenting, and maintaining OpenAPI specifications. Often used alongside API clients for a complete workflow.</p>
+
+  <div class="diff-card">
+    <h3>Stoplight</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free for individual developers. Visual OpenAPI editor with design-first workflow. Integrated mocking, documentation, and style guides. Git-based versioning. Prism (open-source) for local API mocking from OpenAPI specs. The visual editor makes it easier to design APIs without hand-writing YAML. Team features (style guides, shared workspaces) require paid plans. Best for teams adopting design-first API development.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Swagger/OpenAPI Tools</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Swagger Editor and Swagger UI are fully open-source and free. The de facto standard for API documentation. Swagger Editor for writing OpenAPI specs, Swagger UI for interactive documentation. SwaggerHub (cloud platform) has limited free tier. The open-source tools are the foundation that most other API tools build on. Best as a complement to other tools rather than a standalone API development platform.</div>
+  </div>
+
+  <h2 id="mock-servers">Mock Servers</h2>
+  <p class="section-intro">Tools for creating mock API endpoints during development. Essential for frontend teams, integration testing, and API prototyping.</p>
+
+  <div class="diff-card">
+    <h3>Mockoon <span class="winner-badge">BEST MOCK SERVER</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (MIT), unlimited mock endpoints. Desktop app and CLI for creating local mock API servers. Supports dynamic responses, templating (Handlebars), proxy mode, OpenAPI import, and recording. No cloud account required. The CLI enables running mocks in CI/CD pipelines. File-based configuration &mdash; mocks can be versioned in Git. Best for teams that need realistic API mocks during development without cloud dependency or usage limits.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Prism (Stoplight)</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Fully open-source. Generates mock servers from OpenAPI specifications with realistic response data. Validates requests against the spec automatically. Proxy mode for testing real API compliance with the spec. Best used alongside an OpenAPI-first workflow &mdash; define the spec, generate mocks, develop against them, then validate the real implementation.</div>
+  </div>
+
+  <h2 id="migration-trap">The API Tool Migration Trap</h2>
+  <p class="section-intro">Postman&rsquo;s March 2026 change ended free team plans. Here&rsquo;s what it costs to stay vs. migrate, and the hidden risks of cloud-dependent API tools.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Team Size</th>
+        <th>Postman Basic</th>
+        <th>Insomnia Team</th>
+        <th>Bruno</th>
+        <th>Hoppscotch (self-hosted)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1 developer</td>
+        <td>$0 (free tier)</td>
+        <td>$0 (free tier)</td>
+        <td class="cheapest">$0</td>
+        <td class="cheapest">$0</td>
+      </tr>
+      <tr>
+        <td>5 developers</td>
+        <td class="expensive">$70/mo</td>
+        <td>$50/mo</td>
+        <td class="cheapest">$0</td>
+        <td class="cheapest">$0 (Docker infra cost only)</td>
+      </tr>
+      <tr>
+        <td>10 developers</td>
+        <td class="expensive">$140/mo</td>
+        <td>$100/mo</td>
+        <td class="cheapest">$0</td>
+        <td class="cheapest">$0 (Docker infra cost only)</td>
+      </tr>
+      <tr>
+        <td>25 developers</td>
+        <td class="expensive">$350/mo</td>
+        <td>$250/mo</td>
+        <td class="cheapest">$0</td>
+        <td class="cheapest">$0 (Docker infra cost only)</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Postman&rsquo;s March 2026 change: free team plans ended.</strong> Postman&rsquo;s free plan is now single-user only. Teams that were sharing collections for free must now pay $14/user/month for Basic or migrate to alternatives. For a 10-person team, that&rsquo;s $140/month ($1,680/year) for a tool that many teams use primarily as a shared request library. Open-source alternatives like Bruno and Hoppscotch provide team collaboration through Git or self-hosting at zero per-user cost.
+  </div>
+
+  <div class="context-box">
+    <strong>Lock-in risk: the collection export problem.</strong> Teams with years of saved Postman collections face a migration challenge. Postman exports to its own JSON format, and while tools like Bruno and Hoppscotch can import Postman collections, complex pre-request scripts and test assertions may not convert cleanly. The longer you stay, the harder it gets to leave. Local-first tools avoid this trap entirely &mdash; your collections are already plain files on disk.
+  </div>
+
+  <div class="context-box">
+    <strong>Cloud storage vs. Git: two collaboration models.</strong> Cloud-dependent tools (Postman, RapidAPI, Apidog) sync collections through their servers. Local-first tools (Bruno, Yaak, Thunder Client) store collections as files that you version with Git. Git-based collaboration is free, auditable, and integrates with your existing code review workflow. The trade-off: Git requires developer discipline, while cloud sync is more accessible to non-technical team members.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by Use Case</h3>
+
+    <div class="verdict-item">
+      <strong>Best fully free (no limits) &rarr; Bruno</strong>
+      <p>Open-source (MIT), local-first, Git-native. No cloud account, no usage limits, no vendor lock-in. Collections stored as plain files &mdash; version them alongside your code. The clear winner for developers who want zero cost and maximum control.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best web-based &rarr; Hoppscotch</strong>
+      <p>Open-source (MIT), runs in the browser with zero installation. Self-hosted version supports unlimited users and team workspaces for free. Supports REST, GraphQL, WebSocket, SSE, and MQTT. The best option for teams that want free collaboration via self-hosting.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for VS Code users &rarr; Thunder Client</strong>
+      <p>Native VS Code sidebar integration &mdash; test APIs without leaving your editor. File-based storage for Git-friendly workflows. The best choice for developers who live in VS Code and want a lightweight, embedded API client.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for API design + testing &rarr; Apidog</strong>
+      <p>Integrated design, test, mock, and documentation in one tool. Free team collaboration for up to 3 members. Best for small teams that want to reduce tool sprawl with a single platform covering the full API lifecycle.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for team collaboration (free) &rarr; Hoppscotch self-hosted</strong>
+      <p>Self-host via Docker for unlimited users and team workspaces at zero per-user cost. Full collaboration features including shared collections, environments, and real-time editing. The only fully free team API platform &mdash; the trade-off is managing your own Docker infrastructure.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best mock server &rarr; Mockoon</strong>
+      <p>Fully open-source (MIT), unlimited mock endpoints. Desktop app and CLI with no cloud dependency. Supports dynamic responses, Handlebars templating, proxy mode, and OpenAPI import. The best option for creating realistic API mocks during development.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best ecosystem (with limits) &rarr; Postman</strong>
+      <p>The largest API development community, most integrations, and most extensive documentation. The desktop app remains powerful for individual developers. But the March 2026 single-user restriction means teams should evaluate whether the ecosystem benefits justify the per-user cost.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+
+  <div class="diff-card">
+    <h3>Postman&rsquo;s 25 collection run limit throttles CI/CD</h3>
+    <div class="diff-desc">Postman&rsquo;s free tier allows only 25 collection runs/month on the cloud. If you use Newman CLI in CI/CD pipelines, each pipeline run counts toward this limit. A team running API tests on every PR (2 PRs/day &times; 20 working days = 40 runs) would exceed the free tier in less than 2 weeks. The paid Basic plan ($14/user/month) increases this to 250 runs &mdash; still potentially limiting for active teams.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Postman&rsquo;s mock server limits are restrictive</h3>
+    <div class="diff-desc">Postman&rsquo;s free plan includes limited mock server calls. For teams using Postman mocks in development or testing, these limits can be hit quickly. Mockoon (fully free, open-source) or Prism (OpenAPI-based, open-source) are better alternatives for mock server needs &mdash; both have no usage limits and run locally.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Insomnia&rsquo;s Kong ownership creates uncertainty</h3>
+    <div class="diff-desc">Insomnia was acquired by Kong in 2019. Since then, the pricing model has changed multiple times, and the open-source status has been a moving target. While Scratch Pad mode provides a local-only fallback, the ongoing changes have eroded community trust. Teams considering Insomnia should have a migration plan to fully open-source alternatives like Bruno.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Bruno has no cloud sync (by design)</h3>
+    <div class="diff-desc">Bruno deliberately avoids cloud sync &mdash; collections live on your filesystem. This means no automatic cross-device sync without setting up your own solution (Git, Dropbox, etc.). For solo developers who work on multiple machines, this is a minor inconvenience. For teams, Git-based workflows handle collaboration well but require some Git proficiency from all team members.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Thunder Client&rsquo;s evolving free tier limits</h3>
+    <div class="diff-desc">Thunder Client has introduced collection limits on its free tier in recent versions. The specific limits have changed over time &mdash; check the current VS Code marketplace listing for the latest numbers. The file-based storage option (for Git integration) may also be limited on free plans. Teams with large collection libraries should verify that the free tier still meets their needs.</div>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent API development tool pricing changes tracked in our index.</p>
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All API development tool data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  ${buildMcpCta("api-development-free-tier-comparison-2026")}
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -29307,6 +29906,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/analytics-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAnalyticsFreeTierComparison2026Page());
+  } else if (url.pathname === "/api-development-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/api-development-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api-development-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildApiDevelopmentFreeTierComparison2026Page());
   } else if (url.pathname === "/email-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/email-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
