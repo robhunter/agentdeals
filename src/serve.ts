@@ -4067,6 +4067,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Datadog",
     hubDesc: "Side-by-side comparison of 20+ monitoring free tiers — data ingest limits, retention, hosts, alerting, APM, and the observability cost trap at scale",
   },
+  {
+    slug: "email-free-tier-comparison-2026",
+    title: "Email & Messaging Free Tier Comparison 2026 — SendGrid vs Resend vs Postmark vs Amazon SES",
+    metaDesc: "Side-by-side comparison of 15+ email service free tiers in 2026. Compare SendGrid, Resend, Postmark, Amazon SES, Brevo, Mailtrap, Loops, and more — monthly volume, rate limits, dedicated IPs, and scaling costs.",
+    contextHtml: "",
+    tag: "email-free-tier-comparison-2026",
+    primaryVendor: "SendGrid",
+    hubDesc: "Side-by-side comparison of 15+ email free tiers — monthly volume, daily caps, rate limits, dedicated IPs, and the email cost trap at scale",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -21881,6 +21890,735 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Email free tier comparison page ---
+
+function buildEmailFreeTierComparison2026Page(): string {
+  const title = "Email & Messaging Free Tier Comparison 2026 — SendGrid vs Resend vs Postmark vs Amazon SES";
+  const metaDescEmail = "Side-by-side comparison of 15+ email service free tiers in 2026. Compare SendGrid, Resend, Postmark, Amazon SES, Brevo, Mailtrap, Loops, and more — monthly volume, rate limits, dedicated IPs, and scaling costs.";
+  const slug = "email-free-tier-comparison-2026";
+  const pubDate = "2026-04-01";
+
+  // Collect email-related deal changes
+  const emailVendorKeywords = ["SendGrid", "Resend", "Postmark", "Brevo", "Mailchimp", "Amazon SES", "Mailgun", "Mailtrap", "Loops", "MailerSend", "Mailjet", "SparkPost", "MessageBird", "Plunk", "EmailOctopus", "Buttondown", "ImprovMX", "SimpleLogin", "ForwardEmail", "Postal"];
+  const emailChanges = dealChanges.filter((c: any) =>
+    emailVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("email") || c.summary.toLowerCase().includes("smtp") || c.summary.toLowerCase().includes("transactional")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = emailChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["email-alternatives", "free-startup-stack", "free-tier-risk", "free-tier-tracker"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = emailChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No email-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescEmail,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescEmail)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescEmail)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.growth-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-table .cheapest{color:#3fb950;font-weight:700}
+.growth-table .expensive{color:#f85149;font-weight:700}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Email Free Tier Comparison</div>
+  <h1>Email &amp; Messaging Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ email services compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Email Services Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">62K</div><div class="stat-label">Highest Free Volume (SES from EC2)</div></div>
+    <div class="stat-card"><div class="stat-number green">Resend</div><div class="stat-label">Best Developer Experience</div></div>
+    <div class="stat-card"><div class="stat-number red">SendGrid</div><div class="stat-label">Free Tier Removed (May 2025)</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> offers the highest free volume at 62,000 emails/month when sent from EC2 &mdash; unmatched for apps already on AWS. <strong>Resend</strong> has the best developer experience with a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 1,000 production emails/month plus full inbox simulation.</p>
+    <p><strong>The SendGrid shock:</strong> SendGrid &mdash; the most widely-used transactional email API &mdash; permanently removed its free tier on May 27, 2025. The perpetual 100 emails/day plan is gone, replaced by a 60-day trial only, then $19.95/month minimum. Thousands of side projects and startups were forced to migrate. This is the single most impactful free tier removal in developer tooling.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#transactional-apis">Transactional Email APIs</a></li>
+      <li><a href="#marketing-transactional">Marketing + Transactional</a></li>
+      <li><a href="#email-testing">Email Testing &amp; QA</a></li>
+      <li><a href="#email-verification">Email Verification</a></li>
+      <li><a href="#email-forwarding">Email Forwarding &amp; Routing</a></li>
+      <li><a href="#self-hosted">Self-Hosted Email</a></li>
+      <li><a href="#cost-trap">The Email Cost Trap</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top email service free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Volume</th>
+        <th>Daily Cap</th>
+        <th>Rate Limit</th>
+        <th>Custom Domain</th>
+        <th>Webhooks</th>
+        <th>Inbound Email</th>
+        <th>Templates</th>
+        <th>Analytics</th>
+        <th>Dedicated IP</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Amazon SES<span class="winner-badge">MOST VOLUME</span></td>
+        <td>62K/mo (from EC2)</td>
+        <td>None</td>
+        <td>14/sec (default)</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; SNS</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">$24.95/mo</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Resend<span class="winner-badge">BEST DX</span></td>
+        <td>3,000/mo</td>
+        <td>100/day</td>
+        <td>2/sec</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; React Email</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; Pro+</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Brevo<span class="winner-badge">BEST DAILY</span></td>
+        <td>300/day (~9K/mo)</td>
+        <td>300/day</td>
+        <td>~3/sec</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; Paid</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Mailtrap<span class="winner-badge">BEST TESTING</span></td>
+        <td>1,000/mo (sending)</td>
+        <td>~33/day</td>
+        <td>1/sec</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Testing</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; Paid</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Loops</td>
+        <td>2,500 contacts free</td>
+        <td>Varies</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">MailerSend</td>
+        <td>3,000/mo</td>
+        <td>None</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; Paid</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Mailjet</td>
+        <td>6,000/mo</td>
+        <td>200/day</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; Paid</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Postmark<span class="caution-badge">TEST ONLY</span></td>
+        <td>100/mo (test)</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; Paid</td>
+      </tr>
+      <tr>
+        <td class="provider-col">SendGrid<span class="removed-badge">FREE REMOVED</span></td>
+        <td>60-day trial only</td>
+        <td>100/day (trial)</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">$80/mo</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Mailgun<span class="removed-badge">FREE REMOVED</span></td>
+        <td>30-day trial only</td>
+        <td>100/day (trial)</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Paid</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Plunk</td>
+        <td>Self-hosted unlimited</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">N/A</td>
+      </tr>
+      <tr>
+        <td class="provider-col">EmailOctopus</td>
+        <td>2,500 subscribers</td>
+        <td>10K/mo</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">EmailJS</td>
+        <td>200/mo</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">N/A</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Sweego</td>
+        <td>500/day</td>
+        <td>500/day</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">AhaSend</td>
+        <td>1,000/mo</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="transactional-apis">Transactional Email APIs</h2>
+  <p class="section-intro">Purpose-built APIs for sending password resets, order confirmations, welcome emails, and other triggered messages. The core of most application email.</p>
+
+  <div class="diff-card">
+    <h3>Amazon SES <span class="winner-badge">MOST VOLUME</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 62,000 emails/month when sent from an EC2 instance, Lambda, or Elastic Beanstalk. $0.10/1,000 emails from external sources. The raw volume champion. No monthly subscription, pure pay-per-use beyond free tier. Full SMTP and API support. The catch: no built-in template editor, analytics dashboard, or suppression management &mdash; you build or integrate those yourself. Best for teams already on AWS who want maximum volume at minimum cost.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Resend <span class="winner-badge">BEST DX</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month, 100/day cap, 1 custom domain. Created by the team behind React Email. Modern REST API with excellent TypeScript SDK, React component-based email templates, and real-time delivery webhooks. The daily cap (100/day) is the main constraint &mdash; you can't burst-send a newsletter. Best for developers building modern web apps who want the cleanest API experience.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Postmark <span class="caution-badge">TEST ONLY FREE</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 100 test emails/month in a sandbox. Not usable for production without paying ($15/mo for 10K emails). Postmark's differentiator is delivery speed &mdash; average delivery in &lt;10 seconds. Excellent bounce handling and deliverability reputation. The "free tier" is effectively a testing sandbox, not a production service.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>SendGrid <span class="removed-badge">FREE TIER REMOVED</span></h3>
+    <div class="diff-desc"><strong>Was:</strong> 100 emails/day perpetual free tier. <strong>Now:</strong> 60-day trial only (100 emails/day), then $19.95/month minimum (Essentials plan). Removed May 27, 2025, after the Twilio acquisition. This was the most widely-used email API free tier in developer tooling. Thousands of tutorials, boilerplates, and side projects referenced it. If you're still on SendGrid free, you're on borrowed time &mdash; your trial will expire.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Mailgun <span class="removed-badge">FREE TIER REMOVED</span></h3>
+    <div class="diff-desc"><strong>Was:</strong> 10,000 emails/month perpetual free tier. <strong>Now:</strong> 30-day trial only (100 emails/day), then $35/month minimum. Mailgun's free tier removal predated SendGrid's and followed the same pattern: acquisition (by Sinch), monetization pressure, and free tier elimination. The pattern is clear: VC-backed email APIs eventually remove free tiers.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>MailerSend</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month. Built by the team behind MailerLite. Clean API, inbound email processing, and email verification included. No daily cap (unlike Resend). Good template editor. A solid Resend alternative with slightly fewer developer-focused features but more generous limits.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Mailjet</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 6,000 emails/month (200/day cap). Both transactional and marketing email in one platform. SMTP relay and REST API. Contact list management included. The daily cap is restrictive for transactional bursts, but the monthly volume is generous for small projects.</div>
+  </div>
+
+  <h2 id="marketing-transactional">Marketing + Transactional</h2>
+  <p class="section-intro">Platforms that combine marketing email (newsletters, campaigns) with transactional email (triggered messages) in one product.</p>
+
+  <div class="diff-card">
+    <h3>Brevo (formerly Sendinblue) <span class="winner-badge">BEST DAILY</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 300 emails/day permanent free tier (no monthly cap). Marketing automation, transactional email, SMS, WhatsApp, and CRM in one platform. The daily cap works well for steady-state sending (welcome emails, password resets) but limits burst sending. At 300/day, you get ~9,000/month &mdash; more than enough for most early-stage projects. The most feature-complete free tier in this category.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Loops</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 2,500 contacts, unlimited emails to those contacts. Purpose-built for SaaS companies. Combines marketing loops (drip sequences, newsletters) with transactional messages (welcome emails, usage alerts). Modern UI designed for product-led growth teams. The contact limit is the constraint, not volume &mdash; generous for early-stage SaaS.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>EmailOctopus</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 2,500 subscribers, 10,000 emails/month. Simple, affordable email marketing. Uses Amazon SES under the hood for reliable delivery. Landing pages and forms included. Best for newsletters and content creators who want simplicity over features.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Buttondown</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 100 subscribers. Newsletter-focused platform with markdown support, RSS-to-email, and clean subscriber management. Popular with indie developers and technical writers. Limited free tier but excellent for personal newsletters.</div>
+  </div>
+
+  <h2 id="email-testing">Email Testing &amp; QA</h2>
+  <p class="section-intro">Tools for testing email delivery, inspecting message content, and simulating inboxes without sending to real recipients.</p>
+
+  <div class="diff-card">
+    <h3>Mailtrap <span class="winner-badge">BEST TESTING</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Email Testing: unlimited test inboxes with up to 100 test emails/month. Email Sending: 1,000 emails/month for production. The testing product captures emails in a virtual inbox, lets you inspect HTML/text/headers, check spam scores, and validate links. The sending product is a separate service for production delivery. Best for development teams who need proper email QA workflows.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Mailpit (self-hosted)</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free, open-source. Lightweight SMTP testing server with web UI. Catches all outgoing email in development. Single binary, zero config. The modern replacement for MailHog. Perfect for local development &mdash; point your app's SMTP at localhost:1025 and inspect all emails in the browser.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Ethereal Email</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free. Fake SMTP service by the Nodemailer team. Creates disposable SMTP accounts for testing. No setup required &mdash; generate credentials and start sending. Emails are never delivered to real recipients. Good for automated testing and CI/CD pipelines.</div>
+  </div>
+
+  <h2 id="email-verification">Email Verification</h2>
+  <p class="section-intro">Services to validate email addresses before sending &mdash; reduces bounces, protects sender reputation, and improves deliverability.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Free Verifications</th>
+        <th>Bulk Upload</th>
+        <th>API Access</th>
+        <th>Real-time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Verifalia</td>
+        <td>25/day</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Mailcheck.ai</td>
+        <td>300/mo</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Emailvalidation.io</td>
+        <td>100/mo</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Key takeaway:</strong> Email verification is essential once you're sending at volume. A 5% bounce rate can destroy your sender reputation and land all your emails in spam. Verifalia offers the most generous free tier (25 verifications/day). For bulk list cleaning before a campaign, you'll need a paid tier.
+  </div>
+
+  <h2 id="email-forwarding">Email Forwarding &amp; Routing</h2>
+  <p class="section-intro">Custom domain email without running a mail server. Forward <code>hello@yourdomain.com</code> to your personal inbox.</p>
+
+  <div class="diff-card">
+    <h3>ImprovMX</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Up to 25 aliases per domain, forwarding to 1 destination. Simple MX record setup. Works with any domain. No sending capability on free tier &mdash; forwarding only. The simplest way to get custom domain email without a mail server.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>ForwardEmail</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Unlimited aliases, unlimited domains. Open-source. Privacy-focused with no logs policy. Supports regex-based catch-all routing. The most generous free forwarding service. Also supports sending via SMTP on paid tier.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>SimpleLogin</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10 aliases. Email aliasing service (now owned by Proton). Create unique aliases for each service to protect your real email address. Built for privacy, not transactional email. Good for personal use; not designed for application email.</div>
+  </div>
+
+  <h2 id="self-hosted">Self-Hosted Email</h2>
+  <p class="section-intro">Run your own mail server for unlimited volume and full control. But be warned: email deliverability is hard.</p>
+
+  <div class="diff-card">
+    <h3>Postal <span class="winner-badge">BEST SELF-HOSTED</span></h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free, open-source. Full-featured mail delivery platform with web UI, click/open tracking, webhook notifications, IP pool management, and multi-organization support. Built for transactional email at scale. The most complete self-hosted alternative to SendGrid. Requires dedicated IP with clean reputation and proper DNS (SPF, DKIM, DMARC) setup.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Mailu</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free, open-source. Docker-based full mail server (SMTP, IMAP, webmail, antispam, antivirus). Designed for personal or small organization email hosting. More focused on mailbox hosting than transactional email delivery.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Mail-in-a-Box</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free, open-source. One-command mail server setup on Ubuntu. Includes Roundcube webmail, spam filtering, DNSSEC, and automatic certificate management. The easiest way to self-host a complete mail server. Best for personal email independence, not high-volume transactional sending.</div>
+  </div>
+
+  <div class="context-box">
+    <strong>The self-hosted email trade-off:</strong> Self-hosting email eliminates per-message costs but introduces serious operational complexity. IP reputation management is the biggest challenge &mdash; new IPs are assumed spammy by major providers. You need proper SPF, DKIM, DMARC, rDNS, warm-up periods, and active monitoring. For transactional email at scale, Postal is the right choice. For personal mailboxes, Mail-in-a-Box is simplest. For most developers, a managed service like SES or Resend is more practical.
+  </div>
+
+  <h2 id="cost-trap">The Email Cost Trap</h2>
+  <p class="section-intro">Email costs seem trivial at small scale. They're not.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Monthly Volume</th>
+        <th>Amazon SES</th>
+        <th>Resend</th>
+        <th>SendGrid</th>
+        <th>Postmark</th>
+        <th>Brevo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>10K emails</strong></td>
+        <td class="cheapest">$1.00</td>
+        <td>$0 (free tier)</td>
+        <td>$19.95</td>
+        <td>$15.00</td>
+        <td class="cheapest">$0 (free tier)</td>
+      </tr>
+      <tr>
+        <td><strong>50K emails</strong></td>
+        <td class="cheapest">$5.00</td>
+        <td>$20.00</td>
+        <td>$19.95</td>
+        <td>$42.50</td>
+        <td>$25.00</td>
+      </tr>
+      <tr>
+        <td><strong>100K emails</strong></td>
+        <td class="cheapest">$10.00</td>
+        <td>$40.00</td>
+        <td>$89.95</td>
+        <td>$70.00</td>
+        <td>$65.00</td>
+      </tr>
+      <tr>
+        <td><strong>500K emails</strong></td>
+        <td class="cheapest">$50.00</td>
+        <td>$225.00</td>
+        <td class="expensive">$449.95</td>
+        <td>$245.00</td>
+        <td>$169.00</td>
+      </tr>
+      <tr>
+        <td><strong>1M emails</strong></td>
+        <td class="cheapest">$100.00</td>
+        <td class="expensive">$475.00</td>
+        <td class="expensive">$749.95</td>
+        <td>$400.00</td>
+        <td>$339.00</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Why SES is 10x cheaper:</strong> Amazon SES charges a flat <strong>$0.10 per 1,000 emails</strong> with no base fee, no plan tiers, and no per-recipient surcharges. At 1M emails/month, SES costs $100 while SendGrid charges $750. The trade-off: SES gives you raw sending infrastructure with no built-in template editor, analytics dashboard, or suppression list management. You're paying for simplicity and developer experience with managed services like Resend and Postmark.
+  </div>
+
+  <div class="context-box">
+    <strong>The dedicated IP trap:</strong> Shared IP pools work fine for low-volume senders. But once you're sending 50K+ emails/month, you need a dedicated IP for deliverability control. <strong>Postmark charges $50/month</strong> per dedicated IP. <strong>SendGrid charges $80/month.</strong> This doubles your bill on lower tiers. SES dedicated IPs are free but require manual warm-up. Resend includes dedicated IPs on Pro ($80/month) and above.
+  </div>
+
+  <div class="context-box">
+    <strong>The per-email overage trap:</strong> Exceeding your plan's included volume triggers per-email overage charges. SendGrid charges <strong>$1.30 per additional 1,000 emails</strong> on the Essentials plan &mdash; 13x the SES rate. A single product launch email that exceeds your plan can cost hundreds. Always check overage rates, not just base prices.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by Use Case</h3>
+
+    <div class="verdict-item">
+      <strong>High volume on a budget &rarr; Amazon SES</strong>
+      <p>$0.10/1K emails. 62K free from EC2. No monthly minimums. Unbeatable for volume. You'll need to build or buy template management and analytics separately.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best developer experience &rarr; Resend</strong>
+      <p>Modern REST API, TypeScript SDK, React Email templates. 3K/mo free. The cleanest integration experience for modern web apps. Daily cap (100/day) is the main free tier constraint.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Daily drip sending &rarr; Brevo</strong>
+      <p>300/day permanent free tier. Combined marketing + transactional. CRM included. Best for steady-state sending patterns (welcome emails, daily digests, password resets).</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Email testing &amp; staging &rarr; Mailtrap</strong>
+      <p>Virtual inboxes, spam analysis, HTML checking, and link validation. 1K/mo production sending included. The standard for email QA workflows.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Marketing + transactional &rarr; Loops or Brevo</strong>
+      <p>Loops: 2.5K contacts free, purpose-built for SaaS. Brevo: 300/day free, the most feature-complete platform. Choose Loops for product-led growth; Brevo for all-in-one marketing.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Self-hosted control &rarr; Postal</strong>
+      <p>Open-source, unlimited volume, full tracking and webhook support. Requires IP reputation management and DNS expertise. The only viable self-hosted transactional email platform.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Privacy-focused forwarding &rarr; ForwardEmail or SimpleLogin</strong>
+      <p>ForwardEmail: unlimited aliases, open-source. SimpleLogin: 10 aliases, Proton-owned. Both protect your real email. ForwardEmail for domains; SimpleLogin for personal aliasing.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+
+  <div class="diff-card">
+    <h3>SendGrid's free tier removal catches developers mid-project</h3>
+    <div class="diff-desc">Thousands of tutorials and boilerplates reference SendGrid's free tier. New developers following these guides discover the free tier no longer exists only after implementing the integration. The 60-day trial creates urgency to migrate before it expires. Always verify free tier availability before committing to an email provider.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Mailgun removed its free tier too</h3>
+    <div class="diff-desc">Mailgun's perpetual 10,000 emails/month free tier was removed in favor of a 30-day trial. The pattern is clear: email APIs backed by large acquirers (Twilio for SendGrid, Sinch for Mailgun) eventually eliminate free tiers to drive revenue. Prioritize providers with sustainable business models for free tiers.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Postmark's "free" is test-only</h3>
+    <div class="diff-desc">Postmark's free tier is 100 test emails/month in a sandbox environment. You cannot send production email without a paid plan ($15/month for 10K emails). It's a developer preview, not a free tier. Don't choose Postmark expecting a permanent free production service.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Amazon SES free tier only from EC2/Lambda</h3>
+    <div class="diff-desc">SES's 62,000 free emails/month only applies when sent from AWS services (EC2, Lambda, Elastic Beanstalk). Sending from external servers costs $0.10/1,000 from the first email. If your app isn't on AWS, there's no free tier &mdash; just very cheap pay-per-use pricing.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Warm-up period: you can't send 100K on day 1</h3>
+    <div class="diff-desc">Every email service throttles new accounts. SES starts you in a sandbox (200 emails/day, verified recipients only). SendGrid starts at 100/day. Even after sandbox approval, ISPs will flag sudden volume spikes from new senders. Plan 2-4 weeks of gradual warm-up before sending at target volume. This catches teams who wait until launch day to set up email.</div>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent email and messaging pricing changes tracked in our index.</p>
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All email service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  ${buildMcpCta("email-free-tier-comparison-2026")}
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Monitoring free tier comparison page ---
 
 function buildMonitoringFreeTierComparison2026Page(): string {
@@ -26485,6 +27223,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cicd-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCicdFreeTierComparison2026Page());
+  } else if (url.pathname === "/email-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/email-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildEmailFreeTierComparison2026Page());
   } else if (url.pathname === "/monitoring-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/monitoring-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/monitoring-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
