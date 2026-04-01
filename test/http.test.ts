@@ -2838,6 +2838,39 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
+  it("GET /serverless-free-tier-comparison-2026 renders serverless comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/serverless-free-tier-comparison-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Serverless Free Tier Comparison 2026"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("AWS Lambda"), "Should mention AWS Lambda");
+    assert.ok(html.includes("Cloudflare Workers"), "Should mention Cloudflare Workers");
+    assert.ok(html.includes("Google Cloud Functions"), "Should mention Google Cloud Functions");
+    assert.ok(html.includes("Azure Functions"), "Should mention Azure Functions");
+    assert.ok(html.includes("Deno Deploy"), "Should mention Deno Deploy");
+    assert.ok(html.includes("Cloud Run"), "Should mention Cloud Run");
+    assert.ok(html.includes("Val Town"), "Should mention Val Town");
+    assert.ok(html.includes("Traditional FaaS"), "Should have traditional FaaS section");
+    assert.ok(html.includes("Edge Compute"), "Should have edge compute section");
+    assert.ok(html.includes("Full-Service Serverless"), "Should have full-service section");
+    assert.ok(html.includes("Specialized Serverless"), "Should have specialized section");
+    assert.ok(html.includes("CPU-Time vs Wall-Clock-Time"), "Should have billing gotcha section");
+    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
+    assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/cloud-free-tier-comparison-2026"), "Should cross-link to cloud comparison");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 
