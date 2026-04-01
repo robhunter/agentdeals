@@ -166,25 +166,6 @@
       ]
     },
     {
-      "vendor": "GitHub Actions",
-      "change_type": "restriction",
-      "date": "2026-03-01",
-      "summary": "Self-hosted runner usage now costs $0.002/min for private repos. GitHub-hosted runner free tier (2,000 min/mo) unchanged",
-      "previous_state": "Self-hosted runners free for all repos",
-      "current_state": "Self-hosted runners $0.002/min for private repos. GitHub-hosted runner free tier unchanged",
-      "impact": "medium",
-      "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
-      "category": "CI/CD",
-      "alternatives": [
-        "GitLab CI",
-        "CircleCI",
-        "Buildkite",
-        "Harness CI",
-        "Drone CI",
-        "Google Cloud Build"
-      ]
-    },
-    {
       "vendor": "Bright Data MCP",
       "change_type": "new_free_tier",
       "date": "2025-08-14",
