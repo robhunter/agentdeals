@@ -4159,6 +4159,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "OpenAI Assistants API sunset August 2026 — migration paths, free AI API alternatives, and cost comparison",
   },
   {
+    slug: "firebase-studio-shutdown",
+    title: "Firebase Studio Shutdown Guide — Free Cloud IDE Alternatives & Migration Paths",
+    metaDesc: "Firebase Studio shuts down June 22, 2026 (new workspaces) and March 2027 (full shutdown). Compare free cloud IDE alternatives: GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Migration paths and free tier comparison.",
+    contextHtml: "",
+    tag: "firebase-studio-alternative",
+    primaryVendor: "Firebase Studio",
+    hubDesc: "Firebase Studio shutdown guide — free cloud IDE alternatives with compute hours, storage, and collaboration limits compared",
+  },
+  {
     slug: "shutdowns",
     title: "Developer Tool Shutdown Tracker 2026 — API Sunsets, Deprecations & Migration Deadlines",
     metaDesc: "Track every developer tool API sunset, deprecation, and service shutdown in 2026. Timelines, impact assessments, migration paths, and free alternatives — updated as new shutdowns are announced.",
@@ -16274,6 +16283,433 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track OpenAI pricing changes and compare AI API free tiers from your AI assistant. Get stability ratings, migration alerts, and cost comparisons \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Firebase Studio Shutdown Guide page ---
+
+function buildFirebaseStudioShutdownPage(): string {
+  const title = "Firebase Studio Shutdown: Free Cloud IDE Alternatives & Migration Paths";
+  const metaDesc = "Firebase Studio shuts down June 22, 2026 (new workspaces) and March 2027 (full shutdown). Compare free cloud IDE alternatives: GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Migration checklist and free tier comparison.";
+  const slug = "firebase-studio-shutdown";
+  const pubDate = "2026-04-02";
+
+  const stabilityMap = getStabilityMap();
+
+  // Firebase deal changes
+  const firebaseChanges = dealChanges.filter(c =>
+    c.vendor === "Firebase" || c.vendor === "Google"
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const firebaseStability = stabilityMap.get("firebase") ?? "volatile";
+  const stabilityColor = firebaseStability === "volatile" ? "#f85149" : firebaseStability === "watch" ? "#d29922" : firebaseStability === "improving" ? "#3fb950" : "var(--text-muted)";
+
+  // Deadline calculations
+  const workspaceFreeze = new Date("2026-06-22");
+  const fullShutdown = new Date("2027-03-22");
+  const today = new Date();
+  const daysToFreeze = Math.max(0, Math.ceil((workspaceFreeze.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+  const daysToShutdown = Math.max(0, Math.ceil((fullShutdown.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+
+  // Cloud IDE alternatives comparison data
+  interface CloudIDE {
+    name: string;
+    slug: string;
+    freeCompute: string;
+    freeStorage: string;
+    collaboration: string;
+    aiFeatures: string;
+    bestFor: string;
+    type: "cloud-ide" | "ai-builder" | "google-path";
+  }
+
+  const alternatives: CloudIDE[] = [
+    { name: "Google Antigravity", slug: "", freeCompute: "TBA (launching 2026)", freeStorage: "TBA", collaboration: "TBA", aiFeatures: "Agentic local workflows, code-first IDE", bestFor: "Google ecosystem developers, agentic coding", type: "google-path" },
+    { name: "Google AI Studio", slug: "google-gemini-api", freeCompute: "Web-based (no compute needed)", freeStorage: "N/A", collaboration: "N/A", aiFeatures: "Gemini API prototyping, prompt testing", bestFor: "Quick AI prototyping, Gemini API testing", type: "google-path" },
+    { name: "GitHub Codespaces", slug: "github-codespaces", freeCompute: "120 core-hours/month (2-core)", freeStorage: "15 GB/month", collaboration: "Live Share built-in", aiFeatures: "Copilot integration", bestFor: "Full dev environment, GitHub-native workflows", type: "cloud-ide" },
+    { name: "Gitpod", slug: "gitpod", freeCompute: "50 hours/month", freeStorage: "Workspace snapshots", collaboration: "Shared workspaces", aiFeatures: "AI code completions", bestFor: "Pre-configured dev environments, open-source projects", type: "cloud-ide" },
+    { name: "Replit", slug: "replit", freeCompute: "Limited (shared vCPU)", freeStorage: "10 GiB per Repl", collaboration: "Real-time multiplayer", aiFeatures: "Replit AI, Ghostwriter", bestFor: "Rapid prototyping, learning, pair programming", type: "cloud-ide" },
+    { name: "CodeSandbox", slug: "codesandbox", freeCompute: "400 VM credits/month", freeStorage: "20 GB", collaboration: "Real-time collaboration", aiFeatures: "AI code suggestions", bestFor: "Web development, React/Vue/Angular projects", type: "cloud-ide" },
+    { name: "StackBlitz", slug: "stackblitz", freeCompute: "Unlimited (WebContainer, runs in browser)", freeStorage: "Browser-based", collaboration: "Share via URL", aiFeatures: "Bolt.new integration", bestFor: "Instant startup, frontend frameworks, no server needed", type: "cloud-ide" },
+    { name: "Coder", slug: "coder", freeCompute: "Unlimited (self-hosted OSS)", freeStorage: "Your infrastructure", collaboration: "Team workspaces", aiFeatures: "AI assistant integration", bestFor: "Enterprise, self-hosted, full control", type: "cloud-ide" },
+    { name: "Cursor", slug: "cursor", freeCompute: "Local (2,000 completions + 50 premium requests/mo)", freeStorage: "Local", collaboration: "N/A", aiFeatures: "AI-first: chat, edit, compose, multi-file", bestFor: "AI-assisted coding, VS Code users wanting AI superpowers", type: "cloud-ide" },
+    { name: "Windsurf", slug: "windsurf", freeCompute: "Local (free tier with quotas)", freeStorage: "Local", collaboration: "N/A", aiFeatures: "Cascade flows, AI agents, multi-file edits", bestFor: "Agentic coding, AI-driven development", type: "cloud-ide" },
+    { name: "Bolt.new", slug: "bolt-new", freeCompute: "Limited free tokens", freeStorage: "Project-based", collaboration: "Share via URL", aiFeatures: "Full-stack AI builder from prompts", bestFor: "Non-coders building full apps, rapid prototyping", type: "ai-builder" },
+    { name: "Lovable", slug: "lovable", freeCompute: "5 free generations/day", freeStorage: "Project-based", collaboration: "Team sharing", aiFeatures: "AI app builder, Supabase integration", bestFor: "MVPs, startup prototyping, design-to-code", type: "ai-builder" },
+    { name: "v0 (Vercel)", slug: "v0", freeCompute: "200 free generations/month", freeStorage: "N/A", collaboration: "Share via URL", aiFeatures: "UI generation from prompts", bestFor: "UI/component generation, React/Next.js projects", type: "ai-builder" },
+  ];
+
+  const cloudIdes = alternatives.filter(a => a.type === "cloud-ide");
+  const aiBuilders = alternatives.filter(a => a.type === "ai-builder");
+  const googlePaths = alternatives.filter(a => a.type === "google-path");
+
+  function buildTableRows(items: CloudIDE[]): string {
+    return items.map(a => {
+      const stability = a.slug ? (stabilityMap.get(a.slug) ?? "stable") : "stable";
+      const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
+      const vendorLink = a.slug ? `<a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a>` : escHtmlServer(a.name);
+      return `<tr>
+        <td style="font-weight:600">${vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(a.freeCompute)}</td>
+        <td style="font-size:.8rem">${escHtmlServer(a.freeStorage)}</td>
+        <td style="font-size:.8rem">${escHtmlServer(a.collaboration)}</td>
+        <td style="font-size:.8rem">${escHtmlServer(a.aiFeatures)}</td>
+        <td><span style="color:${stabColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${a.slug ? escHtmlServer(stability) : "\u2014"}</span></td>
+      </tr>`;
+    }).join("\n        ");
+  }
+
+  const changeTimelineRows = firebaseChanges.slice(0, 10).map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["firebase-alternatives", "stability", "shutdowns", "ide-code-editors-alternatives", "ai-coding-pricing-2026", "google-developer-program-2026"].includes(p.slug)
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: alternatives.filter(a => a.slug).map(a => ({ "@type": "SoftwareApplication", name: a.name })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} \u2014 AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
+.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}
+.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}
+.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}
+.deadline-secondary{font-size:1rem;font-weight:600;font-family:var(--mono);color:#d29922;margin-top:.75rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-number.orange{color:#d29922}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}
+.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}
+.decision-path:hover{border-color:var(--accent)}
+.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}
+.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.checklist{list-style:none;padding:0;margin:1rem 0}
+.checklist li{padding:.5rem 0 .5rem 1.75rem;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:.9rem;position:relative}
+.checklist li::before{content:"\u2610";position:absolute;left:0;color:var(--accent);font-size:1.1rem}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">IDE &amp; Code Editors</a> &rsaquo; Firebase Studio Shutdown Guide</div>
+  <h1>Firebase Studio Shutdown: Free Cloud IDE Alternatives &amp; Migration Paths</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${firebaseChanges.length} Firebase/Google pricing changes tracked</p>
+
+  <div class="deadline-banner">
+    <div class="deadline-days">${daysToFreeze} days</div>
+    <div class="deadline-label">until new workspace creation disabled</div>
+    <div class="deadline-date">June 22, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">Firebase stability: ${firebaseStability.toUpperCase()}</span></div>
+    <div class="deadline-secondary">${daysToShutdown} days until full shutdown (March 22, 2027)</div>
+  </div>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number red">${daysToFreeze}</div><div class="stat-label">Days to Workspace Freeze</div></div>
+    <div class="stat-card"><div class="stat-number orange">${daysToShutdown}</div><div class="stat-label">Days to Full Shutdown</div></div>
+    <div class="stat-card"><div class="stat-number">${alternatives.filter(a => a.type === "cloud-ide").length}</div><div class="stat-label">Cloud IDE Alternatives</div></div>
+    <div class="stat-card"><div class="stat-number green">${aiBuilders.length}</div><div class="stat-label">AI Builder Alternatives</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>What\u2019s happening:</strong> Google is shutting down Firebase Studio (formerly Project IDX), its cloud-based IDE. <strong>New workspace creation will be disabled on June 22, 2026.</strong> Existing workspaces remain accessible until <strong>March 22, 2027</strong>, when all data will be permanently deleted. Developers must export their projects before this date.</p>
+    <p><strong>What\u2019s NOT affected:</strong> Core Firebase services \u2014 Firestore, Authentication, Cloud Functions, App Hosting, Realtime Database, Cloud Storage, Hosting \u2014 are <strong>not affected</strong> by this shutdown. This only impacts the cloud IDE/development environment.</p>
+    <p><strong>Google\u2019s official paths:</strong> Google is directing developers to <strong>Antigravity</strong> (a new agentic code-first IDE) and <strong>AI Studio</strong> (web-based prototyping for Gemini API). Neither is a 1:1 replacement for Firebase Studio\u2019s full cloud IDE experience.</p>
+    <p><strong>Our data says:</strong> Firebase\u2019s stability rating is <strong style="color:${stabilityColor}">${firebaseStability}</strong> based on ${firebaseChanges.length} tracked changes \u2014 including Studio shutdown, Spark plan forced Blaze migration, and storage bucket access restrictions. Developers should evaluate independent cloud IDEs for long-term stability.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#timeline">Shutdown Timeline</a></li>
+      <li><a href="#google-paths">Google\u2019s Official Migration Paths</a></li>
+      <li><a href="#cloud-ide-comparison">Cloud IDE Free Tier Comparison</a></li>
+      <li><a href="#ai-builders">AI Full-Stack Builder Alternatives</a></li>
+      <li><a href="#recommendations">Best For Each Use Case</a></li>
+      <li><a href="#migration-checklist">Migration Checklist</a></li>
+      <li><a href="#firebase-timeline">Firebase Pricing Change Timeline</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+    </ol>
+  </div>
+
+  <h2 id="timeline">Shutdown Timeline</h2>
+  <p class="section-intro">Firebase Studio (rebranded from Project IDX in early 2025) is being wound down in two phases. Understanding the timeline is critical for planning your migration.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>What Happens</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;font-family:var(--mono);font-size:.85rem">June 22, 2026</td>
+        <td>New workspace creation disabled</td>
+        <td><span style="color:#d29922;font-size:.8rem;font-weight:600">HIGH</span> \u2014 No new projects can be started</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;font-family:var(--mono);font-size:.85rem">June 22, 2026 \u2013 Mar 2027</td>
+        <td>Read-only access to existing workspaces</td>
+        <td><span style="color:#d29922;font-size:.8rem;font-weight:600">MEDIUM</span> \u2014 Can export but not create</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;font-family:var(--mono);font-size:.85rem">March 22, 2027</td>
+        <td>All data permanently deleted</td>
+        <td><span style="color:#f85149;font-size:.8rem;font-weight:600">CRITICAL</span> \u2014 Data loss if not exported</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Key distinction:</strong> Firebase Studio was a <em>cloud IDE</em> \u2014 a browser-based development environment for building and deploying apps. It is completely separate from Firebase\u2019s core BaaS services (Firestore, Auth, Hosting, etc.), which continue to operate normally. If you only use Firebase for backend services, this shutdown does not affect you.
+  </div>
+
+  <h2 id="google-paths">Google\u2019s Official Migration Paths</h2>
+  <p class="section-intro">Google is directing Firebase Studio users to two new products. Neither is a drop-in replacement \u2014 they serve different workflows.</p>
+
+  <div class="decision-tree">
+    <div class="decision-path" style="border-left:3px solid #4285f4">
+      <h3>Antigravity \u2014 Agentic Code-First IDE</h3>
+      <p>Google\u2019s next-generation IDE focused on <strong>agentic local workflows</strong>. Emphasizes AI-driven code generation with local execution. Still in early access \u2014 details and pricing TBA. Likely best for developers who want Google\u2019s AI models integrated into a local development experience.</p>
+      <p class="best-for">Best for: Google ecosystem developers who want AI-assisted local development rather than a cloud IDE</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid #34a853">
+      <h3>AI Studio \u2014 Web-Based Prototyping</h3>
+      <p>Google\u2019s web-based interface for <strong>Gemini API prototyping</strong> and testing. Not a general-purpose IDE \u2014 focused on prompt engineering, model evaluation, and API experimentation. <a href="/vendor/google-gemini-api">Free tier available</a> with rate limits.</p>
+      <p class="best-for">Best for: AI/ML developers prototyping with Gemini API, prompt testing, quick API experiments</p>
+    </div>
+  </div>
+
+  <div class="context-box">
+    <strong>Gap analysis:</strong> Neither Antigravity nor AI Studio replicates Firebase Studio\u2019s full cloud IDE experience: browser-based editing, cloud compute, integrated deploy-to-Firebase, Nix environment configuration, and team collaboration. For a true cloud IDE replacement, evaluate the independent alternatives below.
+  </div>
+
+  <h2 id="cloud-ide-comparison">Cloud IDE Free Tier Comparison</h2>
+  <p class="section-intro">Free tier details for ${cloudIdes.length} cloud IDE alternatives. Compute hours, storage, collaboration features, and AI capabilities compared. Click provider names for full vendor profiles with verified limits.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Compute</th>
+        <th>Free Storage</th>
+        <th>Collaboration</th>
+        <th>AI Features</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${buildTableRows(cloudIdes)}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Compute model differences:</strong> GitHub Codespaces and Gitpod run full VMs with CPU/RAM quotas (billed per hour). StackBlitz runs entirely in the browser via WebContainers \u2014 no server needed, instant startup, unlimited free usage. Replit and CodeSandbox use shared infrastructure with credits. Coder is self-hosted and free as OSS, but you provide the infrastructure. Cursor and Windsurf are local editors with cloud AI features.
+  </div>
+
+  <h2 id="ai-builders">AI Full-Stack Builder Alternatives</h2>
+  <p class="section-intro">If you used Firebase Studio primarily for quick prototyping, these AI-powered builders may be a better fit than a traditional cloud IDE.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Storage</th>
+        <th>Collaboration</th>
+        <th>AI Features</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${buildTableRows(aiBuilders)}
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="recommendations">Best For Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by Use Case</h3>
+    <div class="verdict-item">
+      <strong>Closest to Firebase Studio experience:</strong>
+      <p>GitHub Codespaces \u2014 full cloud VM, VS Code in browser, 120 core-hours/month free, integrated with GitHub. Nearest 1:1 replacement for Firebase Studio\u2019s cloud IDE workflow.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Best for open-source projects:</strong>
+      <p>Gitpod \u2014 50 hours/month free, pre-configured dev environments via .gitpod.yml, great for maintainers who want contributors to spin up instantly.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>No compute limits:</strong>
+      <p>StackBlitz \u2014 runs in the browser via WebContainers. No server, no quotas, instant startup. Limited to Node.js/frontend stacks but unbeatable for those use cases.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Best for learning &amp; pair programming:</strong>
+      <p>Replit \u2014 real-time multiplayer editing, built-in AI assistant, supports 50+ languages. Lower compute limits but great collaboration features.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Enterprise / self-hosted:</strong>
+      <p>Coder \u2014 free open-source, deploy on your own infrastructure. Full control over compute, storage, and access. Best for teams with security or compliance requirements.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>AI-assisted coding (local):</strong>
+      <p>Cursor or Windsurf \u2014 not cloud IDEs, but if you\u2019re switching away from the cloud anyway, these offer superior AI coding features. Both have free tiers with generous completions.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Non-coders building apps:</strong>
+      <p>Bolt.new or Lovable \u2014 describe what you want in natural language, get a working full-stack app. Firebase Studio users who relied on templates and visual building may prefer this approach.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Staying in Google ecosystem:</strong>
+      <p>Google Antigravity (when available) or AI Studio for Gemini prototyping. Note: Antigravity is local-first, not a cloud IDE \u2014 it\u2019s a different paradigm than Firebase Studio.</p>
+    </div>
+  </div>
+
+  <h2 id="migration-checklist">Migration Checklist</h2>
+  <p class="section-intro">Steps to safely migrate your projects out of Firebase Studio before the shutdown deadlines.</p>
+
+  <ul class="checklist">
+    <li><strong>Export all workspace code</strong> \u2014 git clone or download each workspace. Verify all files are present locally.</li>
+    <li><strong>Save environment configuration</strong> \u2014 copy your Nix config, .idx files, environment variables, and secrets. These won\u2019t transfer automatically.</li>
+    <li><strong>Inventory Firebase service dependencies</strong> \u2014 list which Firebase services your project uses (Firestore, Auth, Hosting, etc.). These are NOT shutting down \u2014 only the IDE is.</li>
+    <li><strong>Choose your replacement IDE</strong> \u2014 use the comparison table above. Test with a small project first before migrating everything.</li>
+    <li><strong>Recreate dev environment</strong> \u2014 set up equivalent config in your new IDE (devcontainer.json for Codespaces, .gitpod.yml for Gitpod, etc.).</li>
+    <li><strong>Update CI/CD pipelines</strong> \u2014 if you used Firebase Studio\u2019s integrated deploy, set up Firebase CLI deployment in your new workflow.</li>
+    <li><strong>Test the full workflow</strong> \u2014 edit, build, test, and deploy from your new environment. Verify everything works before the June 22 freeze.</li>
+    <li><strong>Notify team members</strong> \u2014 share the new environment setup. Update README and onboarding docs.</li>
+    <li><strong>Set a calendar reminder</strong> \u2014 March 2027 for final data deletion. Even if you\u2019ve migrated, verify nothing was left behind.</li>
+  </ul>
+
+  ${firebaseChanges.length > 0 ? `<h2 id="firebase-timeline">Firebase Pricing Change Timeline</h2>
+  <p class="section-intro">Firebase\u2019s stability rating is <strong style="color:${stabilityColor}">${firebaseStability}</strong>. We\u2019ve tracked ${firebaseChanges.length} changes. Here\u2019s the history:</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : ""}
+
+  <h2 id="methodology">Methodology</h2>
+
+  <div class="methodology">
+    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. Cloud IDE and AI coding tool free tiers are verified against vendor pricing pages. Stability ratings are computed from our <a href="/changes">deal changes database</a> \u2014 Firebase is classified as <strong style="color:${stabilityColor}">${firebaseStability}</strong> based on ${firebaseChanges.length} tracked changes.</p>
+    <p><strong>Shutdown dates:</strong> June 22, 2026 (workspace freeze) and March 22, 2027 (data deletion) are sourced from Google\u2019s official Firebase Studio shutdown announcement. Countdown timers are computed dynamically.</p>
+    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track Firebase pricing changes, compare cloud IDE free tiers, and get shutdown deadline alerts from your AI assistant. Stability ratings, migration guidance, and cost comparisons \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -32175,6 +32611,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-assistants-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildOpenaiAssistantsAlternativesPage());
+  } else if (url.pathname === "/firebase-studio-shutdown" && isGetOrHead) {
+    recordApiHit("/firebase-studio-shutdown");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/firebase-studio-shutdown", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFirebaseStudioShutdownPage());
   } else if (url.pathname === "/shutdowns" && isGetOrHead) {
     recordApiHit("/shutdowns");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/shutdowns", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

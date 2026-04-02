@@ -86,6 +86,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "api-development-free-tier-comparison-2026", title: "API Development Free Tier Comparison 2026", description: "12+ API tools — Postman vs Bruno vs Hoppscotch vs Insomnia, collaboration limits" },
   { slug: "security-free-tier-comparison-2026", title: "Security Free Tier Comparison 2026", description: "20+ security tools — SAST, SCA, DAST, secrets, container/IaC, SSL/TLS, zero trust" },
   { slug: "state-of-free-tiers-2026", title: "State of Free Tiers 2026", description: "Data-driven analysis of 1,559 offers across 54 categories — the free tier squeeze, bright spots, cost traps" },
+  { slug: "firebase-studio-shutdown", title: "Firebase Studio Shutdown Guide", description: "Firebase Studio shuts down June 2026 — free cloud IDE alternatives with compute, storage, and collaboration limits compared" },
 ];
 
 export function getGuideList(): GuideMetadata[] {
