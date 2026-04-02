@@ -3099,6 +3099,37 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
   });
 
+  it("GET /security-free-tier-comparison-2026 renders security comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/security-free-tier-comparison-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Security"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Snyk"), "Should mention Snyk");
+    assert.ok(html.includes("Semgrep"), "Should mention Semgrep");
+    assert.ok(html.includes("GitGuardian"), "Should mention GitGuardian");
+    assert.ok(html.includes("Trivy"), "Should mention Trivy");
+    assert.ok(html.includes("OWASP ZAP"), "Should mention OWASP ZAP");
+    assert.ok(html.includes("CodeQL"), "Should mention CodeQL");
+    assert.ok(html.includes("SAST"), "Should have SAST section");
+    assert.ok(html.includes("SCA"), "Should have SCA section");
+    assert.ok(html.includes("DAST"), "Should have DAST section");
+    assert.ok(html.includes("Secrets Detection"), "Should have secrets detection section");
+    assert.ok(html.includes("Container"), "Should have container section");
+    assert.ok(html.includes("DevSecOps Cost Trap"), "Should have cost trap section");
+    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
+    assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 
