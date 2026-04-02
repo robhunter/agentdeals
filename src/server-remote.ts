@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import {
   fetchCategories,
@@ -14,6 +14,7 @@ import {
   fetchNewestDeals,
   fetchWeeklyDigest,
 } from "./api-client.js";
+import { getGuideList, getGuideBySlug } from "./guides.js";
 
 function mcpError(msg: string) {
   return {
@@ -492,6 +493,271 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           },
         ],
       };
+    }
+  );
+
+  // --- Resources ---
+
+  function toSlug(name: string): string {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+  }
+
+  // Static: all categories
+  server.registerResource(
+    "categories",
+    "agentdeals://categories",
+    {
+      description: "All 54 developer tool categories with offer counts",
+      mimeType: "text/plain",
+    },
+    async () => {
+      const categories = (await fetchCategories()) as Array<{ name: string; count: number }>;
+      const lines = categories.map(c => `- **${c.name}** (${c.count} offers)`);
+      const total = categories.reduce((sum, c) => sum + c.count, 0);
+      const text = `# AgentDeals Categories\n\n${categories.length} categories, ${total} total offers.\n\n${lines.join("\n")}`;
+      return { contents: [{ uri: "agentdeals://categories", text, mimeType: "text/plain" }] };
+    }
+  );
+
+  // Template: category detail
+  server.registerResource(
+    "category",
+    new ResourceTemplate("agentdeals://category/{slug}", {
+      list: async () => {
+        const categories = (await fetchCategories()) as Array<{ name: string; count: number }>;
+        return {
+          resources: categories.map(c => ({
+            uri: `agentdeals://category/${toSlug(c.name)}`,
+            name: c.name,
+            description: `${c.count} offers in ${c.name}`,
+            mimeType: "text/plain",
+          })),
+        };
+      },
+      complete: {
+        slug: async (value) => {
+          const categories = (await fetchCategories()) as Array<{ name: string; count: number }>;
+          return categories.map(c => toSlug(c.name)).filter(s => s.startsWith(value));
+        },
+      },
+    }),
+    {
+      description: "All offers in a specific category",
+      mimeType: "text/plain",
+    },
+    async (_uri, { slug }) => {
+      const data = (await fetchOffers({ category: slug as string, limit: 200 })) as { offers: Array<{ vendor: string; tier: string; description: string; verifiedDate: string; category: string }>; total: number };
+      if (!data.offers || data.offers.length === 0) {
+        return { contents: [{ uri: `agentdeals://category/${slug}`, text: `No category found matching "${slug}".`, mimeType: "text/plain" }] };
+      }
+      const categoryName = data.offers[0].category;
+      const lines = data.offers.map(o => `- **${o.vendor}** — ${o.tier}: ${o.description} (verified ${o.verifiedDate})`);
+      const text = `# ${categoryName}\n\n${data.total} offers.\n\n${lines.join("\n")}`;
+      return { contents: [{ uri: `agentdeals://category/${slug}`, text, mimeType: "text/plain" }] };
+    }
+  );
+
+  // Static: all vendors
+  server.registerResource(
+    "vendors",
+    "agentdeals://vendors",
+    {
+      description: "All vendors with category and tier type",
+      mimeType: "text/plain",
+    },
+    async () => {
+      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string }>; total: number };
+      const sorted = data.offers.sort((a, b) => a.vendor.localeCompare(b.vendor));
+      const lines = sorted.map(o => `- **${o.vendor}** | ${o.category} | ${o.tier}`);
+      const text = `# AgentDeals Vendors\n\n${data.total} vendors.\n\n${lines.join("\n")}`;
+      return { contents: [{ uri: "agentdeals://vendors", text, mimeType: "text/plain" }] };
+    }
+  );
+
+  // Template: vendor detail
+  server.registerResource(
+    "vendor",
+    new ResourceTemplate("agentdeals://vendor/{slug}", {
+      list: async () => {
+        const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; tier: string }> };
+        return {
+          resources: data.offers.map(o => ({
+            uri: `agentdeals://vendor/${toSlug(o.vendor)}`,
+            name: o.vendor,
+            description: `${o.vendor} — ${o.tier}`,
+            mimeType: "text/plain",
+          })),
+        };
+      },
+      complete: {
+        slug: async (value) => {
+          const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string }> };
+          return data.offers.map(o => toSlug(o.vendor)).filter(s => s.startsWith(value));
+        },
+      },
+    }),
+    {
+      description: "Full vendor details: free tier limits, pricing, verified date, alternatives, changes",
+      mimeType: "text/plain",
+    },
+    async (_uri, { slug }) => {
+      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string }>; total: number };
+      const match = data.offers.find(o => toSlug(o.vendor) === slug);
+      if (!match) {
+        return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };
+      }
+
+      const changesData = (await fetchDealChanges({ vendor: match.vendor, since: "2020-01-01" })) as { changes: Array<{ date: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
+      const alternatives = data.offers.filter(o => o.category === match.category && o.vendor !== match.vendor).slice(0, 5);
+
+      let text = `# ${match.vendor}\n\n`;
+      text += `**Category:** ${match.category}\n`;
+      text += `**Tier:** ${match.tier}\n`;
+      text += `**Description:** ${match.description}\n`;
+      text += `**Pricing Page:** ${match.url}\n`;
+      text += `**Verified:** ${match.verifiedDate}\n`;
+      if (match.eligibility) {
+        text += `**Eligibility:** ${match.eligibility.type} — ${match.eligibility.conditions.join(", ")}\n`;
+      }
+      if (match.expires_date) {
+        text += `**Expires:** ${match.expires_date}\n`;
+      }
+      text += `**Tags:** ${match.tags.join(", ")}\n`;
+
+      if (changesData.changes.length > 0) {
+        text += `\n## Pricing Changes\n\n`;
+        for (const c of changesData.changes) {
+          text += `- **${c.date}** [${c.change_type}] ${c.summary}\n  Previous: ${c.previous_state}\n  Current: ${c.current_state}\n`;
+        }
+      }
+
+      if (alternatives.length > 0) {
+        text += `\n## Alternatives in ${match.category}\n\n`;
+        for (const a of alternatives) {
+          text += `- **${a.vendor}** — ${a.tier}: ${a.description}\n`;
+        }
+      }
+
+      return { contents: [{ uri: `agentdeals://vendor/${slug}`, text, mimeType: "text/plain" }] };
+    }
+  );
+
+  // Static: all pricing changes
+  server.registerResource(
+    "changes",
+    "agentdeals://changes",
+    {
+      description: "All tracked pricing changes across developer tools",
+      mimeType: "text/plain",
+    },
+    async () => {
+      const data = (await fetchDealChanges({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string }> };
+      const lines = data.changes.map(c => `- **${c.date}** | ${c.vendor} | ${c.change_type} | ${c.summary}`);
+      const text = `# AgentDeals Pricing Changes\n\n${data.changes.length} tracked changes.\n\n${lines.join("\n")}`;
+      return { contents: [{ uri: "agentdeals://changes", text, mimeType: "text/plain" }] };
+    }
+  );
+
+  // Static: latest changes
+  server.registerResource(
+    "changes-latest",
+    "agentdeals://changes/latest",
+    {
+      description: "Most recent pricing changes (last 10)",
+      mimeType: "text/plain",
+    },
+    async () => {
+      const data = (await fetchDealChanges({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
+      const latest = data.changes.slice(0, 10);
+      const lines = latest.map(c =>
+        `- **${c.date}** | ${c.vendor} [${c.change_type}]\n  ${c.summary}\n  Previous: ${c.previous_state}\n  Current: ${c.current_state}`
+      );
+      const text = `# Latest Pricing Changes\n\n${lines.join("\n\n")}`;
+      return { contents: [{ uri: "agentdeals://changes/latest", text, mimeType: "text/plain" }] };
+    }
+  );
+
+  // Static: all editorial guides
+  server.registerResource(
+    "guides",
+    "agentdeals://guides",
+    {
+      description: "All editorial pages — comparisons, stack guides, pricing reports, and alternatives",
+      mimeType: "text/plain",
+    },
+    async () => {
+      const guides = getGuideList();
+      const byType = new Map<string, typeof guides>();
+      for (const g of guides) {
+        if (!byType.has(g.type)) byType.set(g.type, []);
+        byType.get(g.type)!.push(g);
+      }
+      let text = `# AgentDeals Editorial Guides\n\n${guides.length} guides.\n`;
+      for (const [type, items] of byType) {
+        text += `\n## ${type.charAt(0).toUpperCase() + type.slice(1)}\n\n`;
+        for (const g of items) {
+          text += `- **${g.title}** (/${g.slug}) — ${g.description}\n`;
+        }
+      }
+      return { contents: [{ uri: "agentdeals://guides", text, mimeType: "text/plain" }] };
+    }
+  );
+
+  // Template: guide detail
+  server.registerResource(
+    "guide",
+    new ResourceTemplate("agentdeals://guide/{slug}", {
+      list: async () => {
+        const guides = getGuideList();
+        return {
+          resources: guides.map(g => ({
+            uri: `agentdeals://guide/${g.slug}`,
+            name: g.title,
+            description: g.description,
+            mimeType: "text/plain",
+          })),
+        };
+      },
+      complete: {
+        slug: async (value) => {
+          const guides = getGuideList();
+          return guides.map(g => g.slug).filter(s => s.startsWith(value));
+        },
+      },
+    }),
+    {
+      description: "Editorial guide detail — title, description, type, and URL",
+      mimeType: "text/plain",
+    },
+    async (_uri, { slug }) => {
+      const guide = getGuideBySlug(slug as string);
+      if (!guide) {
+        return { contents: [{ uri: `agentdeals://guide/${slug}`, text: `No guide found matching "${slug}".`, mimeType: "text/plain" }] };
+      }
+      let text = `# ${guide.title}\n\n`;
+      text += `**Type:** ${guide.type}\n`;
+      text += `**Description:** ${guide.description}\n`;
+      text += `**URL:** /${guide.slug}\n`;
+
+      // Add related vendor data from changes
+      try {
+        const changesData = (await fetchDealChanges({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string }> };
+        const slugLower = guide.slug.toLowerCase();
+        const relatedChanges = changesData.changes.filter(c => {
+          const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+          return slugLower.includes(vendorSlug) || vendorSlug.includes(slugLower.replace(/-alternatives$/, "").replace(/-vs-.*/, ""));
+        });
+        if (relatedChanges.length > 0) {
+          text += `\n## Related Pricing Changes\n\n`;
+          for (const c of relatedChanges.slice(0, 5)) {
+            text += `- **${c.date}** | ${c.vendor} [${c.change_type}] ${c.summary}\n`;
+          }
+        }
+      } catch {
+        // Changes endpoint not available — skip
+      }
+
+      return { contents: [{ uri: `agentdeals://guide/${slug}`, text, mimeType: "text/plain" }] };
     }
   );
 
