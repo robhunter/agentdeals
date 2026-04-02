@@ -22934,6 +22934,392 @@
         "free"
       ],
       "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Nike Training Club",
+      "category": "Fitness & Health",
+      "description": "Fully free fitness app. 200+ workouts (strength, endurance, yoga, mobility). Video-guided workouts with Nike Master Trainers. Training plans. Activity tracking. No subscription required.",
+      "tier": "Free",
+      "url": "https://www.nike.com/ntc-app",
+      "tags": [
+        "fitness",
+        "health",
+        "workouts",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Samsung Health",
+      "category": "Fitness & Health",
+      "description": "Fully free health tracking app. Step counting, heart rate, sleep, stress, SpO2 (Samsung devices). Workout tracking (70+ exercises). Food/water logging. Group challenges. Works on all Android devices (some features Samsung-only).",
+      "tier": "Free",
+      "url": "https://www.samsung.com/us/apps/samsung-health/",
+      "tags": [
+        "fitness",
+        "health",
+        "tracking",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "MyFitnessPal",
+      "category": "Fitness & Health",
+      "description": "Free food diary and calorie counter. Database of 14M+ foods. Barcode scanner. Basic nutrition tracking (calories, macros). Exercise logging. No meal planning, no food analysis, no advanced macros on free.",
+      "tier": "Free",
+      "url": "https://www.myfitnesspal.com/premium",
+      "tags": [
+        "fitness",
+        "health",
+        "nutrition",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Strava",
+      "category": "Fitness & Health",
+      "description": "Free GPS activity tracking for running, cycling, swimming, hiking. Route recording with maps. Activity feed. Clubs and challenges. Segment tracking (leaderboard viewing). No route planning, no training plans, no live segments on free.",
+      "tier": "Free",
+      "url": "https://www.strava.com/subscribe",
+      "tags": [
+        "fitness",
+        "health",
+        "running",
+        "cycling",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Apple Health",
+      "category": "Fitness & Health",
+      "description": "Fully free health data aggregation on iOS. Steps, distance, flights climbed, sleep, heart rate, cycle tracking, medications, medical ID, health records. Data sharing with doctors. Third-party app integration hub.",
+      "tier": "Free",
+      "url": "https://www.apple.com/ios/health/",
+      "tags": [
+        "fitness",
+        "health",
+        "tracking",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Proton VPN",
+      "category": "VPN & Privacy",
+      "description": "Unlimited data with no speed caps (unique among free VPNs). 5 countries (US, NL, JP, RO, PL). 1 device. No ads. No logs policy. WireGuard, IKEv2, OpenVPN protocols. No Secure Core, no streaming, no P2P on free.",
+      "tier": "Free",
+      "url": "https://protonvpn.com/free-vpn",
+      "tags": [
+        "vpn",
+        "privacy",
+        "security",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Windscribe",
+      "category": "VPN & Privacy",
+      "description": "10 GB/month free data. 11 server locations. Ad/tracker blocker (R.O.B.E.R.T.). Firewall (kill switch). WireGuard, IKEv2, OpenVPN. Browser extension included. Additional 5 GB for tweeting about them.",
+      "tier": "Free",
+      "url": "https://windscribe.com/upgrade",
+      "tags": [
+        "vpn",
+        "privacy",
+        "security",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Cloudflare WARP",
+      "category": "VPN & Privacy",
+      "description": "Fully free WARP mode (1.1.1.1 with WARP). Encrypts DNS and all traffic via Cloudflare network. No bandwidth limits. No logs. Faster than traditional VPNs (Cloudflare network). No country selection on free (nearest endpoint).",
+      "tier": "Free",
+      "url": "https://one.one.one.one/",
+      "tags": [
+        "vpn",
+        "privacy",
+        "dns",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Khan Academy",
+      "category": "Education",
+      "description": "Fully free education platform. Math, science, computing, humanities, test prep (SAT, LSAT, MCAT). Video lessons, exercises, progress tracking. Personalized learning dashboard. Teacher tools. No ads. Nonprofit.",
+      "tier": "Free",
+      "url": "https://www.khanacademy.org",
+      "tags": [
+        "education",
+        "learning",
+        "math",
+        "science",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Duolingo",
+      "category": "Education",
+      "description": "Free language learning (40+ languages). Gamified lessons (5 lives system). Daily streak tracking. Leaderboards. Basic stories. No unlimited hearts, no offline lessons, no advanced progress quizzes on free. Ad-supported.",
+      "tier": "Free",
+      "url": "https://www.duolingo.com",
+      "tags": [
+        "education",
+        "language-learning",
+        "consumer",
+        "free-tier",
+        "ad-supported"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "MIT OpenCourseWare",
+      "category": "Education",
+      "description": "Fully free access to MIT course materials. 2,500+ courses. Lecture notes, problem sets, exams, video lectures. No registration required. No certificates or credits. Creative Commons licensed.",
+      "tier": "Free",
+      "url": "https://ocw.mit.edu",
+      "tags": [
+        "education",
+        "university",
+        "courses",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Coursera",
+      "category": "Education",
+      "description": "Free audit mode for most courses. Video lectures, readings, quizzes. No certificates, no graded assignments, no peer reviews on audit. Some courses have free certificates via financial aid. 7-day free trial for specializations.",
+      "tier": "Free (Audit)",
+      "url": "https://www.coursera.org",
+      "tags": [
+        "education",
+        "courses",
+        "university",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "edX",
+      "category": "Education",
+      "description": "Free audit track for most courses. Video lectures, readings, discussion forums. No certificates, no graded assignments on audit. Courses from Harvard, MIT, Stanford, and 200+ universities. Some courses fully free.",
+      "tier": "Free (Audit)",
+      "url": "https://www.edx.org",
+      "tags": [
+        "education",
+        "courses",
+        "university",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Gmail",
+      "category": "Consumer Email",
+      "description": "15 GB storage shared with Google Drive and Photos. Advanced spam filtering. Smart Compose. Search with filters. Labels and categories. Multiple accounts. Ads in Promotions tab. Google Workspace integration.",
+      "tier": "Free",
+      "url": "https://www.google.com/gmail/about/",
+      "tags": [
+        "email",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Outlook.com",
+      "category": "Consumer Email",
+      "description": "15 GB email storage. 5 GB OneDrive included. Calendar, contacts, tasks integrated. Focused Inbox. Office for the web access. Custom email aliases. Sweep rules. Ad-supported.",
+      "tier": "Free",
+      "url": "https://outlook.live.com",
+      "tags": [
+        "email",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Proton Mail",
+      "category": "Consumer Email",
+      "description": "1 GB storage. 150 messages/day send limit. 1 email address. End-to-end encrypted. Zero-access encryption. No custom domains, no filters, no auto-reply on free. Swiss privacy jurisdiction.",
+      "tier": "Free",
+      "url": "https://proton.me/mail/pricing",
+      "tags": [
+        "email",
+        "encrypted",
+        "privacy",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Tutanota",
+      "category": "Consumer Email",
+      "description": "1 GB storage. End-to-end encrypted (email, calendar, contacts). 1 Tuta.com address. No custom domains, no aliases, no auto-reply, no inbox rules on free. German privacy jurisdiction. Open-source.",
+      "tier": "Free",
+      "url": "https://tuta.com/pricing",
+      "tags": [
+        "email",
+        "encrypted",
+        "privacy",
+        "open-source",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Pocket",
+      "category": "News & Reading",
+      "description": "Free save-for-later reading service. Save articles, videos, stories from any browser. Offline reading on mobile. Tags for organization. Text-to-speech. Discover feed with recommendations. No highlights, no full-text search, no permanent library on free.",
+      "tier": "Free",
+      "url": "https://getpocket.com/premium",
+      "tags": [
+        "reading",
+        "bookmarks",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Instapaper",
+      "category": "News & Reading",
+      "description": "Free article saving and reading. Clean reading view. Offline access on mobile. Speed reading mode. Basic highlights (5/month). Text-to-speech. Folder organization. No unlimited highlights, no full-text search, no notes on free.",
+      "tier": "Free",
+      "url": "https://www.instapaper.com/premium",
+      "tags": [
+        "reading",
+        "bookmarks",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Feedly",
+      "category": "News & Reading",
+      "description": "Follow up to 100 sources. 3 feeds (boards). Basic article search. OPML import/export. Mobile and web apps. No AI features, no notes, no shared boards, no Leo AI on free.",
+      "tier": "Free",
+      "url": "https://feedly.com/i/pro",
+      "tags": [
+        "rss",
+        "news",
+        "reading",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Apple News",
+      "category": "News & Reading",
+      "description": "Fully free news aggregator on iOS/macOS. Curated top stories, trending topics. Follow channels and topics. Personalized feed. Shared stories. No Apple News+ premium articles on free. No ads on Apple News (curated, not ad-supported).",
+      "tier": "Free",
+      "url": "https://www.apple.com/apple-news/",
+      "tags": [
+        "news",
+        "reading",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Robinhood",
+      "category": "Banking & Finance",
+      "description": "Commission-free stock, ETF, options, and crypto trading. No account minimums. Fractional shares. Dividend reinvestment. Basic market data. No advanced charts, no Level II data, no margin on free. FDIC-insured cash sweep.",
+      "tier": "Free",
+      "url": "https://robinhood.com",
+      "tags": [
+        "finance",
+        "investing",
+        "trading",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Mint (Credit Karma)",
+      "category": "Banking & Finance",
+      "description": "Free credit score monitoring (TransUnion, Equifax). Credit report details. Score simulator. Personalized financial recommendations. Budget tracking (migrated from Mint). Tax filing. Ad-supported.",
+      "tier": "Free",
+      "url": "https://www.creditkarma.com",
+      "tags": [
+        "finance",
+        "credit",
+        "budgeting",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Wise",
+      "category": "Banking & Finance",
+      "description": "Free multi-currency account. Hold 40+ currencies. Local bank details in 10+ currencies. Debit card available. No monthly fees. Transparent exchange rates (mid-market rate). Small fees only on conversions and transfers.",
+      "tier": "Free",
+      "url": "https://wise.com/pricing",
+      "tags": [
+        "finance",
+        "banking",
+        "international",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Insight Timer",
+      "category": "Meditation & Wellness",
+      "description": "Fully free meditation app. 200,000+ free guided meditations. Timer with ambient sounds. Courses (some free). Community groups. Sleep music. Progress tracking. Largest free meditation library.",
+      "tier": "Free",
+      "url": "https://insighttimer.com",
+      "tags": [
+        "meditation",
+        "wellness",
+        "mindfulness",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Waking Up",
+      "category": "Meditation & Wellness",
+      "description": "Free scholarship program (anyone who asks gets full access). Otherwise paid. Guided meditations by Sam Harris. Daily meditations. Theory lessons. Conversations. Practice timer. Full access via scholarship request.",
+      "tier": "Free (Scholarship)",
+      "url": "https://www.wakingup.com",
+      "tags": [
+        "meditation",
+        "wellness",
+        "mindfulness",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
     }
   ]
 }
