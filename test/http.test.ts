@@ -1314,7 +1314,7 @@ describe("HTTP transport", () => {
     const response = await fetch(`http://localhost:${serverPort}/alternative-to/vercel`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
-    assert.ok(html.includes("Free Alternatives to Vercel"), "Should have vendor-specific title");
+    assert.ok(html.includes("Vercel Alternatives with Free Tiers"), "Should have vendor-specific title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes("/vendor/"), "Should link to vendor profiles");
     assert.ok(html.includes("Current Vercel Situation"), "Should show vendor situation");
