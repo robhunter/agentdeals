@@ -3820,4 +3820,40 @@ describe("IndexNow integration", () => {
       if (proc) proc.kill();
     }
   });
+
+});
+
+describe("shutdown tracker page", () => {
+  let proc: ChildProcess | null = null;
+
+  afterEach(() => {
+    if (proc) {
+      proc.kill();
+      proc = null;
+    }
+  });
+
+  it("GET /shutdowns renders shutdown tracker page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/shutdowns`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Developer Tool Shutdown Tracker 2026"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"ItemList"'), "Should use ItemList schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Active Shutdowns"), "Should have active shutdowns stat");
+    assert.ok(html.includes("OpenAI Assistants API"), "Should list OpenAI Assistants shutdown");
+    assert.ok(html.includes("Tenor API"), "Should list Tenor API shutdown");
+    assert.ok(html.includes("Firebase Studio"), "Should list Firebase Studio shutdown");
+    assert.ok(html.includes("HubSpot"), "Should list HubSpot shutdown");
+    assert.ok(html.includes("days left"), "Should show days remaining");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/stability"), "Should cross-link to stability dashboard");
+    assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
+    assert.ok(html.includes("Migration path"), "Should show migration paths");
+  });
 });

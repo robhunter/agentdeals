@@ -4158,6 +4158,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "OpenAI",
     hubDesc: "OpenAI Assistants API sunset August 2026 — migration paths, free AI API alternatives, and cost comparison",
   },
+  {
+    slug: "shutdowns",
+    title: "Developer Tool Shutdown Tracker 2026 — API Sunsets, Deprecations & Migration Deadlines",
+    metaDesc: "Track every developer tool API sunset, deprecation, and service shutdown in 2026. Timelines, impact assessments, migration paths, and free alternatives — updated as new shutdowns are announced.",
+    contextHtml: "",
+    tag: "shutdown-tracker",
+    primaryVendor: "AgentDeals",
+    hubDesc: "Living tracker of developer tool shutdowns, API sunsets, and deprecation deadlines in 2026 — with migration paths and alternatives",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -16265,6 +16274,374 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track OpenAI pricing changes and compare AI API free tiers from your AI assistant. Get stability ratings, migration alerts, and cost comparisons \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Developer Tool Shutdown Tracker page ---
+
+function buildShutdownTrackerPage(): string {
+  const title = "Developer Tool Shutdown Tracker 2026";
+  const subtitle = "API sunsets, deprecations & migration deadlines \u2014 updated as new shutdowns are announced";
+  const metaDesc = "Track every developer tool API sunset, deprecation, and service shutdown in 2026. Timelines, impact assessments, migration paths, and free alternatives.";
+  const slug = "shutdowns";
+  const pubDate = "2026-04-02";
+
+  const stabilityMap = getStabilityMap();
+
+  interface ShutdownEntry {
+    service: string;
+    vendorSlug: string;
+    what: string;
+    deadline: string;
+    impact: string;
+    whoAffected: string;
+    migrationPath: string;
+    migrationLink?: string;
+    status: "active" | "imminent" | "completed";
+  }
+
+  const today = new Date();
+
+  const shutdowns: ShutdownEntry[] = [
+    {
+      service: "HubSpot Contact Lists API v1",
+      vendorSlug: "hubspot",
+      what: "Legacy Contact Lists API v1 sunset \u2014 replaced by Lists API v3",
+      deadline: "2026-04-30",
+      impact: "CRM integrations using v1 endpoints will stop working",
+      whoAffected: "Developers with HubSpot CRM integrations using Contact Lists API v1",
+      migrationPath: "Migrate to Lists API v3 \u2014 new filtering syntax, pagination changes",
+      status: "active",
+    },
+    {
+      service: "OpenAI Realtime API Beta",
+      vendorSlug: "openai",
+      what: "Realtime API beta endpoints deprecated \u2014 replaced by stable Realtime API",
+      deadline: "2026-05-07",
+      impact: "Voice and streaming AI applications using beta endpoints",
+      whoAffected: "Developers building voice assistants, real-time transcription, or streaming AI apps with OpenAI",
+      migrationPath: "Switch to stable Realtime API endpoints \u2014 mostly compatible, some parameter changes",
+      status: "active",
+    },
+    {
+      service: "OpenAI DALL\u00b7E Model Snapshots",
+      vendorSlug: "openai",
+      what: "Legacy DALL\u00b7E model snapshots removed from API \u2014 use dall-e-3 or gpt-image-1",
+      deadline: "2026-05-12",
+      impact: "Image generation apps pinned to specific DALL\u00b7E versions",
+      whoAffected: "Developers using versioned DALL\u00b7E model IDs in API calls",
+      migrationPath: "Update model parameter to dall-e-3 or gpt-image-1 \u2014 test output quality differences",
+      status: "active",
+    },
+    {
+      service: "Firebase Studio (New Workspaces)",
+      vendorSlug: "firebase",
+      what: "New Firebase Studio workspace creation disabled",
+      deadline: "2026-06-22",
+      impact: "Cannot create new cloud IDE workspaces",
+      whoAffected: "Developers starting new projects on Firebase Studio",
+      migrationPath: "Export projects to local dev or alternative cloud IDEs (GitHub Codespaces, Gitpod, Replit)",
+      status: "active",
+    },
+    {
+      service: "Tenor API",
+      vendorSlug: "tenor",
+      what: "Complete API shutdown \u2014 GIF search and sharing service discontinued",
+      deadline: "2026-06-30",
+      impact: "All GIF integrations using Tenor API will stop working",
+      whoAffected: "Apps, bots, forums, and messaging integrations using Tenor for GIF search",
+      migrationPath: "Migrate to Giphy API (free tier available) or self-hosted GIF solutions",
+      status: "active",
+    },
+    {
+      service: "OpenAI Assistants API",
+      vendorSlug: "openai",
+      what: "Complete API shutdown \u2014 Assistants, Threads, Runs, and Messages endpoints removed",
+      deadline: "2026-08-26",
+      impact: "All AI agent applications built on Assistants API will break",
+      whoAffected: "AI agent builders using Assistants API for threads, code interpreter, file search, and persistent assistants",
+      migrationPath: "Migrate to Responses API, or switch to Claude/Gemini/open-source frameworks",
+      migrationLink: "/openai-assistants-alternatives",
+      status: "active",
+    },
+    {
+      service: "Firebase Studio (Full Shutdown)",
+      vendorSlug: "firebase",
+      what: "Complete shutdown \u2014 all workspaces deleted, data removed",
+      deadline: "2027-03-22",
+      impact: "All remaining Firebase Studio data permanently deleted",
+      whoAffected: "Anyone with data still in Firebase Studio workspaces",
+      migrationPath: "Export all workspace data before deadline \u2014 move to GitHub Codespaces, Gitpod, or local development",
+      status: "active",
+    },
+  ];
+
+  // Sort by deadline
+  shutdowns.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+
+  // Categorize by urgency
+  const imminent: ShutdownEntry[] = [];
+  const upcoming: ShutdownEntry[] = [];
+  const later: ShutdownEntry[] = [];
+  const completed: ShutdownEntry[] = [];
+
+  for (const s of shutdowns) {
+    const deadlineDate = new Date(s.deadline);
+    const daysLeft = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (daysLeft < 0) {
+      completed.push(s);
+    } else if (daysLeft <= 30) {
+      imminent.push(s);
+    } else if (daysLeft <= 90) {
+      upcoming.push(s);
+    } else {
+      later.push(s);
+    }
+  }
+
+  const activeCount = imminent.length + upcoming.length + later.length;
+  const nextDeadline = shutdowns.find(s => new Date(s.deadline) > today);
+  const nextDaysLeft = nextDeadline ? Math.max(0, Math.ceil((new Date(nextDeadline.deadline).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))) : 0;
+
+  function urgencyColor(deadline: string): string {
+    const dl = new Date(deadline);
+    const days = Math.ceil((dl.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (days < 0) return "#6b7280";
+    if (days <= 30) return "#f85149";
+    if (days <= 90) return "#d29922";
+    return "#3fb950";
+  }
+
+  function daysLabel(deadline: string): string {
+    const dl = new Date(deadline);
+    const days = Math.ceil((dl.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (days < 0) return "Completed";
+    if (days === 0) return "Today";
+    if (days === 1) return "1 day left";
+    return `${days} days left`;
+  }
+
+  function buildShutdownCard(s: ShutdownEntry): string {
+    const dateStr = new Date(s.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    const stability = stabilityMap.get(s.vendorSlug) ?? "stable";
+    const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
+    const color = urgencyColor(s.deadline);
+    const vendorOffer = offers.find(o => toSlug(o.vendor) === s.vendorSlug);
+    const editorialLink = ALTERNATIVES_PAGES.find(p =>
+      p.primaryVendor.toLowerCase() === (vendorOffer?.vendor ?? "").toLowerCase() ||
+      p.slug.includes(s.vendorSlug)
+    );
+
+    return `<div class="shutdown-card" style="border-left-color:${color}">
+      <div class="shutdown-header">
+        <div>
+          <h3 style="margin:0"><a href="/vendor/${escHtmlServer(s.vendorSlug)}" style="color:var(--text)">${escHtmlServer(s.service)}</a></h3>
+          <div class="shutdown-deadline" style="color:${color}">
+            <span class="deadline-icon">\u23f0</span>
+            <span>${escHtmlServer(dateStr)}</span>
+            <span class="days-badge" style="background:${color}20;color:${color}">${escHtmlServer(daysLabel(s.deadline))}</span>
+          </div>
+        </div>
+        <div class="stability-badge" style="color:${stabColor}">${escHtmlServer(stability.toUpperCase())}</div>
+      </div>
+      <p class="shutdown-what">${escHtmlServer(s.what)}</p>
+      <div class="shutdown-details">
+        <div class="detail-row"><span class="detail-label">Who\u2019s affected:</span> <span>${escHtmlServer(s.whoAffected)}</span></div>
+        <div class="detail-row"><span class="detail-label">Impact:</span> <span>${escHtmlServer(s.impact)}</span></div>
+        <div class="detail-row"><span class="detail-label">Migration path:</span> <span>${escHtmlServer(s.migrationPath)}</span></div>
+      </div>
+      <div class="shutdown-links">
+        <a href="/vendor/${escHtmlServer(s.vendorSlug)}">Vendor profile \u2192</a>
+        ${s.migrationLink ? `<a href="${s.migrationLink}">Migration guide \u2192</a>` : ""}
+        ${editorialLink && editorialLink.slug !== slug ? `<a href="/${editorialLink.slug}">Alternatives guide \u2192</a>` : ""}
+      </div>
+    </div>`;
+  }
+
+  function buildSection(heading: string, description: string, entries: ShutdownEntry[], urgency: string): string {
+    if (entries.length === 0) return "";
+    return `
+    <h2 id="${urgency}">${escHtmlServer(heading)} <span class="section-count">(${entries.length})</span></h2>
+    <p class="section-intro">${escHtmlServer(description)}</p>
+    ${entries.map(s => buildShutdownCard(s)).join("\n    ")}`;
+  }
+
+  // Get deal changes for vendors in our shutdown list
+  const shutdownVendorSlugs = [...new Set(shutdowns.map(s => s.vendorSlug))];
+  const relevantChanges = dealChanges.filter(c =>
+    shutdownVendorSlugs.some(slug => toSlug(c.vendor) === slug)
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10);
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["openai-assistants-alternatives", "stability", "free-tier-risk", "free-tier-tracker", "state-of-free-tiers-2026", "ai-ml-alternatives"].includes(p.slug)
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: activeCount,
+    itemListElement: shutdowns.filter(s => new Date(s.deadline) >= today).map((s, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: s.service,
+      description: s.what,
+      url: `${BASE_URL}/vendor/${s.vendorSlug}`,
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} \u2014 AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:.5rem;line-height:1.5}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-number.yellow{color:#d29922}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.section-count{font-size:.9rem;color:var(--text-dim);font-weight:400}
+.shutdown-card{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:8px;padding:1.25rem;margin-bottom:1rem;transition:border-color .15s}
+.shutdown-card:hover{border-color:var(--border-hover)}
+.shutdown-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.75rem}
+.shutdown-deadline{display:flex;align-items:center;gap:.5rem;font-size:.85rem;margin-top:.35rem;font-family:var(--mono)}
+.deadline-icon{font-size:.9rem}
+.days-badge{font-size:.75rem;font-weight:600;padding:.15rem .5rem;border-radius:4px}
+.stability-badge{font-size:.7rem;font-weight:700;letter-spacing:.05em;white-space:nowrap}
+.shutdown-what{color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem;line-height:1.6}
+.shutdown-details{font-size:.85rem;color:var(--text-muted);margin-bottom:.75rem}
+.detail-row{margin-bottom:.35rem;line-height:1.5}
+.detail-label{color:var(--text-dim);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em}
+.shutdown-links{display:flex;gap:1rem;flex-wrap:wrap;font-size:.85rem}
+.shutdown-links a{color:var(--accent)}
+.shutdown-links a:hover{text-decoration:underline}
+.timeline-bar{display:flex;gap:4px;margin:1.5rem 0 2rem;height:8px;border-radius:4px;overflow:hidden}
+.timeline-segment{height:100%;border-radius:2px;min-width:4px}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology p{margin-bottom:.5rem}
+.methodology p:last-child{margin-bottom:0}
+.methodology strong{color:var(--text)}
+.related-pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;margin:1rem 0 2rem}
+.related-page-link{display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:all .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none;background:var(--accent-glow)}
+.link-title{font-weight:600;color:var(--text);margin-bottom:.25rem;font-size:.9rem}
+.link-desc{color:var(--text-muted);font-size:.8rem;line-height:1.4}
+${globalNavCss()}
+${mcpCtaCss()}
+@media(max-width:640px){
+  h1{font-size:1.6rem}
+  .summary-stats{grid-template-columns:repeat(2,1fr)}
+  .shutdown-header{flex-direction:column;gap:.5rem}
+  .related-pages{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+${buildGlobalNav("guides")}
+<div class="container">
+  <div class="breadcrumb"><a href="/">Home</a> / <a href="/guides">Guides</a> / Shutdown Tracker</div>
+  <h1>${escHtmlServer(title)}</h1>
+  <p class="subtitle">${escHtmlServer(subtitle)}</p>
+  <div class="pub-date">Updated ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${nextDaysLeft} days` : ""}</div>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">${activeCount}</div><div class="stat-label">Active Shutdowns</div></div>
+    <div class="stat-card"><div class="stat-number red">${imminent.length}</div><div class="stat-label">Imminent (&lt;30 days)</div></div>
+    <div class="stat-card"><div class="stat-number yellow">${upcoming.length}</div><div class="stat-label">Upcoming (30\u201390 days)</div></div>
+    <div class="stat-card"><div class="stat-number green">${later.length}</div><div class="stat-label">Later this year</div></div>
+  </div>
+
+  <div class="timeline-bar">
+    ${shutdowns.filter(s => new Date(s.deadline) >= today).map(s => {
+      const color = urgencyColor(s.deadline);
+      return `<div class="timeline-segment" style="background:${color};flex:1" title="${escHtmlServer(s.service)} \u2014 ${escHtmlServer(daysLabel(s.deadline))}"></div>`;
+    }).join("\n    ")}
+  </div>
+
+  ${buildSection("\u26a0\ufe0f Imminent", "These shutdowns are happening within the next 30 days. Take action now.", imminent, "imminent")}
+
+  ${buildSection("\u23f3 Upcoming", "These shutdowns are 30\u201390 days away. Plan your migration now.", upcoming, "upcoming")}
+
+  ${buildSection("\u2705 Later This Year", "These shutdowns are 90+ days away. Start planning when convenient.", later, "later")}
+
+  ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", completed, "completed")}
+
+  ${relevantChanges.length > 0 ? `
+  <h2 id="pricing-changes">Related Pricing Changes</h2>
+  <p class="section-intro">Recent pricing and policy changes from vendors on our shutdown list \u2014 from our <a href="/changes">deal changes database</a>.</p>
+  <table class="pricing-table">
+    <thead><tr><th>Date</th><th>Vendor</th><th>Change</th><th>Impact</th></tr></thead>
+    <tbody>
+      ${relevantChanges.map(c => {
+        const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+        return `<tr>
+          <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+          <td><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+          <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+          <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+        </tr>`;
+      }).join("\n      ")}
+    </tbody>
+  </table>` : ""}
+
+  <h2 id="methodology">Methodology</h2>
+  <div class="methodology">
+    <p><strong>How we track shutdowns:</strong> We monitor official vendor announcements, API changelogs, developer blogs, and community reports for service deprecation and shutdown notices. Each entry is verified against the vendor\u2019s official documentation before inclusion.</p>
+    <p><strong>Urgency classification:</strong> <span style="color:#f85149;font-weight:600">Imminent</span> (&lt;30 days) \u2014 take action now. <span style="color:#d29922;font-weight:600">Upcoming</span> (30\u201390 days) \u2014 plan migration. <span style="color:#3fb950;font-weight:600">Later</span> (90+ days) \u2014 start planning when convenient.</p>
+    <p><strong>Stability ratings</strong> are computed from our <a href="/changes">deal changes database</a> of ${dealChanges.length} tracked changes. <a href="/stability">View the full stability dashboard</a>.</p>
+    <p><strong>Updates:</strong> This page is updated as new shutdowns are announced. Subscribe to our <a href="/feed.xml">Atom feed</a> for change notifications, or query via <a href="/setup">MCP server</a>.</p>
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Query shutdown data and migration deadlines from your AI assistant. Get stability ratings, track vendor changes, and find free alternatives \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -31798,6 +32175,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-assistants-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildOpenaiAssistantsAlternativesPage());
+  } else if (url.pathname === "/shutdowns" && isGetOrHead) {
+    recordApiHit("/shutdowns");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/shutdowns", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildShutdownTrackerPage());
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
