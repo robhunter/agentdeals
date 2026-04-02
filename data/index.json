@@ -22110,6 +22110,830 @@
         "rds"
       ],
       "verifiedDate": "2026-03-27"
+    },
+    {
+      "vendor": "Spotify",
+      "category": "Streaming & Media",
+      "description": "Ad-supported music streaming. Shuffle-only on mobile in most markets. Up to 160kbps audio quality. No offline downloads. Limited skips on mobile (~6/hour). Unlimited skips on desktop. Full catalog access.",
+      "tier": "Free",
+      "url": "https://www.spotify.com/us/free/",
+      "tags": [
+        "streaming",
+        "music",
+        "ad-supported",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "YouTube",
+      "category": "Streaming & Media",
+      "description": "Unlimited ad-supported video streaming. YouTube Shorts, comments, uploads (up to 12 hours or 256 GB per video). No background play on mobile, no offline downloads. Includes basic YouTube Music with ads.",
+      "tier": "Free",
+      "url": "https://www.youtube.com",
+      "tags": [
+        "streaming",
+        "video",
+        "ad-supported",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Tubi",
+      "category": "Streaming & Media",
+      "description": "Fully free ad-supported streaming. Thousands of movies and TV shows. No subscription required. Account optional for watchlist and resume. No viewing limits.",
+      "tier": "Free",
+      "url": "https://tubitv.com",
+      "tags": [
+        "streaming",
+        "video",
+        "movies",
+        "ad-supported",
+        "consumer"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Pluto TV",
+      "category": "Streaming & Media",
+      "description": "Fully free ad-supported streaming. 250+ live channels, on-demand movies and TV. No account required. No viewing limits.",
+      "tier": "Free",
+      "url": "https://pluto.tv",
+      "tags": [
+        "streaming",
+        "video",
+        "live-tv",
+        "ad-supported",
+        "consumer"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Peacock",
+      "category": "Streaming & Media",
+      "description": "Ad-supported access to a limited catalog (subset of full NBCUniversal library). No live sports or full NBC next-day content on free tier. Account required. No offline downloads.",
+      "tier": "Free",
+      "url": "https://www.peacocktv.com",
+      "tags": [
+        "streaming",
+        "video",
+        "ad-supported",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Crunchyroll",
+      "category": "Streaming & Media",
+      "description": "Ad-supported anime streaming. Access to a limited library of older and select titles. New episodes typically delayed 1 week after simulcast. Up to 1080p. No offline downloads, no manga.",
+      "tier": "Free",
+      "url": "https://www.crunchyroll.com",
+      "tags": [
+        "streaming",
+        "anime",
+        "ad-supported",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Pandora",
+      "category": "Streaming & Media",
+      "description": "Ad-supported personalized radio stations. Limited skips (6 per station per hour). No on-demand playback, no offline mode, no unlimited replays. Station-based listening only.",
+      "tier": "Free",
+      "url": "https://www.pandora.com",
+      "tags": [
+        "streaming",
+        "music",
+        "radio",
+        "ad-supported",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "iHeartRadio",
+      "category": "Streaming & Media",
+      "description": "Free live radio streaming (thousands of AM/FM stations), custom artist stations, podcasts. Limited skips on custom stations (6/hour). No on-demand song playback. No offline mode.",
+      "tier": "Free",
+      "url": "https://www.iheart.com",
+      "tags": [
+        "streaming",
+        "radio",
+        "podcasts",
+        "ad-supported",
+        "consumer"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "SoundCloud",
+      "category": "Streaming & Media",
+      "description": "Ad-supported music listening with full catalog access. For creators: up to 3 hours of upload time. Basic listener analytics. 128kbps quality. No offline listening.",
+      "tier": "Free",
+      "url": "https://soundcloud.com",
+      "tags": [
+        "streaming",
+        "music",
+        "creator",
+        "ad-supported",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Plex",
+      "category": "Streaming & Media",
+      "description": "Free media server software for personal media (unlimited local streaming). Ad-supported Movies & TV library (Plex-provided content). Podcast support. No Plex Pass features (hardware transcoding, mobile sync, live TV/DVR).",
+      "tier": "Free",
+      "url": "https://www.plex.tv",
+      "tags": [
+        "streaming",
+        "media-server",
+        "ad-supported",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Apple Podcasts",
+      "category": "Streaming & Media",
+      "description": "Fully free podcast player built into iOS/macOS. Unlimited streaming and downloads of free podcasts. Library management, queue, sleep timer. Some shows offer separate paid subscriber-only episodes.",
+      "tier": "Free",
+      "url": "https://www.apple.com/apple-podcasts/",
+      "tags": [
+        "podcasts",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Pocket Casts",
+      "category": "Streaming & Media",
+      "description": "Free podcast player on iOS/Android. Full playback, downloads, custom playlists, episode filters. Paid Plus tier adds desktop/web apps, 10 GB cloud storage, custom themes, Apple Watch app.",
+      "tier": "Free",
+      "url": "https://pocketcasts.com",
+      "tags": [
+        "podcasts",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Notion",
+      "category": "Productivity & Notes",
+      "description": "Unlimited pages and blocks for individual use. 1 member workspace with up to 10 guests. 5 MB file upload limit per file. 7-day page history. Basic integrations. API access.",
+      "tier": "Free",
+      "url": "https://www.notion.so/pricing",
+      "tags": [
+        "notes",
+        "productivity",
+        "wiki",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Todoist",
+      "category": "Productivity & Notes",
+      "description": "Up to 5 active projects. Up to 5 collaborators per project. 5 MB file upload limit. Basic priority levels. No reminders, no labels, no filters, no calendar view on free tier.",
+      "tier": "Free",
+      "url": "https://todoist.com/pricing",
+      "tags": [
+        "tasks",
+        "todo",
+        "productivity",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Trello",
+      "category": "Productivity & Notes",
+      "description": "Unlimited cards. Up to 10 boards per workspace. Unlimited Power-Ups. 10 MB per file attachment. 250 Workspace command runs per month (automation). Unlimited activity log.",
+      "tier": "Free",
+      "url": "https://trello.com/pricing",
+      "tags": [
+        "kanban",
+        "productivity",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Google Keep",
+      "category": "Productivity & Notes",
+      "description": "Fully free with Google account. Unlimited notes, lists, labels, reminders, color coding. Voice memos with auto-transcription. Image notes with OCR. Shared notes. Images use Google account storage.",
+      "tier": "Free",
+      "url": "https://keep.google.com",
+      "tags": [
+        "notes",
+        "lists",
+        "reminders",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Obsidian",
+      "category": "Productivity & Notes",
+      "description": "Fully free for personal use. Local-only markdown notes. Unlimited vaults, notes, and community plugins. No cloud sync on free (Obsidian Sync is $8/mo). No publish on free. Commercial use requires paid license ($50/user/year).",
+      "tier": "Free",
+      "url": "https://obsidian.md/pricing",
+      "tags": [
+        "notes",
+        "markdown",
+        "local-first",
+        "knowledge-management",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Apple Notes",
+      "category": "Productivity & Notes",
+      "description": "Fully free on Apple devices. Unlimited notes with rich text, checklists, tables, sketches, document scanning. Shared notes. iCloud sync counts against 5 GB iCloud free storage. Locked notes with password/biometric.",
+      "tier": "Free",
+      "url": "https://www.apple.com/icloud/",
+      "tags": [
+        "notes",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Microsoft To Do",
+      "category": "Productivity & Notes",
+      "description": "Fully free with Microsoft account. Unlimited lists and tasks. Due dates, reminders, recurring tasks. My Day planning view. File attachments up to 25 MB. Shared lists. Outlook integration. Cross-platform.",
+      "tier": "Free",
+      "url": "https://todo.microsoft.com",
+      "tags": [
+        "tasks",
+        "todo",
+        "productivity",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "TickTick",
+      "category": "Productivity & Notes",
+      "description": "Up to 9 lists. Up to 99 tasks per list. 1 calendar subscription. 2 reminders per task. Basic Pomodoro timer. Basic habit tracker (up to 5 habits). No calendar view or task duration on free.",
+      "tier": "Free",
+      "url": "https://ticktick.com/about/upgrade",
+      "tags": [
+        "tasks",
+        "todo",
+        "productivity",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Standard Notes",
+      "category": "Productivity & Notes",
+      "description": "Unlimited notes with end-to-end encryption. Cross-platform sync. Plain text editor only on free. 100 MB total storage. No rich text, spreadsheets, file attachments, or note history on free tier.",
+      "tier": "Free",
+      "url": "https://standardnotes.com/plans",
+      "tags": [
+        "notes",
+        "encrypted",
+        "privacy",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Simplenote",
+      "category": "Productivity & Notes",
+      "description": "Fully free. Unlimited plain-text notes with cross-platform sync. Markdown support. Tags. 30-day version history. Collaboration via shared notes. Published notes with public URLs. No file attachments.",
+      "tier": "Free",
+      "url": "https://simplenote.com",
+      "tags": [
+        "notes",
+        "plain-text",
+        "markdown",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Evernote",
+      "category": "Productivity & Notes",
+      "description": "Up to 50 notes total. 1 notebook. 60 MB monthly upload limit. 25 MB max note size. Single device sync plus web. Basic search. No offline notebooks, PDF annotation, or email forwarding on free.",
+      "tier": "Free",
+      "url": "https://evernote.com/free",
+      "tags": [
+        "notes",
+        "productivity",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Coda",
+      "category": "Productivity & Notes",
+      "description": "Unlimited docs with size limits. Up to 1,000 rows for native tables, 50 rows for Packs tables. Unlimited editors/viewers. 7-day version history. Cross-doc limited on free tier.",
+      "tier": "Free",
+      "url": "https://coda.io/pricing",
+      "tags": [
+        "docs",
+        "productivity",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Airtable",
+      "category": "Productivity & Notes",
+      "description": "Unlimited bases. Up to 1,000 records per base. 1 GB attachment space per base. 100 automation runs per month. 1 extension per base. Up to 5 editors. No sync or Gantt/timeline views on free.",
+      "tier": "Free",
+      "url": "https://airtable.com/pricing",
+      "tags": [
+        "database",
+        "spreadsheet",
+        "no-code",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Google Drive",
+      "category": "Cloud Storage",
+      "description": "15 GB shared across Google Drive, Gmail, and Google Photos. Google Docs/Sheets/Slides don't count against quota. Real-time collaboration. File sharing with permissions. Max file upload 5 TB.",
+      "tier": "Free",
+      "url": "https://one.google.com/about/plans",
+      "tags": [
+        "cloud-storage",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Google Photos",
+      "category": "Cloud Storage",
+      "description": "15 GB shared across Google Drive, Gmail, and Google Photos. Photos stored at original quality count against quota. Basic editing tools. Sharing, albums, face grouping. No unlimited storage saver quality since June 2021.",
+      "tier": "Free",
+      "url": "https://one.google.com/about/plans",
+      "tags": [
+        "photos",
+        "cloud-storage",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "iCloud",
+      "category": "Cloud Storage",
+      "description": "5 GB total across iCloud Drive, Photos, Mail, backups, Notes. Device backups, iCloud Keychain, Find My included. No iCloud Private Relay or Hide My Email on free tier.",
+      "tier": "Free",
+      "url": "https://www.apple.com/icloud/",
+      "tags": [
+        "cloud-storage",
+        "backup",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "OneDrive",
+      "category": "Cloud Storage",
+      "description": "5 GB storage. File sharing and collaboration. Office for the web (Word, Excel, PowerPoint — basic editing). Personal Vault (3 files limit on free). Photo upload. Mobile app.",
+      "tier": "Free",
+      "url": "https://www.microsoft.com/en-us/microsoft-365/onedrive/compare-onedrive-plans",
+      "tags": [
+        "cloud-storage",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Flickr",
+      "category": "Cloud Storage",
+      "description": "Up to 1,000 photos/videos. No storage size limit per photo (originals preserved). Community features (groups, comments, favorites). Basic stats. Ad-supported.",
+      "tier": "Free",
+      "url": "https://www.flickr.com/account/upgrade",
+      "tags": [
+        "photos",
+        "community",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Dropbox",
+      "category": "Cloud Storage",
+      "description": "2 GB storage. Up to 3 devices linked. File sharing. 30-day version history. Dropbox Paper access. 100 MB max file size via web (larger via desktop app). Dropbox Transfer up to 100 MB.",
+      "tier": "Free (Basic)",
+      "url": "https://www.dropbox.com/plans",
+      "tags": [
+        "cloud-storage",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "MEGA",
+      "category": "Cloud Storage",
+      "description": "20 GB permanent storage. End-to-end encrypted. MEGA Chat. File sharing with encryption. Desktop and mobile sync. 1 GB transfer quota that replenishes. Up to 5 GB additional via achievements (temporary).",
+      "tier": "Free",
+      "url": "https://mega.io/pricing",
+      "tags": [
+        "cloud-storage",
+        "encrypted",
+        "privacy",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "pCloud",
+      "category": "Cloud Storage",
+      "description": "10 GB storage (unlockable via tasks). File sharing. Built-in media player. Automatic upload from mobile. Up to 5 GB additional via referral bonuses. Client-side encryption is a paid add-on.",
+      "tier": "Free",
+      "url": "https://www.pcloud.com",
+      "tags": [
+        "cloud-storage",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Internxt",
+      "category": "Cloud Storage",
+      "description": "10 GB storage. End-to-end encrypted with zero-knowledge architecture. File sharing. Cross-platform apps. Open-source. No file size limits within storage quota.",
+      "tier": "Free",
+      "url": "https://internxt.com/pricing",
+      "tags": [
+        "cloud-storage",
+        "encrypted",
+        "privacy",
+        "open-source",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Bitwarden",
+      "category": "Password Managers",
+      "description": "Unlimited vault items (passwords, notes, cards, identities). Unlimited devices. Password generator. Basic 2FA (email, authenticator app). No TOTP code storage, no emergency access, no Vault Health Reports on free. Open-source.",
+      "tier": "Free",
+      "url": "https://bitwarden.com/pricing/",
+      "tags": [
+        "password-manager",
+        "security",
+        "open-source",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Proton Pass",
+      "category": "Password Managers",
+      "description": "Unlimited logins and notes. Unlimited devices. 10 hide-my-email aliases. Integrated 2FA/TOTP. Passkey support. End-to-end encrypted. No credit card storage or unlimited aliases on free.",
+      "tier": "Free",
+      "url": "https://proton.me/pass/pricing",
+      "tags": [
+        "password-manager",
+        "security",
+        "privacy",
+        "encrypted",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Apple Passwords",
+      "category": "Password Managers",
+      "description": "Fully free, built into iOS 18+/macOS Sequoia+. Unlimited passwords, passkeys, verification codes (TOTP), Wi-Fi passwords. iCloud Keychain sync. Shared groups. Security alerts for compromised passwords.",
+      "tier": "Free",
+      "url": "https://support.apple.com/guide/passwords/",
+      "tags": [
+        "password-manager",
+        "security",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "KeePassXC",
+      "category": "Password Managers",
+      "description": "Fully free and open-source (GPLv2+). Unlimited entries. Local encrypted database (AES-256, ChaCha20). TOTP support. Browser integration. SSH agent. YubiKey support. No built-in cloud sync. Cross-platform.",
+      "tier": "Free",
+      "url": "https://keepassxc.org",
+      "tags": [
+        "password-manager",
+        "security",
+        "open-source",
+        "local-first",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "LastPass",
+      "category": "Password Managers",
+      "description": "Unlimited vault items. Single device type only (mobile OR desktop, not both). 50 MB encrypted file storage. No emergency access, no 1-to-many sharing, no dark web monitoring on free.",
+      "tier": "Free",
+      "url": "https://www.lastpass.com/pricing",
+      "tags": [
+        "password-manager",
+        "security",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "NordPass",
+      "category": "Password Managers",
+      "description": "Unlimited passwords on 1 device at a time. Password generator. Import/export. AutoFill. No passkey storage, no item sharing, no email masking, no password health, no data breach scanner on free.",
+      "tier": "Free",
+      "url": "https://nordpass.com/plans/",
+      "tags": [
+        "password-manager",
+        "security",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Slack",
+      "category": "Communication & Messaging",
+      "description": "90-day message history. 1-to-1 huddles. 10 app integrations. 5 GB total file storage for workspace. No group huddles, no screen sharing in huddles, no Slack Connect, no guest accounts on free.",
+      "tier": "Free",
+      "url": "https://slack.com/pricing",
+      "tags": [
+        "messaging",
+        "team-chat",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Discord",
+      "category": "Communication & Messaging",
+      "description": "Unlimited servers, channels, messages. Voice/video calls (up to 25 in DM groups). Screen sharing (720p/30fps). Go Live streaming (720p/30fps). 25 MB file upload limit. No HD streaming or animated avatars on free.",
+      "tier": "Free",
+      "url": "https://discord.com/nitro",
+      "tags": [
+        "messaging",
+        "voice-chat",
+        "community",
+        "gaming",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Zoom",
+      "category": "Communication & Messaging",
+      "description": "Unlimited 1-on-1 meetings. Group meetings limited to 40 minutes, up to 100 participants. Screen sharing. Virtual backgrounds. Breakout rooms. Local recording. No cloud recording or AI companion on free.",
+      "tier": "Free (Basic)",
+      "url": "https://zoom.us/pricing",
+      "tags": [
+        "video-conferencing",
+        "meetings",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Google Meet",
+      "category": "Communication & Messaging",
+      "description": "1-hour group meetings (up to 100 participants). Unlimited 1-on-1 calls (24-hour limit). Screen sharing. Real-time captions. Background effects. No recording or breakout rooms on free.",
+      "tier": "Free",
+      "url": "https://apps.google.com/meet/pricing/",
+      "tags": [
+        "video-conferencing",
+        "meetings",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Microsoft Teams",
+      "category": "Communication & Messaging",
+      "description": "Unlimited chat messages and search. Group meetings up to 60 minutes, up to 100 participants. 5 GB per user file storage. Screen sharing. No meeting recording or webinars on free.",
+      "tier": "Free",
+      "url": "https://www.microsoft.com/en-us/microsoft-teams/compare-microsoft-teams-options",
+      "tags": [
+        "video-conferencing",
+        "messaging",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Signal",
+      "category": "Communication & Messaging",
+      "description": "Fully free and open-source. End-to-end encrypted messaging, voice, and video calls. Group chats up to 1,000 members. Disappearing messages. Sealed sender. No ads, no tracking. Desktop app.",
+      "tier": "Free",
+      "url": "https://signal.org",
+      "tags": [
+        "messaging",
+        "encrypted",
+        "privacy",
+        "open-source",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Telegram",
+      "category": "Communication & Messaging",
+      "description": "Fully free core features. Unlimited messages. Groups up to 200,000 members. Channels with unlimited subscribers. 2 GB file upload limit. Cloud-based message sync. Voice/video calls. Bot platform.",
+      "tier": "Free",
+      "url": "https://telegram.org",
+      "tags": [
+        "messaging",
+        "cloud-based",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "WhatsApp",
+      "category": "Communication & Messaging",
+      "description": "Fully free for personal use. End-to-end encrypted messaging, voice, and video calls. Group chats up to 1,024 members. File sharing up to 2 GB. Multi-device support (up to 4 linked devices). Community groups.",
+      "tier": "Free",
+      "url": "https://www.whatsapp.com",
+      "tags": [
+        "messaging",
+        "encrypted",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Canva",
+      "category": "Design & Creative",
+      "description": "5 GB cloud storage. 250,000+ free templates. 1 million+ free photos/graphics. Basic photo editing and AI features. Download as PNG/JPG/PDF. No Background Remover, Brand Kit, or Magic Resize on free.",
+      "tier": "Free",
+      "url": "https://www.canva.com/pricing/",
+      "tags": [
+        "design",
+        "graphics",
+        "templates",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Figma",
+      "category": "Design & Creative",
+      "description": "Up to 3 Figma design files and 3 FigJam files. Unlimited personal drafts. Unlimited viewers/commenters. Basic prototyping. No team libraries or branching on free.",
+      "tier": "Free (Starter)",
+      "url": "https://www.figma.com/pricing/",
+      "tags": [
+        "design",
+        "ui-ux",
+        "prototyping",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Photopea",
+      "category": "Design & Creative",
+      "description": "Fully free (ad-supported). Full PSD/XCF/Sketch file support. Layers, masks, filters, smart objects. No download limits. Browser-based, no install needed. Photoshop-compatible free alternative.",
+      "tier": "Free",
+      "url": "https://www.photopea.com",
+      "tags": [
+        "photo-editing",
+        "design",
+        "browser-based",
+        "ad-supported",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "GIMP",
+      "category": "Design & Creative",
+      "description": "Fully free and open-source (GPLv3). Full image editor with layers, masks, filters, custom brushes, color management. Plugin/script support (Python, Script-Fu). PSD import. RAW editing via plugins. Cross-platform.",
+      "tier": "Free",
+      "url": "https://www.gimp.org",
+      "tags": [
+        "photo-editing",
+        "design",
+        "open-source",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Inkscape",
+      "category": "Design & Creative",
+      "description": "Fully free and open-source (GPLv2+). Full vector graphics editor. SVG native format. Bezier/spiro curves, text, clones, layers. PDF/EPS/AI import. Extensions support. Cross-platform.",
+      "tier": "Free",
+      "url": "https://inkscape.org",
+      "tags": [
+        "vector-graphics",
+        "design",
+        "svg",
+        "open-source",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "DaVinci Resolve",
+      "category": "Design & Creative",
+      "description": "Full professional video editor. Multi-track timeline. Color grading. Fairlight audio editing. Fusion visual effects. Limited to UHD resolution (no 8K). No multi-GPU, HDR tools, or team collaboration on free. No watermark.",
+      "tier": "Free",
+      "url": "https://www.blackmagicdesign.com/products/davinciresolve",
+      "tags": [
+        "video-editing",
+        "color-grading",
+        "vfx",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Krita",
+      "category": "Design & Creative",
+      "description": "Fully free and open-source (GPLv3). Professional digital painting with 100+ brushes. Brush engine customization. Frame-by-frame animation support. HDR painting. PSD support. Cross-platform.",
+      "tier": "Free",
+      "url": "https://krita.org",
+      "tags": [
+        "digital-painting",
+        "art",
+        "illustration",
+        "open-source",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
+    },
+    {
+      "vendor": "Blender",
+      "category": "Design & Creative",
+      "description": "Fully free and open-source (GPLv2+). Full 3D creation suite: modeling, sculpting, animation, rigging, simulation, rendering (Cycles/EEVEE), compositing, motion tracking, video editing. Python scripting.",
+      "tier": "Free",
+      "url": "https://www.blender.org",
+      "tags": [
+        "3d-modeling",
+        "animation",
+        "rendering",
+        "vfx",
+        "open-source",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-04-02"
     }
   ]
 }
