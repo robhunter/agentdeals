@@ -2504,6 +2504,27 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("vendor-card"), "Should have vendor cards");
   });
 
+  it("GET /openai-assistants-alternatives renders sunset guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/openai-assistants-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Assistants API Sunset"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("August 26, 2026"), "Should show shutdown date");
+    assert.ok(html.includes("Migration Paths"), "Should have migration paths section");
+    assert.ok(html.includes("Free Tier Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Anthropic Claude"), "Should list Claude as alternative");
+    assert.ok(html.includes("Google Gemini"), "Should list Gemini as alternative");
+    assert.ok(html.includes("/stability"), "Should cross-link to stability dashboard");
+    assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+  });
+
   it("GET /hcp-terraform-migration renders migration guide page", async () => {
     proc = await startHttpServer();
 
