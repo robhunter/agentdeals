@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFreshnessMetrics } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFreshnessMetrics, getStabilityMap } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews } from "./stats.js";
@@ -3941,6 +3941,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     tag: "free-tier-risk",
     primaryVendor: "Heroku",
     hubDesc: "Risk scores for 30+ developer free tiers — which are safe to build on and which might disappear",
+  },
+  {
+    slug: "stability",
+    title: "Developer Free Tier Stability Dashboard — Visual Risk Overview",
+    metaDesc: "Real-time stability ratings for developer free tiers based on tracked pricing changes. See which tools are stable, which need watching, and which are deteriorating.",
+    contextHtml: "",
+    tag: "stability",
+    primaryVendor: "AgentDeals",
+    hubDesc: "Visual stability dashboard — which developer free tiers are safe, watched, volatile, or improving",
   },
   {
     slug: "hcp-terraform-migration",
@@ -15515,6 +15524,333 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track free tier risk for 1,500+ developer tools from your AI assistant. Get pricing alerts, risk scores, and migration recommendations — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Stability Dashboard page ---
+
+function buildStabilityDashboardPage(): string {
+  const title = "Developer Free Tier Stability Dashboard";
+  const metaDesc = "Real-time stability ratings for developer free tiers based on tracked pricing changes. See which tools are stable, which need watching, and which are deteriorating.";
+  const slug = "stability";
+
+  const stabilityMap = getStabilityMap();
+  const allChanges = loadDealChanges();
+
+  // Build vendor → changes map for detail display
+  const vendorChangesMap = new Map<string, typeof allChanges>();
+  for (const c of allChanges) {
+    const key = c.vendor.toLowerCase();
+    if (!vendorChangesMap.has(key)) vendorChangesMap.set(key, []);
+    vendorChangesMap.get(key)!.push(c);
+  }
+
+  // Count by stability class
+  const volatileVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
+  const watchVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
+  const improvingVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
+  const stableVendorsWithChanges: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
+
+  for (const [vendorKey, stability] of stabilityMap) {
+    const changes = vendorChangesMap.get(vendorKey) ?? [];
+    const entry = { vendor: changes[0]?.vendor ?? vendorKey, stability, changes };
+    if (stability === "volatile") volatileVendors.push(entry);
+    else if (stability === "watch") watchVendors.push(entry);
+    else if (stability === "improving") improvingVendors.push(entry);
+    else stableVendorsWithChanges.push(entry);
+  }
+
+  // Total stable = offers not in stability map + explicitly stable
+  const totalStable = offers.length - volatileVendors.length - watchVendors.length - improvingVendors.length;
+
+  // Sort by most recent change date
+  const sortByRecent = (a: { changes: typeof allChanges }, b: { changes: typeof allChanges }) => {
+    const aDate = a.changes.length > 0 ? a.changes.reduce((latest, c) => c.date > latest ? c.date : latest, "") : "";
+    const bDate = b.changes.length > 0 ? b.changes.reduce((latest, c) => c.date > latest ? c.date : latest, "") : "";
+    return bDate.localeCompare(aDate);
+  };
+  volatileVendors.sort(sortByRecent);
+  watchVendors.sort(sortByRecent);
+  improvingVendors.sort(sortByRecent);
+
+  const toVendorSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/g, "");
+
+  // Find category for a vendor from offers
+  const vendorCategory = new Map<string, string>();
+  for (const o of offers) {
+    if (!vendorCategory.has(o.vendor.toLowerCase())) {
+      vendorCategory.set(o.vendor.toLowerCase(), o.category);
+    }
+  }
+  // Also use deal change categories
+  for (const c of allChanges) {
+    if (!vendorCategory.has(c.vendor.toLowerCase()) && c.category) {
+      vendorCategory.set(c.vendor.toLowerCase(), c.category);
+    }
+  }
+
+  const getCategory = (vendor: string) => vendorCategory.get(vendor.toLowerCase()) ?? allChanges.find(c => c.vendor.toLowerCase() === vendor.toLowerCase())?.category ?? "";
+
+  const stabilityColors: Record<string, string> = { volatile: "#f85149", watch: "#d29922", improving: "#3fb950", stable: "#3b82f6" };
+  const stabilityEmoji: Record<string, string> = { volatile: "\u{1F534}", watch: "\u{1F7E1}", improving: "\u{1F7E2}", stable: "\u{1F535}" };
+
+  const buildVendorCard = (entry: { vendor: string; changes: typeof allChanges }, color: string) => {
+    const vendorSlug = toVendorSlug(entry.vendor);
+    const category = getCategory(entry.vendor);
+    const latestChange = entry.changes.reduce((latest, c) => c.date > (latest?.date ?? "") ? c : latest, entry.changes[0]);
+    const changeTypeLabel = latestChange?.change_type.replace(/_/g, " ") ?? "";
+
+    // Check if there's an editorial alternative page for this vendor
+    const editorialLink = ALTERNATIVES_PAGES.find(p =>
+      p.primaryVendor.toLowerCase() === entry.vendor.toLowerCase() ||
+      p.slug.includes(toVendorSlug(entry.vendor))
+    );
+
+    return `<div class="vendor-card" style="border-left-color:${color}">
+      <div class="vendor-header">
+        <a href="/vendor/${vendorSlug}" class="vendor-name">${escHtmlServer(entry.vendor)}</a>
+        ${category ? `<span class="vendor-cat">${escHtmlServer(category)}</span>` : ""}
+      </div>
+      <p class="vendor-summary">${escHtmlServer(latestChange?.summary?.substring(0, 200) ?? "")}</p>
+      <div class="vendor-meta">
+        <span class="change-type">${escHtmlServer(changeTypeLabel)}</span>
+        <span class="change-date">${escHtmlServer(latestChange?.date ?? "")}</span>
+        ${entry.changes.length > 1 ? `<span class="change-count">${entry.changes.length} changes tracked</span>` : ""}
+        ${editorialLink ? `<a href="/${editorialLink.slug}" class="alt-link">View alternatives &rarr;</a>` : ""}
+      </div>
+    </div>`;
+  };
+
+  // Top stable categories
+  const stableCategoryCounts = new Map<string, number>();
+  for (const o of offers) {
+    const vKey = o.vendor.toLowerCase();
+    const stability = stabilityMap.get(vKey) ?? "stable";
+    if (stability === "stable") {
+      stableCategoryCounts.set(o.category, (stableCategoryCounts.get(o.category) ?? 0) + 1);
+    }
+  }
+  const topStableCategories = [...stableCategoryCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12);
+
+  // Methodology change type mappings
+  const negativeTypes = ["free_tier_removed", "open_source_killed", "limits_reduced", "restriction", "pricing_restructured", "product_deprecated"];
+  const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
+
+  // Related pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["free-tier-risk", "state-of-free-tiers-2026", "free-tier-tracker", "free-startup-stack", "q1-2026-developer-pricing-report"].includes(p.slug)
+  );
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: title,
+    description: metaDesc,
+    creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    dateModified: new Date().toISOString().split("T")[0],
+    url: `${BASE_URL}/${slug}`,
+    variableMeasured: [
+      { "@type": "PropertyValue", name: "Volatile Vendors", value: volatileVendors.length },
+      { "@type": "PropertyValue", name: "Watch Vendors", value: watchVendors.length },
+      { "@type": "PropertyValue", name: "Improving Vendors", value: improvingVendors.length },
+      { "@type": "PropertyValue", name: "Stable Vendors", value: totalStable },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:1060px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.subtitle{color:var(--text-muted);font-size:.95rem;margin-bottom:1.5rem;line-height:1.6}
+.summary-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center;transition:border-color .15s}
+.stat-card:hover{border-color:var(--border-hover)}
+.stat-number{font-size:2rem;font-weight:700;font-family:var(--mono)}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.stat-bar{height:4px;border-radius:2px;margin-top:.75rem;background:var(--border)}
+.stat-bar-fill{height:100%;border-radius:2px;transition:width .3s}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.vendor-card{padding:1rem 1.25rem;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .15s}
+.vendor-card:hover{border-color:var(--border-hover)}
+.vendor-header{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.vendor-name{color:var(--text);font-weight:600;font-size:.95rem;text-decoration:none}
+.vendor-name:hover{color:var(--accent)}
+.vendor-cat{font-size:.75rem;color:var(--text-dim);background:var(--bg-elevated);padding:.15rem .5rem;border-radius:4px}
+.vendor-summary{color:var(--text-muted);font-size:.85rem;margin:.5rem 0;line-height:1.6}
+.vendor-meta{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--text-dim)}
+.change-type{text-transform:capitalize}
+.change-date{font-family:var(--mono);font-size:.75rem}
+.change-count{color:var(--text-dim)}
+.alt-link{color:var(--accent);font-weight:500}
+.stable-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;margin:1rem 0}
+.stable-cat{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center}
+.stable-cat-name{color:var(--text);font-size:.9rem}
+.stable-cat-count{font-family:var(--mono);font-size:.85rem;color:var(--accent)}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.method-col h3{font-size:.9rem;margin:0 0 .5rem}
+.method-col ul{list-style:none;padding:0;margin:0}
+.method-col li{padding:.25rem 0;font-size:.85rem;color:var(--text-muted)}
+.method-col li::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.5rem}
+.neg-dot::before{background:#f85149}
+.pos-dot::before{background:#3fb950}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.method-grid{grid-template-columns:1fr}.stable-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.summary-stats{grid-template-columns:1fr}.stable-grid{grid-template-columns:1fr}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Stability Dashboard</div>
+  <h1>${escHtmlServer(title)}</h1>
+  <p class="subtitle">Real-time risk ratings based on <strong>${allChanges.length}</strong> tracked pricing changes across <strong>${stabilityMap.size}</strong> vendors. Last updated ${new Date().toISOString().split("T")[0]}.</p>
+
+  <div class="summary-stats">
+    <div class="stat-card">
+      <div class="stat-number" style="color:${stabilityColors.volatile}">${volatileVendors.length}</div>
+      <div class="stat-label">${stabilityEmoji.volatile} Volatile</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(volatileVendors.length / stabilityMap.size * 100)}%;background:${stabilityColors.volatile}"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" style="color:${stabilityColors.watch}">${watchVendors.length}</div>
+      <div class="stat-label">${stabilityEmoji.watch} Watch</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(watchVendors.length / stabilityMap.size * 100)}%;background:${stabilityColors.watch}"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" style="color:${stabilityColors.improving}">${improvingVendors.length}</div>
+      <div class="stat-label">${stabilityEmoji.improving} Improving</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(improvingVendors.length / stabilityMap.size * 100)}%;background:${stabilityColors.improving}"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" style="color:${stabilityColors.stable}">${totalStable.toLocaleString()}</div>
+      <div class="stat-label">${stabilityEmoji.stable} Stable</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:${stabilityColors.stable}"></div></div>
+    </div>
+  </div>
+
+  <h2>${stabilityEmoji.volatile} Volatile — High Risk</h2>
+  <p class="section-intro">These vendor free tiers have been removed, severely cut, or show multiple negative changes. If you depend on these, plan a migration.</p>
+  ${volatileVendors.map(v => buildVendorCard(v, stabilityColors.volatile)).join("\n  ")}
+  <div class="context-box">
+    <strong>What makes a vendor volatile?</strong> Free tier removed entirely, open-source version killed, product deprecated, or two or more negative pricing changes. These vendors have demonstrated a pattern of degrading their free tier offering.
+  </div>
+
+  <h2>${stabilityEmoji.watch} Watch — Moderate Risk</h2>
+  <p class="section-intro">One negative pricing change tracked. The free tier still exists but has been tightened. Monitor for further changes.</p>
+  ${watchVendors.map(v => buildVendorCard(v, stabilityColors.watch)).join("\n  ")}
+  <div class="context-box">
+    <strong>What puts a vendor on watch?</strong> A single negative change &mdash; limits reduced, restrictions added, or pricing restructured. One change doesn&rsquo;t mean the free tier is going away, but it&rsquo;s a signal to pay attention.
+  </div>
+
+  <h2>${stabilityEmoji.improving} Improving — Positive Signal</h2>
+  <p class="section-intro">These vendors are actively expanding their free tiers. Only positive changes tracked &mdash; limits increased, new free tiers added, or programs expanded.</p>
+  ${improvingVendors.map(v => buildVendorCard(v, stabilityColors.improving)).join("\n  ")}
+  <div class="context-box">
+    <strong>What makes a vendor &ldquo;improving&rdquo;?</strong> Only positive pricing changes in our history &mdash; limits increased, new free tiers launched, or startup programs expanded. No negative changes. These vendors are investing in their free tier as a growth strategy.
+  </div>
+
+  <h2>${stabilityEmoji.stable} Stable — Safe to Build On</h2>
+  <p class="section-intro"><strong>${totalStable.toLocaleString()} of ${offers.length.toLocaleString()}</strong> vendors in our index have stable free tiers &mdash; no negative pricing changes tracked. Here are the top categories by stable vendor count:</p>
+  <div class="stable-grid">
+    ${topStableCategories.map(([cat, count]) => {
+      const catSlug = cat.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/g, "");
+      return `<a href="/category/${catSlug}" class="stable-cat" style="text-decoration:none">
+      <span class="stable-cat-name">${escHtmlServer(cat)}</span>
+      <span class="stable-cat-count">${count}</span>
+    </a>`;
+    }).join("\n    ")}
+  </div>
+  <div class="context-box">
+    <strong>Why &ldquo;stable&rdquo; is the default:</strong> Vendors with no tracked negative pricing changes are classified as stable. Absence of bad news is a positive signal &mdash; most developer tools maintain their free tiers over time. Our tracking covers ${allChanges.length} pricing changes since 2022, so &ldquo;stable&rdquo; means no negative movement in our observation window.
+  </div>
+
+  <h2>Methodology</h2>
+  <p class="section-intro">Stability classifications are computed automatically from our <a href="/changes">deal changes dataset</a> of ${allChanges.length} tracked pricing changes.</p>
+  <div class="method-grid">
+    <div class="method-col">
+      <h3 style="color:${stabilityColors.volatile}">Negative Change Types</h3>
+      <ul>
+        ${negativeTypes.map(t => `<li class="neg-dot">${escHtmlServer(t.replace(/_/g, " "))}</li>`).join("\n        ")}
+      </ul>
+    </div>
+    <div class="method-col">
+      <h3 style="color:${stabilityColors.improving}">Positive Change Types</h3>
+      <ul>
+        ${positiveTypes.map(t => `<li class="pos-dot">${escHtmlServer(t.replace(/_/g, " "))}</li>`).join("\n        ")}
+      </ul>
+    </div>
+  </div>
+  <div class="methodology">
+    <strong>Classification rules:</strong><br>
+    &bull; <strong style="color:${stabilityColors.volatile}">Volatile:</strong> Free tier removed, OSS killed, product deprecated, or 2+ negative changes<br>
+    &bull; <strong style="color:${stabilityColors.watch}">Watch:</strong> Exactly one negative change<br>
+    &bull; <strong style="color:${stabilityColors.improving}">Improving:</strong> Only positive changes (no negative)<br>
+    &bull; <strong style="color:${stabilityColors.stable}">Stable:</strong> No negative changes (default for vendors not in change history)<br><br>
+    <strong>Data freshness:</strong> Classifications update automatically as new pricing changes are tracked. Source data: <code>deal_changes.json</code> with ${allChanges.length} entries covering changes from 2022 to present.
+  </div>
+
+  <h2>Cross-References</h2>
+  <p class="section-intro">Related analysis and deeper dives into developer tool pricing.</p>
+  <div class="related-pages">
+    <a href="/changes" class="related-page-link">
+      <div class="link-title">All Pricing Changes Timeline</div>
+      <div class="link-desc">Full timeline of all ${allChanges.length} tracked developer tool pricing changes</div>
+    </a>
+    <a href="/state-of-free-tiers-2026" class="related-page-link">
+      <div class="link-title">State of Free Tiers 2026</div>
+      <div class="link-desc">Comprehensive data-driven report on free tier trends across 1,500+ developer tools</div>
+    </a>
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track vendor stability for 1,500+ developer tools from your AI assistant. Get real-time stability ratings, pricing alerts, and migration recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -30943,6 +31279,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-tier-risk", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeTierRiskPage());
+  } else if (url.pathname === "/stability" && isGetOrHead) {
+    recordApiHit("/stability");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/stability", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildStabilityDashboardPage());
   } else if (url.pathname === "/gemini-api-pricing-2026" && isGetOrHead) {
     recordApiHit("/gemini-api-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gemini-api-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

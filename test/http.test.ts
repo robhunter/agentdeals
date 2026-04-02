@@ -2481,6 +2481,29 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-startup-stack"), "Should cross-link to startup stack");
   });
 
+  it("GET /stability renders stability dashboard page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/stability`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Free Tier Stability Dashboard"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Dataset"'), "Should use Dataset schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Volatile"), "Should have volatile section");
+    assert.ok(html.includes("Watch"), "Should have watch section");
+    assert.ok(html.includes("Improving"), "Should have improving section");
+    assert.ok(html.includes("Stable"), "Should have stable section");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
+    assert.ok(html.includes("/state-of-free-tiers-2026"), "Should cross-link to state of free tiers");
+    assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
+    assert.ok(html.includes("vendor-card"), "Should have vendor cards");
+  });
+
   it("GET /hcp-terraform-migration renders migration guide page", async () => {
     proc = await startHttpServer();
 
