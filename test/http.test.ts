@@ -3833,6 +3833,35 @@ describe("shutdown tracker page", () => {
     }
   });
 
+  it("GET /firebase-studio-shutdown renders Firebase Studio shutdown guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/firebase-studio-shutdown`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Firebase Studio Shutdown"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("June 22, 2026"), "Should show workspace freeze date");
+    assert.ok(html.includes("March 22, 2027"), "Should show full shutdown date");
+    assert.ok(html.includes("days"), "Should show days remaining");
+    assert.ok(html.includes("GitHub Codespaces"), "Should list Codespaces alternative");
+    assert.ok(html.includes("Gitpod"), "Should list Gitpod alternative");
+    assert.ok(html.includes("StackBlitz"), "Should list StackBlitz alternative");
+    assert.ok(html.includes("Replit"), "Should list Replit alternative");
+    assert.ok(html.includes("Antigravity"), "Should mention Google Antigravity");
+    assert.ok(html.includes("AI Studio"), "Should mention AI Studio");
+    assert.ok(html.includes("Migration Checklist"), "Should have migration checklist");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/stability"), "Should cross-link to stability dashboard");
+    assert.ok(html.includes("/firebase-alternatives"), "Should cross-link to Firebase alternatives");
+    assert.ok(html.includes("Bolt.new"), "Should list AI builder alternatives");
+    assert.ok(html.includes("Lovable"), "Should list Lovable");
+    assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
+  });
+
   it("GET /shutdowns renders shutdown tracker page", async () => {
     proc = await startHttpServer();
 
