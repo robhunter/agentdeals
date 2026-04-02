@@ -1708,8 +1708,16 @@ function buildVendorPage(slug: string): string | null {
     .filter(([, [a, b]]) => a === vendorName || b === vendorName);
 
   // Title and meta
-  const title = `${vendorName} Free Tier & Pricing — AgentDeals`;
-  const metaDesc = `${vendorName} free tier details: ${primary.tier}. ${primary.description.slice(0, 120)}${primary.description.length > 120 ? "..." : ""} Verified ${primary.verifiedDate}.`;
+  const currentYear = new Date().getFullYear();
+  const hasFree = primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
+  const title = hasFree
+    ? `${vendorName} Free Tier ${currentYear}: Limits, Pricing & What Changed | AgentDeals`
+    : `${vendorName} Pricing ${currentYear}: Plans, Costs & Free Alternatives | AgentDeals`;
+  const descLimits = primary.description.slice(0, 100).replace(/\.\s.*$/, "");
+  const verifiedMonth = (() => { const d = primary.verifiedDate.split("-"); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${months[parseInt(d[1],10)-1]} ${d[0]}`; })();
+  const metaDesc = hasFree
+    ? `${vendorName} free tier includes ${descLimits}. Verified ${verifiedMonth}. Compare with ${alternatives.length} alternatives in ${primary.category}.`
+    : `${vendorName} pricing details and ${alternatives.length} free alternatives in ${primary.category}. Verified ${verifiedMonth}.`;
 
   // Changes HTML
   const changesHtml = vendorChanges.length > 0 ? vendorChanges.map(c => {
@@ -1889,8 +1897,8 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
-  <h1>${escHtmlServer(vendorName)} <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></h1>
-  <p class="page-meta">Free tier details, pricing history, and alternatives. Last updated ${primary.verifiedDate}.</p>
+  <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear} <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></h1>
+  <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives. Verified ${verifiedMonth}.</p>
 
   <div class="detail-grid">
     <div class="detail-card">
@@ -1990,8 +1998,10 @@ function buildAlternativesPage(slug: string): string | null {
     : [];
 
   // Title and meta
-  const title = `Free Alternatives to ${vendorName} — AgentDeals`;
-  const metaDesc = `Compare ${enrichedAlts.length} free alternatives to ${vendorName}. ${vendorChanges.length > 0 ? `${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. ` : ""}Find stable, verified free-tier tools.`;
+  const currentYear = new Date().getFullYear();
+  const title = `Best ${vendorName} Alternatives with Free Tiers (${currentYear}) | AgentDeals`;
+  const topAlts = enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ");
+  const metaDesc = `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${vendorCategories[0]}. ${topAlts ? `Side-by-side free tier limits for ${topAlts}.` : "Find stable, verified free-tier tools."}`;
 
   // Situation section: why look for alternatives
   const situationHtml = (() => {
@@ -2214,8 +2224,8 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternative-to">Alternatives</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
-  <h1>Free Alternatives to ${escHtmlServer(vendorName)}</h1>
-  <p class="page-meta">${enrichedAlts.length} free alternative${enrichedAlts.length !== 1 ? "s" : ""} available. Sorted by pricing stability.</p>
+  <h1>Best ${escHtmlServer(vendorName)} Alternatives with Free Tiers (${currentYear})</h1>
+  <p class="page-meta">${enrichedAlts.length} free alternative${enrichedAlts.length !== 1 ? "s" : ""} in ${vendorCategories.map(c => escHtmlServer(c)).join(", ")}. Sorted by pricing stability.</p>
 
   <div class="situation-box">
     <h2>Current ${escHtmlServer(vendorName)} Situation</h2>
