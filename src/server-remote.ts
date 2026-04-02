@@ -77,13 +77,14 @@ export function createServer(): McpServer {
         vendor: z.string().optional().describe("Get full details for a specific vendor (fuzzy match). Returns alternatives in the same category."),
         eligibility: z.enum(["public", "accelerator", "oss", "student", "fintech", "geographic", "enterprise"]).optional().describe("Filter by eligibility type"),
         sort: z.enum(["vendor", "category", "newest"]).optional().describe("Sort: vendor (A-Z), category, newest (recently verified first)"),
+        stability: z.enum(["stable", "watch", "volatile", "improving"]).optional().describe("Filter by free tier stability class. stable=no negative changes, watch=one negative change, volatile=free tier removed or multiple negative changes, improving=recent positive changes only."),
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Only return deals verified/added after this date."),
         limit: z.number().optional().describe("Max results (default: 20)"),
         offset: z.number().optional().describe("Pagination offset (default: 0)"),
         response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor name, tier, one-line description, URL only. 'detailed': full response (default)."),
       },
     },
-    async ({ query, category, vendor, eligibility, sort, since, limit, offset, response_format }) => {
+    async ({ query, category, vendor, eligibility, sort, stability, since, limit, offset, response_format }) => {
       try {
         // Mode: list categories
         if (category === "list") {
@@ -120,6 +121,7 @@ export function createServer(): McpServer {
           category,
           eligibility_type: eligibility,
           sort,
+          stability,
           limit: effectiveLimit,
           offset: effectiveOffset,
         }) as { offers: Record<string, unknown>[]; total: number };

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
@@ -139,7 +139,8 @@ export function searchOffers(
   query?: string,
   category?: string,
   eligibilityType?: string,
-  sort?: string
+  sort?: string,
+  stability?: StabilityClass
 ): Offer[] {
   let results = loadOffers();
 
@@ -154,6 +155,13 @@ export function searchOffers(
     const lowerType = eligibilityType.toLowerCase();
     results = results.filter(
       (o) => o.eligibility?.type.toLowerCase() === lowerType
+    );
+  }
+
+  if (stability) {
+    const stabilityMap = getStabilityMap();
+    results = results.filter(
+      (o) => (stabilityMap.get(o.vendor.toLowerCase()) ?? "stable") === stability
     );
   }
 
@@ -196,6 +204,65 @@ export function searchOffers(
   return results;
 }
 
+const NEGATIVE_STABILITY_TYPES = new Set([
+  "free_tier_removed",
+  "open_source_killed",
+  "limits_reduced",
+  "pricing_restructured",
+  "product_deprecated",
+  "restriction",
+]);
+
+const VOLATILE_TYPES = new Set([
+  "free_tier_removed",
+  "open_source_killed",
+  "product_deprecated",
+]);
+
+const POSITIVE_STABILITY_TYPES = new Set([
+  "limits_increased",
+  "new_free_tier",
+  "startup_program_expanded",
+  "pricing_postponed",
+]);
+
+export function classifyStability(vendorChanges: DealChange[]): StabilityClass {
+  if (vendorChanges.length === 0) return "stable";
+
+  const hasVolatile = vendorChanges.some(c => VOLATILE_TYPES.has(c.change_type));
+  const negativeCount = vendorChanges.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
+  const positiveCount = vendorChanges.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
+
+  // Volatile: free tier removed, OSS killed, product deprecated, or multiple negative changes
+  if (hasVolatile || negativeCount >= 2) return "volatile";
+
+  // Improving: only positive changes (no negative)
+  if (positiveCount > 0 && negativeCount === 0) return "improving";
+
+  // Watch: one negative change
+  if (negativeCount === 1) return "watch";
+
+  // No negative or positive (e.g. only pricing_model_change) = stable
+  return "stable";
+}
+
+// Build a map of vendor name (lowercase) → stability class from deal_changes
+export function getStabilityMap(): Map<string, StabilityClass> {
+  const changes = loadDealChanges();
+  const vendorChangesMap = new Map<string, DealChange[]>();
+  for (const c of changes) {
+    const key = c.vendor.toLowerCase();
+    if (!vendorChangesMap.has(key)) vendorChangesMap.set(key, []);
+    vendorChangesMap.get(key)!.push(c);
+  }
+
+  const result = new Map<string, StabilityClass>();
+  for (const [vendor, vendorChanges] of vendorChangesMap) {
+    result.set(vendor, classifyStability(vendorChanges));
+  }
+  return result;
+}
+
 export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   const changes = loadDealChanges();
   const now = new Date();
@@ -217,6 +284,14 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   for (const c of changes) {
     const key = c.vendor.toLowerCase();
     vendorAllChanges.set(key, (vendorAllChanges.get(key) ?? 0) + 1);
+  }
+
+  // Build vendor → all changes for stability classification
+  const vendorAllChangesList = new Map<string, DealChange[]>();
+  for (const c of changes) {
+    const key = c.vendor.toLowerCase();
+    if (!vendorAllChangesList.has(key)) vendorAllChangesList.set(key, []);
+    vendorAllChangesList.get(key)!.push(c);
   }
 
   return offers.map((offer) => {
@@ -250,11 +325,14 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       risk_level = "stable";
     }
 
+    // stability: derived from change types, not just count
+    const stability = classifyStability(vendorAllChangesList.get(key) ?? []);
+
     const days_since_verified = Math.floor(
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     );
 
-    return { ...offer, recent_change, expires_soon, risk_level, days_since_verified };
+    return { ...offer, recent_change, expires_soon, risk_level, stability, days_since_verified };
   });
 }
 

@@ -30046,9 +30046,13 @@ const httpServer = createHttpServer(async (req, res) => {
     const category = url.searchParams.get("category") || undefined;
     const eligibilityType = url.searchParams.get("eligibility_type") || undefined;
     const sort = url.searchParams.get("sort") || undefined;
+    const stabilityParam = url.searchParams.get("stability") || undefined;
+    const validStability = stabilityParam && ["stable", "watch", "volatile", "improving"].includes(stabilityParam)
+      ? stabilityParam as import("./types.js").StabilityClass
+      : undefined;
     const limit = parseInt(url.searchParams.get("limit") ?? "20", 10);
     const offset = parseInt(url.searchParams.get("offset") ?? "0", 10);
-    const results = searchOffers(q, category, eligibilityType, sort);
+    const results = searchOffers(q, category, eligibilityType, sort, validStability);
     const total = results.length;
     const paged = enrichOffers(results.slice(offset, offset + limit));
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });

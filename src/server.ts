@@ -1,6 +1,6 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges } from "./data.js";
+import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -39,13 +39,14 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         vendor: z.string().optional().describe("Get full details for a specific vendor (fuzzy match). Returns alternatives in the same category."),
         eligibility: z.enum(["public", "accelerator", "oss", "student", "fintech", "geographic", "enterprise"]).optional().describe("Filter by eligibility type"),
         sort: z.enum(["vendor", "category", "newest"]).optional().describe("Sort: vendor (A-Z), category, newest (recently verified first)"),
+        stability: z.enum(["stable", "watch", "volatile", "improving"]).optional().describe("Filter by free tier stability class. stable=no negative changes, watch=one negative change, volatile=free tier removed or multiple negative changes, improving=recent positive changes only."),
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Only return deals verified/added after this date."),
         limit: z.number().optional().describe("Max results (default: 20)"),
         offset: z.number().optional().describe("Pagination offset (default: 0)"),
         response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor name, tier, one-line description, URL only. 'detailed': full response (default)."),
       },
     },
-    async ({ query, category, vendor, eligibility, sort, since, limit, offset, response_format }) => {
+    async ({ query, category, vendor, eligibility, sort, stability, since, limit, offset, response_format }) => {
       try {
         recordToolCall("search_deals");
 
@@ -87,7 +88,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         }
 
         // Mode: search/browse
-        const allResults = searchOffers(query, category, eligibility, sort);
+        const allResults = searchOffers(query, category, eligibility, sort, stability);
         const total = allResults.length;
         const effectiveOffset = offset ?? 0;
         const effectiveLimit = limit ?? 20;
@@ -236,9 +237,14 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
               content: [{ type: "text" as const, text: result.error }],
             };
           }
+          const stabMap = getStabilityMap();
+          const enrichedResult = {
+            ...result.result,
+            stability: stabMap.get(result.result.vendor.toLowerCase()) ?? "stable",
+          };
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_vendors", params: { vendors }, result_count: 1, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result.result, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }],
           };
         }
 
@@ -254,6 +260,17 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
           }
 
           let result: any = comparison.comparison;
+
+          // Add stability indicators
+          const stabMap = getStabilityMap();
+          result = {
+            ...result,
+            stability: {
+              [vendors[0]]: stabMap.get(comparison.comparison.vendor_a.vendor.toLowerCase()) ?? "stable",
+              [vendors[1]]: stabMap.get(comparison.comparison.vendor_b.vendor.toLowerCase()) ?? "stable",
+            },
+          };
+
           if (doRisk) {
             const riskA = checkVendorRisk(vendors[0]);
             const riskB = checkVendorRisk(vendors[1]);
@@ -670,6 +687,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };
       }
       const changes = loadDealChanges().filter(c => c.vendor.toLowerCase() === match.vendor.toLowerCase());
+      const stability = classifyStability(changes);
       const alternatives = offers
         .filter(o => o.category === match.category && o.vendor !== match.vendor)
         .slice(0, 5);
@@ -677,6 +695,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       let text = `# ${match.vendor}\n\n`;
       text += `**Category:** ${match.category}\n`;
       text += `**Tier:** ${match.tier}\n`;
+      text += `**Stability:** ${stability}\n`;
       text += `**Description:** ${match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += `**Verified:** ${match.verifiedDate}\n`;
