@@ -30530,7 +30530,7 @@ function buildLandingPage(): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AgentDeals — Pricing Context for AI Agents</title>
-<meta name="description" content="${stats.offers}+ developer infrastructure deals across ${stats.categories} categories. Give your AI agent pricing context for better vendor recommendations, or browse deals directly.">
+<meta name="description" content="${stats.offers}+ free tier deals across ${stats.categories} categories — developer tools, cloud infrastructure, and consumer services. Give your AI agent pricing context for better recommendations, or browse deals directly.">
 <meta property="og:title" content="AgentDeals — Pricing Context for AI Agents">
 <meta property="og:description" content="Your AI recommends tools from memory. Memory doesn't include pricing. ${stats.offers}+ deals across ${stats.categories} categories.">
 <meta property="og:type" content="website">
@@ -30548,7 +30548,7 @@ ${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png"
       "@type": "WebSite",
       "name": "AgentDeals",
       "url": "${BASE_URL}",
-      "description": "${stats.offers}+ developer infrastructure deals across ${stats.categories} categories. Pricing context for AI agents.",
+      "description": "${stats.offers}+ free tier deals across ${stats.categories} categories — developer tools, cloud infrastructure, and consumer services. Pricing context for AI agents.",
       "potentialAction": {
         "@type": "SearchAction",
         "target": "${BASE_URL}/api/offers?q={search_term_string}",
@@ -30557,8 +30557,8 @@ ${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png"
     },
     {
       "@type": "ItemList",
-      "name": "Developer Tool Deals",
-      "description": "Free tiers, credits, and discounts from developer infrastructure companies",
+      "name": "Free Tier Deals",
+      "description": "Free tiers, credits, and discounts from developer tools and consumer services",
       "numberOfItems": ${stats.offers},
       "itemListElement": ${JSON.stringify([...categories].sort((a, b) => b.count - a.count).slice(0, 10).map((c, i) => ({
         "@type": "ListItem",
@@ -30808,7 +30808,7 @@ ${globalNavCss()}
   <div class="hero">
     <div class="hero-label">MCP Server</div>
     <h1>Deals for <em>agents.</em></h1>
-    <p class="hero-sub">Your AI recommends tools from memory. Memory doesn't include pricing. AgentDeals gives agents the context to make better infrastructure recommendations.</p>
+    <p class="hero-sub">Your AI recommends tools from memory. Memory doesn't include pricing. AgentDeals gives agents the context to make better recommendations — developer tools, cloud services, and everyday apps.</p>
     <div class="hero-actions">
       <a href="#browse" class="btn-primary">Browse ${stats.offers.toLocaleString()}+ deals</a>
       <a href="/setup" class="btn-secondary">Connect via MCP</a>
@@ -30872,7 +30872,7 @@ ${buildDeadlinesHtml()}
   <div class="section">
     <div class="section-label">The Problem</div>
     <p class="problem-text">When Claude Code recommends Railway, it doesn't know <strong>Render has a better free tier</strong>. When it suggests Supabase, it doesn't know <strong>your YC batch gets $100K in AWS credits</strong>.</p>
-    <p class="problem-text">AgentDeals gives your agent <strong>pricing context</strong> &mdash; free tiers, startup credits, and deal changes across ${stats.categories} categories of developer infrastructure.</p>
+    <p class="problem-text">AgentDeals gives your agent <strong>pricing context</strong> &mdash; free tiers, startup credits, and deal changes across ${stats.categories} categories of developer tools and consumer services.</p>
   </div>
 
   <div class="divider"></div>
