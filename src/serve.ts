@@ -4112,6 +4112,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Postman",
     hubDesc: "Side-by-side comparison of 12+ API development tool free tiers — users, collections, requests, mock servers, local-first vs cloud, and the API tool migration trap",
   },
+  {
+    slug: "security-free-tier-comparison-2026",
+    title: "Developer Security Tools Free Tier Comparison 2026 — Snyk vs Semgrep vs GitGuardian vs Trivy",
+    metaDesc: "Side-by-side comparison of 20+ developer security tool free tiers in 2026. Compare Snyk, Semgrep, SonarCloud, GitGuardian, Trivy, CodeQL, OWASP ZAP, and more — scans, repos, contributors, and security cost traps.",
+    contextHtml: "",
+    tag: "security-free-tier-comparison-2026",
+    primaryVendor: "Snyk",
+    hubDesc: "Side-by-side comparison of 20+ developer security tool free tiers — SAST, SCA, DAST, secrets detection, container security, and the DevSecOps cost trap at scale",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -26117,6 +26126,717 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function buildSecurityFreeTierComparison2026Page(): string {
+  const title = "Developer Security Tools Free Tier Comparison 2026 — Snyk vs Semgrep vs GitGuardian vs Trivy";
+  const metaDescSec = "Side-by-side comparison of 20+ developer security tool free tiers in 2026. Compare Snyk, Semgrep, SonarCloud, GitGuardian, Trivy, CodeQL, OWASP ZAP, and more — scans, repos, contributors, and security cost traps.";
+  const slug = "security-free-tier-comparison-2026";
+  const pubDate = "2026-04-01";
+
+  // Collect security-related deal changes
+  const secVendorKeywords = ["Snyk", "SonarCloud", "GitGuardian", "Semgrep", "Trivy", "OWASP ZAP", "Nuclei", "CodeQL", "Dependabot", "Renovate", "FOSSA", "Socket", "Tailscale", "Twingate", "1Password", "Checkov", "Grype", "Falco", "StackHawk", "Probely", "Gitleaks", "TruffleHog", "aikido", "SOOS"];
+  const secChanges = dealChanges.filter((c: any) =>
+    secVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("security") || c.summary.toLowerCase().includes("vulnerability") || c.summary.toLowerCase().includes("secret")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = secChanges.slice(0, 12).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["security-alternatives", "auth-free-tier-comparison-2026", "cloud-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = secChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No security-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescSec,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} &mdash; AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescSec)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescSec)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals &mdash; Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-card .diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.growth-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-table .cheapest{color:#3fb950;font-weight:700}
+.growth-table .expensive{color:#f85149;font-weight:700}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Security Free Tier Comparison</div>
+  <h1>Developer Security Tools Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ security tools compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Security Tools Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">$0</div><div class="stat-label">Trivy / ZAP / Nuclei (OSS)</div></div>
+    <div class="stat-card"><div class="stat-number amber">200</div><div class="stat-label">Snyk SCA Tests/Mo</div></div>
+    <div class="stat-card"><div class="stat-number green">&#8734;</div><div class="stat-label">CodeQL Public Repo Scans</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> The developer security landscape splits sharply between <strong>open-source tools</strong> (Trivy, Semgrep, OWASP ZAP, Nuclei, Gitleaks, Checkov) that are truly unlimited when self-hosted, and <strong>hosted platforms</strong> (Snyk, SonarCloud, GitGuardian, StackHawk) with generous free tiers that cap scans, repos, or contributors. For most teams, a stack of OSS tools covers 90% of security needs at zero cost &mdash; but hosted platforms add CI/CD integration, dashboards, and triage workflows that save engineering time.</p>
+    <p><strong>The open-source advantage:</strong> Security is the strongest category for OSS tools. Trivy (vulnerability scanning), Semgrep (SAST), OWASP ZAP (DAST), Gitleaks (secrets), and Checkov (IaC) together provide comprehensive coverage with no scan limits, no contributor caps, and no vendor lock-in. The trade-off is self-hosting, configuration, and building your own reporting &mdash; which is why hosted platforms like Snyk and GitGuardian thrive despite strong OSS alternatives.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#sast">SAST (Static Analysis)</a></li>
+      <li><a href="#sca">SCA &amp; Dependency Scanning</a></li>
+      <li><a href="#dast">DAST (Dynamic Testing)</a></li>
+      <li><a href="#secrets">Secrets Detection</a></li>
+      <li><a href="#container">Container &amp; IaC Security</a></li>
+      <li><a href="#network">SSL/TLS, Network &amp; Zero Trust</a></li>
+      <li><a href="#cost-trap">The DevSecOps Cost Trap</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top developer security tool free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Type</th>
+        <th>Free Tier Limit</th>
+        <th>Open Source</th>
+        <th>CI/CD Free</th>
+        <th>Private Repos</th>
+        <th>Self-Hosted</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col">Snyk<span class="caution-badge">SCAN CAPS</span></td>
+        <td>SCA + SAST + Container + IaC</td>
+        <td>200 SCA + 100 SAST + 100 container + 300 IaC tests/mo</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Unlimited devs</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Semgrep<span class="winner-badge">BEST SAST</span></td>
+        <td>SAST + SCA</td>
+        <td>10 contributors, 50 private repos (unlimited public)</td>
+        <td class="check">&#10003; LGPL-2.1</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; 50 repos</td>
+        <td class="check">&#10003; OSS CLI</td>
+      </tr>
+      <tr>
+        <td class="provider-col">SonarCloud</td>
+        <td>SAST + Code Quality</td>
+        <td>Free for public projects, unlimited</td>
+        <td class="partial">&#9679; SonarQube is OSS</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; Public only</td>
+        <td class="check">&#10003; SonarQube</td>
+      </tr>
+      <tr>
+        <td class="provider-col">CodeQL<span class="winner-badge">BEST FOR OSS</span></td>
+        <td>SAST (Semantic)</td>
+        <td>Free for all public repos, no scan limits</td>
+        <td class="partial">&#9679; MIT (engine)</td>
+        <td class="check">&#10003; GitHub Actions</td>
+        <td class="cross">&#10007; Public only (free)</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">aikido.dev</td>
+        <td>All-in-one AppSec</td>
+        <td>2 users, SAST + SCA + CSPM + DAST + Secrets + IaC + Container</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">GitGuardian</td>
+        <td>Secrets Detection</td>
+        <td>25 devs, 420+ secret types, unlimited real-time, 500 historical</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; ggshield CLI</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Gitleaks<span class="winner-badge">BEST FREE SECRETS</span></td>
+        <td>Secrets Detection</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; MIT</td>
+        <td class="check">&#10003; GitHub Action</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">TruffleHog</td>
+        <td>Secrets Detection</td>
+        <td>Unlimited (OSS CLI)</td>
+        <td class="check">&#10003; Apache-2.0</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Trivy<span class="winner-badge">BEST CONTAINER</span></td>
+        <td>Container + FS + IaC + SBOM</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; Apache-2.0</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Grype</td>
+        <td>Container + FS Vulnerability</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; Apache-2.0</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Checkov</td>
+        <td>IaC Static Analysis</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; Apache-2.0</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">OWASP ZAP<span class="winner-badge">BEST FREE DAST</span></td>
+        <td>DAST</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; Apache-2.0</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Nuclei</td>
+        <td>DAST + Vulnerability Scanner</td>
+        <td>Unlimited (OSS), 9,000+ templates</td>
+        <td class="check">&#10003; MIT</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">StackHawk</td>
+        <td>DAST</td>
+        <td>1 app, unlimited scans, CI/CD, cURL repro steps</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Probely</td>
+        <td>DAST</td>
+        <td>5 scan hours/mo, 3 users, full API access</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Dependabot</td>
+        <td>SCA + Dependency Updates</td>
+        <td>Free for all GitHub repos</td>
+        <td class="check">&#10003; (GitHub)</td>
+        <td class="check">&#10003; Native</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; GitHub only</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Renovate</td>
+        <td>Dependency Updates</td>
+        <td>Unlimited (OSS)</td>
+        <td class="check">&#10003; AGPL-3.0</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">FOSSA</td>
+        <td>License Compliance + SCA</td>
+        <td>5 projects, 10 devs, 1 release group</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Socket.dev</td>
+        <td>Supply Chain Security</td>
+        <td>Free for OSS + first private repo</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">&#9679; 1 private</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">SOOS</td>
+        <td>SCA</td>
+        <td>Unlimited for OSS projects</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007; OSS only</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Falco</td>
+        <td>Runtime Security</td>
+        <td>Unlimited (CNCF Graduated, OSS)</td>
+        <td class="check">&#10003; Apache-2.0</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Tailscale</td>
+        <td>Zero Trust VPN</td>
+        <td>3 users, 100 devices, MagicDNS</td>
+        <td class="partial">&#9679; Clients OSS</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">&#9679; Headscale</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Twingate</td>
+        <td>Zero Trust Access</td>
+        <td>5 users, 10 remote networks</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Let&rsquo;s Encrypt</td>
+        <td>SSL/TLS Certificates</td>
+        <td>Unlimited free certificates</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; ACME</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="sast">SAST (Static Analysis)</h2>
+  <p class="section-intro">Static Application Security Testing tools analyze source code for vulnerabilities without executing it. The best SAST tools catch SQL injection, XSS, path traversal, and other OWASP Top 10 issues before code reaches production.</p>
+
+  <div class="diff-card">
+    <h3>Semgrep &mdash; best free SAST for teams</h3>
+    <div class="diff-desc">Open-source SAST engine with a managed platform. The OSS CLI is unlimited with 2,000+ community rules. The hosted platform (Semgrep Cloud) adds a free tier: 10 contributors, 50 private repos, unlimited public repos. Cross-file analysis, custom rules in YAML, and 30+ languages. The strongest combination of power and accessibility for teams that want managed SAST without paying.</div>
+  </div>
+  <div class="diff-card">
+    <h3>SonarCloud / SonarQube &mdash; best for code quality + security</h3>
+    <div class="diff-desc">SonarCloud is free and unlimited for open-source projects &mdash; code quality, security analysis, and CI/CD integration across 15+ languages. For private repos, self-host SonarQube Community Edition (free, open source). SonarQube covers fewer security rules than dedicated SAST tools but excels at combining quality and security analysis in one workflow.</div>
+  </div>
+  <div class="diff-card">
+    <h3>CodeQL &mdash; best for public repos on GitHub</h3>
+    <div class="diff-desc">GitHub&rsquo;s semantic code analysis engine. Free for all public repositories with no scan limits. Supports JS/TS, Python, Java, C#, C/C++, Go, Ruby, Swift, Kotlin. The semantic analysis approach catches vulnerabilities that pattern-matching tools miss (taint tracking, data flow analysis). Free for public repos; GitHub Advanced Security license required for private repos (enterprise only).</div>
+  </div>
+  <div class="diff-card">
+    <h3>Snyk Code &mdash; real-time SAST with IDE integration</h3>
+    <div class="diff-desc">Snyk&rsquo;s SAST offering provides 100 tests/month on the free tier. Strong IDE integrations (VS Code, IntelliJ) catch issues during development. The 100-test limit is per organization, not per repo &mdash; shared across all Snyk products. Best for teams already using Snyk for SCA who want unified vulnerability management.</div>
+  </div>
+
+  <h2 id="sca">SCA &amp; Dependency Scanning</h2>
+  <p class="section-intro">Software Composition Analysis tools scan your dependencies for known CVEs and license issues. Critical for supply chain security &mdash; most modern applications are 80%+ open-source code by volume.</p>
+
+  <div class="diff-card">
+    <h3>Snyk Open Source &mdash; most comprehensive hosted SCA</h3>
+    <div class="diff-desc">200 SCA tests/month on the free tier with unlimited contributing developers. Covers npm, pip, Maven, Gradle, Go modules, NuGet, and more. Automated fix PRs, license compliance, and prioritized vulnerability scoring. The 200-test limit resets monthly &mdash; each <code>snyk test</code> or <code>snyk monitor</code> invocation counts as one test per project.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Dependabot &mdash; best zero-config SCA for GitHub</h3>
+    <div class="diff-desc">Free for all GitHub repositories (public and private). Automatically generates pull requests for dependency updates and vulnerability fixes across 30+ ecosystems. Zero configuration needed &mdash; GitHub enables vulnerability alerts by default. The simplest SCA onboarding: create a <code>dependabot.yml</code> file and it runs. No scan limits, no contributor caps.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Renovate &mdash; best self-hosted dependency bot</h3>
+    <div class="diff-desc">Open source (AGPL-3.0) with 90+ package manager support &mdash; more than any other dependency bot. Available as a self-hosted CLI or free hosted service on GitHub/GitLab via Mend. Supports monorepos, grouped updates, automerge with configurable rules, and advanced scheduling. The free hosted version has no limits.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Socket.dev &mdash; supply chain threat detection</h3>
+    <div class="diff-desc">Goes beyond CVE scanning to detect supply chain attacks: typosquatting, install scripts, obfuscated code, author anomalies. Free for all open-source repos plus your first private repo. The unique &ldquo;package health score&rdquo; approach catches threats that traditional SCA tools miss entirely (zero-day supply chain attacks have no CVE to match against).</div>
+  </div>
+  <div class="diff-card">
+    <h3>FOSSA &mdash; license compliance + SCA</h3>
+    <div class="diff-desc">5 projects, 10 developers, 1 release group on the free tier. Strongest at license compliance &mdash; tracks SBOM generation, license obligations, and export control. For teams that need both vulnerability scanning and legal compliance reporting, FOSSA provides both in one tool. The free tier is tight but functional for small projects.</div>
+  </div>
+
+  <h2 id="dast">DAST (Dynamic Testing)</h2>
+  <p class="section-intro">Dynamic Application Security Testing tools probe running applications for vulnerabilities by sending crafted requests and analyzing responses. Essential for catching runtime issues that static analysis misses &mdash; misconfigurations, authentication bypasses, and server-side injection.</p>
+
+  <div class="diff-card">
+    <h3>OWASP ZAP &mdash; best free DAST tool</h3>
+    <div class="diff-desc">The gold standard of open-source DAST. Apache 2.0 licensed with passive scanning, active scanning, AJAX spider, fuzzing, manual interception proxy, and full CI/CD integration. No scan limits, no application limits, no time restrictions. Community-maintained with continuous updates. The only DAST tool that truly matches commercial offerings (StackHawk, Invicti) on core scanning capability &mdash; at zero cost.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Nuclei &mdash; template-based vulnerability scanning</h3>
+    <div class="diff-desc">Open-source (MIT) scanner with a YAML template system. 9,000+ community-contributed templates covering web apps, APIs, networks, DNS, SSL, and cloud misconfigurations. Extremely fast &mdash; can scan thousands of targets in minutes. Best for broad reconnaissance and known-vulnerability detection. Complements ZAP (which excels at deep application testing) with breadth across infrastructure.</div>
+  </div>
+  <div class="diff-card">
+    <h3>StackHawk &mdash; best hosted DAST for CI/CD</h3>
+    <div class="diff-desc">Free Developer plan: 1 application with unlimited DAST scans, CI/CD integration, historical scan data, and cURL reproduction steps for every finding. Built on ZAP&rsquo;s engine with a modern UI and developer workflow. The 1-app limit means it&rsquo;s free for a single service &mdash; additional apps require the $35/app/month Pro plan.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Probely &mdash; web app &amp; API scanning</h3>
+    <div class="diff-desc">Free plan with 5 scan hours/month, up to 3 users, and full API access. No credit card required. Covers OWASP Top 10, API-specific vulnerabilities, and provides remediation guidance. The 5-hour limit means approximately 1&ndash;2 full scans per month for a typical web application &mdash; sufficient for periodic security assessments but not continuous scanning.</div>
+  </div>
+
+  <h2 id="secrets">Secrets Detection</h2>
+  <p class="section-intro">Secrets detection tools scan your code, commits, and CI/CD pipelines for leaked credentials, API keys, and tokens. A single exposed secret can compromise your entire infrastructure &mdash; these tools are non-negotiable for any production codebase.</p>
+
+  <div class="diff-card">
+    <h3>GitGuardian &mdash; most comprehensive hosted secrets scanner</h3>
+    <div class="diff-desc">Free for up to 25 developers with 420+ secret types detected, unlimited real-time scanning, and 500 historical scan detections. The CLI (ggshield) integrates as a pre-commit hook and CI scanner. The 25-developer limit is generous for startups. Historical scanning (scanning existing commit history) is capped at 500 detections &mdash; enough for an initial audit but may not cover large repositories.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Gitleaks &mdash; best fully free secrets scanner</h3>
+    <div class="diff-desc">Open-source (MIT) CLI tool with no limits on repos, scans, or secret types. The GitHub Action is free for all repositories. Configurable via TOML with custom patterns. Faster than TruffleHog for simple git history scanning. The go-to choice for teams that want secrets detection without any vendor dependency or scan caps.</div>
+  </div>
+  <div class="diff-card">
+    <h3>TruffleHog &mdash; multi-source secrets scanner</h3>
+    <div class="diff-desc">Open-source (Apache 2.0) with a unique advantage: scans not just git repos but also Docker images, S3 buckets, Slack, and 20+ other sources. Detects 800+ credential types with active verification (tests if detected secrets are still valid). The multi-source scanning makes TruffleHog ideal for comprehensive secrets audits across your entire infrastructure.</div>
+  </div>
+
+  <h2 id="container">Container &amp; IaC Security</h2>
+  <p class="section-intro">Container security tools scan images for CVEs and misconfigurations. Infrastructure-as-Code (IaC) scanners check Terraform, CloudFormation, Kubernetes manifests, and Dockerfiles for security issues before deployment.</p>
+
+  <div class="diff-card">
+    <h3>Trivy &mdash; best all-in-one OSS scanner</h3>
+    <div class="diff-desc">Open-source (Apache 2.0) multi-target scanner: container images, filesystems, git repos, IaC (Terraform, CloudFormation, Helm, Dockerfile), Kubernetes clusters, SBOMs, and cloud accounts (AWS, GCP, Azure). Covers 20+ language ecosystems with daily-updated CVE databases. The single binary that replaces 3&ndash;4 separate tools. CNCF project with strong community support.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Grype &mdash; fast container vulnerability scanning</h3>
+    <div class="diff-desc">Open-source (Apache 2.0) from Anchore. Focused on vulnerability scanning for container images and filesystems. Pairs with Syft (SBOM generator). Supports 20+ ecosystems with daily CVE database updates. Lighter weight than Trivy &mdash; does one thing well. Best for teams that want a dedicated, fast container scanner without the broader scope of Trivy.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Checkov &mdash; best IaC security scanner</h3>
+    <div class="diff-desc">Open-source (Apache 2.0) by Prisma Cloud (Palo Alto). Scans Terraform, CloudFormation, Kubernetes, Helm, Dockerfile, and 10+ frameworks. 1,000+ built-in policies. Custom policies in Python or YAML. The deepest IaC coverage of any free tool. The CI/CD integration is straightforward &mdash; runs as a single CLI command in your pipeline.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Falco &mdash; runtime container security</h3>
+    <div class="diff-desc">CNCF Graduated project (Apache 2.0). Runtime security monitoring for containers, hosts, and Kubernetes. Monitors Linux syscalls and Kubernetes audit events to detect threats in real-time: shell spawning in containers, unexpected network connections, sensitive file access. Unlike scanning tools that check before deployment, Falco watches what actually happens at runtime.</div>
+  </div>
+
+  <h2 id="network">SSL/TLS, Network &amp; Zero Trust</h2>
+  <p class="section-intro">SSL/TLS tools ensure your certificates are valid and properly configured. Zero trust networking replaces traditional VPNs with identity-based access control &mdash; increasingly critical as teams go remote and infrastructure moves to the cloud.</p>
+
+  <div class="diff-card">
+    <h3>Let&rsquo;s Encrypt &mdash; free SSL certificates</h3>
+    <div class="diff-desc">Free, automated SSL/TLS certificates trusted by all major browsers. ACME protocol for automated renewal. No limit on certificates. The default choice for any web service that needs HTTPS. Integration via certbot, Caddy, Traefik, nginx, and most cloud providers. There is no reason to pay for basic SSL certificates in 2026.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Tailscale &mdash; best free mesh VPN</h3>
+    <div class="diff-desc">3 users, 100 devices free with WireGuard-based mesh networking. MagicDNS, exit nodes, subnet routers, ACLs, and split tunneling included. Zero-config networking between devices &mdash; no port forwarding, no firewall rules. The free tier is generous for personal use and small teams. Requires personal email domain (no business/custom domain on free).</div>
+  </div>
+  <div class="diff-card">
+    <h3>Twingate &mdash; zero trust network access</h3>
+    <div class="diff-desc">Starter plan free forever: 5 users, 10 remote networks. Replace traditional VPNs with identity-based access. Each user gets secure access to specific resources rather than the entire network. More enterprise-oriented than Tailscale &mdash; better for accessing internal services (databases, admin panels) without exposing them to the internet.</div>
+  </div>
+
+  <h2 id="cost-trap">The DevSecOps Cost Trap</h2>
+  <p class="section-intro">Security tools have the widest price gap of any developer tool category. The same capabilities that cost $0 via open-source tools can cost $50,000+/year through hosted platforms. Understanding where to use OSS vs. hosted is the single biggest cost decision in DevSecOps.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>OSS Stack (Self-Hosted)</th>
+        <th>Hosted Free Tier</th>
+        <th>Hosted Paid (10-dev team)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SAST</td>
+        <td class="cheapest">$0 (Semgrep OSS)</td>
+        <td>$0 (Semgrep Cloud, 10 devs)</td>
+        <td class="expensive">$4,000&ndash;10,000/yr</td>
+      </tr>
+      <tr>
+        <td>SCA</td>
+        <td class="cheapest">$0 (Trivy + Renovate)</td>
+        <td>$0 (Snyk, 200 tests/mo)</td>
+        <td class="expensive">$5,000&ndash;15,000/yr</td>
+      </tr>
+      <tr>
+        <td>DAST</td>
+        <td class="cheapest">$0 (OWASP ZAP)</td>
+        <td>$0 (StackHawk, 1 app)</td>
+        <td class="expensive">$3,000&ndash;12,000/yr</td>
+      </tr>
+      <tr>
+        <td>Secrets</td>
+        <td class="cheapest">$0 (Gitleaks)</td>
+        <td>$0 (GitGuardian, 25 devs)</td>
+        <td class="expensive">$3,000&ndash;8,000/yr</td>
+      </tr>
+      <tr>
+        <td>Container</td>
+        <td class="cheapest">$0 (Trivy)</td>
+        <td>$0 (Snyk, 100 tests/mo)</td>
+        <td class="expensive">$5,000&ndash;20,000/yr</td>
+      </tr>
+      <tr>
+        <td>IaC</td>
+        <td class="cheapest">$0 (Checkov)</td>
+        <td>$0 (Snyk, 300 IaC tests/mo)</td>
+        <td class="expensive">$3,000&ndash;8,000/yr</td>
+      </tr>
+      <tr>
+        <td><strong>Total</strong></td>
+        <td class="cheapest"><strong>$0</strong></td>
+        <td><strong>$0 (with limits)</strong></td>
+        <td class="expensive"><strong>$23,000&ndash;73,000/yr</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>The open-source vs hosted trade-off:</strong> Open-source security tools are genuinely enterprise-grade &mdash; Trivy, Semgrep, ZAP, and Gitleaks are used by Fortune 500 companies. The cost of self-hosting is engineering time: setting up CI/CD integrations, managing vulnerability databases, building dashboards, and triaging alerts. For a team of 5, the setup cost is 2&ndash;3 days. For hosted platforms, it&rsquo;s 30 minutes. The $23K&ndash;$73K/yr price difference buys convenience, not capability.
+  </div>
+  <div class="context-box">
+    <strong>The scan budget math:</strong> Snyk&rsquo;s free tier gives 200 SCA tests/month. Each <code>snyk test</code> on a project counts as one test. If you have 10 repos and run CI on every PR (5 PRs/day &times; 20 days = 100 PRs/month &times; 10 repos = 1,000 tests), you&rsquo;ll burn through the free tier in 4 days. Teams with active CI/CD pipelines outgrow hosted free tiers fast &mdash; which is exactly the business model.
+  </div>
+  <div class="context-box">
+    <strong>Free for OSS, expensive for private repos:</strong> SonarCloud, CodeQL, and SOOS are unlimited for public repositories but require paid plans for private code. This is the most common pricing model in security tooling. If your code is open-source, you get enterprise-grade security for free. If it&rsquo;s private, the same tools cost thousands per year. Plan accordingly: use OSS-unlimited tools (Semgrep, Trivy, Gitleaks) for private repos, and take advantage of full platform features on your open-source projects.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by use case</h3>
+
+    <div class="verdict-item">
+      <strong>Best free SAST &rarr; Semgrep</strong>
+      <p>The OSS CLI is unlimited with 2,000+ rules. The hosted platform adds dashboard, triage, and CI/CD automation for up to 10 contributors. Cross-file analysis catches data flow vulnerabilities that simpler pattern matchers miss. The custom rule system (YAML-based) is the most accessible of any SAST tool.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best free SCA &rarr; Dependabot + Renovate</strong>
+      <p>For GitHub repos, Dependabot is zero-config and unlimited. For multi-platform teams or advanced needs (monorepos, grouped updates, automerge), Renovate is the most capable dependency bot with 90+ package managers. Together they cover all SCA needs without scan limits.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best free DAST &rarr; OWASP ZAP</strong>
+      <p>No scan limits, no app limits, full CI/CD integration. The gold standard that commercial DAST tools benchmark against. For teams wanting a simpler managed experience, StackHawk&rsquo;s free tier (1 app, unlimited scans) provides a modern UI on top of ZAP&rsquo;s engine.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best free secrets scanner &rarr; Gitleaks</strong>
+      <p>MIT-licensed, fast, configurable, and integrates as a pre-commit hook or GitHub Action. For broader scanning (Docker images, S3, Slack), TruffleHog covers more sources. For a hosted dashboard with team management, GitGuardian&rsquo;s free tier (25 devs) is the best option.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best free container scanner &rarr; Trivy</strong>
+      <p>One binary that scans containers, filesystems, IaC, Kubernetes, and cloud accounts. Daily CVE database updates, 20+ language ecosystems. The breadth of targets makes Trivy the default choice &mdash; it replaces multiple specialized tools with a single scanner.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best all-in-one platform &rarr; Snyk (free tier)</strong>
+      <p>If you want a single platform covering SCA, SAST, containers, and IaC with a unified dashboard, Snyk&rsquo;s free tier is the most complete. The scan limits (200+100+100+300/month) constrain active CI/CD but are sufficient for periodic scanning and individual developer use.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best zero-budget full stack &rarr; Semgrep + Trivy + Gitleaks + ZAP</strong>
+      <p>This OSS combination covers SAST, SCA, container security, IaC scanning, secrets detection, and DAST &mdash; with no scan limits, no contributor caps, and no vendor lock-in. Total cost: $0. Total setup time: 2&ndash;3 hours to integrate into CI/CD.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+
+  <div class="diff-card">
+    <h3>Snyk&rsquo;s test budget burns fast in active CI/CD</h3>
+    <div class="diff-desc">Snyk&rsquo;s 200 SCA tests/month sounds generous, but each CI pipeline run that calls <code>snyk test</code> consumes a test per project. A monorepo with 5 packages running CI on 10 PRs/week burns 200 tests in a single week. The 100 SAST, 100 container, and 300 IaC tests share the same dynamic. Teams with active CI should either reserve Snyk for scheduled scans (not per-PR) or use unlimited OSS alternatives in CI.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>CodeQL and SonarCloud are public-only on free tiers</h3>
+    <div class="diff-desc">Both tools offer unlimited free scanning &mdash; but only for public/open-source repositories. For private codebases, CodeQL requires GitHub Advanced Security ($49/committer/month) and SonarCloud requires a paid plan. If you have a mix of public and private repos, use these tools on public repos and supplement with Semgrep OSS (unlimited for private repos) on private code.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>GitGuardian&rsquo;s historical scan cap</h3>
+    <div class="diff-desc">GitGuardian&rsquo;s free tier includes unlimited real-time scanning (new commits) but caps historical scanning at 500 detections. For a repository with years of commit history, the initial audit may hit this limit before scanning all historical commits. Workaround: use Gitleaks or TruffleHog for the initial historical audit, then enable GitGuardian for ongoing real-time monitoring.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>StackHawk&rsquo;s 1-app limit constrains microservices</h3>
+    <div class="diff-desc">StackHawk&rsquo;s free Developer plan covers 1 application with unlimited scans. For teams with multiple services (API, frontend, admin panel), each additional app requires the Pro plan at $35/app/month. A microservices architecture with 5 services would cost $140/month. Alternative: use OWASP ZAP (unlimited apps) with StackHawk-style CI integration via the ZAP GitHub Action.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Tailscale requires personal email domain</h3>
+    <div class="diff-desc">Tailscale&rsquo;s free tier requires a personal email domain (Gmail, Outlook, GitHub) &mdash; custom/business domains require a paid plan. This limits team use: you can&rsquo;t onboard employees with company email addresses on the free tier. For small teams using personal accounts, the 3-user limit is the real constraint. Headscale (open-source, self-hosted Tailscale-compatible coordination server) removes both limitations.</div>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent security tool pricing changes tracked in our index.</p>
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All security tool data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  ${buildMcpCta("security-free-tier-comparison-2026")}
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -29911,6 +30631,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api-development-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildApiDevelopmentFreeTierComparison2026Page());
+  } else if (url.pathname === "/security-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/security-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/security-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildSecurityFreeTierComparison2026Page());
   } else if (url.pathname === "/email-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/email-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
