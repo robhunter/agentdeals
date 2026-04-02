@@ -3130,6 +3130,30 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
   });
 
+  it("GET /state-of-free-tiers-2026 renders State of Free Tiers report", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/state-of-free-tiers-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("State of Developer Free Tiers 2026"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Executive Summary"), "Should have executive summary section");
+    assert.ok(html.includes("By the Numbers"), "Should have stats section");
+    assert.ok(html.includes("Free Tier Squeeze"), "Should have squeeze section");
+    assert.ok(html.includes("Bright Spots"), "Should have bright spots section");
+    assert.ok(html.includes("Startup Credit Programs"), "Should have startup credits section");
+    assert.ok(html.includes("Category Landscape"), "Should have category landscape section");
+    assert.ok(html.includes("Cost Trap"), "Should have cost trap section");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+  });
+
   it("GET /guides renders guides hub page with all editorial content", async () => {
     proc = await startHttpServer();
 

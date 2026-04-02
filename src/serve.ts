@@ -4131,6 +4131,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Snyk",
     hubDesc: "Side-by-side comparison of 20+ developer security tool free tiers — SAST, SCA, DAST, secrets detection, container security, and the DevSecOps cost trap at scale",
   },
+  {
+    slug: "state-of-free-tiers-2026",
+    title: "State of Developer Free Tiers 2026 — Data-Driven Report",
+    metaDesc: `We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories. The state of free tiers in 2026: who's cutting back, who's expanding, the most generous free tiers by category, and the cost traps to avoid.`,
+    contextHtml: "",
+    tag: "state-of-free-tiers-2026",
+    primaryVendor: "AgentDeals",
+    hubDesc: `Data-driven analysis of ${offers.length.toLocaleString()} developer tool free tiers across ${categories.length} categories — trends, risks, and recommendations`,
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -26847,6 +26856,350 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- State of Developer Free Tiers 2026 report ---
+
+function buildStateOfFreeTiers2026Page(): string {
+  const title = "State of Developer Free Tiers 2026 — Data-Driven Report | AgentDeals";
+  const metaDesc = `We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories. The state of free tiers in 2026: who's cutting back, who's expanding, and the cost traps to avoid.`;
+  const now = new Date().toISOString().split("T")[0];
+
+  // --- Compute dynamic stats from actual data ---
+  const freeTierOffers = offers.filter(o => {
+    const t = o.tier.toLowerCase();
+    return t.includes("free") || t === "hobby" || t === "starter" || t === "personal" || t === "developer" || t === "community" || t === "open source";
+  });
+  const freePct = Math.round((freeTierOffers.length / offers.length) * 100);
+
+  const eligibilityOffers = offers.filter(o => o.eligibility);
+  const startupOffers = offers.filter(o => o.tier.toLowerCase().includes("startup") || (o.eligibility && JSON.stringify(o.eligibility).toLowerCase().includes("startup")));
+
+  // Category stats
+  const catCounts = new Map<string, number>();
+  const catFreeCounts = new Map<string, number>();
+  for (const o of offers) {
+    catCounts.set(o.category, (catCounts.get(o.category) ?? 0) + 1);
+    const t = o.tier.toLowerCase();
+    if (t.includes("free") || t === "hobby" || t === "starter" || t === "personal" || t === "developer" || t === "community" || t === "open source") {
+      catFreeCounts.set(o.category, (catFreeCounts.get(o.category) ?? 0) + 1);
+    }
+  }
+  const sortedCats = [...catCounts.entries()].sort((a, b) => b[1] - a[1]);
+
+  // Deal changes analysis
+  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
+  const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+  const negativeChanges = dealChanges.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
+  const positiveChanges = dealChanges.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
+
+  // Change type counts
+  const changeTypeCounts = new Map<string, number>();
+  for (const c of dealChanges) {
+    changeTypeCounts.set(c.change_type, (changeTypeCounts.get(c.change_type) ?? 0) + 1);
+  }
+
+  // Most generous free tiers by category (top categories with most free options)
+  const topFreeCategories = [...catFreeCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12);
+
+  // Category free tier percentage
+  const catFreePercentage = sortedCats.map(([cat, total]) => ({
+    category: cat,
+    total,
+    free: catFreeCounts.get(cat) ?? 0,
+    pct: Math.round(((catFreeCounts.get(cat) ?? 0) / total) * 100),
+  })).sort((a, b) => b.pct - a.pct);
+
+  const changeTypeBadgeMap: Record<string, { label: string; color: string }> = {
+    free_tier_removed: { label: "Removed", color: "#f85149" },
+    limits_reduced: { label: "Reduced", color: "#d29922" },
+    restriction: { label: "Restricted", color: "#d29922" },
+    open_source_killed: { label: "OSS Killed", color: "#f85149" },
+    product_deprecated: { label: "Deprecated", color: "#f85149" },
+    new_free_tier: { label: "New Free Tier", color: "#3fb950" },
+    limits_increased: { label: "Expanded", color: "#3fb950" },
+    startup_program_expanded: { label: "Credits Expanded", color: "#3fb950" },
+    pricing_restructured: { label: "Restructured", color: "#8b5cf6" },
+    pricing_model_change: { label: "Model Change", color: "#8b5cf6" },
+    pricing_postponed: { label: "Postponed", color: "#d29922" },
+  };
+
+  // Build negative changes timeline HTML
+  const squeezeHtml = negativeChanges.slice(0, 15).map(c => {
+    const badge = changeTypeBadgeMap[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    return `<div style="margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">
+        <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${c.date}</span>
+        <span style="font-size:.7rem;color:${impactColor};font-weight:600">${c.impact} impact</span>
+        <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
+      </div>
+      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${escHtmlServer(c.summary)}</div>
+    </div>`;
+  }).join("\n");
+
+  // Build positive changes HTML
+  const brightSpotsHtml = positiveChanges.slice(0, 10).map(c => {
+    const badge = changeTypeBadgeMap[c.change_type] ?? { label: c.change_type, color: "#3fb950" };
+    return `<div style="margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">
+        <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${c.date}</span>
+        <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
+      </div>
+      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${escHtmlServer(c.summary)}</div>
+    </div>`;
+  }).join("\n");
+
+  // Category landscape table
+  const categoryTableRows = catFreePercentage.slice(0, 20).map(c => {
+    const barWidth = Math.max(c.pct, 2);
+    return `<tr>
+      <td><a href="/category/${toSlug(c.category)}">${escHtmlServer(c.category)}</a></td>
+      <td style="text-align:right">${c.total}</td>
+      <td style="text-align:right">${c.free}</td>
+      <td style="text-align:right">${c.pct}%</td>
+      <td style="width:120px"><div style="background:var(--accent-glow);border-radius:4px;height:16px;width:100%"><div style="background:var(--accent);border-radius:4px;height:100%;width:${barWidth}%"></div></div></td>
+    </tr>`;
+  }).join("\n");
+
+  // Cross-links to comparison pages
+  const comparisonLinks = ALTERNATIVES_PAGES
+    .filter(p => p.slug.includes("-comparison-") || p.slug.includes("-vs-"))
+    .slice(0, 12)
+    .map(p => `<a href="/${p.slug}" style="display:inline-block;padding:.3rem .7rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s;text-decoration:none">${escHtmlServer(p.title.split(" — ")[0].split(" 2026")[0])}</a>`)
+    .join("\n        ");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "State of Developer Free Tiers 2026",
+    description: metaDesc,
+    url: `${BASE_URL}/state-of-free-tiers-2026`,
+    datePublished: now,
+    dateModified: now,
+    publisher: {
+      "@type": "Organization",
+      name: "AgentDeals",
+      url: BASE_URL,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${BASE_URL}/state-of-free-tiers-2026`,
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/state-of-free-tiers-2026">
+<meta property="og:title" content="State of Developer Free Tiers 2026">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/state-of-free-tiers-2026">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .75rem}
+.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+.stat-card .stat-number{font-family:var(--mono);font-size:2rem;font-weight:700;color:var(--accent);display:block;line-height:1.2}
+.stat-card .stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem;display:block}
+.callout{margin:1.5rem 0;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated);font-size:.9rem;line-height:1.5}
+.callout-warn{border-color:#d29922;background:rgba(210,153,34,0.08)}
+.callout-good{border-color:#3fb950;background:rgba(63,185,80,0.08)}
+.callout strong{color:var(--text)}
+.section-desc{color:var(--text-muted);font-size:.95rem;margin-bottom:1.5rem;line-height:1.5}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{text-align:left;padding:.6rem .75rem;background:var(--bg-elevated);color:var(--text-muted);font-family:var(--mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid var(--border)}
+td{padding:.5rem .75rem;border-bottom:1px solid rgba(51,65,85,0.5);color:var(--text-muted)}
+td a{color:var(--accent)}
+tr:hover td{background:var(--accent-glow)}
+.cost-table{overflow-x:auto}
+.cost-table table{min-width:600px}
+.cross-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 1.5rem}
+.cross-links a:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.key-takeaways{margin:1rem 0 2rem}
+.key-takeaways li{margin-bottom:.5rem;color:var(--text-muted);font-size:.95rem}
+.key-takeaways li strong{color:var(--text)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}h2{font-size:1.2rem}.stat-grid{grid-template-columns:repeat(2,1fr)}.stat-card .stat-number{font-size:1.5rem}}
+${mcpCtaCss()}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers 2026</div>
+  <h1>State of Developer Free Tiers 2026</h1>
+  <p class="page-meta">Data-driven analysis of ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories. Last updated ${now}.</p>
+
+  <!-- 1. Executive Summary -->
+  <h2>Executive Summary</h2>
+  <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${dealChanges.length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
+  <ul class="key-takeaways">
+    <li><strong>${freePct}% of tracked services offer free tiers</strong> &mdash; the developer-friendly ecosystem remains strong, but the trend is tightening.</li>
+    <li><strong>${negativeChanges.length} negative pricing changes vs ${positiveChanges.length} positive</strong> &mdash; free tier removals and restrictions outpace expansions ${Math.round(negativeChanges.length / Math.max(positiveChanges.length, 1))}:1.</li>
+    <li><strong>${changeTypeCounts.get("free_tier_removed") ?? 0} free tiers completely removed</strong> &mdash; Heroku, PlanetScale, SendGrid, Brave Search API, X API, and more. Once removed, none have returned.</li>
+    <li><strong>Egress and overage are the real costs</strong> &mdash; storage at $0.023/GB vs egress at $0.09/GB. Cloudflare R2&rsquo;s zero-egress model is 60x cheaper than S3 at scale.</li>
+    <li><strong>Open source is the safety net</strong> &mdash; in security tools, a $0 OSS stack matches $23K&ndash;$73K/yr hosted alternatives on capability.</li>
+  </ul>
+
+  <!-- 2. By the Numbers -->
+  <h2>By the Numbers</h2>
+  <div class="stat-grid">
+    <div class="stat-card"><span class="stat-number">${offers.length.toLocaleString()}</span><span class="stat-label">Offers Tracked</span></div>
+    <div class="stat-card"><span class="stat-number">${categories.length}</span><span class="stat-label">Categories</span></div>
+    <div class="stat-card"><span class="stat-number">${freeTierOffers.length.toLocaleString()}</span><span class="stat-label">Free Tier Offers</span></div>
+    <div class="stat-card"><span class="stat-number">${freePct}%</span><span class="stat-label">Free Tier Rate</span></div>
+    <div class="stat-card"><span class="stat-number">${dealChanges.length}</span><span class="stat-label">Pricing Changes</span></div>
+    <div class="stat-card"><span class="stat-number">${eligibilityOffers.length}</span><span class="stat-label">With Eligibility Rules</span></div>
+  </div>
+  <div class="callout">
+    <strong>How to read this data:</strong> We track publicly available developer tool free tiers, startup programs, and OSS eligibility across ${categories.length} categories. Every offer is manually verified against pricing pages. &ldquo;Free tier&rdquo; includes perpetual free plans, generous hobby tiers, and always-free offerings &mdash; not limited trials.
+  </div>
+
+  <!-- 3. The Free Tier Squeeze -->
+  <h2>The Free Tier Squeeze: Who&rsquo;s Cutting Back</h2>
+  <p class="section-desc">Of ${dealChanges.length} tracked pricing changes, ${negativeChanges.length} (${Math.round((negativeChanges.length / dealChanges.length) * 100)}%) are negative for developers &mdash; free tier removals, limit reductions, and new restrictions. The pattern is clear: as companies mature, raise prices, or get acquired, free tiers shrink.</p>
+  <div class="callout callout-warn">
+    <strong>Key pattern:</strong> Once a free tier is removed, it never comes back. Heroku (2022), PlanetScale (2024), SendGrid (2025), Brave Search (2026), X API (2026) &mdash; all permanent. Plan your architecture around services with structural commitment to free tiers (open-source alternatives, cloud provider loss leaders, or developer-first companies).
+  </div>
+  ${squeezeHtml}
+
+  <!-- 4. Bright Spots -->
+  <h2>The Bright Spots: Who&rsquo;s Expanding</h2>
+  <p class="section-desc">${positiveChanges.length} tracked changes are developer-positive: new free tiers, expanded limits, and improved startup programs. Notable expansions include GitHub Copilot Free, Auth0 tripling MAU limits, and Amazon Aurora PostgreSQL joining the AWS Free Tier.</p>
+  <div class="callout callout-good">
+    <strong>Trend worth watching:</strong> AI coding tools are in a free-tier arms race. GitHub Copilot launched a free tier (Dec 2025), Google shipped Gemini Code Assist free (Dec 2025), and multiple vendors are competing on generous free completions to capture developer lock-in.
+  </div>
+  ${brightSpotsHtml}
+
+  <!-- 5. Startup Credit Programs -->
+  <h2>Startup Credit Programs: The Hidden Goldmine</h2>
+  <p class="section-desc">${eligibilityOffers.length} offers in our index include eligibility restrictions or startup programs. The combined value exceeds $1M in available credits for qualifying startups. Key programs:</p>
+  <div class="cost-table">
+  <table>
+    <thead><tr><th>Program</th><th>Credits</th><th>Eligibility</th><th>Notable Benefits</th></tr></thead>
+    <tbody>
+      <tr><td><a href="/vendor/google-cloud">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
+      <tr><td><a href="/vendor/cloudflare">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $250K</td><td>4 tiers by stage</td><td>Workers, R2, CDN, security</td></tr>
+      <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>Founders Hub</td><td>Azure + OpenAI credits</td></tr>
+      <tr><td><a href="/vendor/digitalocean">DigitalOcean Hatch</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Early-stage</td><td>Compute + support credits</td></tr>
+      <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Accelerator-backed</td><td>AWS credits, technical support</td></tr>
+      <tr><td><a href="/vendor/railway">Railway</a></td><td style="color:#3fb950;font-weight:600">$5 free/month</td><td>Everyone</td><td>No credit card, usage-based</td></tr>
+      <tr><td><a href="/vendor/vercel">Vercel</a></td><td style="color:#3fb950;font-weight:600">Hobby plan free</td><td>Non-commercial</td><td>Edge functions, serverless</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for 19 programs across 3 tiers.</p>
+
+  <!-- 6. Category Landscape -->
+  <h2>Category Landscape</h2>
+  <p class="section-desc">Which categories have the most free tier options? The table below shows our top 20 categories ranked by free tier density.</p>
+  <div class="cost-table">
+  <table>
+    <thead><tr><th>Category</th><th style="text-align:right">Total</th><th style="text-align:right">Free</th><th style="text-align:right">Free %</th><th>Density</th></tr></thead>
+    <tbody>
+      ${categoryTableRows}
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">Browse all ${categories.length} categories at <a href="/category">/category</a>.</p>
+
+  <!-- 7. Cost Trap -->
+  <h2>The Cost Trap: When Free Tiers Become Expensive</h2>
+  <p class="section-desc">Free tiers are acquisition tools. The real question is: what happens at 10x, 100x, and 1000x the free limit? Our comparison data reveals dramatic cost divergence at scale.</p>
+
+  <h3>Storage: Egress Is the Real Cost</h3>
+  <div class="callout callout-warn">
+    At 1 TB stored + 10 TB egress/month, <strong>Cloudflare R2 costs ~$15/mo</strong> while <strong>AWS S3 costs ~$925/mo</strong> &mdash; a 60x difference. The free tier comparison doesn&rsquo;t predict the paid tier cost curve.
+    <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/storage-free-tier-comparison-2026">Full storage comparison &rarr;</a></span>
+  </div>
+
+  <h3>Auth: The Growth Tax</h3>
+  <div class="callout callout-warn">
+    At 100K MAU, <strong>Clerk costs ~$1,800/mo</strong> while <strong>Supabase Auth costs ~$162/mo</strong> &mdash; an 11x difference. WorkOS AuthKit is free up to 1M MAU for authentication.
+    <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/auth-free-tier-comparison-2026">Full auth comparison &rarr;</a></span>
+  </div>
+
+  <h3>Monitoring: Per-Host Pricing Explodes</h3>
+  <div class="callout callout-warn">
+    At 100 hosts, <strong>Datadog costs ~$5,500/mo</strong> while <strong>Grafana Cloud costs ~$300&ndash;$800/mo</strong>. Datadog&rsquo;s 1-day free retention makes the free tier practically unusable for debugging.
+    <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/monitoring-free-tier-comparison-2026">Full monitoring comparison &rarr;</a></span>
+  </div>
+
+  <h3>Email: Post-Acquisition Squeeze</h3>
+  <div class="callout callout-warn">
+    At 1M emails/month, <strong>Amazon SES costs ~$100/mo</strong> while <strong>SendGrid costs ~$750/mo</strong>. SendGrid and Mailgun both removed free tiers after acquisition. The pattern: VC-backed email APIs eliminate free tiers once acquired.
+    <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/email-free-tier-comparison-2026">Full email comparison &rarr;</a></span>
+  </div>
+
+  <h3>Security: OSS Wins on Price</h3>
+  <div class="callout callout-good">
+    A full OSS security stack (Semgrep + Gitleaks + Trivy + OWASP ZAP) costs <strong>$0</strong> and matches the capability of $23K&ndash;$73K/yr hosted alternatives. Security has the strongest OSS options of any category.
+    <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/security-free-tier-comparison-2026">Full security comparison &rarr;</a></span>
+  </div>
+
+  <!-- 8. Methodology -->
+  <h2>Methodology</h2>
+  <p class="section-desc">How we built this dataset:</p>
+  <ul style="color:var(--text-muted);font-size:.9rem;padding-left:1.25rem;margin-bottom:1rem">
+    <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer is verified against the vendor&rsquo;s public pricing page. We record the verification date and source URL.</li>
+    <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${dealChanges.length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
+    <li style="margin-bottom:.4rem"><strong>Definition of &ldquo;free tier&rdquo;:</strong> Perpetual free plans, always-free offerings, and generous hobby/starter tiers without time limits. We exclude limited trials (e.g., 14-day, 30-day) and one-time credits.</li>
+    <li style="margin-bottom:.4rem"><strong>Update frequency:</strong> Continuous. Our <a href="/freshness">data freshness dashboard</a> shows verification recency by category.</li>
+    <li style="margin-bottom:.4rem"><strong>Open data:</strong> All data is accessible via our <a href="/api/docs">REST API</a> and <a href="/setup">MCP server</a>. Query it from your AI coding assistant.</li>
+  </ul>
+
+  <h2>Explore the Data</h2>
+  <p class="section-desc">Dive deeper with our category-specific comparison guides:</p>
+  <div class="cross-links">
+    ${comparisonLinks}
+  </div>
+
+  ${buildMcpCta("Query all " + offers.length.toLocaleString() + " developer tool deals from your AI coding assistant. Search free tiers, compare vendors, track pricing changes — directly in your editor.")}
+
+  <div style="margin:2rem 0 1rem;padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)">
+    <h3 style="margin:0 0 .75rem;font-family:var(--serif);font-size:1rem;color:var(--text)">More Guides</h3>
+    <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem">
+      <li><a href="/free-tier-risk">Free Tier Risk Index</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; sustainability risk scores for 38 vendors</span></li>
+      <li><a href="/free-tier-tracker">Q1 2026 Free Tier Tracker</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; removals, expansions, and trends</span></li>
+      <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; 19 programs, $1M+ combined credits</span></li>
+      <li><a href="/free-startup-stack">Free Startup Stack</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; complete infrastructure on $0/month</span></li>
+      <li><a href="/q1-2026-developer-pricing-report">Q1 2026 Pricing Report</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; quarterly pricing analysis</span></li>
+    </ul>
+    <p style="margin:.75rem 0 0;font-size:.85rem;color:var(--text-dim)"><a href="/guides">View all ${ALTERNATIVES_PAGES.length} guides &rarr;</a></p>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Setup guide page ---
 
 function buildSetupPage(): string {
@@ -30646,6 +30999,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/security-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSecurityFreeTierComparison2026Page());
+  } else if (url.pathname === "/state-of-free-tiers-2026" && isGetOrHead) {
+    recordApiHit("/state-of-free-tiers-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/state-of-free-tiers-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildStateOfFreeTiers2026Page());
   } else if (url.pathname === "/email-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/email-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
