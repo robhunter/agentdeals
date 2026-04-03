@@ -3031,14 +3031,14 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
-  it("GET /auth-free-tier-comparison-2026 renders auth comparison page", async () => {
+  it("GET /auth-comparison-2026 renders auth comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/auth-free-tier-comparison-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/auth-comparison-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
-    assert.ok(html.includes("Auth Free Tier Comparison 2026"), "Should have title");
+    assert.ok(html.includes("Auth"), "Should have auth in title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
@@ -3050,6 +3050,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Keycloak"), "Should mention Keycloak");
     assert.ok(html.includes("FusionAuth"), "Should mention FusionAuth");
     assert.ok(html.includes("WorkOS"), "Should mention WorkOS");
+    assert.ok(html.includes("PropelAuth"), "Should mention PropelAuth");
+    assert.ok(html.includes("Authentik"), "Should mention Authentik");
+    assert.ok(html.includes("Authelia"), "Should mention Authelia");
+    assert.ok(html.includes("Appwrite"), "Should mention Appwrite");
     assert.ok(html.includes("Managed Auth"), "Should have managed auth section");
     assert.ok(html.includes("BaaS-Integrated Auth"), "Should have BaaS auth section");
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
@@ -3062,6 +3066,15 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/supabase-vs-firebase"), "Should cross-link to Supabase vs Firebase");
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+    assert.ok(html.includes("agentic"), "Should mention agentic AI auth");
+  });
+
+  it("GET /auth-free-tier-comparison-2026 redirects to /auth-comparison-2026", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/auth-free-tier-comparison-2026`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/auth-comparison-2026"), "Should redirect to new slug");
   });
 
   it("GET /storage-free-tier-comparison-2026 renders storage comparison page", async () => {
