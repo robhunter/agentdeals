@@ -3962,12 +3962,12 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   },
   {
     slug: "gemini-api-pricing-2026",
-    title: "Gemini API Pricing Changes April 2026 — Spend Caps, Rate Limits & Free Alternatives",
-    metaDesc: "Google enforces billing-account spend caps on Gemini API April 1, 2026. Free tier rate limits slashed 50-80% in late 2025. Compare Gemini vs Claude vs GPT-4 vs Groq vs open-source alternatives. Updated March 2026.",
+    title: "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives",
+    metaDesc: "Gemini API billing overhaul April 2026: enforced spend caps ($250-$100K+/mo by tier), prepaid billing for new users, Gemini 3.1 Pro paid-only. Free tier preserved for Flash/Flash-Lite only. Compare 8 free LLM API alternatives.",
     contextHtml: "",
     tag: "gemini-api-pricing-2026",
     primaryVendor: "Google Gemini API",
-    hubDesc: "Gemini API spend caps enforced April 1 — rate limit cuts, new tier structure, and free LLM API alternatives",
+    hubDesc: "Gemini API billing guide — spend caps ($250-$100K+/mo), prepaid billing, 3.1 Pro paid-only, free tier changes, 8-provider comparison",
   },
   {
     slug: "free-tier-tracker",
@@ -14866,8 +14866,8 @@ ${mcpCtaCss()}
 }
 
 function buildGeminiApiPricing2026Page(): string {
-  const title = "Gemini API Pricing Changes April 2026 — Spend Caps, Rate Limits & Free Alternatives";
-  const metaDesc = "Google enforces billing-account spend caps on Gemini API April 1, 2026. Free tier rate limits slashed 50-80% in late 2025. Compare Gemini vs Claude vs GPT-4 vs Groq vs open-source alternatives. Updated March 2026.";
+  const title = "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives";
+  const metaDesc = "Gemini API billing overhaul April 2026: enforced spend caps ($250-$100K+/mo by tier), prepaid billing for new users, Gemini 3.1 Pro paid-only. Free tier preserved for Flash/Flash-Lite only. Compare 8 free LLM API alternatives.";
   const slug = "gemini-api-pricing-2026";
   const pubDate = "2026-03-26";
 
@@ -14878,7 +14878,7 @@ function buildGeminiApiPricing2026Page(): string {
 
   // LLM API competitors for comparison table
   const llmProviders = [
-    { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, 2.5 Pro (limited)", notes: "Spend caps enforced April 1. Pro free tier removed.", risk: "high" },
+    { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, Flash-Lite (free); 3.1 Pro (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users.", risk: "high" },
     { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "200K tokens", models: "Opus 4.6, Sonnet 4.6, Haiku 4.5", notes: "No free tier — $5/$25 per MTok (Opus). Batch API at 50% off.", risk: "none" },
     { name: "OpenAI API", freeLimit: "GPT-3.5 only, 3 RPM", context: "128K tokens", models: "GPT-3.5 Turbo (free), GPT-4o (paid)", notes: "Free trial credits discontinued mid-2025. Very limited free access.", risk: "medium" },
     { name: "Groq", freeLimit: "30 RPM, 100K-500K tokens/day", context: "128K tokens", models: "Llama 4, Qwen3, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed.", risk: "low" },
@@ -14997,19 +14997,19 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing 2026</div>
-  <h1>Gemini API Pricing Changes — April 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Spend caps enforced: April 1, 2026 &middot; 3 tracked Gemini changes</p>
+  <h1>Gemini API Pricing 2026 — Free Tier Changes, Spend Caps &amp; Alternatives</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Updated April 2, 2026 &middot; Spend caps enforced April 1 &middot; 3.1 Pro paid-only &middot; Prepaid billing live</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number red">Apr 1</div><div class="stat-label">Spend Caps Enforced</div></div>
+    <div class="stat-card"><div class="stat-number red">$250</div><div class="stat-label">Tier 1 Spend Cap</div></div>
     <div class="stat-card"><div class="stat-number red">50-80%</div><div class="stat-label">Rate Limit Cuts</div></div>
-    <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Tracked Changes</div></div>
+    <div class="stat-card"><div class="stat-number red">0</div><div class="stat-label">Free Pro Models</div></div>
     <div class="stat-card"><div class="stat-number">${llmProviders.length}</div><div class="stat-label">Providers Compared</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Google is enforcing billing-account-level spend caps on the Gemini API starting April 1, 2026.</strong> When a tier's aggregate spend hits its cap, all API requests under that billing account pause until the next billing cycle. This follows late 2025's <strong>50-80% rate limit cuts</strong> and the removal of the Pro model free tier.</p>
-    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>Pro is no longer free, Flash went from ~250 to 20-50 requests/day, and now spend caps add another constraint for paid users.</strong> Below we cover what's changing, who's affected, and which alternatives offer better free access.</p>
+    <p><strong>Google overhauled Gemini API billing effective April 1, 2026.</strong> Enforced monthly spend caps by tier (Tier 1: $250/mo, Tier 2: $2,000/mo, Tier 3: $20K-$100K+) automatically pause API requests when reached. New users face <strong>prepaid billing</strong> — buy credits before using the API. The latest flagship <strong>Gemini 3.1 Pro is paid-only</strong> with no free tier access.</p>
+    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>Pro is no longer free, Flash went from ~250 to 20-50 requests/day, spend caps add another constraint for paid users, and the newest model requires payment.</strong> Free tier access is preserved only for Flash and Flash-Lite models with restructured rate limits. Below we cover what changed, who's affected, and which alternatives offer better free access.</p>
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${escHtmlServer(rateLimitChange.summary)}</p>` : ""}
   </div>
 
@@ -15020,6 +15020,7 @@ ${mcpCtaCss()}
       <li><a href="#timeline">Timeline of Gemini API Changes</a></li>
       <li><a href="#who-affected">Who's Affected</a></li>
       <li><a href="#new-tiers">New Tier Structure &amp; Spend Caps</a></li>
+      <li><a href="#prepaid">Prepaid Billing &amp; Paid-Only Models</a></li>
       <li><a href="#comparison">Free LLM API Comparison</a></li>
       <li><a href="#what-to-do">What to Do</a></li>
     </ol>
@@ -15035,9 +15036,11 @@ ${mcpCtaCss()}
     <tbody>
       <tr><td style="font-weight:600">Free tier rate limits</td><td>Flash: ~250 RPD, Pro: available</td><td style="font-weight:600">Flash: 10 RPM (~20-50 RPD). Pro: removed</td><td style="color:#f85149;font-weight:600">50-80% reduction</td></tr>
       <tr><td style="font-weight:600">Gemini 2.0 Flash</td><td>Available, standard limits</td><td style="font-weight:600">Deprecated, scheduled for retirement</td><td style="color:#f85149;font-weight:600">Must migrate to 2.5</td></tr>
-      <tr><td style="font-weight:600">Spend caps (Apr 1)</td><td>No hard caps — billed without pausing</td><td style="font-weight:600">Tier-level caps, requests pause when hit</td><td style="color:#d29922;font-weight:600">New constraint</td></tr>
+      <tr><td style="font-weight:600">Spend caps (Apr 1)</td><td>No hard caps — billed without pausing</td><td style="font-weight:600">$250/mo (Tier 1), $2K/mo (Tier 2), $20K+ (Tier 3)</td><td style="color:#d29922;font-weight:600">Requests pause at cap</td></tr>
+      <tr><td style="font-weight:600">Billing model</td><td>Pay-as-you-go for all</td><td style="font-weight:600">Prepaid billing for new users</td><td style="color:#d29922;font-weight:600">Buy credits in advance</td></tr>
+      <tr><td style="font-weight:600">Gemini 3.1 Pro</td><td>N/A (new model)</td><td style="font-weight:600">Paid-only — no free tier access</td><td style="color:#f85149;font-weight:600">Latest flagship paywalled</td></tr>
       <tr><td style="font-weight:600">Context window</td><td>1M tokens</td><td>1M tokens</td><td style="color:var(--text-dim)">Unchanged</td></tr>
-      <tr><td style="font-weight:600">Flash-Lite limits</td><td>Generous (unspecified)</td><td style="font-weight:600">15 RPM</td><td style="color:#f85149;font-weight:600">Reduced</td></tr>
+      <tr><td style="font-weight:600">Flash-Lite limits</td><td>Generous (unspecified)</td><td style="font-weight:600">15 RPM (preserved)</td><td style="color:#3fb950;font-weight:600">Free tier preserved</td></tr>
     </tbody>
   </table>
 
@@ -15087,16 +15090,17 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="new-tiers">4. New Tier Structure &amp; Spend Caps</h2>
-  <p class="section-intro">Google revamped the Gemini API billing structure with automatic tier upgrades based on spend level. Each tier has a corresponding spend cap that pauses requests when reached.</p>
+  <p class="section-intro">Google revamped the Gemini API billing structure with automatic tier upgrades based on spend level. Each tier has a monthly spend cap that pauses all API requests when reached.</p>
 
   <table class="pricing-table">
     <thead>
-      <tr><th>Tier</th><th>Free Rate Limits</th><th>Paid Rate Limits</th><th>Key Constraint</th></tr>
+      <tr><th>Tier</th><th>Monthly Spend Cap</th><th>Free Rate Limits</th><th>Paid Rate Limits</th><th>Key Constraint</th></tr>
     </thead>
     <tbody>
-      <tr><td style="font-weight:600">Free</td><td style="font-family:var(--mono)">Flash: 10 RPM, Flash-Lite: 15 RPM</td><td>N/A</td><td style="color:#f85149">No Pro access. Heavily limited.</td></tr>
-      <tr><td style="font-weight:600">Pay-as-you-go</td><td style="font-family:var(--mono)">Same as free</td><td>Higher RPM per model</td><td style="color:#d29922">Spend cap pauses requests at billing account level</td></tr>
-      <tr><td style="font-weight:600">Scale (auto-upgrade)</td><td style="font-family:var(--mono)">Same as free</td><td>Even higher RPM</td><td>Auto-upgraded at spend threshold — higher cap</td></tr>
+      <tr><td style="font-weight:600">Free</td><td style="font-family:var(--mono)">$0</td><td style="font-family:var(--mono)">Flash: 10 RPM, Flash-Lite: 15 RPM</td><td>N/A</td><td style="color:#f85149">No Pro/3.1 Pro access. Heavily limited.</td></tr>
+      <tr><td style="font-weight:600">Tier 1 (Pay-as-you-go)</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$250/mo</td><td style="font-family:var(--mono)">Same as free</td><td>Higher RPM per model</td><td style="color:#d29922">Requests pause at $250 aggregate spend</td></tr>
+      <tr><td style="font-weight:600">Tier 2</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$2,000/mo</td><td style="font-family:var(--mono)">Same as free</td><td>Even higher RPM</td><td style="color:#d29922">Auto-upgraded at spend threshold</td></tr>
+      <tr><td style="font-weight:600">Tier 3+</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$20K&ndash;$100K+</td><td style="font-family:var(--mono)">Same as free</td><td>Highest RPM, priority</td><td>Enterprise scale, custom caps</td></tr>
     </tbody>
   </table>
 
@@ -15104,7 +15108,23 @@ ${mcpCtaCss()}
     <strong>What "spend cap" means in practice:</strong> Unlike rate limits (which reject individual requests), spend caps <em>pause all requests</em> for the remainder of the billing month once the tier's aggregate spend limit is reached. This is a billing-account-level control — all projects under the same billing account share the cap. Google added project-level caps on March 16, 2026 as a mitigation tool.
   </div>
 
-  <h2 id="comparison">5. Free LLM API Comparison</h2>
+  <h2 id="prepaid">5. Prepaid Billing &amp; Paid-Only Models</h2>
+  <p class="section-intro">Two additional changes that affect new and high-usage developers.</p>
+
+  <div class="impact-card" style="border-left-color:#d29922">
+    <h3 style="color:#d29922">Prepaid billing for new users</h3>
+    <p class="impact-desc">New Gemini API users are now enrolled in <strong>prepaid billing</strong> — you buy credits in advance and consume them with API calls. This replaces the previous pay-as-you-go model for new accounts. Existing users retain pay-as-you-go billing for now, but the transition signals Google's move toward pre-commitment pricing.</p>
+  </div>
+  <div class="impact-card" style="border-left-color:#f85149">
+    <h3 style="color:#f85149">Gemini 3.1 Pro is paid-only</h3>
+    <p class="impact-desc"><strong>The latest flagship model (Gemini 3.1 Pro) has no free tier access.</strong> Following the removal of free Pro access in late 2025, Google's newest model is entirely behind the paywall. Free tier developers are limited to Flash and Flash-Lite models. This widens the gap between free and paid Gemini API capabilities.</p>
+  </div>
+  <div class="impact-card" style="border-left-color:#3fb950">
+    <h3 style="color:#3fb950">Flash-Lite models remain free</h3>
+    <p class="impact-desc">The free tier is preserved for Flash-Lite models at 15 RPM, with restructured rate limits. For lightweight tasks (classification, extraction, simple Q&amp;A), Flash-Lite remains a viable zero-cost option. Flash is also free at 10 RPM — just significantly reduced from pre-2025 levels.</p>
+  </div>
+
+  <h2 id="comparison">6. Free LLM API Comparison</h2>
   <p class="section-intro">How Gemini's free tier compares to alternatives. Sorted by free tier generosity — several providers offer significantly more free access than Gemini post-cuts.</p>
 
   <table class="pricing-table">
@@ -15126,7 +15146,7 @@ ${mcpCtaCss()}
     <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a> offers 30 RPM free (3x Gemini Flash) with ultra-fast inference. <a href="/vendor/cerebras">Cerebras</a> gives 1M tokens/day free. <a href="/vendor/mistral-ai">Mistral AI</a> offers 1B tokens/month free. <a href="/vendor/openrouter">OpenRouter</a> provides ~30 free models through one API. All are more generous than Gemini's post-cut free tier. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
   </div>
 
-  <h2 id="what-to-do">6. What to Do</h2>
+  <h2 id="what-to-do">7. What to Do</h2>
   <p class="section-intro">Practical steps depending on your situation, from monitoring spend to migrating to alternatives.</p>
 
   <div class="impact-card" style="border-left-color:var(--accent)">
@@ -17255,6 +17275,7 @@ function buildShutdownTrackerPage(): string {
       impact: "All applications using gemini-2.0-flash or gemini-2.0-flash-lite model IDs will stop working",
       whoAffected: "Developers using Gemini 2.0 Flash model ID in API calls \u2014 migration to Gemini 2.5 Flash required",
       migrationPath: "Update model parameter to gemini-2.5-flash \u2014 straightforward migration, improved performance",
+      migrationLink: "/gemini-api-pricing-2026",
       status: "active",
     },
     {
@@ -31864,6 +31885,13 @@ const httpServer = createHttpServer(async (req, res) => {
   // Feed URL aliases — redirect common feed paths to canonical /feed.xml
   if ((url.pathname === "/rss" || url.pathname === "/feed" || url.pathname === "/atom") && isGetOrHead) {
     res.writeHead(301, { Location: "/feed.xml" });
+    res.end();
+    return;
+  }
+
+  // Gemini API pricing alias — redirect to canonical slug with year
+  if (url.pathname === "/gemini-api-pricing" && isGetOrHead) {
+    res.writeHead(301, { Location: "/gemini-api-pricing-2026" });
     res.end();
     return;
   }
