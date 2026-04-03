@@ -17248,6 +17248,16 @@ function buildShutdownTrackerPage(): string {
       status: "active",
     },
     {
+      service: "Gemini 2.0 Flash",
+      vendorSlug: "google-gemini-api",
+      what: "Gemini 2.0 Flash and Flash-Lite models deprecated \u2014 full removal September 24, 2026. Image generation via 2.0 Flash shut down March 31.",
+      deadline: "2026-09-24",
+      impact: "All applications using gemini-2.0-flash or gemini-2.0-flash-lite model IDs will stop working",
+      whoAffected: "Developers using Gemini 2.0 Flash model ID in API calls \u2014 migration to Gemini 2.5 Flash required",
+      migrationPath: "Update model parameter to gemini-2.5-flash \u2014 straightforward migration, improved performance",
+      status: "active",
+    },
+    {
       service: "OpenAI Assistants API",
       vendorSlug: "openai",
       what: "Complete API shutdown \u2014 Assistants, Threads, Runs, and Messages endpoints removed",
@@ -17256,6 +17266,16 @@ function buildShutdownTrackerPage(): string {
       whoAffected: "AI agent builders using Assistants API for threads, code interpreter, file search, and persistent assistants",
       migrationPath: "Migrate to Responses API, or switch to Claude/Gemini/open-source frameworks",
       migrationLink: "/openai-assistants-alternatives",
+      status: "active",
+    },
+    {
+      service: "OpenAI Videos API (Sora)",
+      vendorSlug: "openai",
+      what: "Videos API (Sora) deprecated March 24, 2026 \u2014 complete removal September 24, 2026. No direct OpenAI replacement for video generation.",
+      deadline: "2026-09-24",
+      impact: "All video generation applications using the Videos API will stop working with no OpenAI replacement",
+      whoAffected: "Developers using POST /v1/videos/generations and the Sora 2 model for AI video generation",
+      migrationPath: "No direct OpenAI replacement \u2014 evaluate third-party video generation APIs (Runway, Pika, Luma)",
       status: "active",
     },
     {
