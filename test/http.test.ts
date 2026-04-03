@@ -3095,10 +3095,10 @@ describe("HTTP transport", () => {
     assert.ok(response.headers.get("location")?.includes("/auth-comparison-2026"), "Should redirect to new slug");
   });
 
-  it("GET /storage-free-tier-comparison-2026 renders storage comparison page", async () => {
+  it("GET /storage-comparison-2026 renders expanded storage and CDN comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/storage-free-tier-comparison-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/storage-comparison-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -3107,6 +3107,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
+    // Providers
     assert.ok(html.includes("Cloudflare R2"), "Should mention Cloudflare R2");
     assert.ok(html.includes("Backblaze B2"), "Should mention Backblaze B2");
     assert.ok(html.includes("AWS S3"), "Should mention AWS S3");
@@ -3115,18 +3116,34 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Storj"), "Should mention Storj");
     assert.ok(html.includes("Tigris"), "Should mention Tigris");
     assert.ok(html.includes("MinIO"), "Should mention MinIO");
-    assert.ok(html.includes("S3-Compatible Object Storage"), "Should have S3-compatible section");
+    assert.ok(html.includes("Cloudinary"), "Should mention Cloudinary");
+    assert.ok(html.includes("BunnyCDN"), "Should mention BunnyCDN");
+    assert.ok(html.includes("ImageKit"), "Should mention ImageKit");
+    assert.ok(html.includes("Pinata"), "Should mention Pinata IPFS");
+    // Sections
+    assert.ok(html.includes("Zero-Egress"), "Should have zero-egress section");
     assert.ok(html.includes("Cloud Provider Storage"), "Should have cloud provider section");
-    assert.ok(html.includes("BaaS-Integrated Storage"), "Should have BaaS section");
-    assert.ok(html.includes("Specialized"), "Should have specialized/media section");
+    assert.ok(html.includes("Media"), "Should have media/CDN section");
+    assert.ok(html.includes("BaaS-Integrated"), "Should have BaaS section");
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
-    assert.ok(html.includes("Storage Cost Trap"), "Should have cost trap section");
+    assert.ok(html.includes("Decentralized"), "Should have decentralized section");
+    assert.ok(html.includes("Growth Cost Trap"), "Should have cost trap section");
+    assert.ok(html.includes("S3 Egress Tax"), "Should have S3 egress tax section");
+    assert.ok(html.includes("100 TB"), "Should have 100TB scale in cost table");
+    assert.ok(html.includes("NAT Gateway"), "Should explain NAT Gateway hidden charge");
     assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+  });
+
+  it("GET /storage-free-tier-comparison-2026 redirects to /storage-comparison-2026", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${serverPort}/storage-free-tier-comparison-2026`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/storage-comparison-2026"), "Should redirect to new slug");
   });
 
   it("GET /analytics-free-tier-comparison-2026 renders analytics comparison page", async () => {
