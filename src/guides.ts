@@ -75,7 +75,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "cicd-free-tier-comparison-2026", title: "CI/CD Free Tier Comparison 2026", description: "15+ CI/CD platforms compared — build minutes, runners, parallel jobs, self-hosted options" },
   { slug: "cloud-free-tier-comparison-2026", title: "Cloud Free Tier Comparison 2026", description: "AWS vs GCP vs Azure vs 5 alternatives — compute, storage, databases, and serverless" },
   { slug: "database-free-tier-comparison-2026", title: "Database Free Tier Comparison 2026", description: "15+ databases compared — Postgres, MySQL, MongoDB, Redis, vector, and edge databases" },
-  { slug: "hosting-free-tier-comparison-2026", title: "Hosting Free Tier Comparison 2026", description: "PaaS, static, serverless hosting — bandwidth, build minutes, and scaling limits" },
+  { slug: "hosting-free-tier-comparison-2026", title: "Hosting Free Tier Comparison 2026", description: "12+ hosting platforms compared — Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, bandwidth, compute, cold starts, and scaling costs" },
   { slug: "serverless-free-tier-comparison-2026", title: "Serverless Free Tier Comparison 2026", description: "10+ serverless platforms — invocations, compute, CPU-time vs wall-clock billing" },
   { slug: "auth-free-tier-comparison-2026", title: "Auth Free Tier Comparison 2026", description: "15+ auth services — MAU limits, overage costs, self-hosted options, growth cost traps" },
   { slug: "monitoring-free-tier-comparison-2026", title: "Monitoring Free Tier Comparison 2026", description: "20+ monitoring services — data ingest, retention, hosts, alerting, observability costs" },
