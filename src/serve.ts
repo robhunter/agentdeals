@@ -29263,7 +29263,7 @@ ${globalNavCss()}
 function buildSetupPage(): string {
   const baseUrl = BASE_URL;
   const title = "Setup Guide — AgentDeals MCP Server";
-  const metaDesc = "Step-by-step instructions to add AgentDeals as an MCP server in Claude Desktop, Claude Code, Cursor, Cline, and Windsurf. Search 1,500+ developer deals from your AI assistant.";
+  const metaDesc = "Step-by-step instructions to add AgentDeals as an MCP server in Claude Desktop, Claude Code, Cursor, VS Code, OpenCode, and Windsurf. Search 1,600+ developer deals from your AI assistant.";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -29406,7 +29406,59 @@ function buildSetupPage(): string {
 }`,
     },
     {
-      id: "other", name: "Other Clients",
+      id: "vscode", name: "VS Code (Copilot)",
+      desc: `Add to <code>.vscode/mcp.json</code> in your project root`,
+      hint: `Requires GitHub Copilot extension with MCP support enabled`,
+      localConfig: `{
+  "servers": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}`,
+      remoteConfig: `{
+  "servers": {
+    "agentdeals": {
+      "type": "http",
+      "url": "${baseUrl}/mcp"
+    }
+  }
+}`,
+    },
+    {
+      id: "opencode", name: "OpenCode",
+      desc: `Add to <code>opencode.json</code> in your project root`,
+      hint: `Or global: <code>~/.config/opencode/config.json</code>`,
+      localConfig: `{
+  "mcp": {
+    "agentdeals": {
+      "command": "npx",
+      "args": ["-y", "agentdeals"]
+    }
+  }
+}`,
+      remoteConfig: `{
+  "mcp": {
+    "agentdeals": {
+      "type": "remote",
+      "url": "${baseUrl}/mcp"
+    }
+  }
+}`,
+    },
+    {
+      id: "npx", name: "npm / npx",
+      desc: `Run locally via npx &mdash; works with any MCP client that supports stdio transport`,
+      hint: `Requires Node.js 18+. Published as <a href="https://www.npmjs.com/package/agentdeals">agentdeals</a> on npm.`,
+      localConfig: `npx -y agentdeals`,
+      localExtra: `<p class="config-hint">Or install globally:</p>
+          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>npm install -g agentdeals
+agentdeals</code></pre>`,
+      remoteConfig: null as unknown as string,
+    },
+    {
+      id: "other", name: "Generic MCP",
       desc: `Any MCP client that supports streamable-http transport`,
       hint: "",
       localConfig: `{
@@ -29431,10 +29483,8 @@ Session: Mcp-Session-Id header (auto-managed)`,
     const hintLine = c.hint ? `\n        <p class="config-hint">${c.hint}</p>` : "";
     const localExtraHtml = (c as any).localExtra ? `\n          ${(c as any).localExtra}` : "";
     const remoteExtraHtml = (c as any).remoteExtra ? `\n          ${(c as any).remoteExtra}` : "";
-    return `<div class="client-panel${i === 0 ? " active" : ""}" id="panel-${c.id}">
-      <div class="connect-block">
-        <h3 class="config-title">${escHtmlServer(c.name)}</h3>
-        <p class="config-desc">${c.desc}</p>${hintLine}
+    const hasRemote = c.remoteConfig != null;
+    const transportToggle = hasRemote ? `
         <div class="transport-toggle">
           <button class="transport-btn active" data-transport="local">npx (local)</button>
           <button class="transport-btn" data-transport="remote">Remote HTTP</button>
@@ -29444,7 +29494,12 @@ Session: Mcp-Session-Id header (auto-managed)`,
         </div>
         <div class="transport-content" data-transport="remote">
           <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>${escHtmlServer(c.remoteConfig)}</code></pre>${remoteExtraHtml}
-        </div>
+        </div>` : `
+        <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>${escHtmlServer(c.localConfig)}</code></pre>${localExtraHtml}`;
+    return `<div class="client-panel${i === 0 ? " active" : ""}" id="panel-${c.id}">
+      <div class="connect-block">
+        <h3 class="config-title">${escHtmlServer(c.name)}</h3>
+        <p class="config-desc">${c.desc}</p>${hintLine}${transportToggle}
       </div>
     </div>`;
   }).join("\n    ");

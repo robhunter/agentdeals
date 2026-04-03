@@ -354,6 +354,9 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("claude-desktop"));
     assert.ok(html.includes("claude-code"));
     assert.ok(html.includes("cursor"));
+    assert.ok(html.includes("vscode"), "Should have VS Code panel");
+    assert.ok(html.includes("opencode"), "Should have OpenCode panel");
+    assert.ok(html.includes("npx"), "Should have npm/npx panel");
     assert.ok(html.includes("npx -y agentdeals"));
     assert.ok(html.includes("/mcp"));
     assert.ok(html.includes("HowTo"), "Should have HowTo JSON-LD structured data");
