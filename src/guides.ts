@@ -88,6 +88,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "state-of-free-tiers-2026", title: "State of Free Tiers 2026", description: "Data-driven analysis of 1,600+ offers across 67 categories — the free tier squeeze, bright spots, cost traps" },
   { slug: "tenor-alternatives", title: "Tenor API Shutdown Migration Guide", description: "Google Tenor API shuts down June 2026 — GIF API alternatives (Klipy, Giphy, Imgur), migration code examples, and platform impact" },
   { slug: "firebase-studio-shutdown", title: "Firebase Studio Shutdown Guide", description: "Firebase Studio shuts down June 2026 — free cloud IDE alternatives with compute, storage, and collaboration limits compared" },
+  { slug: "openai-assistants-migration-2026", title: "OpenAI Assistants API Migration Guide 2026", description: "Comprehensive Assistants API migration guide — feature map, complexity assessment, decision framework, agent frameworks, wire-compatible bridges, cost comparison" },
 ];
 
 export function getGuideList(): GuideMetadata[] {

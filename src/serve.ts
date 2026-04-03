@@ -4159,6 +4159,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "OpenAI Assistants API sunset August 2026 — migration paths, free AI API alternatives, and cost comparison",
   },
   {
+    slug: "openai-assistants-migration-2026",
+    title: "OpenAI Assistants API Migration Guide 2026 — Responses API, Alternatives & Decision Framework",
+    metaDesc: "Complete OpenAI Assistants API migration guide. Feature mapping to Responses API, migration complexity assessment, decision framework, 15+ alternatives compared, cost analysis. Shutdown August 26, 2026.",
+    contextHtml: "",
+    tag: "openai-assistants-migration-2026",
+    primaryVendor: "OpenAI Assistants",
+    hubDesc: "Comprehensive Assistants API migration guide — feature map, complexity assessment, decision framework, agent frameworks, wire-compatible bridges, cost comparison",
+  },
+  {
     slug: "firebase-studio-shutdown",
     title: "Firebase Studio Shutdown Guide — Free Cloud IDE Alternatives & Migration Paths",
     metaDesc: "Firebase Studio shuts down June 22, 2026 (new workspaces) and March 2027 (full shutdown). Compare free cloud IDE alternatives: GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Migration paths and free tier comparison.",
@@ -16319,6 +16328,599 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- OpenAI Assistants API Migration Guide 2026 (comprehensive) ---
+
+function buildOpenaiAssistantsMigration2026Page(): string {
+  const title = "OpenAI Assistants API Migration Guide 2026: Responses API, Alternatives & Decision Framework";
+  const metaDesc = "Complete OpenAI Assistants API migration guide. Feature mapping to Responses API, migration complexity assessment, decision framework (stay vs switch vs go agnostic), 15+ alternatives compared, cost analysis. Shutdown August 26, 2026.";
+  const slug = "openai-assistants-migration-2026";
+  const pubDate = "2026-04-03";
+
+  const stabilityMap = getStabilityMap();
+
+  // OpenAI deal changes
+  const openaiChanges = dealChanges.filter(c =>
+    c.vendor === "OpenAI"
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Calculate days until shutdown
+  const shutdownDate = new Date("2026-08-26");
+  const today = new Date();
+  const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+
+  const openaiStability = stabilityMap.get("openai") ?? "stable";
+  const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
+
+  // Feature migration map
+  interface FeatureMapping {
+    assistantsFeature: string;
+    responsesReplacement: string;
+    complexity: string;
+    notes: string;
+  }
+
+  const featureMappings: FeatureMapping[] = [
+    { assistantsFeature: "Assistants (persistent config)", responsesReplacement: "Prompts (dashboard-only, NOT API-creatable)", complexity: "Medium", notes: "Breaking: no programmatic creation. Must use dashboard or inline instructions." },
+    { assistantsFeature: "Threads (conversation state)", responsesReplacement: "Conversations API (or self-managed context)", complexity: "High", notes: "State management shifts to developer. 30-day response TTL." },
+    { assistantsFeature: "Runs / Run Steps", responsesReplacement: "Responses / Items", complexity: "Low", notes: "Streaming-first. Simpler lifecycle, no polling required." },
+    { assistantsFeature: "Code Interpreter", responsesReplacement: "Code interpreter tool", complexity: "Low", notes: "Direct equivalent. Same capability, different API shape." },
+    { assistantsFeature: "File Search (vector stores)", responsesReplacement: "File search tool", complexity: "Medium", notes: ".docx upload regression reported. PDF and other formats work." },
+    { assistantsFeature: "Function Calling", responsesReplacement: "Function calling (compatible)", complexity: "Low", notes: "Same concept. Plus new MCP server support." },
+    { assistantsFeature: "Annotations / Citations", responsesReplacement: "Citations in responses", complexity: "Low", notes: "Format changed but concept preserved." },
+    { assistantsFeature: "N/A (new)", responsesReplacement: "MCP support, deep research, web search, computer use", complexity: "—", notes: "New capabilities not available in Assistants API." },
+  ];
+
+  // Direct API alternatives
+  interface ApiProvider {
+    name: string;
+    slug: string;
+    freeTier: string;
+    toolUse: string;
+    codeExec: string;
+    pricing: string;
+    bestFor: string;
+  }
+
+  const apiProviders: ApiProvider[] = [
+    { name: "OpenAI (Responses API)", slug: "openai", freeTier: "Pay-per-use only", toolUse: "Native function calling + MCP", codeExec: "Code interpreter tool", pricing: "$2.50/$10 per MTok (GPT-4o)", bestFor: "Direct migration, least code changes" },
+    { name: "Anthropic Claude", slug: "anthropic-api", freeTier: "Pay-per-use ($5/$25 MTok)", toolUse: "Native tool use", codeExec: "Computer use, code execution", pricing: "$3/$15 (Sonnet), $5/$25 (Opus)", bestFor: "Best reasoning, 200K context" },
+    { name: "Google Gemini", slug: "google-gemini-api", freeTier: "Free tier (rate-limited)", toolUse: "Native function calling", codeExec: "Code execution tool", pricing: "Free → $1.25/$5 (2.5 Pro)", bestFor: "Free tier, multimodal" },
+    { name: "DeepSeek", slug: "deepseek-api", freeTier: "Free credits + pay-as-you-go", toolUse: "Native function calling", codeExec: "No built-in", pricing: "~$0.27/$1.10 per MTok", bestFor: "Cheapest frontier reasoning" },
+    { name: "Mistral AI", slug: "mistral-ai", freeTier: "Experiment tier (free)", toolUse: "Native function calling", codeExec: "No built-in", pricing: "$2/$6 (Large), free (Small)", bestFor: "European hosting, code generation" },
+    { name: "Meta Llama (via Groq)", slug: "groq", freeTier: "Free (rate-limited)", toolUse: "Via Llama models", codeExec: "No built-in", pricing: "Free within rate limits", bestFor: "Fastest inference, open-source" },
+  ];
+
+  // Agent frameworks
+  interface AgentFramework {
+    name: string;
+    type: string;
+    license: string;
+    languages: string;
+    stateManagement: string;
+    bestFor: string;
+  }
+
+  const frameworks: AgentFramework[] = [
+    { name: "LangChain / LangGraph", type: "Agent framework", license: "MIT", languages: "Python, JS/TS", stateManagement: "Built-in (LangGraph checkpointer)", bestFor: "Most popular, largest ecosystem" },
+    { name: "LlamaIndex", type: "RAG + agents", license: "MIT", languages: "Python, TS", stateManagement: "Workflow-based", bestFor: "RAG-heavy agent workflows" },
+    { name: "CrewAI", type: "Multi-agent", license: "MIT", languages: "Python", stateManagement: "Task-based crew state", bestFor: "Multi-agent orchestration" },
+    { name: "AutoGen (Microsoft)", type: "Multi-agent", license: "CC-BY-4.0", languages: "Python, .NET", stateManagement: "Conversation-based", bestFor: "Enterprise, Azure integration" },
+    { name: "Vercel AI SDK", type: "Streaming toolkit", license: "Apache 2.0", languages: "TypeScript", stateManagement: "React state / server actions", bestFor: "Next.js apps, streaming UI" },
+  ];
+
+  // Wire-compatible bridges
+  interface WireBridge {
+    name: string;
+    approach: string;
+    status: string;
+    effort: string;
+  }
+
+  const bridges: WireBridge[] = [
+    { name: "Ragwalla", approach: "Drop-in Assistants API replacement — same endpoints, backed by Responses API", status: "Active, maintained", effort: "Minimal — change base URL" },
+    { name: "DataStax astra-assistants-api", approach: "Assistants API wire-compatible server backed by Astra DB + any LLM", status: "Active, open-source", effort: "Low — deploy server, change base URL" },
+  ];
+
+  // Cost comparison
+  interface CostRow {
+    operation: string;
+    responsesApi: string;
+    claude: string;
+    gemini: string;
+    deepseek: string;
+  }
+
+  const costRows: CostRow[] = [
+    { operation: "Input tokens (per MTok)", responsesApi: "$2.50", claude: "$3.00 (Sonnet)", gemini: "Free → $1.25", deepseek: "$0.27" },
+    { operation: "Output tokens (per MTok)", responsesApi: "$10.00", claude: "$15.00 (Sonnet)", gemini: "Free → $5.00", deepseek: "$1.10" },
+    { operation: "File search (per GB/day)", responsesApi: "$0.10", claude: "N/A (PDF native)", gemini: "N/A (multimodal)", deepseek: "N/A" },
+    { operation: "Code interpreter (per call)", responsesApi: "$0.03", claude: "N/A", gemini: "Included", deepseek: "N/A" },
+    { operation: "Web search (per 1K calls)", responsesApi: "$25.00–$50.00", claude: "N/A", gemini: "Included (grounding)", deepseek: "N/A" },
+  ];
+
+  const featureRows = featureMappings.map(f => {
+    const compColor = f.complexity === "Low" ? "#3fb950" : f.complexity === "Medium" ? "#d29922" : f.complexity === "High" ? "#f85149" : "var(--text-dim)";
+    return `<tr>
+      <td style="font-weight:600;font-size:.85rem">${escHtmlServer(f.assistantsFeature)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(f.responsesReplacement)}</td>
+      <td><span style="color:${compColor};font-weight:600;font-size:.8rem">${escHtmlServer(f.complexity)}</span></td>
+      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(f.notes)}</td>
+    </tr>`;
+  }).join("\n        ");
+
+  const providerRows = apiProviders.map(p => {
+    const stability = stabilityMap.get(p.slug) ?? "stable";
+    const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
+    const freeColor = p.freeTier.includes("Free") || p.freeTier.includes("free") ? "#3fb950" : "var(--accent)";
+    return `<tr>
+      <td style="font-weight:600"><a href="/vendor/${p.slug}" style="color:var(--text)">${escHtmlServer(p.name)}</a></td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(p.pricing)}</td>
+      <td><span style="color:${stabColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(stability)}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  const frameworkRows = frameworks.map(f =>
+    `<tr>
+      <td style="font-weight:600">${escHtmlServer(f.name)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(f.type)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(f.license)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(f.languages)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(f.stateManagement)}</td>
+    </tr>`
+  ).join("\n        ");
+
+  const bridgeRows = bridges.map(b => {
+    const effortColor = b.effort.startsWith("Minimal") ? "#3fb950" : "#d29922";
+    return `<tr>
+      <td style="font-weight:600">${escHtmlServer(b.name)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(b.approach)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(b.status)}</td>
+      <td><span style="color:${effortColor};font-weight:600;font-size:.8rem">${escHtmlServer(b.effort.split(" — ")[0])}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  const costTableRows = costRows.map(c =>
+    `<tr>
+      <td style="font-weight:600;font-size:.85rem">${escHtmlServer(c.operation)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.responsesApi)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.claude)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.gemini)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.deepseek)}</td>
+    </tr>`
+  ).join("\n        ");
+
+  const changeTimelineRows = openaiChanges.map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["openai-assistants-alternatives", "shutdowns", "free-llm-apis", "ai-ml-alternatives", "ai-coding-pricing-2026", "free-ai-stack", "stability", "free-tier-risk"].includes(p.slug)
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: [...apiProviders.map(p => ({ "@type": "SoftwareApplication", name: p.name })), ...frameworks.map(f => ({ "@type": "SoftwareApplication", name: f.name }))],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} \u2014 AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
+.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}
+.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}
+.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}
+.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}
+.decision-path:hover{border-color:var(--accent)}
+.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}
+.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}
+.complexity-card{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);margin-bottom:1rem}
+.complexity-card h3{margin:0 0 .5rem;font-size:1rem}
+.complexity-card ul{margin:.5rem 0 0;padding-left:1.25rem;color:var(--text-muted);font-size:.9rem}
+.complexity-card li{margin-bottom:.35rem}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.timeline-event{display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid var(--border)}
+.timeline-date{min-width:120px;font-family:var(--mono);font-size:.85rem;color:var(--text-dim);padding-top:.1rem}
+.timeline-content{font-size:.9rem;color:var(--text-muted)}
+.timeline-content strong{color:var(--text)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}.timeline-event{flex-direction:column;gap:.25rem}.timeline-date{min-width:auto}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; <a href="/shutdowns">Shutdowns</a> &rsaquo; Assistants API Migration</div>
+  <h1>OpenAI Assistants API Migration Guide 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
+
+  <div class="deadline-banner">
+    <div class="deadline-days">${daysLeft} days</div>
+    <div class="deadline-label">until Assistants API shutdown</div>
+    <div class="deadline-date">August 26, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">OpenAI stability: ${openaiStability.toUpperCase()}</span></div>
+  </div>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
+    <div class="stat-card"><div class="stat-number">${apiProviders.length + frameworks.length + bridges.length}</div><div class="stat-label">Alternatives Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">3</div><div class="stat-label">Migration Paths</div></div>
+    <div class="stat-card"><div class="stat-number">${featureMappings.length}</div><div class="stat-label">Feature Mappings</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>The situation:</strong> OpenAI deprecated the Assistants API on August 26, 2025. The v1 beta access ended December 18, 2024. The full shutdown is <strong>August 26, 2026</strong> \u2014 after which all Assistants, Threads, Runs, and Messages endpoints stop functioning. OpenAI\u2019s official migration guide has significant gaps: references non-existent UI elements, no automated tooling, and no code examples for complex patterns.</p>
+    <p><strong>Key insight:</strong> The Responses API is a capable replacement with new features (MCP support, deep research, web search, computer use), but it has <strong>breaking changes</strong> that the official guide undersells: no programmatic Prompt creation, .docx upload regression, shifted state management burden, and 30-day response TTL. Community sentiment reflects frustration with trust erosion and naming confusion (Chat \u2192 Prompts \u2192 Assistants \u2192 Responses).</p>
+    <p><strong>Our data:</strong> OpenAI\u2019s stability rating is <strong style="color:${stabilityColor}">${openaiStability}</strong> based on ${openaiChanges.length} tracked pricing changes. This guide covers three paths: <strong>migrate within OpenAI</strong>, <strong>switch to another provider</strong>, or <strong>go provider-agnostic</strong> to avoid future deprecation cycles.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#timeline">Timeline &amp; Status</a></li>
+      <li><a href="#feature-map">Feature Migration Map</a></li>
+      <li><a href="#complexity">Migration Complexity Assessment</a></li>
+      <li><a href="#decision">Decision Framework: Migrate vs. Leave</a></li>
+      <li><a href="#alternatives">Alternatives: APIs, Frameworks &amp; Bridges</a></li>
+      <li><a href="#cost">Cost Comparison</a></li>
+      <li><a href="#openai-changes">OpenAI Pricing Change Timeline</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+    </ol>
+  </div>
+
+  <h2 id="timeline">1. Timeline &amp; Status</h2>
+  <p class="section-intro">Key dates for the Assistants API deprecation and shutdown. Plan your migration timeline around these milestones.</p>
+
+  <div class="timeline-event">
+    <div class="timeline-date" style="color:#3fb950">Aug 26, 2025</div>
+    <div class="timeline-content"><strong>Deprecation announced.</strong> OpenAI announced Assistants API deprecation alongside Responses API launch. One-year migration window begins.</div>
+  </div>
+  <div class="timeline-event">
+    <div class="timeline-date" style="color:#d29922">Dec 18, 2024</div>
+    <div class="timeline-content"><strong>v1 beta access ended.</strong> Assistants API v1 beta endpoints stopped accepting new requests. All users must be on v2.</div>
+  </div>
+  <div class="timeline-event">
+    <div class="timeline-date" style="color:var(--accent)">Now</div>
+    <div class="timeline-content"><strong>${daysLeft} days remaining.</strong> Assistants API v2 still functional. Responses API fully available with feature parity plus new capabilities.</div>
+  </div>
+  <div class="timeline-event" style="border-bottom:none">
+    <div class="timeline-date" style="color:#f85149">Aug 26, 2026</div>
+    <div class="timeline-content"><strong>Full shutdown.</strong> All Assistants, Threads, Runs, and Messages endpoints cease functioning. No grace period announced. Azure OpenAI follows the same timeline.</div>
+  </div>
+
+  <div class="context-box">
+    <strong>What happens after shutdown:</strong> API calls to Assistants endpoints will return errors. Thread history, assistant configurations, and vector store data associated with the Assistants API will become inaccessible. Export your data before the deadline.
+  </div>
+
+  <h2 id="feature-map">2. Feature Migration Map</h2>
+  <p class="section-intro">Every Assistants API feature mapped to its Responses API equivalent, with migration complexity and gotchas. ${featureMappings.length} features mapped.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Assistants API</th>
+        <th>Responses API Replacement</th>
+        <th>Complexity</th>
+        <th>Notes &amp; Gotchas</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${featureRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Key breaking changes the official guide undersells:</strong> (1) <strong>No programmatic Prompt creation</strong> \u2014 Prompts (the replacement for Assistants) can only be created in the dashboard, not via API. Dynamic assistant creation patterns break. (2) <strong>.docx upload regression</strong> \u2014 file search has a reported regression with Word documents. (3) <strong>State management shifted to developer</strong> \u2014 Threads managed state for you; now you manage conversation context yourself or use the new Conversations API. (4) <strong>30-day response TTL</strong> \u2014 Responses API data expires after 30 days by default.
+  </div>
+
+  <div class="context-box">
+    <strong>New capabilities worth noting:</strong> The Responses API adds features the Assistants API never had: <strong>MCP server support</strong> (connect to external tools), <strong>deep research</strong> (multi-step information gathering), <strong>web search</strong> (real-time information), and <strong>computer use</strong> (browser-based task execution). If you were building workarounds for these in the Assistants API, migration may actually simplify your code.
+  </div>
+
+  <h2 id="complexity">3. Migration Complexity Assessment</h2>
+  <p class="section-intro">Not all migrations are equal. Your complexity depends on which Assistants API features you used and how deeply.</p>
+
+  <div class="complexity-card" style="border-left:3px solid #3fb950">
+    <h3 style="color:#3fb950">\u2705 Low Complexity Patterns</h3>
+    <ul>
+      <li><strong>Stateless, single-turn requests</strong> \u2014 Simple completions with function calling. Map directly to Responses API with minimal changes.</li>
+      <li><strong>Code Interpreter only</strong> \u2014 Direct tool equivalent exists. Change the API call shape, keep the logic.</li>
+      <li><strong>File Search with PDFs</strong> \u2014 File search tool works the same way. PDF handling is stable.</li>
+      <li><strong>Simple function calling</strong> \u2014 Compatible pattern in Responses API. Plus new MCP support for external tools.</li>
+    </ul>
+  </div>
+
+  <div class="complexity-card" style="border-left:3px solid #f85149">
+    <h3 style="color:#f85149">\u26a0\ufe0f High Complexity Patterns</h3>
+    <ul>
+      <li><strong>Multi-turn conversation threads</strong> \u2014 Threads managed state server-side. You now manage context yourself or use Conversations API (new, less mature).</li>
+      <li><strong>Dynamic assistant creation via API</strong> \u2014 Prompts are dashboard-only. You\u2019ll need to pre-create Prompts or inline instructions per request.</li>
+      <li><strong>RAG with vector stores</strong> \u2014 Vector store management changes. Evaluate whether to migrate storage or switch to a dedicated vector DB.</li>
+      <li><strong>Run lifecycle polling</strong> \u2014 The polling-based run model is gone. Migrate to streaming-first patterns.</li>
+      <li><strong>.docx file processing</strong> \u2014 Reported regression. Test thoroughly before relying on Word document handling.</li>
+      <li><strong>Thread-based analytics/audit trails</strong> \u2014 Thread history becomes inaccessible. Export before shutdown and rebuild logging on your side.</li>
+    </ul>
+  </div>
+
+  <h2 id="decision">4. Decision Framework: Migrate vs. Leave</h2>
+  <p class="section-intro">Three paths depending on your priorities. Each has different trade-offs in migration effort, cost, and future-proofing.</p>
+
+  <div class="decision-tree">
+    <div class="decision-path" style="border-left:3px solid var(--accent)">
+      <h3>\ud83d\udd04 Path 1: Stay with OpenAI \u2014 Migrate to Responses API</h3>
+      <p>Direct replacement with feature parity plus new capabilities. Threads \u2192 Conversations API. Assistants \u2192 Prompts + system instructions. Code Interpreter and File Search tools carry over. New: MCP support, deep research, web search, computer use.</p>
+      <p><strong>Choose this when:</strong> You\u2019re deeply invested in OpenAI-specific features (web search, code interpreter), need the lowest migration effort, or have production apps where minimizing risk matters most.</p>
+      <p><strong>Watch out for:</strong> No programmatic Prompt creation, 30-day response TTL, continued API churn risk (this is OpenAI\u2019s 4th major API paradigm shift).</p>
+      <p class="best-for">Effort: Low\u2013Medium &middot; Cost: Same &middot; Lock-in: High</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid #8b5cf6">
+      <h3>\ud83d\udd00 Path 2: Switch to Another AI API Provider</h3>
+      <p>Claude (best reasoning, 200K context), Gemini (free tier, multimodal), DeepSeek (cheapest frontier reasoning), Mistral (European hosting). Each has native tool use/function calling. Requires API integration changes but not architectural rewrites.</p>
+      <p><strong>Choose this when:</strong> You want to reduce single-vendor dependency, need specific capabilities (long context, multimodal, EU hosting), or were already considering alternatives after repeated OpenAI API changes.</p>
+      <p><strong>Watch out for:</strong> Different API shapes require code changes. Some features (code interpreter, web search) may not have direct equivalents. Evaluate each provider\u2019s tool use implementation carefully.</p>
+      <p class="best-for">Effort: Medium &middot; Cost: Varies (often cheaper) &middot; Lock-in: Medium</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid #3fb950">
+      <h3>\ud83c\udf10 Path 3: Go Provider-Agnostic</h3>
+      <p>Use an agent framework (LangChain, LlamaIndex, CrewAI) or multi-provider abstraction (OpenRouter, LiteLLM) to decouple from any single API. Switch models without code changes. Run open-source models locally for full control.</p>
+      <p><strong>Choose this when:</strong> You want to future-proof against another deprecation cycle, need to compare providers on cost/quality, or want the ability to run models locally for privacy or cost reasons.</p>
+      <p><strong>Watch out for:</strong> Abstraction layers add complexity and latency. Framework-specific lock-in replaces API-specific lock-in. Self-hosted models require ML ops capability.</p>
+      <p class="best-for">Effort: Medium\u2013High &middot; Cost: Lowest at scale &middot; Lock-in: Low</p>
+    </div>
+  </div>
+
+  <h2 id="alternatives">5. Alternatives</h2>
+
+  <h3>Direct API Alternatives</h3>
+  <p class="section-intro">${apiProviders.length} AI API providers compared. Free tier details from our index, stability ratings from our <a href="/stability">stability dashboard</a>.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Tool Use</th>
+        <th>Pricing</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${providerRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Agent Frameworks</h3>
+  <p class="section-intro">Provider-agnostic frameworks that abstract away the underlying LLM API. Use these to avoid single-vendor lock-in and switch models without code changes.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Framework</th>
+        <th>Type</th>
+        <th>License</th>
+        <th>Languages</th>
+        <th>State Management</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${frameworkRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Wire-Compatible Bridges</h3>
+  <p class="section-intro">Drop-in replacements that mimic the Assistants API endpoint structure, letting you migrate with minimal code changes.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Bridge</th>
+        <th>Approach</th>
+        <th>Status</th>
+        <th>Effort</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${bridgeRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Wire-compatible bridges explained:</strong> These services implement the same HTTP endpoints and request/response shapes as the Assistants API, so your existing client code works with just a base URL change. <strong>Ragwalla</strong> proxies to OpenAI\u2019s Responses API under the hood, preserving the familiar Assistants interface. <strong>DataStax astra-assistants-api</strong> is open-source and backs the API with Astra DB, letting you swap in any LLM provider. Both are useful as interim solutions while you plan a full migration.
+  </div>
+
+  <h2 id="cost">6. Cost Comparison</h2>
+  <p class="section-intro">Responses API introduces per-tool pricing (file search, code interpreter, web search) on top of token costs. Here\u2019s how it compares to alternatives.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Operation</th>
+        <th>OpenAI Responses</th>
+        <th>Claude (Sonnet)</th>
+        <th>Gemini 2.5</th>
+        <th>DeepSeek</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${costTableRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>The hidden cost of Responses API tools:</strong> File search at $0.10/GB/day and web search at $25\u2013$50 per 1K calls add up quickly. A RAG app processing 10 GB of documents costs $1/day in file search alone \u2014 $30/month before any token costs. Compare: Claude processes PDFs natively with no per-file charge, and Gemini includes grounding (web search) in the base token price.
+  </div>
+
+  <div class="context-box">
+    <strong>Scale economics:</strong> At 100M tokens/month (a moderately busy production app): OpenAI GPT-4o costs ~$1,250. Claude Sonnet costs ~$1,800 but with stronger reasoning. Gemini 2.5 Pro costs ~$625 (cheapest frontier after free tier). DeepSeek V3 costs ~$137 \u2014 10\u00d7 cheaper than GPT-4o for comparable quality on many benchmarks.
+  </div>
+
+  <h2 id="openai-changes">7. OpenAI Pricing Change Timeline</h2>
+  <p class="section-intro">OpenAI\u2019s stability rating is <strong style="color:${stabilityColor}">${openaiStability}</strong>. We\u2019ve tracked ${openaiChanges.length} changes. Pattern: repeated free tier erosion and API paradigm shifts.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Recommendations by Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Which Path for Which Developer</h3>
+    <div class="verdict-item">
+      <strong>Least code changes:</strong>
+      <p>OpenAI Responses API \u2014 direct migration with feature parity. Start here unless you have a reason to leave.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Zero code changes (interim):</strong>
+      <p>Ragwalla or DataStax astra-assistants-api \u2014 wire-compatible bridges that keep your Assistants API code working while you plan a real migration.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Best reasoning &amp; long context:</strong>
+      <p>Anthropic Claude \u2014 Opus 4.6 with 200K context. Best for complex multi-step agent workflows.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Free tier available:</strong>
+      <p>Google Gemini \u2014 free tier with rate limits, multimodal input. Best for prototyping and low-volume production.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Cheapest at scale:</strong>
+      <p>DeepSeek \u2014 frontier reasoning at ~$0.27/$1.10 per MTok. 10\u00d7 cheaper than GPT-4o.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Future-proof against deprecations:</strong>
+      <p>LangChain/LangGraph or OpenRouter \u2014 abstract the LLM layer so you can switch providers without code changes.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Enterprise with compliance needs:</strong>
+      <p>Mistral AI (EU hosting) or AutoGen (Azure/Microsoft ecosystem). Both offer function calling with data residency options.</p>
+    </div>
+  </div>
+
+  <h2 id="methodology">Methodology</h2>
+
+  <div class="methodology">
+    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. Stability ratings are computed from our <a href="/changes">deal changes database</a> \u2014 OpenAI is classified as <strong style="color:${stabilityColor}">${openaiStability}</strong> based on ${openaiChanges.length} tracked changes including free tier removal, limit reductions, and API deprecation.</p>
+    <p><strong>Migration complexity ratings</strong> are based on the scope of code changes required: Low (API shape change only), Medium (some logic restructuring), High (architectural changes to state management or data flow).</p>
+    <p><strong>Cost data</strong> is from official vendor pricing pages, verified April 2026. Tool-specific costs (file search, web search) are Responses API additions not present in the Assistants API.</p>
+    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track OpenAI pricing changes and compare AI API free tiers from your AI assistant. Get stability ratings, migration alerts, and cost comparisons \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Tenor API Shutdown Migration Guide page ---
 
 function buildTenorAlternativesPage(): string {
@@ -17286,7 +17888,7 @@ function buildShutdownTrackerPage(): string {
       impact: "All AI agent applications built on Assistants API will break",
       whoAffected: "AI agent builders using Assistants API for threads, code interpreter, file search, and persistent assistants",
       migrationPath: "Migrate to Responses API, or switch to Claude/Gemini/open-source frameworks",
-      migrationLink: "/openai-assistants-alternatives",
+      migrationLink: "/openai-assistants-migration-2026",
       status: "active",
     },
     {
@@ -33168,6 +33770,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-assistants-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildOpenaiAssistantsAlternativesPage());
+  } else if (url.pathname === "/openai-assistants-migration-2026" && isGetOrHead) {
+    recordApiHit("/openai-assistants-migration-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-assistants-migration-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildOpenaiAssistantsMigration2026Page());
   } else if (url.pathname === "/firebase-studio-shutdown" && isGetOrHead) {
     recordApiHit("/firebase-studio-shutdown");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/firebase-studio-shutdown", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

@@ -2528,6 +2528,36 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Methodology"), "Should have methodology section");
   });
 
+  it("GET /openai-assistants-migration-2026 renders comprehensive migration guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/openai-assistants-migration-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Migration Guide 2026"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("August 26, 2026"), "Should show shutdown date");
+    assert.ok(html.includes("Aug 26, 2025"), "Should show announcement date");
+    assert.ok(html.includes("Dec 18, 2024"), "Should show v1 beta end date");
+    assert.ok(html.includes("Feature Migration Map"), "Should have feature map section");
+    assert.ok(html.includes("Migration Complexity"), "Should have complexity section");
+    assert.ok(html.includes("Decision Framework"), "Should have decision framework");
+    assert.ok(html.includes("Agent Frameworks"), "Should have agent frameworks");
+    assert.ok(html.includes("Wire-Compatible Bridges"), "Should have wire bridges");
+    assert.ok(html.includes("LangChain"), "Should list LangChain");
+    assert.ok(html.includes("Ragwalla"), "Should list Ragwalla");
+    assert.ok(html.includes("DataStax"), "Should list DataStax");
+    assert.ok(html.includes("Cost Comparison"), "Should have cost section");
+    assert.ok(html.includes("Anthropic Claude"), "Should list Claude");
+    assert.ok(html.includes("DeepSeek"), "Should list DeepSeek");
+    assert.ok(html.includes("/shutdowns"), "Should cross-link to shutdowns");
+    assert.ok(html.includes("/stability"), "Should cross-link to stability");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+  });
+
   it("GET /hcp-terraform-migration renders migration guide page", async () => {
     proc = await startHttpServer();
 
