@@ -4168,6 +4168,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Firebase Studio shutdown guide — free cloud IDE alternatives with compute hours, storage, and collaboration limits compared",
   },
   {
+    slug: "tenor-alternatives",
+    title: "Tenor API Shutdown: GIF API Alternatives & Migration Guide",
+    metaDesc: "Google Tenor API shuts down June 30, 2026. Compare GIF API alternatives: Klipy (ex-Tenor team, same API structure), Giphy, Imgur, self-hosted options. Migration code examples and free tier comparison.",
+    contextHtml: "",
+    tag: "tenor-alternative",
+    primaryVendor: "Google Tenor API",
+    hubDesc: "Tenor API shutdown June 2026 — GIF API alternatives with free tier limits, migration code examples, and platform impact analysis",
+  },
+  {
     slug: "shutdowns",
     title: "Developer Tool Shutdown Tracker 2026 — API Sunsets, Deprecations & Migration Deadlines",
     metaDesc: "Track every developer tool API sunset, deprecation, and service shutdown in 2026. Timelines, impact assessments, migration paths, and free alternatives — updated as new shutdowns are announced.",
@@ -16290,6 +16299,450 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Tenor API Shutdown Migration Guide page ---
+
+function buildTenorAlternativesPage(): string {
+  const title = "Tenor API Shutdown: GIF API Alternatives & Migration Guide";
+  const metaDesc = "Google Tenor API shuts down June 30, 2026. Compare GIF API alternatives: Klipy (ex-Tenor team, same API structure), Giphy, Imgur, self-hosted options. Migration code examples and free tier comparison.";
+  const slug = "tenor-alternatives";
+  const pubDate = "2026-04-02";
+
+  const stabilityMap = getStabilityMap();
+
+  // Tenor deal changes
+  const tenorChanges = dealChanges.filter(c =>
+    c.vendor === "Google Tenor API"
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  interface GifApiProvider {
+    name: string;
+    slug: string;
+    freeTier: string;
+    library: string;
+    apiStyle: string;
+    migrationEffort: string;
+    bestFor: string;
+  }
+
+  const providers: GifApiProvider[] = [
+    { name: "Klipy", slug: "klipy", freeTier: "Free tier available", library: "Large (growing, multi-source)", apiStyle: "Near-identical to Tenor API", migrationEffort: "Minimal — change base URL", bestFor: "Easiest migration, ex-Tenor team" },
+    { name: "Giphy API", slug: "giphy-api", freeTier: "Free (API key required, rate-limited)", library: "Largest GIF library", apiStyle: "REST API, different structure", migrationEffort: "Moderate — different endpoints/params", bestFor: "Largest library, strongest brand" },
+    { name: "Giphy SDK", slug: "giphy-sdk", freeTier: "Free with attribution", library: "Same as Giphy API", apiStyle: "Native SDKs (iOS, Android, Web)", migrationEffort: "Moderate — SDK integration", bestFor: "Mobile apps, native GIF pickers" },
+    { name: "Imgur API", slug: "imgur-api", freeTier: "Free (1,250 uploads/day, 12,500 requests/day)", library: "Large (user-uploaded)", apiStyle: "REST API", migrationEffort: "Moderate — different data model", bestFor: "Image + GIF hosting combined" },
+    { name: "Gfycat (via Snap)", slug: "gfycat", freeTier: "Uncertain — acquired by Snap", library: "Short-form video/GIF", apiStyle: "REST API (limited)", migrationEffort: "High — platform instability", bestFor: "Not recommended — uncertain future" },
+    { name: "Self-hosted (Meilisearch + media)", slug: "meilisearch", freeTier: "Free (open source)", library: "Your own curated library", apiStyle: "Custom API", migrationEffort: "High — build from scratch", bestFor: "Full control, no vendor dependency" },
+  ];
+
+  const tenorStability = stabilityMap.get("google-tenor-api") ?? "volatile";
+  const stabilityColor = tenorStability === "volatile" ? "#f85149" : tenorStability === "watch" ? "#d29922" : tenorStability === "improving" ? "#3fb950" : "var(--text-muted)";
+
+  // Calculate days until shutdown
+  const shutdownDate = new Date("2026-06-30");
+  const today = new Date();
+  const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+
+  const providerTableRows = providers.map(p => {
+    const freeColor = p.freeTier.includes("Free") || p.freeTier.includes("free") ? "#3fb950" : "var(--accent)";
+    const effortColor = p.migrationEffort.startsWith("Minimal") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
+    return `<tr>
+      <td style="font-weight:600">${escHtmlServer(p.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(p.library)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(p.apiStyle)}</td>
+      <td><span style="color:${effortColor};font-size:.8rem;font-weight:600">${escHtmlServer(p.migrationEffort.split(" — ")[0])}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  const changeTimelineRows = tenorChanges.map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["shutdowns", "stability", "free-tier-risk", "state-of-free-tiers-2026"].includes(p.slug)
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} \u2014 AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
+.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}
+.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}
+.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}
+.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}
+.decision-path:hover{border-color:var(--accent)}
+.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}
+.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}
+.code-block .comment{color:#8b949e}
+.code-block .keyword{color:#ff7b72}
+.code-block .string{color:#a5d6ff}
+.code-block .highlight{color:#ffa657}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Tenor API Shutdown Guide</div>
+  <h1>Tenor API Shutdown: GIF API Alternatives &amp; Migration Guide</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${tenorChanges.length} Tenor pricing change${tenorChanges.length !== 1 ? "s" : ""} tracked</p>
+
+  <div class="deadline-banner">
+    <div class="deadline-days">${daysLeft} days</div>
+    <div class="deadline-label">until Tenor API shutdown</div>
+    <div class="deadline-date">June 30, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">Tenor stability: ${tenorStability.toUpperCase()}</span></div>
+  </div>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
+    <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">1</div><div class="stat-label">Drop-In Replacement</div></div>
+    <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Migration Paths</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>What\u2019s happening:</strong> Google is shutting down the Tenor GIF API on <strong>June 30, 2026</strong>. New API key registration was disabled on January 13, 2026. Existing API keys will stop working at the deadline. Only the public GIF search API is affected \u2014 the Tenor website and keyboard app continue to operate.</p>
+    <p><strong>Key insight:</strong> <strong>Klipy is the easiest migration path.</strong> Founded by former Tenor employees, Klipy\u2019s API is near-identical to Tenor\u2019s \u2014 in many cases you can migrate by changing the base URL. Free tier available, actively growing library.</p>
+    <p><strong>Who\u2019s affected:</strong> Discord, WhatsApp, Bluesky, and thousands of apps, bots, and forums that use Tenor for inline GIF search. Discord is testing Giphy and Klipy. WhatsApp has switched to Klipy. Bluesky is actively working on migration (issue #9728).</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#timeline">Migration Timeline</a></li>
+      <li><a href="#comparison-table">Alternative Comparison Table</a></li>
+      <li><a href="#migration-paths">Migration Paths</a></li>
+      <li><a href="#code-migration">Code Migration Examples</a></li>
+      <li><a href="#whos-affected">Who\u2019s Affected</a></li>
+      <li><a href="#tenor-timeline">Tenor Pricing Change Timeline</a></li>
+      <li><a href="#recommendations">Recommendations</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+    </ol>
+  </div>
+
+  <h2 id="timeline">Migration Timeline</h2>
+  <p class="section-intro">Key dates from announcement to shutdown. Act now \u2014 the earlier you migrate, the more time you have to catch integration issues.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Event</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Jan 13, 2026</td>
+        <td style="font-size:.85rem">Tenor API shutdown announced. New API key registration disabled.</td>
+        <td><span style="color:#d29922;font-size:.8rem;font-weight:600">MEDIUM</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Jan 13, 2026</td>
+        <td style="font-size:.85rem">No new API keys can be created. Existing keys continue to work.</td>
+        <td><span style="color:#d29922;font-size:.8rem;font-weight:600">MEDIUM</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Jun 30, 2026</td>
+        <td style="font-size:.85rem"><strong>Complete API shutdown.</strong> All existing API keys stop working. All endpoints return errors.</td>
+        <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Post-shutdown</td>
+        <td style="font-size:.85rem">Tenor website and keyboard app continue to operate. Only the developer API is discontinued.</td>
+        <td><span style="color:var(--text-dim);font-size:.8rem;font-weight:600">INFO</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>What\u2019s NOT affected:</strong> The Tenor website (tenor.com) and the Tenor keyboard app will continue to work. Google is only shutting down the public developer API. If your users search GIFs on tenor.com directly, nothing changes for them \u2014 only API-integrated apps are affected.
+  </div>
+
+  <h2 id="comparison-table">GIF API Alternative Comparison</h2>
+  <p class="section-intro">All ${providers.length} alternatives compared. Migration effort rated from the perspective of a Tenor API integration.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Library Size</th>
+        <th>API Style</th>
+        <th>Migration Effort</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${providerTableRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Klipy advantage:</strong> Klipy was founded by former Tenor employees who built the original API. Their API structure is near-identical to Tenor\u2019s \u2014 same endpoint patterns, similar response formats, compatible parameter names. For most integrations, migration is as simple as changing the base URL and API key. This makes Klipy the lowest-risk migration path by far.
+  </div>
+
+  <div class="context-box">
+    <strong>Giphy API limits:</strong> Giphy\u2019s API requires approval for production use. The beta API key is rate-limited and not intended for production apps. Approval can take days to weeks. If you\u2019re migrating a high-traffic app, start the Giphy approval process early \u2014 don\u2019t wait until close to the June 30 deadline.
+  </div>
+
+  <h2 id="migration-paths">Migration Paths</h2>
+  <p class="section-intro">Three paths depending on your constraints. Klipy is the fastest for most apps. Giphy offers the largest library. Self-hosted gives full control.</p>
+
+  <div class="decision-tree">
+    <div class="decision-path" style="border-left:3px solid #3fb950">
+      <h3>Path 1: Migrate to Klipy (Recommended)</h3>
+      <p>Near-identical API to Tenor. Change the base URL, get a Klipy API key, and most integrations work immediately. Free tier available. Growing library with multi-source GIF aggregation.</p>
+      <p class="best-for">Best for: Most apps \u2014 fastest migration, lowest risk, ex-Tenor team knows the use cases</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid var(--accent)">
+      <h3>Path 2: Migrate to Giphy</h3>
+      <p>Largest GIF library and strongest brand recognition. Different API structure than Tenor \u2014 requires endpoint and parameter changes. Production use requires API approval (beta key is rate-limited). Native SDKs for iOS, Android, and web.</p>
+      <p class="best-for">Best for: Apps that need the largest possible GIF library, consumer-facing products where Giphy brand recognition matters</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid #8b5cf6">
+      <h3>Path 3: Self-Hosted / Custom Solution</h3>
+      <p>Build your own GIF search using Meilisearch or Elasticsearch with curated media. Full control over content, no API dependencies, no rate limits. Requires sourcing and indexing GIF content.</p>
+      <p class="best-for">Best for: Apps with specific content requirements, teams that want zero vendor dependency, compliance-sensitive use cases</p>
+    </div>
+  </div>
+
+  <h2 id="code-migration">Code Migration Examples</h2>
+
+  <h3>Tenor \u2192 Klipy (Minimal Changes)</h3>
+  <p class="section-intro">Klipy\u2019s API mirrors Tenor\u2019s structure. In most cases, change the base URL and API key:</p>
+
+  <div class="code-block">
+<span class="comment">// Before: Tenor API</span>
+<span class="keyword">const</span> TENOR_API_KEY = <span class="string">"YOUR_TENOR_KEY"</span>;
+<span class="keyword">const</span> response = <span class="keyword">await</span> fetch(
+  <span class="string">\`https://tenor.googleapis.com/v2/search?q=\${query}&amp;key=\${TENOR_API_KEY}&amp;limit=20\`</span>
+);
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.json();
+<span class="keyword">const</span> gifs = data.results; <span class="comment">// Array of GIF objects</span>
+
+<span class="comment">// After: Klipy API (change base URL and key)</span>
+<span class="keyword">const</span> KLIPY_API_KEY = <span class="string">"YOUR_KLIPY_KEY"</span>;
+<span class="keyword">const</span> response = <span class="keyword">await</span> fetch(
+  <span class="string">\`https://api.klipy.com/v1/search?q=\${query}&amp;key=\${KLIPY_API_KEY}&amp;limit=20\`</span>
+);
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.json();
+<span class="keyword">const</span> gifs = data.results; <span class="comment">// Same response structure</span>
+  </div>
+
+  <h3>Tenor \u2192 Giphy (Different API Structure)</h3>
+  <p class="section-intro">Giphy uses different endpoint patterns and parameter names:</p>
+
+  <div class="code-block">
+<span class="comment">// Before: Tenor API</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> fetch(
+  <span class="string">\`https://tenor.googleapis.com/v2/search?q=\${query}&amp;key=\${TENOR_KEY}&amp;limit=20\`</span>
+);
+<span class="keyword">const</span> { results } = <span class="keyword">await</span> response.json();
+<span class="keyword">const</span> gifUrl = results[0].media_formats.gif.url;
+
+<span class="comment">// After: Giphy API (different structure)</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> fetch(
+  <span class="string">\`https://api.giphy.com/v1/gifs/search?q=\${query}&amp;api_key=\${GIPHY_KEY}&amp;limit=20\`</span>
+);
+<span class="keyword">const</span> { data } = <span class="keyword">await</span> response.json();
+<span class="keyword">const</span> gifUrl = data[0].images.original.url;
+<span class="comment">// Note: response structure, parameter names, and</span>
+<span class="comment">// media format paths are all different from Tenor</span>
+  </div>
+
+  <h2 id="whos-affected">Who\u2019s Affected</h2>
+  <p class="section-intro">The Tenor API powers GIF search in some of the world\u2019s largest platforms. Here\u2019s who\u2019s actively migrating:</p>
+
+  <div class="decision-tree">
+    <div class="diff-card">
+      <h3>Discord</h3>
+      <div class="diff-desc">One of Tenor\u2019s largest API consumers for inline GIF search. Actively testing both Giphy and Klipy as replacements. Millions of GIF searches per day across the platform.</div>
+    </div>
+    <div class="diff-card">
+      <h3>WhatsApp</h3>
+      <div class="diff-desc">Has switched GIF search from Tenor to Klipy. One of the first major platforms to complete migration, validating Klipy\u2019s API compatibility and scale.</div>
+    </div>
+    <div class="diff-card">
+      <h3>Bluesky</h3>
+      <div class="diff-desc">Actively working on Tenor API replacement (GitHub issue #9728). Community discussing Giphy, Klipy, and open-source alternatives as options.</div>
+    </div>
+    <div class="diff-card">
+      <h3>Thousands of Apps, Bots &amp; Forums</h3>
+      <div class="diff-desc">Any app, Slack bot, Discord bot, forum, or messaging integration that uses the Tenor API for GIF search. Most indie developers haven\u2019t started migration yet \u2014 the June 30 deadline is approaching fast.</div>
+    </div>
+  </div>
+
+  <div class="context-box">
+    <strong>Why Google is shutting it down:</strong> Google acquired Tenor in 2018 primarily for GIF integration in Google Search, Messages, and Gboard. The public developer API was never a revenue priority. With Google\u2019s broader cost-cutting and focus on core products, maintaining a free GIF API for third-party developers doesn\u2019t align with current strategy.
+  </div>
+
+  ${tenorChanges.length > 0 ? `<h2 id="tenor-timeline">Tenor Pricing Change Timeline</h2>
+  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : ""}
+
+  <h2 id="recommendations">Recommendations</h2>
+
+  <div class="verdict-box">
+    <h3>Best Alternative for Each Use Case</h3>
+    <div class="verdict-item">
+      <strong>Fastest migration (recommended):</strong>
+      <p>Klipy \u2014 near-identical API structure to Tenor, ex-Tenor team, change base URL and API key. Free tier available. Validated by WhatsApp\u2019s migration.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Largest GIF library:</strong>
+      <p>Giphy \u2014 the biggest name in GIFs with the largest library. Requires API approval for production. Different API structure means more migration work.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Mobile apps with native GIF pickers:</strong>
+      <p>Giphy SDK \u2014 native SDKs for iOS, Android, and web with pre-built GIF picker UI. Saves development time but locks you into Giphy\u2019s UI components.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Image + GIF combined:</strong>
+      <p>Imgur API \u2014 if you need both image hosting and GIF search in one API. User-uploaded content means different content profile than curated GIF libraries.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Zero vendor dependency:</strong>
+      <p>Self-hosted with Meilisearch \u2014 curate your own GIF library, no rate limits, no API shutdowns. Higher initial effort but complete control and no ongoing dependency.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>High-traffic apps on a deadline:</strong>
+      <p>Start with Klipy for immediate migration (days, not weeks), then evaluate Giphy for long-term if library size matters more. Don\u2019t wait for Giphy API approval with June 30 approaching.</p>
+    </div>
+  </div>
+
+  <h2 id="methodology">Methodology</h2>
+
+  <div class="methodology">
+    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. The Tenor API shutdown is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>
+    <p><strong>Migration recommendations:</strong> Based on API documentation review, community reports (Discord, Bluesky GitHub issues), and platform migration announcements. Klipy\u2019s API compatibility was verified against Tenor\u2019s v2 API documentation.</p>
+    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track GIF API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Firebase Studio Shutdown Guide page ---
 
 function buildFirebaseStudioShutdownPage(): string {
@@ -16790,7 +17243,8 @@ function buildShutdownTrackerPage(): string {
       deadline: "2026-06-30",
       impact: "All GIF integrations using Tenor API will stop working",
       whoAffected: "Apps, bots, forums, and messaging integrations using Tenor for GIF search",
-      migrationPath: "Migrate to Giphy API (free tier available) or self-hosted GIF solutions",
+      migrationPath: "Migrate to Klipy (ex-Tenor team, same API structure) or Giphy API",
+      migrationLink: "/tenor-alternatives",
       status: "active",
     },
     {
@@ -32616,6 +33070,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/firebase-studio-shutdown", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFirebaseStudioShutdownPage());
+  } else if (url.pathname === "/tenor-alternatives" && isGetOrHead) {
+    recordApiHit("/tenor-alternatives");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/tenor-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildTenorAlternativesPage());
   } else if (url.pathname === "/shutdowns" && isGetOrHead) {
     recordApiHit("/shutdowns");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/shutdowns", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
