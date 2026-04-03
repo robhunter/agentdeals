@@ -2559,7 +2559,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
-    assert.ok(html.includes("Gemini API Pricing Changes"), "Should have title");
+    assert.ok(html.includes("Gemini API Pricing 2026"), "Should have title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
@@ -2574,9 +2574,23 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Cerebras"), "Should include Cerebras as alternative");
     assert.ok(html.includes("50-80%"), "Should mention rate limit reduction");
     assert.ok(html.includes("Spend Caps"), "Should mention spend caps");
+    assert.ok(html.includes("$250"), "Should include Tier 1 spend cap amount");
+    assert.ok(html.includes("$2,000"), "Should include Tier 2 spend cap amount");
+    assert.ok(html.includes("Prepaid"), "Should mention prepaid billing");
+    assert.ok(html.includes("3.1 Pro"), "Should mention Gemini 3.1 Pro");
+    assert.ok(html.includes("paid-only"), "Should mention paid-only models");
+    assert.ok(html.includes("Flash-Lite"), "Should mention Flash-Lite free tier");
     assert.ok(html.includes("/free-llm-apis"), "Should cross-link to free LLM APIs");
     assert.ok(html.includes("Methodology"), "Should have methodology section");
     assert.ok(html.includes("April 1"), "Should mention the deadline");
+  });
+
+  it("GET /gemini-api-pricing redirects to /gemini-api-pricing-2026", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/gemini-api-pricing`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/gemini-api-pricing-2026");
   });
 
   it("GET /free-tier-tracker renders free tier tracker page", async () => {
