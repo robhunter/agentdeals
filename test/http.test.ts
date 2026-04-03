@@ -3862,6 +3862,35 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
   });
 
+  it("GET /tenor-alternatives renders Tenor API shutdown guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/tenor-alternatives`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Tenor API Shutdown"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("June 30, 2026"), "Should show shutdown date");
+    assert.ok(html.includes("days"), "Should show days remaining");
+    assert.ok(html.includes("Klipy"), "Should list Klipy as alternative");
+    assert.ok(html.includes("Giphy"), "Should list Giphy as alternative");
+    assert.ok(html.includes("Imgur"), "Should list Imgur as alternative");
+    assert.ok(html.includes("Migration Timeline"), "Should have migration timeline");
+    assert.ok(html.includes("Code Migration"), "Should have code migration section");
+    assert.ok(html.includes("Who\u2019s Affected"), "Should have who's affected section");
+    assert.ok(html.includes("Discord"), "Should mention Discord");
+    assert.ok(html.includes("WhatsApp"), "Should mention WhatsApp");
+    assert.ok(html.includes("Bluesky"), "Should mention Bluesky");
+    assert.ok(html.includes("Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/shutdowns"), "Should cross-link to shutdowns tracker");
+    assert.ok(html.includes("/stability"), "Should cross-link to stability dashboard");
+  });
+
   it("GET /shutdowns renders shutdown tracker page", async () => {
     proc = await startHttpServer();
 
