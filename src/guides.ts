@@ -77,7 +77,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "database-free-tier-comparison-2026", title: "Database Free Tier Comparison 2026", description: "15+ databases compared — Postgres, MySQL, MongoDB, Redis, vector, and edge databases" },
   { slug: "hosting-free-tier-comparison-2026", title: "Hosting Free Tier Comparison 2026", description: "12+ hosting platforms compared — Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, bandwidth, compute, cold starts, and scaling costs" },
   { slug: "serverless-free-tier-comparison-2026", title: "Serverless Free Tier Comparison 2026", description: "10+ serverless platforms — invocations, compute, CPU-time vs wall-clock billing" },
-  { slug: "auth-free-tier-comparison-2026", title: "Auth Free Tier Comparison 2026", description: "15+ auth services — MAU limits, overage costs, self-hosted options, growth cost traps" },
+  { slug: "auth-comparison-2026", title: "Auth & Identity Comparison 2026", description: "20+ auth services — MAU/MRU limits, overage costs, agentic AI auth, self-hosted options, growth cost traps" },
   { slug: "monitoring-free-tier-comparison-2026", title: "Monitoring Free Tier Comparison 2026", description: "20+ monitoring services — data ingest, retention, hosts, alerting, observability costs" },
   { slug: "email-free-tier-comparison-2026", title: "Email Free Tier Comparison 2026", description: "15+ email services — sending volume, daily caps, webhooks, custom domains" },
   { slug: "storage-free-tier-comparison-2026", title: "Storage Free Tier Comparison 2026", description: "15+ storage services — capacity, egress, API calls, CDN, and object storage" },
