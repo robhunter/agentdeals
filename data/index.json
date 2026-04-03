@@ -83,20 +83,21 @@
     {
       "vendor": "Railway",
       "category": "Cloud Hosting",
-      "description": "$5/month Hobby plan with $5 resource credit included — 48 GB RAM, 48 vCPU, 5 GB volume storage",
-      "tier": "Hobby",
+      "description": "Free plan: $0/month with one-time $5 credit (30-day trial), 1 vCPU, 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services max ($1/month minimum after trial). Hobby plan: $5/month with $5 resource credit included, 48 vCPU, 48 GB RAM, 5 GB volume storage, up to 5 replicas at 8 vCPU/8 GB RAM each",
+      "tier": "Free",
       "url": "https://railway.com/pricing",
       "tags": [
         "hosting",
         "paas",
         "deployment",
         "docker",
+        "free-trial",
         "low-cost",
         "hetzner-alternative",
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-02"
     },
     {
       "vendor": "Fly.io",
@@ -245,7 +246,7 @@
     {
       "vendor": "Supabase",
       "category": "Databases",
-      "description": "Open source Firebase alternative — 500 MB Postgres database, 50K monthly active users, 1 GB file storage, 2 GB database egress, 10 GB total bandwidth (5 GB cached + 5 GB uncached), 500K edge function invocations, 200 concurrent realtime connections, 2 free projects. Includes Auth, Storage, Realtime, and Edge Functions",
+      "description": "Open source Firebase alternative — 500 MB Postgres database, 50K monthly active users, 1 GB file storage, 5 GB bandwidth (uncached egress across all services: Storage, Auth, Functions, Database, Realtime) + 5 GB CDN cached egress, 500K edge function invocations, 200 concurrent realtime connections, 2 free projects. Includes Auth, Storage, Realtime, and Edge Functions",
       "tier": "Free",
       "url": "https://supabase.com/pricing",
       "tags": [
@@ -259,7 +260,7 @@
         "auth0-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-03-24"
+      "verifiedDate": "2026-04-02"
     },
     {
       "vendor": "Neon",
