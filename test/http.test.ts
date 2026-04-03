@@ -2962,10 +2962,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
-  it("GET /email-free-tier-comparison-2026 renders email comparison page", async () => {
+  it("GET /email-comparison-2026 renders expanded email comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/email-free-tier-comparison-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/email-comparison-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -2981,19 +2981,33 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Brevo"), "Should mention Brevo");
     assert.ok(html.includes("Mailtrap"), "Should mention Mailtrap");
     assert.ok(html.includes("Loops"), "Should mention Loops");
-    assert.ok(html.includes("Transactional Email APIs"), "Should have transactional section");
-    assert.ok(html.includes("Marketing + Transactional"), "Should have marketing section");
+    assert.ok(html.includes("Maileroo"), "Should mention Maileroo");
+    assert.ok(html.includes("MailerLite"), "Should mention MailerLite");
+    assert.ok(html.includes("EmailOctopus"), "Should mention EmailOctopus");
+    assert.ok(html.includes("Pure Transactional APIs"), "Should have transactional section");
+    assert.ok(html.includes("All-in-One"), "Should have all-in-one section");
+    assert.ok(html.includes("Newsletter"), "Should have newsletter section");
+    assert.ok(html.includes("SendGrid Exodus"), "Should have SendGrid exodus section");
     assert.ok(html.includes("Email Testing"), "Should have testing section");
     assert.ok(html.includes("Email Verification"), "Should have verification section");
     assert.ok(html.includes("Email Forwarding"), "Should have forwarding section");
+    assert.ok(html.includes("SMTP Infrastructure"), "Should have infrastructure section");
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
-    assert.ok(html.includes("Email Cost Trap"), "Should have cost trap section");
+    assert.ok(html.includes("Growth Cost Trap"), "Should have cost trap section");
     assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
-    assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
+    assert.ok(html.includes("Hidden Costs"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+  });
+
+  it("GET /email-free-tier-comparison-2026 redirects to /email-comparison-2026", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/email-free-tier-comparison-2026`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/email-comparison-2026"), "Should redirect to new URL");
   });
 
   it("GET /monitoring-comparison-2026 renders expanded monitoring comparison page", async () => {
