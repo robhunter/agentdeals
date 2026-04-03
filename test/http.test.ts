@@ -3221,6 +3221,43 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
   });
 
+  it("GET /hosting-free-tier-comparison-2026 renders hosting comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/hosting-free-tier-comparison-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Hosting"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Vercel"), "Should mention Vercel");
+    assert.ok(html.includes("Netlify"), "Should mention Netlify");
+    assert.ok(html.includes("Render"), "Should mention Render");
+    assert.ok(html.includes("Railway"), "Should mention Railway");
+    assert.ok(html.includes("Cloudflare Pages"), "Should mention Cloudflare Pages");
+    assert.ok(html.includes("Fly.io"), "Should mention Fly.io");
+    assert.ok(html.includes("Koyeb"), "Should mention Koyeb");
+    assert.ok(html.includes("Deno Deploy"), "Should mention Deno Deploy");
+    assert.ok(html.includes("GitHub Pages"), "Should mention GitHub Pages");
+    assert.ok(html.includes("Frontend"), "Should have frontend section");
+    assert.ok(html.includes("Backend"), "Should have backend section");
+    assert.ok(html.includes("Edge"), "Should have edge section");
+    assert.ok(html.includes("Static Site"), "Should have static sites section");
+    assert.ok(html.includes("Hosting Cost Trap"), "Should have cost trap section");
+    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
+    assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/hosting-alternatives"), "Should cross-link to hosting alternatives");
+    assert.ok(html.includes("/vercel-vs-netlify"), "Should cross-link to Vercel vs Netlify");
+    assert.ok(html.includes("/railway-vs-render"), "Should cross-link to Railway vs Render");
+    assert.ok(html.includes("/guides"), "Should link back to guides hub");
+    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+  });
+
   it("GET /state-of-free-tiers-2026 renders State of Free Tiers report", async () => {
     proc = await startHttpServer();
 

@@ -4132,6 +4132,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Side-by-side comparison of 12+ API development tool free tiers — users, collections, requests, mock servers, local-first vs cloud, and the API tool migration trap",
   },
   {
+    slug: "hosting-free-tier-comparison-2026",
+    title: "Hosting & PaaS Free Tier Comparison 2026 — Vercel vs Netlify vs Render vs Cloudflare vs Railway",
+    metaDesc: "Side-by-side comparison of 12+ developer hosting free tiers in 2026. Compare Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, Deno Deploy, GitHub Pages, and more — bandwidth, compute, build minutes, cold starts, and scaling costs.",
+    contextHtml: "",
+    tag: "hosting-free-tier-comparison-2026",
+    primaryVendor: "Vercel",
+    hubDesc: "Side-by-side comparison of 12+ hosting free tiers — bandwidth, compute, build minutes, cold starts, commercial use restrictions, and the hosting cost trap at scale",
+  },
+  {
     slug: "security-free-tier-comparison-2026",
     title: "Developer Security Tools Free Tier Comparison 2026 — Snyk vs Semgrep vs GitGuardian vs Trivy",
     metaDesc: "Side-by-side comparison of 20+ developer security tool free tiers in 2026. Compare Snyk, Semgrep, SonarCloud, GitGuardian, Trivy, CodeQL, OWASP ZAP, and more — scans, repos, contributors, and security cost traps.",
@@ -5256,7 +5265,7 @@ ${buildCards(startupCredits)}
   </div>
 
   <div class="search-cta">
-    <p>Looking for more? <a href="/category/cloud-hosting">Browse all Cloud Hosting tools</a> or <a href="/category/cloud-iaas">Cloud IaaS tools</a> in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+    <p>Looking for more? See our <a href="/hosting-free-tier-comparison-2026">Hosting Free Tier Comparison 2026</a> for a side-by-side comparison of 12+ platforms. <a href="/category/cloud-hosting">Browse all Cloud Hosting tools</a> or <a href="/category/cloud-iaas">Cloud IaaS tools</a> in our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -13440,7 +13449,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This comparison covers Vercel vs Netlify free tiers as of March 2026. For more hosting options, see our <a href="/hosting-alternatives">full hosting comparison</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This comparison covers Vercel vs Netlify free tiers as of March 2026. For more hosting options, see our <a href="/hosting-free-tier-comparison-2026">hosting free tier comparison</a> with 12+ platforms compared side-by-side, or our <a href="/hosting-alternatives">hosting alternatives hub</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -14100,7 +14109,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This comparison covers Railway vs Render free tiers as of March 2026. For more hosting options, see our <a href="/hosting-alternatives">full hosting comparison</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This comparison covers Railway vs Render free tiers as of March 2026. For more hosting options, see our <a href="/hosting-free-tier-comparison-2026">hosting free tier comparison</a> with 12+ platforms compared side-by-side, or our <a href="/hosting-alternatives">hosting alternatives hub</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -29516,6 +29525,624 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Hosting & PaaS Free Tier Comparison 2026 ---
+
+function buildHostingFreeTierComparison2026Page(): string {
+  const title = "Hosting & PaaS Free Tier Comparison 2026 — Vercel vs Netlify vs Render vs Cloudflare vs Railway";
+  const metaDescHosting = "Side-by-side comparison of 12+ developer hosting free tiers in 2026. Compare Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, Deno Deploy, GitHub Pages, and more — bandwidth, compute, build minutes, cold starts, and scaling costs.";
+  const slug = "hosting-free-tier-comparison-2026";
+  const pubDate = "2026-04-03";
+
+  // Collect hosting-related deal changes
+  const hostingVendorKeywords = ["Vercel", "Netlify", "Render", "Railway", "Fly.io", "Cloudflare Pages", "Cloudflare Workers", "Koyeb", "Deno Deploy", "GitHub Pages", "PythonAnywhere", "Hetzner", "Heroku", "Clever Cloud"];
+  const hostingChanges = dealChanges.filter((c: any) =>
+    hostingVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
+    (c.summary && (c.summary.toLowerCase().includes("hosting") || c.summary.toLowerCase().includes("deploy") || c.summary.toLowerCase().includes("paas")))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const changeTimelineRows = hostingChanges.slice(0, 15).map((c: any) => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["hosting-alternatives", "vercel-alternatives", "cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "free-startup-stack", "free-devops-stack", "free-tier-risk"].includes(p.slug)
+  );
+
+  const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title)}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ");
+
+  const changeTimelineHtml = hostingChanges.length > 0 ? `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Provider</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<p class="section-intro">No hosting-specific pricing changes tracked yet.</p>`;
+
+  // JSON-LD Article schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDescHosting,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDescHosting)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDescHosting)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.green{color:#3fb950}
+.stat-number.amber{color:#d29922}
+.stat-number.red{color:#f85149}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.comp-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.8rem}
+.comp-table th{text-align:left;padding:.6rem .4rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg)}
+.comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
+.comp-table tr:hover{background:var(--accent-glow)}
+.comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.growth-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-table .cheapest{color:#3fb950;font-weight:700}
+.growth-table .expensive{color:#f85149;font-weight:700}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.comp-table{font-size:.7rem}.comp-table td,.comp-table th{padding:.35rem .2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Hosting Free Tier Comparison</div>
+  <h1>Hosting &amp; PaaS Free Tier Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ hosting platforms compared</p>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">Hosting Platforms Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">&#8734;</div><div class="stat-label">CF Pages Bandwidth (Free)</div></div>
+    <div class="stat-card"><div class="stat-number green">100 GB</div><div class="stat-label">Vercel Fast Data Transfer</div></div>
+    <div class="stat-card"><div class="stat-number amber">$5</div><div class="stat-label">Railway Trial Credit (One-Time)</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Quick verdict:</strong> <strong>Cloudflare Pages</strong> is the most generous free hosting for static/Jamstack sites &mdash; unlimited bandwidth, 500 builds/month, 100 sites. For full-stack apps, <strong>Render</strong> offers free web services with 512 MB RAM, free PostgreSQL, and custom domains. <strong>Vercel</strong> remains the best Next.js host with 100 GB bandwidth and 1M serverless invocations, but the Hobby plan bans commercial use. <strong>Koyeb</strong> is the sleeper pick with a free web service (1 vCPU, 512 MB RAM) plus a free Postgres database with scale-to-zero.</p>
+    <p><strong>The hosting landscape has shifted:</strong> Netlify moved to credit-based pricing (300 credits/month). Railway offers a $5 trial credit (not unlimited free). Fly.io reduced its free tier to a 2-hour trial for new accounts. Heroku&rsquo;s free tier is gone since 2022. The era of unlimited free PaaS hosting is over &mdash; but static hosting remains genuinely free thanks to Cloudflare, GitHub Pages, and Vercel.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#main-comparison">Main Comparison Table</a></li>
+      <li><a href="#frontend-jamstack">Frontend &amp; Jamstack</a></li>
+      <li><a href="#backend-api">Backend &amp; API Hosting</a></li>
+      <li><a href="#edge-serverless">Edge &amp; Serverless</a></li>
+      <li><a href="#static-sites">Static Site Hosting</a></li>
+      <li><a href="#cost-trap">The Hosting Cost Trap</a></li>
+      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
+      <li><a href="#changes">Pricing Change Timeline</a></li>
+      <li><a href="#data-source">Data Source</a></li>
+    </ol>
+  </div>
+
+  <h2 id="main-comparison">Main Comparison Table</h2>
+  <p class="section-intro">Side-by-side comparison of the top developer hosting free tiers. All data verified against official pricing pages.</p>
+
+  <div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Free Tier</th>
+        <th>Bandwidth</th>
+        <th>Compute</th>
+        <th>Build Mins</th>
+        <th>Projects</th>
+        <th>Custom Domain</th>
+        <th>Serverless Fns</th>
+        <th>Container</th>
+        <th>Cold Start</th>
+        <th>Permanent Free</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="provider-col"><a href="/vendor/vercel">Vercel</a></td>
+        <td>Hobby (free)</td>
+        <td>100 GB Fast Data Transfer</td>
+        <td>4 hrs Active CPU</td>
+        <td>6,000/mo</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td>1M invocations</td>
+        <td class="cross">&#10007;</td>
+        <td>~250ms (cold)</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/netlify">Netlify</a></td>
+        <td>Free (300 credits/mo)</td>
+        <td>~30 GB (at 10 credits/GB)</td>
+        <td>Serverless only</td>
+        <td>~20 (at 15 credits/build)</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td>125K/mo (Level 0)</td>
+        <td class="cross">&#10007;</td>
+        <td>~500ms</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/cloudflare-pages">Cloudflare Pages</a><span class="winner-badge">BEST STATIC</span></td>
+        <td>Free</td>
+        <td class="cheapest">Unlimited</td>
+        <td>Workers (100K req/day)</td>
+        <td>500/mo</td>
+        <td>100 sites</td>
+        <td class="check">&#10003; (100/project)</td>
+        <td>Workers Functions</td>
+        <td class="cross">&#10007;</td>
+        <td>~0ms (edge)</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/render">Render</a><span class="winner-badge">BEST BACKEND</span></td>
+        <td>Free web services</td>
+        <td>100 GB/mo</td>
+        <td>512 MB RAM, 0.1 CPU</td>
+        <td>500/mo</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>30&ndash;60s (spins down)</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/railway">Railway</a><span class="caution-badge">TRIAL ONLY</span></td>
+        <td>$5 one-time credit</td>
+        <td>Included in credit</td>
+        <td>1 vCPU, 0.5 GB RAM</td>
+        <td>N/A (usage-based)</td>
+        <td>1 project, 3 services</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; Docker</td>
+        <td>None (always on)</td>
+        <td class="cross">&#10007; 30-day trial</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/fly-io">Fly.io</a><span class="caution-badge">LIMITED TRIAL</span></td>
+        <td>Trial: 2 hrs runtime OR 7 days</td>
+        <td>Included</td>
+        <td>Shared 1x CPU, 256 MB</td>
+        <td>N/A</td>
+        <td>Limited</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; Docker</td>
+        <td>None (always on)</td>
+        <td class="cross">&#10007; Trial only (new accounts)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/koyeb">Koyeb</a></td>
+        <td>1 free web service</td>
+        <td>Included</td>
+        <td>1 vCPU, 512 MB RAM, 2 GB SSD</td>
+        <td>N/A</td>
+        <td>1 service + 1 DB</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; Docker</td>
+        <td>Scale-to-zero</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/deno-deploy">Deno Deploy</a></td>
+        <td>Free</td>
+        <td>100 GB egress</td>
+        <td>15 hrs CPU/mo</td>
+        <td>N/A</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td>Edge functions (native)</td>
+        <td class="cross">&#10007;</td>
+        <td>~0ms (edge)</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/cloudflare-workers">Cloudflare Workers</a></td>
+        <td>Free</td>
+        <td>Unlimited</td>
+        <td>100K req/day, 10ms CPU</td>
+        <td>N/A</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td>Native edge compute</td>
+        <td class="cross">&#10007;</td>
+        <td>~0ms (edge)</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/github-pages">GitHub Pages</a></td>
+        <td>Free (all accounts)</td>
+        <td>100 GB/mo</td>
+        <td class="cross">&#10007; Static only</td>
+        <td>10 builds/hr</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>N/A (static)</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/pythonanywhere">PythonAnywhere</a></td>
+        <td>Beginner (free)</td>
+        <td>Included</td>
+        <td>100 CPU-seconds/day, 512 MB disk</td>
+        <td>N/A</td>
+        <td>1 web app</td>
+        <td class="cross">&#10007; Subdomain only</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td>N/A</td>
+        <td class="check">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/heroku">Heroku</a><span class="removed-badge">FREE REMOVED</span></td>
+        <td>None (removed Nov 2022)</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td class="cross">&#10007; Removed</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="frontend-jamstack">Frontend &amp; Jamstack</h2>
+  <p class="section-intro">Best platforms for deploying Next.js, Remix, Astro, and static sites. These platforms specialize in frontend frameworks with serverless function support.</p>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/vercel">Vercel</a> &mdash; Best for Next.js</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Hobby plan with 100 GB/month Fast Data Transfer, 1M function invocations, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage. The gold standard for Next.js deployment &mdash; built by the same team. Automatic preview deployments, edge middleware, ISR, and image optimization. <strong>Key limitation:</strong> Hobby plan prohibits commercial use. Any production app generating revenue needs the $20/seat/mo Pro plan. <a href="/vercel-vs-netlify">See Vercel vs Netlify comparison &rarr;</a></div>
+  </div>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/netlify">Netlify</a> &mdash; Credit-Based Free Tier</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 300 credits/month. Bandwidth costs 10 credits/GB (~30 GB), builds cost 15 credits each (~20 builds). Sites pause on credit exhaustion &mdash; no overages. Serverless functions at Level 0 (125K invocations). Legacy accounts (pre-Sep 2025) keep the old model: 100 GB bandwidth + 300 build minutes. <strong>Key limitation:</strong> The credit system is less predictable than flat limits. Heavy builders or bandwidth-intensive sites can exhaust credits quickly. Every repo committer is now charged as a Pro seat ($19/mo) when using Netlify CMS or Identity with private repos.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> <span class="winner-badge">BEST STATIC</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Up to 100 sites, unlimited bandwidth, 500 builds/month, 100 custom domains per project. No build time limits per build. Pages Functions run on Cloudflare Workers (100K requests/day free). Supports Next.js, Astro, SvelteKit, Remix via adapter. <strong>The standout:</strong> Unlimited bandwidth is unique among hosting platforms. No cold starts since Pages Functions run on Workers edge. Best for static sites, Jamstack apps, and projects where bandwidth usage is unpredictable.</div>
+  </div>
+
+  <h2 id="backend-api">Backend &amp; API Hosting</h2>
+  <p class="section-intro">Full-stack PaaS platforms for backend services, APIs, and Docker containers. These give you actual compute resources, not just static file serving.</p>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/render">Render</a> <span class="winner-badge">BEST FREE BACKEND</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free web services with 512 MB RAM, 0.1 CPU, 100 GB bandwidth/month, 500 build minutes/month. Free PostgreSQL database (256 MB RAM, 30-day expiry for inactive DBs). Free Redis (25 MB). Custom domains with automatic SSL. <strong>Key limitation:</strong> Free services spin down after 15 minutes of inactivity with 30&ndash;60 second cold starts. The PostgreSQL free tier deletes data after 30 days of inactivity. Best for side projects, staging environments, and apps that can tolerate cold starts. <a href="/railway-vs-render">See Railway vs Render comparison &rarr;</a></div>
+  </div>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/railway">Railway</a> <span class="caution-badge">TRIAL ONLY</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> $5 one-time credit with 30-day trial. 1 vCPU, 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services max. No credit card required. Usage-based billing after trial &mdash; $1/mo minimum on Developer plan. Supports Docker, Node.js, Python, Go, Rust, and more. Managed PostgreSQL, MySQL, Redis, and MongoDB. <strong>Key limitation:</strong> This is a trial, not a permanent free tier. The $5 credit runs out, and $1/mo minimum applies after. But the DX is exceptional &mdash; the best deploy experience of any PaaS.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/fly-io">Fly.io</a> <span class="caution-badge">LIMITED TRIAL</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> New accounts get a trial: 2 hours of runtime OR 7 days, whichever comes first. Legacy accounts (pre-2025) retain the old free allowance of 3 shared VMs. Supports Docker containers with global deployment across 30+ regions. <strong>Key limitation:</strong> The free trial is extremely limited for new users. Fly.io is best thought of as a paid platform with a demo mode. The legacy free tier was generous, but new signups get a very brief trial. Credit card required.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/koyeb">Koyeb</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1 free web service (1 vCPU, 512 MB RAM, 2 GB SSD) + 1 free Postgres database (1 GB storage, 5 hr/month compute runtime). Scale-to-zero when idle. Docker, buildpack, and pre-built image support. Global edge proxying. <strong>The sleeper pick:</strong> Koyeb offers the most complete free PaaS package &mdash; a web service with real compute <em>plus</em> a managed database. The database has a 5 hr/month active compute limit, but that's sufficient for low-traffic side projects.</div>
+  </div>
+
+  <h2 id="edge-serverless">Edge &amp; Serverless</h2>
+  <p class="section-intro">Edge compute and serverless platforms &mdash; no containers to manage, globally distributed, near-zero cold starts.</p>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/cloudflare-workers">Cloudflare Workers</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1 (SQLite): 5 GB storage, 5M rows read/day, 100K rows written/day. Queues, Cron Triggers, and Durable Objects all included. <strong>The edge advantage:</strong> Workers run in 300+ global locations with ~0ms cold start. CPU-time billing (not wall-clock) makes I/O-heavy workloads 10&ndash;50x cheaper than traditional serverless. See our <a href="/serverless-free-tier-comparison-2026">serverless comparison</a> for details.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/deno-deploy">Deno Deploy</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M requests/month, 100 GB egress, 1 GiB KV storage, 450K KV reads/month, 15 hours CPU time/month. Runs in 35+ edge locations. Native TypeScript/JavaScript. Built-in KV database with strong consistency. <strong>Key advantage:</strong> The most generous edge compute free tier by CPU time. Best for TypeScript-first projects, API servers, and apps that need a built-in database without external dependencies.</div>
+  </div>
+
+  <h2 id="static-sites">Static Site Hosting</h2>
+  <p class="section-intro">The simplest free hosting &mdash; just HTML, CSS, and JS. No server-side compute, no cold starts, no complexity.</p>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/github-pages">GitHub Pages</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Included with all GitHub accounts (free and paid). 1 GB published site size, 100 GB bandwidth/month, 10 builds/hour. Custom domains with automatic HTTPS via Let's Encrypt. Jekyll built-in, or use GitHub Actions for any static site generator. <strong>Best for:</strong> Documentation, personal sites, open-source project pages. The simplest path from repo to website. No signup beyond GitHub. Limitation: no server-side processing, and sites must be public on free GitHub accounts.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/pythonanywhere">PythonAnywhere</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Beginner plan &mdash; 1 web app (username.pythonanywhere.com), 512 MB disk, 100 CPU-seconds/day, 2 consoles. Python/Django/Flask hosting with pre-installed packages. <strong>Key limitation:</strong> No custom domain on free tier (subdomain only). No outbound internet access (can't call external APIs). The 100 CPU-seconds/day cap is very restrictive. Best for learning Python web development and prototyping.</div>
+  </div>
+
+  <h2 id="cost-trap">The Hosting Cost Trap</h2>
+  <p class="section-intro">Free tiers look similar until you grow. Here's how costs diverge as your app scales.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Usage Scenario</th>
+        <th>Cloudflare Pages</th>
+        <th>Vercel (Pro)</th>
+        <th>Netlify (Pro)</th>
+        <th>Render (Starter)</th>
+        <th>Railway</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Side project (1 GB/mo bandwidth)</strong></td>
+        <td class="cheapest">$0</td>
+        <td>$0</td>
+        <td>$0</td>
+        <td>$0</td>
+        <td>$0 (trial credit)</td>
+      </tr>
+      <tr>
+        <td><strong>Growing app (50 GB/mo, 100 builds)</strong></td>
+        <td class="cheapest">$0</td>
+        <td>$0 (Hobby)</td>
+        <td>$0 (if credits last)</td>
+        <td>$0 (free tier)</td>
+        <td>~$5&ndash;10/mo</td>
+      </tr>
+      <tr>
+        <td><strong>Production (500 GB/mo, team of 3)</strong></td>
+        <td class="cheapest">$0</td>
+        <td class="expensive">$60/mo (Pro, $20/seat)</td>
+        <td>$57/mo (Pro, $19/seat)</td>
+        <td>$7&ndash;25/mo</td>
+        <td>~$15&ndash;30/mo</td>
+      </tr>
+      <tr>
+        <td><strong>Scale (2 TB/mo, team of 5)</strong></td>
+        <td class="cheapest">$0 (bandwidth)</td>
+        <td class="expensive">$100/mo + overages</td>
+        <td>$95/mo + overages</td>
+        <td>$25&ndash;85/mo</td>
+        <td>~$30&ndash;60/mo</td>
+      </tr>
+      <tr>
+        <td><strong>Commercial use allowed?</strong></td>
+        <td class="check">&#10003; Yes</td>
+        <td class="cross">&#10007; Hobby: no</td>
+        <td class="check">&#10003; Yes</td>
+        <td class="check">&#10003; Yes</td>
+        <td class="check">&#10003; Yes</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Vercel's commercial use restriction:</strong> The Hobby plan explicitly prohibits commercial use. Any app generating revenue, displaying ads, or serving a business purpose requires the $20/seat/month Pro plan. This is the biggest gotcha in developer hosting &mdash; you can build and deploy for free, but the moment your project succeeds, you owe $20/seat/month minimum. Cloudflare Pages, Netlify, and Render all allow commercial use on their free tiers.
+  </div>
+
+  <div class="context-box">
+    <strong>Per-seat pricing at scale:</strong> Vercel ($20/seat) and Netlify ($19/seat) charge per team member. A team of 10 developers costs $200/mo on Vercel before any compute charges. Railway and Render use usage-based pricing &mdash; you pay for compute consumed, not team size. For growing teams, usage-based platforms often cost less than per-seat platforms.
+  </div>
+
+  <div class="context-box">
+    <strong>The cold start tax:</strong> Render's free web services spin down after 15 minutes of inactivity, causing 30&ndash;60 second cold starts for the next request. This makes Render's free tier unsuitable for production APIs where response time matters. Railway keeps services always-on during your trial, and Koyeb uses scale-to-zero with faster wake times. Vercel and Cloudflare use serverless/edge models that avoid traditional cold starts entirely.
+  </div>
+
+  <h2 id="best-for">Best for Each Use Case</h2>
+
+  <div class="verdict-box">
+    <h3>Recommendations by Use Case</h3>
+
+    <div class="verdict-item">
+      <strong>Best for Next.js &rarr; Vercel</strong>
+      <p>Built by the Next.js team. Automatic ISR, edge middleware, image optimization, and preview deployments. The tightest integration of any framework-hosting pair. Just connect your repo. If you outgrow Hobby, Cloudflare Pages with the Next.js adapter is the best free alternative.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for backend APIs &rarr; Render</strong>
+      <p>512 MB RAM web services with free PostgreSQL and Redis. Custom domains, automatic SSL. The most complete free backend package. Accept the 30&ndash;60s cold starts for side projects, or pay $7/mo for always-on. <a href="/railway-vs-render">Compare with Railway &rarr;</a></p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for side projects &rarr; Cloudflare Pages + Workers</strong>
+      <p>Unlimited bandwidth, 100K Workers requests/day, built-in KV/D1 storage. No cold starts, no spending surprises, no commercial use restrictions. The closest thing to truly unlimited free hosting.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for startups graduating from free tier &rarr; Railway</strong>
+      <p>Usage-based pricing with no per-seat charges. The $5 trial lets you validate before committing. Excellent DX with instant deploys, managed databases, and Docker support. Costs scale linearly with usage, not team size.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for Docker containers &rarr; Koyeb</strong>
+      <p>The only platform with a permanent free Docker container (1 vCPU, 512 MB) plus free Postgres. Scale-to-zero keeps costs at $0. Railway also supports Docker but is trial-only. Fly.io's new trial is too limited.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Most generous free bandwidth &rarr; Cloudflare Pages</strong>
+      <p>Unlimited bandwidth, no asterisks. Vercel offers 100 GB, GitHub Pages 100 GB, Netlify ~30 GB (credit-based). For bandwidth-intensive sites (media, downloads, high-traffic blogs), Cloudflare Pages has no equal.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for edge/low-latency &rarr; Cloudflare Workers</strong>
+      <p>300+ global locations, ~0ms cold starts, CPU-time billing (not wall-clock). For latency-sensitive APIs and edge compute, Workers is the clear winner. Deno Deploy is the runner-up with 35+ locations and more generous CPU time.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Simplest static hosting &rarr; GitHub Pages</strong>
+      <p>If you have a GitHub account, you already have hosting. Push HTML to a repo, enable Pages, done. 100 GB bandwidth, custom domains, HTTPS. Zero signup friction for documentation, personal sites, and project pages.</p>
+    </div>
+  </div>
+
+  <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
+
+  <div class="diff-card">
+    <h3>Vercel Hobby plan bans commercial use</h3>
+    <div class="diff-desc">The most common gotcha in developer hosting. Vercel's Hobby plan terms prohibit commercial use &mdash; any project generating revenue, displaying ads, or serving a business needs Pro ($20/seat/month). This restriction is unique among hosting platforms. Cloudflare Pages, Netlify, Render, and Railway all allow commercial use on free/entry tiers. Many developers build on Vercel Hobby and only discover this when they launch.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Railway is a trial, not a free tier</h3>
+    <div class="diff-desc">Railway's "free plan" is a one-time $5 credit lasting up to 30 days. After that, the Developer plan has a $1/month minimum. Don't start a project on Railway expecting permanent free hosting &mdash; plan for the transition to paid. That said, Railway's paid pricing is very competitive ($0.000463/min for 0.5 vCPU), and the trial is enough to build and validate an idea.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Render free tier cold starts (30&ndash;60 seconds)</h3>
+    <div class="diff-desc">Free web services spin down after 15 minutes of inactivity. The next request triggers a full restart: pull image, start process, wait for health check. This takes 30&ndash;60 seconds. For an API, this means the first user after any idle period waits a full minute. Acceptable for personal projects and dashboards, but not for production APIs or services with intermittent traffic.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Fly.io free tier is effectively gone for new accounts</h3>
+    <div class="diff-desc">New Fly.io accounts get a trial of 2 hours runtime OR 7 days, whichever comes first. The generous legacy free tier (3 shared VMs, 3 GB persistent storage) is only for pre-2025 accounts. Fly.io requires a credit card at signup. For new users, treat Fly.io as a paid platform with a brief demo mode.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Netlify credit math is tricky</h3>
+    <div class="diff-desc">300 credits/month sounds generous, but credits are consumed by multiple actions: builds (15 credits each), bandwidth (10 credits/GB), and compute (5 credits/GB-hour). A site with 10 builds/day and 20 GB bandwidth uses ~4,500 + 200 = 4,700 credits &mdash; well over the 300 limit. Sites pause on credit exhaustion. Additionally, every repo committer now counts as a Pro seat ($19/mo) when using Netlify CMS or Identity with private repos.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>PythonAnywhere blocks outbound internet</h3>
+    <div class="diff-desc">The free Beginner plan has no outbound internet access. Your web app cannot call external APIs, fetch data from other services, or make any HTTP requests to external hosts. This is a hard block, not a rate limit. Upgrade to the Hacker plan ($10/mo, was $5 before the tier restructuring in Jan 2026) for outbound access.</div>
+  </div>
+
+  <h2 id="changes">Pricing Change Timeline</h2>
+  <p class="section-intro">Recent hosting and PaaS pricing changes tracked in our index.</p>
+  ${changeTimelineHtml}
+
+  <h2 id="data-source">Data Source</h2>
+  <div class="methodology">
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All hosting platform data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPagesHtml}
+  </div>
+
+  ${buildMcpCta("hosting-free-tier-comparison-2026")}
+
+  <div class="search-cta">
+    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
+  </div>
+</div>
+<footer>
+  <div class="container">
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- State of Developer Free Tiers 2026 report ---
 
 function buildStateOfFreeTiers2026Page(): string {
@@ -33730,6 +34357,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/security-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSecurityFreeTierComparison2026Page());
+  } else if (url.pathname === "/hosting-free-tier-comparison-2026" && isGetOrHead) {
+    recordApiHit("/hosting-free-tier-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hosting-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildHostingFreeTierComparison2026Page());
   } else if (url.pathname === "/state-of-free-tiers-2026" && isGetOrHead) {
     recordApiHit("/state-of-free-tiers-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/state-of-free-tiers-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
