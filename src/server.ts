@@ -19,7 +19,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
   const server = new McpServer({
     name: "agentdeals",
     version: "0.1.0",
-    description: "AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. 1,500+ verified offers across 54 categories with pricing change tracking.",
+    description: "AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. 1,600+ verified offers across 67 categories with pricing change tracking.",
   });
 
   // --- Tool 1: search_deals ---
@@ -863,7 +863,7 @@ export function getServerCard(baseUrl: string) {
       title: "AgentDeals",
       version: "0.2.0",
     },
-    description: "Search and compare free tiers, startup credits, and pricing changes across 1,500+ developer tools. 4 intent-based MCP tools for infrastructure decisions, cost estimation, and vendor comparison.",
+    description: "Search and compare free tiers, startup credits, and pricing changes across 1,600+ developer tools. 4 intent-based MCP tools for infrastructure decisions, cost estimation, and vendor comparison.",
     iconUrl: `${baseUrl}/og-image.png`,
     documentationUrl: `${baseUrl}/setup`,
     transport: {

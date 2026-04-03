@@ -564,7 +564,7 @@ ${offersHtml}
     </div>
   </div>
 
-  ${buildMcpCta("Browse this category from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
+  ${buildMcpCta("Browse this category from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -859,7 +859,7 @@ ${tableRows}
     ${otherBestOf}
   </div>
 
-  ${buildMcpCta("Get personalized recommendations from your AI. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
+  ${buildMcpCta("Get personalized recommendations from your AI. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -1271,7 +1271,7 @@ ${globalNavCss()}
     </div>
   </div>
 ${relatedHtml}
-  ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
+  ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -1938,7 +1938,7 @@ ${comparisonsHtml}
     <code>${escHtmlServer(mcpSnippet)}</code>
   </div>
 ${faqHtml}
-  ${buildMcpCta("Want to compare this vendor in your AI? Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
+  ${buildMcpCta("Want to compare this vendor in your AI? Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -2247,7 +2247,7 @@ ${allAltsHtml}
     ${trendsHtml}
   </div>
 ${altFaqHtml}
-  ${buildMcpCta("Find alternatives from your AI coding assistant. Search 1,500+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
+  ${buildMcpCta("Find alternatives from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -13108,7 +13108,7 @@ ${mcpCtaCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  ${buildMcpCta("Compare Supabase, Firebase, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  ${buildMcpCta("Compare Supabase, Firebase, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -13436,7 +13436,7 @@ ${mcpCtaCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  ${buildMcpCta("Compare Vercel, Netlify, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  ${buildMcpCta("Compare Vercel, Netlify, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -13764,7 +13764,7 @@ ${mcpCtaCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  ${buildMcpCta("Compare Neon, Supabase, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  ${buildMcpCta("Compare Neon, Supabase, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -13776,7 +13776,7 @@ ${mcpCtaCss()}
 
 function buildRailwayVsRenderPage(): string {
   const title = "Railway vs Render — Free Tier Comparison (2026)";
-  const metaDesc = "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, Redis, sleep behavior, bandwidth, custom domains — verified data from 1,500+ developer tools. Usage-based flexibility vs predictable billing.";
+  const metaDesc = "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, Redis, sleep behavior, bandwidth, custom domains — verified data from 1,600+ developer tools. Usage-based flexibility vs predictable billing.";
   const slug = "railway-vs-render";
   const pubDate = "2026-03-26";
 
@@ -14096,7 +14096,7 @@ ${mcpCtaCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  ${buildMcpCta("Compare Railway, Render, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  ${buildMcpCta("Compare Railway, Render, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -14108,7 +14108,7 @@ ${mcpCtaCss()}
 
 function buildDatadogVsNewRelicPage(): string {
   const title = "Datadog vs New Relic — Free Tier Comparison (2026)";
-  const metaDesc = "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, synthetics, retention, alerting — verified data from 1,500+ developer tools. Per-host pricing vs per-GB pricing.";
+  const metaDesc = "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, synthetics, retention, alerting — verified data from 1,600+ developer tools. Per-host pricing vs per-GB pricing.";
   const slug = "datadog-vs-new-relic";
   const pubDate = "2026-03-26";
 
@@ -14423,7 +14423,7 @@ ${mcpCtaCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  ${buildMcpCta("Compare Datadog, New Relic, and 1,500+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
+  ${buildMcpCta("Compare Datadog, New Relic, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -15579,7 +15579,7 @@ ${mcpCtaCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  ${buildMcpCta("Track free tier risk for 1,500+ developer tools from your AI assistant. Get pricing alerts, risk scores, and migration recommendations — directly in your editor.")}
+  ${buildMcpCta("Track free tier risk for 1,600+ developer tools from your AI assistant. Get pricing alerts, risk scores, and migration recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -15896,7 +15896,7 @@ ${mcpCtaCss()}
     </a>
     <a href="/state-of-free-tiers-2026" class="related-page-link">
       <div class="link-title">State of Free Tiers 2026</div>
-      <div class="link-desc">Comprehensive data-driven report on free tier trends across 1,500+ developer tools</div>
+      <div class="link-desc">Comprehensive data-driven report on free tier trends across 1,600+ developer tools</div>
     </a>
     ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
       <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
@@ -15906,7 +15906,7 @@ ${mcpCtaCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  ${buildMcpCta("Track vendor stability for 1,500+ developer tools from your AI assistant. Get real-time stability ratings, pricing alerts, and migration recommendations — directly in your editor.")}
+  ${buildMcpCta("Track vendor stability for 1,600+ developer tools from your AI assistant. Get real-time stability ratings, pricing alerts, and migration recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -18038,7 +18038,7 @@ ${mcpCtaCss()}
     ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link"><div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div><div class="link-desc">${escHtmlServer(p.hubDesc)}</div></a>`).join("\n    ")}
   </div>
 
-  ${buildMcpCta("Track free tier changes across 1,500+ developer tools from your AI assistant. Get pricing alerts, change history, and migration recommendations — directly in your editor.")}
+  ${buildMcpCta("Track free tier changes across 1,600+ developer tools from your AI assistant. Get pricing alerts, change history, and migration recommendations — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -29278,7 +29278,7 @@ function buildSetupPage(): string {
   };
 
   const toolExamples: { tool: string; question: string; desc: string }[] = [
-    { tool: "search_deals", question: "Find free database hosting", desc: "Search 1,500+ deals by category, pricing, or keyword" },
+    { tool: "search_deals", question: "Find free database hosting", desc: "Search 1,600+ deals by category, pricing, or keyword" },
     { tool: "compare_vendors", question: "Compare Supabase vs Neon", desc: "Side-by-side comparison of free tiers, risk levels, and limits" },
     { tool: "track_changes", question: "What pricing changes happened this month?", desc: "Track free tier removals, limit changes, and new deals" },
     { tool: "plan_stack", question: "Estimate costs for a SaaS backend", desc: "Stack recommendations, cost estimates, and infrastructure audits" },

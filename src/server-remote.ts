@@ -57,7 +57,7 @@ export function createServer(): McpServer {
   const server = new McpServer({
     name: "agentdeals",
     version: "0.1.0",
-    description: "Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. 1,500+ verified offers across 54 categories with pricing change tracking.",
+    description: "Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. 1,600+ verified offers across 67 categories with pricing change tracking.",
   });
 
   // --- Tool 1: search_deals ---
@@ -66,7 +66,7 @@ export function createServer(): McpServer {
     "search_deals",
     {
       description:
-        "Find free tiers, credits, and discounts for 1,500+ developer tools. Search by keyword, browse categories, or get full vendor details with alternatives. Covers AWS, Vercel, Supabase, Cloudflare, and more. Call this tool when a user asks: 'Does Supabase have a free tier?', 'What's cheaper than Vercel?', 'Find me a free database'.",
+        "Find free tiers, credits, and discounts for 1,600+ developer tools. Search by keyword, browse categories, or get full vendor details with alternatives. Covers AWS, Vercel, Supabase, Cloudflare, and more. Call this tool when a user asks: 'Does Supabase have a free tier?', 'What's cheaper than Vercel?', 'Find me a free database'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
