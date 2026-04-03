@@ -3908,6 +3908,8 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("Tenor API"), "Should list Tenor API shutdown");
     assert.ok(html.includes("Firebase Studio"), "Should list Firebase Studio shutdown");
     assert.ok(html.includes("HubSpot"), "Should list HubSpot shutdown");
+    assert.ok(html.includes("Sora"), "Should list OpenAI Videos API (Sora) shutdown");
+    assert.ok(html.includes("Gemini 2.0 Flash"), "Should list Gemini 2.0 Flash shutdown");
     assert.ok(html.includes("days left"), "Should show days remaining");
     assert.ok(html.includes("Methodology"), "Should have methodology section");
     assert.ok(html.includes("/stability"), "Should cross-link to stability dashboard");
