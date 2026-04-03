@@ -2996,10 +2996,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
-  it("GET /monitoring-free-tier-comparison-2026 renders monitoring comparison page", async () => {
+  it("GET /monitoring-comparison-2026 renders expanded monitoring comparison page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/monitoring-free-tier-comparison-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/monitoring-comparison-2026`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
@@ -3016,19 +3016,37 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("PagerDuty"), "Should mention PagerDuty");
     assert.ok(html.includes("Healthchecks"), "Should mention Healthchecks.io");
     assert.ok(html.includes("Prometheus"), "Should mention Prometheus");
+    assert.ok(html.includes("Checkly"), "Should mention Checkly");
+    assert.ok(html.includes("SigNoz"), "Should mention SigNoz");
+    assert.ok(html.includes("HyperDX"), "Should mention HyperDX");
+    assert.ok(html.includes("Rollbar"), "Should mention Rollbar");
+    assert.ok(html.includes("Bugsnag"), "Should mention Bugsnag");
+    assert.ok(html.includes("Elastic"), "Should mention Elastic");
+    assert.ok(html.includes("Better Stack"), "Should mention Better Stack");
     assert.ok(html.includes("Full-Stack Observability"), "Should have observability section");
     assert.ok(html.includes("Error Tracking"), "Should have error tracking section");
-    assert.ok(html.includes("Uptime Monitoring"), "Should have uptime section");
+    assert.ok(html.includes("Synthetic Monitoring"), "Should have uptime/synthetic section");
     assert.ok(html.includes("Incident Management"), "Should have incident section");
     assert.ok(html.includes("Cron"), "Should have cron monitoring section");
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
     assert.ok(html.includes("Observability Cost Trap"), "Should have cost trap section");
+    assert.ok(html.includes("500 hosts"), "Should have 500-host scale in cost table");
     assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("serverless"), "Should have serverless verdict");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
+    assert.ok(html.includes("cardinality"), "Should mention cardinality cost trap");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+  });
+
+  it("GET /monitoring-free-tier-comparison-2026 redirects to /monitoring-comparison-2026", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/monitoring-free-tier-comparison-2026`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/monitoring-comparison-2026"), "Should redirect to new slug");
   });
 
   it("GET /auth-comparison-2026 renders auth comparison page", async () => {

@@ -4078,13 +4078,13 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Side-by-side comparison of 20+ auth free tiers — MAU/MRU limits, SSO, M2M tokens, agentic AI auth, self-hosted options, and growth cost traps",
   },
   {
-    slug: "monitoring-free-tier-comparison-2026",
-    title: "Monitoring & Observability Free Tier Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Sentry",
-    metaDesc: "Side-by-side comparison of 20+ monitoring free tiers in 2026. Compare Datadog, Grafana Cloud, New Relic, Sentry, UptimeRobot, PagerDuty, Healthchecks.io, and more — data ingest, retention, hosts, alerting, and scaling costs.",
+    slug: "monitoring-comparison-2026",
+    title: "Monitoring & Observability Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Better Stack",
+    metaDesc: "Comprehensive comparison of 25+ monitoring free tiers in 2026. Datadog, Grafana Cloud, New Relic, Better Stack, Sentry, Checkly, SigNoz, HyperDX, and more — data ingest, retention, APM, scaling costs at 10/50/100/500 hosts.",
     contextHtml: "",
-    tag: "monitoring-free-tier-comparison-2026",
+    tag: "monitoring-comparison-2026",
     primaryVendor: "Datadog",
-    hubDesc: "Side-by-side comparison of 20+ monitoring free tiers — data ingest limits, retention, hosts, alerting, APM, and the observability cost trap at scale",
+    hubDesc: "Side-by-side comparison of 25+ monitoring free tiers — data ingest, retention, APM, error tracking, uptime, and the observability cost trap at 10 to 500 hosts",
   },
   {
     slug: "email-free-tier-comparison-2026",
@@ -25502,14 +25502,14 @@ ${mcpCtaCss()}
 
 // --- Monitoring free tier comparison page ---
 
-function buildMonitoringFreeTierComparison2026Page(): string {
-  const title = "Monitoring & Observability Free Tier Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Sentry";
-  const metaDescMonitoring = "Side-by-side comparison of 20+ monitoring free tiers in 2026. Compare Datadog, Grafana Cloud, New Relic, Sentry, UptimeRobot, PagerDuty, Healthchecks.io, and more — data ingest, retention, hosts, alerting, and scaling costs.";
-  const slug = "monitoring-free-tier-comparison-2026";
-  const pubDate = "2026-04-01";
+function buildMonitoringComparison2026Page(): string {
+  const title = "Monitoring & Observability Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Better Stack";
+  const metaDescMonitoring = "Comprehensive comparison of 25+ monitoring free tiers in 2026. Datadog, Grafana Cloud, New Relic, Better Stack, Sentry, Checkly, SigNoz, HyperDX, Elastic, and more — data ingest, retention, APM, scaling costs at 10/50/100/500 hosts.";
+  const slug = "monitoring-comparison-2026";
+  const pubDate = "2026-04-03";
 
   // Collect monitoring-related deal changes
-  const monitoringVendorKeywords = ["Datadog", "Grafana", "New Relic", "Sentry", "Axiom", "Sematext", "Middleware", "BetterStack", "Better Stack", "UptimeRobot", "StatusCake", "Hyperping", "Pulsetic", "Pingbreak", "OnlineOrNot", "PagerDuty", "incident.io", "PagerTree", "Healthchecks", "Cronitor", "Dead Man", "Prometheus", "Jaeger", "Netdata", "Robusta", "AppSignal", "Inspector", "Uptimia"];
+  const monitoringVendorKeywords = ["Datadog", "Grafana", "New Relic", "Sentry", "Axiom", "Sematext", "Middleware", "BetterStack", "Better Stack", "UptimeRobot", "StatusCake", "Hyperping", "Pulsetic", "Pingbreak", "OnlineOrNot", "PagerDuty", "incident.io", "PagerTree", "Healthchecks", "Cronitor", "Dead Man", "Prometheus", "Jaeger", "Netdata", "Robusta", "AppSignal", "Inspector", "Uptimia", "Checkly", "Rollbar", "Bugsnag", "HyperDX", "SigNoz", "Elastic"];
   const monitoringChanges = dealChanges.filter((c: any) =>
     monitoringVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
     (c.summary && (c.summary.toLowerCase().includes("monitoring") || c.summary.toLowerCase().includes("observability") || c.summary.toLowerCase().includes("apm") || c.summary.toLowerCase().includes("uptime")))
@@ -25528,7 +25528,7 @@ function buildMonitoringFreeTierComparison2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["monitoring-alternatives", "datadog-vs-new-relic", "cloud-free-tier-comparison-2026", "free-devops-stack", "free-tier-risk"].includes(p.slug)
+    ["monitoring-alternatives", "datadog-vs-new-relic", "cloud-free-tier-comparison-2026", "auth-comparison-2026", "free-devops-stack", "free-tier-risk"].includes(p.slug)
   );
 
   const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
@@ -25658,20 +25658,20 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Monitoring Free Tier Comparison</div>
-  <h1>Monitoring &amp; Observability Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ monitoring services compared</p>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
+  <h1>Monitoring &amp; Observability Comparison 2026</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 25+ monitoring services compared</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Monitoring Services Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">100GB</div><div class="stat-label">Highest Free Ingest (New Relic)</div></div>
+    <div class="stat-card"><div class="stat-number">25+</div><div class="stat-label">Monitoring Services Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">500GB</div><div class="stat-label">Highest Free Ingest (Axiom)</div></div>
     <div class="stat-card"><div class="stat-number green">Grafana</div><div class="stat-label">Best Overall Free Tier</div></div>
-    <div class="stat-card"><div class="stat-number amber">1 day</div><div class="stat-label">Datadog Free Retention</div></div>
+    <div class="stat-card"><div class="stat-number red">$66K/yr</div><div class="stat-label">Datadog at 100 Hosts</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Grafana Cloud</strong> offers the best overall free tier for monitoring &mdash; 10,000 metrics series, 50GB logs, 50GB traces, and 14-day retention with full dashboarding and alerting. <strong>New Relic</strong> has the most generous data ingest at 100GB/month, but limits you to 1 full platform user (a team bottleneck). <strong>UptimeRobot</strong> is the simplest choice for uptime monitoring with 50 free monitors. <strong>Prometheus + Grafana</strong> self-hosted gives unlimited scale with zero per-host costs.</p>
-    <p><strong>The observability cost trap:</strong> Monitoring costs explode at scale because pricing is tied to hosts, data volume, or both. At 50 hosts, Datadog Infrastructure Pro costs ~$750/mo while Grafana Cloud is still free for 10,000 metric series. At 100GB/day of logs, Datadog charges for both ingest and indexing separately. The worst trap: <strong>Datadog&rsquo;s free tier retains metrics for only 1 day</strong> &mdash; useless for trend analysis, capacity planning, or incident investigation beyond "right now."</p>
+    <p><strong>Quick verdict:</strong> <strong>Grafana Cloud</strong> offers the best overall free tier for monitoring &mdash; 10,000 metrics series, 50GB logs, 50GB traces, and 14-day retention with full dashboarding and alerting. <strong>New Relic</strong> has the most generous unified platform ingest at 100GB/month with full APM, but limits you to 1 full platform user. <strong>Axiom</strong> leads on raw ingest volume at 500GB/month free. <strong>Better Stack</strong> is the best combined uptime + logging starter. For self-hosted: <strong>SigNoz</strong> is the modern all-in-one alternative; <strong>Prometheus + Grafana</strong> is the most battle-tested.</p>
+    <p><strong>The observability cost trap:</strong> Monitoring is the #1 developer spending complaint. Datadog bills can go from $0 to $10,000+/month because pricing compounds across per-host fees, separate product charges (APM, logs, synthetics are each billed independently), and cardinality penalties. At 100 hosts with APM and logs, Datadog costs ~$5,500/mo while Grafana Cloud Pro runs ~$300-800/mo. The worst trap: <strong>Datadog&rsquo;s free tier retains metrics for only 1 day</strong> &mdash; you literally cannot investigate yesterday&rsquo;s incident.</p>
   </div>
 
   <div class="toc">
@@ -25680,7 +25680,7 @@ ${mcpCtaCss()}
       <li><a href="#main-comparison">Main Comparison Table</a></li>
       <li><a href="#fullstack-observability">Full-Stack Observability Platforms</a></li>
       <li><a href="#error-apm">Error Tracking &amp; APM</a></li>
-      <li><a href="#uptime-monitoring">Uptime Monitoring</a></li>
+      <li><a href="#uptime-monitoring">Uptime &amp; Synthetic Monitoring</a></li>
       <li><a href="#incident-management">Incident Management</a></li>
       <li><a href="#cron-monitoring">Cron &amp; Job Monitoring</a></li>
       <li><a href="#self-hosted">Self-Hosted / Open Source</a></li>
@@ -25947,6 +25947,84 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td><span style="color:#3fb950">None</span></td>
       </tr>
+      <tr>
+        <td class="provider-col">Elastic (ELK)<span class="winner-badge">OPEN SOURCE</span></td>
+        <td>Unlimited (self-hosted)</td>
+        <td>Configurable</td>
+        <td>Configurable</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Kibana</td>
+        <td class="check">&#10003; Elastic APM</td>
+        <td class="check">&#10003;</td>
+        <td><span style="color:#3fb950">None</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">SigNoz<span class="winner-badge">MODERN OSS</span></td>
+        <td>Unlimited (self-hosted)</td>
+        <td>Configurable</td>
+        <td>Configurable</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; OpenTelemetry</td>
+        <td class="check">&#10003;</td>
+        <td><span style="color:#3fb950">None</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">HyperDX</td>
+        <td>Unlimited (self-hosted)</td>
+        <td>Configurable</td>
+        <td>Configurable</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Session replay</td>
+        <td class="check">&#10003;</td>
+        <td><span style="color:#3fb950">None</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Checkly<span class="winner-badge">BEST SYNTHETIC</span></td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>5 browser checks + 10 API checks</td>
+        <td>1 user</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Status pages</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Rollbar</td>
+        <td>5K events/mo</td>
+        <td>N/A</td>
+        <td>30 days</td>
+        <td>Unlimited</td>
+        <td>1 user</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Issue tracking</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
+      <tr>
+        <td class="provider-col">Bugsnag</td>
+        <td>7.5K events/mo</td>
+        <td>N/A</td>
+        <td>7 days</td>
+        <td>1 project</td>
+        <td>1 user</td>
+        <td class="check">&#10003;</td>
+        <td class="partial">Issue tracking</td>
+        <td class="partial">Performance</td>
+        <td class="cross">&#10007;</td>
+        <td><span style="color:#3fb950">Low</span></td>
+      </tr>
     </tbody>
   </table>
   </div>
@@ -25980,13 +26058,18 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
+    <h3>Elastic (ELK Stack) <span class="winner-badge">ENTERPRISE OSS</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Unlimited (self-hosted, AGPL-licensed). Elasticsearch for search and analytics, Kibana for visualization, Elastic APM for application performance monitoring, Filebeat/Logstash for log ingestion. The most feature-complete open-source observability stack. Supports logs, metrics, traces, and APM in a single platform. Cloud (Elastic Cloud) has a 14-day free trial, then ~$95/mo for the cheapest tier. The self-hosted cost is pure infrastructure. Downside: resource-hungry &mdash; Elasticsearch needs significant RAM (16GB+ recommended for production).</div>
+  </div>
+
+  <div class="diff-card">
     <h3>Middleware.io</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 1 host, 1-day data retention, full-stack observability including APM, logs, and infrastructure. Modern OpenTelemetry-native platform. The single host limit makes it suitable only for development or very small projects.</div>
   </div>
 
   <div class="diff-card">
-    <h3>BetterStack (formerly Logtail)</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1GB log ingest, 3-day retention, 10 uptime monitors (3-min checks), status pages. Combines logging with uptime monitoring. Clean UI. The log retention is short but the combined logging + uptime monitoring makes it a good starter choice.</div>
+    <h3>Better Stack (formerly Logtail)</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1GB log ingest, 3-day retention, 10 uptime monitors (3-min checks), status pages. Combines logging with uptime monitoring. Clean UI. The log retention is short but the combined logging + uptime monitoring makes it a good starter choice for teams that want uptime + logs in one platform without setup complexity.</div>
   </div>
 
   <h2 id="error-apm">Error Tracking &amp; APM</h2>
@@ -25998,11 +26081,21 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
+    <h3>Rollbar</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5,000 events/month, 30-day retention, 1 user. Error monitoring with automatic grouping, deploy tracking, and real-time alerts. Strong REST API and 40+ platform integrations. Deploy tracking links errors to specific releases. The 1-user limit and lower event count vs Sentry makes it a secondary choice for most teams.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Bugsnag</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 7,500 events/month, 7-day retention, 1 project, 1 user. Error monitoring with stability scoring, release health tracking, and breadcrumbs. Particularly strong for mobile apps (iOS/Android). Performance monitoring included on free tier (basic). The single-project limit is the main constraint.</div>
+  </div>
+
+  <div class="diff-card">
     <h3>AppSignal</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 100,000 requests/month, 30-day APM retention, 10-day log retention. Error tracking, performance monitoring, host metrics, and anomaly detection. Particularly strong for Ruby and Elixir. Unlimited team members.</div>
   </div>
 
-  <h2 id="uptime-monitoring">Uptime Monitoring</h2>
+  <h2 id="uptime-monitoring">Uptime &amp; Synthetic Monitoring</h2>
   <p class="section-intro">Dedicated tools for monitoring whether your services are up and responding correctly.</p>
 
   <div style="overflow-x:auto">
@@ -26074,12 +26167,25 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
       </tr>
+      <tr>
+        <td class="provider-col">Checkly<span class="winner-badge">SYNTHETIC</span></td>
+        <td>5 browser + 10 API</td>
+        <td>1 min</td>
+        <td>Email, Slack, PagerDuty, OpsGenie</td>
+        <td class="check">&#10003;</td>
+        <td class="check">&#10003;</td>
+      </tr>
     </tbody>
   </table>
   </div>
 
+  <div class="diff-card">
+    <h3>Checkly <span class="winner-badge">BEST SYNTHETIC</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 browser checks (Playwright-based), 10 API checks, 1-min check interval from 20+ global locations. Monitoring-as-code: define checks in JavaScript/TypeScript, version in git, deploy via CLI. Integrates with Vercel, GitHub Actions, and Terraform. The only free synthetic monitoring tool with full Playwright browser automation &mdash; test real user flows, not just pings.</div>
+  </div>
+
   <div class="context-box">
-    <strong>Key takeaway:</strong> UptimeRobot dominates on monitor count (50 free). Hyperping has the fastest free check interval (1 min). BetterStack combines uptime with logging for a two-in-one free tier. For most small projects, UptimeRobot's 50 monitors at 5-min intervals is more than enough.
+    <strong>Key takeaway:</strong> UptimeRobot dominates on monitor count (50 free). Checkly is the best choice for synthetic browser testing (Playwright-based, monitoring-as-code). Hyperping has the fastest simple check interval (1 min). Better Stack combines uptime with logging for a two-in-one free tier. For most small projects, UptimeRobot's 50 monitors at 5-min intervals is more than enough.
   </div>
 
   <h2 id="incident-management">Incident Management</h2>
@@ -26157,74 +26263,95 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
+    <h3>SigNoz <span class="winner-badge">MODERN ALL-IN-ONE</span></h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free self-hosted (open-source, Apache 2.0 or AGPL depending on features). Single binary with metrics, logs, and traces powered by ClickHouse and OpenTelemetry. The closest open-source equivalent to Datadog &mdash; single pane of glass with correlated metrics/logs/traces, APM dashboards, and alerting. OpenTelemetry-native (no vendor SDK). Cloud tier starts at $199/mo. Best for teams wanting a Datadog-like experience without Datadog pricing.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>HyperDX</h3>
+    <div class="diff-desc"><strong>Cost:</strong> Free self-hosted (open-source, MIT). Unified platform for logs, metrics, traces, and session replays. Correlates frontend session replays with backend traces &mdash; unique capability among open-source tools. OpenTelemetry-native. Built on ClickHouse. Cloud free tier available (limited). Best for full-stack debugging where you need to see exactly what the user did and how the backend responded.</div>
+  </div>
+
+  <div class="diff-card">
     <h3>Netdata</h3>
     <div class="diff-desc"><strong>Cost:</strong> Free self-hosted (unlimited). Cloud free tier: 5 nodes, 14-day retention. Real-time infrastructure monitoring with zero-config auto-discovery of 800+ integrations. Per-second granularity out of the box. Extremely lightweight agent (~1% CPU). Best for real-time infrastructure visibility without complex setup.</div>
   </div>
 
   <div class="context-box">
-    <strong>The self-hosted trade-off:</strong> Self-hosted monitoring eliminates per-host and per-GB costs but introduces operational burden. You need to run, scale, and maintain the monitoring infrastructure itself &mdash; which is ironic when monitoring is supposed to tell you when things break. Best for teams with dedicated platform/infra engineers. If you're a small team, start with Grafana Cloud free tier and self-host only when you outgrow it.
+    <strong>The self-hosted trade-off:</strong> Self-hosted monitoring eliminates per-host and per-GB costs but introduces operational burden. You need to run, scale, and maintain the monitoring infrastructure itself &mdash; which is ironic when monitoring is supposed to tell you when things break. <strong>SigNoz</strong> is the easiest all-in-one to self-host (single Docker Compose). <strong>Prometheus + Grafana</strong> is the most battle-tested but requires assembling multiple components. <strong>Elastic</strong> is the most feature-complete but resource-hungry. If you're a small team, start with Grafana Cloud free tier and self-host only when you outgrow it.
   </div>
 
   <h2 id="cost-trap">The Observability Cost Trap</h2>
-  <p class="section-intro">Monitoring costs explode at scale. Here's what it actually costs when you outgrow the free tier.</p>
+  <p class="section-intro">Monitoring is the #1 developer spending complaint. Here's what it actually costs when you outgrow the free tier &mdash; at 10, 50, 100, and 500 host scale.</p>
 
+  <h3>Annual Cost by Scale (Infrastructure + APM + Logs)</h3>
   <div style="overflow-x:auto">
   <table class="growth-table">
     <thead>
       <tr>
-        <th>Scenario</th>
+        <th>Scale</th>
         <th>Datadog</th>
         <th>Grafana Cloud</th>
         <th>New Relic</th>
-        <th>Self-Hosted</th>
+        <th>Better Stack</th>
+        <th>Self-Hosted (Prometheus/SigNoz)</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><strong>5 hosts, basic metrics</strong></td>
+        <td><strong>10 hosts</strong></td>
+        <td class="expensive">~$3,720/yr ($31/host/mo)</td>
         <td class="cheapest">$0 (free tier)</td>
-        <td class="cheapest">$0 (free tier)</td>
-        <td class="cheapest">$0 (free tier)</td>
-        <td class="cheapest">$0 (infra only)</td>
-      </tr>
-      <tr>
-        <td><strong>20 hosts + APM</strong></td>
-        <td class="expensive">~$620/mo ($31/host)</td>
-        <td class="cheapest">~$0 (likely still free)</td>
-        <td>~$0 (within 100GB)</td>
+        <td class="cheapest">$0 (within 100GB)</td>
+        <td>~$348/yr ($29/mo)</td>
         <td class="cheapest">$0 (infra only)</td>
       </tr>
       <tr>
         <td><strong>50 hosts + APM + logs</strong></td>
-        <td class="expensive">~$2,250/mo</td>
-        <td>~$50-200/mo</td>
-        <td>~$200-400/mo</td>
-        <td class="cheapest">$50-150/mo (infra)</td>
+        <td class="expensive">~$27,000/yr</td>
+        <td>~$600-2,400/yr</td>
+        <td>~$2,400-4,800/yr</td>
+        <td>~$3,000-6,000/yr</td>
+        <td class="cheapest">$600-1,800/yr (infra)</td>
       </tr>
       <tr>
         <td><strong>100 hosts full stack</strong></td>
-        <td class="expensive">~$5,500/mo</td>
-        <td>~$300-800/mo</td>
-        <td>~$500-1,000/mo</td>
-        <td>$200-500/mo (infra)</td>
+        <td class="expensive">~$66,000/yr</td>
+        <td>~$3,600-9,600/yr</td>
+        <td>~$6,000-12,000/yr</td>
+        <td>~$7,200-12,000/yr</td>
+        <td class="cheapest">$2,400-6,000/yr (infra)</td>
       </tr>
       <tr>
-        <td><strong>100GB/day logs</strong></td>
-        <td class="expensive">~$5,100/mo (ingest + index)</td>
-        <td>~$1,500/mo</td>
-        <td>~$1,800/mo (over 100GB)</td>
-        <td>$100-300/mo (storage)</td>
+        <td><strong>500 hosts enterprise</strong></td>
+        <td class="expensive">~$330,000/yr</td>
+        <td>~$24,000-60,000/yr</td>
+        <td>~$36,000-72,000/yr</td>
+        <td>~$36,000-60,000/yr</td>
+        <td class="cheapest">$12,000-30,000/yr (infra)</td>
+      </tr>
+      <tr>
+        <td><strong>100GB/day logs (any scale)</strong></td>
+        <td class="expensive">~$61,200/yr (ingest + index)</td>
+        <td>~$18,000/yr</td>
+        <td>~$21,600/yr</td>
+        <td>~$14,400/yr</td>
+        <td class="cheapest">$1,200-3,600/yr (storage)</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Why Datadog costs explode:</strong> Datadog uses <strong>per-host pricing</strong> ($15-31/host/mo for Infrastructure, $31-40/host/mo for APM) that scales linearly. But the real trap is that every feature is a separate add-on: APM, Log Management, Synthetics, SIEM, Database Monitoring, and Continuous Profiler are each priced independently. At 50 hosts with APM + logs, you're paying for 3 separate products. Grafana Cloud and New Relic include APM and logs in base pricing. Self-hosted eliminates per-host costs entirely &mdash; you only pay for the infrastructure to run the monitoring stack.
+    <strong>Why Datadog costs explode:</strong> Datadog uses <strong>per-host pricing</strong> ($15-31/host/mo for Infrastructure, $31-40/host/mo for APM) that scales linearly. But the real trap is that every feature is a separate add-on: APM, Log Management, Synthetics, SIEM, Database Monitoring, and Continuous Profiler are each priced independently. At 50 hosts with APM + logs, you're paying for 3 separate products. At 500 hosts, that's $330K+/year &mdash; more than many companies spend on the infrastructure being monitored. Grafana Cloud, New Relic, and Better Stack include APM and logs in base pricing. Self-hosted eliminates per-host costs entirely.
   </div>
 
   <div class="context-box">
-    <strong>The 1-day retention trap:</strong> Datadog's free tier retains metrics for only <strong>1 day</strong>. This means you literally cannot: look at last week's CPU trends, compare this Monday to last Monday, investigate an incident that happened yesterday afternoon, or do any capacity planning. Most serious monitoring requires at least 7-14 days of retention. Grafana Cloud offers 14 days free; New Relic offers 8 days for metrics and 30 days for logs.
+    <strong>The cardinality trap:</strong> Beyond per-host pricing, Datadog charges $0.05/custom metric for high-cardinality metrics. A single Kubernetes cluster with 200 pods can generate 50,000+ custom metrics = $2,500/mo in cardinality charges alone. New Relic and Grafana Cloud don't charge per-metric on their free tiers. If you use custom tags heavily, cardinality fees can exceed your base monitoring bill.
+  </div>
+
+  <div class="context-box">
+    <strong>The 1-day retention trap:</strong> Datadog's free tier retains metrics for only <strong>1 day</strong>. This means you literally cannot: look at last week's CPU trends, compare this Monday to last Monday, investigate an incident that happened yesterday afternoon, or do any capacity planning. Most serious monitoring requires at least 7-14 days of retention. Grafana Cloud offers 14 days free; New Relic offers 8 days for metrics and 30 days for logs; Axiom offers 30 days.
   </div>
 
   <h2 id="best-for">Best for Each Use Case</h2>
@@ -26255,6 +26382,26 @@ ${mcpCtaCss()}
     <div class="verdict-item">
       <strong>Self-hosted everything &rarr; Prometheus + Jaeger + Grafana</strong>
       <p>Unlimited scale, zero per-host or per-GB costs, and full data ownership. Add Loki for logs. Requires infrastructure expertise. The CNCF-blessed observability stack.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for startups (cost + features) &rarr; Grafana Cloud or Axiom</strong>
+      <p>Grafana Cloud gives metrics + logs + traces free with 14-day retention. Axiom gives 500GB/month ingest with 30-day retention. Both avoid per-host pricing traps. Start with one, migrate to self-hosted when you reach scale.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for serverless (Lambda/Edge) &rarr; New Relic or Axiom</strong>
+      <p>Serverless functions generate bursty, high-volume telemetry that per-host pricing can't handle. New Relic's 100GB ingest with no host counting, or Axiom's 500GB with unlimited users, fit serverless architectures where "hosts" are ephemeral. Datadog charges per-function invocation for serverless &mdash; avoid.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best for enterprise (compliance, SLA) &rarr; Datadog or New Relic</strong>
+      <p>When compliance (SOC 2, HIPAA, FedRAMP) and vendor SLAs matter more than cost, Datadog and New Relic lead. Datadog has the broadest feature set. New Relic has better cost predictability. Both offer enterprise support and dedicated infrastructure.</p>
+    </div>
+
+    <div class="verdict-item">
+      <strong>Best synthetic monitoring &rarr; Checkly</strong>
+      <p>Playwright-based browser checks, monitoring-as-code in TypeScript, 20+ global locations, 1-min intervals. Test real user flows, not just endpoint pings. Version your monitoring in git alongside your application code.</p>
     </div>
 
     <div class="verdict-item">
@@ -26296,6 +26443,21 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
+    <h3>Datadog custom metric cardinality charges</h3>
+    <div class="diff-desc">Custom metrics cost $0.05/metric/month. With Kubernetes labels, container IDs, and dynamic tags, a modest cluster can generate 50,000+ custom metrics without you noticing. That's $2,500/mo in surprise cardinality charges &mdash; often discovered only on the first bill. Use metric aggregation rules and allowlists to prevent runaway cardinality.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Better Stack's 3-day log retention</h3>
+    <div class="diff-desc">The free tier retains logs for only 3 days. For incident investigation that spans a week or more (common in production), you'll need to upgrade. The combined uptime + logging is convenient but the retention limit forces upgrades faster than standalone logging tools.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3>Self-hosted operational burden</h3>
+    <div class="diff-desc">Running Prometheus + Grafana + Loki at scale requires dedicated infrastructure: persistent storage, backup procedures, high-availability setup, and regular upgrades. The irony of self-hosted monitoring: when your monitoring infrastructure itself breaks, you have no monitoring to tell you. Budget 0.5-1 FTE for a production self-hosted monitoring stack above 50 hosts.</div>
+  </div>
+
+  <div class="diff-card">
     <h3>Data egress and API rate limits</h3>
     <div class="diff-desc">Exporting data from monitoring platforms is often rate-limited or restricted on free tiers. New Relic limits NRQL query rate. Datadog's free API has lower rate limits. This makes it hard to migrate away or build custom integrations &mdash; classic vendor lock-in by design.</div>
   </div>
@@ -26306,7 +26468,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All monitoring service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier tools and tracks ${dealChanges.length} historical pricing changes. All monitoring service data on this page is verified against official pricing pages. Paid tier cost estimates use publicly available list prices as of ${pubDate}. Actual costs vary with usage, commitment discounts, and enterprise negotiations. <a href="/freshness">Check data freshness</a>.
   </div>
 
   <h2>Related Guides</h2>
@@ -26314,7 +26476,7 @@ ${mcpCtaCss()}
     ${relatedPagesHtml}
   </div>
 
-  ${buildMcpCta("monitoring-free-tier-comparison-2026")}
+  ${buildMcpCta("monitoring-comparison-2026")}
 
   <div class="search-cta">
     Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
@@ -27060,7 +27222,7 @@ function buildTestingFreeTierComparison2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["testing-alternatives", "cicd-free-tier-comparison-2026", "monitoring-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk"].includes(p.slug)
+    ["testing-alternatives", "cicd-free-tier-comparison-2026", "monitoring-comparison-2026", "free-startup-stack", "free-tier-risk"].includes(p.slug)
   );
 
   const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
@@ -27722,7 +27884,7 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["analytics-alternatives", "monitoring-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk", "free-ai-stack"].includes(p.slug)
+    ["analytics-alternatives", "monitoring-comparison-2026", "free-startup-stack", "free-tier-risk", "free-ai-stack"].includes(p.slug)
   );
 
   const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
@@ -30579,7 +30741,7 @@ ${globalNavCss()}
   <h3>Monitoring: Per-Host Pricing Explodes</h3>
   <div class="callout callout-warn">
     At 100 hosts, <strong>Datadog costs ~$5,500/mo</strong> while <strong>Grafana Cloud costs ~$300&ndash;$800/mo</strong>. Datadog&rsquo;s 1-day free retention makes the free tier practically unusable for debugging.
-    <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/monitoring-free-tier-comparison-2026">Full monitoring comparison &rarr;</a></span>
+    <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/monitoring-comparison-2026">Full monitoring comparison &rarr;</a></span>
   </div>
 
   <h3>Email: Post-Acquisition Squeeze</h3>
@@ -33335,6 +33497,13 @@ const httpServer = createHttpServer(async (req, res) => {
     return;
   }
 
+  // Monitoring comparison alias — redirect old slug to new canonical
+  if (url.pathname === "/monitoring-free-tier-comparison-2026" && isGetOrHead) {
+    res.writeHead(301, { Location: "/monitoring-comparison-2026" });
+    res.end();
+    return;
+  }
+
   // Server-side page view tracking (fire-and-forget, no latency impact)
   // Track HTML page requests only — exclude API, MCP, static assets, health
   const isPagePath = req.method === "GET" && !url.pathname.startsWith("/api/") &&
@@ -34527,11 +34696,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildEmailFreeTierComparison2026Page());
-  } else if (url.pathname === "/monitoring-free-tier-comparison-2026" && isGetOrHead) {
-    recordApiHit("/monitoring-free-tier-comparison-2026");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/monitoring-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+  } else if (url.pathname === "/monitoring-comparison-2026" && isGetOrHead) {
+    recordApiHit("/monitoring-comparison-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/monitoring-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildMonitoringFreeTierComparison2026Page());
+    res.end(buildMonitoringComparison2026Page());
   } else if (url.pathname === "/auth-comparison-2026" && isGetOrHead) {
     recordApiHit("/auth-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/auth-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
