@@ -3871,6 +3871,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Complete free frontend/Jamstack development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
   {
+    slug: "free-nextjs-stack",
+    title: "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure",
+    metaDesc: "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs. Updated April 2026.",
+    contextHtml: "",
+    tag: "nextjs-stack-guide",
+    primaryVendor: "Vercel",
+    hubDesc: "Complete free Next.js full-stack infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
+  },
+  {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
     metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
@@ -11583,6 +11592,414 @@ ${ossAlternatives.map(oss => `      <tr>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized frontend stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your Jamstack infrastructure — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Free Next.js Stack Guide ---
+
+function buildFreeNextjsStackPage(): string {
+  const title = "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const metaDesc = "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs. Updated April 2026.";
+  const slug = "free-nextjs-stack";
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  const stackCategories = [
+    {
+      name: "Hosting & Deployment",
+      icon: "🚀",
+      recommended: { vendor: "Vercel", why: "The creators of Next.js. Zero-config deployments with automatic edge optimization, ISR, middleware, and server components. Hobby plan: 100 GB bandwidth, 100 hours serverless function execution, 6,000 build minutes. Preview deploys on every PR. The only platform with day-one support for every Next.js feature." },
+      alternatives: ["Railway", "Netlify", "Cloudflare Pages"],
+      outgrow: "When you exceed 100 GB bandwidth/month or need commercial use (Hobby plan is non-commercial). Railway offers $5/month credit with no commercial restriction. Netlify gives 100 GB bandwidth with serverless functions. Cloudflare Pages has unlimited bandwidth but limited Next.js feature support.",
+      whyNot: "Why not Heroku: No free tier since November 2022. Why not Render: Free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds kill the Next.js experience.",
+      relatedPage: "/hosting-free-tier-comparison-2026",
+    },
+    {
+      name: "Database",
+      icon: "🗄️",
+      recommended: { vendor: "Neon", why: "Serverless Postgres with branching — perfect for Next.js server components and API routes. Free tier: 0.5 GiB storage, 190+ compute hours/month (scales to zero), unlimited databases. Neon's serverless driver (@neondatabase/serverless) works in Vercel Edge Functions where traditional Postgres clients cannot." },
+      alternatives: ["Supabase", "Turso", "PlanetScale"],
+      outgrow: "When you exceed 0.5 GiB storage or need always-on connections. Supabase offers 500 MB storage with built-in auth and realtime but pauses after 7 days inactive. Turso gives 9 GB total storage across edge locations. PlanetScale's free tier was removed in April 2024.",
+      whyNot: "Why not PlanetScale: Free tier removed April 2024 — now starts at $39/month. Why not MongoDB Atlas: 512 MB storage is workable, but Postgres is the better fit for Next.js's server-side patterns (Prisma, Drizzle, raw SQL in server components).",
+      relatedPage: "/database-free-tier-comparison-2026",
+    },
+    {
+      name: "Authentication",
+      icon: "🔐",
+      recommended: { vendor: "Clerk", why: "Best-in-class Next.js DX with @clerk/nextjs SDK, middleware integration, and pre-built UI components. Free tier: 10,000 monthly active users, unlimited social logins, email/password, MFA, organizations, and webhooks. Drops right into App Router with zero auth boilerplate." },
+      alternatives: ["Auth0", "Supabase", "Kinde"],
+      outgrow: "When you exceed 10,000 MAU ($0.02/MAU overage — $1,800/month at 100K MAU). Auth0 offers 25,000 MAU free but with fewer built-in UI components. Supabase Auth gives 50,000 MAU with the cheapest scale-up ($0.00325/MAU). For maximum free ceiling, WorkOS AuthKit offers 1M MAU free for basic auth.",
+      whyNot: "Why not NextAuth/Auth.js: Self-hosted and free at any scale, but you build every UI yourself and manage session storage. Good if you want full control; Clerk if you want to ship fast.",
+      relatedPage: "/auth-comparison-2026",
+    },
+    {
+      name: "Object Storage",
+      icon: "📦",
+      recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means any S3 SDK works. Perfect for Next.js image uploads, user files, and static assets that would cost a fortune on S3 egress." },
+      alternatives: ["Backblaze B2", "Tigris", "Supabase"],
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3 (the egress tax). Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN. Tigris gives 5 GB with S3 compatibility and global distribution.",
+      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. At 100 GB egress/month, that's $9/month just for bandwidth — R2 charges $0.",
+      relatedPage: "/storage-comparison-2026",
+    },
+    {
+      name: "Email & Transactional",
+      icon: "✉️",
+      recommended: { vendor: "Resend", why: "Modern developer-first email API built for React. 3,000 emails/month, 100/day on free tier. The react-email library lets you build email templates with JSX — same component model as your Next.js app. TypeScript SDK, webhook delivery tracking, and domain verification." },
+      alternatives: ["Amazon SES", "Brevo", "Mailtrap"],
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Amazon SES offers 62,000 emails/month free from EC2 at $0.10/1K after — cheapest at scale. Brevo gives 300 emails/day (9,000/month) with no monthly cap and includes marketing automation. Mailtrap is best for testing with virtual inboxes.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. Existing free plans reduced to 100 emails/day. The Twilio acquisition killed the developer-first positioning. Resend is the spiritual successor.",
+      relatedPage: "/email-comparison-2026",
+    },
+    {
+      name: "Monitoring & Error Tracking",
+      icon: "🐛",
+      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments. First-class Next.js SDK with automatic instrumentation for API routes, server components, middleware, and client-side errors. Source map support for production debugging." },
+      alternatives: ["BetterStack", "Grafana Cloud", "Highlight.io"],
+      outgrow: "When you exceed 5,000 errors/month or need more than 1 team member. BetterStack combines uptime monitoring (10 monitors) with incident management. Grafana Cloud offers 10,000 series metrics + 50 GB logs + 50 GB traces. Highlight.io bundles 500 sessions + 1,000 errors + 1M logs on free tier.",
+      whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. The per-host pricing model gets expensive fast: ~$5,500/month at 100 hosts.",
+      relatedPage: "/monitoring-comparison-2026",
+    },
+    {
+      name: "CI/CD",
+      icon: "⚙️",
+      recommended: { vendor: "GitHub Actions", why: "2,000 minutes/month on free tier for public repos (unlimited) and private repos. Native GitHub integration means CI runs on every push and PR. Next.js apps typically build in 1-3 minutes — that's 660-2,000 builds/month. Matrix testing, caching, and reusable workflows included." },
+      alternatives: ["Railway", "Vercel", "GitLab CI"],
+      outgrow: "When you exceed 2,000 minutes/month on private repos or need GPU/ARM runners. Railway auto-deploys from git with zero CI config. Vercel's built-in CI handles the deploy pipeline — you only need GitHub Actions for tests and linting. GitLab CI offers 400 minutes/month on free tier.",
+      whyNot: null,
+      relatedPage: "/cicd-free-tier-comparison-2026",
+    },
+    {
+      name: "Analytics",
+      icon: "📊",
+      recommended: { vendor: "PostHog", why: "1 million events/month free — includes product analytics, 5,000 session replays, feature flags (1M requests), A/B testing, and surveys. Replaces 3-4 separate tools. Self-hostable. PostHog's Next.js SDK integrates with App Router and supports both client and server-side tracking." },
+      alternatives: ["Plausible", "Umami", "Vercel Analytics"],
+      outgrow: "When you exceed 1M events/month. Plausible CE is self-hosted with unlimited everything — privacy-first with no cookies. Umami is another lightweight self-hosted option. Vercel Analytics is free on Hobby but limited to basic web analytics.",
+      whyNot: "Why not Google Analytics: Free at any scale but heavy, privacy-invasive (requires cookie consent banners in EU), and the GA4 migration broke many workflows. PostHog gives you more features with better privacy.",
+      relatedPage: "/analytics-free-tier-comparison-2026",
+    },
+    {
+      name: "Search",
+      icon: "🔍",
+      recommended: { vendor: "Algolia", why: "10,000 records and 10,000 search requests/month on the free tier. Instant search with typo tolerance, faceting, and geo-search. The InstantSearch.js React library integrates cleanly with Next.js. Best-in-class search relevance out of the box." },
+      alternatives: ["Meilisearch", "Typesense", "Orama"],
+      outgrow: "When you exceed 10,000 records or 10,000 searches/month. Meilisearch Cloud offers 100,000 documents free. Typesense Cloud gives 100 search operations/hour on free tier. Both Meilisearch and Typesense are self-hostable with no limits. Orama runs client-side in the browser — zero backend cost.",
+      whyNot: null,
+      relatedPage: null,
+    },
+    {
+      name: "Background Jobs & Cron",
+      icon: "⏱️",
+      recommended: { vendor: "Inngest", why: "Free tier: 25,000 function runs/month with event-driven architecture, retries, scheduling, and step functions. First-class Next.js integration — define functions in your API routes, Inngest handles queuing, retries, and scheduling. No infrastructure to manage." },
+      alternatives: ["QStash", "Trigger.dev", "Vercel Cron"],
+      outgrow: "When you exceed 25,000 runs/month. QStash (Upstash) offers 500 messages/day for simple HTTP-based job queuing. Trigger.dev gives 50,000 runs/month with a more code-first approach. Vercel Cron Jobs are free on Hobby for scheduled tasks (1/day minimum interval) but don't handle event-driven workflows.",
+      whyNot: null,
+      relatedPage: null,
+    },
+  ];
+
+  const resolveVendor = (vendorName: string) => {
+    const offer = offers.find(o => o.vendor === vendorName);
+    if (!offer) return null;
+    return enrichOffers([offer])[0];
+  };
+
+  const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
+  const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-04-03",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Is Vercel free for Next.js?",
+        acceptedAnswer: { "@type": "Answer", text: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5/month free credit) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
+      },
+      {
+        "@type": "Question",
+        name: "What's the best free database for Next.js?",
+        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) is the best fit for Next.js. Its serverless driver works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (9 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
+      },
+      {
+        "@type": "Question",
+        name: "Can I build a SaaS for free with Next.js?",
+        acceptedAnswer: { "@type": "Answer", text: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
+      },
+      {
+        "@type": "Question",
+        name: "What's the first thing to spend money on when scaling a Next.js app?",
+        acceptedAnswer: { "@type": "Answer", text: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. The Neon Launch plan at $19/month gets you 10 GiB storage, 300 compute hours, and autoscaling. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
+      },
+    ],
+  };
+
+  const categorySections = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
+
+    const recCard = rec ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <div class="pick-links">
+          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>` : "";
+
+    const altCards = altVendors.length > 0 ? `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
+      </div>` : "";
+
+    const whyNotBox = cat.whyNot ? `
+      <div class="whynot-box">
+        <strong>⚠️ ${escHtmlServer(cat.whyNot)}</strong>
+      </div>` : "";
+
+    const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
+
+    return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      ${recCard}
+      ${altCards}
+      <div class="outgrow-box">
+        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+      </div>
+      ${whyNotBox}
+      ${relatedLink}
+    </div>`;
+  }).join("\n");
+
+  const stabilityNotes = stackChanges.length > 0 ? `
+  <h2>Stability Notes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <div class="stability-list">
+    ${stackChanges.slice(0, 12).map(c => {
+      const typeColors: Record<string, string> = {
+        free_tier_removed: "#f85149", limits_reduced: "#d29922", pricing_restructured: "#d29922",
+        restriction: "#d29922", limits_increased: "#3fb950", new_free_tier: "#3fb950",
+        pricing_postponed: "#3fb950", startup_program_expanded: "#3fb950", product_deprecated: "#f85149",
+      };
+      const color = typeColors[c.change_type] ?? "#94a3b8";
+      return `<div class="stability-item">
+        <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+      </div>`;
+    }).join("\n    ")}
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+
+  const tableRows = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    return `      <tr>
+        <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
+        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
+        <td>${riskBadge}</td>
+      </tr>`;
+  }).join("\n");
+
+  // Growth cost analysis — the "$20/month upgrade" section
+  const growthCosts = [
+    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
+    { layer: "Hosting", vendor: "Vercel", freeLimit: "100 GB bandwidth", firstPaid: "Pro $20/mo/member", gets: "1 TB bandwidth, commercial use, faster builds", hitFirst: true },
+    { layer: "Auth", vendor: "Clerk", freeLimit: "10,000 MAU", firstPaid: "Pro $25/mo + $0.02/MAU", gets: "Unlimited MAU, custom domains, premium support", hitFirst: false },
+    { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
+    { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
+    { layer: "Monitoring", vendor: "Sentry", freeLimit: "5,000 errors/mo", firstPaid: "Team $26/mo", gets: "50,000 errors, unlimited members, integrations", hitFirst: false },
+    { layer: "Analytics", vendor: "PostHog", freeLimit: "1M events/mo", firstPaid: "$0.00031/event", gets: "Pay-as-you-go beyond 1M, group analytics", hitFirst: false },
+    { layer: "Search", vendor: "Algolia", freeLimit: "10,000 records", firstPaid: "Build $0.50/1K req", gets: "100,000 records, more search requests", hitFirst: false },
+    { layer: "Jobs", vendor: "Inngest", freeLimit: "25,000 runs/mo", firstPaid: "Team $50/mo", gets: "125,000 runs, concurrency, priority support", hitFirst: false },
+    { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2,000 min/mo", firstPaid: "Team $4/user/mo", gets: "3,000 min/mo, required reviewers", hitFirst: false },
+  ];
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.cost-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
+.cost-banner .cost-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.cost-banner .cost-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
+.stack-category{border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;background:var(--bg-card)}
+.stack-category h2{margin:0 0 1rem;font-size:1.25rem}
+.cat-icon{margin-right:.5rem}
+.stack-pick{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:rgba(59,130,246,0.05);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.pick-badge{font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;background:var(--accent);color:#fff}
+.pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.pick-name:hover{color:var(--accent)}
+.pick-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.pick-why{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:.5rem}
+.pick-limits{font-family:var(--mono);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
+.pick-links a{color:var(--accent)}
+.alt-picks{margin-bottom:1rem}
+.alt-label{color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem}
+.alt-chip{display:inline-block;padding:.3rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text);margin:.25rem .25rem .25rem 0;transition:border-color .15s}
+.alt-chip:hover{border-color:var(--accent);text-decoration:none}
+.chip-tier{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-left:.25rem}
+.outgrow-box{background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.2);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.outgrow-box strong{color:var(--text)}
+.whynot-box{background:rgba(248,81,73,0.06);border:1px solid rgba(248,81,73,0.15);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5;margin-top:.75rem}
+.whynot-box strong{color:var(--text-muted);font-weight:500}
+.related-link{display:block;margin-top:.75rem;font-size:.85rem}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.growth-table th,.growth-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.growth-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-first{color:#d29922;font-weight:600}
+.stability-list{display:flex;flex-direction:column;gap:.5rem}
+.stability-item{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5;background:var(--bg-card)}
+.stability-item strong{color:var(--text)}
+.stability-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.1rem .4rem;border-radius:8px;margin-right:.5rem}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.growth-table{font-size:.75rem}.growth-table th,.growth-table td{padding:.4rem .5rem}.cost-banner .cost-amount{font-size:2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Next.js Stack</div>
+  <h1>The Complete Free Next.js Stack</h1>
+
+  <div class="context">
+    <p>Everything you need to build and ship a Next.js app — without spending a dollar. This guide recommends the best free tier for each layer of your Next.js infrastructure — <strong>10 layers</strong> from hosting to background jobs — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Designed for solo developers, indie hackers, and small teams building SaaS products, side projects, or MVPs with Next.js. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
+    <div class="cost-label">Total infrastructure cost for a Next.js SaaS on free tiers</div>
+  </div>
+
+  <h2>Stack Overview</h2>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Recommended</th>
+        <th>Key Limit</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+  </div>
+
+${categorySections}
+
+${stabilityNotes}
+
+  <h2>The $20/Month Upgrade — What to Spend First</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">When you're ready to spend your first dollar, here's where it matters most. Sorted by which limits you'll likely hit first:</p>
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Free Limit</th>
+        <th>First Paid Plan</th>
+        <th>What You Get</th>
+      </tr>
+    </thead>
+    <tbody>
+${growthCosts.map(g => `      <tr>
+        <td style="font-weight:600">${escHtmlServer(g.layer)}${g.hitFirst ? ` <span class="growth-first">⬆ hit first</span>` : ""}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted)">${escHtmlServer(g.freeLimit)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(g.firstPaid)}</td>
+        <td style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(g.gets)}</td>
+      </tr>`).join("\n")}
+    </tbody>
+  </table>
+  </div>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The $39/month breakpoint:</strong> Database (Neon Launch $19/mo) + Hosting (Vercel Pro $20/mo) unlocks commercial use, 10 GiB Postgres, 1 TB bandwidth, and faster builds. Everything else — auth (10K MAU), email (3K/mo), monitoring (5K errors), analytics (1M events), storage (10 GB R2), search (10K records), jobs (25K runs), CI (2,000 min) — stays free well past your first 1,000 users.</p>
+  </div>
+
+  <h2>Architecture: How It Fits Together</h2>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:1rem">A typical Next.js SaaS connects these layers:</p>
+    <div style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted);line-height:2;padding:1rem;background:rgba(0,0,0,0.2);border-radius:8px;overflow-x:auto;white-space:pre">User → Vercel (Next.js hosting + edge) → Neon (Postgres via serverless driver)
+                                        → Clerk (auth middleware + session)
+                                        → R2 (file uploads via presigned URLs)
+                                        → Resend (transactional emails from API routes)
+                                        → Inngest (background jobs triggered by events)
+                                        → PostHog (analytics + feature flags)
+                                        → Sentry (error tracking + performance)
+                                        → Algolia (search index, synced from Postgres)
+GitHub → GitHub Actions (CI: tests + lint) → Vercel (CD: auto-deploy)</div>
+    <p style="color:var(--text-dim);font-size:.8rem;margin-top:1rem">All connections use HTTPS APIs — no VPCs, no SSH tunnels, no complex networking. Each service is independently replaceable.</p>
+  </div>
+
+  <div class="search-cta">
+    <p>Need a different framework? See our <a href="/free-startup-stack">Free Startup Stack</a> for framework-agnostic infrastructure, <a href="/free-frontend-stack">Free Frontend Stack</a> for Jamstack/static sites, or <a href="/free-devops-stack">Free DevOps Stack</a> for infrastructure tooling. Or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get personalized Next.js stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -34900,6 +35317,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-frontend-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeFrontendStackPage());
+  } else if (url.pathname === "/free-nextjs-stack" && isGetOrHead) {
+    recordApiHit("/free-nextjs-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-nextjs-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeNextjsStackPage());
   } else if (url.pathname === "/supabase-vs-firebase" && isGetOrHead) {
     recordApiHit("/supabase-vs-firebase");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/supabase-vs-firebase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
