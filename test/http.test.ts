@@ -2476,6 +2476,73 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-nextjs-stack"), "Should cross-link to Next.js stack guide");
   });
 
+  it("GET /free-saas-stack renders SaaS starter stack guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/free-saas-stack`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Free SaaS Starter Stack"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes('"FAQPage"'), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("$0"), "Should show $0 cost");
+    // TL;DR section
+    assert.ok(html.includes("tldr-box"), "Should have TL;DR box");
+    assert.ok(html.includes("Railway"), "Should recommend Railway for hosting");
+    assert.ok(html.includes("Neon"), "Should recommend Neon for database");
+    assert.ok(html.includes("Clerk"), "Should recommend Clerk for auth");
+    assert.ok(html.includes("Stripe"), "Should have Stripe for payments");
+    assert.ok(html.includes("Resend"), "Should recommend Resend for email");
+    assert.ok(html.includes("Cloudflare R2"), "Should recommend R2 for storage");
+    assert.ok(html.includes("Sentry"), "Should recommend Sentry for monitoring");
+    assert.ok(html.includes("PostHog"), "Should recommend PostHog for analytics");
+    assert.ok(html.includes("Inngest"), "Should recommend Inngest for background jobs");
+    // Sections
+    assert.ok(html.includes("Hosting"), "Should have hosting section");
+    assert.ok(html.includes("Database"), "Should have database section");
+    assert.ok(html.includes("Authentication"), "Should have auth section");
+    assert.ok(html.includes("Payments"), "Should have payments section");
+    assert.ok(html.includes("Email"), "Should have email section");
+    assert.ok(html.includes("Object Storage"), "Should have storage section");
+    assert.ok(html.includes("Monitoring"), "Should have monitoring section");
+    assert.ok(html.includes("CI/CD"), "Should have CI/CD section");
+    assert.ok(html.includes("Analytics"), "Should have analytics section");
+    assert.ok(html.includes("Background Jobs"), "Should have background jobs section");
+    assert.ok(html.includes("Framework"), "Should have framework section");
+    // Growth cost analysis
+    assert.ok(html.includes("Growth Path"), "Should have growth path section");
+    assert.ok(html.includes("1K-5K"), "Should have 1K users scale");
+    assert.ok(html.includes("10K-25K"), "Should have 10K users scale");
+    assert.ok(html.includes("50K-100K"), "Should have 100K users scale");
+    assert.ok(html.includes("$19/month breakpoint"), "Should have breakpoint analysis");
+    // When to upgrade table
+    assert.ok(html.includes("When to Upgrade"), "Should have upgrade guidance");
+    assert.ok(html.includes("hit first"), "Should indicate which limits hit first");
+    // Cross-links
+    assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
+    assert.ok(html.includes("whynot-box"), "Should have why-not callouts");
+    assert.ok(html.includes("/hosting-free-tier-comparison-2026"), "Should cross-link to hosting comparison");
+    assert.ok(html.includes("/database-free-tier-comparison-2026"), "Should cross-link to database comparison");
+    assert.ok(html.includes("/auth-comparison-2026"), "Should cross-link to auth comparison");
+    assert.ok(html.includes("/monitoring-comparison-2026"), "Should cross-link to monitoring comparison");
+    assert.ok(html.includes("/email-comparison-2026"), "Should cross-link to email comparison");
+    assert.ok(html.includes("/storage-comparison-2026"), "Should cross-link to storage comparison");
+    assert.ok(html.includes("/free-nextjs-stack"), "Should cross-link to Next.js stack");
+    assert.ok(html.includes("/free-django-stack"), "Should cross-link to Django stack");
+    assert.ok(html.includes("/free-fastapi-stack"), "Should cross-link to FastAPI stack");
+    assert.ok(html.includes("/free-go-stack"), "Should cross-link to Go stack");
+    // FAQ
+    assert.ok(html.includes("cheapest way to launch a SaaS"), "Should have FAQ content");
+    assert.ok(html.includes("build a SaaS for free"), "Should have FAQ content");
+    assert.ok(html.includes("best free database for SaaS"), "Should have FAQ content");
+    assert.ok(html.includes("start paying for infrastructure"), "Should have FAQ content");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links to other guides");
+  });
+
   it("GET /google-developer-program-2026 renders GDP pricing analysis page", async () => {
     proc = await startHttpServer();
 

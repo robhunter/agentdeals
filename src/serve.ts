@@ -3907,6 +3907,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Complete free Go/Golang infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
   },
   {
+    slug: "free-saas-stack",
+    title: "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month",
+    metaDesc: "Build a complete SaaS product on free tiers. 12 infrastructure categories — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics. Exact limits, growth costs at 1K/10K/100K users. Updated April 2026.",
+    contextHtml: "",
+    tag: "saas-stack-guide",
+    primaryVendor: "Neon",
+    hubDesc: "Complete free SaaS infrastructure stack — 11 categories with opinionated picks, growth cost analysis at 4 scale points, and Stripe payments integration",
+  },
+  {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
     metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
@@ -13432,6 +13441,557 @@ GitHub → GitHub Actions (CI: go test + golangci-lint) → Railway (CD: auto-de
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized Go stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Free SaaS Starter Stack Guide ---
+
+function buildFreeSaasStackPage(): string {
+  const title = "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month";
+  const metaDesc = "Build a complete SaaS product on free tiers. 12 infrastructure categories — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics. Exact limits, growth costs at 1K/10K/100K users. Updated April 2026.";
+  const slug = "free-saas-stack";
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  const stackCategories = [
+    {
+      name: "Framework & Runtime",
+      icon: "\u{1F3D7}\u{FE0F}",
+      recommended: { vendor: "Next.js", why: "The dominant full-stack React framework for SaaS. Server components, API routes, middleware, and ISR \u2014 all in one project. Vercel and Netlify deploy it natively; Railway and Render support it with Nixpacks. TypeScript-first, massive ecosystem of SaaS boilerplates and templates." },
+      alternatives: [] as string[],
+      outgrow: "You don't outgrow a framework \u2014 you outgrow its hosting. Choose based on your team: SSR/marketing-heavy \u2192 Next.js, API-first \u2192 FastAPI or Go, rapid prototyping with admin panel \u2192 Django, performance-critical \u2192 Go.",
+      whyNot: null as string | null,
+      relatedPage: null as string | null,
+      isFrameworkSection: true,
+    },
+    {
+      name: "Hosting & Deployment",
+      icon: "\u{1F680}",
+      recommended: { vendor: "Railway", why: "The best all-around free hosting for SaaS in 2026. $5/month free credit covers a small app with auto-deploy from GitHub. Supports any language/framework via Nixpacks or Dockerfile. No cold starts \u2014 your service stays warm. Includes free Postgres and Redis add-ons. Best DX: instant deploys, logs, and metrics in one dashboard." },
+      alternatives: ["Vercel", "Render", "Cloudflare Pages"],
+      outgrow: "When you exceed the $5/month free credit (1-2 services). Vercel is best for Next.js (100 GB bandwidth, but bans commercial use on Hobby plan \u2014 you must upgrade to Pro at $20/seat/month when you launch your SaaS). Render offers a free tier with 750 hours/month but spins down after 15 min inactivity. Cloudflare Pages is best for static/Jamstack with unlimited bandwidth.",
+      whyNot: "Why not Heroku: No free tier since November 2022. Why not Vercel Hobby: Bans commercial use \u2014 the moment your SaaS charges users, you owe $20/seat/month. Great for prototyping, but plan for the upgrade. Why not AWS/GCP/Azure directly: Free tiers exist but are complex to configure and most services expire after 12 months.",
+      relatedPage: "/hosting-free-tier-comparison-2026",
+      isFrameworkSection: false,
+    },
+    {
+      name: "Database",
+      icon: "\u{1F5C4}\u{FE0F}",
+      recommended: { vendor: "Neon", why: "Serverless Postgres \u2014 the best SaaS database in 2026. 0.5 GiB storage, 190+ compute hours/month, scales to zero when idle. Branching for preview environments. Works with every ORM (Prisma, Drizzle, TypeORM, SQLAlchemy, pgx). Connection pooling handles concurrent users efficiently. Neon is what Vercel, Replit, and Retool use internally." },
+      alternatives: ["Supabase", "CockroachDB", "Turso"],
+      outgrow: "When you exceed 0.5 GiB storage or need always-on compute. Supabase gives 500 MB Postgres with auth + storage + realtime bundled (pauses after 1 week inactive). CockroachDB offers 10 GiB distributed SQL \u2014 best for multi-region SaaS. Turso provides 9 GB edge SQLite \u2014 great for read-heavy, globally distributed apps.",
+      whyNot: "Why not MongoDB Atlas: 512 MB free, but document databases add complexity for SaaS (no joins, denormalized data, eventual consistency). Postgres handles 95% of SaaS workloads better. Why not PlanetScale: Removed free tier in April 2024.",
+      relatedPage: "/database-free-tier-comparison-2026",
+      isFrameworkSection: false,
+    },
+    {
+      name: "Authentication",
+      icon: "\u{1F510}",
+      recommended: { vendor: "Clerk", why: "50,000 monthly retained users free \u2014 the most generous managed auth for SaaS. Drop-in React/Next.js components for login, signup, user profile, and organization management. Social login, MFA, and RBAC included. Organizations feature (multi-tenant SaaS) available on free tier. Webhooks for syncing user data to your database." },
+      alternatives: ["Auth0", "Supabase", "Kinde"],
+      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100K users: Clerk ~$175/mo, Auth0 ~$240/mo, Supabase ~$25/mo (cheapest at scale).",
+      whyNot: "Why not Firebase Auth: 50K MAU free, but Firebase is a full BaaS \u2014 using just auth means importing the entire SDK. Supabase Auth is a better \u00e0 la carte option. Why not rolling your own: Auth is the #1 source of security vulnerabilities in SaaS. Password reset, email verification, rate limiting, session management, CSRF \u2014 auth providers handle all of this. Only roll your own if you have dedicated security expertise.",
+      relatedPage: "/auth-comparison-2026",
+      isFrameworkSection: false,
+    },
+    {
+      name: "Payments & Billing",
+      icon: "\u{1F4B3}",
+      recommended: { vendor: "Stripe", why: "The default SaaS billing platform. No monthly fees \u2014 only 2.9% + 30\u00a2 per transaction. Subscriptions, usage-based billing, invoicing, tax calculation, customer portal, and webhooks. Every SaaS billing library (Stripe.js, @stripe/stripe-js) is built for Stripe first. Start collecting revenue on day one with zero fixed costs." },
+      alternatives: [] as string[],
+      outgrow: "You don't outgrow Stripe \u2014 it scales to billions. Consider Lemon Squeezy ($0 fixed + 5% + 50\u00a2) if you need a Merchant of Record (handles sales tax, VAT, and compliance globally \u2014 you receive net payouts). Paddle (5% + 50\u00a2) is the enterprise MoR alternative. The trade-off: MoR services charge higher per-transaction fees but eliminate tax/compliance complexity.",
+      whyNot: "Why not PayPal: Higher fees, worse developer experience, no native subscription billing. Why not building your own billing: Subscription billing has edge cases (proration, dunning, tax compliance, refunds, upgrades/downgrades) that take months to build correctly. Stripe handles all of this. Why not free alternatives: There aren't any \u2014 payment processing requires financial infrastructure.",
+      relatedPage: null,
+      isFrameworkSection: false,
+    },
+    {
+      name: "Email & Transactional",
+      icon: "\u{1F4E7}",
+      recommended: { vendor: "Resend", why: "3,000 emails/month free with a modern, developer-first API. React Email for templates \u2014 write email templates in JSX. Clean SDK, excellent deliverability, and webhook notifications for bounces and complaints. The new standard for SaaS transactional email (welcome emails, password resets, invoice notifications, team invitations)." },
+      alternatives: ["Brevo", "Amazon SES"],
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation included \u2014 good for SaaS that needs both transactional and newsletter email. Amazon SES offers 62,000/month free from EC2 \u2014 cheapest at scale ($0.10/1K emails) but requires more setup.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. Many tutorials still reference it \u2014 those are outdated. Why not Mailgun: Free tier removed. Why not Postmark: No free production tier (test mode only). Postmark has the best deliverability but costs $15/mo for 10K emails.",
+      relatedPage: "/email-comparison-2026",
+      isFrameworkSection: false,
+    },
+    {
+      name: "Object Storage",
+      icon: "\u{1F4E6}",
+      recommended: { vendor: "Cloudflare R2", why: "10 GB storage with zero egress fees \u2014 the only major storage provider that doesn't charge for bandwidth. S3-compatible API works with every SDK and library. For SaaS, this means user uploads (avatars, documents, images) cost nothing to serve, no matter how many times they're downloaded. No surprise bandwidth bills." },
+      alternatives: ["Backblaze B2", "Supabase"],
+      outgrow: "When you exceed 10 GB storage or 1M Class A operations/month. R2's zero-egress model means the constraint is storage volume, not bandwidth \u2014 a SaaS serving 1 TB of user files still pays $0 in egress. At scale: 100 GB costs ~$1.50/mo on R2 vs ~$9/mo on S3 (plus $9/GB egress on S3). Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN.",
+      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. A SaaS serving user-uploaded files can accumulate significant egress costs. R2 charges $0 for egress, forever. Why not Vercel Blob: 250 MB free \u2014 too small for most SaaS file storage needs.",
+      relatedPage: "/storage-comparison-2026",
+      isFrameworkSection: false,
+    },
+    {
+      name: "Monitoring & Error Tracking",
+      icon: "\u{1F41B}",
+      recommended: { vendor: "Sentry", why: "5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments \u2014 all free. Best-in-class error tracking with stack traces, release tracking, and user context. Integrates with every framework (Next.js, Django, FastAPI, Go, Rails). Session replay shows you exactly what the user saw when the error occurred." },
+      alternatives: ["Grafana Cloud", "BetterStack", "New Relic"],
+      outgrow: "When you exceed 5,000 errors/month (fix your bugs first). For full observability beyond error tracking: Grafana Cloud offers 10K metrics series + 50 GB logs + 50 GB traces free. New Relic gives 100 GB data ingest/month (most generous, but limited to 1 user). BetterStack combines uptime monitoring with incident management.",
+      whyNot: "Why not Datadog: Free tier has 1-day metric retention \u2014 practically unusable. Per-host pricing ($15/host/month) gets expensive fast. Why not just console.log: You'll miss errors in production, have no alerting, and can't see trends. Sentry catches errors you didn't know about.",
+      relatedPage: "/monitoring-comparison-2026",
+      isFrameworkSection: false,
+    },
+    {
+      name: "CI/CD",
+      icon: "\u2699\uFE0F",
+      recommended: { vendor: "GitHub Actions", why: "2,000 minutes/month for private repos, unlimited for public. Deep GitHub integration \u2014 trigger on push, PR, schedule, or manual dispatch. Massive marketplace of community actions for testing, linting, deploying, and security scanning. Matrix testing across Node/Python/Go versions. Cache dependencies to cut build times by 50-80%." },
+      alternatives: ["GitLab CI"] as string[],
+      outgrow: "When you exceed 2,000 minutes/month on private repos. Self-hosted runners are free (but now cost $0.002/min for private repos as of March 2026). Railway and Vercel auto-deploy from git \u2014 combine with GitHub Actions for tests only to conserve minutes.",
+      whyNot: null,
+      relatedPage: "/cicd-free-tier-comparison-2026",
+      isFrameworkSection: false,
+    },
+    {
+      name: "Analytics",
+      icon: "\u{1F4C8}",
+      recommended: { vendor: "PostHog", why: "1M events/month, 5K session replays, feature flags, and A/B testing \u2014 all free. The most comprehensive product analytics platform for SaaS. Track user journeys, measure feature adoption, run experiments, and manage feature rollouts. Self-hostable (open source). GDPR-friendly with EU hosting option." },
+      alternatives: ["Plausible", "Umami"] as string[],
+      outgrow: "When you exceed 1M events/month \u2014 typically at 10K-50K active users depending on event density. Plausible (self-hosted) is free with unlimited events but only covers web analytics (no funnels, no feature flags). Umami (self-hosted) is similar. For SaaS, PostHog's product analytics + feature flags combination is hard to beat.",
+      whyNot: "Why not Google Analytics: Privacy concerns, complex setup, no feature flags or session replay. Many SaaS users block GA. Why not Mixpanel: Free tier is generous (20M events) but no session replay, feature flags, or A/B testing. PostHog bundles everything.",
+      relatedPage: "/analytics-free-tier-comparison-2026",
+      isFrameworkSection: false,
+    },
+    {
+      name: "Background Jobs & Queues",
+      icon: "\u23F1\uFE0F",
+      recommended: { vendor: "Inngest", why: "Free tier: 25,000 function runs/month with 5 concurrent steps. Durable workflow orchestration \u2014 retries, scheduling, fan-out, and step functions. TypeScript-first with Next.js integration. No infrastructure to manage \u2014 send an event, Inngest runs your function reliably. Perfect for SaaS: onboarding workflows, scheduled reports, webhook processing, billing reconciliation." },
+      alternatives: ["Trigger.dev", "Upstash"] as string[],
+      outgrow: "When you exceed 25,000 runs/month. Trigger.dev offers 10,000 runs/month free with a similar developer experience. For simpler needs: Upstash QStash (500 messages/day free) provides HTTP-based async messaging \u2014 send a POST, it delivers reliably with retries. For self-managed: BullMQ (Redis-backed) with Upstash Redis (10K commands/day) handles moderate queue needs.",
+      whyNot: "Why not cron jobs alone: Cron doesn't retry failures, handle concurrency limits, or provide observability. Why not AWS SQS/Lambda: Complex setup, 12-month free tier expiration. Inngest and Trigger.dev give you managed, durable execution with a serverless DX.",
+      relatedPage: null,
+      isFrameworkSection: false,
+    },
+  ];
+
+  const resolveVendor = (vendorName: string) => {
+    if (vendorName === "Next.js" || vendorName === "Stripe" || vendorName === "Lemon Squeezy" || vendorName === "Paddle" || vendorName === "Plausible" || vendorName === "Umami") return null;
+    const offer = offers.find(o => o.vendor === vendorName);
+    if (!offer) return null;
+    return enrichOffers([offer])[0];
+  };
+
+  const stackVendors = stackCategories.flatMap(c => {
+    const v = c.recommended.vendor;
+    return (v === "Next.js" || v === "Stripe") ? [...c.alternatives] : [v, ...c.alternatives];
+  });
+  const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-04-04",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What's the cheapest way to launch a SaaS in 2026?",
+        acceptedAnswer: { "@type": "Answer", text: "You can launch a complete SaaS for $0/month using free tiers: Railway or Render (hosting), Neon (Postgres database), Clerk (auth with 50K users free), Stripe (payments \u2014 no monthly fee, only per-transaction), Resend (3K emails/month), Cloudflare R2 (10 GB storage, zero egress), Sentry (error tracking), GitHub Actions (CI/CD), PostHog (1M analytics events), and Inngest (25K background job runs). Total monthly cost at launch: $0. You'll hit your first paid tier around 1,000-5,000 users." },
+      },
+      {
+        "@type": "Question",
+        name: "Can I build a SaaS for free?",
+        acceptedAnswer: { "@type": "Answer", text: "Yes. Every layer of SaaS infrastructure \u2014 hosting, database, authentication, email, storage, monitoring, CI/CD, and analytics \u2014 has a viable free tier in 2026. The only category without a free option is payment processing (Stripe charges 2.9% + 30\u00a2 per transaction but has no monthly fee). Most free tiers support 1,000-5,000 active users before you need to upgrade. The first paid tier is typically database storage \u2014 Neon's Launch plan ($19/month) is usually the first upgrade." },
+      },
+      {
+        "@type": "Question",
+        name: "What's the best free database for SaaS?",
+        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) \u2014 0.5 GiB storage, 190+ compute hours/month, scales to zero. Works with every ORM and framework. For bundled BaaS: Supabase gives 500 MB Postgres + auth + storage + realtime (but pauses after 1 week inactive). For distributed SQL: CockroachDB offers 10 GiB free. For edge SQLite: Turso provides 9 GB. Postgres is the default SaaS database \u2014 95% of SaaS apps use it." },
+      },
+      {
+        "@type": "Question",
+        name: "When should I start paying for infrastructure?",
+        acceptedAnswer: { "@type": "Answer", text: "Most SaaS products can run entirely on free tiers through their first 1,000-5,000 users. Database storage (Neon 0.5 GiB) is typically the first limit you'll hit, followed by email volume (Resend 3K/month) and hosting compute. The jump from free to first paid tier is $19-25/month. By the time you need to pay, you should have paying customers. Plan your growth path: at 10K users expect ~$150-300/month total infrastructure, at 100K users ~$1,500-3,000/month." },
+      },
+    ],
+  };
+
+  const categorySections = stackCategories.map(cat => {
+    if (cat.isFrameworkSection) {
+      return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      <div class="framework-decision">
+        <p class="pick-why">This guide is <strong style="color:var(--text)">framework-agnostic</strong> \u2014 the infrastructure stack works with any language or framework. Choose based on your needs:</p>
+        <div class="framework-grid">
+          <a href="/free-nextjs-stack" class="framework-card">
+            <strong>Next.js</strong>
+            <span>SSR, marketing sites, full-stack React</span>
+          </a>
+          <a href="/free-django-stack" class="framework-card">
+            <strong>Django</strong>
+            <span>Rapid prototyping, admin panel, batteries included</span>
+          </a>
+          <a href="/free-fastapi-stack" class="framework-card">
+            <strong>FastAPI</strong>
+            <span>API-first, async Python, ML serving</span>
+          </a>
+          <a href="/free-go-stack" class="framework-card">
+            <strong>Go</strong>
+            <span>Performance, microservices, single binary</span>
+          </a>
+        </div>
+      </div>
+    </div>`;
+    }
+
+    const rec = resolveVendor(cat.recommended.vendor);
+    const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
+
+    const recCard = rec ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <div class="pick-links">
+          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>` : (cat.recommended.vendor === "Stripe") ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <span class="pick-name">Stripe</span>
+          <span class="pick-tier">No monthly fee \u2014 2.9% + 30\u00a2/txn</span>
+          <span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors.stable}22;color:${riskColors.stable};font-weight:600">stable</span>
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">No monthly fee. Pay-per-transaction only. Subscriptions, invoicing, tax, customer portal included.</p>
+      </div>` : `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <span class="pick-name">${escHtmlServer(cat.recommended.vendor)}</span>
+          <span class="pick-tier">Free tier</span>
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+      </div>`;
+
+    const altCards = altVendors.length > 0 ? `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
+      </div>` : "";
+
+    const whyNotBox = cat.whyNot ? `
+      <div class="whynot-box">
+        <strong>\u26A0\uFE0F ${escHtmlServer(cat.whyNot)}</strong>
+      </div>` : "";
+
+    const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
+
+    return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      ${recCard}
+      ${altCards}
+      <div class="outgrow-box">
+        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+      </div>
+      ${whyNotBox}
+      ${relatedLink}
+    </div>`;
+  }).join("\n");
+
+  const stabilityNotes = stackChanges.length > 0 ? `
+  <h2>Stability Notes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <div class="stability-list">
+    ${stackChanges.slice(0, 12).map(c => {
+      const typeColors: Record<string, string> = {
+        free_tier_removed: "#f85149", limits_reduced: "#d29922", pricing_restructured: "#d29922",
+        restriction: "#d29922", limits_increased: "#3fb950", new_free_tier: "#3fb950",
+        pricing_postponed: "#3fb950", startup_program_expanded: "#3fb950", product_deprecated: "#f85149",
+      };
+      const color = typeColors[c.change_type] ?? "#94a3b8";
+      return `<div class="stability-item">
+        <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+      </div>`;
+    }).join("\n    ")}
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+
+  const tableRows = stackCategories.filter(c => !c.isFrameworkSection).map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const vendorName = cat.recommended.vendor;
+    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : (vendorName === "Stripe" ? "No monthly fee \u2014 2.9% + 30\u00a2/txn" : "\u2014");
+    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
+    return `      <tr>
+        <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
+        <td>${vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
+        <td>${riskBadge}</td>
+      </tr>`;
+  }).join("\n");
+
+  // Growth cost analysis at 4 scale points
+  const growthCosts = [
+    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB", firstPaid: "Launch $19/mo", atScale: "$69/mo (Scale)", hitFirst: true },
+    { layer: "Hosting", vendor: "Railway", freeLimit: "$5/mo credit", firstPaid: "Hobby $5/mo", atScale: "$20+/mo (usage)", hitFirst: true },
+    { layer: "Email", vendor: "Resend", freeLimit: "3K/mo", firstPaid: "Pro $20/mo", atScale: "$100/mo (100K)", hitFirst: false },
+    { layer: "Auth", vendor: "Clerk", freeLimit: "50K MRU", firstPaid: "$25/mo", atScale: "$175/mo (100K)", hitFirst: false },
+    { layer: "Analytics", vendor: "PostHog", freeLimit: "1M events", firstPaid: "Pay-as-you-go", atScale: "$450/mo", hitFirst: false },
+    { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", atScale: "$15/mo (1TB)", hitFirst: false },
+    { layer: "Monitoring", vendor: "Sentry", freeLimit: "5K errors", firstPaid: "Team $26/mo", atScale: "$80/mo", hitFirst: false },
+    { layer: "Payments", vendor: "Stripe", freeLimit: "No fixed cost", firstPaid: "2.9% + 30\u00a2/txn", atScale: "2.9% + 30\u00a2/txn", hitFirst: false },
+    { layer: "Background Jobs", vendor: "Inngest", freeLimit: "25K runs/mo", firstPaid: "$50/mo", atScale: "$150/mo", hitFirst: false },
+    { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2K min/mo", firstPaid: "Team $4/user/mo", atScale: "$19/user/mo", hitFirst: false },
+  ];
+
+  const scaleTable = `
+  <h2>The Growth Path \u2014 From $0 to $500/Month</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">What you'll spend at each scale milestone. The most expensive moment is the first upgrade \u2014 plan for it.</p>
+
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Scale</th>
+        <th>Users</th>
+        <th>Monthly Cost</th>
+        <th>What Changes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600">\u{1F680} Launch</td>
+        <td style="font-family:var(--mono);font-size:.85rem">0-500</td>
+        <td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">$0/mo</td>
+        <td style="font-size:.85rem;color:var(--text-muted)">Everything on free tiers. Stripe charges only per transaction.</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600">\u{1F4C8} Traction</td>
+        <td style="font-family:var(--mono);font-size:.85rem">1K-5K</td>
+        <td style="font-family:var(--mono);font-size:.85rem;color:#d29922">$40-80/mo</td>
+        <td style="font-size:.85rem;color:var(--text-muted)">Database ($19) and hosting ($5-20) are the first upgrades. Email may hit limit at 3K sends/month. Auth, analytics, monitoring still free.</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600">\u{1F525} Growth</td>
+        <td style="font-family:var(--mono);font-size:.85rem">10K-25K</td>
+        <td style="font-family:var(--mono);font-size:.85rem;color:#d29922">$150-300/mo</td>
+        <td style="font-size:.85rem;color:var(--text-muted)">Email upgrade ($20), analytics may exceed 1M events, monitoring upgrade ($26). Auth still free (Clerk 50K, Auth0 25K). Hosting scales with usage.</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600">\u{1F3E2} Scale</td>
+        <td style="font-family:var(--mono);font-size:.85rem">50K-100K</td>
+        <td style="font-family:var(--mono);font-size:.85rem;color:#f85149">$500-1,500/mo</td>
+        <td style="font-size:.85rem;color:var(--text-muted)">All services on paid tiers. Auth exceeds free limits. Database at Scale tier ($69). Analytics, monitoring, background jobs all paid. But at 100K users, you should have significant revenue.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The $19/month breakpoint:</strong> Database (Neon Launch at $19/mo) is the first upgrade most SaaS products need \u2014 0.5 GiB fills up fast with user data, session logs, and analytics tables. Everything else stays free much longer. Auth (Clerk 50K free) and analytics (PostHog 1M events) typically last until 10K+ active users. <strong style="color:var(--text)">Key insight:</strong> at every scale point, your infrastructure cost should be &lt;10% of revenue. If you're charging $10/user/month, 100 users = $1,000 MRR \u2014 more than enough to cover $40-80/month in infrastructure.</p>
+  </div>`;
+
+  const upgradeTable = `
+  <h2>When to Upgrade \u2014 Service by Service</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Sorted by which limits you'll likely hit first:</p>
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Free Limit</th>
+        <th>First Paid</th>
+        <th>At 100K Users</th>
+      </tr>
+    </thead>
+    <tbody>
+${growthCosts.map(g => `      <tr>
+        <td style="font-weight:600">${escHtmlServer(g.layer)}${g.hitFirst ? ` <span class="growth-first">\u2B06 hit first</span>` : ""}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted)">${escHtmlServer(g.freeLimit)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(g.firstPaid)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted)">${escHtmlServer(g.atScale)}</td>
+      </tr>`).join("\n")}
+    </tbody>
+  </table>
+  </div>`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} \u2014 AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.tldr-box{background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(168,85,247,0.08));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0 2rem}
+.tldr-box h2{margin:0 0 1rem;font-size:1.2rem;color:var(--accent)}
+.tldr-stack{display:flex;flex-wrap:wrap;gap:.5rem;margin:.75rem 0}
+.tldr-item{display:inline-flex;align-items:center;gap:.35rem;font-size:.85rem;padding:.35rem .7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text)}
+.tldr-item .tldr-cat{color:var(--text-dim);font-size:.75rem}
+.cost-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
+.cost-banner .cost-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.cost-banner .cost-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
+.cost-scale{display:flex;justify-content:center;gap:2rem;margin-top:1rem;flex-wrap:wrap}
+.cost-scale-item{text-align:center}
+.cost-scale-item .scale-users{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em}
+.cost-scale-item .scale-cost{font-size:1.1rem;font-weight:600;font-family:var(--mono)}
+.framework-decision{padding:1rem 0}
+.framework-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-top:.75rem}
+.framework-card{display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}
+.framework-card:hover{border-color:var(--accent);text-decoration:none}
+.framework-card strong{display:block;color:var(--text);font-size:1rem;margin-bottom:.25rem}
+.framework-card span{font-size:.8rem;color:var(--text-muted)}
+.stack-category{border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;background:var(--bg-card)}
+.stack-category h2{margin:0 0 1rem;font-size:1.25rem}
+.cat-icon{margin-right:.5rem}
+.stack-pick{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:rgba(59,130,246,0.05);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.pick-badge{font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;background:var(--accent);color:#fff}
+.pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.pick-name:hover{color:var(--accent)}
+.pick-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.pick-why{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:.5rem}
+.pick-limits{font-family:var(--mono);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
+.pick-links a{color:var(--accent)}
+.alt-picks{margin-bottom:1rem}
+.alt-label{color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem}
+.alt-chip{display:inline-block;padding:.3rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text);margin:.25rem .25rem .25rem 0;transition:border-color .15s}
+.alt-chip:hover{border-color:var(--accent);text-decoration:none}
+.chip-tier{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-left:.25rem}
+.outgrow-box{background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.2);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.outgrow-box strong{color:var(--text)}
+.whynot-box{background:rgba(248,81,73,0.06);border:1px solid rgba(248,81,73,0.15);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5;margin-top:.75rem}
+.whynot-box strong{color:var(--text-muted);font-weight:500}
+.related-link{display:block;margin-top:.75rem;font-size:.85rem}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.growth-table th,.growth-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.growth-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-first{color:#d29922;font-weight:600}
+.stability-list{display:flex;flex-direction:column;gap:.5rem}
+.stability-item{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5;background:var(--bg-card)}
+.stability-item strong{color:var(--text)}
+.stability-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.1rem .4rem;border-radius:8px;margin-right:.5rem}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.growth-table{font-size:.75rem}.growth-table th,.growth-table td{padding:.4rem .5rem}.cost-banner .cost-amount{font-size:2rem}.cost-scale{gap:1rem}.framework-grid{grid-template-columns:1fr}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free SaaS Stack</div>
+  <h1>The Complete Free SaaS Starter Stack for 2026</h1>
+
+  <div class="context">
+    <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide gives you the <strong>opinionated "just tell me what to use" answer</strong> \u2014 the best free tier for each layer of a SaaS stack, with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Every recommendation includes alternatives, "when you'll outgrow it" guidance, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+  </div>
+
+  <div class="tldr-box">
+    <h2>TL;DR \u2014 The $0/Month SaaS Stack</h2>
+    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem">If you're building a SaaS today, use these. Each one is the best free option in its category:</p>
+    <div class="tldr-stack">
+      <span class="tldr-item"><span class="tldr-cat">Hosting:</span> Railway</span>
+      <span class="tldr-item"><span class="tldr-cat">Database:</span> Neon</span>
+      <span class="tldr-item"><span class="tldr-cat">Auth:</span> Clerk</span>
+      <span class="tldr-item"><span class="tldr-cat">Payments:</span> Stripe</span>
+      <span class="tldr-item"><span class="tldr-cat">Email:</span> Resend</span>
+      <span class="tldr-item"><span class="tldr-cat">Storage:</span> R2</span>
+      <span class="tldr-item"><span class="tldr-cat">Monitoring:</span> Sentry</span>
+      <span class="tldr-item"><span class="tldr-cat">CI/CD:</span> GitHub Actions</span>
+      <span class="tldr-item"><span class="tldr-cat">Analytics:</span> PostHog</span>
+      <span class="tldr-item"><span class="tldr-cat">Jobs:</span> Inngest</span>
+    </div>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
+    <div class="cost-label">Total infrastructure cost at launch (Stripe charges per-transaction only)</div>
+    <div class="cost-scale">
+      <div class="cost-scale-item"><div class="scale-users">1K users</div><div class="scale-cost" style="color:#d29922">~$40-80</div></div>
+      <div class="cost-scale-item"><div class="scale-users">10K users</div><div class="scale-cost" style="color:#d29922">~$150-300</div></div>
+      <div class="cost-scale-item"><div class="scale-users">100K users</div><div class="scale-cost" style="color:#f85149">~$500-1,500</div></div>
+    </div>
+  </div>
+
+  <h2>Stack Overview</h2>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Recommended</th>
+        <th>Key Limit</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+  </div>
+
+${categorySections}
+
+${stabilityNotes}
+
+${scaleTable}
+
+${upgradeTable}
+
+  <div class="search-cta">
+    <p>Need a specialized stack? See our <a href="/free-startup-stack">Free Startup Stack</a> for general infrastructure, <a href="/free-ai-stack">Free AI/ML Stack</a> for AI development, or <a href="/free-devops-stack">Free DevOps Stack</a> for infrastructure tooling. Framework-specific guides: <a href="/free-nextjs-stack">Next.js</a> \u00b7 <a href="/free-django-stack">Django</a> \u00b7 <a href="/free-fastapi-stack">FastAPI</a> \u00b7 <a href="/free-go-stack">Go</a>. Or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get personalized SaaS stack recommendations from your AI assistant. Compare free tiers, check stability, and plan your infrastructure \u2014 directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -36769,6 +37329,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-go-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeGoStackPage());
+  } else if (url.pathname === "/free-saas-stack" && isGetOrHead) {
+    recordApiHit("/free-saas-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-saas-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeSaasStackPage());
   } else if (url.pathname === "/supabase-vs-firebase" && isGetOrHead) {
     recordApiHit("/supabase-vs-firebase");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/supabase-vs-firebase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
