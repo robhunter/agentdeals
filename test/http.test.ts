@@ -914,7 +914,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -1407,6 +1407,40 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("feed.xml"), "Should link to RSS feed");
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("GET /pricing-changes renders pricing changelog page with filters and anchors", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/pricing-changes`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Developer Tool Pricing Changes"), "Should have pricing changes title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("ItemList"), "JSON-LD should use ItemList");
+    assert.ok(html.includes("/pricing-changes"), "Should reference /pricing-changes");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("pc-filters"), "Should have filter controls");
+    assert.ok(html.includes("data-filter-type"), "Should have filter type buttons");
+    assert.ok(html.includes("data-filter-impact"), "Should have filter impact buttons");
+    assert.ok(html.includes('id="'), "Should have anchor IDs on entries");
+    assert.ok(html.includes("pc-states") || html.includes("pc-state-label"), "Should have before/after state rendering");
+    assert.ok(html.includes("/pricing-changes/feed.xml"), "Should link to pricing changes feed");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("GET /pricing-changes/feed.xml returns valid Atom feed", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/pricing-changes/feed.xml`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("application/atom+xml"));
+    const xml = await response.text();
+    assert.ok(xml.includes('<?xml version="1.0"'), "Should be valid XML");
+    assert.ok(xml.includes("<feed xmlns"), "Should be Atom feed");
+    assert.ok(xml.includes("/pricing-changes#"), "Should link to pricing changes anchors");
+    assert.ok(xml.includes("urn:agentdeals:pricing-changes-feed"), "Should have correct feed ID");
   });
 
   it("GET /agent-stack renders agent stack guide page", async () => {
