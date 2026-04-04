@@ -40,10 +40,12 @@
     "ingest:startup-deals": "node scripts/ingest-startup-deals.ts",
     "recategorize": "node scripts/recategorize.ts",
     "reverify": "node scripts/reverify.js",
+    "verify-freshness": "node scripts/verify-freshness.js",
     "validate": "node scripts/validate-data.ts",
     "build:mcpb": "npm run build && npx @anthropic-ai/mcpb pack ."
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.82.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "swagger-ui-dist": "^5.32.0",
     "zod": "^3.25.0"
