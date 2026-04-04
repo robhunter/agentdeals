@@ -24124,6 +24124,169 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+// --- Comparison Page Enrichment Helpers ---
+
+interface ComparisonPageMeta {
+  slug: string;
+  categoryName: string;
+  categorySlug: string;
+  shortName: string;
+  relatedSlugs: string[];  // slugs of related comparison pages
+}
+
+const comparisonPagesMeta: ComparisonPageMeta[] = [
+  { slug: "cloud-free-tier-comparison-2026", categoryName: "Cloud IaaS", categorySlug: "cloud-hosting", shortName: "Cloud", relatedSlugs: ["hosting-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "storage-comparison-2026"] },
+  { slug: "database-free-tier-comparison-2026", categoryName: "Databases", categorySlug: "databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
+  { slug: "cicd-free-tier-comparison-2026", categoryName: "CI/CD", categorySlug: "ci-cd", shortName: "CI/CD", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
+  { slug: "serverless-free-tier-comparison-2026", categoryName: "Serverless", categorySlug: "serverless", shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
+  { slug: "auth-comparison-2026", categoryName: "Auth", categorySlug: "auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
+  { slug: "email-comparison-2026", categoryName: "Email", categorySlug: "email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
+  { slug: "monitoring-comparison-2026", categoryName: "Monitoring", categorySlug: "monitoring", shortName: "Monitoring", relatedSlugs: ["security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "analytics-free-tier-comparison-2026"] },
+  { slug: "storage-comparison-2026", categoryName: "Storage", categorySlug: "storage", shortName: "Storage & CDN", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
+  { slug: "testing-free-tier-comparison-2026", categoryName: "Testing", categorySlug: "testing", shortName: "Testing", relatedSlugs: ["cicd-free-tier-comparison-2026", "monitoring-comparison-2026", "security-free-tier-comparison-2026"] },
+  { slug: "analytics-free-tier-comparison-2026", categoryName: "Analytics", categorySlug: "analytics", shortName: "Analytics", relatedSlugs: ["monitoring-comparison-2026", "email-comparison-2026", "testing-free-tier-comparison-2026"] },
+  { slug: "api-development-free-tier-comparison-2026", categoryName: "API Development", categorySlug: "api-development", shortName: "API Development", relatedSlugs: ["testing-free-tier-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "security-free-tier-comparison-2026", categoryName: "Security", categorySlug: "security", shortName: "Security", relatedSlugs: ["auth-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "hosting-free-tier-comparison-2026", categoryName: "Cloud Hosting", categorySlug: "cloud-hosting", shortName: "Hosting", relatedSlugs: ["cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "cicd-free-tier-comparison-2026"] },
+];
+
+const comparisonMetaBySlug = new Map(comparisonPagesMeta.map(m => [m.slug, m]));
+
+function buildComparisonCategoryBackLink(slug: string): string {
+  const meta = comparisonMetaBySlug.get(slug);
+  if (!meta) return "";
+  const catOffers = offers.filter(o => {
+    const norm = o.category?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return norm === meta.categorySlug || o.category === meta.categoryName;
+  });
+  const count = catOffers.length;
+  return `<div style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:10px;padding:1rem 1.25rem;margin:1rem 0 1.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+    <span style="font-size:1.3rem">\u{1F4C2}</span>
+    <span style="font-size:.95rem;color:var(--text)">Browse all <strong>${count}</strong> ${escHtmlServer(meta.categoryName)} services with free tiers \u2192 <a href="/category/${escHtmlServer(meta.categorySlug)}" style="font-weight:600">${escHtmlServer(meta.categoryName)} Category Hub</a></span>
+  </div>`;
+}
+
+function buildComparisonRelatedComparisons(slug: string): string {
+  const meta = comparisonMetaBySlug.get(slug);
+  if (!meta || meta.relatedSlugs.length === 0) return "";
+  const related = meta.relatedSlugs
+    .map(s => comparisonMetaBySlug.get(s))
+    .filter((m): m is ComparisonPageMeta => !!m);
+  if (related.length === 0) return "";
+  return `<h2>Related Comparisons</h2>
+  <div class="related-pages">
+    ${related.map(r => `<a href="/${r.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(r.shortName)} Free Tier Comparison 2026</div>
+      <div class="link-desc">Side-by-side comparison of ${escHtmlServer(r.shortName.toLowerCase())} free tiers — limits, costs, and recommendations</div>
+    </a>`).join("\n    ")}
+  </div>`;
+}
+
+function buildComparisonFaq(slug: string, title: string): string {
+  const meta = comparisonMetaBySlug.get(slug);
+  if (!meta) return "";
+  const catName = meta.categoryName;
+  const catOffers = offers.filter(o => {
+    const norm = o.category?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return norm === meta.categorySlug || o.category === catName;
+  });
+  const count = catOffers.length;
+  const enriched = enrichOffers(catOffers);
+  const stableCount = enriched.filter((o: any) => o.stability === "stable").length;
+  const stablePct = count > 0 ? Math.round((stableCount / count) * 100) : 0;
+  const topVendor = catOffers[0]?.vendor || catName;
+
+  const faqs = [
+    {
+      q: `What is the best free ${catName.toLowerCase()} service in 2026?`,
+      a: `Based on our comparison of ${count} ${catName.toLowerCase()} services, ${topVendor} stands out for its free tier generosity. However, the best choice depends on your specific requirements — this comparison breaks down limits, scaling costs, and lock-in risk for each provider.`,
+    },
+    {
+      q: `Which ${catName.toLowerCase()} free tier is most generous?`,
+      a: `Free tier generosity varies by use case. Some providers offer more storage, others more compute or API calls. Our comparison table above shows exact limits side-by-side so you can evaluate based on what matters most for your workload.`,
+    },
+    {
+      q: `Are free ${catName.toLowerCase()} services reliable enough for production?`,
+      a: `${stablePct}% of the ${count} ${catName.toLowerCase()} services we track have stable pricing histories. For production use, prioritize providers rated "stable" in our analysis and review the hidden costs section to avoid surprises at scale.`,
+    },
+    {
+      q: `How do ${catName.toLowerCase()} free tiers compare on limits?`,
+      a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. Our comparison table provides exact numbers for each provider. Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits.`,
+    },
+  ];
+
+  const faqHtml = faqs.map(f => `<div style="margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)">
+      <h3 style="margin:0 0 .5rem;font-size:1rem;color:var(--text)">${escHtmlServer(f.q)}</h3>
+      <p style="margin:0;color:var(--text-muted);font-size:.9rem;line-height:1.7">${escHtmlServer(f.a)}</p>
+    </div>`).join("\n    ");
+
+  return `<h2 id="faq">Frequently Asked Questions</h2>
+  <div style="margin:1rem 0 2rem">
+    ${faqHtml}
+  </div>`;
+}
+
+function buildComparisonFaqJsonLd(slug: string): string {
+  const meta = comparisonMetaBySlug.get(slug);
+  if (!meta) return "";
+  const catName = meta.categoryName;
+  const catOffers = offers.filter(o => {
+    const norm = o.category?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return norm === meta.categorySlug || o.category === catName;
+  });
+  const count = catOffers.length;
+  const enriched = enrichOffers(catOffers);
+  const stableCount = enriched.filter((o: any) => o.stability === "stable").length;
+  const stablePct = count > 0 ? Math.round((stableCount / count) * 100) : 0;
+  const topVendor = catOffers[0]?.vendor || catName;
+
+  const faqs = [
+    {
+      q: `What is the best free ${catName.toLowerCase()} service in 2026?`,
+      a: `Based on our comparison of ${count} ${catName.toLowerCase()} services, ${topVendor} stands out for its free tier generosity. However, the best choice depends on your specific requirements — this comparison breaks down limits, scaling costs, and lock-in risk for each provider.`,
+    },
+    {
+      q: `Which ${catName.toLowerCase()} free tier is most generous?`,
+      a: `Free tier generosity varies by use case. Some providers offer more storage, others more compute or API calls. Our comparison table above shows exact limits side-by-side so you can evaluate based on what matters most for your workload.`,
+    },
+    {
+      q: `Are free ${catName.toLowerCase()} services reliable enough for production?`,
+      a: `${stablePct}% of the ${count} ${catName.toLowerCase()} services we track have stable pricing histories. For production use, prioritize providers rated "stable" in our analysis and review the hidden costs section to avoid surprises at scale.`,
+    },
+    {
+      q: `How do ${catName.toLowerCase()} free tiers compare on limits?`,
+      a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. Our comparison table provides exact numbers for each provider. Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits.`,
+    },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  return `<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>`;
+}
+
+function buildComparisonBreadcrumbJsonLd(slug: string, title: string): string {
+  const meta = comparisonMetaBySlug.get(slug);
+  if (!meta) return "";
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: meta.categoryName, item: `${BASE_URL}/category/${meta.categorySlug}` },
+      { "@type": "ListItem", position: 3, name: title, item: `${BASE_URL}/${slug}` },
+    ],
+  };
+  return `<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>`;
+}
+
 // --- Cloud Free Tier Comparison 2026 ---
 
 function buildCloudFreeTierComparison2026Page(): string {
@@ -24252,9 +24415,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Cloud Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Cloud Free Tier Comparison</div>
   <h1>Cloud Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 4 cloud providers compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Clouds Compared</div></div>
@@ -24699,6 +24864,14 @@ ${mcpCtaCss()}
 
   ${buildMcpCta("Compare cloud free tiers, track pricing changes, and plan your infrastructure stack — all from your AI coding assistant.")}
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
@@ -24872,9 +25045,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Database Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Database Free Tier Comparison</div>
   <h1>Database Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 44 database services compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">44</div><div class="stat-label">Database Services</div></div>
@@ -25378,6 +25553,14 @@ ${mcpCtaCss()}
 
   ${buildMcpCta("Compare database free tiers, track pricing changes, and plan your data stack — all from your AI coding assistant.")}
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -25546,9 +25729,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; CI/CD Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/ci-cd">CI/CD</a> &rsaquo; CI/CD Free Tier Comparison</div>
   <h1>CI/CD Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 37 CI/CD services compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">37</div><div class="stat-label">CI/CD Services</div></div>
@@ -26039,6 +26224,14 @@ ${mcpCtaCss()}
 
   ${buildMcpCta("Compare CI/CD free tiers, track pricing changes, and plan your DevOps stack — all from your AI coding assistant.")}
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -26208,9 +26401,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Serverless Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/serverless">Serverless</a> &rsaquo; Serverless Free Tier Comparison</div>
   <h1>Serverless Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 10+ serverless platforms compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">10+</div><div class="stat-label">Serverless Platforms</div></div>
@@ -26678,6 +26873,14 @@ ${mcpCtaCss()}
 
   ${buildMcpCta("Compare serverless free tiers, track pricing changes, and plan your infrastructure stack — all from your AI coding assistant.")}
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -26855,9 +27058,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Auth &amp; Identity Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/auth">Auth</a> &rsaquo; Auth &amp; Identity Comparison</div>
   <h1>Auth &amp; Identity Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ auth services compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Auth Services Compared</div></div>
@@ -27614,6 +27819,14 @@ ${mcpCtaCss()}
 
   ${buildMcpCta("Compare auth service free tiers, track pricing changes, and plan your authentication stack — all from your AI coding assistant.")}
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -27791,9 +28004,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Email Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/email">Email</a> &rsaquo; Email Comparison</div>
   <h1>Email &amp; Transactional Messaging Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ email services compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Email Services Compared</div></div>
@@ -28581,6 +28796,14 @@ ${mcpCtaCss()}
     <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All email service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
   </div>
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -28760,9 +28983,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/monitoring">Monitoring</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
   <h1>Monitoring &amp; Observability Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 25+ monitoring services compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">25+</div><div class="stat-label">Monitoring Services Compared</div></div>
@@ -29573,6 +29798,14 @@ ${mcpCtaCss()}
     <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier tools and tracks ${dealChanges.length} historical pricing changes. All monitoring service data on this page is verified against official pricing pages. Paid tier cost estimates use publicly available list prices as of ${pubDate}. Actual costs vary with usage, commitment discounts, and enterprise negotiations. <a href="/freshness">Check data freshness</a>.
   </div>
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -29752,9 +29985,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Storage &amp; CDN Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/storage">Storage</a> &rsaquo; Storage &amp; CDN Comparison</div>
   <h1>Storage &amp; CDN Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ storage &amp; CDN services compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Storage & CDN Services</div></div>
@@ -30372,6 +30607,14 @@ ${mcpCtaCss()}
     <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All storage service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
   </div>
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -30549,9 +30792,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Testing Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/testing">Testing</a> &rsaquo; Testing Free Tier Comparison</div>
   <h1>Testing &amp; QA Tools Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ testing services compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Testing Tools Compared</div></div>
@@ -31034,6 +31279,14 @@ ${mcpCtaCss()}
     <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All testing service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
   </div>
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -31211,9 +31464,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Analytics Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/analytics">Analytics</a> &rsaquo; Analytics Free Tier Comparison</div>
   <h1>Analytics &amp; Product Analytics Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ analytics services compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Analytics Services Compared</div></div>
@@ -31710,6 +31965,14 @@ ${mcpCtaCss()}
     <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All analytics service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
   </div>
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -31887,9 +32150,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; API Development Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/api-development">API Development</a> &rsaquo; API Development Free Tier Comparison</div>
   <h1>API Development Tools Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ API development tools compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">API Tools Compared</div></div>
@@ -32300,6 +32565,14 @@ ${mcpCtaCss()}
     <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All API development tool data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
   </div>
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -32477,9 +32750,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Security Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/security">Security</a> &rsaquo; Security Free Tier Comparison</div>
   <h1>Developer Security Tools Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ security tools compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Security Tools Compared</div></div>
@@ -33011,6 +33286,14 @@ ${mcpCtaCss()}
     <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All security tool data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
   </div>
 
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
+
   <h2>Related Guides</h2>
   <div class="related-pages">
     ${relatedPagesHtml}
@@ -33190,9 +33473,11 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Hosting Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Hosting Free Tier Comparison</div>
   <h1>Hosting &amp; PaaS Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ hosting platforms compared</p>
+
+  ${buildComparisonCategoryBackLink(slug)}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">Hosting Platforms Compared</div></div>
@@ -33628,6 +33913,14 @@ ${mcpCtaCss()}
   <div class="methodology">
     <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All hosting platform data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
   </div>
+
+
+  ${buildComparisonFaq(slug, title)}
+
+  ${buildComparisonRelatedComparisons(slug)}
+
+  ${buildComparisonFaqJsonLd(slug)}
+  ${buildComparisonBreadcrumbJsonLd(slug, title)}
 
   <h2>Related Guides</h2>
   <div class="related-pages">
