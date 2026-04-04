@@ -789,6 +789,29 @@ ${offersHtml}
   </table>
 
   ${relatedGuidesHtml}
+  ${(() => {
+    // Popular Comparisons section — VS pages + editorial vs pages in this category
+    const catVsPages = Array.from(vsPageMap.entries()).filter(([, v]) => v.category === categoryName);
+    const catEditorialVs = ALTERNATIVES_PAGES.filter(p => {
+      if (!p.slug.includes("-vs-")) return false;
+      // Check if the editorial vs page's primary vendor is in this category
+      const primaryOffer = offers.find(o => o.vendor === p.primaryVendor);
+      return primaryOffer?.category === categoryName;
+    });
+    const links: string[] = [];
+    for (const [s, v] of catVsPages) {
+      links.push(`<a href="/${s}" class="compare-pill">${escHtmlServer(v.vendorA)} vs ${escHtmlServer(v.vendorB)}</a>`);
+    }
+    for (const p of catEditorialVs) {
+      links.push(`<a href="/${p.slug}" class="compare-pill">${escHtmlServer(p.title.split(" — ")[0].split(":")[0])}</a>`);
+    }
+    return links.length > 0 ? `<div class="related-cats">
+    <h2>Popular Comparisons</h2>
+    <div class="guide-links" style="display:flex;flex-wrap:wrap;gap:.5rem">
+      ${links.join("\n      ")}
+    </div>
+  </div>` : "";
+  })()}
   ${relatedCatsHtml}
   ${faqHtml}
 
@@ -1516,6 +1539,526 @@ ${relatedHtml}
 </html>`;
 }
 
+// --- Programmatic vendor-vs-vendor comparison pages (root-level URLs) ---
+
+interface VsPageConfig {
+  vendorA: string;  // Alphabetical first
+  vendorB: string;  // Alphabetical second
+  verdict: string;  // 2-3 sentence quick verdict (plain text)
+  keyDifferences: string;  // HTML for key differences section
+  recommendation: string;  // HTML for recommendation section
+  category: string;  // For grouping in hub pages
+}
+
+const VS_PAGES: VsPageConfig[] = [
+  // Databases
+  {
+    vendorA: "CockroachDB", vendorB: "MongoDB",
+    category: "Databases",
+    verdict: "CockroachDB offers distributed SQL with PostgreSQL compatibility, while MongoDB is the leading NoSQL document database. Choose CockroachDB for relational data with horizontal scaling; choose MongoDB for flexible schemas and startup credits.",
+    keyDifferences: `<ul>
+      <li><strong>Data model:</strong> CockroachDB is relational SQL (PostgreSQL-compatible wire protocol), MongoDB is document-oriented NoSQL (JSON/BSON). This is the fundamental architectural decision.</li>
+      <li><strong>Free tier structure:</strong> CockroachDB gives 50M Request Units + 10 GiB storage/month on serverless. MongoDB offers $5K Atlas credits for Brex startups — generous but time-limited.</li>
+      <li><strong>Scaling model:</strong> CockroachDB scales horizontally with automatic sharding and strong consistency. MongoDB scales via replica sets and sharding but requires manual shard key selection.</li>
+      <li><strong>Best for:</strong> CockroachDB excels at multi-region, ACID-compliant workloads. MongoDB excels at rapid prototyping with flexible schemas and rich query operators.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose CockroachDB if</strong> you need PostgreSQL compatibility, strong consistency across regions, or want to avoid NoSQL lock-in. The serverless free tier is permanently free with no credit card.</p>
+    <p><strong>Choose MongoDB if</strong> you need flexible document schemas, have a Brex startup account for $5K credits, or your team already knows the MongoDB query language.</p>`,
+  },
+  {
+    vendorA: "Neon", vendorB: "Turso",
+    category: "Databases",
+    verdict: "Neon is serverless Postgres with branching and scale-to-zero. Turso is edge-native SQLite with global replication. Both are modern, developer-friendly databases — Neon for Postgres compatibility, Turso for ultra-low-latency edge reads.",
+    keyDifferences: `<ul>
+      <li><strong>Database engine:</strong> Neon runs PostgreSQL (full compatibility, extensions, SQL ecosystem). Turso runs libSQL (SQLite fork with server mode and replication).</li>
+      <li><strong>Free tier:</strong> Neon offers 0.5 GB storage per project, 100 CU-hours/month, up to 100 projects. Turso offers 5 GB storage, 100 databases, 500M rows read/month — significantly more storage.</li>
+      <li><strong>Edge story:</strong> Turso replicates data to edge locations for sub-millisecond reads. Neon runs in a single region but offers a serverless driver for edge function compatibility.</li>
+      <li><strong>Branching:</strong> Neon's killer feature is instant database branching — create full copies for CI/CD preview environments in seconds. Turso doesn't have an equivalent.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Neon if</strong> you need PostgreSQL compatibility, database branching for development workflows, or plan to use an ORM that expects Postgres (Django, Rails, Prisma).</p>
+    <p><strong>Choose Turso if</strong> you need edge-native reads, SQLite simplicity, or are building with frameworks that work well with SQLite (Laravel, Remix with better-sqlite3).</p>`,
+  },
+  // Cloud Hosting
+  {
+    vendorA: "Cloudflare Pages", vendorB: "Vercel",
+    category: "Cloud Hosting",
+    verdict: "Cloudflare Pages offers unlimited bandwidth with zero egress costs. Vercel has the best Next.js integration but bans commercial use on the free plan. For static sites, Cloudflare Pages wins on cost; for Next.js apps, Vercel wins on DX.",
+    keyDifferences: `<ul>
+      <li><strong>Bandwidth:</strong> Cloudflare Pages has unlimited bandwidth (truly free). Vercel caps at 100 GB/month on the free plan — and the $20/seat Pro plan is required for commercial use.</li>
+      <li><strong>Framework support:</strong> Vercel is the creator of Next.js and has first-class support for ISR, middleware, and edge functions. Cloudflare Pages supports most frameworks but Next.js features may lag.</li>
+      <li><strong>Commercial use:</strong> Vercel's Hobby plan explicitly bans commercial use, forcing the $20/seat Pro upgrade. Cloudflare Pages has no such restriction on the free tier.</li>
+      <li><strong>Build limits:</strong> Cloudflare Pages allows 500 builds/month. Vercel gives 6,000 build minutes/month but with concurrency limits.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Cloudflare Pages if</strong> you want truly free hosting with unlimited bandwidth, no commercial use restrictions, or you're building static/Jamstack sites.</p>
+    <p><strong>Choose Vercel if</strong> you're building with Next.js and want the best possible developer experience, including ISR, preview deployments, and edge middleware — just budget for the $20/seat Pro plan.</p>`,
+  },
+  {
+    vendorA: "Netlify", vendorB: "Render",
+    category: "Cloud Hosting",
+    verdict: "Netlify excels at frontend/Jamstack deployments with its credit-based system, while Render is the best free option for backend services with containers, Postgres, and Redis included. Different tools for different layers of the stack.",
+    keyDifferences: `<ul>
+      <li><strong>Specialization:</strong> Netlify is frontend-focused (static sites, serverless functions, edge). Render is full-stack (web services, databases, Redis, cron jobs, Docker containers).</li>
+      <li><strong>Free tier model:</strong> Netlify uses 300 credits/month (deploys cost 15 credits, bandwidth costs 10 credits/GB). Render offers free web services with 512 MB RAM plus free PostgreSQL and Redis instances.</li>
+      <li><strong>Backend support:</strong> Render provides persistent containers with 512 MB RAM, managed Postgres (256 MB), and Redis (25 MB). Netlify's backend is limited to serverless functions with execution limits.</li>
+      <li><strong>Cold starts:</strong> Render free services spin down after 15 minutes of inactivity (30-60s cold start). Netlify's serverless functions have typical cold start latency but no spin-down.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Netlify if</strong> you're building a frontend/Jamstack site, need form handling and identity built-in, or want preview deploys for every PR.</p>
+    <p><strong>Choose Render if</strong> you need a free backend (API server, database, Redis), want to run Docker containers, or need a full-stack hosting solution beyond just static sites.</p>`,
+  },
+  // Monitoring
+  {
+    vendorA: "Datadog", vendorB: "Sentry",
+    category: "Monitoring",
+    verdict: "Datadog and Sentry serve different monitoring needs. Datadog is infrastructure monitoring (hosts, metrics, APM) while Sentry is application error tracking (crashes, stack traces, replays). Most teams need both — they're complementary, not competitive.",
+    keyDifferences: `<ul>
+      <li><strong>Focus:</strong> Datadog monitors infrastructure (5 hosts free, metrics, logs, APM). Sentry tracks application errors (5K errors/month, stack traces, session replays, performance).</li>
+      <li><strong>Free tier value:</strong> Datadog's free tier has only 1-day metric retention — effectively useless for trend analysis. Sentry's 5K errors/month with full stack traces is genuinely useful for small projects.</li>
+      <li><strong>Pricing trap:</strong> Datadog's per-host pricing scales linearly — at 100 hosts, expect $5,500+/month. Sentry scales by error volume, which is more predictable.</li>
+      <li><strong>Team size:</strong> Sentry's Developer plan is limited to 1 user. Datadog's free tier allows up to 5 hosts with no user limit.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Datadog if</strong> you need infrastructure monitoring across multiple hosts and want a unified observability platform — but be aware of the 1-day retention trap on the free tier.</p>
+    <p><strong>Choose Sentry if</strong> you need error tracking with detailed stack traces, session replays, and performance monitoring for your application code.</p>`,
+  },
+  {
+    vendorA: "Datadog", vendorB: "Grafana Cloud",
+    category: "Monitoring",
+    verdict: "Grafana Cloud's free tier is dramatically more generous than Datadog's: 10K metrics with 14-day retention vs Datadog's 5 hosts with 1-day retention. For teams that want full-stack observability without vendor lock-in, Grafana Cloud is the clear winner on free tier value.",
+    keyDifferences: `<ul>
+      <li><strong>Free tier generosity:</strong> Grafana Cloud offers 10K metric series, 50 GB logs, 50 GB traces with 14-day retention. Datadog offers 5 hosts with 1-day retention — a 14x retention difference.</li>
+      <li><strong>Lock-in:</strong> Grafana Cloud is built on open standards (Prometheus, Loki, Tempo). Datadog uses proprietary agents and query languages, making migration painful.</li>
+      <li><strong>Users:</strong> Grafana Cloud allows 3 users on the free plan. Datadog has no explicit user limit on free tier.</li>
+      <li><strong>Ease of use:</strong> Datadog has arguably better out-of-the-box dashboards and integrations. Grafana requires more initial configuration but offers more flexibility.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Grafana Cloud if</strong> you want the most generous free monitoring tier, prefer open standards, or want to avoid vendor lock-in.</p>
+    <p><strong>Choose Datadog if</strong> you prioritize out-of-the-box integrations and polished UX — but only if you can justify the cost when you outgrow the very limited free tier.</p>`,
+  },
+  // Auth
+  {
+    vendorA: "Auth0", vendorB: "Clerk",
+    category: "Auth",
+    verdict: "Auth0 offers 25K MAU with enterprise-grade features, while Clerk focuses on developer experience with 50K monthly retained users and pre-built UI components. Auth0 wins on scale and configurability; Clerk wins on time-to-ship.",
+    keyDifferences: `<ul>
+      <li><strong>Free tier:</strong> Auth0 gives 25K MAU (B2C), unlimited logins, and no credit card required. Clerk gives 50K monthly retained users — more users but different counting methodology (retained vs active).</li>
+      <li><strong>DX focus:</strong> Clerk provides pre-built, customizable UI components (sign-in, sign-up, user profile) that work out of the box. Auth0 requires more configuration with Universal Login and Actions.</li>
+      <li><strong>Growth cost:</strong> Clerk costs ~$1,800/month at 100K MAU. Auth0 is cheaper at scale with enterprise plans, but growth pricing is less transparent.</li>
+      <li><strong>Enterprise features:</strong> Auth0 has deeper enterprise capabilities (RBAC, Organizations, Machine-to-Machine tokens, Actions for custom logic). Clerk is adding these but Auth0 has the head start.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Auth0 if</strong> you need enterprise-grade auth with deep customization, RBAC, M2M tokens, or you're building a multi-tenant B2B application.</p>
+    <p><strong>Choose Clerk if</strong> you want the fastest path to production auth with beautiful pre-built components, especially with Next.js or React.</p>`,
+  },
+  {
+    vendorA: "Auth0", vendorB: "Kinde",
+    category: "Auth",
+    verdict: "Auth0 is the established enterprise auth platform with 25K MAU free. Kinde is the newer contender offering 10.5K MAU with feature flags included. Auth0 has deeper enterprise features; Kinde bundles more value per dollar.",
+    keyDifferences: `<ul>
+      <li><strong>Free MAU:</strong> Auth0 offers 25K MAU — more than double Kinde's 10.5K MAU. For pure free tier size, Auth0 wins.</li>
+      <li><strong>Bundled features:</strong> Kinde includes feature flags (10K events/month) in its free tier — no need for a separate LaunchDarkly or Flagsmith. Auth0 doesn't include feature management.</li>
+      <li><strong>Enterprise maturity:</strong> Auth0 has been around since 2013 (acquired by Okta). Kinde launched in 2023. Auth0 has deeper docs, more integrations, and a larger community.</li>
+      <li><strong>Multi-tenancy:</strong> Both support organizations/multi-tenancy, but Auth0's Organizations feature is more battle-tested for complex B2B scenarios.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Auth0 if</strong> you need the largest free MAU count, enterprise-grade stability, or deep integrations with the Okta ecosystem.</p>
+    <p><strong>Choose Kinde if</strong> you want auth + feature flags in one service, prefer a simpler setup experience, or are building an early-stage product that values bundled functionality over enterprise depth.</p>`,
+  },
+  // CI/CD
+  {
+    vendorA: "CircleCI", vendorB: "GitHub Actions",
+    category: "CI/CD",
+    verdict: "GitHub Actions is free and unlimited for public repos, making it unbeatable for open source. CircleCI offers 30K credits/month with powerful caching and parallelism. For private repos with complex build pipelines, CircleCI's execution model can be more efficient.",
+    keyDifferences: `<ul>
+      <li><strong>Free tier model:</strong> GitHub Actions gives unlimited minutes for public repos and 2K min/month for private repos. CircleCI gives 30K credits/month (~6K build minutes on small Docker) regardless of repo visibility.</li>
+      <li><strong>Integration:</strong> GitHub Actions is native to GitHub — no additional service to set up, manage, or authenticate. CircleCI requires connecting your repo to an external service.</li>
+      <li><strong>Caching & parallelism:</strong> CircleCI has more sophisticated caching, test splitting, and parallelism features. GitHub Actions caching works but is simpler.</li>
+      <li><strong>Marketplace:</strong> GitHub Actions has a massive marketplace of community actions. CircleCI has Orbs, which are well-maintained but fewer in number.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose GitHub Actions if</strong> you host code on GitHub, work on open-source projects (unlimited free minutes), or want zero-configuration CI/CD without an external service.</p>
+    <p><strong>Choose CircleCI if</strong> you need advanced build optimization (test splitting, resource classes, Docker layer caching) or your workflows would benefit from CircleCI's credit-based flexibility.</p>`,
+  },
+  {
+    vendorA: "GitHub Actions", vendorB: "GitLab CI",
+    category: "CI/CD",
+    verdict: "GitHub Actions and GitLab CI are the two dominant CI/CD platforms, each tightly integrated with their respective Git hosting platforms. GitHub Actions offers more free minutes (2K vs 400/month for private repos); GitLab CI includes built-in container registry and security scanning.",
+    keyDifferences: `<ul>
+      <li><strong>Free minutes:</strong> GitHub Actions gives 2,000 min/month for private repos. GitLab CI gives only 400 compute minutes/month — 5x less.</li>
+      <li><strong>Platform integration:</strong> Each is tightly coupled to its Git host. Migrating CI/CD means migrating your entire workflow (issues, PRs/MRs, code review).</li>
+      <li><strong>Built-in features:</strong> GitLab includes container registry, security scanning (SAST/DAST), and package registry in the free tier. GitHub requires separate services or marketplace actions for these.</li>
+      <li><strong>User limits:</strong> GitLab CI free tier is limited to 5 users and 3 top-level groups. GitHub Actions has no user limit on free plans.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose GitHub Actions if</strong> your code lives on GitHub, you need more free build minutes, or you want access to the largest ecosystem of community actions.</p>
+    <p><strong>Choose GitLab CI if</strong> you want an all-in-one DevOps platform with built-in security scanning and container registry, and your team is under 5 members.</p>`,
+  },
+  // Email
+  {
+    vendorA: "Brevo", vendorB: "Resend",
+    category: "Email",
+    verdict: "Resend is a developer-first transactional email API with React Email support. Brevo (formerly Sendinblue) is an all-in-one marketing + transactional platform. Choose Resend for pure transactional email DX; choose Brevo for combined marketing and transactional needs.",
+    keyDifferences: `<ul>
+      <li><strong>Free volume:</strong> Brevo allows 300 emails/day (~9K/month) with up to 100K contacts. Resend allows 3K emails/month — lower volume but with no daily cap fluctuation.</li>
+      <li><strong>Scope:</strong> Brevo includes marketing automation, landing pages, CRM, and segmentation. Resend is purely transactional email — lean and focused.</li>
+      <li><strong>Developer experience:</strong> Resend integrates with React Email for JSX-based templates, has a minimal API, and feels modern. Brevo's API is more traditional with a larger surface area.</li>
+      <li><strong>Growth pricing:</strong> Brevo's paid plans start at $9/month for 5K emails. Resend starts at $20/month for 50K emails — better per-email economics at scale.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Resend if</strong> you're building a developer-focused product, want the cleanest API and React Email integration, or only need transactional email.</p>
+    <p><strong>Choose Brevo if</strong> you need marketing email alongside transactional (newsletters, automation, landing pages) or want the highest free sending volume.</p>`,
+  },
+  {
+    vendorA: "Postmark", vendorB: "Resend",
+    category: "Email",
+    verdict: "Resend offers 3K emails/month free with a modern developer experience. Postmark offers only 100 emails/month free but is legendary for deliverability. For free tier value, Resend wins decisively; for mission-critical transactional email at scale, Postmark has the track record.",
+    keyDifferences: `<ul>
+      <li><strong>Free tier:</strong> Resend gives 3K emails/month — 30x more than Postmark's 100 emails/month. For testing and small projects, Resend's free tier is actually usable.</li>
+      <li><strong>Deliverability:</strong> Postmark has built its reputation on industry-leading deliverability with dedicated IP pools and strict anti-spam policies. They reject marketing email entirely.</li>
+      <li><strong>API design:</strong> Resend has a minimal, modern API with React Email support. Postmark has a mature API with message streams, webhooks, and inbound processing.</li>
+      <li><strong>Philosophy:</strong> Postmark is transactional-only (no marketing). Resend is transactional-focused but more flexible with its sending policies.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Resend if</strong> you want a generous free tier, modern DX with React Email, or you're building a side project that needs to actually send email for free.</p>
+    <p><strong>Choose Postmark if</strong> deliverability is your #1 priority and you're willing to pay for it — Postmark's free tier is effectively a trial, not a production tier.</p>`,
+  },
+  // Storage
+  {
+    vendorA: "Backblaze B2", vendorB: "Cloudflare R2",
+    category: "Storage",
+    verdict: "Cloudflare R2 is the clear winner for most use cases: zero egress fees make it dramatically cheaper at scale. Backblaze B2 offers free egress through Cloudflare CDN but requires extra setup. Both offer 10 GB free storage with S3 compatibility.",
+    keyDifferences: `<ul>
+      <li><strong>Egress:</strong> R2 has zero egress fees — always. B2 charges for egress ($0.01/GB) but offers free egress through Cloudflare CDN via the Bandwidth Alliance. R2's zero-egress is simpler and more predictable.</li>
+      <li><strong>Free tier:</strong> Both offer 10 GB free storage. R2 includes 1M writes and 10M reads/month. B2's allowances are similar but structured differently.</li>
+      <li><strong>At scale:</strong> At 1 TB stored + 10 TB egress, R2 costs ~$15/month vs B2 at ~$60/month (without CDN) or ~$15/month (with Cloudflare CDN). R2 is cheaper out of the box.</li>
+      <li><strong>Ecosystem:</strong> R2 integrates natively with Cloudflare Workers, Pages, and the broader Cloudflare ecosystem. B2 is a standalone storage service.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Cloudflare R2 if</strong> you want zero egress fees without any CDN configuration, are already in the Cloudflare ecosystem, or want the simplest S3-compatible storage pricing.</p>
+    <p><strong>Choose Backblaze B2 if</strong> you already use Backblaze for backups, need their B2 lifecycle rules, or prefer a storage-focused provider independent of CDN vendors.</p>`,
+  },
+  {
+    vendorA: "Cloudinary", vendorB: "ImageKit",
+    category: "Storage",
+    verdict: "Both are media optimization CDNs, but they're sized differently. ImageKit offers 20 GB bandwidth + 20 GB storage free. Cloudinary uses a credit system (25 credits = 25 GB bandwidth OR 25 GB storage). ImageKit is simpler to understand; Cloudinary has richer transformation features.",
+    keyDifferences: `<ul>
+      <li><strong>Free tier clarity:</strong> ImageKit gives clear limits: 20 GB bandwidth, 20 GB storage, unlimited transformations. Cloudinary uses 25 credits/month where 1 credit = 1 GB storage OR 1 GB bandwidth OR 1K transformations — confusing at first.</li>
+      <li><strong>Transformations:</strong> Cloudinary has a deeper transformation API (AI-based cropping, background removal, video effects). ImageKit covers the core transformations well but with less AI.</li>
+      <li><strong>Video support:</strong> Both handle video, but Cloudinary's video transformation capabilities are more mature.</li>
+      <li><strong>CDN performance:</strong> ImageKit uses a multi-CDN approach (AWS CloudFront + others). Cloudinary uses its own CDN infrastructure.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Cloudinary if</strong> you need advanced AI-powered transformations, rich video processing, or have complex media workflows.</p>
+    <p><strong>Choose ImageKit if</strong> you want straightforward pricing, generous bandwidth, and unlimited image transformations without worrying about credit math.</p>`,
+  },
+  // Analytics
+  {
+    vendorA: "Amplitude", vendorB: "PostHog",
+    category: "Analytics",
+    verdict: "PostHog gives 1M events/month with session replays, feature flags, and A/B testing included. Amplitude gives 50K MTU with 10M events but charges separately for session replays. PostHog is the better all-in-one value; Amplitude has deeper behavioral analytics.",
+    keyDifferences: `<ul>
+      <li><strong>Free tier:</strong> PostHog offers 1M events + 5K session replays + 1M feature flag requests — all included. Amplitude offers 50K MTU (10M events) + 1K session replays but feature flags are limited.</li>
+      <li><strong>Product scope:</strong> PostHog bundles analytics, session replays, feature flags, A/B testing, and error tracking in one platform. Amplitude is analytics-focused with replays as an add-on.</li>
+      <li><strong>Pricing model:</strong> PostHog charges per event. Amplitude charges per Monthly Tracked User (MTU). The MTU model can be cheaper for high-event/low-user products, or more expensive for low-event/high-user ones.</li>
+      <li><strong>Self-hosting:</strong> PostHog is open source (MIT core) and can be self-hosted. Amplitude is cloud-only.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose PostHog if</strong> you want an all-in-one product analytics platform, value open source, or want to replace multiple tools (analytics + replays + flags + A/B testing).</p>
+    <p><strong>Choose Amplitude if</strong> you need deep behavioral analytics with advanced cohort analysis, or your product has high events-per-user where MTU pricing works in your favor.</p>`,
+  },
+  {
+    vendorA: "Amplitude", vendorB: "Mixpanel",
+    category: "Analytics",
+    verdict: "Mixpanel offers 1M events/month with 10K session replays and unlimited seats. Amplitude offers 50K MTU with 10M events and 1K replays. Mixpanel's per-event pricing is simpler; Amplitude's MTU model can be cheaper or more expensive depending on your product's usage patterns.",
+    keyDifferences: `<ul>
+      <li><strong>Pricing model:</strong> Mixpanel charges per event (1M/month free). Amplitude charges per MTU — 50K users with up to 10M events. If your users generate many events, Amplitude could be cheaper.</li>
+      <li><strong>Session replays:</strong> Mixpanel includes 10K session replays free. Amplitude includes only 1K — a 10x difference.</li>
+      <li><strong>Seats:</strong> Mixpanel has unlimited seats on the free plan. Amplitude allows unlimited users too but with governance features reserved for paid plans.</li>
+      <li><strong>Data retention:</strong> Both offer 1-year retention on free plans, which is generous compared to most analytics tools.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Mixpanel if</strong> you want the most events and session replays for free, prefer per-event pricing clarity, or need unlimited team seats.</p>
+    <p><strong>Choose Amplitude if</strong> you have high-frequency event tracking per user (where MTU pricing saves money), or need Amplitude's experiment and feature flag capabilities.</p>`,
+  },
+  // AI / ML
+  {
+    vendorA: "Groq", vendorB: "Hugging Face",
+    category: "AI / ML",
+    verdict: "Groq offers ultra-fast LLM inference on custom LPU hardware with free API access. Hugging Face is the ML model hub with inference credits and a vast open-source ecosystem. Groq is for speed-optimized LLM inference; Hugging Face is for model discovery and flexible inference.",
+    keyDifferences: `<ul>
+      <li><strong>Focus:</strong> Groq is purely an LLM inference API optimized for speed (custom LPU hardware). Hugging Face is a comprehensive ML platform (model hub, datasets, Spaces, inference API).</li>
+      <li><strong>Free tier:</strong> Groq offers 30 RPM with 100K-500K tokens/day depending on model. Hugging Face offers $0.10/month in free inference credits with access to 200+ models.</li>
+      <li><strong>Speed:</strong> Groq's LPU hardware delivers industry-leading token generation speed — often 5-10x faster than GPU-based inference. Hugging Face inference speed varies by provider.</li>
+      <li><strong>Model selection:</strong> Hugging Face provides access to 200+ models across providers. Groq supports a curated set of popular models (Llama, Mixtral, Gemma) optimized for its hardware.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Groq if</strong> you need the fastest possible LLM inference, are building latency-sensitive applications, or want a simple API for popular open models.</p>
+    <p><strong>Choose Hugging Face if</strong> you need access to the broadest model selection, want to host your own models, or need the full ML development platform (datasets, training, Spaces).</p>`,
+  },
+  {
+    vendorA: "Groq", vendorB: "Mistral AI",
+    category: "AI / ML",
+    verdict: "Groq provides ultra-fast inference for open models on custom hardware. Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) with a generous 1B tokens/month free. Groq wins on speed; Mistral wins on model variety and free token volume.",
+    keyDifferences: `<ul>
+      <li><strong>Models:</strong> Groq serves open models (Llama, Mixtral, Gemma) on its hardware. Mistral serves its own proprietary models (Mistral Large, Codestral, Pixtral) plus Mistral-tuned open models.</li>
+      <li><strong>Free tier volume:</strong> Mistral offers 1B tokens/month at 2 RPM. Groq offers 100K-500K tokens/day (3-15M/month) at 30 RPM — more rate-limited but higher throughput ceiling.</li>
+      <li><strong>Speed:</strong> Groq's custom LPU hardware delivers significantly faster inference. Mistral runs on standard GPU infrastructure.</li>
+      <li><strong>Code models:</strong> Mistral has Codestral, a dedicated coding model. Groq serves general models that also handle code but without a specialized coding model.</li>
+    </ul>`,
+    recommendation: `<p><strong>Choose Groq if</strong> you need the fastest inference speed, want to use popular open models (Llama 4, Mixtral), or are building real-time applications.</p>
+    <p><strong>Choose Mistral AI if</strong> you want access to Mistral's proprietary models (especially Codestral for code), need the largest free token allowance, or prefer European-based AI providers.</p>`,
+  },
+];
+
+// VS page lookup maps — populated after alternativesPageMap is built (below ALTERNATIVES_PAGES)
+const vsPageMap = new Map<string, VsPageConfig>();
+const vsPageByVendor = new Map<string, VsPageConfig[]>();
+
+// Group VS pages by category for hub pages
+function getVsPagesByCategory(): Map<string, Array<{ slug: string; a: string; b: string }>> {
+  const byCat = new Map<string, Array<{ slug: string; a: string; b: string }>>();
+  for (const [slug, vs] of vsPageMap) {
+    const cat = vs.category;
+    if (!byCat.has(cat)) byCat.set(cat, []);
+    byCat.get(cat)!.push({ slug, a: vs.vendorA, b: vs.vendorB });
+  }
+  return byCat;
+}
+
+function buildVsPage(slug: string): string | null {
+  const config = vsPageMap.get(slug);
+  if (!config) return null;
+
+  const result = compareServices(config.vendorA, config.vendorB);
+  if ("error" in result) return null;
+
+  const { vendor_a: a, vendor_b: b } = result.comparison;
+  const title = `${a.vendor} vs ${b.vendor}: Free Tier Comparison — AgentDeals`;
+  const metaDesc = `Compare ${a.vendor} and ${b.vendor} free tiers side by side. ${config.verdict.split(".")[0]}.`;
+
+  // Enriched data for risk badges
+  const riskA = enrichOffers([offers.find(o => o.vendor === a.vendor)!])[0];
+  const riskB = enrichOffers([offers.find(o => o.vendor === b.vendor)!])[0];
+
+  const riskBadge = (level: string | null) => {
+    const colors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+    const color = colors[level ?? ""] ?? "#8b949e";
+    return `<span style="display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:600;background:${color}20;color:${color};border:1px solid ${color}40">${level ?? "unknown"}</span>`;
+  };
+
+  const stabilityBadge = (stability: string) => {
+    const colors: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
+    const color = colors[stability] ?? "#8b949e";
+    return `<span style="display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:600;background:${color}20;color:${color};border:1px solid ${color}40">${stability}</span>`;
+  };
+
+  // Deal changes for pricing history
+  const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
+    if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
+    return changes.sort((x, y) => y.date.localeCompare(x.date)).slice(0, 5).map(c => {
+      const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+      return `<div style="margin-bottom:.75rem;padding:.6rem .75rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 6px 6px 0">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
+          <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
+          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${c.date}</span>
+          <span style="font-size:.7rem;color:${c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e"}">${c.impact} impact</span>
+        </div>
+        <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
+      </div>`;
+    }).join("\n");
+  };
+
+  // Related comparisons: other VS pages sharing a vendor, plus /compare/ pages
+  const relatedVs = Array.from(vsPageMap.entries())
+    .filter(([s, v]) => s !== slug && (v.vendorA === config.vendorA || v.vendorA === config.vendorB || v.vendorB === config.vendorA || v.vendorB === config.vendorB))
+    .slice(0, 4);
+  // Also check editorial vs pages
+  const editorialVs = ALTERNATIVES_PAGES.filter(p => {
+    if (!p.slug.includes("-vs-")) return false;
+    const slugLower = p.slug.toLowerCase();
+    return slugLower.includes(toSlug(config.vendorA)) || slugLower.includes(toSlug(config.vendorB));
+  }).slice(0, 2);
+
+  const relatedHtml = (relatedVs.length + editorialVs.length) > 0 ? `
+  <div class="section">
+    <h2>Related Comparisons</h2>
+    <div class="related-grid">
+${relatedVs.map(([s, v]) => `      <a href="/${s}" class="related-card">${escHtmlServer(v.vendorA)} vs ${escHtmlServer(v.vendorB)}</a>`).join("\n")}
+${editorialVs.map(p => `      <a href="/${p.slug}" class="related-card">${escHtmlServer(p.title.split(" — ")[0].split(":")[0])}</a>`).join("\n")}
+    </div>
+  </div>` : "";
+
+  // Category hub link
+  const catMapping = categoryComparisonMap[a.category];
+  const categoryHubLink = catMapping?.hub
+    ? `<div class="category-hub-link">
+    <a href="${catMapping.hub}">
+      <span>&#128218;</span> Browse all ${escHtmlServer(a.category)} services with free tiers &rarr;
+    </a>
+  </div>`
+    : catMapping?.comparison
+    ? `<div class="category-hub-link">
+    <a href="${catMapping.comparison}">
+      <span>&#128218;</span> Read our full ${escHtmlServer(a.category)} Free Tier Comparison &rarr;
+    </a>
+  </div>`
+    : "";
+
+  // FAQ structured data
+  const faqItems = [
+    { q: `Is ${a.vendor} or ${b.vendor} better for free tier?`, a: config.verdict },
+    { q: `What is ${a.vendor}'s free tier?`, a: `${a.vendor} offers a ${a.tier} plan: ${a.description.substring(0, 200)}${a.description.length > 200 ? "..." : ""}` },
+    { q: `What is ${b.vendor}'s free tier?`, a: `${b.vendor} offers a ${b.tier} plan: ${b.description.substring(0, 200)}${b.description.length > 200 ? "..." : ""}` },
+    { q: `Should I choose ${a.vendor} or ${b.vendor}?`, a: config.recommendation.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() },
+  ];
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${a.vendor} vs ${b.vendor}: Free Tier Comparison`,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-04-04",
+    dateModified: "2026-04-04",
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--purple:#a855f7;--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.25rem;color:var(--text);margin:2rem 0 .75rem}
+.page-meta{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem}
+.verdict-box{padding:1.25rem;border:1px solid var(--accent);border-radius:12px;background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(168,85,247,0.08));margin-bottom:2rem;font-size:.95rem;line-height:1.7}
+.verdict-box strong{color:var(--accent)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+.vendor-col{border:1px solid var(--border);border-radius:12px;padding:1.25rem;background:var(--bg-card);backdrop-filter:blur(10px)}
+.vendor-col h3{font-family:var(--serif);font-size:1.1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.vendor-col h3 a{color:var(--text)}
+.detail-row{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(51,65,85,0.4);font-size:.85rem}
+.detail-label{color:var(--text-dim);font-family:var(--mono);font-size:.75rem;text-transform:uppercase}
+.detail-value{color:var(--text);text-align:right;max-width:60%}
+.desc-block{margin-top:.75rem;padding:.75rem;background:var(--bg-elevated);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.section{margin-top:2rem}
+.section ul{padding-left:1.5rem;margin:.5rem 0}
+.section li{margin-bottom:.75rem;font-size:.9rem;color:var(--text-muted);line-height:1.6}
+.section li strong{color:var(--text)}
+.section p{font-size:.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:.5rem}
+.changes-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.changes-col h3{font-size:.85rem;color:var(--accent);font-family:var(--mono);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.category-hub-link{margin-top:2rem;padding:1rem 1.25rem;border-radius:12px;background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid rgba(59,130,246,0.2)}
+.category-hub-link a{display:flex;align-items:center;gap:.5rem;color:var(--text);font-weight:600;font-size:.95rem;text-decoration:none}
+.category-hub-link a:hover{color:var(--accent)}
+.related-grid{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-card{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
+.related-card:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.faq-section{margin-top:2rem}
+.faq-item{border-bottom:1px solid var(--border);padding:.75rem 0}
+.faq-q{font-weight:600;font-size:.9rem;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:.5rem}
+.faq-q::before{content:"\\25B8";color:var(--accent);font-size:.75rem;transition:transform .2s}
+.faq-q.open::before{transform:rotate(90deg)}
+.faq-a{display:none;padding:.5rem 0 .25rem 1.25rem;font-size:.85rem;color:var(--text-muted);line-height:1.6}
+.faq-a.open{display:block}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-grid,.changes-cols{grid-template-columns:1fr}}
+${mcpCtaCss()}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("compare")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/${toSlug(a.category)}">${escHtmlServer(a.category)}</a> &rsaquo; ${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</div>
+  <h1>${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}: Free Tier Comparison</h1>
+  <p class="page-meta">Side-by-side comparison of free tiers, pricing changes, and stability. Last updated ${new Date().toISOString().split("T")[0]}.</p>
+
+  <div class="verdict-box">
+    <strong>Quick Verdict:</strong> ${escHtmlServer(config.verdict)}
+  </div>
+
+  <h2>Side-by-Side Comparison</h2>
+  <div class="compare-grid">
+    <div class="vendor-col">
+      <h3><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA.risk_level)} ${stabilityBadge(riskA.stability ?? "stable")}</h3>
+      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
+      <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
+      <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
+      <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskA.stability ?? "stable")}</span></div>
+      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
+      <div class="desc-block">${escHtmlServer(a.description)}</div>
+    </div>
+    <div class="vendor-col">
+      <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB.risk_level)} ${stabilityBadge(riskB.stability ?? "stable")}</h3>
+      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
+      <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
+      <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
+      <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskB.stability ?? "stable")}</span></div>
+      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
+      <div class="desc-block">${escHtmlServer(b.description)}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Key Differences</h2>
+    ${config.keyDifferences}
+  </div>
+
+  <div class="section">
+    <h2>Pricing Change History</h2>
+    <div class="changes-cols">
+      <div class="changes-col">
+        <h3>${escHtmlServer(a.vendor)}</h3>
+        ${changesHtml(a.deal_changes, a.vendor)}
+      </div>
+      <div class="changes-col">
+        <h3>${escHtmlServer(b.vendor)}</h3>
+        ${changesHtml(b.deal_changes, b.vendor)}
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Our Recommendation</h2>
+    ${config.recommendation}
+  </div>
+
+${relatedHtml}
+${categoryHubLink}
+
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+${faqItems.map(f => `    <div class="faq-item">
+      <div class="faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">${escHtmlServer(f.q)}</div>
+      <div class="faq-a">${escHtmlServer(f.a)}</div>
+    </div>`).join("\n")}
+  </div>
+
+  ${buildMcpCta(`Compare ${escHtmlServer(a.vendor)}, ${escHtmlServer(b.vendor)}, and 1,600+ other developer tools from your AI coding assistant.`)}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- Weekly digest pages ---
 
 // ISO 8601 week number calculation
@@ -2147,12 +2690,19 @@ ${alternatives.map(a => `      <a href="/vendor/${toSlug(a.vendor)}" class="alt-
     </div>
   </div>` : "";
 
-  // Comparisons HTML
-  const comparisonsHtml = vendorComparisons.length > 0 ? `
+  // Comparisons HTML — include both /compare/ pages and root-level VS pages
+  const vendorVsPages = vsPageByVendor.get(vendorName.toLowerCase()) ?? [];
+  const vsLinks = vendorVsPages.map(vs => {
+    const slug = `${toSlug(vs.vendorA)}-vs-${toSlug(vs.vendorB)}`;
+    return `      <a href="/${slug}" class="compare-pill">${escHtmlServer(vs.vendorA)} vs ${escHtmlServer(vs.vendorB)}</a>`;
+  });
+  const compareLinks = vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="compare-pill">${escHtmlServer(a)} vs ${escHtmlServer(b)}</a>`);
+  const allCompareLinks = [...vsLinks, ...compareLinks];
+  const comparisonsHtml = allCompareLinks.length > 0 ? `
   <div class="section">
     <h2>Comparisons</h2>
     <div class="compare-links">
-${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="compare-pill">${escHtmlServer(a)} vs ${escHtmlServer(b)}</a>`).join("\n")}
+${allCompareLinks.join("\n")}
     </div>
   </div>` : "";
 
@@ -4725,6 +5275,21 @@ const editorialByVendor = new Map<string, AlternativesPageConfig>();
 for (const page of ALTERNATIVES_PAGES) {
   alternativesPageMap.set(page.slug, page);
   editorialByVendor.set(page.primaryVendor.toLowerCase(), page);
+}
+
+// Populate VS page maps now that alternativesPageMap is available
+for (const vs of VS_PAGES) {
+  const slug = `${toSlug(vs.vendorA)}-vs-${toSlug(vs.vendorB)}`;
+  const offerA = offers.find(o => o.vendor === vs.vendorA);
+  const offerB = offers.find(o => o.vendor === vs.vendorB);
+  if (offerA && offerB && !alternativesPageMap.has(slug)) {
+    vsPageMap.set(slug, vs);
+    for (const v of [vs.vendorA, vs.vendorB]) {
+      const key = v.toLowerCase();
+      if (!vsPageByVendor.has(key)) vsPageByVendor.set(key, []);
+      vsPageByVendor.get(key)!.push(vs);
+    }
+  }
 }
 
 function buildTimelyAlternativesPage(slug: string): string | null {
@@ -37770,6 +38335,12 @@ ${ALTERNATIVES_PAGES.map(p => `  <url>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>`).join("\n")}
+${Array.from(vsPageMap.keys()).map(s => `  <url>
+    <loc>${BASE_URL}/${s}</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join("\n")}
   <url>
     <loc>${BASE_URL}/guides</loc>
     <lastmod>${editorialDate}</lastmod>
@@ -38319,6 +38890,31 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildTimelyAlternativesPage(slug)!);
+  } else if (vsPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
+    const slug = url.pathname.slice(1);
+    recordApiHit("/" + slug);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildVsPage(slug)!);
+  } else if (isGetOrHead && url.pathname.includes("-vs-") && url.pathname.split("/").length === 2) {
+    // Reverse URL redirect for vendor-vs-vendor pages (e.g., /vercel-vs-cloudflare-pages → /cloudflare-pages-vs-vercel)
+    const slug = url.pathname.slice(1);
+    const vsIdx = slug.indexOf("-vs-");
+    if (vsIdx > 0) {
+      const partB = slug.substring(0, vsIdx);
+      const partA = slug.substring(vsIdx + 4);
+      const reversed = `${partA}-vs-${partB}`;
+      if (vsPageMap.has(reversed) || alternativesPageMap.has(reversed)) {
+        res.writeHead(301, { Location: `/${reversed}` });
+        res.end();
+      } else {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Not found" }));
+      }
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+    }
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
