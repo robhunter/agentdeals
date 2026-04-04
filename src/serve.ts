@@ -3898,6 +3898,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Complete free FastAPI/Python infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
   },
   {
+    slug: "free-go-stack",
+    title: "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure",
+    metaDesc: "Build a complete Go app on free tiers. 10 infrastructure layers — single binary hosting, Postgres via pgx, Redis, auth, storage, email, monitoring, CI/CD, background jobs, and API docs. Exact limits, growth costs. Updated April 2026.",
+    contextHtml: "",
+    tag: "go-stack-guide",
+    primaryVendor: "Railway",
+    hubDesc: "Complete free Go/Golang infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
+  },
+  {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
     metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
@@ -12956,6 +12965,473 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized FastAPI stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Free Go/Golang Stack Guide ---
+
+function buildFreeGoStackPage(): string {
+  const title = "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const metaDesc = "Build a complete Go app on free tiers. 10 infrastructure layers — single binary hosting, Postgres via pgx, Redis, auth, storage, email, monitoring, CI/CD, background jobs, and API docs. Exact limits, growth costs. Updated April 2026.";
+  const slug = "free-go-stack";
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  const stackCategories = [
+    {
+      name: "Hosting & Deployment",
+      icon: "🚀",
+      recommended: { vendor: "Railway", why: "The best free Go hosting in 2026. $5/month free credit covers a Go binary with auto-deploy from GitHub. Nixpacks auto-detects Go projects — compiles your binary and runs it. No sleep timer — your service stays warm. Go binaries start in milliseconds, so even serverless cold starts are negligible. Docker images from scratch base are typically 5-15 MB, maximizing the free credit." },
+      alternatives: ["Render", "Fly.io", "Koyeb"],
+      outgrow: "When you exceed the $5/month free credit (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity, but Go's instant cold starts (~50ms) make this less painful than Python/Node. Fly.io gives 3 shared-CPU VMs free with 256 MB RAM — Go's low memory footprint fits well. Koyeb offers 1 nano service free with edge deployment. Google Cloud Run's free tier (2M requests/month) is excellent for Go — instant scale-to-zero with near-instant cold starts.",
+      whyNot: "Why not Heroku: No free tier since November 2022. Why not AWS Lambda: Go compiles to a native binary that works great on Lambda (via provided.al2023 runtime), but the 3.2M free invocations expire after 12 months. Cloud Run is simpler and stays free forever. Why not Vercel: Vercel's Go support is limited to serverless functions — no persistent connections, WebSockets, or goroutines.",
+      relatedPage: "/hosting-free-tier-comparison-2026",
+    },
+    {
+      name: "Database",
+      icon: "🗄️",
+      recommended: { vendor: "Neon", why: "Serverless Postgres with the fastest Go driver. Free tier: 0.5 GiB storage, 190+ compute hours/month, scales to zero. Use with pgx — the fastest Go Postgres driver, written in pure Go with zero CGo dependencies. pgx supports connection pooling, prepared statements, COPY protocol, and native Go types (time.Time, net.IP, uuid.UUID). Neon's connection pooler handles high-concurrency goroutine access efficiently." },
+      alternatives: ["Supabase", "CockroachDB", "Turso"],
+      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth. CockroachDB's free tier gives 10 GiB with distributed Postgres-compatible SQL — ideal for multi-region Go services. Turso offers 9 GB of edge SQLite via libsql-go — great for read-heavy, globally distributed Go APIs.",
+      whyNot: "Why not SQLite (embedded): Go has excellent SQLite support via modernc.org/sqlite (pure Go, no CGo), but most free hosting uses ephemeral filesystems — your database is wiped on every deploy. Only viable on persistent VMs or with Litestream replication. Why not MySQL: Go's database/sql works with MySQL, but the Postgres ecosystem (pgx, sqlc, migrations) is stronger in Go. Most Go ORMs default to Postgres.",
+      relatedPage: "/database-free-tier-comparison-2026",
+    },
+    {
+      name: "Cache & Redis",
+      icon: "⚡",
+      recommended: { vendor: "Upstash", why: "Serverless Redis with Go support. Free tier: 10,000 commands/day, 256 MB storage. The go-redis/redis library is the standard Go Redis client — supports connection pooling, pipelining, pub/sub, and Lua scripting. Go's goroutines + Redis pub/sub is a natural fit for real-time features without external message brokers. Use for session storage, rate limiting, response caching, and as a task queue backend." },
+      alternatives: ["Redis Cloud"],
+      outgrow: "When you exceed 10,000 commands/day. Redis Cloud offers 30 MB free with unlimited commands — better for high-throughput caching. For simple caching without Redis, Go's sync.Map or groupcache provide in-process caching with zero external dependencies, but these don't persist across deploys or share state between instances.",
+      whyNot: null,
+      relatedPage: null,
+    },
+    {
+      name: "Authentication",
+      icon: "🔐",
+      recommended: { vendor: "Auth0", why: "25,000 MAU free — the most generous managed auth tier. Go has no framework-level auth (unlike Django), so you need an external provider or roll your own. Auth0's Go SDK + middleware pattern works cleanly: validate JWTs with go-jose or golang-jwt, wrap protected handlers with an auth middleware function. Go's crypto/bcrypt and crypto/subtle are in the standard library — if you roll your own, the crypto primitives are solid." },
+      alternatives: ["Clerk", "Supabase"],
+      outgrow: "When you exceed 25,000 MAU or need enterprise features. Clerk offers 10,000 MAU with pre-built UI (less useful for API-only Go services). Supabase Auth gives 50,000 MAU if you're already using Supabase for your database. For API-only services, rolling your own with golang-jwt + bcrypt is viable — Go's stdlib makes the crypto parts safe.",
+      whyNot: "Why not rolling your own from scratch: Go's crypto stdlib (bcrypt, hmac, subtle) is excellent, making it tempting. But you'll still need to implement password reset flows, email verification, rate limiting, CSRF protection, and session management. Auth0 handles all of this on free tier. Only roll your own for API-key auth, internal services, or if you're already comfortable with the security implications.",
+      relatedPage: "/auth-comparison-2026",
+    },
+    {
+      name: "Object Storage",
+      icon: "📦",
+      recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API via aws-sdk-go-v2. Go's io.Reader/io.Writer interfaces make streaming uploads and downloads natural — no buffering entire files in memory. Multipart uploads work out of the box with the AWS SDK." },
+      alternatives: ["Backblaze B2", "Supabase"],
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN. Supabase Storage gives 1 GB free with image transformations.",
+      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. Go services returning pre-signed URLs for large files can rack up egress costs quickly — R2 charges $0.",
+      relatedPage: "/storage-comparison-2026",
+    },
+    {
+      name: "Email & Transactional",
+      icon: "✉️",
+      recommended: { vendor: "Resend", why: "Modern developer-first email API. 3,000 emails/month, 100/day on free tier. Clean REST API — call with net/http (stdlib) or any HTTP client. No framework-specific adapter needed. Go's net/smtp in the standard library handles basic SMTP sending, but API-based delivery (Resend, Postmark) is more reliable for production — handles SPF/DKIM/DMARC, bounce tracking, and deliverability monitoring." },
+      alternatives: ["Brevo"],
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES offers 62,000 emails/month free from EC2 at $0.10/1K after — cheapest at scale.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. Many Go tutorials still reference SendGrid — those guides are outdated. Why not net/smtp alone: Go's stdlib SMTP works for dev/testing, but lacks bounce handling, deliverability monitoring, and template rendering that production email requires.",
+      relatedPage: "/email-comparison-2026",
+    },
+    {
+      name: "Monitoring & Observability",
+      icon: "🐛",
+      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments. Official Go SDK with HTTP middleware integration — captures panics, request context, and goroutine stack traces. Go also has excellent built-in observability: pprof (CPU/memory profiling), expvar (metrics), and net/http/pprof (live profiling endpoint). OpenTelemetry's Go SDK (otel-go) is mature — export traces to Grafana Cloud, Jaeger, or any OTLP-compatible backend." },
+      alternatives: ["Grafana Cloud", "BetterStack"],
+      outgrow: "When you exceed 5,000 errors/month or need more than 1 team member. Grafana Cloud offers 10,000 series metrics + 50 GB logs + 50 GB traces — great for full observability with OpenTelemetry. BetterStack combines uptime monitoring (10 monitors) with incident management.",
+      whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. Per-host pricing ($15/host/month) gets expensive fast. Why not just pprof: pprof is excellent for development profiling but doesn't capture production errors, alerting, or request tracing across services. Use both — pprof for profiling, Sentry for errors.",
+      relatedPage: "/monitoring-comparison-2026",
+    },
+    {
+      name: "CI/CD",
+      icon: "⚙️",
+      recommended: { vendor: "GitHub Actions", why: "2,000 minutes/month on free tier for public repos (unlimited) and private repos. Go tests are fast — the testing package is in the standard library, no test framework needed. go test ./... runs everything. Matrix testing across Go 1.21-1.23 catches compatibility issues. Caching the Go module cache cuts CI time by 60-80%. Add go vet, staticcheck, and golangci-lint for comprehensive static analysis — Go's tooling is best-in-class." },
+      alternatives: ["Render"],
+      outgrow: "When you exceed 2,000 minutes/month on private repos. Go's fast compilation means CI runs are typically shorter than Python/Node projects. Railway and Render auto-deploy from git with zero CI config — combine with GitHub Actions for tests only.",
+      whyNot: null,
+      relatedPage: "/cicd-free-tier-comparison-2026",
+    },
+    {
+      name: "Background Jobs",
+      icon: "⏱️",
+      recommended: { vendor: "Go Goroutines", why: "Go's killer feature — goroutines handle most background task needs natively, with zero external dependencies. Launch a goroutine for fire-and-forget work (sending emails, logging, webhooks) at near-zero cost (~2 KB per goroutine). For persistent queues that survive restarts, use Asynq (Redis-backed, inspired by Ruby's Sidekiq) or Temporal (durable workflow orchestration, free tier available). Upstash Redis (10K cmds/day free) works as the Asynq backend." },
+      alternatives: ["Upstash"],
+      outgrow: "Goroutines never outgrow — they scale to millions. You need a persistent queue (Asynq, Temporal, NATS JetStream) when tasks must survive process restarts, need scheduling, or require exactly-once delivery. Upstash's 10,000 commands/day covers moderate Asynq usage. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput queues.",
+      whyNot: "Why not Celery/Bull/Sidekiq equivalents: Go doesn't need them for most use cases — goroutines handle concurrent work natively. Asynq is the closest Go equivalent when you need persistence. Why not channels alone: Go channels are in-process — tasks are lost if the process crashes. For production reliability, use a Redis-backed queue.",
+      relatedPage: null,
+    },
+    {
+      name: "API Documentation",
+      icon: "📖",
+      recommended: { vendor: "swaggo/swag", why: "Generate OpenAPI/Swagger documentation from Go comments. Add annotations to your handler functions, run swag init, and get a Swagger UI endpoint. Works with chi, gin, echo, fiber, and net/http. Not as automatic as FastAPI's type-driven docs, but integrates well with Go's existing comment conventions. For gRPC services, buf and Connect provide automatic documentation from .proto files." },
+      alternatives: [],
+      outgrow: "You won't outgrow swaggo — it scales with your API. For API gateway features (rate limiting, API keys, analytics), Zuplo offers a free tier with 500K requests/month. For gRPC, buf.build's free tier generates client SDKs and documentation from your proto definitions.",
+      whyNot: "Why not hand-writing OpenAPI YAML: It drifts from your actual code. swaggo generates from your source — one source of truth. Why not no docs at all: Even for internal APIs, Swagger UI saves debugging time.",
+      relatedPage: null,
+    },
+  ];
+
+  const resolveVendor = (vendorName: string) => {
+    if (vendorName === "Go Goroutines" || vendorName === "swaggo/swag") return null;
+    if (vendorName === "Upstash") {
+      const offer = offers.find(o => o.vendor === "Upstash");
+      if (!offer) return null;
+      return enrichOffers([offer])[0];
+    }
+    const offer = offers.find(o => o.vendor === vendorName);
+    if (!offer) return null;
+    return enrichOffers([offer])[0];
+  };
+
+  const stackVendors = stackCategories.flatMap(c => {
+    const v = c.recommended.vendor;
+    return (v === "Go Goroutines" || v === "swaggo/swag") ? [...c.alternatives] : [v, ...c.alternatives];
+  });
+  const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-04-04",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Can I host Go for free in 2026?",
+        acceptedAnswer: { "@type": "Answer", text: "Yes. Railway offers a $5/month free credit that covers a Go binary — Go's tiny memory footprint (~10 MB Docker images from scratch) maximizes the credit. Render has a free tier but spins down after 15 minutes; Go's instant cold starts (~50ms) make this tolerable. Fly.io gives 3 shared-CPU VMs free. Google Cloud Run's free tier (2M requests/month) is excellent for Go — near-instant cold starts and true scale-to-zero." },
+      },
+      {
+        "@type": "Question",
+        name: "What database should I use with Go?",
+        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month. Use with pgx, the fastest Go Postgres driver (pure Go, no CGo). For type-safe SQL without an ORM, use sqlc — it generates Go code from SQL queries at compile time. Go developers typically prefer raw SQL + pgx or sqlc over ORMs like GORM." },
+      },
+      {
+        "@type": "Question",
+        name: "Go vs Node.js for free hosting?",
+        acceptedAnswer: { "@type": "Answer", text: "Go compiles to a single binary with no runtime dependencies — Docker images are 5-15 MB vs 100+ MB for Node.js. This means lower memory usage (more headroom on free tiers), instant cold starts (better for serverless), and simpler deploys (no node_modules, no npm install). Go's goroutines handle concurrency without async/await complexity. Trade-off: Go's ecosystem for web frameworks is smaller, and there's no equivalent to npm's package breadth." },
+      },
+      {
+        "@type": "Question",
+        name: "Do I need a framework for Go web apps?",
+        acceptedAnswer: { "@type": "Answer", text: "No. Go's net/http standard library is production-ready — it powers many of the world's largest services. Add a router (chi or gorilla/mux) for path parameters and middleware chaining. Frameworks like Gin, Echo, and Fiber add convenience (binding, validation, structured logging) but aren't required. The stdlib-first approach means fewer dependencies, smaller binaries, and no framework lock-in." },
+      },
+    ],
+  };
+
+  const categorySections = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
+
+    const recCard = rec ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <div class="pick-links">
+          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>` : (cat.recommended.vendor === "Go Goroutines" || cat.recommended.vendor === "swaggo/swag") ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <span class="pick-name">${escHtmlServer(cat.recommended.vendor)}</span>
+          <span class="pick-tier">Free (${cat.recommended.vendor === "Go Goroutines" ? "built into Go" : "open source"})</span>
+          <span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors.stable}22;color:${riskColors.stable};font-weight:600">stable</span>
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${cat.recommended.vendor === "Go Goroutines" ? "Unlimited — goroutines cost ~2 KB each, millions per process" : "OpenAPI generation from Go comments — Swagger UI included"}</p>
+      </div>` : `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <span class="pick-name">${escHtmlServer(cat.recommended.vendor)}</span>
+          <span class="pick-tier">Free tier</span>
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+      </div>`;
+
+    const altCards = altVendors.length > 0 ? `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
+      </div>` : "";
+
+    const whyNotBox = cat.whyNot ? `
+      <div class="whynot-box">
+        <strong>⚠️ ${escHtmlServer(cat.whyNot)}</strong>
+      </div>` : "";
+
+    const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
+
+    return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      ${recCard}
+      ${altCards}
+      <div class="outgrow-box">
+        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+      </div>
+      ${whyNotBox}
+      ${relatedLink}
+    </div>`;
+  }).join("\n");
+
+  const stabilityNotes = stackChanges.length > 0 ? `
+  <h2>Stability Notes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <div class="stability-list">
+    ${stackChanges.slice(0, 12).map(c => {
+      const typeColors: Record<string, string> = {
+        free_tier_removed: "#f85149", limits_reduced: "#d29922", pricing_restructured: "#d29922",
+        restriction: "#d29922", limits_increased: "#3fb950", new_free_tier: "#3fb950",
+        pricing_postponed: "#3fb950", startup_program_expanded: "#3fb950", product_deprecated: "#f85149",
+      };
+      const color = typeColors[c.change_type] ?? "#94a3b8";
+      return `<div class="stability-item">
+        <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+      </div>`;
+    }).join("\n    ")}
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+
+  const tableRows = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const vendorName = cat.recommended.vendor;
+    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : (vendorName === "Go Goroutines" ? "Unlimited — built into Go runtime" : vendorName === "swaggo/swag" ? "Open source — generates from comments" : "—");
+    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
+    return `      <tr>
+        <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
+        <td>${vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
+        <td>${riskBadge}</td>
+      </tr>`;
+  }).join("\n");
+
+  // Growth cost analysis
+  const growthCosts = [
+    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
+    { layer: "Hosting", vendor: "Railway", freeLimit: "$5/mo credit", firstPaid: "Hobby $5/mo", gets: "$5 + usage-based, no sleep, more RAM", hitFirst: true },
+    { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
+    { layer: "Auth", vendor: "Auth0", freeLimit: "25,000 MAU", firstPaid: "Essential $35/mo", gets: "Custom domains, roles, MFA policies", hitFirst: false },
+    { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
+    { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
+    { layer: "Monitoring", vendor: "Sentry", freeLimit: "5,000 errors/mo", firstPaid: "Team $26/mo", gets: "50,000 errors, unlimited members, integrations", hitFirst: false },
+    { layer: "Background Jobs", vendor: "Go Goroutines", freeLimit: "Unlimited", firstPaid: "Free forever", gets: "N/A — built into Go runtime", hitFirst: false },
+    { layer: "API Docs", vendor: "swaggo/swag", freeLimit: "Unlimited", firstPaid: "Free forever", gets: "N/A — open source", hitFirst: false },
+    { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2,000 min/mo", firstPaid: "Team $4/user/mo", gets: "3,000 min/mo, required reviewers", hitFirst: false },
+  ];
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.cost-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
+.cost-banner .cost-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.cost-banner .cost-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
+.builtin-box{background:rgba(63,185,80,0.08);border:1px solid rgba(63,185,80,0.2);border-radius:12px;padding:1.25rem;margin:1.5rem 0}
+.builtin-box h3{color:#3fb950;font-size:1rem;margin-bottom:.5rem}
+.builtin-box ul{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem}
+.builtin-box li{font-size:.85rem;color:var(--text-muted);padding:.25rem .6rem;background:rgba(63,185,80,0.06);border-radius:8px;border:1px solid rgba(63,185,80,0.1)}
+.binary-box{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:1.25rem;margin:1.5rem 0}
+.binary-box h3{color:var(--accent);font-size:1rem;margin-bottom:.5rem}
+.binary-box p{font-size:.85rem;color:var(--text-muted);line-height:1.6}
+.stack-category{border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;background:var(--bg-card)}
+.stack-category h2{margin:0 0 1rem;font-size:1.25rem}
+.cat-icon{margin-right:.5rem}
+.stack-pick{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:rgba(59,130,246,0.05);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.pick-badge{font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;background:var(--accent);color:#fff}
+.pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.pick-name:hover{color:var(--accent)}
+.pick-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.pick-why{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:.5rem}
+.pick-limits{font-family:var(--mono);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
+.pick-links a{color:var(--accent)}
+.alt-picks{margin-bottom:1rem}
+.alt-label{color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem}
+.alt-chip{display:inline-block;padding:.3rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text);margin:.25rem .25rem .25rem 0;transition:border-color .15s}
+.alt-chip:hover{border-color:var(--accent);text-decoration:none}
+.chip-tier{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-left:.25rem}
+.outgrow-box{background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.2);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.outgrow-box strong{color:var(--text)}
+.whynot-box{background:rgba(248,81,73,0.06);border:1px solid rgba(248,81,73,0.15);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5;margin-top:.75rem}
+.whynot-box strong{color:var(--text-muted);font-weight:500}
+.related-link{display:block;margin-top:.75rem;font-size:.85rem}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.growth-table th,.growth-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.growth-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-first{color:#d29922;font-weight:600}
+.stability-list{display:flex;flex-direction:column;gap:.5rem}
+.stability-item{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5;background:var(--bg-card)}
+.stability-item strong{color:var(--text)}
+.stability-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.1rem .4rem;border-radius:8px;margin-right:.5rem}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.growth-table{font-size:.75rem}.growth-table th,.growth-table td{padding:.4rem .5rem}.cost-banner .cost-amount{font-size:2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Go Stack</div>
+  <h1>The Complete Free Go/Golang Stack</h1>
+
+  <div class="context">
+    <p>Everything you need to build and ship a Go service — without spending a dollar. This guide recommends the best free tier for each layer of your Go infrastructure — <strong>10 layers</strong> from single-binary hosting to API documentation — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Designed for developers building REST APIs, CLI tools, microservices, DevOps tooling, and cloud-native infrastructure with Go. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
+    <div class="cost-label">Total infrastructure cost for a Go service on free tiers</div>
+  </div>
+
+  <div class="binary-box">
+    <h3>📦 The Single Binary Advantage</h3>
+    <p>Go compiles to a single, statically-linked binary. No runtime, no dependencies, no node_modules, no virtual environments. A Go Docker image built from <code style="background:rgba(0,0,0,.3);padding:.1rem .3rem;border-radius:4px;font-size:.8rem">scratch</code> is typically <strong style="color:var(--text)">5-15 MB</strong> — vs 100+ MB for Node.js or Python. This means: lower memory usage (more headroom on free tiers), instant cold starts (50ms vs 5-30 seconds), simpler deploys (copy one file), and no supply chain attacks from dependency trees. Go is the language that Docker, Kubernetes, Terraform, and Prometheus are written in.</p>
+  </div>
+
+  <div class="builtin-box">
+    <h3>🔧 What Go's Standard Library Gives You for Free</h3>
+    <ul>
+      <li>net/http Server</li>
+      <li>encoding/json</li>
+      <li>crypto/bcrypt</li>
+      <li>crypto/tls</li>
+      <li>testing Framework</li>
+      <li>net/http/pprof</li>
+      <li>expvar Metrics</li>
+      <li>context.Context</li>
+      <li>sync Primitives</li>
+      <li>embed (static files)</li>
+      <li>log/slog (structured logging)</li>
+      <li>race detector (-race)</li>
+    </ul>
+  </div>
+
+  <h2>Stack Overview</h2>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Recommended</th>
+        <th>Key Limit</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+  </div>
+
+${categorySections}
+
+${stabilityNotes}
+
+  <h2>The $20/Month Upgrade — What to Spend First</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">When you're ready to spend your first dollar, here's where it matters most. Sorted by which limits you'll likely hit first:</p>
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Free Limit</th>
+        <th>First Paid Plan</th>
+        <th>What You Get</th>
+      </tr>
+    </thead>
+    <tbody>
+${growthCosts.map(g => `      <tr>
+        <td style="font-weight:600">${escHtmlServer(g.layer)}${g.hitFirst ? ` <span class="growth-first">⬆ hit first</span>` : ""}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted)">${escHtmlServer(g.freeLimit)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(g.firstPaid)}</td>
+        <td style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(g.gets)}</td>
+      </tr>`).join("\n")}
+    </tbody>
+  </table>
+  </div>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The $19/month breakpoint:</strong> Database (Neon Launch $19/mo) is the first upgrade that matters — 10 GiB storage and autoscaling. Hosting stays free longer on Railway's $5 credit because Go binaries use so little memory. Two layers — background jobs (goroutines) and API docs (swaggo) — are free forever with no external service. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), CI (2,000 min) — stays free well past your first 1,000 users. Go's minimal resource footprint means you get more out of every free tier.</p>
+  </div>
+
+  <h2>Architecture: How It Fits Together</h2>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:1rem">A typical Go service connects these layers:</p>
+    <div style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted);line-height:2;padding:1rem;background:rgba(0,0,0,0.2);border-radius:8px;overflow-x:auto;white-space:pre">Client → Railway (Go binary, net/http or chi router) → Neon (Postgres via pgx)
+                                                      → Auth0 (JWT validation via middleware)
+                                                      → Upstash Redis (cache via go-redis)
+                                                      → R2 (file storage via aws-sdk-go-v2)
+                                                      → Resend (transactional emails via net/http)
+                                                      → goroutines (background tasks, in-process)
+                                                      → Sentry (error tracking + HTTP middleware)
+                                                      → swaggo/swag (/swagger/index.html)
+GitHub → GitHub Actions (CI: go test + golangci-lint) → Railway (CD: auto-deploy)</div>
+    <p style="color:var(--text-dim);font-size:.8rem;margin-top:1rem">All connections use HTTPS — no VPCs, no SSH tunnels, no complex networking. Each service is independently replaceable. Go's interface-based design makes swapping providers clean — implement the interface, swap the implementation.</p>
+  </div>
+
+  <div class="search-cta">
+    <p>Need a different framework? See our <a href="/free-nextjs-stack">Free Next.js Stack</a> for React full-stack, <a href="/free-django-stack">Free Django Stack</a> for batteries-included Python, <a href="/free-fastapi-stack">Free FastAPI Stack</a> for async Python APIs, <a href="/free-startup-stack">Free Startup Stack</a> for framework-agnostic infrastructure, <a href="/free-ai-stack">Free AI Stack</a> for ML/AI development, or <a href="/free-devops-stack">Free DevOps Stack</a> for infrastructure tooling (mostly written in Go). Or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get personalized Go stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -36288,6 +36764,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-fastapi-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeFastapiStackPage());
+  } else if (url.pathname === "/free-go-stack" && isGetOrHead) {
+    recordApiHit("/free-go-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-go-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeGoStackPage());
   } else if (url.pathname === "/supabase-vs-firebase" && isGetOrHead) {
     recordApiHit("/supabase-vs-firebase");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/supabase-vs-firebase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

@@ -2424,6 +2424,58 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-nextjs-stack"), "Should cross-link to Next.js stack guide");
   });
 
+  it("GET /free-go-stack renders Go stack guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/free-go-stack`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Complete Free Go"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes('"FAQPage"'), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("$0"), "Should show $0 cost");
+    assert.ok(html.includes("Hosting"), "Should have hosting layer");
+    assert.ok(html.includes("Database"), "Should have database layer");
+    assert.ok(html.includes("Cache"), "Should have cache layer");
+    assert.ok(html.includes("Authentication"), "Should have auth layer");
+    assert.ok(html.includes("Object Storage"), "Should have storage layer");
+    assert.ok(html.includes("Email"), "Should have email layer");
+    assert.ok(html.includes("Monitoring"), "Should have monitoring layer");
+    assert.ok(html.includes("CI/CD"), "Should have CI/CD layer");
+    assert.ok(html.includes("Background Jobs"), "Should have background jobs layer");
+    assert.ok(html.includes("API Documentation"), "Should have API docs layer");
+    assert.ok(html.includes("Railway"), "Should recommend Railway");
+    assert.ok(html.includes("Neon"), "Should recommend Neon");
+    assert.ok(html.includes("Auth0"), "Should recommend Auth0");
+    assert.ok(html.includes("Upstash"), "Should recommend Upstash");
+    assert.ok(html.includes("Cloudflare R2"), "Should recommend R2");
+    assert.ok(html.includes("Resend"), "Should recommend Resend");
+    assert.ok(html.includes("Sentry"), "Should recommend Sentry");
+    assert.ok(html.includes("Go Goroutines"), "Should have goroutines recommendation");
+    assert.ok(html.includes("swaggo/swag"), "Should mention swaggo for docs");
+    assert.ok(html.includes("pgx"), "Should mention pgx Go Postgres driver");
+    assert.ok(html.includes("Single Binary Advantage"), "Should have single binary section");
+    assert.ok(html.includes("Standard Library"), "Should have stdlib features section");
+    assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
+    assert.ok(html.includes("whynot-box"), "Should have why-not callouts");
+    assert.ok(html.includes("$20/Month Upgrade") || html.includes("$19/month breakpoint"), "Should have growth cost section");
+    assert.ok(html.includes("Stack Overview"), "Should have overview table");
+    assert.ok(html.includes("Architecture"), "Should have architecture section");
+    assert.ok(html.includes("Can I host Go for free"), "Should have FAQ content");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+    assert.ok(html.includes("/hosting-free-tier-comparison-2026"), "Should cross-link to hosting comparison");
+    assert.ok(html.includes("/database-free-tier-comparison-2026"), "Should cross-link to database comparison");
+    assert.ok(html.includes("/auth-comparison-2026"), "Should cross-link to auth comparison");
+    assert.ok(html.includes("/monitoring-comparison-2026"), "Should cross-link to monitoring comparison");
+    assert.ok(html.includes("/free-fastapi-stack"), "Should cross-link to FastAPI stack guide");
+    assert.ok(html.includes("/free-django-stack"), "Should cross-link to Django stack guide");
+    assert.ok(html.includes("/free-nextjs-stack"), "Should cross-link to Next.js stack guide");
+  });
+
   it("GET /google-developer-program-2026 renders GDP pricing analysis page", async () => {
     proc = await startHttpServer();
 
