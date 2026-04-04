@@ -176,7 +176,16 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath 
   const toVerify = limit ? stale.slice(0, limit) : stale;
   const skipped = stale.length - toVerify.length;
 
-  const client = new Anthropic();
+  let client;
+  function getClient() {
+    if (!client) {
+      if (!process.env.ANTHROPIC_API_KEY) {
+        throw new Error("ANTHROPIC_API_KEY environment variable is required");
+      }
+      client = new Anthropic();
+    }
+    return client;
+  }
   const today = new Date().toISOString().split("T")[0];
 
   let verified = 0;
@@ -200,7 +209,7 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath 
     // Verify with Haiku
     let result;
     try {
-      result = await verifyWithHaiku(client, offer, page.text);
+      result = await verifyWithHaiku(getClient(), offer, page.text);
     } catch (err) {
       failed++;
       failures.push({ vendor: offer.vendor, category: offer.category, url: offer.url, error: `AI error: ${err.message}` });
