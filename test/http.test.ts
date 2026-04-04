@@ -4352,4 +4352,43 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
     assert.ok(html.includes("Migration path"), "Should show migration paths");
   });
+
+  it("GET /cockroachdb-vs-mongodb renders programmatic VS page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/cockroachdb-vs-mongodb`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("CockroachDB vs MongoDB: Free Tier Comparison"), "Should have correct H1");
+    assert.ok(html.includes("Quick Verdict"), "Should have quick verdict section");
+    assert.ok(html.includes("Key Differences"), "Should have key differences section");
+    assert.ok(html.includes("Our Recommendation"), "Should have recommendation section");
+    assert.ok(html.includes("Side-by-Side Comparison"), "Should have comparison table");
+    assert.ok(html.includes("Pricing Change History"), "Should have pricing change history");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ section");
+    assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/vendor/cockroachdb"), "Should link to vendor pages");
+    assert.ok(html.includes("/vendor/mongodb"), "Should link to vendor pages");
+    assert.ok(html.includes("database-alternatives"), "Should link to category hub");
+  });
+
+  it("GET /<reversed-vs-slug> redirects to canonical VS page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/mongodb-vs-cockroachdb`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/cockroachdb-vs-mongodb"), "Should redirect to canonical URL");
+  });
+
+  it("sitemap.xml includes programmatic VS pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/cockroachdb-vs-mongodb"), "Sitemap should include VS pages");
+    assert.ok(xml.includes("/auth0-vs-clerk"), "Sitemap should include VS pages");
+    assert.ok(xml.includes("/amplitude-vs-posthog"), "Sitemap should include VS pages");
+  });
 });
