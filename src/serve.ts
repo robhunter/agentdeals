@@ -3880,6 +3880,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Complete free Next.js full-stack infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
   },
   {
+    slug: "free-django-stack",
+    title: "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure",
+    metaDesc: "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs. Updated April 2026.",
+    contextHtml: "",
+    tag: "django-stack-guide",
+    primaryVendor: "Railway",
+    hubDesc: "Complete free Django/Python infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
+  },
+  {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
     metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
@@ -12000,6 +12009,468 @@ GitHub → GitHub Actions (CI: tests + lint) → Vercel (CD: auto-deploy)</div>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized Next.js stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+// --- Free Django/Python Stack Guide ---
+
+function buildFreeDjangoStackPage(): string {
+  const title = "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
+  const metaDesc = "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs. Updated April 2026.";
+  const slug = "free-django-stack";
+
+  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+  const stackCategories = [
+    {
+      name: "Hosting & Deployment",
+      icon: "🚀",
+      recommended: { vendor: "Railway", why: "The best free Django hosting in 2026. $5/month free credit covers a small Django app with WSGI/ASGI support, managed Postgres add-on, and auto-deploy from GitHub. Supports Gunicorn, Uvicorn, and Daphne out of the box. No sleep timer — your app stays warm. Nixpacks auto-detects Django projects and installs dependencies from requirements.txt or pyproject.toml." },
+      alternatives: ["Render", "Fly.io", "PythonAnywhere"],
+      outgrow: "When you exceed the $5/month free credit (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds hurt Django apps. Fly.io gives 3 shared-CPU VMs free with 256 MB RAM. PythonAnywhere offers a free tier with WSGI support but only one web app and no custom domain.",
+      whyNot: "Why not Heroku: No free tier since November 2022 — Eco dynos start at $5/month with mandatory credit card. Why not AWS Elastic Beanstalk: No free tier for the EB service itself, only the underlying EC2 instances (12-month trial). Overkill for a Django side project.",
+      relatedPage: "/hosting-free-tier-comparison-2026",
+    },
+    {
+      name: "Database",
+      icon: "🗄️",
+      recommended: { vendor: "Neon", why: "Serverless Postgres — Django's recommended database. Free tier: 0.5 GiB storage, 190+ compute hours/month, scales to zero. Django's ORM, migrations, and django.contrib.postgres module all work perfectly. Neon's connection pooler handles Django's synchronous database connections efficiently. Branching lets you test migrations safely before applying to production." },
+      alternatives: ["Supabase", "CockroachDB", "Railway"],
+      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth and realtime, but pauses after 7 days inactive. CockroachDB's free tier gives 10 GiB storage with distributed Postgres-compatible SQL. Railway's managed Postgres comes out of the same $5 credit as hosting.",
+      whyNot: "Why not SQLite: Fine for local development, but most free hosting platforms use ephemeral filesystems — your database would be wiped on every deploy. Why not MySQL: Django supports it, but Postgres-specific features (JSONField, ArrayField, full-text search, range types) are too valuable to leave on the table.",
+      relatedPage: "/database-free-tier-comparison-2026",
+    },
+    {
+      name: "Cache & Redis",
+      icon: "⚡",
+      recommended: { vendor: "Upstash", why: "Serverless Redis with a generous free tier: 10,000 commands/day, 256 MB storage. Perfect for Django's cache framework (django.core.cache with django-redis backend), session storage, and Celery broker. Pay-per-request pricing means you only pay for what you use beyond free limits. REST API works anywhere — no persistent connections needed." },
+      alternatives: ["Redis Cloud", "Railway"],
+      outgrow: "When you exceed 10,000 commands/day. Redis Cloud offers 30 MB free with unlimited commands — better if you have high command volume but small data. Railway Redis comes from the same $5 credit. For simple caching without Redis, Django's built-in database cache backend costs nothing extra.",
+      whyNot: null,
+      relatedPage: null,
+    },
+    {
+      name: "Authentication",
+      icon: "🔐",
+      recommended: { vendor: "Django Built-in Auth", why: "Django's batteries-included advantage — django.contrib.auth is free at any scale. User model, login/logout views, password hashing (PBKDF2 + Argon2 support), permissions, groups, session management, CSRF protection, and the admin interface for user management. Add django-allauth for social login (Google, GitHub, etc.) — also free and open source." },
+      alternatives: ["Auth0", "Clerk", "Supabase"],
+      outgrow: "You won't outgrow Django's built-in auth — it scales with your app. If you need managed social login without django-allauth, Auth0 offers 25,000 MAU free. Clerk gives 10,000 MAU with pre-built UI components. But for most Django projects, the built-in auth + django-allauth covers everything.",
+      whyNot: "Why not rolling your own: Django already rolled it for you. Custom auth code is the #1 source of security vulnerabilities in web apps. Use the framework's battle-tested implementation.",
+      relatedPage: "/auth-comparison-2026",
+    },
+    {
+      name: "Object Storage",
+      icon: "📦",
+      recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means django-storages works out of the box with the S3Boto3Storage backend. Perfect for Django file uploads (ImageField, FileField), static file hosting (collectstatic), and media storage." },
+      alternatives: ["Backblaze B2", "Supabase", "Cloudflare"],
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN — also works with django-storages. Supabase Storage gives 1 GB free with image transformations.",
+      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. Django apps serving user-uploaded media can rack up egress costs quickly — R2 charges $0.",
+      relatedPage: "/storage-comparison-2026",
+    },
+    {
+      name: "Email & Transactional",
+      icon: "✉️",
+      recommended: { vendor: "Resend", why: "Modern developer-first email API. 3,000 emails/month, 100/day on free tier. Works with Django's send_mail() via django-anymail or a simple custom backend. TypeScript SDK is unnecessary — Resend's REST API is clean enough to call with requests or the official Python SDK. Domain verification, webhook delivery tracking." },
+      alternatives: ["Postmark", "Brevo", "Amazon SES"],
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Postmark offers 100 emails/month free but exceptional deliverability. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES offers 62,000 emails/month free from EC2 at $0.10/1K after — cheapest at scale.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. Existing free plans reduced to 100 emails/day. Many Django tutorials still reference SendGrid — those guides are outdated.",
+      relatedPage: "/email-comparison-2026",
+    },
+    {
+      name: "Monitoring & Error Tracking",
+      icon: "🐛",
+      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments. First-class Django SDK with automatic instrumentation for views, middleware, Celery tasks, database queries, and template rendering. The sentry-sdk Python package integrates in 3 lines of code in settings.py." },
+      alternatives: ["BetterStack", "Grafana Cloud"],
+      outgrow: "When you exceed 5,000 errors/month or need more than 1 team member. BetterStack combines uptime monitoring (10 monitors) with incident management. Grafana Cloud offers 10,000 series metrics + 50 GB logs + 50 GB traces — great if you want full observability beyond error tracking.",
+      whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. The per-host pricing model ($15/host/month for infrastructure) gets expensive fast.",
+      relatedPage: "/monitoring-comparison-2026",
+    },
+    {
+      name: "CI/CD",
+      icon: "⚙️",
+      recommended: { vendor: "GitHub Actions", why: "2,000 minutes/month on free tier for public repos (unlimited) and private repos. Django test runner integrates naturally — run pytest or manage.py test, lint with ruff/flake8, type-check with mypy. Matrix testing across Python 3.10-3.13 catches compatibility issues. Caching pip dependencies cuts CI time by 50-70%." },
+      alternatives: ["Railway", "GitLab CI", "Render"],
+      outgrow: "When you exceed 2,000 minutes/month on private repos. Railway and Render auto-deploy from git with zero CI config — combine with GitHub Actions for tests only. GitLab CI offers 400 minutes/month on free tier.",
+      whyNot: null,
+      relatedPage: "/cicd-free-tier-comparison-2026",
+    },
+    {
+      name: "Task Queue & Background Jobs",
+      icon: "⏱️",
+      recommended: { vendor: "Upstash", why: "Celery + Upstash Redis is the Django-native solution for background jobs. Celery handles async tasks (email sending, image processing, report generation), periodic tasks (cron-like scheduling), and task chaining/grouping. Upstash's 10,000 commands/day free tier covers moderate task queue usage. Celery is free, open source, and the Django ecosystem's standard task runner." },
+      alternatives: ["Redis Cloud", "Inngest"],
+      outgrow: "When you exceed 10,000 Redis commands/day (roughly 3,000-5,000 task dispatches depending on complexity). Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. Inngest offers 25,000 function runs/month but requires adapting away from Celery's Django-native patterns.",
+      whyNot: "Why not RQ (Redis Queue): Simpler than Celery but less feature-rich — no periodic tasks, no task chains, smaller ecosystem. Celery is the standard for a reason. Why not Django-Q2: Good lightweight alternative if Celery feels too heavy, but smaller community and fewer production deployments.",
+      relatedPage: null,
+    },
+    {
+      name: "Search",
+      icon: "🔍",
+      recommended: { vendor: "Algolia", why: "10,000 records and 10,000 search requests/month on the free tier. The algoliasearch Python client and django-algoliasearch library handle indexing Django models automatically — decorate your model, and Algolia syncs on save/delete. Instant search with typo tolerance, faceting, and geo-search." },
+      alternatives: ["Meilisearch"],
+      outgrow: "When you exceed 10,000 records or 10,000 searches/month. Meilisearch Cloud offers 100,000 documents free. Both Meilisearch and Typesense are self-hostable with no limits. For simpler needs, Django's built-in Postgres full-text search (django.contrib.postgres.search) is free and requires no external service.",
+      whyNot: null,
+      relatedPage: null,
+    },
+  ];
+
+  const resolveVendor = (vendorName: string) => {
+    if (vendorName === "Django Built-in Auth" || vendorName === "Upstash") {
+      // Upstash appears in both cache and task queue — resolve once
+      if (vendorName === "Upstash") {
+        const offer = offers.find(o => o.vendor === "Upstash");
+        if (!offer) return null;
+        return enrichOffers([offer])[0];
+      }
+      return null; // Django built-in auth has no vendor entry
+    }
+    const offer = offers.find(o => o.vendor === vendorName);
+    if (!offer) return null;
+    return enrichOffers([offer])[0];
+  };
+
+  const stackVendors = stackCategories.flatMap(c => {
+    const v = c.recommended.vendor;
+    return v === "Django Built-in Auth" ? [...c.alternatives] : [v, ...c.alternatives];
+  });
+  const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: "2026-04-03",
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Can I host Django for free in 2026?",
+        acceptedAnswer: { "@type": "Answer", text: "Yes. Railway offers a $5/month free credit that covers a small Django app with Gunicorn, auto-deploy from GitHub, and managed Postgres. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io gives 3 shared-CPU VMs free with 256 MB RAM." },
+      },
+      {
+        "@type": "Question",
+        name: "What's the best free database for Django?",
+        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month, scales to zero. Django's ORM is built for Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search, and range types. Supabase (500 MB) is a good alternative with built-in auth. CockroachDB offers 10 GiB free with distributed Postgres-compatible SQL." },
+      },
+      {
+        "@type": "Question",
+        name: "Does Django need Redis?",
+        acceptedAnswer: { "@type": "Answer", text: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash offers 10,000 Redis commands/day free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
+      },
+      {
+        "@type": "Question",
+        name: "PythonAnywhere vs Railway vs Render for Django?",
+        acceptedAnswer: { "@type": "Answer", text: "Railway is the best overall — $5/month credit, no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
+      },
+    ],
+  };
+
+  const categorySections = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
+
+    const recCard = rec ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <div class="pick-links">
+          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
+          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+        </div>
+      </div>` : cat.recommended.vendor === "Django Built-in Auth" ? `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <span class="pick-name">Django Built-in Auth</span>
+          <span class="pick-tier">Free (included)</span>
+          <span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors.stable}22;color:${riskColors.stable};font-weight:600">stable</span>
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+        <p class="pick-limits">django.contrib.auth — unlimited users, sessions, permissions, groups. Add django-allauth for social login.</p>
+      </div>` : `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <span class="pick-name">${escHtmlServer(cat.recommended.vendor)}</span>
+          <span class="pick-tier">Free tier</span>
+        </div>
+        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
+      </div>`;
+
+    const altCards = altVendors.length > 0 ? `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
+      </div>` : "";
+
+    const whyNotBox = cat.whyNot ? `
+      <div class="whynot-box">
+        <strong>⚠️ ${escHtmlServer(cat.whyNot)}</strong>
+      </div>` : "";
+
+    const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
+
+    return `
+    <div class="stack-category" id="${toSlug(cat.name)}">
+      <h2><span class="cat-icon">${cat.icon}</span> ${escHtmlServer(cat.name)}</h2>
+      ${recCard}
+      ${altCards}
+      <div class="outgrow-box">
+        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+      </div>
+      ${whyNotBox}
+      ${relatedLink}
+    </div>`;
+  }).join("\n");
+
+  const stabilityNotes = stackChanges.length > 0 ? `
+  <h2>Stability Notes</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <div class="stability-list">
+    ${stackChanges.slice(0, 12).map(c => {
+      const typeColors: Record<string, string> = {
+        free_tier_removed: "#f85149", limits_reduced: "#d29922", pricing_restructured: "#d29922",
+        restriction: "#d29922", limits_increased: "#3fb950", new_free_tier: "#3fb950",
+        pricing_postponed: "#3fb950", startup_program_expanded: "#3fb950", product_deprecated: "#f85149",
+      };
+      const color = typeColors[c.change_type] ?? "#94a3b8";
+      return `<div class="stability-item">
+        <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+      </div>`;
+    }).join("\n    ")}
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+
+  const tableRows = stackCategories.map(cat => {
+    const rec = resolveVendor(cat.recommended.vendor);
+    const vendorName = cat.recommended.vendor;
+    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : vendorName === "Django Built-in Auth" ? "Unlimited — included in Django" : "—";
+    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
+    return `      <tr>
+        <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
+        <td>${vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
+        <td>${riskBadge}</td>
+      </tr>`;
+  }).join("\n");
+
+  // Growth cost analysis
+  const growthCosts = [
+    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
+    { layer: "Hosting", vendor: "Railway", freeLimit: "$5/mo credit", firstPaid: "Hobby $5/mo", gets: "$5 + usage-based, no sleep, more RAM", hitFirst: true },
+    { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
+    { layer: "Auth", vendor: "Django Built-in", freeLimit: "Unlimited", firstPaid: "Free forever", gets: "N/A — scales with your app", hitFirst: false },
+    { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
+    { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
+    { layer: "Monitoring", vendor: "Sentry", freeLimit: "5,000 errors/mo", firstPaid: "Team $26/mo", gets: "50,000 errors, unlimited members, integrations", hitFirst: false },
+    { layer: "Task Queue", vendor: "Celery + Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited task dispatches", hitFirst: false },
+    { layer: "Search", vendor: "Algolia", freeLimit: "10,000 records", firstPaid: "Build $0.50/1K req", gets: "100,000 records, more search requests", hitFirst: false },
+    { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2,000 min/mo", firstPaid: "Team $4/user/mo", gets: "3,000 min/mo, required reviewers", hitFirst: false },
+  ];
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
+.context strong{color:var(--text)}
+.cost-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
+.cost-banner .cost-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.cost-banner .cost-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
+.batteries-box{background:rgba(63,185,80,0.08);border:1px solid rgba(63,185,80,0.2);border-radius:12px;padding:1.25rem;margin:1.5rem 0}
+.batteries-box h3{color:#3fb950;font-size:1rem;margin-bottom:.5rem}
+.batteries-box ul{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem}
+.batteries-box li{font-size:.85rem;color:var(--text-muted);padding:.25rem .6rem;background:rgba(63,185,80,0.06);border-radius:8px;border:1px solid rgba(63,185,80,0.1)}
+.stack-category{border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;background:var(--bg-card)}
+.stack-category h2{margin:0 0 1rem;font-size:1.25rem}
+.cat-icon{margin-right:.5rem}
+.stack-pick{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:rgba(59,130,246,0.05);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.pick-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.pick-badge{font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;background:var(--accent);color:#fff}
+.pick-name{font-size:1.1rem;font-weight:600;color:var(--text)}
+.pick-name:hover{color:var(--accent)}
+.pick-tier{font-family:var(--mono);color:var(--accent);font-size:.8rem;padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
+.pick-why{color:var(--text-muted);font-size:.9rem;line-height:1.5;margin-bottom:.5rem}
+.pick-limits{font-family:var(--mono);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.pick-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
+.pick-links a{color:var(--accent)}
+.alt-picks{margin-bottom:1rem}
+.alt-label{color:var(--text-dim);font-size:.8rem;margin-bottom:.5rem}
+.alt-chip{display:inline-block;padding:.3rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text);margin:.25rem .25rem .25rem 0;transition:border-color .15s}
+.alt-chip:hover{border-color:var(--accent);text-decoration:none}
+.chip-tier{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-left:.25rem}
+.outgrow-box{background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.2);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.outgrow-box strong{color:var(--text)}
+.whynot-box{background:rgba(248,81,73,0.06);border:1px solid rgba(248,81,73,0.15);border-radius:8px;padding:.75rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5;margin-top:.75rem}
+.whynot-box strong{color:var(--text-muted);font-weight:500}
+.related-link{display:block;margin-top:.75rem;font-size:.85rem}
+.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.compare-table tr:hover{background:var(--accent-glow)}
+.growth-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+.growth-table th,.growth-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.growth-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.growth-table tr:hover{background:var(--accent-glow)}
+.growth-first{color:#d29922;font-weight:600}
+.stability-list{display:flex;flex-direction:column;gap:.5rem}
+.stability-item{padding:.75rem;border:1px solid var(--border);border-radius:8px;font-size:.85rem;color:var(--text-muted);line-height:1.5;background:var(--bg-card)}
+.stability-item strong{color:var(--text)}
+.stability-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.1rem .4rem;border-radius:8px;margin-right:.5rem}
+.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.growth-table{font-size:.75rem}.growth-table th,.growth-table td{padding:.4rem .5rem}.cost-banner .cost-amount{font-size:2rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Free Django Stack</div>
+  <h1>The Complete Free Django/Python Stack</h1>
+
+  <div class="context">
+    <p>Everything you need to build and ship a Django app — without spending a dollar. This guide recommends the best free tier for each layer of your Django infrastructure — <strong>10 layers</strong> from hosting to search — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Designed for Python developers building SaaS products, AI/ML applications, APIs, and side projects with Django. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+  </div>
+
+  <div class="cost-banner">
+    <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
+    <div class="cost-label">Total infrastructure cost for a Django SaaS on free tiers</div>
+  </div>
+
+  <div class="batteries-box">
+    <h3>🔋 Django's Batteries Included — What You Don't Need to Pay For</h3>
+    <ul>
+      <li>ORM & Migrations</li>
+      <li>Admin Interface</li>
+      <li>Auth & Permissions</li>
+      <li>Forms & Validation</li>
+      <li>Template Engine</li>
+      <li>URL Routing</li>
+      <li>Session Management</li>
+      <li>CSRF Protection</li>
+      <li>Security Middleware</li>
+      <li>Internationalization</li>
+      <li>Signals</li>
+      <li>Management Commands</li>
+    </ul>
+  </div>
+
+  <h2>Stack Overview</h2>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Recommended</th>
+        <th>Key Limit</th>
+        <th>Stability</th>
+      </tr>
+    </thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+  </div>
+
+${categorySections}
+
+${stabilityNotes}
+
+  <h2>The $24/Month Upgrade — What to Spend First</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">When you're ready to spend your first dollar, here's where it matters most. Sorted by which limits you'll likely hit first:</p>
+  <div style="overflow-x:auto">
+  <table class="growth-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Free Limit</th>
+        <th>First Paid Plan</th>
+        <th>What You Get</th>
+      </tr>
+    </thead>
+    <tbody>
+${growthCosts.map(g => `      <tr>
+        <td style="font-weight:600">${escHtmlServer(g.layer)}${g.hitFirst ? ` <span class="growth-first">⬆ hit first</span>` : ""}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted)">${escHtmlServer(g.freeLimit)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(g.firstPaid)}</td>
+        <td style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(g.gets)}</td>
+      </tr>`).join("\n")}
+    </tbody>
+  </table>
+  </div>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The $24/month breakpoint:</strong> Database (Neon Launch $19/mo) + Hosting (Railway Hobby $5/mo) gives you 10 GiB Postgres, no sleep timers, and enough compute for real traffic. Everything else — auth (unlimited with Django), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), search (10K records), CI (2,000 min) — stays free well past your first 1,000 users. Django's built-in auth means you never pay for authentication.</p>
+  </div>
+
+  <h2>Architecture: How It Fits Together</h2>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:1rem">A typical Django SaaS connects these layers:</p>
+    <div style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted);line-height:2;padding:1rem;background:rgba(0,0,0,0.2);border-radius:8px;overflow-x:auto;white-space:pre">User → Railway (Gunicorn + Django WSGI) → Neon (Postgres via psycopg2/dj-database-url)
+                                          → Django Auth (built-in sessions + permissions)
+                                          → Upstash Redis (cache + Celery broker)
+                                          → R2 (file uploads via django-storages)
+                                          → Resend (transactional emails via django-anymail)
+                                          → Celery (background tasks, scheduled via Celery Beat)
+                                          → Sentry (error tracking + performance)
+                                          → Algolia (search index, synced from Django ORM)
+GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div>
+    <p style="color:var(--text-dim);font-size:.8rem;margin-top:1rem">All connections use HTTPS APIs — no VPCs, no SSH tunnels, no complex networking. Each service is independently replaceable. The Celery worker runs as a separate Railway service from the same $5 credit.</p>
+  </div>
+
+  <div class="search-cta">
+    <p>Need a different framework? See our <a href="/free-nextjs-stack">Free Next.js Stack</a> for React full-stack, <a href="/free-startup-stack">Free Startup Stack</a> for framework-agnostic infrastructure, <a href="/free-ai-stack">Free AI Stack</a> for ML/AI development (many Django apps serve AI models), or <a href="/free-devops-stack">Free DevOps Stack</a> for infrastructure tooling. Or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Get personalized Django stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -35322,6 +35793,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => `  <url>
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-nextjs-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreeNextjsStackPage());
+  } else if (url.pathname === "/free-django-stack" && isGetOrHead) {
+    recordApiHit("/free-django-stack");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-django-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildFreeDjangoStackPage());
   } else if (url.pathname === "/supabase-vs-firebase" && isGetOrHead) {
     recordApiHit("/supabase-vs-firebase");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/supabase-vs-firebase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

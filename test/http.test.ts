@@ -2325,6 +2325,54 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/monitoring-comparison-2026"), "Should cross-link to monitoring comparison");
   });
 
+  it("GET /free-django-stack renders Django stack guide page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/free-django-stack`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Complete Free Django"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes('"FAQPage"'), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("$0"), "Should show $0 cost");
+    assert.ok(html.includes("Hosting"), "Should have hosting layer");
+    assert.ok(html.includes("Database"), "Should have database layer");
+    assert.ok(html.includes("Cache"), "Should have cache layer");
+    assert.ok(html.includes("Authentication"), "Should have auth layer");
+    assert.ok(html.includes("Object Storage"), "Should have storage layer");
+    assert.ok(html.includes("Email"), "Should have email layer");
+    assert.ok(html.includes("Monitoring"), "Should have monitoring layer");
+    assert.ok(html.includes("CI/CD"), "Should have CI/CD layer");
+    assert.ok(html.includes("Task Queue"), "Should have task queue layer");
+    assert.ok(html.includes("Search"), "Should have search layer");
+    assert.ok(html.includes("Railway"), "Should recommend Railway");
+    assert.ok(html.includes("Neon"), "Should recommend Neon");
+    assert.ok(html.includes("Django Built-in Auth"), "Should recommend Django built-in auth");
+    assert.ok(html.includes("Upstash"), "Should recommend Upstash");
+    assert.ok(html.includes("Cloudflare R2"), "Should recommend R2");
+    assert.ok(html.includes("Resend"), "Should recommend Resend");
+    assert.ok(html.includes("Sentry"), "Should recommend Sentry");
+    assert.ok(html.includes("Algolia"), "Should recommend Algolia");
+    assert.ok(html.includes("Celery"), "Should mention Celery");
+    assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
+    assert.ok(html.includes("whynot-box"), "Should have why-not callouts");
+    assert.ok(html.includes("$24/Month Upgrade"), "Should have growth cost section");
+    assert.ok(html.includes("Stack Overview"), "Should have overview table");
+    assert.ok(html.includes("Architecture"), "Should have architecture section");
+    assert.ok(html.includes("Batteries Included"), "Should have batteries-included section");
+    assert.ok(html.includes("Can I host Django for free"), "Should have FAQ content");
+    assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
+    assert.ok(html.includes("/hosting-free-tier-comparison-2026"), "Should cross-link to hosting comparison");
+    assert.ok(html.includes("/database-free-tier-comparison-2026"), "Should cross-link to database comparison");
+    assert.ok(html.includes("/auth-comparison-2026"), "Should cross-link to auth comparison");
+    assert.ok(html.includes("/monitoring-comparison-2026"), "Should cross-link to monitoring comparison");
+    assert.ok(html.includes("/free-nextjs-stack"), "Should cross-link to Next.js stack guide");
+  });
+
   it("GET /google-developer-program-2026 renders GDP pricing analysis page", async () => {
     proc = await startHttpServer();
 
