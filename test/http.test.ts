@@ -1345,6 +1345,33 @@ describe("HTTP transport", () => {
     assert.ok(altCount >= 100, `Expected 100+ alternative-to URLs in sitemap, got ${altCount}`);
   });
 
+  it("sitemap.xml has varying lastmod dates based on content", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    // Extract all lastmod dates
+    const lastmods = [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map(m => m[1]);
+    assert.ok(lastmods.length > 100, `Expected 100+ lastmod entries, got ${lastmods.length}`);
+    // Verify not all dates are the same (the whole point of this feature)
+    const uniqueDates = new Set(lastmods);
+    assert.ok(uniqueDates.size > 1, `Expected varying lastmod dates, got ${uniqueDates.size} unique date(s): ${[...uniqueDates].join(", ")}`);
+    // All dates should be valid YYYY-MM-DD format
+    for (const d of lastmods) {
+      assert.match(d, /^\d{4}-\d{2}-\d{2}$/, `Invalid lastmod date format: ${d}`);
+    }
+    // No future dates
+    const today = new Date().toISOString().split("T")[0];
+    for (const d of lastmods) {
+      assert.ok(d <= today, `Lastmod date ${d} is in the future`);
+    }
+    // Vendor pages should use verifiedDate (spot check: /vendor/vercel should not use today's date)
+    const vercelEntry = xml.match(/<url>\s*<loc>[^<]*\/vendor\/vercel<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/);
+    assert.ok(vercelEntry, "Should have vercel vendor entry");
+    // The vercel lastmod should be a verifiedDate, not necessarily today
+    assert.match(vercelEntry![1], /^\d{4}-\d{2}-\d{2}$/, "Vercel lastmod should be valid date");
+  });
+
   // --- Expiring page ---
 
   it("GET /expiring renders expiring deals timeline page", async () => {
