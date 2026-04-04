@@ -1675,6 +1675,76 @@ ${categorySections}
 </html>`;
 }
 
+// Category-to-page mappings for vendor page enrichment
+const categoryComparisonMap: Record<string, { comparison?: string; hub?: string }> = {
+  "Databases": { comparison: "/database-free-tier-comparison-2026", hub: "/database-alternatives" },
+  "Cloud Hosting": { comparison: "/hosting-free-tier-comparison-2026", hub: "/hosting-alternatives" },
+  "Monitoring": { comparison: "/monitoring-comparison-2026", hub: "/monitoring-alternatives" },
+  "CI/CD": { comparison: "/cicd-free-tier-comparison-2026", hub: "/ci-cd-alternatives" },
+  "Security": { comparison: "/security-free-tier-comparison-2026", hub: "/security-alternatives" },
+  "Cloud Storage": { hub: "/storage-alternatives" },
+  "Storage": { comparison: "/storage-comparison-2026", hub: "/storage-alternatives" },
+  "CDN": { comparison: "/storage-comparison-2026", hub: "/storage-alternatives" },
+  "Testing": { comparison: "/testing-free-tier-comparison-2026", hub: "/testing-alternatives" },
+  "Analytics": { comparison: "/analytics-free-tier-comparison-2026", hub: "/analytics-alternatives" },
+  "Email": { comparison: "/email-comparison-2026", hub: "/email-alternatives" },
+  "API Development": { comparison: "/api-development-free-tier-comparison-2026", hub: "/api-development-alternatives" },
+  "AI / ML": { hub: "/ai-ml-alternatives" },
+  "AI Coding": { hub: "/ide-code-editors-alternatives" },
+  "Auth": { comparison: "/auth-comparison-2026", hub: "/security-alternatives" },
+  "Design": { hub: "/design-alternatives" },
+  "IDE & Code Editors": { hub: "/ide-code-editors-alternatives" },
+  "Project Management": { hub: "/project-management-alternatives" },
+  "Error Tracking": { comparison: "/monitoring-comparison-2026", hub: "/monitoring-alternatives" },
+  "Logging": { comparison: "/monitoring-comparison-2026", hub: "/monitoring-alternatives" },
+  "Container Registry": { hub: "/ci-cd-alternatives" },
+  "Infrastructure": { hub: "/hosting-alternatives" },
+  "Secrets Management": { hub: "/security-alternatives" },
+  "Feature Flags": { hub: "/monitoring-alternatives" },
+  "Search": { hub: "/database-alternatives" },
+  "Headless CMS": { hub: "/database-alternatives" },
+  "Payments": { hub: "/free-saas-stack" },
+  "Documentation": { hub: "/api-development-alternatives" },
+  "Messaging": { hub: "/email-alternatives" },
+  "Forms": { hub: "/design-alternatives" },
+  "Low-Code Platforms": { hub: "/design-alternatives" },
+  "Workflow Automation": { hub: "/project-management-alternatives" },
+  "Team Collaboration": { hub: "/project-management-alternatives" },
+  "Source Control": { hub: "/ci-cd-alternatives" },
+  "Code Quality": { hub: "/testing-alternatives" },
+  "Browser Automation": { hub: "/testing-alternatives" },
+  "Web Scraping": { hub: "/testing-alternatives" },
+  "Server Management": { hub: "/hosting-alternatives" },
+  "Cloud IaaS": { comparison: "/cloud-free-tier-comparison-2026", hub: "/hosting-alternatives" },
+  "Status Pages": { hub: "/monitoring-alternatives" },
+  "Notebooks & Data Science": { hub: "/ai-ml-alternatives" },
+  "Mobile Development": { hub: "/design-alternatives" },
+  "Video": { hub: "/storage-alternatives" },
+  "Media": { hub: "/storage-alternatives" },
+  "Maps/Geolocation": { hub: "/api-development-alternatives" },
+  "Localization": { hub: "/api-development-alternatives" },
+  "DNS & Domain Management": { hub: "/hosting-alternatives" },
+  "Tunneling & Networking": { hub: "/hosting-alternatives" },
+  "Diagramming": { hub: "/design-alternatives" },
+  "Dev Utilities": { hub: "/api-development-alternatives" },
+  "Startup Programs": { hub: "/startup-credits" },
+  "Startup Perks": { hub: "/startup-credits" },
+  "Background Jobs": { hub: "/hosting-alternatives" },
+  "API Gateway": { hub: "/api-development-alternatives" },
+};
+
+// SaaS-relevant categories for cross-linking to /free-saas-stack
+const saasRelevantCategories = new Set([
+  "Databases", "Cloud Hosting", "Auth", "Payments", "Email", "Cloud Storage",
+  "Storage", "Monitoring", "Error Tracking", "CI/CD", "Analytics", "Background Jobs",
+  "Search", "Feature Flags",
+]);
+
+// Hosting/deployment categories for cross-linking to framework guides
+const hostingCategories = new Set([
+  "Cloud Hosting", "Infrastructure", "Cloud IaaS", "Server Management",
+]);
+
 function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -1697,6 +1767,7 @@ function buildVendorPage(slug: string): string | null {
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskLevel = enriched.risk_level ?? "stable";
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
+  const stability = enriched.stability ?? "stable";
 
   // Alternatives: other vendors in the same primary category
   const alternatives = offers
@@ -1718,6 +1789,100 @@ function buildVendorPage(slug: string): string | null {
   const metaDesc = hasFree
     ? `${vendorName} free tier includes ${descLimits}. Verified ${verifiedMonth}. Compare with ${alternatives.length} alternatives in ${primary.category}.`
     : `${vendorName} pricing details and ${alternatives.length} free alternatives in ${primary.category}. Verified ${verifiedMonth}.`;
+
+  // --- NEW: Quick Verdict ---
+  const stabilityLabel: Record<string, string> = { stable: "stable", watch: "on our watch list", volatile: "volatile", improving: "improving" };
+  const stabilityText = stabilityLabel[stability] || "stable";
+  const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
+  const verdictLine2 = vendorChanges.length === 0
+    ? `It's ${stabilityText} — zero pricing changes recorded.`
+    : `It's ${stabilityText} — ${vendorChanges.length} pricing change${vendorChanges.length > 1 ? "s" : ""} recorded.`;
+  const verdictLine3 = alternatives.length > 0
+    ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
+    : "";
+  const quickVerdictHtml = `
+  <div class="quick-verdict">
+    <p>${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}. ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
+  </div>`;
+
+  // --- NEW: Category Context ---
+  const catMapping = categoryComparisonMap[primary.category];
+  const categoryCount = offers.filter(o => o.category === primary.category).length;
+  const catContextLink = catMapping?.comparison
+    ? `<a href="${catMapping.comparison}">full ${escHtmlServer(primary.category)} Free Tier Comparison</a>`
+    : catMapping?.hub
+    ? `<a href="${catMapping.hub}">${escHtmlServer(primary.category)} alternatives guide</a>`
+    : `<a href="/category/${toSlug(primary.category)}">${escHtmlServer(primary.category)} category</a>`;
+  const categoryContextHtml = `
+  <div class="category-context">
+    <span class="cat-context-label">One of ${categoryCount} ${escHtmlServer(primary.category)} services we track.</span> See our ${catContextLink} &rarr;
+  </div>`;
+
+  // --- NEW: Growth Path ---
+  const growthBullets: string[] = [];
+  const desc = primary.description.toLowerCase();
+  const limitPatterns = [
+    { regex: /(\d[\d,]*)\s*(gb|gib)\s*(storage|data|disk)/i, unit: "storage", format: (m: RegExpMatchArray) => `${m[1]} ${m[2].toUpperCase()} storage` },
+    { regex: /(\d[\d,]*)\s*(gb|gib)\s*(bandwidth|transfer|egress)/i, unit: "bandwidth", format: (m: RegExpMatchArray) => `${m[1]} ${m[2].toUpperCase()} bandwidth` },
+    { regex: /(\d[\d,]*k?)\s*(mau|monthly active users)/i, unit: "users", format: (m: RegExpMatchArray) => `${m[1]} MAU` },
+    { regex: /(\d[\d,]*k?)\s*(api\s*calls|requests|invocations|events|emails|messages)(\/(?:mo|month|day))?/i, unit: "requests", format: (m: RegExpMatchArray) => `${m[1]} ${m[2]}${m[3] || "/mo"}` },
+    { regex: /(\d[\d,]*)\s*(projects?|repos?|sites?|apps?|databases?|instances?)/i, unit: "projects", format: (m: RegExpMatchArray) => `${m[1]} ${m[2]}` },
+  ];
+  for (const pat of limitPatterns) {
+    const m = primary.description.match(pat.regex);
+    if (m) {
+      growthBullets.push(`At ${pat.format(m)}, you'll need to upgrade.`);
+    }
+  }
+  if (growthBullets.length === 0 && hasFree) {
+    growthBullets.push(`When your usage exceeds the free tier limits, you'll need to upgrade.`);
+  }
+  if (alternatives.length > 2) {
+    const topAlt = alternatives[0];
+    growthBullets.push(`At that point, consider <a href="/vendor/${toSlug(topAlt.vendor)}">${escHtmlServer(topAlt.vendor)}</a> which offers ${escHtmlServer(topAlt.tier)} in the same category.`);
+  }
+  const growthPathHtml = growthBullets.length > 0 ? `
+  <div class="section growth-section">
+    <h2>When You'll Outgrow ${escHtmlServer(vendorName)}'s Free Tier</h2>
+    <ul class="growth-list">
+      ${growthBullets.map(b => `<li>${b}</li>`).join("\n      ")}
+    </ul>
+  </div>` : "";
+
+  // --- NEW: How [Vendor] Compares mini table ---
+  const enrichedAlts = enrichOffers(alternatives.slice(0, 3));
+  const compareTableHtml = enrichedAlts.length > 0 ? `
+  <div class="section compare-table-section">
+    <h2>How ${escHtmlServer(vendorName)} Compares</h2>
+    <div class="mini-compare-table-wrap">
+      <table class="mini-compare-table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Free Tier</th>
+            <th>Stability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="current-vendor-row">
+            <td><strong>${escHtmlServer(vendorName)}</strong></td>
+            <td>${escHtmlServer(primary.tier)}</td>
+            <td><span class="stability-dot" style="background:${riskColor}"></span> ${escHtmlServer(stability)}</td>
+          </tr>
+${enrichedAlts.map(a => {
+  const aStability = a.stability ?? "stable";
+  const aColor = riskColors[a.risk_level ?? "stable"] ?? "#8b949e";
+  return `          <tr>
+            <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
+            <td>${escHtmlServer(a.tier)}</td>
+            <td><span class="stability-dot" style="background:${aColor}"></span> ${escHtmlServer(aStability)}</td>
+          </tr>`;
+}).join("\n")}
+        </tbody>
+      </table>
+    </div>
+    ${catMapping?.comparison ? `<p class="compare-more"><a href="${catMapping.comparison}">See full comparison &rarr;</a></p>` : catMapping?.hub ? `<p class="compare-more"><a href="${catMapping.hub}">See all ${escHtmlServer(primary.category)} options &rarr;</a></p>` : ""}
+  </div>` : "";
 
   // Changes HTML
   const changesHtml = vendorChanges.length > 0 ? vendorChanges.map(c => {
@@ -1754,6 +1919,31 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
     </div>
   </div>` : "";
 
+  // --- NEW: Internal Links ---
+  const internalLinks: string[] = [];
+  if (catMapping?.comparison) {
+    internalLinks.push(`<a href="${catMapping.comparison}">${escHtmlServer(primary.category)} Free Tier Comparison</a>`);
+  }
+  if (catMapping?.hub && catMapping.hub !== catMapping?.comparison) {
+    internalLinks.push(`<a href="${catMapping.hub}">${escHtmlServer(primary.category)} Alternatives Guide</a>`);
+  }
+  if (saasRelevantCategories.has(primary.category)) {
+    internalLinks.push(`<a href="/free-saas-stack">Free SaaS Starter Stack</a>`);
+  }
+  if (hostingCategories.has(primary.category)) {
+    internalLinks.push(`<a href="/free-nextjs-stack">Free Next.js Stack</a>`);
+    internalLinks.push(`<a href="/free-django-stack">Free Django Stack</a>`);
+  }
+  internalLinks.push(`<a href="/setup">Setup Guide</a>`);
+  internalLinks.push(`<a href="/stability">Stability Dashboard</a>`);
+  const internalLinksHtml = `
+  <div class="section related-guides">
+    <h2>Related Guides</h2>
+    <div class="guide-links">
+      ${internalLinks.map(l => `<span class="guide-pill">${l}</span>`).join("\n      ")}
+    </div>
+  </div>`;
+
   // MCP snippet
   const mcpSnippet = `{
   "tool": "search_deals",
@@ -1785,7 +1975,7 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
     },
   };
 
-  // FAQ data for vendor pages
+  // FAQ data for vendor pages — expanded to 6-8 questions
   const faqFreeAnswer = `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${primary.description.slice(0, 200)}${primary.description.length > 200 ? "..." : ""}`;
   const faqTierAnswer = `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`;
   const faqReliableAnswer = riskLevel === "stable"
@@ -1795,10 +1985,30 @@ ${vendorComparisons.map(([s, [a, b]]) => `      <a href="/compare/${s}" class="c
     : `${vendorName}'s free tier is considered risky. There ${vendorChanges.length === 1 ? "has been 1 significant pricing change" : `have been ${vendorChanges.length} significant pricing changes`}. ${vendorChanges[0] ? `Most recently: ${vendorChanges[0].summary}` : ""} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
 
+  // NEW: Additional FAQ items
+  const faqProductionAnswer = hasFree
+    ? (riskLevel === "stable"
+      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. With ${stabilityText} pricing and ${escHtmlServer(keyLimit)}, it's a reasonable starting point. Monitor your usage against the limits and have an upgrade plan ready.`
+      : `${vendorName}'s free tier is usable for prototyping and development, but exercise caution for production workloads given its ${stabilityText} pricing history. Consider alternatives with more stable pricing for critical services.`)
+    : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`;
+  const faqChangedAnswer = vendorChanges.length > 0
+    ? `Yes, ${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${vendorChanges[0].date}).`
+    : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
+  const faqAlternativesAnswer = alternatives.length > 0
+    ? `The top free alternatives to ${vendorName} in ${primary.category} include ${alternatives.slice(0, 5).map(a => `${a.vendor} (${a.tier})`).join(", ")}. See all ${alternatives.length} alternatives above.`
+    : `We don't currently track other vendors in the same category as ${vendorName}.`;
+  const faqOutgrowAnswer = growthBullets.length > 0
+    ? `${growthBullets[0].replace(/<[^>]*>/g, "")} When you outgrow the free tier, evaluate paid plans against alternatives — sometimes a competitor's free tier covers what you need.`
+    : `When your usage exceeds the free tier limits, you'll need to upgrade or evaluate alternatives in the same category.`;
+
   const vendorFaqItems = [
     { q: `Is ${vendorName} free?`, a: faqFreeAnswer },
     { q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer },
     { q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer },
+    { q: `Is ${vendorName}'s free tier good for production?`, a: faqProductionAnswer },
+    { q: `What changed in ${vendorName}'s pricing recently?`, a: faqChangedAnswer },
+    { q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer },
+    { q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer },
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
   ];
 
@@ -1851,7 +2061,10 @@ a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);tex
 .breadcrumb a{color:var(--text-muted)}
 h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
 h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radius:12px;vertical-align:middle;margin-left:.5rem}
-.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.page-meta{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.quick-verdict{margin-bottom:1.25rem;padding:.75rem 1rem;background:var(--accent-glow);border-radius:10px;border:1px solid rgba(59,130,246,0.2);font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.category-context{margin-bottom:2rem;font-size:.85rem;color:var(--text-dim)}
+.cat-context-label{color:var(--text-muted)}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
 .detail-card{border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;background:var(--bg-card);backdrop-filter:blur(10px)}
 .detail-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.25rem}
@@ -1861,6 +2074,17 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .desc-text{font-size:.9rem;color:var(--text-muted);line-height:1.7}
 .section{margin-bottom:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
 .section h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:1rem}
+.growth-list{list-style:none;padding:0}
+.growth-list li{padding:.4rem 0 .4rem 1.25rem;position:relative;font-size:.9rem;color:var(--text-muted);line-height:1.6}
+.growth-list li::before{content:'\\2192';position:absolute;left:0;color:var(--accent)}
+.growth-list li a{color:var(--accent)}
+.mini-compare-table-wrap{overflow-x:auto;margin-bottom:.75rem}
+.mini-compare-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.mini-compare-table th{text-align:left;padding:.5rem .75rem;border-bottom:2px solid var(--border);color:var(--text-dim);font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}
+.mini-compare-table td{padding:.5rem .75rem;border-bottom:1px solid var(--border);color:var(--text-muted)}
+.mini-compare-table .current-vendor-row td{background:var(--accent-glow);color:var(--text)}
+.stability-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.35rem;vertical-align:middle}
+.compare-more{font-size:.85rem;margin-top:.5rem}
 .change-item{margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid var(--border);background:var(--bg-card);border-radius:0 8px 8px 0}
 .change-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap}
 .badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
@@ -1878,17 +2102,21 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .compare-links{display:flex;flex-wrap:wrap;gap:.5rem}
 .compare-pill{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
 .compare-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.guide-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.guide-pill{display:inline-block}
+.guide-pill a{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:8px;font-size:.8rem;color:var(--text-muted);transition:all .2s;text-decoration:none}
+.guide-pill a:hover{border-color:var(--accent);color:var(--text);background:var(--accent-glow);text-decoration:none}
 .mcp-section code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
 .cat-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.25rem}
 .cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.2)}
 .faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;overflow:hidden}
 .faq-q{padding:.75rem 1rem;font-weight:600;font-size:.9rem;color:var(--text);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem}
-.faq-q::before{content:'▸';color:var(--accent);font-size:.8rem;transition:transform .2s}
+.faq-q::before{content:'\\25B8';color:var(--accent);font-size:.8rem;transition:transform .2s}
 details[open] .faq-q::before{transform:rotate(90deg)}
 .faq-q:hover{color:var(--accent)}
 .faq-a{padding:0 1rem .75rem 1.75rem;font-size:.85rem;color:var(--text-muted);line-height:1.7}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.detail-grid{grid-template-columns:1fr}.alt-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
+@media(max-width:768px){h1{font-size:1.5rem}.detail-grid{grid-template-columns:1fr}.alt-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.mini-compare-table{font-size:.8rem}}
 ${globalNavCss()}
 ${mcpCtaCss()}
 </style>
@@ -1899,6 +2127,8 @@ ${mcpCtaCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear} <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></h1>
   <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives. Verified ${verifiedMonth}.</p>
+${quickVerdictHtml}
+${categoryContextHtml}
 
   <div class="detail-grid">
     <div class="detail-card">
@@ -1925,6 +2155,8 @@ ${mcpCtaCss()}
     <h2>Free Tier Details</h2>
     <p class="desc-text">${escHtmlServer(primary.description)}</p>
   </div>
+${compareTableHtml}
+${growthPathHtml}
 
   <div class="section">
     <h2>Pricing Change History (${vendorChanges.length} recorded)</h2>
@@ -1932,6 +2164,7 @@ ${mcpCtaCss()}
   </div>
 ${alternativesHtml}
 ${comparisonsHtml}
+${internalLinksHtml}
   <div class="section mcp-section">
     <h2>Query via MCP</h2>
     <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.75rem">Look up ${escHtmlServer(vendorName)} programmatically with the AgentDeals MCP server:</p>
