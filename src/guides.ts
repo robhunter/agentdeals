@@ -60,6 +60,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "free-django-stack", title: "Free Django Stack", description: "Free Django/Python full-stack infrastructure — WSGI hosting, Postgres, Redis, Celery, auth, storage, 10 layers" },
   { slug: "free-fastapi-stack", title: "Free FastAPI Stack", description: "Free FastAPI/Python full-stack infrastructure — ASGI hosting, async Postgres, Redis, auth, storage, 10 layers" },
   { slug: "free-go-stack", title: "Free Go Stack", description: "Free Go/Golang full-stack infrastructure — single binary hosting, Postgres via pgx, goroutines, stdlib, 10 layers" },
+  { slug: "free-saas-stack", title: "Free SaaS Starter Stack", description: "Complete free SaaS infrastructure — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics, background jobs, growth costs at 4 scale points" },
   { slug: "q2-pricing-preview-2026", title: "Q2 2026 Pricing Preview", description: "Forward-looking Q2 pricing preview — upcoming changes, expirations, market trends" },
   { slug: "google-developer-program-2026", title: "Google Developer Program Premium 2026", description: "Google Developer Program Premium analysis — price comparison, migration guide, alternatives" },
   { slug: "supabase-vs-firebase", title: "Supabase vs Firebase", description: "Free tier comparison — storage, compute, auth, pricing at scale, decision guide" },
