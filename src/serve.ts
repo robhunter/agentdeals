@@ -414,7 +414,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/guides", label: "Guides", section: "guides" },
     { href: "/compare", label: "Compare", section: "compare" },
     { href: "/digest", label: "Digest", section: "digest" },
-    { href: "/changes", label: "Changes", section: "changes" },
+    { href: "/pricing-changes", label: "Changes", section: "changes" },
     { href: "/expiring", label: "Expiring", section: "expiring" },
     { href: "/freshness", label: "Freshness", section: "freshness" },
     { href: "/api/docs", label: "API", section: "api" },
@@ -2664,19 +2664,31 @@ ${enrichedAlts.map(a => {
     ${catMapping?.comparison ? `<p class="compare-more"><a href="${catMapping.comparison}">See full comparison &rarr;</a></p>` : catMapping?.hub ? `<p class="compare-more"><a href="${catMapping.hub}">See all ${escHtmlServer(primary.category)} options &rarr;</a></p>` : ""}
   </div>` : "";
 
-  // Changes HTML
+  // Changes HTML — with link to /pricing-changes#anchor
   const changesHtml = vendorChanges.length > 0 ? vendorChanges.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const anchor = `${toSlug(c.vendor)}-${c.date}`;
     return `<div class="change-item">
         <div class="change-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
-          <span class="change-date">${c.date}</span>
+          <span class="change-date"><a href="/pricing-changes#${anchor}" style="color:var(--text-dim);text-decoration:none">${c.date}</a></span>
           <span class="impact impact-${c.impact}">${c.impact} impact</span>
         </div>
         <div class="change-summary">${escHtmlServer(c.summary)}</div>
         ${c.previous_state && c.current_state ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
       </div>`;
   }).join("\n") : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
+
+  // Prominent change notice for vendors with significant changes
+  const latestChange = vendorChanges[0];
+  const changeNoticeHtml = latestChange && (latestChange.change_type === "free_tier_removed" || latestChange.change_type === "limits_reduced" || latestChange.change_type === "open_source_killed" || latestChange.change_type === "product_deprecated" || latestChange.change_type === "pricing_restructured") ? (() => {
+    const badge = changeTypeBadge[latestChange.change_type] ?? { label: latestChange.change_type, color: "#8b949e" };
+    const anchor = `${toSlug(latestChange.vendor)}-${latestChange.date}`;
+    return `<div class="change-notice" style="margin:1rem 0;padding:.75rem 1rem;border:1px solid ${badge.color}40;border-left:3px solid ${badge.color};border-radius:0 8px 8px 0;background:${badge.color}10">
+      <span style="font-size:.85rem">\u26a0\ufe0f <strong>Pricing change:</strong> ${escHtmlServer(latestChange.summary)} (${latestChange.date})</span>
+      <a href="/pricing-changes#${anchor}" style="display:block;font-size:.8rem;margin-top:.25rem">View in changelog &rarr;</a>
+    </div>`;
+  })() : "";
 
   // Alternatives HTML
   const alternativesHtml = alternatives.length > 0 ? `
@@ -2916,6 +2928,7 @@ ${mcpCtaCss()}
   <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives. Verified ${verifiedMonth}.</p>
 ${quickVerdictHtml}
 ${categoryContextHtml}
+${changeNoticeHtml}
 
   <div class="detail-grid">
     <div class="detail-card">
@@ -2948,6 +2961,7 @@ ${growthPathHtml}
   <div class="section">
     <h2>Pricing Change History (${vendorChanges.length} recorded)</h2>
     ${changesHtml}
+    <p style="margin-top:.75rem;font-size:.8rem"><a href="/pricing-changes">View all ${dealChanges.length} pricing changes across all vendors &rarr;</a></p>
   </div>
 ${alternativesHtml}
 ${comparisonsHtml}
@@ -35267,6 +35281,385 @@ function copyConfig(btn){
 </html>`;
 }
 
+// --- Pricing Changes Changelog page ---
+
+function buildPricingChangesPage(): string {
+  const allChanges = loadDealChanges();
+  const today = new Date().toISOString().slice(0, 10);
+  const currentYear = new Date().getFullYear();
+
+  // Sort all changes reverse chronological
+  const sorted = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
+
+  // Group by month
+  const byMonth = new Map<string, typeof sorted>();
+  for (const c of sorted) {
+    const monthKey = c.date.slice(0, 7);
+    if (!byMonth.has(monthKey)) byMonth.set(monthKey, []);
+    byMonth.get(monthKey)!.push(c);
+  }
+
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  function formatMonth(key: string): string {
+    const [y, m] = key.split("-");
+    return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
+  }
+
+  // Anchor ID for each change: vendor-slug + date
+  function changeAnchor(c: typeof allChanges[0]): string {
+    return `${toSlug(c.vendor)}-${c.date}`;
+  }
+
+  // Change type filter category mapping
+  const filterCategory: Record<string, string> = {
+    free_tier_removed: "negative",
+    limits_reduced: "negative",
+    open_source_killed: "negative",
+    product_deprecated: "negative",
+    restriction: "negative",
+    limits_increased: "positive",
+    new_free_tier: "positive",
+    startup_program_expanded: "positive",
+    pricing_restructured: "neutral",
+    pricing_model_change: "neutral",
+    pricing_postponed: "neutral",
+  };
+
+  function buildChangeEntry(c: typeof allChanges[0]): string {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    const vendorSlug = toSlug(c.vendor);
+    const isUpcoming = c.date >= today;
+    const category = filterCategory[c.change_type] ?? "neutral";
+    const altHtml = c.alternatives && c.alternatives.length > 0
+      ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
+      : "";
+    const stateHtml = c.previous_state && c.current_state
+      ? `<div class="pc-states">
+          <div class="pc-state"><span class="pc-state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div>
+          <div class="pc-state"><span class="pc-state-label">After:</span> ${escHtmlServer(c.current_state)}</div>
+        </div>`
+      : "";
+    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}">
+        <div class="pc-left">
+          <div class="pc-date">${c.date}</div>
+          ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
+          <a href="#${changeAnchor(c)}" class="pc-anchor" title="Link to this change">#</a>
+        </div>
+        <div class="pc-right">
+          <div class="pc-head">
+            <span class="badge" style="background:${badge.color}">${badge.label}</span>
+            <a href="/vendor/${vendorSlug}" class="pc-vendor">${escHtmlServer(c.vendor)}</a>
+            <span class="pc-impact" style="color:${impactColor}">${c.impact} impact</span>
+          </div>
+          <div class="pc-summary">${escHtmlServer(c.summary)}</div>
+${stateHtml}
+${altHtml}
+        </div>
+      </div>`;
+  }
+
+  // Stats
+  const upcomingCount = sorted.filter(c => c.date >= today).length;
+  const removedCount = sorted.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const thisMonth = today.slice(0, 7);
+  const thisMonthCount = sorted.filter(c => c.date.slice(0, 7) === thisMonth).length;
+
+  // Collect unique change types for filter buttons
+  const changeTypes = [...new Set(sorted.map(c => c.change_type))];
+
+  const filterButtonsHtml = `
+    <div class="pc-filters">
+      <div class="pc-filter-group">
+        <span class="pc-filter-label">Type:</span>
+        <button class="pc-filter-btn active" data-filter-type="all">All</button>
+        <button class="pc-filter-btn pc-filter-negative" data-filter-type="category" data-filter-value="negative">Removals &amp; Reductions</button>
+        <button class="pc-filter-btn pc-filter-positive" data-filter-type="category" data-filter-value="positive">New &amp; Increased</button>
+        <button class="pc-filter-btn pc-filter-neutral" data-filter-type="category" data-filter-value="neutral">Restructured</button>
+      </div>
+      <div class="pc-filter-group">
+        <span class="pc-filter-label">Impact:</span>
+        <button class="pc-filter-btn active" data-filter-impact="all">All</button>
+        <button class="pc-filter-btn" data-filter-impact="high">High</button>
+        <button class="pc-filter-btn" data-filter-impact="medium">Medium</button>
+        <button class="pc-filter-btn" data-filter-impact="low">Low</button>
+      </div>
+      <div class="pc-filter-count"><span id="pc-visible-count">${sorted.length}</span> of ${sorted.length} changes shown</div>
+    </div>`;
+
+  const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {
+    const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
+    return `    <div class="month-group">
+      <h2 class="month-heading" id="month-${month}">${formatMonth(month)}</h2>
+${entriesHtml}
+    </div>`;
+  }).join("\n");
+
+  const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
+  const metaDesc = `Track ${allChanges.length} developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Reverse-chronological timeline with filters.`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: allChanges.length,
+    url: `${BASE_URL}/pricing-changes`,
+    itemListElement: sorted.slice(0, 50).map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "NewsArticle",
+        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label} \u2014 ${c.summary.slice(0, 100)}`,
+        description: c.summary,
+        datePublished: c.date,
+        url: `${BASE_URL}/pricing-changes#${changeAnchor(c)}`,
+        publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+      },
+    })),
+  };
+
+  const filterScript = `
+<script>
+(function() {
+  var typeFilter = 'all';
+  var impactFilter = 'all';
+  function applyFilters() {
+    var entries = document.querySelectorAll('.pc-entry');
+    var visible = 0;
+    entries.forEach(function(el) {
+      var typeMatch = typeFilter === 'all' || el.getAttribute('data-category') === typeFilter;
+      var impactMatch = impactFilter === 'all' || el.getAttribute('data-impact') === impactFilter;
+      if (typeMatch && impactMatch) {
+        el.style.display = '';
+        visible++;
+      } else {
+        el.style.display = 'none';
+      }
+    });
+    document.getElementById('pc-visible-count').textContent = visible;
+    // Hide empty month groups
+    document.querySelectorAll('.month-group').forEach(function(g) {
+      var visEntries = g.querySelectorAll('.pc-entry:not([style*="display: none"])');
+      g.style.display = visEntries.length > 0 ? '' : 'none';
+    });
+  }
+  document.querySelectorAll('[data-filter-type]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var group = document.querySelectorAll('[data-filter-type]');
+      group.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (btn.getAttribute('data-filter-type') === 'all') {
+        typeFilter = 'all';
+      } else {
+        typeFilter = btn.getAttribute('data-filter-value');
+      }
+      applyFilters();
+    });
+  });
+  document.querySelectorAll('[data-filter-impact]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var group = document.querySelectorAll('[data-filter-impact]');
+      group.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      impactFilter = btn.getAttribute('data-filter-impact') === 'all' ? 'all' : btn.getAttribute('data-filter-impact');
+      applyFilters();
+    });
+  });
+  // Highlight anchor on load
+  if (window.location.hash) {
+    var target = document.getElementById(window.location.hash.slice(1));
+    if (target) {
+      target.style.borderColor = 'var(--accent)';
+      target.style.background = 'var(--accent-glow)';
+    }
+  }
+})();
+</script>`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/pricing-changes">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/pricing-changes">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/pricing-changes/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1rem}
+.rss-link{display:inline-block;color:var(--accent);font-size:.85rem;margin-bottom:1.5rem;padding:.3rem .6rem;border:1px solid var(--border);border-radius:6px}
+.rss-link:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.stat-card{flex:1;min-width:120px;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-align:center}
+.stat-value{font-family:var(--serif);font-size:1.5rem;color:var(--text)}
+.stat-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.pc-filters{margin-bottom:2rem;padding:1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg-card)}
+.pc-filter-group{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem}
+.pc-filter-group:last-of-type{margin-bottom:0}
+.pc-filter-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;min-width:50px}
+.pc-filter-btn{padding:.25rem .6rem;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);font-size:.75rem;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.pc-filter-btn:hover{border-color:var(--accent);color:var(--text)}
+.pc-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pc-filter-negative.active{background:#f85149;border-color:#f85149}
+.pc-filter-positive.active{background:#3fb950;border-color:#3fb950}
+.pc-filter-neutral.active{background:#bc8cff;border-color:#bc8cff}
+.pc-filter-count{font-size:.75rem;color:var(--text-dim);margin-top:.5rem;font-family:var(--mono)}
+.month-group{margin-bottom:2rem}
+.month-heading{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.pc-entry{display:flex;gap:1rem;padding:.75rem;margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s,background .2s}
+.pc-entry:hover{border-color:var(--accent)}
+.pc-entry:target{border-color:var(--accent);background:var(--accent-glow)}
+.pc-upcoming{border-color:rgba(88,166,255,0.3)}
+.pc-left{flex-shrink:0;min-width:100px;text-align:right;position:relative}
+.pc-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
+.pc-upcoming-badge{font-family:var(--mono);font-size:.65rem;color:#58a6ff;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.pc-anchor{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);opacity:0;transition:opacity .15s}
+.pc-entry:hover .pc-anchor{opacity:1}
+.pc-anchor:hover{color:var(--accent);text-decoration:none}
+.pc-right{flex:1;min-width:0}
+.pc-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
+.pc-vendor{color:var(--text);font-weight:600;font-size:.85rem}
+.pc-vendor:hover{color:var(--accent)}
+.pc-impact{font-family:var(--mono);font-size:.7rem}
+.pc-summary{font-size:.85rem;color:var(--text-muted)}
+.pc-states{margin-top:.4rem;font-size:.8rem}
+.pc-state{display:flex;gap:.5rem;color:var(--text-dim);margin-bottom:.15rem}
+.pc-state-label{font-weight:600;color:var(--text-muted);min-width:45px}
+.pc-alts{font-size:.8rem;color:var(--text-dim);margin-top:.35rem}
+.pc-alts-label{font-weight:600;color:var(--text-muted)}
+.pc-alts a{color:var(--accent);font-size:.8rem}
+.badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
+.mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.mcp-cta a{font-weight:600}
+.cross-links{margin-top:2rem;padding:1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg-card)}
+.cross-links h2{font-size:1rem;margin-bottom:.5rem}
+.cross-links ul{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem}
+.cross-links li a{display:inline-block;padding:.25rem .6rem;border:1px solid var(--border);border-radius:6px;font-size:.8rem;color:var(--text-muted)}
+.cross-links li a:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.pc-entry{flex-direction:column;gap:.25rem}.pc-left{text-align:left;min-width:auto;display:flex;gap:.75rem;align-items:center}.pc-filter-group{flex-direction:column;align-items:flex-start}.pc-anchor{opacity:1}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("changes")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Pricing Changes</div>
+  <h1>${escHtmlServer(title)}</h1>
+  <p class="page-intro">Every developer tool pricing change we track \u2014 free tier removals, price increases, restructures, and new deals. Filter by type or impact. Subscribe to stay ahead.</p>
+  <a href="/pricing-changes/feed.xml" class="rss-link">\u{1F4E1} Subscribe to pricing changes feed</a>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value">${allChanges.length}</div>
+      <div class="stat-label">Total Changes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${thisMonthCount}</div>
+      <div class="stat-label">This Month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${upcomingCount}</div>
+      <div class="stat-label">Upcoming</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${removedCount}</div>
+      <div class="stat-label">Removals</div>
+    </div>
+  </div>
+
+${filterButtonsHtml}
+
+${monthsHtml}
+
+  <div class="cross-links">
+    <h2>Related</h2>
+    <ul>
+      <li><a href="/expiring">Expiring Deals Timeline</a></li>
+      <li><a href="/stability">Vendor Stability Dashboard</a></li>
+      <li><a href="/free-tier-risk">Free Tier Risk Index</a></li>
+      <li><a href="/free-tier-tracker">Q1 2026 Erosion Report</a></li>
+      <li><a href="/state-of-free-tiers-2026">State of Free Tiers 2026</a></li>
+      <li><a href="/setup">Connect via MCP</a></li>
+    </ul>
+  </div>
+
+  <div class="mcp-cta">
+    <p>Get real-time pricing change alerts in your AI coding assistant.</p>
+    <a href="/setup">Connect via MCP &rarr;</a>
+  </div>
+
+  <footer>\u00a9 ${currentYear} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers across ${categories.length} categories &middot; <a href="/pricing-changes/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a></footer>
+</div>
+${filterScript}
+</body>
+</html>`;
+}
+
+function buildPricingChangesFeed(): string {
+  const allChanges = loadDealChanges();
+  const sorted = [...allChanges].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 50);
+  const escXml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+  const changeLabel: Record<string, string> = {
+    free_tier_removed: "Free Tier Removed",
+    limits_reduced: "Limits Reduced",
+    restriction: "New Restriction",
+    limits_increased: "Limits Increased",
+    new_free_tier: "New Free Tier",
+    pricing_restructured: "Pricing Restructured",
+    open_source_killed: "Open Source Killed",
+    pricing_model_change: "Pricing Model Change",
+    startup_program_expanded: "Startup Program Expanded",
+    pricing_postponed: "Pricing Postponed",
+    product_deprecated: "Product Deprecated",
+  };
+  const updatedTs = sorted.length > 0 ? new Date(sorted[0].date + "T00:00:00Z").toISOString() : new Date().toISOString();
+  const entries = sorted.map((c) => {
+    const label = changeLabel[c.change_type] ?? c.change_type;
+    const vendorSlug = toSlug(c.vendor);
+    const anchor = `${vendorSlug}-${c.date}`;
+    const id = `agentdeals-${anchor}`;
+    const stateInfo = c.previous_state && c.current_state
+      ? ` Before: ${c.previous_state}. After: ${c.current_state}.`
+      : "";
+    return `  <entry>
+    <title>${escXml(c.vendor)}: ${escXml(label)}</title>
+    <link href="${BASE_URL}/pricing-changes#${anchor}" rel="alternate"/>
+    <id>urn:agentdeals:${escXml(id)}</id>
+    <updated>${new Date(c.date + "T00:00:00Z").toISOString()}</updated>
+    <summary>${escXml(c.summary + stateInfo)}</summary>
+    <category term="${escXml(c.change_type)}" label="${escXml(label)}"/>
+  </entry>`;
+  }).join("\n");
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>AgentDeals \u2014 Developer Tool Pricing Changes</title>
+  <subtitle>Track pricing changes, free tier removals, and deal updates across developer infrastructure tools.</subtitle>
+  <link href="${BASE_URL}/pricing-changes" rel="alternate"/>
+  <link href="${BASE_URL}/pricing-changes/feed.xml" rel="self" type="application/atom+xml"/>
+  <id>urn:agentdeals:pricing-changes-feed</id>
+  <updated>${updatedTs}</updated>
+${entries}
+</feed>`;
+}
+
 // --- Deal changes timeline page ---
 
 function buildChangesPage(): string {
@@ -38242,6 +38635,12 @@ ${catList}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/pricing-changes</loc>
+    <lastmod>${latestVerified}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/freshness</loc>
     <lastmod>${latestVerified}</lastmod>
     <changefreq>daily</changefreq>
@@ -38477,6 +38876,16 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
     }
+  } else if (url.pathname === "/pricing-changes" && isGetOrHead) {
+    recordApiHit("/pricing-changes");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/pricing-changes", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildPricingChangesPage());
+  } else if (url.pathname === "/pricing-changes/feed.xml" && isGetOrHead) {
+    recordApiHit("/pricing-changes/feed.xml");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/pricing-changes/feed.xml", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "application/atom+xml; charset=utf-8", "Cache-Control": "public, max-age=3600", "Access-Control-Allow-Origin": "*" });
+    res.end(buildPricingChangesFeed());
   } else if (url.pathname === "/changes" && isGetOrHead) {
     recordApiHit("/changes");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/changes", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
