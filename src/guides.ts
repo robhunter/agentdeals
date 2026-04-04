@@ -57,6 +57,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "free-devops-stack", title: "Free DevOps Stack", description: "Free DevOps infrastructure stack — CI/CD, monitoring, logging, IaC, 10 categories" },
   { slug: "free-frontend-stack", title: "Free Frontend Stack", description: "Free frontend/Jamstack development stack — hosting, CMS, auth, analytics, 10 categories" },
   { slug: "free-nextjs-stack", title: "Free Next.js Stack", description: "Free Next.js full-stack infrastructure — hosting, database, auth, storage, email, monitoring, 10 layers" },
+  { slug: "free-django-stack", title: "Free Django Stack", description: "Free Django/Python full-stack infrastructure — WSGI hosting, Postgres, Redis, Celery, auth, storage, 10 layers" },
   { slug: "q2-pricing-preview-2026", title: "Q2 2026 Pricing Preview", description: "Forward-looking Q2 pricing preview — upcoming changes, expirations, market trends" },
   { slug: "google-developer-program-2026", title: "Google Developer Program Premium 2026", description: "Google Developer Program Premium analysis — price comparison, migration guide, alternatives" },
   { slug: "supabase-vs-firebase", title: "Supabase vs Firebase", description: "Free tier comparison — storage, compute, auth, pricing at scale, decision guide" },
