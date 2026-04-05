@@ -914,7 +914,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -1562,6 +1562,70 @@ describe("HTTP transport", () => {
     for (const cat of data) {
       assert.ok(cat.vendors.length >= 3, `Category ${cat.id} should have at least 3 vendors, got ${cat.vendors.length}`);
     }
+  });
+
+  it("GET /stacks renders stack templates index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/stacks`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Curated Stack Templates"), "Should have stacks index title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/stacks"), "Should reference /stacks");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("/stacks/saas-mvp"), "Should link to SaaS MVP template");
+    assert.ok(html.includes("/stacks/side-project"), "Should link to side project template");
+    assert.ok(html.includes("/stacks/ai-startup"), "Should link to AI startup template");
+    assert.ok(html.includes("/stacks/open-source"), "Should link to open-source template");
+    assert.ok(html.includes("/stacks/api-first"), "Should link to API-first template");
+    assert.ok(html.includes("/estimate"), "Should link to cost estimator");
+  });
+
+  it("GET /stacks/saas-mvp renders stack template page with all required elements", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/stacks/saas-mvp`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Best Free Stack for a SaaS MVP"), "Should have template title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("cost-summary"), "Should have cost summary bar");
+    assert.ok(html.includes("/estimate?"), "Should have estimator pre-fill link");
+    assert.ok(html.includes("stability-dot"), "Should have stability indicators");
+    assert.ok(html.includes("/vendor/"), "Should link to vendor pages");
+    assert.ok(html.includes("swap-card"), "Should have swap/alternatives section");
+    assert.ok(html.includes("related-link"), "Should have related links");
+    assert.ok(html.includes("Supabase"), "Should include Supabase");
+    assert.ok(html.includes("Vercel"), "Should include Vercel");
+    assert.ok(html.includes("Clerk"), "Should include Clerk");
+    assert.ok(html.includes("breadcrumb"), "Should have breadcrumb navigation");
+    assert.ok(html.includes("Stack Templates"), "Should reference parent stacks page");
+  });
+
+  it("GET /stacks pages are in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/stacks</loc>") || xml.includes("/stacks<"), "Sitemap should include /stacks index");
+    assert.ok(xml.includes("/stacks/saas-mvp"), "Sitemap should include saas-mvp template");
+    assert.ok(xml.includes("/stacks/side-project"), "Sitemap should include side-project template");
+    assert.ok(xml.includes("/stacks/ai-startup"), "Sitemap should include ai-startup template");
+    assert.ok(xml.includes("/stacks/open-source"), "Sitemap should include open-source template");
+    assert.ok(xml.includes("/stacks/api-first"), "Sitemap should include api-first template");
+  });
+
+  it("GET /stacks/nonexistent returns 404", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/stacks/nonexistent`);
+    assert.strictEqual(response.status, 404);
   });
 
   it("GET /agent-stack renders agent stack guide page", async () => {
