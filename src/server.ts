@@ -1,6 +1,6 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap } from "./data.js";
+import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -323,18 +323,19 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),
         vendor: z.string().optional().describe("Filter to one vendor (case-insensitive)"),
-        vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase')"),
+        vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),
+        categories: z.string().optional().describe("Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match."),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
         lookahead_days: z.number().optional().describe("Days to look ahead for expirations (default: 30)"),
         response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)."),
       },
     },
-    async ({ since, change_type, vendor, vendors, include_expiring, lookahead_days, response_format }) => {
+    async ({ since, change_type, vendor, vendors, categories, include_expiring, lookahead_days, response_format }) => {
       try {
         recordToolCall("track_changes");
 
         // No params = weekly digest
-        if (!since && !change_type && !vendor && !vendors && include_expiring === undefined) {
+        if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined) {
           const digest = getWeeklyDigest();
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: {}, result_count: digest.deal_changes.length, session_id: getSessionId?.() });
           if (response_format === "concise") {
@@ -348,10 +349,36 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
           };
         }
 
-        // Filtered changes
-        const changes = getDealChanges(since, change_type, vendor, vendors);
         const doExpiring = include_expiring !== false;
         const days = Math.min(Math.max(lookahead_days ?? 30, 1), 365);
+
+        // Personalized mode: when vendors or categories filter is active
+        const isPersonalized = !!(vendors || categories);
+
+        if (isPersonalized) {
+          const personalized = getPersonalizedChanges(since, change_type, vendor, vendors, categories);
+
+          let result: any = personalized;
+          if (doExpiring) {
+            result = { ...personalized, expiring_deals: getExpiringDeals(days) };
+          }
+
+          if (response_format === "concise") {
+            result = {
+              ...result,
+              your_stack_changes: result.your_stack_changes.map(toConciseDealChange),
+              advisory: result.advisory.map(toConciseDealChange),
+            };
+          }
+
+          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, lookahead_days: days, personalized: true }, result_count: personalized.your_stack_changes.length, session_id: getSessionId?.() });
+          return {
+            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+          };
+        }
+
+        // Standard filtered changes (single vendor or change_type only)
+        const changes = getDealChanges(since, change_type, vendor, vendors, categories);
 
         let result: any = changes;
         if (doExpiring) {
@@ -363,7 +390,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
           result = { ...result, changes: result.changes.map(toConciseDealChange) };
         }
 
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, include_expiring: doExpiring, lookahead_days: days }, result_count: changes.changes.length, session_id: getSessionId?.() });
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, lookahead_days: days }, result_count: changes.changes.length, session_id: getSessionId?.() });
         return {
           content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
         };

@@ -263,16 +263,17 @@ export function createServer(): McpServer {
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),
         vendor: z.string().optional().describe("Filter to one vendor (case-insensitive)"),
-        vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase')"),
+        vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),
+        categories: z.string().optional().describe("Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match."),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
         lookahead_days: z.number().optional().describe("Days to look ahead for expirations (default: 30)"),
         response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)."),
       },
     },
-    async ({ since, change_type, vendor, vendors, include_expiring, lookahead_days, response_format }) => {
+    async ({ since, change_type, vendor, vendors, categories, include_expiring, lookahead_days, response_format }) => {
       try {
         // No params = weekly digest
-        if (!since && !change_type && !vendor && !vendors && include_expiring === undefined) {
+        if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined) {
           const data = await fetchWeeklyDigest() as Record<string, unknown>;
           if (response_format === "concise" && Array.isArray(data.deal_changes)) {
             const conciseDigest = { ...data, deal_changes: (data.deal_changes as Record<string, unknown>[]).map((c) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
@@ -281,8 +282,10 @@ export function createServer(): McpServer {
           return mcpText(data);
         }
 
-        // Filtered changes
-        const changes = await fetchDealChanges({ since, type: change_type, vendor, vendors }) as Record<string, unknown>;
+        // Filtered changes — pass categories to API
+        const params: Record<string, string | undefined> = { since, type: change_type, vendor, vendors };
+        if (categories) params.categories = categories;
+        const changes = await fetchDealChanges(params) as Record<string, unknown>;
         const doExpiring = include_expiring !== false;
         const days = Math.min(Math.max(lookahead_days ?? 30, 1), 365);
 
@@ -292,8 +295,18 @@ export function createServer(): McpServer {
           result = { ...(changes as object), expiring_deals: expiring };
         }
 
-        if (response_format === "concise" && Array.isArray(result.changes)) {
-          result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
+        if (response_format === "concise") {
+          // Handle both personalized and standard response shapes
+          if (Array.isArray(result.changes)) {
+            result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
+          }
+          if (Array.isArray(result.your_stack_changes)) {
+            result = {
+              ...result,
+              your_stack_changes: result.your_stack_changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })),
+              advisory: (result.advisory || []).map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })),
+            };
+          }
         }
 
         return mcpText(result);

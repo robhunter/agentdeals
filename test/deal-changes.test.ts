@@ -322,6 +322,88 @@ describe("track_changes tool", () => {
     assert.strictEqual(result.changes[0].vendor, "Netlify");
   });
 
+  it("getDealChanges filters by categories (comma-separated)", async () => {
+    const { getDealChanges } = await import("../dist/data.js");
+
+    // Single category
+    const db = getDealChanges("2024-01-01", undefined, undefined, undefined, "Database");
+    assert.ok(db.total > 0, "Expected at least 1 database change");
+    for (const change of db.changes) {
+      assert.ok(
+        change.category.toLowerCase().includes("database"),
+        `Unexpected category: ${change.category}`
+      );
+    }
+
+    // Multiple categories
+    const multi = getDealChanges("2024-01-01", undefined, undefined, undefined, "Database,Hosting");
+    assert.ok(multi.total >= db.total, "Multiple categories should return at least as many as single");
+    for (const change of multi.changes) {
+      const lower = change.category.toLowerCase();
+      assert.ok(
+        lower.includes("database") || lower.includes("hosting"),
+        `Unexpected category: ${change.category}`
+      );
+    }
+
+    // Nonexistent category
+    const none = getDealChanges("2024-01-01", undefined, undefined, undefined, "nonexistent-category");
+    assert.strictEqual(none.total, 0);
+    assert.deepStrictEqual(none.changes, []);
+  });
+
+  it("getPersonalizedChanges returns stack changes, advisory, and summary", async () => {
+    const { getPersonalizedChanges } = await import("../dist/data.js");
+
+    const result = getPersonalizedChanges("2024-01-01", undefined, undefined, "Netlify,OpenAI");
+    assert.ok(Array.isArray(result.your_stack_changes), "Expected your_stack_changes array");
+    assert.ok(Array.isArray(result.advisory), "Expected advisory array");
+    assert.ok(result.summary, "Expected summary object");
+    assert.ok(typeof result.summary.stack_changes_count === "number");
+    assert.ok(typeof result.summary.ecosystem_high_impact_count === "number");
+    assert.ok(typeof result.summary.period_days === "number");
+
+    // Stack changes should only contain filtered vendors
+    for (const change of result.your_stack_changes) {
+      const lower = change.vendor.toLowerCase();
+      assert.ok(
+        lower.includes("netlify") || lower.includes("openai"),
+        `Stack change has unexpected vendor: ${change.vendor}`
+      );
+    }
+
+    // Advisory should not contain vendors already in stack
+    const stackVendorDates = new Set(
+      result.your_stack_changes.map((c: any) => `${c.vendor}|${c.date}|${c.change_type}`)
+    );
+    for (const change of result.advisory) {
+      assert.ok(
+        !stackVendorDates.has(`${change.vendor}|${change.date}|${change.change_type}`),
+        `Advisory should not duplicate stack changes`
+      );
+    }
+
+    // Advisory limited to 3
+    assert.ok(result.advisory.length <= 3, `Advisory should be max 3, got ${result.advisory.length}`);
+
+    // Summary counts are consistent
+    assert.strictEqual(result.summary.stack_changes_count, result.your_stack_changes.length);
+  });
+
+  it("getPersonalizedChanges with categories filter", async () => {
+    const { getPersonalizedChanges } = await import("../dist/data.js");
+
+    const result = getPersonalizedChanges("2024-01-01", undefined, undefined, undefined, "Database");
+    assert.ok(Array.isArray(result.your_stack_changes));
+    for (const change of result.your_stack_changes) {
+      assert.ok(
+        change.category.toLowerCase().includes("database"),
+        `Expected database category, got: ${change.category}`
+      );
+    }
+    assert.ok(result.summary.stack_changes_count === result.your_stack_changes.length);
+  });
+
   it("every change_type in data matches the tool enum", async () => {
     const VALID_CHANGE_TYPES = new Set([
       "free_tier_removed", "limits_reduced", "restriction", "limits_increased",
