@@ -368,9 +368,20 @@ function trackChangesHtml(): string {
   .timeline-reduced::before { background: #fbbf24; }
   .timeline-increased::before, .timeline-new::before { background: #34d399; }
   .timeline-other::before { background: #60a5fa; }
+  .timeline-item.personal { border-left-color: #3b82f6; border-left-width: 3px; }
   .change-date { font-size: 12px; color: #64748b; }
   .change-vendor { font-weight: 600; color: #f1f5f9; }
   .change-summary { font-size: 13px; color: #94a3b8; margin-top: 2px; }
+  .stack-summary { background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%); border: 1px solid #3b82f6; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+  .stack-summary h3 { margin: 0 0 8px; color: #60a5fa; font-size: 15px; }
+  .stack-summary .summary-stats { display: flex; gap: 16px; font-size: 13px; color: #94a3b8; }
+  .stack-summary .summary-stats strong { color: #f1f5f9; }
+  .advisory-section { margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px; }
+  .advisory-section h3 { font-size: 14px; color: #94a3b8; margin: 0 0 8px; cursor: pointer; }
+  .advisory-section h3::before { content: "\\u25B6"; font-size: 10px; margin-right: 6px; display: inline-block; transition: transform 0.2s; }
+  .advisory-section.open h3::before { transform: rotate(90deg); }
+  .advisory-section .advisory-items { display: none; }
+  .advisory-section.open .advisory-items { display: block; }
 </style></head><body>
 <div id="app"><div class="empty">Loading changes...</div></div>
 <script type="module">
@@ -380,7 +391,11 @@ function render(args, data) {
   const el = document.getElementById("app");
   if (!data) { el.innerHTML = '<div class="empty">Loading...</div>'; return; }
 
-  const changes = data.deal_changes || data.changes || [];
+  // Detect personalized vs standard response
+  const isPersonalized = Array.isArray(data.your_stack_changes);
+  const changes = isPersonalized ? data.your_stack_changes : (data.deal_changes || data.changes || []);
+  const advisory = isPersonalized ? (data.advisory || []) : [];
+  const summary = isPersonalized ? data.summary : null;
   const expiring = data.expiring_deals || data.expiring || [];
 
   // Categorize changes
@@ -389,7 +404,7 @@ function render(args, data) {
   const positive = changes.filter(c => c.change_type === "limits_increased" || c.change_type === "new_free_tier" || c.change_type === "startup_program_expanded");
 
   const stats = [
-    { label: "Total Changes", value: changes.length },
+    { label: isPersonalized ? "Your Stack" : "Total Changes", value: changes.length },
     { label: "Removals", value: removals.length },
     { label: "Reductions", value: reductions.length },
     { label: "Improvements", value: positive.length },
@@ -410,28 +425,50 @@ function render(args, data) {
     return "badge-blue";
   };
 
-  // Filter state
-  let activeFilter = "all";
+  function renderTimelineItem(c, isPersonalItem) {
+    return \`
+      <div class="timeline-item \${timelineClass(c.change_type)}\${isPersonalItem ? " personal" : ""}">
+        <div class="change-date">\${esc(c.date)}</div>
+        <div><span class="change-vendor">\${esc(c.vendor)}</span> <span class="badge \${changeBadge(c.change_type)}">\${esc((c.change_type || "").replace(/_/g, " "))}</span></div>
+        <div class="change-summary">\${esc(c.summary)}</div>
+        \${c.previous_state ? \`<div style="margin-top:4px;font-size:12px"><span style="color:#64748b">Before:</span> \${esc(c.previous_state)}</div>\` : ""}
+        \${c.current_state ? \`<div style="font-size:12px"><span style="color:#64748b">After:</span> \${esc(c.current_state)}</div>\` : ""}
+      </div>
+    \`;
+  }
 
   function renderTimeline(filter) {
     const filtered = filter === "all" ? changes :
       filter === "negative" ? [...removals, ...reductions] :
       filter === "positive" ? positive : changes;
     return filtered.length === 0 ? '<div class="empty">No changes match this filter.</div>' :
-      filtered.map(c => \`
-        <div class="timeline-item \${timelineClass(c.change_type)}">
-          <div class="change-date">\${esc(c.date)}</div>
-          <div><span class="change-vendor">\${esc(c.vendor)}</span> <span class="badge \${changeBadge(c.change_type)}">\${esc((c.change_type || "").replace(/_/g, " "))}</span></div>
-          <div class="change-summary">\${esc(c.summary)}</div>
-          \${c.previous_state ? \`<div style="margin-top:4px;font-size:12px"><span style="color:#64748b">Before:</span> \${esc(c.previous_state)}</div>\` : ""}
-          \${c.current_state ? \`<div style="font-size:12px"><span style="color:#64748b">After:</span> \${esc(c.current_state)}</div>\` : ""}
-        </div>
-      \`).join("");
+      filtered.map(c => renderTimelineItem(c, isPersonalized)).join("");
   }
 
+  const stackSummaryHtml = isPersonalized && summary ? \`
+    <div class="stack-summary">
+      <h3>\\ud83d\\udee1\\ufe0f Your Stack</h3>
+      <div class="summary-stats">
+        <span><strong>\${summary.stack_changes_count}</strong> changes affecting your stack</span>
+        <span><strong>\${summary.ecosystem_high_impact_count}</strong> high-impact changes ecosystem-wide</span>
+        <span>Last <strong>\${summary.period_days}</strong> days</span>
+      </div>
+    </div>
+  \` : "";
+
+  const advisoryHtml = advisory.length > 0 ? \`
+    <div class="advisory-section" id="advisory-section">
+      <h3>Also worth knowing (\${advisory.length})</h3>
+      <div class="advisory-items">
+        \${advisory.map(c => renderTimelineItem(c, false)).join("")}
+      </div>
+    </div>
+  \` : "";
+
   el.innerHTML = \`
-    <h2>Pricing Changes</h2>
+    <h2>\${isPersonalized ? "Your Stack Changes" : "Pricing Changes"}</h2>
     <p class="subtitle">\${data.period || "Recent"} developer tool pricing activity</p>
+    \${stackSummaryHtml}
     <div class="stats-row">\${stats.map(s => \`<div class="stat"><div class="stat-value">\${s.value}</div><div class="stat-label">\${s.label}</div></div>\`).join("")}</div>
     <div class="filter-bar">
       <button class="filter-btn active" data-filter="all">All</button>
@@ -439,6 +476,7 @@ function render(args, data) {
       <button class="filter-btn" data-filter="positive">Improvements</button>
     </div>
     <div id="timeline">\${renderTimeline("all")}</div>
+    \${advisoryHtml}
     \${expiring.length > 0 ? \`
       <div class="card" style="margin-top:16px">
         <h3>Expiring Soon</h3>
@@ -456,6 +494,14 @@ function render(args, data) {
       document.getElementById("timeline").innerHTML = renderTimeline(btn.dataset.filter);
     });
   });
+
+  // Wire up advisory toggle
+  const advisoryEl = document.getElementById("advisory-section");
+  if (advisoryEl) {
+    advisoryEl.querySelector("h3").addEventListener("click", () => {
+      advisoryEl.classList.toggle("open");
+    });
+  }
 }
 
 function esc(s) { if (!s) return ""; const d = document.createElement("div"); d.textContent = String(s); return d.innerHTML; }

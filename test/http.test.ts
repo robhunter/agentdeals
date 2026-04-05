@@ -695,18 +695,40 @@ describe("HTTP transport", () => {
     assert.ok(body.error.includes("Invalid"));
   });
 
-  it("GET /api/changes filters by vendors (comma-separated)", async () => {
+  it("GET /api/changes filters by vendors (comma-separated) — personalized response", async () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01&vendors=Netlify,OpenAI`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
-    assert.ok(body.total >= 2, `Expected at least 2 changes for Netlify+OpenAI, got ${body.total}`);
-    for (const change of body.changes) {
+    // Personalized response format
+    assert.ok(Array.isArray(body.your_stack_changes), "Expected your_stack_changes array");
+    assert.ok(Array.isArray(body.advisory), "Expected advisory array");
+    assert.ok(body.summary, "Expected summary object");
+    assert.ok(body.your_stack_changes.length >= 2, `Expected at least 2 stack changes for Netlify+OpenAI, got ${body.your_stack_changes.length}`);
+    for (const change of body.your_stack_changes) {
       const vendorLower = change.vendor.toLowerCase();
       assert.ok(
         vendorLower.includes("netlify") || vendorLower.includes("openai"),
         `Unexpected vendor: ${change.vendor}`
+      );
+    }
+    assert.ok(body.advisory.length <= 3, "Advisory should be max 3");
+  });
+
+  it("GET /api/changes filters by categories — personalized response", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01&categories=Database`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.your_stack_changes), "Expected your_stack_changes array");
+    assert.ok(Array.isArray(body.advisory), "Expected advisory array");
+    assert.ok(body.summary, "Expected summary object");
+    for (const change of body.your_stack_changes) {
+      assert.ok(
+        change.category.toLowerCase().includes("database"),
+        `Unexpected category: ${change.category}`
       );
     }
   });
