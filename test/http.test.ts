@@ -914,7 +914,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -1441,6 +1441,78 @@ describe("HTTP transport", () => {
     assert.ok(xml.includes("<feed xmlns"), "Should be Atom feed");
     assert.ok(xml.includes("/pricing-changes#"), "Should link to pricing changes anchors");
     assert.ok(xml.includes("urn:agentdeals:pricing-changes-feed"), "Should have correct feed ID");
+  });
+
+  it("GET /badge/{vendor}.svg returns valid SVG badge", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badge/vercel.svg`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("image/svg+xml"), "Should return SVG content type");
+    assert.ok(response.headers.get("cache-control")?.includes("max-age=3600"), "Should have 1-hour cache");
+    const svg = await response.text();
+    assert.ok(svg.includes("<svg"), "Should be valid SVG");
+    assert.ok(svg.includes("xmlns"), "Should have SVG namespace");
+    assert.ok(svg.includes("Vercel"), "Should contain vendor name");
+    assert.ok(svg.includes("free tier"), "Should mention free tier");
+  });
+
+  it("GET /badge/{unknown}.svg returns gray unknown badge (not 404)", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badge/nonexistent-vendor-xyz.svg`);
+    assert.strictEqual(response.status, 200, "Should return 200 even for unknown vendors");
+    assert.ok(response.headers.get("content-type")?.includes("image/svg+xml"));
+    const svg = await response.text();
+    assert.ok(svg.includes("<svg"), "Should be valid SVG");
+    assert.ok(svg.includes("not found"), "Should show not found text");
+    assert.ok(svg.includes("#8b949e"), "Should use gray color for unknown");
+  });
+
+  it("GET /badge/{vendor}.svg supports style=flat-square", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badge/supabase.svg?style=flat-square`);
+    assert.strictEqual(response.status, 200);
+    const svg = await response.text();
+    assert.ok(svg.includes("<svg"), "Should be valid SVG");
+    assert.ok(svg.includes('rx="0"'), "flat-square should have zero border radius");
+  });
+
+  it("GET /badge/{vendor}.svg supports custom label", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badge/neon.svg?label=custom+label`);
+    assert.strictEqual(response.status, 200);
+    const svg = await response.text();
+    assert.ok(svg.includes("custom label"), "Should use custom label text");
+  });
+
+  it("GET /badges renders badges documentation page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badges`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Free Tier Status Badges"), "Should have badges page title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/badges"), "Should reference /badges");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("/badge/"), "Should show badge URLs");
+    assert.ok(html.includes(".svg"), "Should reference SVG badges");
+    assert.ok(html.includes("Markdown"), "Should have Markdown embed option");
+    assert.ok(html.includes("HTML"), "Should have HTML embed option");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("GET /badges page is in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/badges"), "Sitemap should include /badges page");
   });
 
   it("GET /agent-stack renders agent stack guide page", async () => {
