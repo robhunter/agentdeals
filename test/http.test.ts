@@ -3033,7 +3033,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Stable"), "Should have stable section");
     assert.ok(html.includes("Methodology"), "Should have methodology section");
     assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
-    assert.ok(html.includes("/state-of-free-tiers-2026"), "Should cross-link to state of free tiers");
+    assert.ok(html.includes("/state-of-free-tiers"), "Should cross-link to state of free tiers");
     assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
     assert.ok(html.includes("vendor-card"), "Should have vendor cards");
   });
@@ -3851,28 +3851,44 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
-  it("GET /state-of-free-tiers-2026 renders State of Free Tiers report", async () => {
+  it("GET /state-of-free-tiers renders State of Free Tiers report", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/state-of-free-tiers-2026`);
+    const response = await fetch(`http://localhost:${serverPort}/state-of-free-tiers`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
-    assert.ok(html.includes("State of Developer Free Tiers 2026"), "Should have title");
+    assert.ok(html.includes("State of Developer Free Tiers"), "Should have title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
-    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes('"Report"'), "Should use Report schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("Executive Summary"), "Should have executive summary section");
     assert.ok(html.includes("By the Numbers"), "Should have stats section");
+    assert.ok(html.includes("Monthly Pricing Change Trend"), "Should have monthly trend visualization");
+    assert.ok(html.includes("Change Type Breakdown"), "Should have change type breakdown");
     assert.ok(html.includes("Free Tier Squeeze"), "Should have squeeze section");
     assert.ok(html.includes("Bright Spots"), "Should have bright spots section");
+    assert.ok(html.includes("Category Erosion"), "Should have category erosion analysis");
+    assert.ok(html.includes("Still Free"), "Should have still free section");
+    assert.ok(html.includes("Track Changes Yourself"), "Should have CTA section");
+    assert.ok(html.includes("/pricing-changes"), "CTA should link to pricing changes");
+    assert.ok(html.includes("/feed.xml"), "CTA should link to Atom feed");
+    assert.ok(html.includes("/badges"), "CTA should link to badges");
     assert.ok(html.includes("Startup Credit Programs"), "Should have startup credits section");
     assert.ok(html.includes("Category Landscape"), "Should have category landscape section");
     assert.ok(html.includes("Cost Trap"), "Should have cost trap section");
     assert.ok(html.includes("Methodology"), "Should have methodology section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
     assert.ok(html.includes("/guides"), "Should link back to guides hub");
+  });
+
+  it("GET /state-of-free-tiers-2026 redirects to /state-of-free-tiers", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/state-of-free-tiers-2026`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/state-of-free-tiers"));
   });
 
   it("GET /guides renders guides hub page with all editorial content", async () => {
