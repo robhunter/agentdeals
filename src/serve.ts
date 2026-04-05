@@ -488,7 +488,7 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 </svg>`;
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home" | "badges";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home" | "badges" | "estimate";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -515,6 +515,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/pricing-changes", label: "Changes", section: "changes" },
     { href: "/expiring", label: "Expiring", section: "expiring" },
     { href: "/freshness", label: "Freshness", section: "freshness" },
+    { href: "/estimate", label: "Estimate", section: "estimate" },
     { href: "/badges", label: "Badges", section: "badges" },
     { href: "/api/docs", label: "API", section: "api" },
     { href: "/setup", label: "Setup", section: "setup" },
@@ -35380,6 +35381,433 @@ function copyConfig(btn){
 </html>`;
 }
 
+// --- Stack Cost Estimator page ---
+
+interface EstimatorVendorCost {
+  slug: string;
+  name: string;
+  free: string;         // free tier summary
+  starter: number;      // $/mo at ~1K MAU
+  growth: number;       // $/mo at ~10K MAU
+  scale: number;        // $/mo at ~100K MAU
+  notes: string;        // pricing model notes
+}
+
+interface EstimatorCategory {
+  id: string;
+  label: string;
+  vendors: EstimatorVendorCost[];
+}
+
+function buildEstimatorData(): EstimatorCategory[] {
+  // Curated cost data for popular vendors at different scale points
+  // Prices sourced from vendor pricing pages as of 2026-04
+  return [
+    {
+      id: "database",
+      label: "Database",
+      vendors: [
+        { slug: "supabase", name: "Supabase", free: "500 MB storage, 50K MAU", starter: 25, growth: 25, scale: 75, notes: "Pro $25/mo, usage-based after limits" },
+        { slug: "neon", name: "Neon", free: "0.5 GB storage, 100 CU-hours", starter: 19, growth: 69, scale: 350, notes: "Launch $19/mo, Scale $69/mo" },
+        { slug: "planetscale", name: "PlanetScale", free: "5 GB storage, 1B reads", starter: 39, growth: 39, scale: 99, notes: "Scaler $39/mo, Scaler Pro $99/mo" },
+        { slug: "turso", name: "Turso", free: "100 DBs, 5 GB storage", starter: 0, growth: 29, scale: 29, notes: "Generous free tier, Scaler $29/mo" },
+        { slug: "upstash", name: "Upstash", free: "256 MB Redis, 500K cmd/mo", starter: 0, growth: 10, scale: 50, notes: "Pay-per-request, $0.2/100K commands" },
+        { slug: "mongodb-atlas", name: "MongoDB Atlas", free: "512 MB shared cluster", starter: 9, growth: 57, scale: 230, notes: "Dedicated clusters from $57/mo" },
+        { slug: "cockroachdb", name: "CockroachDB", free: "10 GiB storage", starter: 0, growth: 0, scale: 295, notes: "Generous free tier, Standard from $295/mo" },
+        { slug: "firebase", name: "Firebase", free: "1 GB Firestore, 50K reads/day", starter: 0, growth: 25, scale: 100, notes: "Blaze pay-as-you-go" },
+      ],
+    },
+    {
+      id: "hosting",
+      label: "Hosting",
+      vendors: [
+        { slug: "vercel", name: "Vercel", free: "100 GB bandwidth, 1M fn calls", starter: 20, growth: 20, scale: 150, notes: "Pro $20/user/mo, usage overages" },
+        { slug: "railway", name: "Railway", free: "$5 one-time credit", starter: 5, growth: 20, scale: 100, notes: "Hobby $5/mo, usage-based" },
+        { slug: "render", name: "Render", free: "512 MB RAM, 0.1 CPU", starter: 7, growth: 25, scale: 85, notes: "Starter $7/mo per service" },
+        { slug: "netlify", name: "Netlify", free: "300 credits/mo", starter: 19, growth: 19, scale: 99, notes: "Pro $19/mo, overages billed" },
+        { slug: "fly-io", name: "Fly.io", free: "3 shared VMs, 160 GB transfer", starter: 0, growth: 15, scale: 75, notes: "Pay-as-you-go after free tier" },
+        { slug: "cloudflare-workers", name: "Cloudflare Workers", free: "100K req/day", starter: 5, growth: 5, scale: 5, notes: "Paid $5/mo, 10M req included" },
+        { slug: "cloudflare-pages", name: "Cloudflare Pages", free: "Unlimited bandwidth, 500 builds", starter: 0, growth: 0, scale: 0, notes: "Free for most use cases" },
+      ],
+    },
+    {
+      id: "auth",
+      label: "Auth",
+      vendors: [
+        { slug: "clerk", name: "Clerk", free: "50K MAU", starter: 0, growth: 0, scale: 100, notes: "Pro $0.02/MAU after 10K on Pro plan" },
+        { slug: "auth0", name: "Auth0", free: "25K MAU", starter: 0, growth: 35, scale: 240, notes: "Essentials $35/mo (500-10K MAU)" },
+        { slug: "kinde", name: "Kinde", free: "10.5K MAU", starter: 0, growth: 25, scale: 100, notes: "Pro $25/mo (10K-50K MAU)" },
+        { slug: "workos", name: "WorkOS", free: "1M MAU (AuthKit)", starter: 0, growth: 0, scale: 0, notes: "Free up to 1M MAU for user management" },
+        { slug: "supabase", name: "Supabase Auth", free: "50K MAU", starter: 0, growth: 0, scale: 25, notes: "Included with Supabase Pro" },
+        { slug: "firebase", name: "Firebase Auth", free: "50K MAU", starter: 0, growth: 0, scale: 5, notes: "Blaze: $0.0055/MAU after 50K" },
+      ],
+    },
+    {
+      id: "monitoring",
+      label: "Monitoring",
+      vendors: [
+        { slug: "sentry", name: "Sentry", free: "5K errors/mo, 1 user", starter: 26, growth: 26, scale: 80, notes: "Team $26/mo (50K errors)" },
+        { slug: "grafana-cloud", name: "Grafana Cloud", free: "10K metrics, 50 GB logs", starter: 0, growth: 29, scale: 299, notes: "Pro from $29/mo" },
+        { slug: "betterstack", name: "BetterStack", free: "10 monitors, 3 GB logs", starter: 0, growth: 25, scale: 85, notes: "Team $25/mo" },
+        { slug: "new-relic", name: "New Relic", free: "100 GB ingest/mo", starter: 0, growth: 0, scale: 49, notes: "Free up to 100 GB, then $0.30/GB" },
+        { slug: "datadog", name: "Datadog", free: "5 hosts, 1-day retention", starter: 15, growth: 75, scale: 375, notes: "Pro $15/host/mo" },
+        { slug: "posthog", name: "PostHog", free: "1M events/mo", starter: 0, growth: 0, scale: 50, notes: "Free up to 1M events, pay-as-you-go" },
+      ],
+    },
+    {
+      id: "storage",
+      label: "Storage",
+      vendors: [
+        { slug: "cloudflare-r2", name: "Cloudflare R2", free: "10 GB, zero egress", starter: 0, growth: 0, scale: 15, notes: "$0.015/GB/mo after 10 GB, no egress fees" },
+        { slug: "tigris", name: "Tigris", free: "5 GB, zero egress", starter: 0, growth: 0, scale: 10, notes: "S3-compatible, $0.02/GB/mo" },
+        { slug: "cloudinary", name: "Cloudinary", free: "25 credits/mo", starter: 0, growth: 89, scale: 224, notes: "Plus $89/mo (225 credits)" },
+        { slug: "uploadthing", name: "UploadThing", free: "2 GB storage", starter: 0, growth: 30, scale: 120, notes: "Pro $30/mo (100 GB)" },
+        { slug: "supabase", name: "Supabase Storage", free: "1 GB", starter: 0, growth: 25, scale: 25, notes: "Included with Supabase Pro" },
+      ],
+    },
+    {
+      id: "email",
+      label: "Email",
+      vendors: [
+        { slug: "resend", name: "Resend", free: "3K emails/mo", starter: 0, growth: 20, scale: 90, notes: "Pro $20/mo (50K emails)" },
+        { slug: "postmark", name: "Postmark", free: "100 emails/mo", starter: 15, growth: 50, scale: 215, notes: "$15/mo for 10K emails" },
+        { slug: "sendgrid", name: "SendGrid", free: "100 emails/day", starter: 0, growth: 20, scale: 50, notes: "Essentials $20/mo (50K emails)" },
+        { slug: "mailgun", name: "Mailgun", free: "100 emails/day", starter: 0, growth: 35, scale: 90, notes: "Foundation $35/mo (50K emails)" },
+        { slug: "brevo", name: "Brevo", free: "300 emails/day", starter: 0, growth: 25, scale: 65, notes: "Starter $25/mo (20K emails)" },
+        { slug: "amazon-ses", name: "Amazon SES", free: "3K messages/mo (from EC2)", starter: 0, growth: 10, scale: 100, notes: "$0.10/1K emails" },
+      ],
+    },
+    {
+      id: "cicd",
+      label: "CI/CD",
+      vendors: [
+        { slug: "github-actions", name: "GitHub Actions", free: "2K min/mo (private)", starter: 0, growth: 4, scale: 21, notes: "Team $4/user/mo" },
+        { slug: "gitlab-ci", name: "GitLab CI", free: "400 min/mo", starter: 0, growth: 29, scale: 29, notes: "Premium $29/user/mo" },
+        { slug: "circleci", name: "CircleCI", free: "30K credits/mo", starter: 0, growth: 15, scale: 25, notes: "Performance from $15/mo" },
+        { slug: "bitbucket-pipelines", name: "Bitbucket Pipelines", free: "50 min/mo", starter: 0, growth: 15, scale: 15, notes: "Standard $15/user/mo" },
+      ],
+    },
+    {
+      id: "analytics",
+      label: "Analytics",
+      vendors: [
+        { slug: "posthog", name: "PostHog", free: "1M events/mo", starter: 0, growth: 0, scale: 450, notes: "Free up to 1M, then $0.000045/event" },
+        { slug: "mixpanel", name: "Mixpanel", free: "1M events/mo", starter: 0, growth: 0, scale: 150, notes: "Growth from $0.00028/event" },
+        { slug: "amplitude", name: "Amplitude", free: "50K MTU", starter: 0, growth: 0, scale: 995, notes: "Growth pricing varies" },
+        { slug: "plausible", name: "Plausible", free: "Self-hosted only", starter: 9, growth: 19, scale: 69, notes: "Cloud $9/mo (10K pageviews)" },
+      ],
+    },
+  ];
+}
+
+function buildEstimatePage(): string {
+  const estimatorData = buildEstimatorData();
+  const allOffers = loadOffers();
+  const totalVendors = new Set(estimatorData.flatMap(c => c.vendors.map(v => v.slug))).size;
+  const totalCategories = estimatorData.length;
+
+  // Build vendor info map from our index data for free tier descriptions
+  const vendorInfo: Record<string, { description: string; url: string; category: string }> = {};
+  for (const cat of estimatorData) {
+    for (const v of cat.vendors) {
+      const offer = allOffers.find(o => toSlug(o.vendor) === v.slug || o.vendor.toLowerCase() === v.name.toLowerCase());
+      if (offer) {
+        vendorInfo[v.slug] = { description: offer.description, url: offer.url, category: offer.category };
+      }
+    }
+  }
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Stack Cost Estimator",
+    "description": `Compare cloud service costs at 4 scale tiers across ${totalCategories} categories and ${totalVendors}+ vendors. Build shareable cost comparisons.`,
+    "url": `${BASE_URL}/estimate`,
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+  };
+
+  // Build dropdown options HTML for each category
+  const dropdownsHtml = estimatorData.map(cat => {
+    const options = cat.vendors.map(v =>
+      `<option value="${escHtmlServer(v.slug)}">${escHtmlServer(v.name)}</option>`
+    ).join("");
+    return `<div class="est-category">
+      <label for="est-${escHtmlServer(cat.id)}">${escHtmlServer(cat.label)}</label>
+      <select id="est-${escHtmlServer(cat.id)}" data-category="${escHtmlServer(cat.id)}" onchange="updateEstimate()">
+        <option value="">— None —</option>
+        ${options}
+      </select>
+    </div>`;
+  }).join("\n");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Stack Cost Estimator — Compare Cloud Service Costs at Scale | AgentDeals</title>
+  <meta name="description" content="Interactive stack cost estimator. Compare cloud service costs across ${totalCategories} categories at 4 scale tiers — Free, 1K, 10K, and 100K users. Shareable URLs for team decisions.">
+  <link rel="canonical" href="${BASE_URL}/estimate">
+  <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="${BASE_URL}/feed.xml">
+  <meta property="og:title" content="Stack Cost Estimator — AgentDeals">
+  <meta property="og:description" content="Compare cloud service costs at scale. Pick your stack, see costs at Free → 1K → 10K → 100K users.">
+  <meta property="og:url" content="${BASE_URL}/estimate">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="${BASE_URL}/og-image.png">
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+  <style>
+    :root{--bg:#0f172a;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:"Georgia","Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;--green:#3fb950;--yellow:#d29922;--red:#f85149}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+    .container{max-width:1040px;margin:0 auto;padding:1.5rem}
+    ${globalNavCss()}
+    h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem}
+    h2{font-family:var(--serif);font-size:1.3rem;margin:2rem 0 .75rem;color:var(--text)}
+    p{color:var(--text-muted);margin:.5rem 0;font-size:.9rem}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:1.5rem}
+    .est-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;margin:1.5rem 0}
+    .est-category{display:flex;flex-direction:column;gap:.35rem}
+    .est-category label{font-size:.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+    .est-category select{background:var(--bg-elevated);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.6rem .75rem;font-size:.9rem;font-family:var(--sans);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M3 5l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem}
+    .est-category select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
+    .est-category select option{background:var(--bg-elevated);color:var(--text)}
+    .share-bar{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px}
+    .share-url{flex:1;font-family:var(--mono);font-size:.8rem;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .share-btn{background:var(--accent);color:#fff;border:none;padding:.5rem 1rem;border-radius:6px;font-size:.8rem;font-family:var(--sans);cursor:pointer;font-weight:600;white-space:nowrap;transition:all .15s}
+    .share-btn:hover{opacity:.9}
+    .share-btn.copied{background:var(--green)}
+    .results-table{width:100%;border-collapse:collapse;margin:1rem 0;background:var(--bg-elevated);border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+    .results-table th,.results-table td{padding:.65rem .75rem;text-align:left;font-size:.85rem;border-bottom:1px solid var(--border)}
+    .results-table th{background:rgba(0,0,0,.2);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+    .results-table td{color:var(--text)}
+    .results-table tr:last-child td{border-bottom:none}
+    .results-table .vendor-name{font-weight:600}
+    .results-table .vendor-name a{color:var(--text);text-decoration:none}
+    .results-table .vendor-name a:hover{color:var(--accent)}
+    .cost-free{color:var(--green);font-weight:600}
+    .cost-low{color:var(--green)}
+    .cost-mid{color:var(--yellow)}
+    .cost-high{color:var(--red)}
+    .total-row{background:rgba(59,130,246,.08)!important}
+    .total-row td{font-weight:700;border-top:2px solid var(--accent)!important;color:var(--text)}
+    .alt-row{font-size:.75rem;color:var(--text-dim)}
+    .alt-row td{padding:.3rem .75rem;border-bottom:1px solid var(--border)}
+    .alt-tag{color:var(--green);font-size:.7rem}
+    .est-empty{text-align:center;padding:2rem;color:var(--text-muted);font-size:.95rem}
+    .notes-col{color:var(--text-dim);font-size:.8rem}
+    .free-tier-info{font-size:.75rem;color:var(--text-dim);font-weight:normal;display:block;margin-top:.15rem}
+    ${mcpCtaCss()}
+    .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
+    .footer a{color:var(--accent)}
+    @media(max-width:768px){.est-grid{grid-template-columns:1fr 1fr}.results-table{font-size:.8rem}.results-table th,.results-table td{padding:.5rem}.share-bar{flex-direction:column;align-items:stretch}.share-url{font-size:.7rem}}
+    @media(max-width:480px){.est-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    ${buildGlobalNav("estimate")}
+
+    <h1>Stack Cost Estimator</h1>
+    <p class="subtitle">Pick one service per category and see how your stack costs compare at different scale points. Share the URL with your team.</p>
+
+    <h2>Build Your Stack</h2>
+    <div class="est-grid">
+      ${dropdownsHtml}
+    </div>
+
+    <div class="share-bar" id="share-bar" style="display:none">
+      <span class="share-url" id="share-url"></span>
+      <button class="share-btn" id="share-btn" onclick="copyShareUrl()">Copy Link</button>
+    </div>
+
+    <div id="results">
+      <div class="est-empty">Select services above to see cost comparison</div>
+    </div>
+
+    ${buildMcpCta("Use <code>plan_stack</code> to get AI-powered stack recommendations with cost estimates directly in your editor.")}
+
+    <div class="footer">
+      <p>Prices are approximate and based on published vendor pricing as of April 2026. Actual costs may vary based on usage patterns.</p>
+      <p style="margin-top:.5rem">Powered by <a href="/">AgentDeals</a> verified pricing data &middot; <a href="/pricing-changes">Pricing Changes</a> &middot; <a href="/stability">Stability Dashboard</a> &middot; <a href="/privacy">Privacy</a></p>
+    </div>
+  </div>
+
+  <script>
+    var EST_DATA = ${JSON.stringify(estimatorData)};
+    var VENDOR_INFO = ${JSON.stringify(vendorInfo)};
+
+    function getSelections() {
+      var sels = {};
+      var selects = document.querySelectorAll('[data-category]');
+      for (var i = 0; i < selects.length; i++) {
+        var s = selects[i];
+        if (s.value) sels[s.dataset.category] = s.value;
+      }
+      return sels;
+    }
+
+    function findVendor(catId, slug) {
+      var cat = EST_DATA.find(function(c) { return c.id === catId; });
+      if (!cat) return null;
+      return cat.vendors.find(function(v) { return v.slug === slug; }) || null;
+    }
+
+    function costClass(amount) {
+      if (amount === 0) return 'cost-free';
+      if (amount <= 25) return 'cost-low';
+      if (amount <= 100) return 'cost-mid';
+      return 'cost-high';
+    }
+
+    function formatCost(amount) {
+      if (amount === 0) return '$0';
+      return '$' + amount.toLocaleString();
+    }
+
+    function findCheaperAlt(catId, currentSlug, tier) {
+      var cat = EST_DATA.find(function(c) { return c.id === catId; });
+      if (!cat) return null;
+      var current = cat.vendors.find(function(v) { return v.slug === currentSlug; });
+      if (!current) return null;
+      var currentCost = tier === 'starter' ? current.starter : tier === 'growth' ? current.growth : current.scale;
+      if (currentCost === 0) return null;
+      var best = null;
+      for (var i = 0; i < cat.vendors.length; i++) {
+        var v = cat.vendors[i];
+        if (v.slug === currentSlug) continue;
+        var vCost = tier === 'starter' ? v.starter : tier === 'growth' ? v.growth : v.scale;
+        if (vCost < currentCost && (!best || vCost < (tier === 'starter' ? best.starter : tier === 'growth' ? best.growth : best.scale))) {
+          best = v;
+        }
+      }
+      if (!best) return null;
+      var bestCost = tier === 'starter' ? best.starter : tier === 'growth' ? best.growth : best.scale;
+      var savings = currentCost - bestCost;
+      if (savings <= 0) return null;
+      return { name: best.name, slug: best.slug, savings: savings };
+    }
+
+    function updateUrl() {
+      var sels = getSelections();
+      var params = new URLSearchParams();
+      var keys = Object.keys(sels);
+      for (var i = 0; i < keys.length; i++) {
+        params.set(keys[i], sels[keys[i]]);
+      }
+      var newUrl = window.location.pathname + (keys.length > 0 ? '?' + params.toString() : '');
+      history.replaceState(null, '', newUrl);
+      var shareBar = document.getElementById('share-bar');
+      var shareUrl = document.getElementById('share-url');
+      if (keys.length > 0) {
+        shareBar.style.display = 'flex';
+        shareUrl.textContent = window.location.origin + newUrl;
+      } else {
+        shareBar.style.display = 'none';
+      }
+    }
+
+    function updateEstimate() {
+      var sels = getSelections();
+      updateUrl();
+      var keys = Object.keys(sels);
+      var resultsDiv = document.getElementById('results');
+      if (keys.length === 0) {
+        resultsDiv.innerHTML = '<div class="est-empty">Select services above to see cost comparison</div>';
+        return;
+      }
+
+      var rows = [];
+      var totals = { starter: 0, growth: 0, scale: 0 };
+      for (var i = 0; i < keys.length; i++) {
+        var catId = keys[i];
+        var slug = sels[catId];
+        var v = findVendor(catId, slug);
+        if (!v) continue;
+        var cat = EST_DATA.find(function(c) { return c.id === catId; });
+        var catLabel = cat ? cat.label : catId;
+        var info = VENDOR_INFO[slug];
+        var vendorUrl = info ? '/vendor/' + slug : '#';
+        totals.starter += v.starter;
+        totals.growth += v.growth;
+        totals.scale += v.scale;
+
+        rows.push('<tr>'
+          + '<td>' + catLabel + '</td>'
+          + '<td class="vendor-name"><a href="' + vendorUrl + '">' + v.name + '</a>'
+          + '<span class="free-tier-info">' + v.free + '</span></td>'
+          + '<td class="cost-free">$0</td>'
+          + '<td class="' + costClass(v.starter) + '">' + formatCost(v.starter) + '</td>'
+          + '<td class="' + costClass(v.growth) + '">' + formatCost(v.growth) + '</td>'
+          + '<td class="' + costClass(v.scale) + '">' + formatCost(v.scale) + '</td>'
+          + '<td class="notes-col">' + v.notes + '</td>'
+          + '</tr>');
+
+        // Check for cheaper alternatives at the highest paid tier
+        var bestTier = v.scale > 0 ? 'scale' : v.growth > 0 ? 'growth' : v.starter > 0 ? 'starter' : null;
+        if (bestTier) {
+          var alt = findCheaperAlt(catId, slug, bestTier);
+          if (alt) {
+            var tierLabel = bestTier === 'starter' ? '1K' : bestTier === 'growth' ? '10K' : '100K';
+            rows.push('<tr class="alt-row"><td></td><td colspan="6"><span class="alt-tag">&darr; Save $'
+              + alt.savings + '/mo</span> Switch to <a href="/vendor/' + alt.slug + '">' + alt.name
+              + '</a> at ' + tierLabel + ' users</td></tr>');
+          }
+        }
+      }
+
+      var html = '<h2>Cost Comparison</h2>'
+        + '<table class="results-table"><thead><tr>'
+        + '<th>Category</th><th>Service</th>'
+        + '<th>Free<br><span style="font-weight:400;text-transform:none;font-size:.65rem">0 users</span></th>'
+        + '<th>Starter<br><span style="font-weight:400;text-transform:none;font-size:.65rem">~1K MAU</span></th>'
+        + '<th>Growth<br><span style="font-weight:400;text-transform:none;font-size:.65rem">~10K MAU</span></th>'
+        + '<th>Scale<br><span style="font-weight:400;text-transform:none;font-size:.65rem">~100K MAU</span></th>'
+        + '<th>Notes</th></tr></thead><tbody>';
+      html += rows.join('');
+      html += '<tr class="total-row"><td>Total</td><td></td>'
+        + '<td class="cost-free">$0/mo</td>'
+        + '<td>' + formatCost(totals.starter) + '/mo</td>'
+        + '<td>' + formatCost(totals.growth) + '/mo</td>'
+        + '<td>' + formatCost(totals.scale) + '/mo</td>'
+        + '<td></td></tr>';
+      html += '</tbody></table>';
+      resultsDiv.innerHTML = html;
+    }
+
+    function copyShareUrl() {
+      var url = window.location.origin + window.location.pathname + window.location.search;
+      navigator.clipboard.writeText(url).then(function() {
+        var btn = document.getElementById('share-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    // Load from URL params on page load
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var hasAny = false;
+      params.forEach(function(value, key) {
+        var sel = document.querySelector('[data-category="' + key + '"]');
+        if (sel) {
+          var opt = sel.querySelector('option[value="' + value + '"]');
+          if (opt) { sel.value = value; hasAny = true; }
+        }
+      });
+      if (hasAny) updateEstimate();
+    })();
+  </script>
+  ${mcpCtaScript() ? `<script>${mcpCtaScript()}</script>` : ""}
+</body>
+</html>`;
+}
+
 // --- Pricing Changes Changelog page ---
 
 function buildBadgesPage(): string {
@@ -38915,6 +39343,12 @@ ${catList}
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/estimate</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/badges</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -39611,6 +40045,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       "Content-Length": Buffer.byteLength(svg),
     });
     res.end(svg);
+  } else if (url.pathname === "/estimate" && isGetOrHead) {
+    recordApiHit("/estimate");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/estimate", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildEstimatePage());
   } else if (url.pathname === "/badges" && isGetOrHead) {
     recordApiHit("/badges");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/badges", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -39643,6 +40082,7 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/compare`,
     `${BASE_URL}/digest/archive`,
     `${BASE_URL}/trends`,
+    `${BASE_URL}/estimate`,
     `${BASE_URL}/vendor`,
     `${BASE_URL}/alternative-to`,
   ];

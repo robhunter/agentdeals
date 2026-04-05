@@ -914,7 +914,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -1513,6 +1513,55 @@ describe("HTTP transport", () => {
     const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/badges"), "Sitemap should include /badges page");
+  });
+
+  it("GET /estimate renders stack cost estimator page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/estimate`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Stack Cost Estimator"), "Should have estimator page title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/estimate"), "Should reference /estimate");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("EST_DATA"), "Should embed estimator data as JSON");
+    assert.ok(html.includes("data-category"), "Should have category dropdowns");
+    assert.ok(html.includes("database"), "Should have database category");
+    assert.ok(html.includes("hosting"), "Should have hosting category");
+    assert.ok(html.includes("auth"), "Should have auth category");
+    assert.ok(html.includes("monitoring"), "Should have monitoring category");
+    assert.ok(html.includes("storage"), "Should have storage category");
+    assert.ok(html.includes("email"), "Should have email category");
+    assert.ok(html.includes("updateEstimate"), "Should have client-side update function");
+    assert.ok(html.includes("copyShareUrl"), "Should have share URL copy function");
+    assert.ok(html.includes("share-btn"), "Should have share button");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("GET /estimate page is in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/estimate"), "Sitemap should include /estimate page");
+  });
+
+  it("GET /estimate page has at least 6 categories with 3+ vendors each", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/estimate`);
+    const html = await response.text();
+    // Extract the EST_DATA JSON from the page
+    const match = html.match(/var EST_DATA = (\[[\s\S]*?\]);\s*var VENDOR_INFO/);
+    assert.ok(match, "Should have EST_DATA JSON");
+    const data = JSON.parse(match![1]);
+    assert.ok(data.length >= 6, `Should have at least 6 categories, got ${data.length}`);
+    for (const cat of data) {
+      assert.ok(cat.vendors.length >= 3, `Category ${cat.id} should have at least 3 vendors, got ${cat.vendors.length}`);
+    }
   });
 
   it("GET /agent-stack renders agent stack guide page", async () => {
