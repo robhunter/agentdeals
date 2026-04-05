@@ -1,12 +1,12 @@
-src/
-test/
-scripts/
-data/
+/src/
+/test/
+/scripts/
+/data/
 *.ts
 tsconfig.json
 tsconfig.*.json
 .gitignore
-.github/
+/.github/
 *.test.*
 *.map
 *.d.ts
