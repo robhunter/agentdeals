@@ -35245,6 +35245,15 @@ h1{font-family:var(--serif);font-size:1.8rem;color:var(--text);margin-bottom:.5r
 .page-sub{font-size:.95rem;color:var(--text-muted);margin-bottom:2rem;max-width:600px}
 h2{font-family:var(--serif);font-size:1.3rem;color:var(--text);margin-top:2.5rem;margin-bottom:.75rem;letter-spacing:-.01em;padding-top:1.5rem;border-top:1px solid var(--border)}
 h2:first-of-type{border-top:none;padding-top:0;margin-top:1.5rem}
+.one-click{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.12));border:1px solid var(--accent);border-radius:10px;padding:1.5rem;margin-bottom:2rem}
+.one-click h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin-bottom:.5rem}
+.one-click p{font-size:.85rem;color:var(--text-muted);margin-bottom:1rem}
+.one-click-buttons{display:flex;flex-wrap:wrap;gap:.75rem}
+.one-click-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.2rem;border-radius:8px;font-size:.85rem;font-family:var(--sans);font-weight:600;text-decoration:none;transition:all .15s}
+.one-click-btn:hover{text-decoration:none;transform:translateY(-1px)}
+.one-click-btn.primary{background:var(--accent);color:#fff;border:none}.one-click-btn.primary:hover{background:var(--accent-hover)}
+.one-click-btn.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}.one-click-btn.secondary:hover{background:var(--accent-glow)}
+.one-click-note{font-size:.75rem;color:var(--text-dim);margin-top:.75rem}
 .quick-start{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:2rem}
 .quick-start h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem}
 .quick-cmd{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
@@ -35305,6 +35314,16 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 
   <h1>Setup Guide</h1>
   <p class="page-sub">Add AgentDeals to your AI coding assistant. 4 MCP tools for searching deals, comparing vendors, planning stacks, and tracking changes.</p>
+
+  <div class="one-click">
+    <h3>&#x1F4E6; One-Click Install</h3>
+    <p>Install AgentDeals directly in Claude Desktop &mdash; no configuration needed.</p>
+    <div class="one-click-buttons">
+      <a class="one-click-btn primary" href="https://github.com/robhunter/agentdeals/releases/latest/download/agentdeals.mcpb" download>Download .mcpb Extension</a>
+      <a class="one-click-btn secondary" href="https://github.com/robhunter/agentdeals/releases/latest" target="_blank" rel="noopener">View Release &rarr;</a>
+    </div>
+    <p class="one-click-note">Download the <code>.mcpb</code> file and double-click to install in Claude Desktop. All 4 tools and 6 prompt templates are immediately available. No npx, no config editing, no restart.</p>
+  </div>
 
   <div class="quick-start">
     <h3>Quick start</h3>
