@@ -389,7 +389,8 @@ export function getDealChanges(
   since?: string,
   changeType?: string,
   vendor?: string,
-  vendors?: string
+  vendors?: string,
+  categories?: string
 ): { changes: DealChange[]; total: number } {
   let results = loadDealChanges();
 
@@ -420,10 +421,78 @@ export function getDealChanges(
     results = results.filter((c) => c.vendor.toLowerCase().includes(lowerVendor));
   }
 
+  // Category filtering (comma-separated, case-insensitive partial match)
+  if (categories) {
+    const catList = categories.split(",").map((c) => c.trim().toLowerCase()).filter(Boolean);
+    results = results.filter((c) => {
+      const lowerCat = (c.category || "").toLowerCase();
+      return catList.some((cat) => lowerCat.includes(cat));
+    });
+  }
+
   // Sort by date, newest first
   results = [...results].sort((a, b) => b.date.localeCompare(a.date));
 
   return { changes: results, total: results.length };
+}
+
+export interface PersonalizedChanges {
+  your_stack_changes: DealChange[];
+  advisory: DealChange[];
+  summary: {
+    stack_changes_count: number;
+    ecosystem_high_impact_count: number;
+    period_days: number;
+  };
+}
+
+const HIGH_IMPACT_CHANGE_TYPES = new Set([
+  "free_tier_removed", "open_source_killed", "product_deprecated",
+  "limits_reduced", "new_free_tier",
+]);
+
+export function getPersonalizedChanges(
+  since?: string,
+  changeType?: string,
+  vendor?: string,
+  vendors?: string,
+  categories?: string
+): PersonalizedChanges {
+  // Get the user's stack changes
+  const stackResult = getDealChanges(since, changeType, vendor, vendors, categories);
+
+  // Get ALL changes in the same time window (no vendor/category filter)
+  const allResult = getDealChanges(since, changeType);
+
+  // Build a set of vendor names already in the stack results for dedup
+  const stackVendorDates = new Set(
+    stackResult.changes.map((c) => `${c.vendor}|${c.date}|${c.change_type}`)
+  );
+
+  // Advisory: high-impact changes outside the user's filter, top 3
+  const advisory = allResult.changes
+    .filter((c) => c.impact === "high" && HIGH_IMPACT_CHANGE_TYPES.has(c.change_type))
+    .filter((c) => !stackVendorDates.has(`${c.vendor}|${c.date}|${c.change_type}`))
+    .slice(0, 3);
+
+  // Count high-impact ecosystem-wide
+  const ecosystemHighImpact = allResult.changes.filter(
+    (c) => c.impact === "high"
+  ).length;
+
+  // Calculate period in days
+  const sinceDate = since ? new Date(since) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const periodDays = Math.max(1, Math.ceil((Date.now() - sinceDate.getTime()) / (24 * 60 * 60 * 1000)));
+
+  return {
+    your_stack_changes: stackResult.changes,
+    advisory,
+    summary: {
+      stack_changes_count: stackResult.changes.length,
+      ecosystem_high_impact_count: ecosystemHighImpact,
+      period_days: periodDays,
+    },
+  };
 }
 
 function findVendor(offers: Offer[], name: string): { offer: Offer | null; suggestions: string[] } {

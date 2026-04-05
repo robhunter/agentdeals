@@ -145,24 +145,46 @@ export const openapiSpec = {
     "/api/changes": {
       get: {
         summary: "Deal and pricing changes",
-        description: "Returns tracked pricing and tier changes across vendors. Filter by date, change type, or vendor.",
+        description: "Returns tracked pricing and tier changes across vendors. Filter by date, change type, vendor, or category. When vendors or categories are provided, returns personalized results with advisory section for high-impact changes outside your filter.",
         parameters: [
           { name: "since", in: "query", description: "Filter changes after this date (YYYY-MM-DD)", schema: { type: "string", format: "date" }, example: "2025-01-01" },
           { name: "type", in: "query", description: "Filter by change type", schema: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"] } },
           { name: "vendor", in: "query", description: "Filter by vendor name", schema: { type: "string" } },
-          { name: "vendors", in: "query", description: "Comma-separated vendor names to filter by (e.g. 'Vercel,Supabase,Clerk')", schema: { type: "string" }, example: "Vercel,Supabase" }
+          { name: "vendors", in: "query", description: "Comma-separated vendor names to filter by (e.g. 'Vercel,Supabase,Clerk'). Triggers personalized response.", schema: { type: "string" }, example: "Vercel,Supabase" },
+          { name: "categories", in: "query", description: "Comma-separated category names to filter by (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match. Triggers personalized response.", schema: { type: "string" }, example: "Database,Hosting" }
         ],
         responses: {
           "200": {
-            description: "List of deal changes",
+            description: "List of deal changes. When vendors or categories are provided, returns personalized response with your_stack_changes, advisory, and summary fields instead of changes/total.",
             content: {
               "application/json": {
                 schema: {
-                  type: "object",
-                  properties: {
-                    changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
-                    total: { type: "integer" }
-                  }
+                  oneOf: [
+                    {
+                      type: "object",
+                      description: "Standard response (no vendor/category filters)",
+                      properties: {
+                        changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
+                        total: { type: "integer" }
+                      }
+                    },
+                    {
+                      type: "object",
+                      description: "Personalized response (vendor/category filters active)",
+                      properties: {
+                        your_stack_changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
+                        advisory: { type: "array", items: { $ref: "#/components/schemas/DealChange" }, description: "Top 3 high-impact changes outside your filter" },
+                        summary: {
+                          type: "object",
+                          properties: {
+                            stack_changes_count: { type: "integer" },
+                            ecosystem_high_impact_count: { type: "integer" },
+                            period_days: { type: "integer" }
+                          }
+                        }
+                      }
+                    }
+                  ]
                 },
                 example: {
                   changes: [{ vendor: "Heroku", change_type: "free_tier_removed", date: "2022-11-28", summary: "Heroku eliminated all free dynos, free Postgres, and free Redis.", previous_state: "Free dyno (550-1000 hrs/mo), free Postgres (10K rows), free Redis (25MB)", current_state: "No free tier. Cheapest plan: $5/mo Eco dyno.", impact: "high", source_url: "https://blog.heroku.com/next-chapter", category: "Cloud Hosting", alternatives: ["Railway", "Render", "Fly.io"] }],
