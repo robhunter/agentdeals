@@ -6,6 +6,7 @@ import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
+import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 
 function toConciseOffer(offer: Offer | EnrichedOffer) {
   return { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url };
@@ -33,6 +34,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         readOnlyHint: true,
         destructiveHint: false,
       },
+      _meta: TOOL_UI_META.search_deals,
       inputSchema: {
         query: z.string().optional().describe("Keyword search (vendor names, descriptions, tags)"),
         category: z.string().optional().describe("Filter by category. Pass \"list\" to get all categories with counts."),
@@ -138,6 +140,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         readOnlyHint: true,
         destructiveHint: false,
       },
+      _meta: TOOL_UI_META.plan_stack,
       inputSchema: {
         mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: cost analysis at scale. audit: risk + cost + gap analysis."),
         use_case: z.string().optional().describe("What you're building (for recommend mode, e.g. 'Next.js SaaS app')"),
@@ -217,6 +220,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         readOnlyHint: true,
         destructiveHint: false,
       },
+      _meta: TOOL_UI_META.compare_vendors,
       inputSchema: {
         vendors: z.array(z.string()).describe("1 or 2 vendor names. 1 vendor = risk check. 2 vendors = side-by-side comparison."),
         include_risk: z.boolean().optional().describe("Include risk assessment (default: true)"),
@@ -314,6 +318,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         readOnlyHint: true,
         destructiveHint: false,
       },
+      _meta: TOOL_UI_META.track_changes,
       inputSchema: {
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),
@@ -846,6 +851,9 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       return { contents: [{ uri: `agentdeals://guide/${slug}`, text, mimeType: "text/plain" }] };
     }
   );
+
+  // --- MCP Apps UI Resources ---
+  registerMcpAppsResources(server);
 
   return server;
 }
