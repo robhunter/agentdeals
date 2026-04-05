@@ -488,7 +488,7 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 </svg>`;
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home" | "badges" | "estimate" | "stacks";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home" | "badges" | "estimate" | "stacks";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -513,6 +513,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/compare", label: "Compare", section: "compare" },
     { href: "/digest", label: "Digest", section: "digest" },
     { href: "/pricing-changes", label: "Changes", section: "changes" },
+    { href: "/state-of-free-tiers", label: "Report", section: "report" },
     { href: "/expiring", label: "Expiring", section: "expiring" },
     { href: "/freshness", label: "Freshness", section: "freshness" },
     { href: "/stacks", label: "Stacks", section: "stacks" },
@@ -701,6 +702,9 @@ function buildCategoryPage(slug: string): string | null {
     guideLinks.push(`<span class="guide-pill"><a href="/free-django-stack">Free Django Stack</a></span>`);
     guideLinks.push(`<span class="guide-pill"><a href="/free-fastapi-stack">Free FastAPI Stack</a></span>`);
     guideLinks.push(`<span class="guide-pill"><a href="/free-go-stack">Free Go Stack</a></span>`);
+  }
+  if (erosionAffectedCategories.has(categoryName)) {
+    guideLinks.push(`<span class="guide-pill"><a href="/state-of-free-tiers">State of Free Tiers Report</a></span>`);
   }
   guideLinks.push(`<span class="guide-pill"><a href="/stability">Stability Dashboard</a></span>`);
   guideLinks.push(`<span class="guide-pill"><a href="/setup">Setup Guide</a></span>`);
@@ -2625,6 +2629,18 @@ const saasRelevantCategories = new Set([
 const hostingCategories = new Set([
   "Cloud Hosting", "Infrastructure", "Cloud IaaS", "Server Management",
 ]);
+
+// Categories most affected by free tier erosion — for cross-linking to the State of Free Tiers report
+const erosionAffectedCategories = (() => {
+  const negTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
+  const catNeg = new Map<string, number>();
+  for (const c of dealChanges) {
+    if (c.category && negTypes.has(c.change_type)) {
+      catNeg.set(c.category, (catNeg.get(c.category) ?? 0) + 1);
+    }
+  }
+  return new Set([...catNeg.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).map(e => e[0]));
+})();
 
 function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
@@ -5687,6 +5703,10 @@ ${mcpCtaCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Alternatives Guides</div>
   <h1>Alternatives Guides</h1>
   <p class="subtitle">In-depth migration guides for major developer tool changes. Each guide compares free alternatives with service matrices, pricing details, and migration timelines.</p>
+
+  <div style="margin-bottom:1.5rem;padding:1rem 1.25rem;border:1px solid rgba(248,81,73,0.2);border-radius:8px;background:rgba(248,81,73,0.04)">
+    <span style="color:var(--text);font-size:.9rem">Free tiers are eroding &mdash; see our <a href="/state-of-free-tiers" style="color:var(--accent);font-weight:500">State of Free Tiers Report</a> for which categories are most affected and which vendors are still expanding.</span>
+  </div>
 
   <div class="hub-cards">
     ${cards}
@@ -34862,7 +34882,7 @@ ${globalNavCss()}
 </head>
 <body>
 <div class="container">
-  ${buildGlobalNav("guides")}
+  ${buildGlobalNav("report")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers</div>
   <h1>State of Developer Free Tiers (2026)</h1>
   <p class="page-meta">${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story. Last updated ${now}.</p>
@@ -38284,6 +38304,10 @@ ${globalNavCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Pricing Trends</div>
   <h1>Pricing Trends by Category</h1>
   <p class="page-meta">${allChanges.length} tracked pricing changes across ${totalCategories} categories. Ranked by volatility.</p>
+  <div style="margin-bottom:1.5rem;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)">
+    <a href="/state-of-free-tiers" style="color:var(--accent);text-decoration:none;font-size:.95rem;font-weight:500">Read the full State of Free Tiers Report</a>
+    <span style="color:var(--text-muted);font-size:.85rem"> &mdash; data-driven analysis of erosion patterns, category trends, and which vendors are still expanding.</span>
+  </div>
   <div class="section-label">Categories with pricing changes</div>
   <div class="trend-list">
 ${catRows}
@@ -38798,6 +38822,12 @@ ${globalNavCss()}
     <div class="stat-item"><div class="stat-num stat-purple">${stats.categories}</div><div class="stat-label">Categories</div></div>
     <div class="stat-item"><div class="stat-num stat-cyan">4</div><div class="stat-label">MCP Tools</div></div>
     <div class="stat-item"><div class="stat-num">${stats.dealChanges}</div><div class="stat-label">Changes Tracked</div></div>
+  </div>
+
+  <div style="text-align:center;margin:-1.5rem auto 2.5rem;max-width:640px">
+    <a href="/state-of-free-tiers" style="display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text-muted);font-size:.85rem;text-decoration:none;transition:all .2s">
+      <span style="color:#f85149;font-weight:600">${dealChanges.filter(c => ["free_tier_removed","limits_reduced","restriction","open_source_killed","product_deprecated"].includes(c.change_type)).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${dealChanges.filter(c => ["new_free_tier","limits_increased","startup_program_expanded"].includes(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
+    </a>
   </div>
 
 ${buildChangingSoonSection()}
