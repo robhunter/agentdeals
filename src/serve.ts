@@ -488,7 +488,7 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 </svg>`;
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home" | "badges" | "estimate";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home" | "badges" | "estimate" | "stacks";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -515,6 +515,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/pricing-changes", label: "Changes", section: "changes" },
     { href: "/expiring", label: "Expiring", section: "expiring" },
     { href: "/freshness", label: "Freshness", section: "freshness" },
+    { href: "/stacks", label: "Stacks", section: "stacks" },
     { href: "/estimate", label: "Estimate", section: "estimate" },
     { href: "/badges", label: "Badges", section: "badges" },
     { href: "/api/docs", label: "API", section: "api" },
@@ -35381,6 +35382,554 @@ function copyConfig(btn){
 </html>`;
 }
 
+// --- Curated Stack Templates (/stacks) ---
+
+interface StackService {
+  category: string;      // e.g. "Database", "Hosting"
+  vendor: string;        // display name
+  slug: string;          // for /vendor/:slug links and estimator pre-fill
+  estimatorCategory: string; // maps to estimator category id (database, hosting, auth, etc.)
+  freeTier: string;      // free tier summary
+  whyChosen: string;     // short reason for recommendation
+  starter: number;       // $/mo at ~1K MAU
+  growth: number;        // $/mo at ~10K MAU
+  scale: number;         // $/mo at ~100K MAU
+}
+
+interface StackSwap {
+  from: string;          // vendor name
+  to: string;            // vendor name
+  toSlug: string;        // for /vendor/:slug link
+  saving: string;        // e.g. "Save $50/mo at 100K users"
+}
+
+interface StackTemplate {
+  slug: string;          // URL: /stacks/:slug
+  title: string;         // page title
+  metaDesc: string;
+  heroSubtitle: string;  // one-line value prop
+  description: string;   // 2-3 sentence intro
+  services: StackService[];
+  swaps: StackSwap[];
+  relatedComparisons: { href: string; label: string }[];
+  relatedGuides: { href: string; label: string }[];
+}
+
+const STACK_TEMPLATES: StackTemplate[] = [
+  {
+    slug: "saas-mvp",
+    title: "Best Free Stack for a SaaS MVP — Ship for $0/Month in 2026",
+    metaDesc: "Build and launch a SaaS MVP on free tiers. Supabase, Vercel, Clerk, Sentry, Resend, GitHub Actions — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    heroSubtitle: "Everything you need to build and launch a SaaS product without spending a dollar.",
+    description: "The SaaS MVP stack prioritizes developer experience and speed-to-market. Every service here has a generous free tier that covers development through early traction. You can have a production-ready app with auth, database, email, monitoring, and CI/CD — all for $0/month until you have paying customers.",
+    services: [
+      { category: "Database", vendor: "Supabase", slug: "supabase", estimatorCategory: "database", freeTier: "500 MB storage, 50K MAU", whyChosen: "Postgres + auth + storage + realtime in one platform. Perfect for MVPs that need to move fast.", starter: 25, growth: 25, scale: 75 },
+      { category: "Hosting", vendor: "Vercel", slug: "vercel", estimatorCategory: "hosting", freeTier: "100 GB bandwidth, 1M function calls", whyChosen: "Best-in-class Next.js deployment with instant previews and edge functions.", starter: 20, growth: 20, scale: 150 },
+      { category: "Auth", vendor: "Clerk", slug: "clerk", estimatorCategory: "auth", freeTier: "50K monthly active users", whyChosen: "Most generous free auth. Drop-in components, MFA, organizations — all free up to 50K MAU.", starter: 0, growth: 0, scale: 100 },
+      { category: "Monitoring", vendor: "Sentry", slug: "sentry", estimatorCategory: "monitoring", freeTier: "5K errors/mo, 1 user", whyChosen: "Industry-standard error tracking with source maps, breadcrumbs, and release tracking.", starter: 26, growth: 26, scale: 80 },
+      { category: "Email", vendor: "Resend", slug: "resend", estimatorCategory: "email", freeTier: "3K emails/mo", whyChosen: "Modern email API built for developers. React email templates, excellent deliverability.", starter: 0, growth: 20, scale: 90 },
+      { category: "CI/CD", vendor: "GitHub Actions", slug: "github-actions", estimatorCategory: "cicd", freeTier: "2K minutes/mo (private repos)", whyChosen: "Native to your repo. No extra config, generous free tier for private repos.", starter: 0, growth: 4, scale: 21 },
+    ],
+    swaps: [
+      { from: "Vercel", to: "Cloudflare Pages", toSlug: "cloudflare-pages", saving: "Save $150/mo at 100K users — unlimited bandwidth, $0 at any scale" },
+      { from: "Sentry", to: "Grafana Cloud", toSlug: "grafana-cloud", saving: "Save $80/mo at 100K users — 10K metrics and 50 GB logs free" },
+    ],
+    relatedComparisons: [
+      { href: "/supabase-vs-firebase", label: "Supabase vs Firebase" },
+      { href: "/vercel-vs-netlify", label: "Vercel vs Netlify" },
+    ],
+    relatedGuides: [
+      { href: "/free-saas-stack", label: "Complete SaaS Stack Deep-Dive" },
+      { href: "/free-nextjs-stack", label: "Free Next.js Stack" },
+      { href: "/auth-comparison-2026", label: "Auth Comparison 2026" },
+    ],
+  },
+  {
+    slug: "side-project",
+    title: "Best Free Stack for a Side Project — Zero Cost, Zero Hassle in 2026",
+    metaDesc: "Build side projects on completely free tiers. Turso, Render, Firebase Auth, BetterStack, GitHub Actions — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    heroSubtitle: "Build your side project without worrying about costs. Every service here stays free for hobby use.",
+    description: "Side projects need services that stay free forever — not free trials that expire. This stack uses genuinely free tiers with no credit card required. Optimized for solo developers who want to ship fast and keep costs at exactly $0 for as long as possible.",
+    services: [
+      { category: "Database", vendor: "Turso", slug: "turso", estimatorCategory: "database", freeTier: "100 DBs, 5 GB storage", whyChosen: "Most generous free database tier. 5 GB storage, edge SQLite, no inactivity pausing.", starter: 0, growth: 29, scale: 29 },
+      { category: "Hosting", vendor: "Render", slug: "render", estimatorCategory: "hosting", freeTier: "512 MB RAM, 0.1 CPU", whyChosen: "Free web services with auto-deploy from GitHub. Spins down after inactivity but restarts on request.", starter: 7, growth: 25, scale: 85 },
+      { category: "Auth", vendor: "Firebase Auth", slug: "firebase", estimatorCategory: "auth", freeTier: "50K MAU", whyChosen: "Completely free auth up to 50K MAU. No platform lock-in required — use just the auth.", starter: 0, growth: 0, scale: 5 },
+      { category: "Monitoring", vendor: "BetterStack", slug: "betterstack", estimatorCategory: "monitoring", freeTier: "10 monitors, 3 GB logs", whyChosen: "Free uptime monitoring with 10 monitors and status pages. Know when your side project goes down.", starter: 0, growth: 25, scale: 85 },
+      { category: "Email", vendor: "Brevo", slug: "brevo", estimatorCategory: "email", freeTier: "300 emails/day", whyChosen: "300 emails/day free — more than enough for side project transactional email.", starter: 0, growth: 25, scale: 65 },
+      { category: "CI/CD", vendor: "GitHub Actions", slug: "github-actions", estimatorCategory: "cicd", freeTier: "2K minutes/mo (private repos)", whyChosen: "Already where your code lives. Free tier covers any side project CI needs.", starter: 0, growth: 4, scale: 21 },
+    ],
+    swaps: [
+      { from: "Render", to: "Cloudflare Pages", toSlug: "cloudflare-pages", saving: "Save $85/mo at 100K users — if your project is static/Jamstack, Cloudflare Pages is free at any scale" },
+      { from: "Turso", to: "CockroachDB", toSlug: "cockroachdb", saving: "Get 10 GiB storage free — better for side projects that grow unexpectedly" },
+    ],
+    relatedComparisons: [
+      { href: "/railway-vs-render", label: "Railway vs Render" },
+      { href: "/neon-vs-supabase", label: "Neon vs Supabase" },
+    ],
+    relatedGuides: [
+      { href: "/hosting-alternatives", label: "Hosting Alternatives" },
+      { href: "/database-alternatives", label: "Database Alternatives" },
+      { href: "/free-frontend-stack", label: "Free Frontend Stack" },
+    ],
+  },
+  {
+    slug: "ai-startup",
+    title: "Best Free Stack for an AI Startup — Build AI Products for $0/Month in 2026",
+    metaDesc: "Build AI products on free tiers. Neon, Railway, Supabase Auth, Grafana Cloud, Postmark, CircleCI — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    heroSubtitle: "Infrastructure for AI startups that need fast iteration and reliable observability.",
+    description: "AI startups burn through compute budgets fast — save infrastructure costs by using free tiers for everything except your model API. This stack pairs a serverless Postgres database (great for embeddings and vector search via pgvector) with Railway for flexible container hosting and Grafana Cloud for the observability you need when debugging model behavior.",
+    services: [
+      { category: "Database", vendor: "Neon", slug: "neon", estimatorCategory: "database", freeTier: "0.5 GB storage, 100 CU-hours", whyChosen: "Serverless Postgres with pgvector for embeddings. Branching for A/B testing different schemas.", starter: 19, growth: 69, scale: 350 },
+      { category: "Hosting", vendor: "Railway", slug: "railway", estimatorCategory: "hosting", freeTier: "$5 one-time credit", whyChosen: "Container-native hosting that handles GPU-adjacent workloads. No cold starts, great for API servers.", starter: 5, growth: 20, scale: 100 },
+      { category: "Auth", vendor: "Supabase Auth", slug: "supabase", estimatorCategory: "auth", freeTier: "50K MAU", whyChosen: "50K MAU free with social login and JWT tokens. Lightweight and API-first.", starter: 0, growth: 0, scale: 25 },
+      { category: "Monitoring", vendor: "Grafana Cloud", slug: "grafana-cloud", estimatorCategory: "monitoring", freeTier: "10K metrics, 50 GB logs", whyChosen: "Generous free logs (50 GB) — critical for debugging AI pipelines and model behavior.", starter: 0, growth: 29, scale: 299 },
+      { category: "Email", vendor: "Postmark", slug: "postmark", estimatorCategory: "email", freeTier: "100 emails/mo", whyChosen: "Best deliverability for transactional email. Your AI product notifications always land.", starter: 15, growth: 50, scale: 215 },
+      { category: "CI/CD", vendor: "CircleCI", slug: "circleci", estimatorCategory: "cicd", freeTier: "30K credits/mo", whyChosen: "30K free credits cover heavy test suites. Docker layer caching speeds up ML pipeline builds.", starter: 0, growth: 15, scale: 25 },
+    ],
+    swaps: [
+      { from: "Postmark", to: "Resend", toSlug: "resend", saving: "Save $125/mo at 100K users — Resend has a larger free tier (3K vs 100 emails/mo)" },
+      { from: "Grafana Cloud", to: "New Relic", toSlug: "new-relic", saving: "Get 100 GB free ingest — better for startups that need APM + logs in one place" },
+    ],
+    relatedComparisons: [
+      { href: "/datadog-vs-new-relic", label: "Datadog vs New Relic" },
+      { href: "/neon-vs-supabase", label: "Neon vs Supabase" },
+    ],
+    relatedGuides: [
+      { href: "/free-ai-stack", label: "Free AI/ML Stack Deep-Dive" },
+      { href: "/ai-ml-alternatives", label: "AI/ML Alternatives" },
+      { href: "/monitoring-comparison-2026", label: "Monitoring Comparison 2026" },
+    ],
+  },
+  {
+    slug: "open-source",
+    title: "Best Free Stack for an Open-Source Project — CI, Hosting, and Community for $0 in 2026",
+    metaDesc: "Run open-source projects on free tiers. CockroachDB, Netlify, GitHub OAuth, BetterStack, GitHub Actions, Codecov — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    heroSubtitle: "Free infrastructure for open-source maintainers. Focus on your code, not your cloud bill.",
+    description: "Open-source projects get special treatment from most cloud providers — free tiers are more generous and often unlimited for public repos. This stack leverages those OSS advantages with services that have stable, long-standing free tiers and strong community support.",
+    services: [
+      { category: "Database", vendor: "CockroachDB", slug: "cockroachdb", estimatorCategory: "database", freeTier: "10 GiB storage", whyChosen: "10 GiB free distributed SQL. Excellent for OSS projects that need a resilient, scalable database.", starter: 0, growth: 0, scale: 295 },
+      { category: "Hosting", vendor: "Netlify", slug: "netlify", estimatorCategory: "hosting", freeTier: "300 credits/mo", whyChosen: "Great for docs sites and project landing pages. Deploy previews for every PR.", starter: 19, growth: 19, scale: 99 },
+      { category: "Auth", vendor: "WorkOS", slug: "workos", estimatorCategory: "auth", freeTier: "1M MAU (AuthKit)", whyChosen: "1M MAU free — effectively unlimited for any OSS project's auth needs.", starter: 0, growth: 0, scale: 0 },
+      { category: "Monitoring", vendor: "BetterStack", slug: "betterstack", estimatorCategory: "monitoring", freeTier: "10 monitors, 3 GB logs", whyChosen: "Free status page for your OSS project. Users can check uptime without filing issues.", starter: 0, growth: 25, scale: 85 },
+      { category: "Email", vendor: "Resend", slug: "resend", estimatorCategory: "email", freeTier: "3K emails/mo", whyChosen: "3K emails/mo free covers contributor notifications and community updates.", starter: 0, growth: 20, scale: 90 },
+      { category: "CI/CD", vendor: "GitHub Actions", slug: "github-actions", estimatorCategory: "cicd", freeTier: "Unlimited for public repos", whyChosen: "Unlimited free minutes for public repos. The standard for OSS CI/CD.", starter: 0, growth: 0, scale: 0 },
+    ],
+    swaps: [
+      { from: "Netlify", to: "Cloudflare Pages", toSlug: "cloudflare-pages", saving: "Save $99/mo at 100K users — unlimited bandwidth and builds for static sites" },
+      { from: "CockroachDB", to: "Neon", toSlug: "neon", saving: "Better developer experience with branching and scale-to-zero, though smaller free tier (0.5 GB)" },
+    ],
+    relatedComparisons: [
+      { href: "/vercel-vs-netlify", label: "Vercel vs Netlify" },
+    ],
+    relatedGuides: [
+      { href: "/hosting-alternatives", label: "Hosting Alternatives" },
+      { href: "/ci-cd-alternatives", label: "CI/CD Alternatives" },
+      { href: "/auth-comparison-2026", label: "Auth Comparison 2026" },
+    ],
+  },
+  {
+    slug: "api-first",
+    title: "Best Free Stack for an API-First Product — Build APIs for $0/Month in 2026",
+    metaDesc: "Build API products on free tiers. Neon, Fly.io, Auth0, New Relic, Mailgun, GitHub Actions — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    heroSubtitle: "Purpose-built for API products. Low latency, strong auth, and excellent observability.",
+    description: "API-first products need low-latency hosting, robust authentication with API keys and OAuth, and deep observability into request patterns. This stack pairs Fly.io's edge compute with Auth0's enterprise-grade auth and New Relic's generous free APM — giving you production-ready API infrastructure at $0/month.",
+    services: [
+      { category: "Database", vendor: "Neon", slug: "neon", estimatorCategory: "database", freeTier: "0.5 GB storage, 100 CU-hours", whyChosen: "Serverless Postgres scales to zero between requests. Connection pooling handles concurrent API clients.", starter: 19, growth: 69, scale: 350 },
+      { category: "Hosting", vendor: "Fly.io", slug: "fly-io", estimatorCategory: "hosting", freeTier: "3 shared VMs, 160 GB transfer", whyChosen: "Edge compute in 30+ regions. Low latency for API consumers worldwide.", starter: 0, growth: 15, scale: 75 },
+      { category: "Auth", vendor: "Auth0", slug: "auth0", estimatorCategory: "auth", freeTier: "25K MAU", whyChosen: "Enterprise-grade OAuth2/OIDC. API key management, rate limiting, and machine-to-machine tokens.", starter: 0, growth: 35, scale: 240 },
+      { category: "Monitoring", vendor: "New Relic", slug: "new-relic", estimatorCategory: "monitoring", freeTier: "100 GB ingest/mo", whyChosen: "100 GB free ingest with APM — see every API request, latency distribution, and error rate.", starter: 0, growth: 0, scale: 49 },
+      { category: "Email", vendor: "Mailgun", slug: "mailgun", estimatorCategory: "email", freeTier: "100 emails/day", whyChosen: "Reliable transactional email with detailed delivery analytics. Good for API key notifications and alerts.", starter: 0, growth: 35, scale: 90 },
+      { category: "CI/CD", vendor: "GitHub Actions", slug: "github-actions", estimatorCategory: "cicd", freeTier: "2K minutes/mo (private repos)", whyChosen: "Standard CI/CD with matrix builds for testing API across multiple client SDK versions.", starter: 0, growth: 4, scale: 21 },
+    ],
+    swaps: [
+      { from: "Auth0", to: "WorkOS", toSlug: "workos", saving: "Save $240/mo at 100K users — WorkOS AuthKit gives 1M MAU free" },
+      { from: "New Relic", to: "Grafana Cloud", toSlug: "grafana-cloud", saving: "Better for custom dashboards — 10K metrics and 50 GB logs free" },
+    ],
+    relatedComparisons: [
+      { href: "/datadog-vs-new-relic", label: "Datadog vs New Relic" },
+      { href: "/railway-vs-render", label: "Railway vs Render" },
+    ],
+    relatedGuides: [
+      { href: "/free-fastapi-stack", label: "Free FastAPI Stack" },
+      { href: "/free-go-stack", label: "Free Go Stack" },
+      { href: "/api-development-alternatives", label: "API Development Alternatives" },
+    ],
+  },
+];
+
+const stackTemplateMap = new Map<string, StackTemplate>();
+for (const t of STACK_TEMPLATES) stackTemplateMap.set(t.slug, t);
+
+function buildStackTemplatePage(slug: string): string | null {
+  const template = stackTemplateMap.get(slug);
+  if (!template) return null;
+
+  const stabilityMap = getStabilityMap();
+
+  // Compute totals
+  const totals = { free: 0, starter: 0, growth: 0, scale: 0 };
+  for (const s of template.services) {
+    totals.starter += s.starter;
+    totals.growth += s.growth;
+    totals.scale += s.scale;
+  }
+
+  // Build estimator pre-fill URL
+  const estimatorParams = template.services.map(s => `${encodeURIComponent(s.estimatorCategory)}=${encodeURIComponent(s.slug)}`).join("&");
+
+  const stabilityColors: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
+  const stabilityLabels: Record<string, string> = { stable: "Stable", watch: "Watch", volatile: "Volatile", improving: "Improving" };
+
+  const costClass = (amount: number) => amount === 0 ? "cost-free" : amount <= 25 ? "cost-low" : amount <= 100 ? "cost-mid" : "cost-high";
+  const formatCost = (amount: number) => amount === 0 ? "$0" : `$${amount.toLocaleString()}`;
+
+  // Stack table rows
+  const tableRows = template.services.map(s => {
+    const stability = stabilityMap.get(s.slug) ?? "stable";
+    const sColor = stabilityColors[stability] ?? stabilityColors.stable;
+    const sLabel = stabilityLabels[stability] ?? "Stable";
+    return `<tr>
+      <td>${escHtmlServer(s.category)}</td>
+      <td class="vendor-name"><a href="/vendor/${escHtmlServer(s.slug)}">${escHtmlServer(s.vendor)}</a><span class="free-tier-info">${escHtmlServer(s.freeTier)}</span></td>
+      <td><span class="stability-dot" style="background:${sColor}" title="${sLabel}"></span> ${sLabel}</td>
+      <td class="cost-free">$0</td>
+      <td class="${costClass(s.starter)}">${formatCost(s.starter)}</td>
+      <td class="${costClass(s.growth)}">${formatCost(s.growth)}</td>
+      <td class="${costClass(s.scale)}">${formatCost(s.scale)}</td>
+    </tr>`;
+  }).join("\n");
+
+  // Why-chosen cards
+  const whyCards = template.services.map(s => {
+    const stability = stabilityMap.get(s.slug) ?? "stable";
+    const sColor = stabilityColors[stability] ?? stabilityColors.stable;
+    const sLabel = stabilityLabels[stability] ?? "Stable";
+    return `<div class="why-card">
+      <div class="why-card-header">
+        <strong>${escHtmlServer(s.category)}: <a href="/vendor/${escHtmlServer(s.slug)}">${escHtmlServer(s.vendor)}</a></strong>
+        <span class="stability-badge" style="background:${sColor}20;color:${sColor};border:1px solid ${sColor}40">${sLabel}</span>
+      </div>
+      <p>${escHtmlServer(s.whyChosen)}</p>
+      <p class="why-free">${escHtmlServer(s.freeTier)}</p>
+    </div>`;
+  }).join("\n");
+
+  // Swaps section
+  const swapsHtml = template.swaps.map(sw =>
+    `<div class="swap-card">
+      <strong>Swap ${escHtmlServer(sw.from)} for <a href="/vendor/${escHtmlServer(sw.toSlug)}">${escHtmlServer(sw.to)}</a></strong>
+      <p>${escHtmlServer(sw.saving)}</p>
+    </div>`
+  ).join("\n");
+
+  // Related links
+  const comparisonLinks = template.relatedComparisons.map(c => `<a href="${c.href}" class="related-link">${escHtmlServer(c.label)}</a>`).join("");
+  const guideLinks = template.relatedGuides.map(g => `<a href="${g.href}" class="related-link">${escHtmlServer(g.label)}</a>`).join("");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": template.title,
+    "description": template.metaDesc,
+    "url": `${BASE_URL}/stacks/${slug}`,
+    "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": template.services.length,
+      "itemListElement": template.services.map((s, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": s.vendor,
+          "applicationCategory": s.category,
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        },
+      })),
+    },
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "AgentDeals", "item": BASE_URL },
+      { "@type": "ListItem", "position": 2, "name": "Stack Templates", "item": `${BASE_URL}/stacks` },
+      { "@type": "ListItem", "position": 3, "name": template.title.split(" — ")[0] },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${escHtmlServer(template.title)} | AgentDeals</title>
+  <meta name="description" content="${escHtmlServer(template.metaDesc)}">
+  <link rel="canonical" href="${BASE_URL}/stacks/${slug}">
+  <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="${BASE_URL}/feed.xml">
+  <meta property="og:title" content="${escHtmlServer(template.title)}">
+  <meta property="og:description" content="${escHtmlServer(template.metaDesc)}">
+  <meta property="og:url" content="${BASE_URL}/stacks/${slug}">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="${BASE_URL}/og-image.png">
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+  <script type="application/ld+json">${JSON.stringify(breadcrumbLd)}</script>
+  <style>
+    :root{--bg:#0f172a;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:"Georgia","Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;--green:#3fb950;--yellow:#d29922;--red:#f85149}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+    .container{max-width:1040px;margin:0 auto;padding:1.5rem}
+    ${globalNavCss()}
+    h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem}
+    h2{font-family:var(--serif);font-size:1.3rem;margin:2rem 0 .75rem;color:var(--text)}
+    p{color:var(--text-muted);margin:.5rem 0;font-size:.9rem}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .breadcrumb{font-size:.8rem;color:var(--text-dim);margin:.5rem 0}
+    .breadcrumb a{color:var(--text-dim)}
+    .breadcrumb a:hover{color:var(--accent)}
+    .subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:.5rem}
+    .description{color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem;line-height:1.7}
+    .cost-summary{display:flex;gap:.75rem;flex-wrap:wrap;margin:1.5rem 0;padding:1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px}
+    .cost-tier{flex:1;min-width:120px;text-align:center;padding:.5rem}
+    .cost-tier .tier-label{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;display:block}
+    .cost-tier .tier-amount{font-size:1.5rem;font-weight:700;display:block;margin-top:.25rem}
+    .cost-tier .tier-amount.cost-free{color:var(--green)}
+    .cost-tier .tier-amount.cost-low{color:var(--green)}
+    .cost-tier .tier-amount.cost-mid{color:var(--yellow)}
+    .cost-tier .tier-amount.cost-high{color:var(--red)}
+    .cost-tier .tier-users{font-size:.7rem;color:var(--text-dim);display:block}
+    .customize-cta{display:inline-flex;align-items:center;gap:.5rem;margin:1rem 0;padding:.75rem 1.25rem;background:var(--accent);color:#fff;border-radius:8px;font-size:.9rem;font-weight:600;text-decoration:none;transition:opacity .15s}
+    .customize-cta:hover{opacity:.9;text-decoration:none;color:#fff}
+    .stack-table{width:100%;border-collapse:collapse;margin:1rem 0;background:var(--bg-elevated);border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+    .stack-table th,.stack-table td{padding:.65rem .75rem;text-align:left;font-size:.85rem;border-bottom:1px solid var(--border)}
+    .stack-table th{background:rgba(0,0,0,.2);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+    .stack-table td{color:var(--text)}
+    .stack-table tr:last-child td{border-bottom:none}
+    .vendor-name{font-weight:600}
+    .vendor-name a{color:var(--text);text-decoration:none}
+    .vendor-name a:hover{color:var(--accent)}
+    .free-tier-info{font-size:.75rem;color:var(--text-dim);font-weight:normal;display:block;margin-top:.15rem}
+    .cost-free{color:var(--green);font-weight:600}
+    .cost-low{color:var(--green)}
+    .cost-mid{color:var(--yellow)}
+    .cost-high{color:var(--red)}
+    .total-row{background:rgba(59,130,246,.08)!important}
+    .total-row td{font-weight:700;border-top:2px solid var(--accent)!important;color:var(--text)}
+    .stability-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.35rem}
+    .stability-badge{font-size:.7rem;padding:.15rem .5rem;border-radius:4px;font-weight:600}
+    .why-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;margin:1rem 0}
+    .why-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1rem}
+    .why-card-header{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap}
+    .why-card-header strong{font-size:.9rem}
+    .why-card-header strong a{color:var(--text)}
+    .why-card-header strong a:hover{color:var(--accent)}
+    .why-card p{font-size:.85rem;color:var(--text-muted);margin:.25rem 0}
+    .why-free{font-size:.8rem!important;color:var(--accent)!important;font-weight:600}
+    .swap-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:.75rem;margin:1rem 0}
+    .swap-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1rem}
+    .swap-card strong{font-size:.9rem}
+    .swap-card p{font-size:.85rem;color:var(--text-muted);margin:.35rem 0 0}
+    .related-section{margin:2rem 0}
+    .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+    .related-link{display:inline-block;padding:.4rem .8rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;font-size:.8rem;color:var(--accent);text-decoration:none}
+    .related-link:hover{border-color:var(--accent);text-decoration:none}
+    ${mcpCtaCss()}
+    .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
+    .footer a{color:var(--accent)}
+    @media(max-width:768px){h1{font-size:1.5rem}.cost-summary{gap:.5rem}.cost-tier .tier-amount{font-size:1.2rem}.stack-table{font-size:.8rem}.stack-table th,.stack-table td{padding:.5rem}.why-cards{grid-template-columns:1fr}.swap-cards{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    ${buildGlobalNav("stacks")}
+    <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/stacks">Stack Templates</a> &rsaquo; ${escHtmlServer(template.title.split(" — ")[0])}</div>
+
+    <h1>${escHtmlServer(template.title.split(" — ")[0])}</h1>
+    <p class="subtitle">${escHtmlServer(template.heroSubtitle)}</p>
+    <p class="description">${escHtmlServer(template.description)}</p>
+
+    <div class="cost-summary">
+      <div class="cost-tier"><span class="tier-label">Free</span><span class="tier-amount cost-free">$0/mo</span><span class="tier-users">0 users</span></div>
+      <div class="cost-tier"><span class="tier-label">Starter</span><span class="tier-amount ${costClass(totals.starter)}">${formatCost(totals.starter)}/mo</span><span class="tier-users">~1K MAU</span></div>
+      <div class="cost-tier"><span class="tier-label">Growth</span><span class="tier-amount ${costClass(totals.growth)}">${formatCost(totals.growth)}/mo</span><span class="tier-users">~10K MAU</span></div>
+      <div class="cost-tier"><span class="tier-label">Scale</span><span class="tier-amount ${costClass(totals.scale)}">${formatCost(totals.scale)}/mo</span><span class="tier-users">~100K MAU</span></div>
+    </div>
+
+    <a href="/estimate?${estimatorParams}" class="customize-cta">Customize in Cost Estimator &rarr;</a>
+
+    <h2>The Stack</h2>
+    <table class="stack-table">
+      <thead><tr>
+        <th>Category</th><th>Service</th><th>Stability</th>
+        <th>Free</th><th>~1K MAU</th><th>~10K MAU</th><th>~100K MAU</th>
+      </tr></thead>
+      <tbody>
+        ${tableRows}
+        <tr class="total-row">
+          <td>Total</td><td></td><td></td>
+          <td class="cost-free">$0/mo</td>
+          <td>${formatCost(totals.starter)}/mo</td>
+          <td>${formatCost(totals.growth)}/mo</td>
+          <td>${formatCost(totals.scale)}/mo</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Why These Services?</h2>
+    <div class="why-cards">
+      ${whyCards}
+    </div>
+
+    <h2>Alternatives &amp; Swaps</h2>
+    <p>Want to customize this stack? Here are smart swaps that can save money at scale:</p>
+    <div class="swap-cards">
+      ${swapsHtml}
+    </div>
+
+    ${template.relatedComparisons.length > 0 || template.relatedGuides.length > 0 ? `
+    <div class="related-section">
+      ${template.relatedComparisons.length > 0 ? `<h2>Related Comparisons</h2><div class="related-links">${comparisonLinks}</div>` : ""}
+      ${template.relatedGuides.length > 0 ? `<h2>Related Guides</h2><div class="related-links">${guideLinks}</div>` : ""}
+    </div>` : ""}
+
+    ${buildMcpCta("Use <code>plan_stack</code> to get AI-powered stack recommendations tailored to your specific use case.")}
+
+    <div class="footer">
+      <p>All pricing data verified from vendor pages as of April 2026. Stability ratings based on <a href="/stability">tracked pricing changes</a>.</p>
+      <p style="margin-top:.5rem"><a href="/stacks">All Stack Templates</a> &middot; <a href="/estimate">Cost Estimator</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/privacy">Privacy</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+function buildStacksIndexPage(): string {
+  const title = "Curated Stack Templates — Best Free Developer Stacks for 2026";
+  const metaDesc = `${STACK_TEMPLATES.length} curated technology stacks for common developer scenarios. Pick a use case, get a complete free-tier stack with verified limits, stability ratings, and cost projections at scale.`;
+
+  const stabilityMap = getStabilityMap();
+  const stabilityColors: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
+
+  const costClass = (amount: number) => amount === 0 ? "cost-free" : amount <= 25 ? "cost-low" : amount <= 100 ? "cost-mid" : "cost-high";
+  const formatCost = (amount: number) => amount === 0 ? "$0" : `$${amount.toLocaleString()}`;
+
+  const templateCards = STACK_TEMPLATES.map(t => {
+    const totalScale = t.services.reduce((sum, s) => sum + s.scale, 0);
+    const serviceNames = t.services.map(s => s.vendor).join(", ");
+    const shortTitle = t.title.split(" — ")[0];
+    return `<a href="/stacks/${escHtmlServer(t.slug)}" class="template-card">
+      <h3>${escHtmlServer(shortTitle)}</h3>
+      <p class="template-subtitle">${escHtmlServer(t.heroSubtitle)}</p>
+      <p class="template-services">${escHtmlServer(serviceNames)}</p>
+      <div class="template-cost">
+        <span class="cost-free">$0/mo free</span>
+        <span class="cost-arrow">&rarr;</span>
+        <span class="${costClass(totalScale)}">$${totalScale}/mo at 100K</span>
+      </div>
+    </a>`;
+  }).join("\n");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": title,
+    "description": metaDesc,
+    "url": `${BASE_URL}/stacks`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": STACK_TEMPLATES.length,
+      "itemListElement": STACK_TEMPLATES.map((t, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "item": {
+          "@type": "Article",
+          "name": t.title,
+          "description": t.heroSubtitle,
+          "url": `${BASE_URL}/stacks/${t.slug}`,
+        },
+      })),
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${escHtmlServer(title)} | AgentDeals</title>
+  <meta name="description" content="${escHtmlServer(metaDesc)}">
+  <link rel="canonical" href="${BASE_URL}/stacks">
+  <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="${BASE_URL}/feed.xml">
+  <meta property="og:title" content="${escHtmlServer(title)}">
+  <meta property="og:description" content="${escHtmlServer(metaDesc)}">
+  <meta property="og:url" content="${BASE_URL}/stacks">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="${BASE_URL}/og-image.png">
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+  <style>
+    :root{--bg:#0f172a;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:"Georgia","Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;--green:#3fb950;--yellow:#d29922;--red:#f85149}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+    .container{max-width:1040px;margin:0 auto;padding:1.5rem}
+    ${globalNavCss()}
+    h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem}
+    h2{font-family:var(--serif);font-size:1.3rem;margin:2rem 0 .75rem;color:var(--text)}
+    p{color:var(--text-muted);margin:.5rem 0;font-size:.9rem}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:1.5rem}
+    .template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;margin:1.5rem 0}
+    .template-card{display:block;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-decoration:none;transition:all .15s}
+    .template-card:hover{border-color:var(--accent);transform:translateY(-2px);text-decoration:none}
+    .template-card h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:0 0 .5rem}
+    .template-subtitle{font-size:.85rem;color:var(--text-muted);margin:0 0 .75rem!important}
+    .template-services{font-size:.8rem;color:var(--text-dim);margin:0 0 .75rem!important;line-height:1.5}
+    .template-cost{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600}
+    .cost-free{color:var(--green)}
+    .cost-low{color:var(--green)}
+    .cost-mid{color:var(--yellow)}
+    .cost-high{color:var(--red)}
+    .cost-arrow{color:var(--text-dim);font-size:.75rem}
+    .cta-section{text-align:center;margin:2rem 0;padding:1.5rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px}
+    .cta-section p{margin:.5rem 0}
+    .cta-btn{display:inline-flex;align-items:center;gap:.5rem;margin:.75rem 0;padding:.75rem 1.25rem;background:var(--accent);color:#fff;border-radius:8px;font-size:.9rem;font-weight:600;text-decoration:none;transition:opacity .15s}
+    .cta-btn:hover{opacity:.9;text-decoration:none;color:#fff}
+    ${mcpCtaCss()}
+    .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
+    .footer a{color:var(--accent)}
+    @media(max-width:768px){h1{font-size:1.5rem}.template-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    ${buildGlobalNav("stacks")}
+
+    <h1>Curated Stack Templates</h1>
+    <p class="subtitle">Complete free-tier stacks for ${STACK_TEMPLATES.length} common developer scenarios. Each stack is verified, rated for stability, and shows real costs at scale.</p>
+
+    <div class="template-grid">
+      ${templateCards}
+    </div>
+
+    <div class="cta-section">
+      <h2>Want to Build Your Own?</h2>
+      <p>Use the interactive cost estimator to pick your own services and compare costs at scale.</p>
+      <a href="/estimate" class="cta-btn">Open Cost Estimator &rarr;</a>
+    </div>
+
+    ${buildMcpCta("Use <code>plan_stack</code> to get AI-powered stack recommendations tailored to your specific use case.")}
+
+    <div class="footer">
+      <p>All pricing data verified from vendor pages as of April 2026. Stability ratings based on <a href="/stability">tracked pricing changes</a>.</p>
+      <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/estimate">Cost Estimator</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/privacy">Privacy</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
 // --- Stack Cost Estimator page ---
 
 interface EstimatorVendorCost {
@@ -39343,6 +39892,18 @@ ${catList}
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/stacks</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  ${STACK_TEMPLATES.map(t => `<url>
+    <loc>${BASE_URL}/stacks/${t.slug}</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join("\n  ")}
+  <url>
     <loc>${BASE_URL}/estimate</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -40045,6 +40606,23 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       "Content-Length": Buffer.byteLength(svg),
     });
     res.end(svg);
+  } else if (url.pathname === "/stacks" && isGetOrHead) {
+    recordApiHit("/stacks");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/stacks", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: STACK_TEMPLATES.length });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildStacksIndexPage());
+  } else if (url.pathname.startsWith("/stacks/") && isGetOrHead) {
+    const stackSlug = url.pathname.slice("/stacks/".length);
+    const stackPage = buildStackTemplatePage(stackSlug);
+    if (stackPage) {
+      recordApiHit(`/stacks/${stackSlug}`);
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/stacks/${stackSlug}`, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(stackPage);
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+    }
   } else if (url.pathname === "/estimate" && isGetOrHead) {
     recordApiHit("/estimate");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/estimate", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -40083,6 +40661,8 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/digest/archive`,
     `${BASE_URL}/trends`,
     `${BASE_URL}/estimate`,
+    `${BASE_URL}/stacks`,
+    ...STACK_TEMPLATES.map(t => `${BASE_URL}/stacks/${t.slug}`),
     `${BASE_URL}/vendor`,
     `${BASE_URL}/alternative-to`,
   ];
