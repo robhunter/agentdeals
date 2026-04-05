@@ -390,7 +390,105 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home";
+// --- Badge SVG generation ---
+
+type BadgeStatus = "active" | "at-risk" | "removed" | "unknown";
+
+function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: string; verifiedDate: string | null } {
+  const vendorName = vendorSlugMap.get(vendorSlug);
+  if (!vendorName) return { status: "unknown", label: "unknown", verifiedDate: null };
+
+  // Check for removal/deprecation in deal changes
+  const vendorChanges = dealChanges.filter(c => toSlug(c.vendor) === vendorSlug);
+  const hasRemoval = vendorChanges.some(c =>
+    c.change_type === "free_tier_removed" || c.change_type === "product_deprecated" || c.change_type === "open_source_killed"
+  );
+  if (hasRemoval) {
+    const removal = vendorChanges.find(c =>
+      c.change_type === "free_tier_removed" || c.change_type === "product_deprecated" || c.change_type === "open_source_killed"
+    )!;
+    return { status: "removed", label: removal.change_type === "product_deprecated" ? "deprecated" : "free tier removed", verifiedDate: removal.date };
+  }
+
+  // Find most recent verifiedDate for this vendor
+  const vendorOffers = offers.filter(o => toSlug(o.vendor) === vendorSlug);
+  if (vendorOffers.length === 0) return { status: "unknown", label: "unknown", verifiedDate: null };
+
+  const latestVerified = vendorOffers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, vendorOffers[0].verifiedDate);
+  const daysSince = Math.floor((Date.now() - new Date(latestVerified).getTime()) / (1000 * 60 * 60 * 24));
+
+  // Check for recent negative changes (at-risk)
+  const hasRecentNegativeChange = vendorChanges.some(c =>
+    (c.change_type === "limits_reduced" || c.change_type === "pricing_restructured" || c.change_type === "pricing_model_change") &&
+    Math.floor((Date.now() - new Date(c.date).getTime()) / (1000 * 60 * 60 * 24)) <= 90
+  );
+
+  if (hasRecentNegativeChange || daysSince > 30) {
+    return { status: "at-risk", label: hasRecentNegativeChange ? "at risk" : "stale", verifiedDate: latestVerified };
+  }
+
+  return { status: "active", label: "active", verifiedDate: latestVerified };
+}
+
+const BADGE_COLORS: Record<BadgeStatus, string> = {
+  "active": "#3fb950",
+  "at-risk": "#d29922",
+  "removed": "#f85149",
+  "unknown": "#8b949e",
+};
+
+function escXml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+}
+
+function measureTextWidth(text: string, fontSize: number): number {
+  // Approximate character width for DejaVu Sans / Verdana at given font size
+  // Average char width ~6.5px at 11px font size
+  const avgWidth = fontSize * 0.59;
+  return Math.ceil(text.length * avgWidth);
+}
+
+function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "flat", customLabel?: string): string {
+  const { status, label: statusLabel, verifiedDate } = getBadgeStatus(vendorSlug);
+  const vendorName = vendorSlugMap.get(vendorSlug);
+
+  const leftText = customLabel || (vendorName ? `${vendorName} free tier` : vendorSlug);
+  const dateStr = verifiedDate ? new Date(verifiedDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "";
+  const rightText = status === "unknown" ? "not found" : `${statusLabel}${dateStr ? ` · ${dateStr}` : ""}`;
+
+  const fontSize = 11;
+  const padding = 8;
+  const leftWidth = measureTextWidth(leftText, fontSize) + padding * 2;
+  const rightWidth = measureTextWidth(rightText, fontSize) + padding * 2;
+  const totalWidth = leftWidth + rightWidth;
+  const height = 20;
+  const radius = style === "flat-square" ? 0 : 3;
+  const color = BADGE_COLORS[status];
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${totalWidth}" height="${height}" role="img" aria-label="${escXml(leftText)}: ${escXml(rightText)}">
+  <title>${escXml(leftText)}: ${escXml(rightText)}</title>
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="${totalWidth}" height="${height}" rx="${radius}" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="${leftWidth}" height="${height}" fill="#555"/>
+    <rect x="${leftWidth}" width="${rightWidth}" height="${height}" fill="${color}"/>
+    <rect width="${totalWidth}" height="${height}" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="${fontSize}">
+    <text aria-hidden="true" x="${leftWidth / 2}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="${(leftWidth - padding * 2) * 10}" lengthAdjust="spacing">${escXml(leftText)}</text>
+    <text x="${leftWidth / 2}" y="140" transform="scale(.1)" fill="#fff" textLength="${(leftWidth - padding * 2) * 10}" lengthAdjust="spacing">${escXml(leftText)}</text>
+    <text aria-hidden="true" x="${(leftWidth + leftWidth + rightWidth) / 2}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="${(rightWidth - padding * 2) * 10}" lengthAdjust="spacing">${escXml(rightText)}</text>
+    <text x="${(leftWidth + leftWidth + rightWidth) / 2}" y="140" transform="scale(.1)" fill="#fff" textLength="${(rightWidth - padding * 2) * 10}" lengthAdjust="spacing">${escXml(rightText)}</text>
+  </g>
+</svg>`;
+}
+
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home" | "badges";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -417,6 +515,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/pricing-changes", label: "Changes", section: "changes" },
     { href: "/expiring", label: "Expiring", section: "expiring" },
     { href: "/freshness", label: "Freshness", section: "freshness" },
+    { href: "/badges", label: "Badges", section: "badges" },
     { href: "/api/docs", label: "API", section: "api" },
     { href: "/setup", label: "Setup", section: "setup" },
   ];
@@ -35283,6 +35382,175 @@ function copyConfig(btn){
 
 // --- Pricing Changes Changelog page ---
 
+function buildBadgesPage(): string {
+  // Popular vendors for preview
+  const previewVendors = ["vercel", "supabase", "cloudflare", "neon", "railway", "sentry", "auth0", "stripe", "github", "netlify", "heroku", "render", "clerk", "postmark", "datadog"];
+  const previewBadges = previewVendors
+    .filter(slug => vendorSlugMap.has(slug))
+    .map(slug => {
+      const name = vendorSlugMap.get(slug)!;
+      const { status } = getBadgeStatus(slug);
+      return { slug, name, status };
+    });
+
+  // All vendors grouped by status
+  const allVendors = Array.from(vendorSlugMap.entries())
+    .map(([slug, name]) => ({ slug, name, ...getBadgeStatus(slug) }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const statusCounts = { active: 0, "at-risk": 0, removed: 0, unknown: 0 };
+  for (const v of allVendors) statusCounts[v.status]++;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Free Tier Status Badges — Embeddable SVG Badges for READMEs | AgentDeals</title>
+  <meta name="description" content="Embeddable free tier status badges for GitHub READMEs, docs, and blog posts. Show whether a vendor's free tier is active, at risk, or removed.">
+  <link rel="canonical" href="${BASE_URL}/badges">
+  <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="${BASE_URL}/feed.xml">
+  <meta property="og:title" content="Free Tier Status Badges — AgentDeals">
+  <meta property="og:description" content="Embeddable SVG badges showing free tier status for ${allVendors.length}+ developer tools.">
+  <meta property="og:url" content="${BASE_URL}/badges">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="${BASE_URL}/og-image.png">
+  <script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Free Tier Status Badges",
+    "description": `Embeddable SVG badges showing free tier status for ${allVendors.length}+ developer tools.`,
+    "url": `${BASE_URL}/badges`,
+    "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+  })}</script>
+  <style>
+    :root{--bg:#0f172a;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:"Georgia","Times New Roman",serif}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    .container{max-width:960px;margin:0 auto;padding:1.5rem}
+    ${globalNavCss()}
+    h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem}
+    h2{font-family:var(--serif);font-size:1.4rem;margin:2rem 0 .75rem;color:var(--text)}
+    h3{font-family:var(--serif);font-size:1.1rem;margin:1.5rem 0 .5rem;color:var(--text)}
+    p{color:var(--text-muted);margin:.5rem 0;font-size:.9rem}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:1.5rem}
+    .stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0 2rem;padding:1rem;background:var(--bg-elevated);border-radius:10px;border:1px solid var(--border)}
+    .stat{text-align:center;flex:1;min-width:80px}
+    .stat-num{font-size:1.5rem;font-weight:700;color:var(--text)}
+    .stat-num.green{color:#3fb950}
+    .stat-num.yellow{color:#d29922}
+    .stat-num.red{color:#f85149}
+    .stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
+    .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+    .preview-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;flex-direction:column;gap:.75rem}
+    .preview-badge{display:flex;align-items:center;gap:.5rem}
+    .preview-badge img{height:20px}
+    .embed-code{background:#0d1117;border:1px solid var(--border);border-radius:6px;padding:.5rem .75rem;font-family:"SFMono-Regular",Consolas,monospace;font-size:.75rem;color:#c9d1d9;overflow-x:auto;white-space:nowrap;position:relative;cursor:pointer}
+    .embed-code:hover{border-color:var(--accent)}
+    .embed-code::after{content:"click to copy";position:absolute;right:.5rem;top:50%;transform:translateY(-50%);font-size:.65rem;color:var(--text-muted);opacity:0;transition:opacity .15s}
+    .embed-code:hover::after{opacity:1}
+    .format-tabs{display:flex;gap:.25rem;margin-bottom:.5rem}
+    .format-tab{font-size:.7rem;padding:.2rem .5rem;border-radius:4px;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer}
+    .format-tab.active{background:var(--accent-glow);color:var(--accent);border-color:var(--accent)}
+    .how-to{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0}
+    .how-to ol{padding-left:1.5rem;color:var(--text-muted);font-size:.9rem}
+    .how-to li{margin:.5rem 0}
+    .how-to code{background:#0d1117;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;color:#c9d1d9}
+    .vendor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;margin:1rem 0}
+    .vendor-badge-link{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;text-decoration:none;font-size:.8rem;color:var(--text-muted);transition:border-color .15s}
+    .vendor-badge-link:hover{border-color:var(--accent);text-decoration:none}
+    .vendor-badge-link img{height:20px}
+    .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    ${mcpCtaCss()}
+    .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
+    .footer a{color:var(--accent)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    ${buildGlobalNav("badges")}
+
+    <h1>Free Tier Status Badges</h1>
+    <p class="subtitle">Embeddable SVG badges for GitHub READMEs, documentation, and blog posts. Show whether a vendor's free tier is active, at risk, or removed — powered by AgentDeals' verified pricing data.</p>
+
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-num">${allVendors.length}</div><div class="stat-label">Vendors</div></div>
+      <div class="stat"><div class="stat-num green">${statusCounts.active}</div><div class="stat-label">Active</div></div>
+      <div class="stat"><div class="stat-num yellow">${statusCounts["at-risk"]}</div><div class="stat-label">At Risk</div></div>
+      <div class="stat"><div class="stat-num red">${statusCounts.removed}</div><div class="stat-label">Removed</div></div>
+    </div>
+
+    <h2>Badge Preview</h2>
+    <div class="preview-grid">
+${previewBadges.map(v => `      <div class="preview-card">
+        <div class="preview-badge">
+          <img src="${BASE_URL}/badge/${v.slug}.svg" alt="${escHtmlServer(v.name)} free tier badge">
+          <a href="/vendor/${v.slug}" style="font-size:.85rem">${escHtmlServer(v.name)}</a>
+        </div>
+        <div class="format-tabs">
+          <button class="format-tab active" onclick="showFormat(this,'md','${v.slug}')">Markdown</button>
+          <button class="format-tab" onclick="showFormat(this,'html','${v.slug}')">HTML</button>
+          <button class="format-tab" onclick="showFormat(this,'rst','${v.slug}')">reST</button>
+        </div>
+        <div class="embed-code" id="code-${v.slug}" onclick="copyCode(this)" data-md="[![${escHtmlServer(v.name)} Free Tier](${BASE_URL}/badge/${v.slug}.svg)](${BASE_URL}/vendor/${v.slug})" data-html='&lt;a href=&quot;${BASE_URL}/vendor/${v.slug}&quot;&gt;&lt;img src=&quot;${BASE_URL}/badge/${v.slug}.svg&quot; alt=&quot;${escHtmlServer(v.name)} Free Tier&quot;&gt;&lt;/a&gt;' data-rst=".. image:: ${BASE_URL}/badge/${v.slug}.svg\n   :target: ${BASE_URL}/vendor/${v.slug}\n   :alt: ${escHtmlServer(v.name)} Free Tier">[![${escHtmlServer(v.name)} Free Tier](${BASE_URL}/badge/${v.slug}.svg)](${BASE_URL}/vendor/${v.slug})</div>
+      </div>`).join("\n")}
+    </div>
+
+    <h2>How to Add a Badge to Your README</h2>
+    <div class="how-to">
+      <ol>
+        <li>Find your vendor below or construct the URL: <code>${BASE_URL}/badge/{vendor-slug}.svg</code></li>
+        <li>Copy the embed code in your preferred format (Markdown, HTML, or reStructuredText)</li>
+        <li>Paste it into your README, documentation, or blog post</li>
+        <li>The badge auto-updates as we verify pricing data — no maintenance needed</li>
+      </ol>
+      <p style="margin-top:1rem"><strong>Badge URL pattern:</strong></p>
+      <div class="embed-code" onclick="copyCode(this)" style="margin:.5rem 0">${BASE_URL}/badge/{vendor-slug}.svg</div>
+      <p style="margin-top:.75rem"><strong>Query parameters:</strong></p>
+      <ul style="padding-left:1.5rem;color:var(--text-muted);font-size:.9rem;margin:.5rem 0">
+        <li><code>?style=flat</code> — Standard style (default)</li>
+        <li><code>?style=flat-square</code> — Square corners</li>
+        <li><code>?label=custom+label</code> — Override left-side label text</li>
+      </ul>
+    </div>
+
+    <h2>All Available Badges</h2>
+    <p>Click any badge to view the vendor's free tier details and copy the embed code.</p>
+    <div class="vendor-grid">
+${allVendors.filter(v => v.status !== "unknown").map(v =>
+  `      <a href="/vendor/${v.slug}" class="vendor-badge-link" title="${escHtmlServer(v.name)} — ${v.status}"><span class="status-dot" style="background:${BADGE_COLORS[v.status]}"></span><img src="${BASE_URL}/badge/${v.slug}.svg" alt="${escHtmlServer(v.name)} badge" loading="lazy">${escHtmlServer(v.name)}</a>`
+).join("\n")}
+    </div>
+
+    ${buildMcpCta("Query free tier status for any vendor via MCP tools — search, compare, and track pricing changes programmatically.")}
+
+    <div class="footer">
+      <p>Badges powered by <a href="/">AgentDeals</a> verified pricing data · <a href="/pricing-changes">Pricing Changes</a> · <a href="/stability">Stability Dashboard</a> · <a href="/privacy">Privacy</a></p>
+    </div>
+  </div>
+  <script>
+    function showFormat(btn, fmt, slug) {
+      const card = btn.closest('.preview-card');
+      card.querySelectorAll('.format-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      const code = card.querySelector('.embed-code');
+      code.textContent = code.dataset[fmt].replace(/\\n/g, '\\n');
+    }
+    function copyCode(el) {
+      const text = el.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = el.style.borderColor;
+        el.style.borderColor = '#3fb950';
+        setTimeout(() => el.style.borderColor = orig, 1000);
+      });
+    }
+  </script>
+</body>
+</html>`;
+}
+
 function buildPricingChangesPage(): string {
   const allChanges = loadDealChanges();
   const today = new Date().toISOString().slice(0, 10);
@@ -38647,6 +38915,12 @@ ${catList}
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/badges</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/agent-stack</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -39324,6 +39598,24 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       res.writeHead(404, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Not found" }));
     }
+  } else if (url.pathname.startsWith("/badge/") && url.pathname.endsWith(".svg") && isGetOrHead) {
+    const slug = url.pathname.slice("/badge/".length).replace(/\.svg$/, "");
+    const style = (url.searchParams.get("style") === "flat-square" ? "flat-square" : "flat") as "flat" | "flat-square";
+    const customLabel = url.searchParams.get("label")?.replace(/\+/g, " ") || undefined;
+    recordApiHit("/badge/:slug.svg");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/badge/" + slug + ".svg", params: { style, label: customLabel ?? "" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    const svg = generateBadgeSvg(slug, style, customLabel);
+    res.writeHead(200, {
+      "Content-Type": "image/svg+xml",
+      "Cache-Control": "public, max-age=3600, s-maxage=3600",
+      "Content-Length": Buffer.byteLength(svg),
+    });
+    res.end(svg);
+  } else if (url.pathname === "/badges" && isGetOrHead) {
+    recordApiHit("/badges");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/badges", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildBadgesPage());
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
