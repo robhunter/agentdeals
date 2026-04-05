@@ -5330,11 +5330,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Side-by-side comparison of 20+ developer security tool free tiers — SAST, SCA, DAST, secrets detection, container security, and the DevSecOps cost trap at scale",
   },
   {
-    slug: "state-of-free-tiers-2026",
+    slug: "state-of-free-tiers",
     title: "State of Developer Free Tiers 2026 — Data-Driven Report",
     metaDesc: `We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories. The state of free tiers in 2026: who's cutting back, who's expanding, the most generous free tiers by category, and the cost traps to avoid.`,
     contextHtml: "",
-    tag: "state-of-free-tiers-2026",
+    tag: "state-of-free-tiers",
     primaryVendor: "AgentDeals",
     hubDesc: `Data-driven analysis of ${offers.length.toLocaleString()} developer tool free tiers across ${categories.length} categories — trends, risks, and recommendations`,
   },
@@ -19277,7 +19277,7 @@ function buildStabilityDashboardPage(): string {
 
   // Related pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["free-tier-risk", "state-of-free-tiers-2026", "free-tier-tracker", "free-startup-stack", "q1-2026-developer-pricing-report"].includes(p.slug)
+    ["free-tier-risk", "state-of-free-tiers", "free-tier-tracker", "free-startup-stack", "q1-2026-developer-pricing-report"].includes(p.slug)
   );
 
   // JSON-LD
@@ -19471,7 +19471,7 @@ ${mcpCtaCss()}
       <div class="link-title">All Pricing Changes Timeline</div>
       <div class="link-desc">Full timeline of all ${allChanges.length} tracked developer tool pricing changes</div>
     </a>
-    <a href="/state-of-free-tiers-2026" class="related-page-link">
+    <a href="/state-of-free-tiers" class="related-page-link">
       <div class="link-title">State of Free Tiers 2026</div>
       <div class="link-desc">Comprehensive data-driven report on free tier trends across 1,600+ developer tools</div>
     </a>
@@ -20555,7 +20555,7 @@ function buildTenorAlternativesPage(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["shutdowns", "stability", "free-tier-risk", "state-of-free-tiers-2026"].includes(p.slug)
+    ["shutdowns", "stability", "free-tier-risk", "state-of-free-tiers"].includes(p.slug)
   );
 
   const jsonLd = {
@@ -21579,7 +21579,7 @@ function buildShutdownTrackerPage(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["openai-assistants-alternatives", "stability", "free-tier-risk", "free-tier-tracker", "state-of-free-tiers-2026", "ai-ml-alternatives"].includes(p.slug)
+    ["openai-assistants-alternatives", "stability", "free-tier-risk", "free-tier-tracker", "state-of-free-tiers", "ai-ml-alternatives"].includes(p.slug)
   );
 
   const jsonLd = {
@@ -28571,7 +28571,7 @@ function buildEmailComparison2026Page(): string {
 
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["email-alternatives", "auth-comparison-2026", "monitoring-comparison-2026", "storage-comparison-2026", "free-startup-stack", "free-tier-risk", "free-tier-tracker", "state-of-free-tiers-2026"].includes(p.slug)
+    ["email-alternatives", "auth-comparison-2026", "monitoring-comparison-2026", "storage-comparison-2026", "free-startup-stack", "free-tier-risk", "free-tier-tracker", "state-of-free-tiers"].includes(p.slug)
   );
 
   const relatedPagesHtml = relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
@@ -34642,9 +34642,9 @@ ${mcpCtaCss()}
 
 // --- State of Developer Free Tiers 2026 report ---
 
-function buildStateOfFreeTiers2026Page(): string {
-  const title = "State of Developer Free Tiers 2026 — Data-Driven Report | AgentDeals";
-  const metaDesc = `We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories. The state of free tiers in 2026: who's cutting back, who's expanding, and the cost traps to avoid.`;
+function buildStateOfFreeTiersPage(): string {
+  const title = "State of Developer Free Tiers (2026) — Data from " + offers.length.toLocaleString() + "+ Tools | AgentDeals";
+  const metaDesc = `${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
   const now = new Date().toISOString().split("T")[0];
 
   // --- Compute dynamic stats from actual data ---
@@ -34656,6 +34656,44 @@ function buildStateOfFreeTiers2026Page(): string {
 
   const eligibilityOffers = offers.filter(o => o.eligibility);
   const startupOffers = offers.filter(o => o.tier.toLowerCase().includes("startup") || (o.eligibility && JSON.stringify(o.eligibility).toLowerCase().includes("startup")));
+
+  // Monthly trend data
+  const monthlyChanges = new Map<string, { total: number; negative: number; positive: number }>();
+  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
+  const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+  for (const c of dealChanges) {
+    const month = c.date.slice(0, 7);
+    const entry = monthlyChanges.get(month) ?? { total: 0, negative: 0, positive: 0 };
+    entry.total++;
+    if (negativeTypes.has(c.change_type)) entry.negative++;
+    if (positiveTypes.has(c.change_type)) entry.positive++;
+    monthlyChanges.set(month, entry);
+  }
+  const sortedMonths = [...monthlyChanges.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  const maxMonthTotal = Math.max(...sortedMonths.map(([, v]) => v.total), 1);
+
+  // Change type counts
+  const changeTypeCounts = new Map<string, number>();
+  for (const c of dealChanges) {
+    changeTypeCounts.set(c.change_type, (changeTypeCounts.get(c.change_type) ?? 0) + 1);
+  }
+  const sortedChangeTypes = [...changeTypeCounts.entries()].sort((a, b) => b[1] - a[1]);
+  const maxChangeTypeCount = Math.max(...sortedChangeTypes.map(([, v]) => v), 1);
+
+  // Category erosion analysis
+  const catChangeCounts = new Map<string, { negative: number; positive: number; total: number }>();
+  for (const c of dealChanges) {
+    if (c.category) {
+      const entry = catChangeCounts.get(c.category) ?? { negative: 0, positive: 0, total: 0 };
+      entry.total++;
+      if (negativeTypes.has(c.change_type)) entry.negative++;
+      if (positiveTypes.has(c.change_type)) entry.positive++;
+      catChangeCounts.set(c.category, entry);
+    }
+  }
+  const sortedCatErosion = [...catChangeCounts.entries()]
+    .sort((a, b) => b[1].negative - a[1].negative)
+    .slice(0, 15);
 
   // Category stats
   const catCounts = new Map<string, number>();
@@ -34669,17 +34707,9 @@ function buildStateOfFreeTiers2026Page(): string {
   }
   const sortedCats = [...catCounts.entries()].sort((a, b) => b[1] - a[1]);
 
-  // Deal changes analysis
-  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
-  const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+  // Deal changes analysis (negativeTypes/positiveTypes/changeTypeCounts defined above)
   const negativeChanges = dealChanges.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
   const positiveChanges = dealChanges.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
-
-  // Change type counts
-  const changeTypeCounts = new Map<string, number>();
-  for (const c of dealChanges) {
-    changeTypeCounts.set(c.change_type, (changeTypeCounts.get(c.change_type) ?? 0) + 1);
-  }
 
   // Most generous free tiers by category (top categories with most free options)
   const topFreeCategories = [...catFreeCounts.entries()]
@@ -34757,11 +34787,12 @@ function buildStateOfFreeTiers2026Page(): string {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline: "State of Developer Free Tiers 2026",
+    "@type": "Report",
+    headline: "State of Developer Free Tiers (2026)",
+    name: "State of Developer Free Tiers (2026)",
     description: metaDesc,
-    url: `${BASE_URL}/state-of-free-tiers-2026`,
-    datePublished: now,
+    url: `${BASE_URL}/state-of-free-tiers`,
+    datePublished: "2026-01-01",
     dateModified: now,
     publisher: {
       "@type": "Organization",
@@ -34770,7 +34801,7 @@ function buildStateOfFreeTiers2026Page(): string {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${BASE_URL}/state-of-free-tiers-2026`,
+      "@id": `${BASE_URL}/state-of-free-tiers`,
     },
   };
 
@@ -34781,11 +34812,11 @@ function buildStateOfFreeTiers2026Page(): string {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="${BASE_URL}/state-of-free-tiers-2026">
-<meta property="og:title" content="State of Developer Free Tiers 2026">
+<link rel="canonical" href="${BASE_URL}/state-of-free-tiers">
+<meta property="og:title" content="State of Developer Free Tiers (2026) — Data from ${offers.length.toLocaleString()}+ Tools">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="article">
-<meta property="og:url" content="${BASE_URL}/state-of-free-tiers-2026">
+<meta property="og:url" content="${BASE_URL}/state-of-free-tiers">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -34832,9 +34863,9 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers 2026</div>
-  <h1>State of Developer Free Tiers 2026</h1>
-  <p class="page-meta">Data-driven analysis of ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories. Last updated ${now}.</p>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers</div>
+  <h1>State of Developer Free Tiers (2026)</h1>
+  <p class="page-meta">${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story. Last updated ${now}.</p>
 
   <!-- 1. Executive Summary -->
   <h2>Executive Summary</h2>
@@ -34861,6 +34892,49 @@ ${globalNavCss()}
     <strong>How to read this data:</strong> We track publicly available developer tool free tiers, startup programs, and OSS eligibility across ${categories.length} categories. Every offer is manually verified against pricing pages. &ldquo;Free tier&rdquo; includes perpetual free plans, generous hobby tiers, and always-free offerings &mdash; not limited trials.
   </div>
 
+  <!-- Monthly Trend Visualization -->
+  <h2>Monthly Pricing Change Trend</h2>
+  <p class="section-desc">Pricing changes by month, showing the acceleration in 2026. Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (new free tiers, expansions).</p>
+  <div style="margin:1.5rem 0;overflow-x:auto">
+    ${sortedMonths.map(([month, data]) => {
+      const totalWidth = Math.round((data.total / maxMonthTotal) * 100);
+      const negWidth = data.total > 0 ? Math.round((data.negative / data.total) * 100) : 0;
+      const posWidth = data.total > 0 ? Math.round((data.positive / data.total) * 100) : 0;
+      const neutralWidth = 100 - negWidth - posWidth;
+      return `<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem">
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim);min-width:5rem;text-align:right">${month}</span>
+        <div style="flex:1;display:flex;height:24px;border-radius:4px;overflow:hidden;background:var(--bg-card);max-width:${totalWidth}%;min-width:30px">
+          ${negWidth > 0 ? `<div style="width:${negWidth}%;background:#f85149" title="${data.negative} negative"></div>` : ""}
+          ${neutralWidth > 0 ? `<div style="width:${neutralWidth}%;background:#8b5cf6" title="${data.total - data.negative - data.positive} neutral"></div>` : ""}
+          ${posWidth > 0 ? `<div style="width:${posWidth}%;background:#3fb950" title="${data.positive} positive"></div>` : ""}
+        </div>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-muted);min-width:1.5rem">${data.total}</span>
+      </div>`;
+    }).join("\n    ")}
+    <div style="display:flex;gap:1.5rem;margin-top:.75rem;font-size:.75rem;color:var(--text-dim)">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f85149;vertical-align:middle;margin-right:.25rem"></span> Negative (removals, reductions)</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem"></span> Restructured / Other</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#3fb950;vertical-align:middle;margin-right:.25rem"></span> Positive (new tiers, expansions)</span>
+    </div>
+  </div>
+
+  <!-- Change Type Breakdown -->
+  <h2>Change Type Breakdown</h2>
+  <p class="section-desc">What kinds of pricing changes are we seeing? The breakdown by change type reveals the dominant patterns.</p>
+  <div style="margin:1.5rem 0">
+    ${sortedChangeTypes.map(([type, count]) => {
+      const badge = changeTypeBadgeMap[type] ?? { label: type, color: "#8b949e" };
+      const barWidth = Math.round((count / maxChangeTypeCount) * 100);
+      return `<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem">
+        <span style="display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.7rem;font-weight:600;background:${badge.color};color:#fff;min-width:6rem;text-align:center">${badge.label}</span>
+        <div style="flex:1;height:20px;background:var(--bg-card);border-radius:4px;overflow:hidden">
+          <div style="height:100%;width:${barWidth}%;background:${badge.color};opacity:0.7;border-radius:4px"></div>
+        </div>
+        <span style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted);min-width:1.5rem;text-align:right">${count}</span>
+      </div>`;
+    }).join("\n    ")}
+  </div>
+
   <!-- 3. The Free Tier Squeeze -->
   <h2>The Free Tier Squeeze: Who&rsquo;s Cutting Back</h2>
   <p class="section-desc">Of ${dealChanges.length} tracked pricing changes, ${negativeChanges.length} (${Math.round((negativeChanges.length / dealChanges.length) * 100)}%) are negative for developers &mdash; free tier removals, limit reductions, and new restrictions. The pattern is clear: as companies mature, raise prices, or get acquired, free tiers shrink.</p>
@@ -34876,6 +34950,56 @@ ${globalNavCss()}
     <strong>Trend worth watching:</strong> AI coding tools are in a free-tier arms race. GitHub Copilot launched a free tier (Dec 2025), Google shipped Gemini Code Assist free (Dec 2025), and multiple vendors are competing on generous free completions to capture developer lock-in.
   </div>
   ${brightSpotsHtml}
+
+  <!-- Category Erosion Analysis -->
+  <h2>Category Erosion: Where Free Tiers Are Disappearing</h2>
+  <p class="section-desc">Which of our ${categories.length} categories have been hit hardest by negative pricing changes? This breakdown shows where developers face the most free tier erosion.</p>
+  <div class="cost-table">
+  <table>
+    <thead><tr><th>Category</th><th style="text-align:right">Negative</th><th style="text-align:right">Positive</th><th style="text-align:right">Total</th><th>Erosion</th></tr></thead>
+    <tbody>
+      ${sortedCatErosion.map(([cat, data]) => {
+        const erosionWidth = data.total > 0 ? Math.round((data.negative / data.total) * 100) : 0;
+        const growthWidth = data.total > 0 ? Math.round((data.positive / data.total) * 100) : 0;
+        return `<tr>
+          <td><a href="/category/${toSlug(cat)}">${escHtmlServer(cat)}</a></td>
+          <td style="text-align:right;color:#f85149;font-weight:600">${data.negative}</td>
+          <td style="text-align:right;color:#3fb950;font-weight:600">${data.positive}</td>
+          <td style="text-align:right">${data.total}</td>
+          <td style="width:120px"><div style="display:flex;height:16px;border-radius:4px;overflow:hidden;background:var(--bg-card)">
+            ${erosionWidth > 0 ? `<div style="width:${erosionWidth}%;background:#f85149"></div>` : ""}
+            ${growthWidth > 0 ? `<div style="width:${growthWidth}%;background:#3fb950"></div>` : ""}
+            <div style="flex:1;background:var(--bg-card)"></div>
+          </div></td>
+        </tr>`;
+      }).join("\n      ")}
+    </tbody>
+  </table>
+  </div>
+
+  <!-- Still Free: Stable Vendors -->
+  <h2>Still Free: Vendors You Can Count On</h2>
+  <p class="section-desc">Not everything is eroding. These vendors have strong structural commitment to free tiers &mdash; through open-source foundations, developer-first business models, or cloud provider loss-leader strategies. They represent the safe bets for long-term architecture decisions.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.5rem 0">
+    <div style="padding:1rem;border:1px solid #3fb950;border-radius:8px;background:rgba(63,185,80,0.06)">
+      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:#3fb950">Cloud Provider Loss Leaders</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem">Free tiers subsidized by the larger platform &mdash; they exist to acquire users into the paid ecosystem.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${["Cloudflare", "Vercel", "Netlify", "Railway", "AWS", "Google Cloud", "Azure"].map(v => `<a href="/vendor/${toSlug(v)}" style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)">${v}</a>`).join("")}</div>
+    </div>
+    <div style="padding:1rem;border:1px solid #3fb950;border-radius:8px;background:rgba(63,185,80,0.06)">
+      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:#3fb950">Developer-First Companies</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem">Companies whose business model depends on developer adoption &mdash; the free tier IS the product.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${["Supabase", "Neon", "Resend", "PostHog", "Sentry", "Grafana Cloud", "Upstash"].map(v => `<a href="/vendor/${toSlug(v)}" style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)">${v}</a>`).join("")}</div>
+    </div>
+    <div style="padding:1rem;border:1px solid #3fb950;border-radius:8px;background:rgba(63,185,80,0.06)">
+      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:#3fb950">Open Source Safety Net</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem">Self-hostable alternatives that can&rsquo;t remove free tiers by definition. Always have an exit strategy.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${["GitLab", "Gitea", "Plausible", "Umami", "n8n", "Meilisearch", "MinIO"].map(v => `<a href="/vendor/${toSlug(v)}" style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)">${v}</a>`).join("")}</div>
+    </div>
+  </div>
+  <div class="callout callout-good">
+    <strong>Architecture advice:</strong> For each critical infrastructure component, ensure at least one of your shortlisted vendors is either open-source or a cloud-provider loss leader. When a vendor like PlanetScale or Heroku removes their free tier, you want an exit plan that doesn&rsquo;t require rewriting your stack.
+  </div>
 
   <!-- 5. Startup Credit Programs -->
   <h2>Startup Credit Programs: The Hidden Goldmine</h2>
@@ -34953,6 +35077,42 @@ ${globalNavCss()}
     <li style="margin-bottom:.4rem"><strong>Update frequency:</strong> Continuous. Our <a href="/freshness">data freshness dashboard</a> shows verification recency by category.</li>
     <li style="margin-bottom:.4rem"><strong>Open data:</strong> All data is accessible via our <a href="/api/docs">REST API</a> and <a href="/setup">MCP server</a>. Query it from your AI coding assistant.</li>
   </ul>
+
+  <!-- Track Changes Yourself CTA -->
+  <h2>Track Changes Yourself</h2>
+  <p class="section-desc">All the data behind this report is open and machine-readable. Stay updated on free tier changes through multiple channels:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0">
+    <a href="/pricing-changes" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
+      <div style="font-size:1.5rem;margin-bottom:.5rem">&#128200;</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">Pricing Changes Timeline</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">Full timeline of all ${dealChanges.length} tracked pricing changes with filters</div>
+    </a>
+    <a href="/feed.xml" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
+      <div style="font-size:1.5rem;margin-bottom:.5rem">&#128225;</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">Atom Feed</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">Subscribe in your RSS reader. Also at /rss, /feed, /atom</div>
+    </a>
+    <a href="/badges" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
+      <div style="font-size:1.5rem;margin-bottom:.5rem">&#127991;</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">Status Badges</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">Embed free tier status badges in your README</div>
+    </a>
+    <a href="/setup" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
+      <div style="font-size:1.5rem;margin-bottom:.5rem">&#129302;</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">MCP Server</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">Query ${offers.length.toLocaleString()} deals from Claude, Cursor, or VS Code</div>
+    </a>
+    <a href="/api/docs" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
+      <div style="font-size:1.5rem;margin-bottom:.5rem">&#128279;</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">REST API</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">18 endpoints. Open data. No API key required.</div>
+    </a>
+    <a href="/stability" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
+      <div style="font-size:1.5rem;margin-bottom:.5rem">&#128202;</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">Stability Dashboard</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">Vendor pricing stability indicators and risk scores</div>
+    </a>
+  </div>
 
   <h2>Explore the Data</h2>
   <p class="section-desc">Dive deeper with our category-specific comparison guides:</p>
@@ -36860,7 +37020,7 @@ ${monthsHtml}
       <li><a href="/stability">Vendor Stability Dashboard</a></li>
       <li><a href="/free-tier-risk">Free Tier Risk Index</a></li>
       <li><a href="/free-tier-tracker">Q1 2026 Erosion Report</a></li>
-      <li><a href="/state-of-free-tiers-2026">State of Free Tiers 2026</a></li>
+      <li><a href="/state-of-free-tiers">State of Free Tiers 2026</a></li>
       <li><a href="/setup">Connect via MCP</a></li>
     </ul>
   </div>
@@ -39247,6 +39407,13 @@ const httpServer = createHttpServer(async (req, res) => {
     return;
   }
 
+  // State of free tiers — redirect old year-suffixed slug to canonical
+  if (url.pathname === "/state-of-free-tiers-2026" && isGetOrHead) {
+    res.writeHead(301, { Location: "/state-of-free-tiers" });
+    res.end();
+    return;
+  }
+
   // Server-side page view tracking (fire-and-forget, no latency impact)
   // Track HTML page requests only — exclude API, MCP, static assets, health
   const isPagePath = req.method === "GET" && !url.pathname.startsWith("/api/") &&
@@ -40531,11 +40698,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hosting-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildHostingFreeTierComparison2026Page());
-  } else if (url.pathname === "/state-of-free-tiers-2026" && isGetOrHead) {
-    recordApiHit("/state-of-free-tiers-2026");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/state-of-free-tiers-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+  } else if (url.pathname === "/state-of-free-tiers" && isGetOrHead) {
+    recordApiHit("/state-of-free-tiers");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/state-of-free-tiers", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildStateOfFreeTiers2026Page());
+    res.end(buildStateOfFreeTiersPage());
   } else if (url.pathname === "/email-comparison-2026" && isGetOrHead) {
     recordApiHit("/email-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
