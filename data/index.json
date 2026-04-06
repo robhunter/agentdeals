@@ -78,7 +78,7 @@
         "deployment",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Railway",
@@ -115,7 +115,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Deno Deploy",
@@ -133,7 +133,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Val Town",
@@ -149,7 +149,7 @@
         "free tier",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Koyeb",
@@ -290,7 +290,7 @@
         "document",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "CockroachDB",
@@ -339,7 +339,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Firebase",
@@ -358,7 +358,7 @@
         "auth0-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Databricks (Lakeflow Connect)",
@@ -391,7 +391,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Appwrite Cloud",
@@ -410,7 +410,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Aiven",
@@ -427,7 +427,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Xata",
@@ -443,7 +443,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Cloudflare D1",
@@ -460,7 +460,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Nhost",
@@ -477,7 +477,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "PocketBase",
@@ -512,7 +512,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "GitHub Actions",
@@ -543,7 +543,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "CircleCI",
@@ -558,7 +558,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Buildkite",
@@ -574,7 +574,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Bitbucket Pipelines",
@@ -590,7 +590,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Sentry",
@@ -735,7 +735,7 @@
         "users",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Auth0",
@@ -751,7 +751,7 @@
         "sso",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Kinde",
@@ -768,7 +768,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "WorkOS",
@@ -785,7 +785,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Resend",
@@ -1284,7 +1284,7 @@
         "compute",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "jsDelivr",
@@ -1299,7 +1299,7 @@
         "github",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "LaunchDarkly",
@@ -1514,7 +1514,7 @@
         "code",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "OpenRouter",
@@ -1530,7 +1530,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Cloudflare Workers AI",
@@ -1546,7 +1546,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "PostHog",
@@ -1562,7 +1562,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11",
+      "verifiedDate": "2026-04-05",
       "expires_date": "2027-01-31"
     },
     {
@@ -1593,7 +1593,7 @@
         "retention",
         "free tier"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Inngest",
@@ -1639,7 +1639,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Doppler",
@@ -2023,7 +2023,7 @@
         "static",
         "github"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Highlight.io",
@@ -2124,7 +2124,7 @@
         "self-hosted",
         "cloud"
       ],
-      "verifiedDate": "2026-02-25"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "GrowthBook",
@@ -2324,7 +2324,7 @@
         "sql",
         "api"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Novu",
@@ -2380,7 +2380,7 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "GitHub Pages",
@@ -2394,7 +2394,7 @@
         "github",
         "jekyll"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Pulsetic",
@@ -2423,7 +2423,7 @@
         "multi-tenant",
         "serverless"
       ],
-      "verifiedDate": "2026-03-11"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Cron-job.org",
@@ -2738,7 +2738,7 @@
         "crashes",
         "free tier"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Rollbar",
@@ -2809,7 +2809,7 @@
         "no-code",
         "free tier"
       ],
-      "verifiedDate": "2026-02-26"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Zapier",
@@ -3176,7 +3176,7 @@
         "ibm",
         "infrastructure"
       ],
-      "verifiedDate": "2026-02-26",
+      "verifiedDate": "2026-04-05",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3975,7 +3975,7 @@
         "api",
         "open source"
       ],
-      "verifiedDate": "2026-02-26"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Prometheus",
@@ -4311,7 +4311,7 @@
         "social",
         "deal-change"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Grafana k6 Cloud",
@@ -4357,7 +4357,7 @@
         "vpn",
         "access-control"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "PythonAnywhere",
@@ -4864,7 +4864,7 @@
         "competitions",
         "datasets"
       ],
-      "verifiedDate": "2026-03-01"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Roboflow",
@@ -5795,7 +5795,7 @@
         "durable-execution",
         "postgres"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Brainboard",
@@ -7290,7 +7290,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "wrapapi.com",
@@ -8726,7 +8726,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "bytebase.com",
@@ -9401,7 +9401,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Protectumus",
@@ -12188,7 +12188,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "ovh.ie",
@@ -12820,7 +12820,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Neocities",
@@ -13080,7 +13080,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "nextdns.io",
@@ -13184,7 +13184,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "isroot.in",
@@ -14560,7 +14560,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "QRtracer",
@@ -15224,7 +15224,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Lucide",
@@ -15445,7 +15445,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "photopea.com",
@@ -15510,7 +15510,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Proto.io",
@@ -15627,7 +15627,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-02"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Shadcn Space",
@@ -18380,7 +18380,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-03-02",
+      "verifiedDate": "2026-04-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21523,7 +21523,7 @@
         "full-stack",
         "developer tools"
       ],
-      "verifiedDate": "2026-03-10"
+      "verifiedDate": "2026-04-05"
     },
     {
       "vendor": "Lovable",
