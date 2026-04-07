@@ -5,10 +5,11 @@ export interface GuideMetadata {
   slug: string;
   title: string;
   description: string;
-  type: "pricing" | "comparison" | "stack" | "alternatives" | "report";
+  type: "pricing" | "comparison" | "stack" | "alternatives" | "report" | "integration";
 }
 
 function classifyGuide(slug: string): GuideMetadata["type"] {
+  if (slug.startsWith("guides/")) return "integration";
   if (slug.includes("-vs-") || slug.includes("-comparison-")) return "comparison";
   if (slug.startsWith("free-") && slug.endsWith("-stack")) return "stack";
   if (slug.includes("pricing") || slug.includes("report") || slug.includes("preview")) return "pricing";
@@ -94,6 +95,10 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "tenor-alternatives", title: "Tenor API Shutdown Migration Guide", description: "Google Tenor API shuts down June 2026 — GIF API alternatives (Klipy, Giphy, Imgur), migration code examples, and platform impact" },
   { slug: "firebase-studio-shutdown", title: "Firebase Studio Shutdown Guide", description: "Firebase Studio shuts down June 2026 — free cloud IDE alternatives with compute, storage, and collaboration limits compared" },
   { slug: "openai-assistants-migration-2026", title: "OpenAI Assistants API Migration Guide 2026", description: "Comprehensive Assistants API migration guide — feature map, complexity assessment, decision framework, agent frameworks, wire-compatible bridges, cost comparison" },
+  { slug: "guides/langchain", title: "Using AgentDeals with LangChain", description: "LangChain MCP integration guide — connect AgentDeals tools via langchain-mcp-adapters, Python code examples, multi-agent workflows" },
+  { slug: "guides/crewai", title: "Using AgentDeals with CrewAI", description: "CrewAI MCP integration guide — native mcps field configuration, multi-agent pricing research workflows" },
+  { slug: "guides/n8n", title: "Using AgentDeals with n8n", description: "n8n MCP integration guide — MCP Server Trigger node setup, no-code automation workflows for pricing monitoring" },
+  { slug: "guides/vercel-ai-sdk", title: "Using AgentDeals with Vercel AI SDK", description: "Vercel AI SDK MCP integration guide — experimental_createMCPClient() setup, React/Next.js code examples" },
 ];
 
 export function getGuideList(): GuideMetadata[] {
