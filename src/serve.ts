@@ -5726,9 +5726,10 @@ ${mcpCtaCss()}
 
 // --- Guides hub page ---
 
-type GuideContentType = "pricing" | "comparison" | "stack" | "alternatives" | "report";
+type GuideContentType = "pricing" | "comparison" | "stack" | "alternatives" | "report" | "integration";
 
 function classifyGuide(slug: string): GuideContentType {
+  if (slug.startsWith("guides/")) return "integration";
   if (slug.includes("-vs-") || slug.includes("-comparison-")) return "comparison";
   if (slug.startsWith("free-") && slug.endsWith("-stack")) return "stack";
   if (slug.includes("pricing") || slug.includes("report") || slug.includes("preview")) return "pricing";
@@ -5742,6 +5743,7 @@ const guideContentTypeLabels: Record<GuideContentType, string> = {
   stack: "Stack Guide",
   alternatives: "Alternatives",
   report: "Report",
+  integration: "Integration",
 };
 
 const guideContentTypeColors: Record<GuideContentType, string> = {
@@ -5750,6 +5752,7 @@ const guideContentTypeColors: Record<GuideContentType, string> = {
   stack: "#10b981",
   alternatives: "#3b82f6",
   report: "#ef4444",
+  integration: "#06b6d4",
 };
 
 const guideSectionOrder: { type: GuideContentType; heading: string; description: string }[] = [
@@ -5758,20 +5761,581 @@ const guideSectionOrder: { type: GuideContentType; heading: string; description:
   { type: "stack", heading: "Stack Guides", description: "Complete free-tier infrastructure stacks for different use cases." },
   { type: "alternatives", heading: "Category Alternatives", description: "Comprehensive guides to free alternatives across every developer tool category." },
   { type: "report", heading: "Special Reports", description: "Free tier risk analysis, migration guides, startup credits, and market tracking." },
+  { type: "integration", heading: "Framework Integration Guides", description: "Step-by-step guides for using AgentDeals MCP tools with popular AI agent frameworks." },
 ];
 
-function buildGuidesPage(): string {
-  const title = "Developer Tool Guides & Analysis";
-  const metaDesc = `${ALTERNATIVES_PAGES.length} in-depth guides — free tier comparisons, pricing analysis, migration guides, and stack recommendations. Powered by data from ${offers.length.toLocaleString()} verified deals.`;
+// --- Framework Integration Guides (/guides/:slug) ---
 
-  const grouped = new Map<GuideContentType, AlternativesPageConfig[]>();
+interface IntegrationGuide {
+  slug: string; // e.g. "langchain" — served at /guides/langchain
+  title: string;
+  metaDesc: string;
+  hubDesc: string;
+  framework: string;
+  intro: string;
+  setupCode: string;
+  setupLang: string;
+  setupNotes: string;
+  workflows: { title: string; description: string; code: string }[];
+  crossLinks: { href: string; label: string }[];
+}
+
+const INTEGRATION_GUIDES: IntegrationGuide[] = [
+  {
+    slug: "langchain",
+    title: "Using AgentDeals with LangChain — MCP Integration Guide",
+    metaDesc: "Connect AgentDeals MCP tools to LangChain agents via langchain-mcp-adapters. Search 1,600+ developer deals, compare vendors, and track pricing changes from Python.",
+    hubDesc: "Connect AgentDeals to LangChain agents via langchain-mcp-adapters — Python code examples and multi-agent workflows",
+    framework: "LangChain",
+    intro: `<p><strong>LangChain</strong> is the most popular Python framework for building LLM-powered applications. With <code>langchain-mcp-adapters</code>, you can connect any MCP server — including AgentDeals — as a tool provider for your LangChain agents.</p>
+<p>AgentDeals provides <strong>4 MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: <code>search_deals</code>, <code>compare_vendors</code>, <code>track_changes</code>, and <code>plan_stack</code>.</p>`,
+    setupCode: `pip install langchain-mcp-adapters langchain-openai langgraph
+
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain_openai import ChatOpenAI
+from langgraph.prebuilt import create_react_agent
+
+model = ChatOpenAI(model="gpt-4o")
+
+async with MultiServerMCPClient(
+    {
+        "agentdeals": {
+            "url": "${BASE_URL}/mcp",
+            "transport": "streamable_http",
+        }
+    }
+) as client:
+    tools = client.get_tools()
+    agent = create_react_agent(model, tools)
+
+    result = await agent.ainvoke(
+        {"messages": [{"role": "user", "content": "Find free database hosting options"}]}
+    )
+    print(result["messages"][-1].content)`,
+    setupLang: "python",
+    setupNotes: `<p>This connects to the <strong>remote AgentDeals server</strong> at <code>${BASE_URL}/mcp</code> — no npm or local install needed. The <code>MultiServerMCPClient</code> handles the MCP session lifecycle automatically.</p>
+<p>You can also run AgentDeals locally via stdio transport:</p>
+<pre><code>"agentdeals": {
+    "command": "npx",
+    "args": ["-y", "agentdeals"],
+    "transport": "stdio",
+}</code></pre>`,
+    workflows: [
+      {
+        title: "Search and compare free database tiers",
+        description: "Use the agent to search for free databases, then compare the top options side by side.",
+        code: `result = await agent.ainvoke(
+    {"messages": [{"role": "user", "content":
+        "Search for free database hosting options, then compare "
+        "Supabase vs Neon vs PlanetScale. Show free tier limits "
+        "and risk levels."
+    }]}
+)
+print(result["messages"][-1].content)`,
+      },
+      {
+        title: "Track pricing changes in your stack",
+        description: "Monitor recent pricing changes for the vendors you use — catch free tier removals before they affect you.",
+        code: `result = await agent.ainvoke(
+    {"messages": [{"role": "user", "content":
+        "Track recent pricing changes for Vercel, Supabase, and "
+        "Cloudflare. Are any free tiers at risk?"
+    }]}
+)
+print(result["messages"][-1].content)`,
+      },
+      {
+        title: "Plan a free infrastructure stack",
+        description: "Get stack recommendations with cost projections at different scale points.",
+        code: `result = await agent.ainvoke(
+    {"messages": [{"role": "user", "content":
+        "Plan a free stack for a SaaS MVP: I need hosting, "
+        "database, auth, email, and monitoring. Estimate costs "
+        "at 1K, 10K, and 100K monthly active users."
+    }]}
+)
+print(result["messages"][-1].content)`,
+      },
+    ],
+    crossLinks: [
+      { href: "/free-startup-stack", label: "Free Startup Stack Guide" },
+      { href: "/database-alternatives", label: "Database Alternatives" },
+      { href: "/ai-ml-alternatives", label: "AI/ML Alternatives" },
+      { href: "/api/docs", label: "REST API Documentation" },
+    ],
+  },
+  {
+    slug: "crewai",
+    title: "Using AgentDeals with CrewAI — MCP Integration Guide",
+    metaDesc: "Connect AgentDeals MCP tools to CrewAI agents via native mcps field. Multi-agent pricing research workflows with search, compare, and track capabilities.",
+    hubDesc: "Connect AgentDeals to CrewAI agents via native mcps configuration — multi-agent pricing research workflows",
+    framework: "CrewAI",
+    intro: `<p><strong>CrewAI</strong> is a popular framework for orchestrating multi-agent AI workflows. It has <strong>native MCP support</strong> via the <code>mcps</code> field on agents, making it easy to give your crew access to AgentDeals tools.</p>
+<p>AgentDeals provides <strong>4 MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: <code>search_deals</code>, <code>compare_vendors</code>, <code>track_changes</code>, and <code>plan_stack</code>.</p>`,
+    setupCode: `pip install crewai
+
+from crewai import Agent, Task, Crew
+
+researcher = Agent(
+    role="Developer Tools Researcher",
+    goal="Find the best free developer tools and compare pricing",
+    backstory="You are an expert at evaluating developer tool "
+              "free tiers and identifying the best options.",
+    mcps=[
+        {
+            "url": "${BASE_URL}/mcp",
+        }
+    ],
+)
+
+task = Task(
+    description="Search for free database hosting options and "
+                "compare the top 3 by free tier limits, risk level, "
+                "and pricing at scale.",
+    expected_output="A comparison table of the top 3 free databases "
+                    "with recommendations.",
+    agent=researcher,
+)
+
+crew = Crew(agents=[researcher], tasks=[task])
+result = crew.kickoff()
+print(result)`,
+    setupLang: "python",
+    setupNotes: `<p>CrewAI's native <code>mcps</code> field connects directly to the AgentDeals remote server. No additional packages or local installation needed.</p>
+<p>For stdio transport (local), use:</p>
+<pre><code>mcps=[
+    {
+        "command": "npx",
+        "args": ["-y", "agentdeals"],
+    }
+]</code></pre>`,
+    workflows: [
+      {
+        title: "Multi-agent vendor evaluation",
+        description: "Create a research crew with a searcher and an analyst working together to evaluate developer tools.",
+        code: `searcher = Agent(
+    role="Tool Searcher",
+    goal="Find free developer tools across categories",
+    backstory="Expert at discovering developer tool free tiers.",
+    mcps=[{"url": "${BASE_URL}/mcp"}],
+)
+
+analyst = Agent(
+    role="Pricing Analyst",
+    goal="Compare vendor pricing and assess risk",
+    backstory="Expert at evaluating pricing sustainability.",
+    mcps=[{"url": "${BASE_URL}/mcp"}],
+)
+
+search_task = Task(
+    description="Find the top 5 free monitoring tools. "
+                "Include data ingestion limits and retention.",
+    expected_output="List of 5 monitoring tools with free tier details.",
+    agent=searcher,
+)
+
+analysis_task = Task(
+    description="Compare the monitoring tools found above. "
+                "Assess free tier risk and recommend the best option "
+                "for a startup with 10 microservices.",
+    expected_output="Comparison table with risk assessment "
+                    "and final recommendation.",
+    agent=analyst,
+    context=[search_task],
+)
+
+crew = Crew(agents=[searcher, analyst], tasks=[search_task, analysis_task])
+result = crew.kickoff()
+print(result)`,
+      },
+      {
+        title: "Pricing change monitoring crew",
+        description: "Set up a crew that monitors pricing changes and generates alerts for your stack.",
+        code: `monitor = Agent(
+    role="Pricing Monitor",
+    goal="Track developer tool pricing changes",
+    backstory="You watch for free tier changes that could "
+              "affect development teams.",
+    mcps=[{"url": "${BASE_URL}/mcp"}],
+)
+
+monitor_task = Task(
+    description="Check for recent pricing changes across "
+                "hosting, database, and auth categories. Flag any "
+                "free tier removals or significant limit reductions.",
+    expected_output="Summary of recent changes with risk assessment.",
+    agent=monitor,
+)
+
+crew = Crew(agents=[monitor], tasks=[monitor_task])
+result = crew.kickoff()
+print(result)`,
+      },
+    ],
+    crossLinks: [
+      { href: "/monitoring-alternatives", label: "Monitoring Alternatives" },
+      { href: "/free-tier-risk", label: "Free Tier Risk Index" },
+      { href: "/state-of-free-tiers", label: "State of Free Tiers Report" },
+      { href: "/api/docs", label: "REST API Documentation" },
+    ],
+  },
+  {
+    slug: "n8n",
+    title: "Using AgentDeals with n8n — MCP Integration Guide",
+    metaDesc: "Connect AgentDeals MCP tools to n8n workflows via the MCP Server Trigger node. No-code pricing monitoring, vendor comparison, and stack planning automation.",
+    hubDesc: "Connect AgentDeals to n8n via MCP Server Trigger node — no-code pricing monitoring and vendor comparison workflows",
+    framework: "n8n",
+    intro: `<p><strong>n8n</strong> is a popular open-source workflow automation platform. With its <strong>MCP Server Trigger</strong> node, you can connect AgentDeals tools to n8n workflows — combining pricing intelligence with 400+ other integrations (Slack, email, databases, CRMs).</p>
+<p>AgentDeals provides <strong>4 MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: <code>search_deals</code>, <code>compare_vendors</code>, <code>track_changes</code>, and <code>plan_stack</code>.</p>`,
+    setupCode: `1. Open your n8n instance and create a new workflow
+2. Add an "MCP Server Trigger" node
+3. In the node settings, configure the MCP server:
+   - Server URL: ${BASE_URL}/mcp
+   - Transport: Streamable HTTP
+4. The node will discover all 4 AgentDeals tools automatically
+5. Connect the MCP Server Trigger to your downstream nodes
+   (e.g., Slack, Email, Google Sheets, HTTP Request)`,
+    setupLang: "text",
+    setupNotes: `<p>n8n's MCP Server Trigger node handles the MCP protocol automatically. Once connected, you can use any AgentDeals tool in your workflow — the node exposes tool inputs as configurable fields.</p>
+<p>For self-hosted n8n, you can also use the local stdio transport by running <code>npx -y agentdeals</code> as a subprocess.</p>`,
+    workflows: [
+      {
+        title: "Weekly pricing change alerts to Slack",
+        description: "Automatically check for pricing changes every week and post a summary to your team's Slack channel.",
+        code: `Workflow: Weekly Pricing Alerts
+┌─────────────┐    ┌──────────────────┐    ┌────────────┐
+│  Schedule    │───▶│  MCP Server      │───▶│   Slack    │
+│  (Weekly)    │    │  track_changes   │    │  #devops   │
+└─────────────┘    └──────────────────┘    └────────────┘
+
+MCP Server Trigger configuration:
+- Tool: track_changes
+- Input: { "query": "recent pricing changes this week" }
+
+Slack node:
+- Channel: #devops-alerts
+- Message: "🔔 Weekly Pricing Update\\n{{ $json.output }}"`,
+      },
+      {
+        title: "New vendor research pipeline",
+        description: "When someone submits a vendor name via a form, automatically search AgentDeals and write results to a Google Sheet.",
+        code: `Workflow: Vendor Research Pipeline
+┌──────────┐    ┌──────────────────┐    ┌──────────────┐
+│  Webhook  │───▶│  MCP Server      │───▶│ Google Sheet │
+│  (Form)   │    │  search_deals    │    │  "Research"  │
+└──────────┘    └──────────────────┘    └──────────────┘
+
+MCP Server Trigger configuration:
+- Tool: search_deals
+- Input: { "query": "{{ $json.vendor_name }} free tier" }
+
+Google Sheets node:
+- Spreadsheet: "Vendor Research"
+- Columns: Vendor, Free Tier, Limits, Risk Level, Date`,
+      },
+      {
+        title: "Stack cost estimation with email report",
+        description: "Generate a cost estimate for a set of vendors and email the results to stakeholders.",
+        code: `Workflow: Stack Cost Report
+┌─────────────┐    ┌──────────────────┐    ┌───────────┐
+│  Schedule    │───▶│  MCP Server      │───▶│   Email   │
+│  (Monthly)   │    │  plan_stack      │    │  Report   │
+└─────────────┘    └──────────────────┘    └───────────┘
+
+MCP Server Trigger configuration:
+- Tool: plan_stack
+- Input: {
+    "query": "Estimate costs for our stack: Vercel, Neon,
+     Clerk, Resend, Sentry at 10K MAU"
+  }
+
+Email node:
+- To: engineering-leads@company.com
+- Subject: "Monthly Stack Cost Report"
+- Body: "{{ $json.output }}"`,
+      },
+    ],
+    crossLinks: [
+      { href: "/estimate", label: "Interactive Stack Cost Estimator" },
+      { href: "/pricing-changes", label: "Pricing Changes Timeline" },
+      { href: "/freshness", label: "Data Freshness Dashboard" },
+      { href: "/api/docs", label: "REST API Documentation" },
+    ],
+  },
+  {
+    slug: "vercel-ai-sdk",
+    title: "Using AgentDeals with Vercel AI SDK — MCP Integration Guide",
+    metaDesc: "Connect AgentDeals MCP tools to Vercel AI SDK via experimental_createMCPClient(). Build React/Next.js apps with pricing intelligence and vendor comparison.",
+    hubDesc: "Connect AgentDeals to Vercel AI SDK via experimental_createMCPClient() — React/Next.js code examples",
+    framework: "Vercel AI SDK",
+    intro: `<p>The <strong>Vercel AI SDK</strong> is the leading JavaScript/TypeScript framework for building AI-powered applications, especially in the React and Next.js ecosystem. It supports MCP via <code>experimental_createMCPClient()</code>, allowing you to use AgentDeals tools in your AI applications.</p>
+<p>AgentDeals provides <strong>4 MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: <code>search_deals</code>, <code>compare_vendors</code>, <code>track_changes</code>, and <code>plan_stack</code>.</p>`,
+    setupCode: `npm install ai @ai-sdk/openai
+
+import { experimental_createMCPClient as createMCPClient } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { generateText } from "ai";
+
+const mcpClient = await createMCPClient({
+  transport: {
+    type: "sse",
+    url: "${BASE_URL}/mcp",
+  },
+});
+
+const tools = await mcpClient.tools();
+
+const { text } = await generateText({
+  model: openai("gpt-4o"),
+  tools,
+  prompt: "Find free database hosting options and compare the top 3",
+  maxSteps: 5,
+});
+
+console.log(text);
+await mcpClient.close();`,
+    setupLang: "typescript",
+    setupNotes: `<p>The Vercel AI SDK connects to AgentDeals via SSE (Server-Sent Events) transport. The <code>experimental_createMCPClient</code> handles the MCP handshake and tool discovery automatically.</p>
+<p><strong>Note:</strong> MCP support in the Vercel AI SDK is experimental. The API may change in future releases. Check the <a href="https://sdk.vercel.ai/docs" style="color:var(--accent)">Vercel AI SDK docs</a> for the latest usage.</p>`,
+    workflows: [
+      {
+        title: "Next.js API route with pricing intelligence",
+        description: "Build a Next.js API route that uses AgentDeals tools to answer questions about developer tool pricing.",
+        code: `// app/api/pricing/route.ts
+import { experimental_createMCPClient as createMCPClient } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { generateText } from "ai";
+
+export async function POST(req: Request) {
+  const { question } = await req.json();
+
+  const mcpClient = await createMCPClient({
+    transport: { type: "sse", url: "${BASE_URL}/mcp" },
+  });
+
+  const tools = await mcpClient.tools();
+
+  const { text } = await generateText({
+    model: openai("gpt-4o"),
+    tools,
+    prompt: question,
+    maxSteps: 5,
+  });
+
+  await mcpClient.close();
+  return Response.json({ answer: text });
+}`,
+      },
+      {
+        title: "Streaming chat with vendor comparison",
+        description: "Build a streaming chat interface that can compare vendors in real time using AgentDeals tools.",
+        code: `// app/api/chat/route.ts
+import { experimental_createMCPClient as createMCPClient } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  const mcpClient = await createMCPClient({
+    transport: { type: "sse", url: "${BASE_URL}/mcp" },
+  });
+
+  const tools = await mcpClient.tools();
+
+  const result = streamText({
+    model: openai("gpt-4o"),
+    tools,
+    messages,
+    maxSteps: 5,
+    onFinish: () => mcpClient.close(),
+  });
+
+  return result.toDataStreamResponse();
+}`,
+      },
+      {
+        title: "CLI tool for stack planning",
+        description: "Build a Node.js CLI tool that helps developers plan their infrastructure stack using AgentDeals data.",
+        code: `// plan-stack.ts
+import { experimental_createMCPClient as createMCPClient } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { generateText } from "ai";
+
+const stack = process.argv.slice(2).join(", ");
+if (!stack) {
+  console.log("Usage: npx tsx plan-stack.ts vercel neon clerk");
+  process.exit(1);
+}
+
+const mcpClient = await createMCPClient({
+  transport: { type: "sse", url: "${BASE_URL}/mcp" },
+});
+
+const { text } = await generateText({
+  model: openai("gpt-4o"),
+  tools: await mcpClient.tools(),
+  prompt: \`Audit this stack: \${stack}. For each vendor, show the
+free tier limits, risk level, and estimated cost at 10K MAU.
+Suggest free alternatives for any high-risk vendors.\`,
+  maxSteps: 5,
+});
+
+console.log(text);
+await mcpClient.close();`,
+      },
+    ],
+    crossLinks: [
+      { href: "/free-nextjs-stack", label: "Free Next.js Stack Guide" },
+      { href: "/hosting-free-tier-comparison-2026", label: "Hosting Comparison" },
+      { href: "/estimate", label: "Interactive Stack Cost Estimator" },
+      { href: "/api/docs", label: "REST API Documentation" },
+    ],
+  },
+];
+
+const integrationGuideMap = new Map<string, IntegrationGuide>();
+for (const guide of INTEGRATION_GUIDES) {
+  integrationGuideMap.set(guide.slug, guide);
+}
+
+function buildIntegrationGuidePage(slug: string): string | null {
+  const guide = integrationGuideMap.get(slug);
+  if (!guide) return null;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: guide.title,
+    description: guide.metaDesc,
+    step: [
+      { "@type": "HowToStep", position: 1, name: "Install dependencies", text: "Install the required packages for " + guide.framework + "." },
+      { "@type": "HowToStep", position: 2, name: "Connect to AgentDeals", text: "Configure " + guide.framework + " to connect to the AgentDeals MCP server." },
+      { "@type": "HowToStep", position: 3, name: "Use AgentDeals tools", text: "Use search_deals, compare_vendors, track_changes, and plan_stack in your workflows." },
+    ],
+  };
+
+  const workflowsHtml = guide.workflows.map(function(w, i) {
+    return '<div class="workflow">' +
+      '<h3>' + (i + 1) + '. ' + escHtmlServer(w.title) + '</h3>' +
+      '<p>' + escHtmlServer(w.description) + '</p>' +
+      '<pre><code>' + escHtmlServer(w.code) + '</code></pre>' +
+      '</div>';
+  }).join("\n");
+
+  const crossLinksHtml = guide.crossLinks.map(function(l) {
+    return '<a href="' + l.href + '" class="cross-link">' + escHtmlServer(l.label) + ' &rarr;</a>';
+  }).join("\n        ");
+
+  const otherGuides = INTEGRATION_GUIDES.filter(function(g) { return g.slug !== slug; });
+  const badgeColor = guideContentTypeColors.integration;
+  const otherGuidesHtml = otherGuides.map(function(g) {
+    return '<a href="/guides/' + g.slug + '" class="guide-card">' +
+      '<div class="guide-card-header">' +
+      '<h3>' + escHtmlServer(g.framework) + '</h3>' +
+      '<span class="guide-badge" style="background:' + badgeColor + '20;color:' + badgeColor + ';border:1px solid ' + badgeColor + '40">Integration</span>' +
+      '</div>' +
+      '<p>' + escHtmlServer(g.hubDesc) + '</p>' +
+      '</a>';
+  }).join("\n      ");
+
+  const css = ':root{--bg:#0f172a;--bg-card:#1e293b;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.08);--border:#334155;--sans:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,sans-serif;--serif:\'Georgia\',serif;--mono:\'SF Mono\',\'Fira Code\',monospace}\n' +
+    '*{box-sizing:border-box}body{font-family:var(--sans);background:var(--bg);color:var(--text);margin:0;padding:0;line-height:1.6}\n' +
+    '.container{max-width:900px;margin:0 auto;padding:1.5rem}\n' +
+    '.breadcrumb{font-size:.85rem;color:var(--text-dim);margin-bottom:1.5rem}.breadcrumb a{color:var(--accent);text-decoration:none}.breadcrumb a:hover{text-decoration:underline}\n' +
+    'h1{font-family:var(--serif);font-size:2rem;margin:0 0 1rem}\n' +
+    'h2{font-family:var(--serif);font-size:1.4rem;margin:2rem 0 .75rem;padding-top:1rem;border-top:1px solid var(--border)}\n' +
+    'h3{font-family:var(--serif);font-size:1.1rem;margin:1rem 0 .5rem;color:var(--accent)}\n' +
+    'p{color:var(--text-muted);font-size:.9rem;line-height:1.7;margin:0 0 1rem}\n' +
+    'code{font-family:var(--mono);font-size:.85rem;background:var(--bg-card);padding:.15rem .4rem;border-radius:4px;color:var(--accent)}\n' +
+    'pre{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;overflow-x:auto;margin:0 0 1.5rem}\n' +
+    'pre code{background:none;padding:0;font-size:.8rem;color:var(--text);line-height:1.6}\n' +
+    '.intro{margin-bottom:2rem}.intro p{font-size:.95rem}\n' +
+    '.setup-section{margin-bottom:2rem}.setup-notes{margin-top:1rem}.setup-notes p{font-size:.85rem}.setup-notes pre{margin-top:.5rem}\n' +
+    '.workflow{margin-bottom:2rem;padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated)}\n' +
+    '.workflow h3{margin-top:0;border:none;padding:0}.workflow p{margin-bottom:.75rem}\n' +
+    '.tools-ref{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin-bottom:2rem}\n' +
+    '.tool-card{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)}\n' +
+    '.tool-card code{font-size:.85rem;font-weight:600}.tool-card p{font-size:.8rem;margin:.25rem 0 0;color:var(--text-dim)}\n' +
+    '.cross-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}\n' +
+    '.cross-link{display:inline-block;padding:.4rem .75rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--accent);text-decoration:none;font-size:.85rem;transition:border-color .15s,background .15s}\n' +
+    '.cross-link:hover{border-color:var(--accent);background:var(--accent-glow)}\n' +
+    '.other-guides{margin:2rem 0}\n' +
+    '.guide-cards{display:grid;grid-template-columns:1fr;gap:.75rem}\n' +
+    '.guide-card{display:block;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s,background .15s}\n' +
+    '.guide-card:hover{border-color:var(--accent);background:var(--accent-glow)}\n' +
+    '.guide-card-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem}\n' +
+    '.guide-card h3{margin:0;font-size:1rem;color:var(--accent);font-family:var(--serif);flex:1;border:none;padding:0}\n' +
+    '.guide-badge{font-size:.7rem;padding:.15rem .5rem;border-radius:4px;font-weight:600;white-space:nowrap}\n' +
+    '.guide-card p{margin:0;font-size:.85rem;color:var(--text-muted);line-height:1.5}\n' +
+    'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n' +
+    'footer a{color:var(--accent);text-decoration:none}\n' +
+    '@media(max-width:768px){h1{font-size:1.5rem}.tools-ref{grid-template-columns:1fr}}\n' +
+    globalNavCss() + '\n' + mcpCtaCss();
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+    '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+    '<title>' + escHtmlServer(guide.title) + '</title>\n' +
+    '<meta name="description" content="' + escHtmlServer(guide.metaDesc) + '">\n' +
+    '<link rel="canonical" href="' + BASE_URL + '/guides/' + guide.slug + '">\n' +
+    '<meta property="og:title" content="' + escHtmlServer(guide.title) + '">\n' +
+    '<meta property="og:description" content="' + escHtmlServer(guide.metaDesc) + '">\n' +
+    '<meta property="og:url" content="' + BASE_URL + '/guides/' + guide.slug + '">\n' +
+    '<meta property="og:type" content="article">\n' +
+    OG_IMAGE_META + GOOGLE_VERIFICATION_META +
+    '<link rel="icon" type="image/png" href="/favicon.png">\n' +
+    '<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">\n' +
+    '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n' +
+    '<style>\n' + css + '\n</style>\n</head>\n<body>\n' +
+    '<div class="container">\n' +
+    '  ' + buildGlobalNav("guides") + '\n' +
+    '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; ' + escHtmlServer(guide.framework) + '</div>\n' +
+    '  <h1>' + escHtmlServer(guide.title.split(" — ")[0]) + '</h1>\n' +
+    '\n  <div class="intro">\n    ' + guide.intro + '\n  </div>\n' +
+    '\n  <h2>Quick Setup</h2>\n' +
+    '  <div class="setup-section">\n' +
+    '    <pre><code>' + escHtmlServer(guide.setupCode) + '</code></pre>\n' +
+    '    <div class="setup-notes">' + guide.setupNotes + '</div>\n' +
+    '  </div>\n' +
+    '\n  <h2>Example Workflows</h2>\n  ' + workflowsHtml + '\n' +
+    '\n  <h2>Available Tools</h2>\n' +
+    '  <p>AgentDeals exposes 4 MCP tools. Your ' + escHtmlServer(guide.framework) + ' agent can call any of them:</p>\n' +
+    '  <div class="tools-ref">\n' +
+    '    <div class="tool-card"><code>search_deals</code><p>Search ' + offers.length.toLocaleString() + '+ deals by keyword, category, or vendor</p></div>\n' +
+    '    <div class="tool-card"><code>compare_vendors</code><p>Side-by-side comparison of free tiers, limits, and risk</p></div>\n' +
+    '    <div class="tool-card"><code>track_changes</code><p>Track pricing changes, removals, and new deals</p></div>\n' +
+    '    <div class="tool-card"><code>plan_stack</code><p>Stack recommendations with cost projections at scale</p></div>\n' +
+    '  </div>\n' +
+    '  <p style="font-size:.85rem">Full tool documentation: <a href="/api/docs" style="color:var(--accent)">/api/docs</a> &middot; <a href="/setup" style="color:var(--accent)">Setup guide for more clients</a></p>\n' +
+    '\n  <h2>Related Guides</h2>\n' +
+    '  <div class="cross-links">\n        ' + crossLinksHtml + '\n  </div>\n' +
+    '\n  ' + buildMcpCta("Use AgentDeals tools directly in your AI editor. Works with Claude Desktop, Cursor, Cline, Windsurf, and any MCP-compatible client.") + '\n' +
+    '\n  <div class="other-guides">\n' +
+    '    <h2>Other Framework Guides</h2>\n' +
+    '    <div class="guide-cards">\n      ' + otherGuidesHtml + '\n    </div>\n' +
+    '  </div>\n' +
+    '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>\n' +
+    '</div>\n' +
+    '<script>' + mcpCtaScript() + '</script>\n' +
+    '</body>\n</html>';
+}
+
+function buildGuidesPage(): string {
+  const totalGuides = ALTERNATIVES_PAGES.length + INTEGRATION_GUIDES.length;
+  const title = "Developer Tool Guides & Analysis";
+  const metaDesc = `${totalGuides} in-depth guides — free tier comparisons, pricing analysis, migration guides, framework integrations, and stack recommendations. Powered by data from ${offers.length.toLocaleString()} verified deals.`;
+
+  const grouped = new Map<GuideContentType, { slug: string; title: string; hubDesc: string }[]>();
   for (const section of guideSectionOrder) grouped.set(section.type, []);
   for (const page of ALTERNATIVES_PAGES) {
     const type = classifyGuide(page.slug);
-    grouped.get(type)!.push(page);
+    grouped.get(type)!.push({ slug: page.slug, title: page.title, hubDesc: page.hubDesc });
+  }
+  for (const guide of INTEGRATION_GUIDES) {
+    grouped.get("integration")!.push({ slug: `guides/${guide.slug}`, title: guide.title, hubDesc: guide.hubDesc });
   }
 
-  const allItems = ALTERNATIVES_PAGES.map((p, i) => ({
+  const allAlternativesItems = ALTERNATIVES_PAGES.map((p, i) => ({
     "@type": "ListItem" as const,
     position: i + 1,
     item: {
@@ -5781,6 +6345,17 @@ function buildGuidesPage(): string {
       url: `${BASE_URL}/${p.slug}`,
     },
   }));
+  const integrationItems = INTEGRATION_GUIDES.map((g, i) => ({
+    "@type": "ListItem" as const,
+    position: ALTERNATIVES_PAGES.length + i + 1,
+    item: {
+      "@type": "Article" as const,
+      name: g.title,
+      description: g.hubDesc,
+      url: `${BASE_URL}/guides/${g.slug}`,
+    },
+  }));
+  const allItems = [...allAlternativesItems, ...integrationItems];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -5789,7 +6364,7 @@ function buildGuidesPage(): string {
     description: metaDesc,
     mainEntity: {
       "@type": "ItemList",
-      numberOfItems: ALTERNATIVES_PAGES.length,
+      numberOfItems: totalGuides,
       itemListElement: allItems,
     },
   };
@@ -5867,12 +6442,12 @@ ${mcpCtaCss()}
   <p class="subtitle">Free tier comparisons, pricing analysis, migration guides, and stack recommendations &mdash; powered by data from ${offers.length.toLocaleString()} verified deals.</p>
 
   <div class="guide-stats">
-    <div class="guide-stat"><span class="stat-num">${ALTERNATIVES_PAGES.length}</span><span class="stat-label">Guides</span></div>
+    <div class="guide-stat"><span class="stat-num">${totalGuides}</span><span class="stat-label">Guides</span></div>
     <div class="guide-stat"><span class="stat-num">${(grouped.get("pricing") ?? []).length}</span><span class="stat-label">Pricing</span></div>
     <div class="guide-stat"><span class="stat-num">${(grouped.get("comparison") ?? []).length}</span><span class="stat-label">Comparisons</span></div>
     <div class="guide-stat"><span class="stat-num">${(grouped.get("stack") ?? []).length}</span><span class="stat-label">Stack Guides</span></div>
     <div class="guide-stat"><span class="stat-num">${(grouped.get("alternatives") ?? []).length}</span><span class="stat-label">Alternatives</span></div>
-    <div class="guide-stat"><span class="stat-num">${(grouped.get("report") ?? []).length}</span><span class="stat-label">Reports</span></div>
+    <div class="guide-stat"><span class="stat-num">${(grouped.get("integration") ?? []).length}</span><span class="stat-label">Integrations</span></div>
   </div>
 
   ${sections}
@@ -35527,6 +36102,15 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
         ${toolExamplesHtml}
   </div>
 
+  <h2>Use with Popular Frameworks</h2>
+  <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.75rem">AgentDeals works with any MCP-compatible framework. Step-by-step integration guides:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;margin-bottom:2rem">
+    <a href="/guides/langchain" style="display:block;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--accent);text-decoration:none;font-size:.9rem;transition:border-color .15s"><strong>LangChain</strong><br><span style="font-size:.8rem;color:var(--text-muted)">Python &middot; langchain-mcp-adapters</span></a>
+    <a href="/guides/crewai" style="display:block;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--accent);text-decoration:none;font-size:.9rem;transition:border-color .15s"><strong>CrewAI</strong><br><span style="font-size:.8rem;color:var(--text-muted)">Python &middot; native mcps field</span></a>
+    <a href="/guides/n8n" style="display:block;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--accent);text-decoration:none;font-size:.9rem;transition:border-color .15s"><strong>n8n</strong><br><span style="font-size:.8rem;color:var(--text-muted)">No-code &middot; MCP Server Trigger</span></a>
+    <a href="/guides/vercel-ai-sdk" style="display:block;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--accent);text-decoration:none;font-size:.9rem;transition:border-color .15s"><strong>Vercel AI SDK</strong><br><span style="font-size:.8rem;color:var(--text-muted)">TypeScript &middot; createMCPClient()</span></a>
+  </div>
+
   <h2>Troubleshooting</h2>
   <div class="troubleshoot">
     <dl>
@@ -40241,6 +40825,12 @@ ${Array.from(vsPageMap.keys()).map(s => `  <url>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+${INTEGRATION_GUIDES.map(g => `  <url>
+    <loc>${BASE_URL}/guides/${g.slug}</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join("\n")}
   <url>
     <loc>${BASE_URL}/alternatives</loc>
     <lastmod>${editorialDate}</lastmod>
@@ -40421,9 +41011,21 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     res.end(buildSearchPage(query, categoryFilter, page));
   } else if (url.pathname === "/guides" && isGetOrHead) {
     recordApiHit("/guides");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/guides", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: ALTERNATIVES_PAGES.length });
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/guides", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: ALTERNATIVES_PAGES.length + INTEGRATION_GUIDES.length });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildGuidesPage());
+  } else if (url.pathname.startsWith("/guides/") && isGetOrHead) {
+    const guideSlug = url.pathname.slice("/guides/".length).replace(/\/$/, "");
+    const html = buildIntegrationGuidePage(guideSlug);
+    if (html) {
+      recordApiHit("/guides/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/guides/" + guideSlug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+    }
   } else if (url.pathname === "/alternatives" && isGetOrHead) {
     recordApiHit("/alternatives");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: ALTERNATIVES_PAGES.length });
