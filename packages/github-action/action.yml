@@ -1,0 +1,31 @@
+name: 'Free Tier Monitor'
+description: 'Monitor the free tier status and stability of your project dependencies using AgentDeals data'
+author: 'AgentDeals'
+
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  package-json-path:
+    description: 'Path to package.json file'
+    required: false
+    default: './package.json'
+  post-pr-comment:
+    description: 'Post a PR comment when vendors have elevated stability ratings'
+    required: false
+    default: 'true'
+  alert-threshold:
+    description: 'Minimum stability rating to trigger alerts (watch, volatile)'
+    required: false
+    default: 'watch'
+
+outputs:
+  vendor-count:
+    description: 'Number of recognized vendors found in dependencies'
+  alert-count:
+    description: 'Number of vendors with elevated stability ratings'
+
+runs:
+  using: 'node20'
+  main: 'index.cjs'
