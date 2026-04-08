@@ -488,7 +488,7 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 </svg>`;
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -518,6 +518,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/freshness", label: "Freshness", section: "freshness" },
     { href: "/stacks", label: "Stacks", section: "stacks" },
     { href: "/estimate", label: "Estimate", section: "estimate" },
+    { href: "/stack-check", label: "Health Check", section: "stack-check" },
     { href: "/badges", label: "Badges", section: "badges" },
     { href: "/developers", label: "API", section: "developers" },
     { href: "/setup", label: "Setup", section: "setup" },
@@ -21360,6 +21361,10 @@ ${mcpCtaCss()}
       <div class="link-title">State of Free Tiers 2026</div>
       <div class="link-desc">Comprehensive data-driven report on free tier trends across 1,600+ developer tools</div>
     </a>
+    <a href="/stack-check" class="related-page-link">
+      <div class="link-title">Stack Health Check</div>
+      <div class="link-desc">Enter your stack and get a personalized risk assessment with health grade and recommendations</div>
+    </a>
     ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
       <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
       <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
@@ -38933,6 +38938,471 @@ function buildEstimatorData(): EstimatorCategory[] {
   ];
 }
 
+function buildStackCheckPage(): string {
+  const allOffers = loadOffers();
+  const allChanges = loadDealChanges();
+  const stabilityMap = getStabilityMap();
+  const totalOffers = allOffers.length;
+  const totalChanges = allChanges.length;
+
+  // Build vendor lookup for client-side enrichment
+  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; stability: string; recent_changes: Array<{ date: string; change_type: string; summary: string; impact: string }> }> = {};
+  for (const offer of allOffers) {
+    const slug = toSlug(offer.vendor);
+    const vendorChanges = allChanges
+      .filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .slice(0, 3);
+    const stability = stabilityMap.get(slug) || "stable";
+    const riskLevel = vendorChanges.length === 0 ? "stable"
+      : vendorChanges.some(c => ["free_tier_removed", "product_deprecated", "open_source_killed"].includes(c.change_type)) ? "risky"
+      : vendorChanges.some(c => ["limits_reduced", "restriction", "pricing_restructured", "pricing_model_change"].includes(c.change_type)) ? "caution"
+      : "stable";
+    vendorLookup[slug] = {
+      vendor: offer.vendor,
+      category: offer.category,
+      description: offer.description,
+      tier: offer.tier,
+      slug,
+      risk_level: riskLevel,
+      stability,
+      recent_changes: vendorChanges.map(c => ({ date: c.date, change_type: c.change_type, summary: c.summary, impact: c.impact })),
+    };
+    // Also add by lowercase vendor name for easy matching
+    vendorLookup[offer.vendor.toLowerCase()] = vendorLookup[slug];
+  }
+
+  // Preset popular stacks
+  const presetStacks = [
+    { name: "MERN Stack", services: "MongoDB, Express, React, Node.js, Vercel" },
+    { name: "JAMstack", services: "Netlify, Supabase, Cloudflare, GitHub Actions" },
+    { name: "Serverless", services: "AWS, Vercel, Neon, Sentry, Resend" },
+    { name: "Rails + Heroku", services: "Heroku, PostgreSQL, Redis, Sentry, GitHub Actions" },
+    { name: "AI Startup", services: "Neon, Railway, OpenAI, Anthropic, Grafana Cloud" },
+    { name: "Side Project", services: "Turso, Render, Firebase, BetterStack, Brevo" },
+  ];
+
+  const title = "Stack Health Check — Is Your Free Tier Stack Safe?";
+  const metaDesc = `Enter your tech stack and get a personalized health report. Risk assessment, pricing change alerts, and cost-saving recommendations powered by ${totalOffers} vendor profiles and ${totalChanges} tracked pricing changes.`;
+  const slug = "stack-check";
+  const pubDate = "2026-04-08";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Stack Health Check",
+    "description": metaDesc,
+    "url": `${BASE_URL}/${slug}`,
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+    "datePublished": pubDate,
+  };
+
+  const faqItems = [
+    { q: "How does the Stack Health Check work?", a: "Enter the cloud services and developer tools in your stack. We cross-reference each against our database of " + totalOffers + " vendor profiles and " + totalChanges + " tracked pricing changes to assess risk levels, identify recent changes, and recommend alternatives." },
+    { q: "What do the health grades (A-F) mean?", a: "A = all services stable with no recent pricing changes. B = mostly stable with minor caution items. C = some services at moderate risk. D = multiple high-risk services. F = critical — immediate action recommended due to removed or deprecated free tiers." },
+    { q: "Is my stack data saved or shared?", a: "No. The health check runs entirely in your browser using our public API. Your stack is encoded in the URL for sharing, but no data is stored on our servers." },
+    { q: "What should I do if my stack scores poorly?", a: "Click the alternatives link on any high-risk service card to find stable replacements. Our risk index tracks which free tiers are expanding vs contracting — prioritize services with a 'stable' or 'improving' stability rating." },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${escHtmlServer(title)} | AgentDeals</title>
+  <meta name="description" content="${escHtmlServer(metaDesc)}">
+  <meta name="keywords" content="free tier health check, stack risk assessment, developer tool pricing check, free tier risk, cloud pricing changes 2026">
+  <link rel="canonical" href="${BASE_URL}/${slug}">
+  <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="${BASE_URL}/feed.xml">
+  <meta property="og:title" content="${escHtmlServer(title)} | AgentDeals">
+  <meta property="og:description" content="${escHtmlServer(metaDesc)}">
+  <meta property="og:url" content="${BASE_URL}/${slug}">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="${BASE_URL}/og-image.png">
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+  <script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+  <style>
+    :root{--bg:#0f172a;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:"Georgia","Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;--green:#3fb950;--yellow:#d29922;--red:#f85149;--purple:#a78bfa}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+    .container{max-width:900px;margin:0 auto;padding:1.5rem}
+    ${globalNavCss()}
+    h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem}
+    h2{font-family:var(--serif);font-size:1.3rem;margin:2rem 0 .75rem;color:var(--text)}
+    h3{font-family:var(--serif);font-size:1.1rem;margin:1.5rem 0 .5rem;color:var(--text)}
+    p{color:var(--text-muted);margin:.5rem 0;font-size:.9rem}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:1.5rem}
+
+    /* Input section */
+    .input-section{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+    .input-row{display:flex;gap:.75rem;margin-bottom:1rem}
+    .input-row input{flex:1;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;font-size:.95rem;font-family:var(--sans)}
+    .input-row input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
+    .input-row input::placeholder{color:var(--text-dim)}
+    .btn-primary{background:var(--accent);color:#fff;border:none;padding:.75rem 1.5rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .15s;white-space:nowrap}
+    .btn-primary:hover{opacity:.9}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+
+    /* Preset stacks */
+    .presets{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+    .presets label{font-size:.8rem;color:var(--text-muted);margin-bottom:.25rem;display:block;width:100%}
+    .preset-btn{background:var(--bg);color:var(--text-muted);border:1px solid var(--border);border-radius:6px;padding:.4rem .8rem;font-size:.8rem;font-family:var(--sans);cursor:pointer;transition:all .15s}
+    .preset-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* Health grade */
+    .grade-section{text-align:center;padding:2rem 1.5rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;margin:1.5rem 0}
+    .grade-badge{display:inline-flex;align-items:center;justify-content:center;width:80px;height:80px;border-radius:50%;font-size:2.5rem;font-weight:800;font-family:var(--serif);margin-bottom:.75rem}
+    .grade-A{background:rgba(63,185,80,.15);color:var(--green);border:3px solid var(--green)}
+    .grade-B{background:rgba(63,185,80,.1);color:var(--green);border:3px solid rgba(63,185,80,.6)}
+    .grade-C{background:rgba(210,153,34,.1);color:var(--yellow);border:3px solid var(--yellow)}
+    .grade-D{background:rgba(248,81,73,.1);color:var(--red);border:3px solid rgba(248,81,73,.6)}
+    .grade-F{background:rgba(248,81,73,.15);color:var(--red);border:3px solid var(--red)}
+    .grade-label{font-size:1rem;color:var(--text);font-weight:600;margin-bottom:.25rem}
+    .grade-desc{font-size:.85rem;color:var(--text-muted)}
+
+    /* Risk summary */
+    .risk-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0}
+    .risk-stat{text-align:center;padding:1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px}
+    .risk-stat .count{font-size:1.8rem;font-weight:700}
+    .risk-stat .label{font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+    .risk-low .count{color:var(--green)}
+    .risk-moderate .count{color:var(--yellow)}
+    .risk-high .count{color:var(--red)}
+
+    /* Service cards */
+    .service-cards{display:grid;gap:.75rem;margin:1.5rem 0}
+    .service-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;transition:border-color .15s}
+    .service-card:hover{border-color:var(--accent)}
+    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;flex-wrap:wrap;gap:.5rem}
+    .card-vendor{font-size:1rem;font-weight:700;color:var(--text)}
+    .card-vendor a{color:var(--text)}
+    .card-vendor a:hover{color:var(--accent)}
+    .card-category{font-size:.75rem;color:var(--text-dim);background:var(--bg);padding:.2rem .5rem;border-radius:4px}
+    .risk-badge{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.25rem .6rem;border-radius:4px}
+    .risk-badge.stable{background:rgba(63,185,80,.12);color:var(--green)}
+    .risk-badge.caution{background:rgba(210,153,34,.12);color:var(--yellow)}
+    .risk-badge.risky{background:rgba(248,81,73,.12);color:var(--red)}
+    .risk-badge.not-found{background:rgba(148,163,184,.1);color:var(--text-dim)}
+    .card-tier{font-size:.85rem;color:var(--text-muted);margin:.25rem 0}
+    .card-changes{margin:.5rem 0}
+    .change-item{font-size:.8rem;color:var(--text-dim);padding:.25rem 0;border-top:1px solid var(--border)}
+    .change-item:first-child{border-top:none}
+    .change-type{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-right:.4rem}
+    .change-negative{color:var(--red)}
+    .change-positive{color:var(--green)}
+    .change-neutral{color:var(--yellow)}
+    .card-links{display:flex;gap:.75rem;margin-top:.5rem;font-size:.8rem}
+    .card-not-found{opacity:.7}
+    .card-suggestions{font-size:.8rem;color:var(--text-dim);margin-top:.25rem}
+
+    /* Gaps & recommendations */
+    .recs-section{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin:1.5rem 0}
+    .rec-item{font-size:.85rem;color:var(--text-muted);padding:.5rem 0;border-bottom:1px solid var(--border)}
+    .rec-item:last-child{border-bottom:none}
+    .gap-item{display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.85rem}
+    .gap-item:last-child{border-bottom:none}
+    .gap-cat{font-weight:600;color:var(--text);min-width:100px}
+    .gap-rec{color:var(--text-muted)}
+
+    /* Share bar */
+    .share-bar{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px}
+    .share-url{flex:1;font-family:var(--mono);font-size:.8rem;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .share-btn{background:var(--accent);color:#fff;border:none;padding:.5rem 1rem;border-radius:6px;font-size:.8rem;font-family:var(--sans);cursor:pointer;font-weight:600;white-space:nowrap;transition:all .15s}
+    .share-btn:hover{opacity:.9}
+    .share-btn.copied{background:var(--green)}
+
+    /* FAQ */
+    .faq-section{margin:2rem 0}
+    .faq-item{border-bottom:1px solid var(--border);padding:1rem 0}
+    .faq-q{font-weight:600;color:var(--text);font-size:.95rem;margin-bottom:.25rem}
+    .faq-a{color:var(--text-muted);font-size:.85rem;line-height:1.6}
+
+    /* Related links */
+    .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.5rem 0}
+    .related-link{font-size:.8rem;color:var(--accent);background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:.4rem .8rem;text-decoration:none;transition:all .15s}
+    .related-link:hover{border-color:var(--accent);text-decoration:none}
+
+    /* Loading state */
+    .loading{text-align:center;padding:2rem;color:var(--text-muted)}
+    .loading .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin-right:.5rem;vertical-align:middle}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #results{display:none}
+
+    ${mcpCtaCss()}
+    @media(max-width:640px){
+      .input-row{flex-direction:column}
+      .risk-summary{grid-template-columns:1fr}
+      .card-header{flex-direction:column;align-items:flex-start}
+      h1{font-size:1.5rem}
+    }
+  </style>
+</head>
+<body>
+  ${buildGlobalNav("estimate")}
+  <div class="container">
+    <h1>Stack Health Check</h1>
+    <p class="subtitle">Enter your tech stack and get a personalized risk assessment — powered by ${totalOffers} vendor profiles and ${totalChanges} tracked pricing changes.</p>
+
+    <div class="input-section">
+      <div class="input-row">
+        <input type="text" id="stack-input" placeholder="e.g. vercel, supabase, github, mongodb, redis" autocomplete="off" aria-label="Enter services">
+        <button class="btn-primary" id="check-btn" onclick="checkStack()">Check Stack</button>
+      </div>
+      <div class="presets">
+        <label>Try a popular stack:</label>
+        ${presetStacks.map(s => `<button class="preset-btn" onclick="usePreset('${escHtmlServer(s.services)}')">${escHtmlServer(s.name)}</button>`).join("\n        ")}
+      </div>
+    </div>
+
+    <div id="loading" class="loading" style="display:none">
+      <span class="spinner"></span> Analyzing your stack...
+    </div>
+
+    <div id="results">
+      <div id="grade-section" class="grade-section"></div>
+
+      <div id="share-bar" class="share-bar" style="display:none">
+        <span class="share-url" id="share-url"></span>
+        <button class="share-btn" onclick="copyShareUrl(this)">Copy Link</button>
+      </div>
+
+      <h2>Risk Summary</h2>
+      <div id="risk-summary" class="risk-summary"></div>
+
+      <h2>Service Details</h2>
+      <div id="service-cards" class="service-cards"></div>
+
+      <div id="gaps-section" style="display:none">
+        <h2>Coverage Gaps</h2>
+        <div id="gaps-list" class="recs-section"></div>
+      </div>
+
+      <div id="recs-section" style="display:none">
+        <h2>Recommendations</h2>
+        <div id="recs-list" class="recs-section"></div>
+      </div>
+    </div>
+
+    ${buildMcpCta("Check your stack risk programmatically — search_deals, plan_stack, compare_vendors, and track_changes in your AI editor.")}
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-section">
+      ${faqItems.map(f => `<div class="faq-item"><div class="faq-q">${escHtmlServer(f.q)}</div><div class="faq-a">${escHtmlServer(f.a)}</div></div>`).join("\n      ")}
+    </div>
+
+    <h2>Related Tools</h2>
+    <div class="related-links">
+      <a href="/free-tier-risk" class="related-link">Free Tier Risk Index</a>
+      <a href="/estimate" class="related-link">Stack Cost Estimator</a>
+      <a href="/state-of-free-tiers" class="related-link">State of Free Tiers</a>
+      <a href="/stacks" class="related-link">Curated Stacks</a>
+      <a href="/freshness" class="related-link">Data Freshness</a>
+      <a href="/pricing-changes" class="related-link">Pricing Changes</a>
+      <a href="/expiring" class="related-link">Expiring Deals</a>
+    </div>
+
+    <p style="margin-top:2rem;font-size:.75rem;color:var(--text-dim);text-align:center">
+      Data from <a href="/">AgentDeals</a> — ${totalOffers} vendor profiles, ${totalChanges} tracked pricing changes. Updated ${pubDate}.
+    </p>
+  </div>
+
+  <script>
+    ${mcpCtaScript()}
+    var VENDOR_LOOKUP = ${JSON.stringify(vendorLookup)};
+
+    function usePreset(services) {
+      document.getElementById('stack-input').value = services;
+      checkStack();
+    }
+
+    function checkStack() {
+      var input = document.getElementById('stack-input').value.trim();
+      if (!input) return;
+
+      var services = input.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+      if (services.length === 0) return;
+
+      // Update URL
+      var newUrl = window.location.pathname + '?s=' + encodeURIComponent(services.join(','));
+      history.replaceState(null, '', newUrl);
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('check-btn').disabled = true;
+
+      fetch('/api/audit-stack?services=' + encodeURIComponent(services.join(',')))
+        .then(function(r) { return r.json(); })
+        .then(function(data) { renderResults(data, services); })
+        .catch(function(err) {
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('check-btn').disabled = false;
+          alert('Error checking stack: ' + err.message);
+        });
+    }
+
+    function renderResults(data, inputServices) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('check-btn').disabled = false;
+
+      // Compute health grade
+      var riskCounts = { stable: 0, caution: 0, risky: 0, not_found: 0 };
+      var totalFound = 0;
+      for (var i = 0; i < data.services.length; i++) {
+        var svc = data.services[i];
+        if (svc.status === 'not_found') { riskCounts.not_found++; continue; }
+        totalFound++;
+        var rl = svc.risk_level || 'stable';
+        if (riskCounts[rl] !== undefined) riskCounts[rl]++;
+        else riskCounts.stable++;
+      }
+
+      var grade, gradeLabel, gradeDesc;
+      if (totalFound === 0) {
+        grade = '?'; gradeLabel = 'Unknown'; gradeDesc = 'None of the entered services were found in our database.';
+      } else {
+        var riskyPct = riskCounts.risky / totalFound;
+        var cautionPct = riskCounts.caution / totalFound;
+        if (riskyPct === 0 && cautionPct === 0) { grade = 'A'; gradeLabel = 'Excellent'; gradeDesc = 'All services are stable with no recent pricing concerns.'; }
+        else if (riskyPct === 0 && cautionPct <= 0.3) { grade = 'B'; gradeLabel = 'Good'; gradeDesc = 'Mostly stable stack with minor items to monitor.'; }
+        else if (riskyPct <= 0.2 && cautionPct <= 0.5) { grade = 'C'; gradeLabel = 'Fair'; gradeDesc = 'Some services at moderate risk — review alternatives for flagged items.'; }
+        else if (riskyPct <= 0.4) { grade = 'D'; gradeLabel = 'Poor'; gradeDesc = 'Multiple high-risk services detected — migration planning recommended.'; }
+        else { grade = 'F'; gradeLabel = 'Critical'; gradeDesc = 'Significant free tier risk across your stack — immediate action recommended.'; }
+      }
+
+      var gradeClass = grade === '?' ? 'C' : grade;
+      document.getElementById('grade-section').innerHTML =
+        '<div class="grade-badge grade-' + gradeClass + '">' + grade + '</div>' +
+        '<div class="grade-label">' + gradeLabel + '</div>' +
+        '<div class="grade-desc">' + gradeDesc + '</div>';
+
+      // Share URL
+      var shareUrl = window.location.origin + '/stack-check?s=' + encodeURIComponent(inputServices.join(','));
+      document.getElementById('share-url').textContent = shareUrl;
+      document.getElementById('share-bar').style.display = 'flex';
+
+      // Risk summary
+      document.getElementById('risk-summary').innerHTML =
+        '<div class="risk-stat risk-low"><div class="count">' + riskCounts.stable + '</div><div class="label">Stable</div></div>' +
+        '<div class="risk-stat risk-moderate"><div class="count">' + riskCounts.caution + '</div><div class="label">Caution</div></div>' +
+        '<div class="risk-stat risk-high"><div class="count">' + riskCounts.risky + '</div><div class="label">High Risk</div></div>';
+
+      // Service cards
+      var cardsHtml = '';
+      var negTypes = ['free_tier_removed','limits_reduced','restriction','product_deprecated','open_source_killed','pricing_model_change','pricing_restructured'];
+      var posTypes = ['limits_increased','new_free_tier','startup_program_expanded','pricing_postponed'];
+      for (var i = 0; i < data.services.length; i++) {
+        var svc = data.services[i];
+        if (svc.status === 'not_found') {
+          cardsHtml += '<div class="service-card card-not-found"><div class="card-header"><span class="card-vendor">' + esc(svc.vendor) + '</span><span class="risk-badge not-found">Not Found</span></div>';
+          cardsHtml += '<p class="card-tier">Not in our database of ' + ${totalOffers} + ' vendor profiles.</p>';
+          if (svc.suggestions && svc.suggestions.length > 0) {
+            cardsHtml += '<p class="card-suggestions">Did you mean: ' + svc.suggestions.map(function(s) { return '<a href="#" onclick="document.getElementById(\\'stack-input\\').value=\\'' + esc(s) + '\\';checkStack();return false">' + esc(s) + '</a>'; }).join(', ') + '?</p>';
+          }
+          cardsHtml += '</div>';
+          continue;
+        }
+        var rl = svc.risk_level || 'stable';
+        var slug = toSlug(svc.vendor);
+        cardsHtml += '<div class="service-card"><div class="card-header"><span class="card-vendor"><a href="/vendor/' + esc(slug) + '">' + esc(svc.vendor) + '</a></span>';
+        cardsHtml += '<div style="display:flex;gap:.5rem;align-items:center"><span class="card-category">' + esc(svc.category) + '</span><span class="risk-badge ' + esc(rl) + '">' + esc(rl) + '</span></div></div>';
+        cardsHtml += '<p class="card-tier">' + esc(svc.tier) + '</p>';
+
+        if (svc.recent_changes && svc.recent_changes.length > 0) {
+          cardsHtml += '<div class="card-changes">';
+          var shown = Math.min(svc.recent_changes.length, 3);
+          for (var j = 0; j < shown; j++) {
+            var ch = svc.recent_changes[j];
+            var cls = negTypes.indexOf(ch.change_type) >= 0 ? 'change-negative' : posTypes.indexOf(ch.change_type) >= 0 ? 'change-positive' : 'change-neutral';
+            cardsHtml += '<div class="change-item"><span class="change-type ' + cls + '">' + esc(ch.change_type.replace(/_/g, ' ')) + '</span>' + esc(ch.date) + ' — ' + esc(ch.summary) + '</div>';
+          }
+          cardsHtml += '</div>';
+        }
+
+        cardsHtml += '<div class="card-links"><a href="/vendor/' + esc(slug) + '">Details</a><a href="/alternative-to/' + esc(slug) + '">Alternatives</a>';
+        if (svc.cheaper_alternative) {
+          cardsHtml += '<span style="color:var(--green);font-size:.8rem">Swap: <a href="/vendor/' + esc(toSlug(svc.cheaper_alternative.vendor)) + '">' + esc(svc.cheaper_alternative.vendor) + '</a></span>';
+        }
+        cardsHtml += '</div></div>';
+      }
+      document.getElementById('service-cards').innerHTML = cardsHtml;
+
+      // Gaps
+      if (data.gaps && data.gaps.length > 0) {
+        document.getElementById('gaps-section').style.display = 'block';
+        var gapsHtml = '';
+        for (var i = 0; i < data.gaps.length; i++) {
+          var g = data.gaps[i];
+          gapsHtml += '<div class="gap-item"><span class="gap-cat">' + esc(g.category) + '</span>';
+          gapsHtml += '<span class="gap-rec">Try <a href="/vendor/' + esc(toSlug(g.recommendation.vendor)) + '">' + esc(g.recommendation.vendor) + '</a> — ' + esc(g.recommendation.description) + '</span></div>';
+        }
+        document.getElementById('gaps-list').innerHTML = gapsHtml;
+      } else {
+        document.getElementById('gaps-section').style.display = 'none';
+      }
+
+      // Recommendations
+      if (data.recommendations && data.recommendations.length > 0) {
+        document.getElementById('recs-section').style.display = 'block';
+        var recsHtml = '';
+        for (var i = 0; i < data.recommendations.length; i++) {
+          recsHtml += '<div class="rec-item">' + esc(data.recommendations[i]) + '</div>';
+        }
+        document.getElementById('recs-list').innerHTML = recsHtml;
+      } else {
+        document.getElementById('recs-section').style.display = 'none';
+      }
+    }
+
+    function esc(s) {
+      if (!s) return '';
+      var d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function toSlug(name) {
+      return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    function copyShareUrl(btn) {
+      var url = document.getElementById('share-url').textContent;
+      navigator.clipboard.writeText(url).then(function() {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    // Auto-check if URL has ?s= parameter
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var s = params.get('s');
+      if (s) {
+        document.getElementById('stack-input').value = s;
+        checkStack();
+      }
+    })();
+  </script>
+</body>
+</html>`;
+}
+
 function buildEstimatePage(): string {
   const estimatorData = buildEstimatorData();
   const allOffers = loadOffers();
@@ -43218,6 +43688,12 @@ ${catList}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/stack-check</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/developers</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -43970,6 +44446,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       res.writeHead(404, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Not found" }));
     }
+  } else if (url.pathname === "/stack-check" && isGetOrHead) {
+    recordApiHit("/stack-check");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/stack-check", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildStackCheckPage());
   } else if (url.pathname === "/estimate" && isGetOrHead) {
     recordApiHit("/estimate");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/estimate", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -44013,6 +44494,7 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/digest/archive`,
     `${BASE_URL}/trends`,
     `${BASE_URL}/estimate`,
+    `${BASE_URL}/stack-check`,
     `${BASE_URL}/developers`,
     `${BASE_URL}/stacks`,
     ...STACK_TEMPLATES.map(t => `${BASE_URL}/stacks/${t.slug}`),
