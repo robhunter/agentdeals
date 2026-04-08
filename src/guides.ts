@@ -75,6 +75,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "free-tier-tracker", title: "Free Tier Tracker Q1 2026", description: "Q1 2026 free tier erosion report — 8 removals, 6 expansions, 4 trend patterns" },
   { slug: "startup-credits", title: "Startup Credits Directory", description: "19 startup credit programs across 3 tiers, $1M+ combined credits, stacking strategy" },
   { slug: "ai-coding-pricing-2026", title: "AI Coding Tools Pricing 2026", description: "9 AI coding tools compared — Cursor, Copilot, Claude Code, Windsurf, pricing and free tiers" },
+  { slug: "ai-coding-tools-pricing", title: "AI Coding Tools Pricing Comparison 2026", description: "The definitive comparison of 16 AI coding tools — IDE, CLI, cloud agent, app builder categories with free tier analysis, hidden costs, and cost breakdowns" },
   { slug: "aws-free-tier-2026", title: "AWS Free Tier Guide 2026", description: "29 services, 3 tier types, hidden costs, alternatives — comprehensive AWS free tier guide" },
   { slug: "gcp-free-tier-2026", title: "GCP Free Tier Guide 2026", description: "31 Always Free products, $300 trial, AI/ML tools, hidden costs — comprehensive GCP guide" },
   { slug: "azure-free-tier-2026", title: "Azure Free Tier Guide 2026", description: "65+ always-free services, $200 trial, Cosmos DB lifetime tier, Founders Hub $150K" },
