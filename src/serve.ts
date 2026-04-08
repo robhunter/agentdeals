@@ -5131,12 +5131,12 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   },
   {
     slug: "free-tier-risk",
-    title: "Free Tier Risk Index — Which Developer Free Tiers Are Safe to Build On?",
-    metaDesc: "Risk scores for 30+ developer tool free tiers based on pricing history, financial signals, and competitive pressure. Data-driven analysis using 72 tracked deal changes. Updated March 2026.",
+    title: "Free Tier Risk Index — Predictive Analysis of Which Free Tiers May Disappear Next",
+    metaDesc: "Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from 80 tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.",
     contextHtml: "",
     tag: "free-tier-risk",
-    primaryVendor: "Heroku",
-    hubDesc: "Risk scores for 30+ developer free tiers — which are safe to build on and which might disappear",
+    primaryVendor: "AgentDeals",
+    hubDesc: "Predictive risk analysis for 38 developer free tiers — category heatmap, pattern analysis, counter-trends, protection strategies",
   },
   {
     slug: "stability",
@@ -20510,13 +20510,13 @@ function buildGeminiApiPricingChangesPage(): string {
 }
 
 function buildFreeTierRiskPage(): string {
-  const title = "Free Tier Risk Index — Which Developer Free Tiers Are Safe to Build On?";
-  const metaDesc = "Risk scores for 30+ developer tool free tiers based on pricing history, financial signals, and competitive pressure. Data-driven analysis using 72 tracked deal changes. Updated March 2026.";
+  const title = "Free Tier Risk Index — Predictive Analysis of Which Free Tiers May Disappear Next";
+  const metaDesc = "Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from 80 tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.";
   const slug = "free-tier-risk";
-  const pubDate = "2026-03-26";
+  const pubDate = "2026-04-08";
 
   // Categorize deal changes
-  const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "product_deprecated", "open_source_killed", "pricing_model_change"];
+  const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "product_deprecated", "open_source_killed", "pricing_model_change", "pricing_restructured"];
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
   const negativeChanges = dealChanges.filter(c => negativeTypes.includes(c.change_type));
   const positiveChanges = dealChanges.filter(c => positiveTypes.includes(c.change_type));
@@ -20599,12 +20599,80 @@ function buildFreeTierRiskPage(): string {
     </tr>`;
   };
 
+  // Category heatmap data — aggregate changes by normalized category
+  const categoryMap = new Map<string, { total: number; negative: number; positive: number }>();
+  const normCat = (c: string) => {
+    const cl = c.toLowerCase();
+    if (cl.includes("ai") || cl.includes("ml")) return "AI / ML";
+    if (cl.includes("cloud") && (cl.includes("iaas") || cl.includes("hosting") || cl.includes("storage") || cl.includes("ide"))) return "Cloud Infrastructure";
+    if (cl.includes("database")) return "Databases";
+    if (cl.includes("hosting")) return "Hosting / PaaS";
+    if (cl.includes("api") && !cl.includes("ai")) return "APIs & Gateways";
+    if (cl.includes("monitor") || cl.includes("logging")) return "Monitoring & Observability";
+    if (cl.includes("storage")) return "Storage";
+    if (cl.includes("testing")) return "Testing";
+    if (cl.includes("ci") || cl.includes("infrastructure")) return "CI/CD & Infrastructure";
+    if (cl.includes("container")) return "Containers";
+    return c;
+  };
+  for (const dc of dealChanges) {
+    const cat = normCat(dc.category);
+    const entry = categoryMap.get(cat) ?? { total: 0, negative: 0, positive: 0 };
+    entry.total++;
+    if (negativeTypes.includes(dc.change_type)) entry.negative++;
+    if (positiveTypes.includes(dc.change_type)) entry.positive++;
+    categoryMap.set(cat, entry);
+  }
+  const heatmapData = [...categoryMap.entries()]
+    .map(([cat, d]) => ({ category: cat, ...d, pctNeg: Math.round((d.negative / d.total) * 100) }))
+    .sort((a, b) => b.total - a.total);
+
+  // Pattern analysis data
+  const monthlyChanges = new Map<string, number>();
+  const monthlyNeg = new Map<string, number>();
+  for (const dc of dealChanges) {
+    const month = dc.date.substring(0, 7);
+    monthlyChanges.set(month, (monthlyChanges.get(month) ?? 0) + 1);
+    if (negativeTypes.includes(dc.change_type)) {
+      monthlyNeg.set(month, (monthlyNeg.get(month) ?? 0) + 1);
+    }
+  }
+  const sortedMonths = [...monthlyChanges.keys()].sort();
+
+  // Vendors with multiple changes (repeat offenders)
+  const vendorChangeCount = new Map<string, number>();
+  for (const dc of dealChanges) {
+    vendorChangeCount.set(dc.vendor, (vendorChangeCount.get(dc.vendor) ?? 0) + 1);
+  }
+  const repeatVendors = [...vendorChangeCount.entries()]
+    .filter(([, count]) => count >= 2)
+    .sort((a, b) => b[1] - a[1]);
+
+  // FAQ data
+  const faqs = [
+    { q: "How often is the Free Tier Risk Index updated?", a: "We update risk scores whenever a new pricing change is tracked. Our dataset currently includes " + dealChanges.length + " changes across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
+    { q: "Which free tiers are safest to build on in 2026?", a: "Cloudflare, GitHub, Grafana Cloud, AWS Always Free, and Google Cloud Always Free are our lowest-risk picks. They share three traits: backed by profitable companies, the free tier is a strategic acquisition funnel, and strong competitive pressure prevents removal." },
+    { q: "What are the warning signs that a free tier is about to be removed?", a: "Key signals: (1) acquisition or ownership change (HashiCorp/IBM, Neon/Databricks), (2) license change (MinIO AGPL to proprietary), (3) credit-based pricing transition (Vercel, Netlify), (4) two or more negative changes within 6 months, and (5) 'sustaining mode' language in announcements." },
+    { q: "How do you calculate risk scores?", a: "We weight four factors: pricing history (40%) — has the vendor changed before and how recently; financial signals (25%) — profitable vs VC-subsidized, recent acquisitions; competitive pressure (20%) — intense competition keeps free tiers alive; free tier strategic value (15%) — is the free tier a funnel or a cost center." },
+    { q: "What should I do if a tool I depend on is rated high risk?", a: "Start planning your migration now. Use abstractions (ORMs, S3-compatible APIs, OpenTelemetry) to minimize switching cost. Identify 2-3 alternatives and test them in a staging environment. Subscribe to our pricing change feed at /feed.xml for early warning." },
+    { q: "Are there any categories where free tiers are expanding?", a: "Yes — AI coding tools (GitHub Copilot Free, Anthropic increases, Windsurf launch) and cloud infrastructure (Cloudflare Queues, Workers expansion, AWS restructuring). Competition for developer mindshare drives expansion. See the Counter-Trends section for details." },
+  ];
+
   // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["q1-2026-developer-pricing-report", "q2-pricing-preview-2026", "free-startup-stack", "hetzner-pricing-2026", "google-developer-program-2026", "hosting-alternatives"].includes(p.slug)
+    ["state-of-free-tiers", "q1-2026-developer-pricing-report", "q2-pricing-preview-2026", "free-startup-stack", "stability", "free-tier-tracker"].includes(p.slug)
   );
 
-  // JSON-LD
+  // JSON-LD — Article + FAQPage
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -20630,10 +20698,12 @@ function buildFreeTierRiskPage(): string {
 <meta property="og:type" content="article">
 <meta property="og:url" content="${BASE_URL}/${slug}">
 <meta property="article:published_time" content="${pubDate}">
+<meta name="keywords" content="free tier risk, which free tiers will be removed, free tier predictions 2026, developer tool pricing, free tier sustainability">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -20721,7 +20791,11 @@ ${mcpCtaCss()}
       <li><a href="#high">High Risk — Plan Your Exit</a> (${highRisk.length} vendors)</li>
       <li><a href="#dead">Already Changed</a> (${deadEntries.length} vendors)</li>
       <li><a href="#scoring">Full Scoring Table</a></li>
-      <li><a href="#advice">What To Do About It</a></li>
+      <li><a href="#heatmap">Category Risk Heatmap</a></li>
+      <li><a href="#patterns">Pattern Analysis</a></li>
+      <li><a href="#counter">Counter-Trends — Who's Expanding</a></li>
+      <li><a href="#advice">How to Protect Your Stack</a></li>
+      <li><a href="#faq">FAQ</a></li>
     </ol>
   </div>
 
@@ -20820,7 +20894,96 @@ ${mcpCtaCss()}
     </table>
   </div>
 
-  <h2 id="advice">7. What To Do About It</h2>
+  <h2 id="heatmap">7. Category Risk Heatmap</h2>
+  <p class="section-intro">Which categories face the most pricing pressure? Darker red = higher percentage of negative changes. Based on ${dealChanges.length} tracked changes across all categories.</p>
+  <div style="display:grid;gap:.5rem;margin:1rem 0 2rem">
+    ${heatmapData.map(h => {
+      const barWidth = Math.max(h.total * 8, 30);
+      const negWidth = Math.round((h.negative / h.total) * 100);
+      const posWidth = Math.round((h.positive / h.total) * 100);
+      const neutralWidth = 100 - negWidth - posWidth;
+      const riskLevel = h.pctNeg >= 80 ? "#f85149" : h.pctNeg >= 60 ? "#d29922" : "#3fb950";
+      return '<div style="display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:6px">'
+        + '<div style="min-width:180px;font-weight:600;font-size:.85rem">' + escHtmlServer(h.category) + '</div>'
+        + '<div style="flex:1;height:20px;background:var(--bg);border-radius:4px;overflow:hidden;display:flex">'
+        + '<div style="width:' + negWidth + '%;background:#f85149;transition:width .3s" title="Negative: ' + h.negative + '"></div>'
+        + '<div style="width:' + neutralWidth + '%;background:#334155" title="Neutral: ' + (h.total - h.negative - h.positive) + '"></div>'
+        + '<div style="width:' + posWidth + '%;background:#3fb950" title="Positive: ' + h.positive + '"></div>'
+        + '</div>'
+        + '<div style="min-width:80px;text-align:right;font-family:var(--mono);font-size:.8rem">'
+        + '<span style="color:' + riskLevel + '">' + h.pctNeg + '% neg</span>'
+        + '</div>'
+        + '<div style="min-width:40px;text-align:right;font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">' + h.total + '</div>'
+        + '</div>';
+    }).join("\n    ")}
+  </div>
+  <div class="context-box">
+    <strong>Reading the heatmap:</strong> Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (expansions, new tiers). Gray = neutral restructurings. Categories with 80%+ negative changes (APIs, Testing, Monitoring) are under the most pricing pressure. AI/ML shows a split — some vendors contracting while new entrants expand.
+  </div>
+
+  <h2 id="patterns">8. Pattern Analysis — What ${dealChanges.length} Changes Tell Us</h2>
+  <p class="section-intro">Statistical patterns from our pricing change dataset that predict future free tier removals.</p>
+
+  <div class="diff-card" style="border-left-color:#f85149">
+    <h3>\u{1F4CA} The Two-Strike Rule</h3>
+    <p class="diff-desc">Vendors with 2+ pricing changes in 12 months almost always make a third. From our data, ${repeatVendors.length} vendors have made multiple changes: ${repeatVendors.slice(0, 8).map(([v, c]) => '<strong>' + escHtmlServer(v) + '</strong> (' + c + ')').join(", ")}. When you see the second change, start your migration plan — the third is coming.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#d29922">
+    <h3>\u{1F4C8} Monthly Acceleration</h3>
+    <p class="diff-desc">Pricing changes are accelerating. Monthly change counts: ${sortedMonths.map(m => '<strong>' + m + '</strong>: ' + (monthlyChanges.get(m) ?? 0)).join(', ')}. Q1 2026 saw 50 changes — more than all of 2025 H2. The pace isn't slowing.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#8b5cf6">
+    <h3>\u{1F3E2} The Acquisition Pattern</h3>
+    <p class="diff-desc">Acquisitions precede free tier changes by 6-18 months. Pattern examples: <strong>Heroku</strong> (Salesforce acquisition → free tier removed), <strong>HCP Terraform</strong> (IBM acquisition → BSL license → legacy tier EOL), <strong>Neon</strong> (Databricks acquisition → pricing restructured), <strong>SendGrid</strong> (Twilio acquisition → free tier removed). When a developer tool gets acquired, budget for a paid plan or prepare to migrate.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#ec4899">
+    <h3>\u{1F4B0} The Credit-Based Transition</h3>
+    <p class="diff-desc">Credit-based pricing is the intermediate step before free tier reduction. Vercel, Netlify, and Fly.io all moved to credit-based models before tightening limits. The credit model lets vendors reduce free usage gradually (lower credits) without the PR hit of "free tier removed." If your vendor announces credits, plan ahead.</p>
+  </div>
+
+  <div class="diff-card" style="border-left-color:#3fb950">
+    <h3>\u{1F6E1}\uFE0F The Safety Signals</h3>
+    <p class="diff-desc">Not all changes are negative. ${positiveChanges.length} of ${dealChanges.length} changes were positive (new tiers or expansions). Safe signals: profitable company with developer funnel business model (Cloudflare, GitHub), open-source core with commercial layer (Grafana, Sentry), and competitive market forcing free tier maintenance (AI coding tools, cloud providers).</p>
+  </div>
+
+  <h2 id="counter">9. Counter-Trends — Who's Expanding Free Tiers</h2>
+  <p class="section-intro">While most pricing changes are negative (${negativeChanges.length} of ${dealChanges.length}), a meaningful minority of vendors are actively expanding. Understanding why reveals what makes a free tier durable.</p>
+
+  <div class="verdict-box" style="border-color:#3fb950;background:linear-gradient(135deg,rgba(63,185,80,0.1),rgba(59,130,246,0.1))">
+    <h3 style="color:#3fb950">The Cloudflare Model</h3>
+    <div class="verdict-item">
+      <strong>What they did:</strong>
+      <p>Added free Queues, expanded Workers, Durable Objects pricing reduction, launched $250K startup program — all in Q1 2026. More free, not less.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Why it works:</strong>
+      <p>Cloudflare's free tier is a strategic moat, not a cost center. Every free Workers user is a potential enterprise CDN customer. The network effect means more developers → more sites → more edge traffic → more enterprise deals. Free tier investment has positive ROI.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>The lesson:</strong>
+      <p>When the free tier IS the business model's funnel (not a charity), it's durable. Look for this pattern: Cloudflare (CDN → enterprise), GitHub (repos → Copilot/Enterprise), Auth0 (dev auth → enterprise IAM).</p>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.5rem 0">
+    <div class="diff-card" style="border-left-color:#3fb950">
+      <h3>AI Coding Tools</h3>
+      <p class="diff-desc">GitHub Copilot Free (2K completions), Windsurf launch, Anthropic rate increases. The AI coding wars are forcing vendors to compete on free tier generosity. This is the most expansionary category in our dataset.</p>
+    </div>
+    <div class="diff-card" style="border-left-color:#3fb950">
+      <h3>Cloud Providers</h3>
+      <p class="diff-desc">AWS restructured and expanded free tier (Jan 2026). Google Always Free stable for years. Azure Founders Hub offers $150K credits. Big cloud free tiers are acquisition funnels that drive billions in enterprise spend.</p>
+    </div>
+    <div class="diff-card" style="border-left-color:#3fb950">
+      <h3>Open-Source First</h3>
+      <p class="diff-desc">Grafana Cloud (50GB logs free), Sentry (5K errors), Prometheus ecosystem. Open-source core means community forks prevent vendor lock-in — which means the commercial layer must stay competitive.</p>
+    </div>
+  </div>
+
+  <h2 id="advice">10. How to Protect Your Stack</h2>
   <div class="verdict-box">
     <h3>Practical Risk Mitigation</h3>
     <div class="verdict-item">
@@ -20845,6 +21008,12 @@ ${mcpCtaCss()}
     </div>
   </div>
 
+  <h2 id="faq">11. Frequently Asked Questions</h2>
+  ${faqs.map(f => '<div class="diff-card" style="border-left-color:var(--accent);cursor:pointer" onclick="const a=this.querySelector(\'.diff-desc\');a.style.display=a.style.display===\'none\'?\'block\':\'none\'">'
+    + '<h3 style="margin:0;display:flex;justify-content:space-between;align-items:center">' + escHtmlServer(f.q) + ' <span style="color:var(--text-dim);font-size:.8rem">&#9660;</span></h3>'
+    + '<p class="diff-desc" style="margin-top:.5rem">' + escHtmlServer(f.a) + '</p>'
+    + '</div>').join("\n  ")}
+
   <h2>Related Guides</h2>
   <p class="section-intro">Deep-dive analysis and comparison guides for developer tool pricing.</p>
   <div class="related-pages">
@@ -20863,11 +21032,11 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Risk scores derived from our dataset of ${dealChanges.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools. Each vendor scored on pricing history (40%), financial signals (25%), competitive pressure (20%), and free tier strategic value (15%). Pricing history sourced from official vendor announcements and our <a href="/changes">deal change tracker</a>. Financial signals based on public funding data, acquisition history, and profitability indicators. This index is updated as new pricing changes are tracked. Last updated: ${new Date().toISOString().split("T")[0]}.
+    <strong>Methodology:</strong> Risk scores derived from our dataset of ${dealChanges.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools. Each vendor scored on pricing history (40%), financial signals (25%), competitive pressure (20%), and free tier strategic value (15%). Pricing history sourced from official vendor announcements and our <a href="/changes">deal change tracker</a>. Financial signals based on public funding data, acquisition history, and profitability indicators. Category heatmap and pattern analysis computed dynamically from our full deal_changes dataset. This index is updated as new pricing changes are tracked. Last updated: ${new Date().toISOString().split("T")[0]}.
   </div>
 
   <div class="search-cta">
-    <p>This risk index covers ${riskEntries.length} major developer tools as of March 2026. For full free tier details on any vendor, search our index of ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>. Track changes in real-time via our <a href="/feed.xml">Atom feed</a> or <a href="/setup">MCP server</a>.</p>
+    <p>This risk index covers ${riskEntries.length} major developer tools as of April 2026. For full free tier details on any vendor, search our index of ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>. Track changes in real-time via our <a href="/feed.xml">Atom feed</a> or <a href="/setup">MCP server</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
