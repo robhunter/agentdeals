@@ -21531,8 +21531,8 @@ ${mcpCtaCss()}
 // --- Firebase Studio Shutdown Guide page ---
 
 function buildFirebaseStudioShutdownPage(): string {
-  const title = "Firebase Studio Shutdown: Free Cloud IDE Alternatives & Migration Paths";
-  const metaDesc = "Firebase Studio shuts down June 22, 2026 (new workspaces) and March 2027 (full shutdown). Compare free cloud IDE alternatives: GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Migration checklist and free tier comparison.";
+  const title = "Firebase Studio Shutdown: Migration Cost Guide & Free IDE Alternatives";
+  const metaDesc = "Firebase Studio shuts down June 22, 2026. Compare migration costs for GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Hidden costs of switching, free tier comparison, and step-by-step migration checklist.";
   const slug = "firebase-studio-shutdown";
   const pubDate = "2026-04-02";
 
@@ -21552,6 +21552,10 @@ function buildFirebaseStudioShutdownPage(): string {
   const today = new Date();
   const daysToFreeze = Math.max(0, Math.ceil((workspaceFreeze.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
   const daysToShutdown = Math.max(0, Math.ceil((fullShutdown.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+
+  // Count IDE alternatives for cross-link
+  const ideCategory = categories.find(c => c.name.toLowerCase().includes("ide") || c.name.toLowerCase().includes("code editor"));
+  const ideAlternativesCount = ideCategory ? ideCategory.count : 59;
 
   // Cloud IDE alternatives comparison data
   interface CloudIDE {
@@ -21695,6 +21699,9 @@ h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .
 .checklist{list-style:none;padding:0;margin:1rem 0}
 .checklist li{padding:.5rem 0 .5rem 1.75rem;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:.9rem;position:relative}
 .checklist li::before{content:"\u2610";position:absolute;left:0;color:var(--accent);font-size:1.1rem}
+.cost-insight{background:linear-gradient(135deg,rgba(210,153,34,0.08),rgba(248,81,73,0.08));border:1px solid rgba(210,153,34,0.3);border-radius:8px;padding:1.25rem;margin:1.5rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.cost-insight strong{color:var(--text)}
+.text-muted{color:var(--text-dim);font-size:.8rem}
 .methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
 .methodology strong{color:var(--text)}
 .related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
@@ -21751,6 +21758,7 @@ ${mcpCtaCss()}
       <li><a href="#ai-builders">AI Full-Stack Builder Alternatives</a></li>
       <li><a href="#recommendations">Best For Each Use Case</a></li>
       <li><a href="#migration-checklist">Migration Checklist</a></li>
+      <li><a href="#hidden-costs">Hidden Costs of Migration</a></li>
       <li><a href="#firebase-timeline">Firebase Pricing Change Timeline</a></li>
       <li><a href="#methodology">Methodology</a></li>
     </ol>
@@ -21910,6 +21918,59 @@ ${mcpCtaCss()}
     <li><strong>Notify team members</strong> \u2014 share the new environment setup. Update README and onboarding docs.</li>
     <li><strong>Set a calendar reminder</strong> \u2014 March 2027 for final data deletion. Even if you\u2019ve migrated, verify nothing was left behind.</li>
   </ul>
+
+  <h2 id="hidden-costs">Hidden Costs of Migration</h2>
+  <p class="section-intro">Subscription pricing is only part of the cost. The real expense of switching cloud IDEs is the invisible productivity hit during the transition.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Cost Category</th>
+        <th>Solo Developer</th>
+        <th>Small Team (3\u20135)</th>
+        <th>Enterprise (10+)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Environment setup</strong><br><span class="text-muted">Replicating devcontainer, Nix config, extensions</span></td>
+        <td>2\u20134 hours</td>
+        <td>1\u20132 days</td>
+        <td>1\u20132 weeks</td>
+      </tr>
+      <tr>
+        <td><strong>Learning curve</strong><br><span class="text-muted">New keybindings, UI, debugging workflows</span></td>
+        <td>1\u20132 days</td>
+        <td>3\u20135 days</td>
+        <td>1\u20133 weeks</td>
+      </tr>
+      <tr>
+        <td><strong>Workflow disruption</strong><br><span class="text-muted">CI/CD reconfig, deploy pipeline updates</span></td>
+        <td>1\u20132 hours</td>
+        <td>0.5\u20131 day</td>
+        <td>1\u20132 weeks</td>
+      </tr>
+      <tr>
+        <td><strong>Team retraining</strong><br><span class="text-muted">Onboarding docs, pairing sessions, support</span></td>
+        <td>N/A</td>
+        <td>2\u20133 days</td>
+        <td>2\u20134 weeks</td>
+      </tr>
+      <tr>
+        <td><strong>Direct cost (annual)</strong><br><span class="text-muted">Subscription pricing for equivalent features</span></td>
+        <td>$0\u2013$120</td>
+        <td>$0\u2013$600</td>
+        <td>$500\u2013$5,000+</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="cost-insight">
+    <p><strong>Key insight:</strong> For solo developers, most alternatives have free tiers that match or exceed what Firebase Studio offered \u2014 the real cost is 1\u20132 days of productivity loss. For teams, the retraining cost often exceeds a full year of subscription pricing. Start the migration early to spread the disruption across multiple sprints rather than a single painful week.</p>
+    <p>See our <a href="/ide-code-editors-alternatives">IDE &amp; Code Editors guide</a> for detailed free tier comparisons across all ${ideAlternativesCount} alternatives.</p>
+  </div>
 
   ${firebaseChanges.length > 0 ? `<h2 id="firebase-timeline">Firebase Pricing Change Timeline</h2>
   <p class="section-intro">Firebase\u2019s stability rating is <strong style="color:${stabilityColor}">${firebaseStability}</strong>. We\u2019ve tracked ${firebaseChanges.length} changes. Here\u2019s the history:</p>
@@ -37540,6 +37601,10 @@ function buildDeveloperHubPage(): string {
     + "    <div class=\"use-case\">\n"
     + "      <h4>Pricing Change Monitoring</h4>\n"
     + "      <p>Subscribe to the <a href=\"/feed.xml\">Atom feed</a> or poll <code>/api/changes</code> to monitor free tier removals, restrictions, and expansions across " + dealChanges.length + " tracked changes. Filter by vendor or category for personalized alerts.</p>\n"
+    + "    </div>\n"
+    + "    <div class=\"use-case\">\n"
+    + "      <h4>Migration Planning</h4>\n"
+    + "      <p>When a vendor shuts down or changes pricing, use <code>/api/offers</code> + <code>/api/compare</code> to evaluate alternatives with real free tier data. See our <a href=\"/firebase-studio-shutdown\">Firebase Studio migration guide</a> for an example of how we use this data to compare cloud IDE alternatives.</p>\n"
     + "    </div>\n"
     + "\n"
     + "    <h2>Response Format</h2>\n"
