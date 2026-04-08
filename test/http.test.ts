@@ -3280,6 +3280,46 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
   });
 
+  it("GET /ai-coding-tools-pricing renders definitive AI coding comparison", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/ai-coding-tools-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("The Definitive"), "Should have definitive title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    // 16 tools across 4 categories
+    assert.ok(html.includes("Cursor"), "Should include Cursor");
+    assert.ok(html.includes("Windsurf"), "Should include Windsurf");
+    assert.ok(html.includes("GitHub Copilot"), "Should include GitHub Copilot");
+    assert.ok(html.includes("Devin"), "Should include Devin");
+    assert.ok(html.includes("Bolt.new"), "Should include Bolt.new");
+    assert.ok(html.includes("Lovable"), "Should include Lovable");
+    assert.ok(html.includes("OpenAI Codex"), "Should include OpenAI Codex");
+    assert.ok(html.includes("Google Antigravity"), "Should include Google Antigravity");
+    assert.ok(html.includes("Gemini CLI"), "Should include Gemini CLI");
+    assert.ok(html.includes("MarsCode"), "Should include MarsCode");
+    assert.ok(html.includes("Claude Code"), "Should include Claude Code");
+    // Key sections
+    assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
+    assert.ok(html.includes("IDE-Based"), "Should have IDE category");
+    assert.ok(html.includes("CLI / Terminal"), "Should have CLI category");
+    assert.ok(html.includes("Cloud Agents"), "Should have cloud agent category");
+    assert.ok(html.includes("App Builders"), "Should have app builder category");
+    assert.ok(html.includes("What You Actually Get for Free"), "Should have free tier section");
+    assert.ok(html.includes("Cost Comparison by Use Case"), "Should have cost analysis");
+    assert.ok(html.includes("Hidden Costs"), "Should have hidden costs section");
+    assert.ok(html.includes("Best-for-Use-Case Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/pricing-changes"), "Should cross-link to changes");
+    assert.ok(html.includes("/developers"), "Should cross-link to developers");
+  });
+
   it("GET /aws-free-tier-2026 renders AWS free tier guide", async () => {
     proc = await startHttpServer();
 
