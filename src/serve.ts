@@ -488,7 +488,7 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 </svg>`;
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "setup" | "home" | "badges" | "estimate" | "stacks";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -519,7 +519,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/stacks", label: "Stacks", section: "stacks" },
     { href: "/estimate", label: "Estimate", section: "estimate" },
     { href: "/badges", label: "Badges", section: "badges" },
-    { href: "/api/docs", label: "API", section: "api" },
+    { href: "/developers", label: "API", section: "developers" },
     { href: "/setup", label: "Setup", section: "setup" },
   ];
   const navLinks = links.map(l =>
@@ -5861,7 +5861,7 @@ print(result["messages"][-1].content)`,
       { href: "/free-startup-stack", label: "Free Startup Stack Guide" },
       { href: "/database-alternatives", label: "Database Alternatives" },
       { href: "/ai-ml-alternatives", label: "AI/ML Alternatives" },
-      { href: "/api/docs", label: "REST API Documentation" },
+      { href: "/developers", label: "REST API Developer Hub" },
     ],
   },
   {
@@ -5976,7 +5976,7 @@ print(result)`,
       { href: "/monitoring-alternatives", label: "Monitoring Alternatives" },
       { href: "/free-tier-risk", label: "Free Tier Risk Index" },
       { href: "/state-of-free-tiers", label: "State of Free Tiers Report" },
-      { href: "/api/docs", label: "REST API Documentation" },
+      { href: "/developers", label: "REST API Developer Hub" },
     ],
   },
   {
@@ -6059,7 +6059,7 @@ Email node:
       { href: "/estimate", label: "Interactive Stack Cost Estimator" },
       { href: "/pricing-changes", label: "Pricing Changes Timeline" },
       { href: "/freshness", label: "Data Freshness Dashboard" },
-      { href: "/api/docs", label: "REST API Documentation" },
+      { href: "/developers", label: "REST API Developer Hub" },
     ],
   },
   {
@@ -6189,7 +6189,7 @@ await mcpClient.close();`,
       { href: "/free-nextjs-stack", label: "Free Next.js Stack Guide" },
       { href: "/hosting-free-tier-comparison-2026", label: "Hosting Comparison" },
       { href: "/estimate", label: "Interactive Stack Cost Estimator" },
-      { href: "/api/docs", label: "REST API Documentation" },
+      { href: "/developers", label: "REST API Developer Hub" },
     ],
   },
 ];
@@ -35670,7 +35670,7 @@ ${globalNavCss()}
     <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${dealChanges.length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
     <li style="margin-bottom:.4rem"><strong>Definition of &ldquo;free tier&rdquo;:</strong> Perpetual free plans, always-free offerings, and generous hobby/starter tiers without time limits. We exclude limited trials (e.g., 14-day, 30-day) and one-time credits.</li>
     <li style="margin-bottom:.4rem"><strong>Update frequency:</strong> Continuous. Our <a href="/freshness">data freshness dashboard</a> shows verification recency by category.</li>
-    <li style="margin-bottom:.4rem"><strong>Open data:</strong> All data is accessible via our <a href="/api/docs">REST API</a> and <a href="/setup">MCP server</a>. Query it from your AI coding assistant.</li>
+    <li style="margin-bottom:.4rem"><strong>Open data:</strong> All data is accessible via our <a href="/developers">REST API</a> and <a href="/setup">MCP server</a>. Query it from your AI coding assistant.</li>
   </ul>
 
   <!-- Track Changes Yourself CTA -->
@@ -35697,7 +35697,7 @@ ${globalNavCss()}
       <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">MCP Server</div>
       <div style="font-size:.8rem;color:var(--text-muted)">Query ${offers.length.toLocaleString()} deals from Claude, Cursor, or VS Code</div>
     </a>
-    <a href="/api/docs" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
+    <a href="/developers" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
       <div style="font-size:1.5rem;margin-bottom:.5rem">&#128279;</div>
       <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">REST API</div>
       <div style="font-size:.8rem;color:var(--text-muted)">18 endpoints. Open data. No API key required.</div>
@@ -36125,7 +36125,9 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
     </dl>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <p style="margin-top:2rem;font-size:.85rem;color:var(--text-muted)">Prefer plain HTTP? Use the <a href="/developers">REST API</a> &mdash; no MCP client needed, same data.</p>
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>
 (function(){
@@ -37309,6 +37311,293 @@ ${allVendors.filter(v => v.status !== "unknown").map(v =>
   </script>
 </body>
 </html>`;
+}
+
+function buildDeveloperHubPage(): string {
+  const endpointTable = [
+    { method: "GET", path: "/api/offers", desc: "Search and browse offers", params: "q, category, limit, offset" },
+    { method: "GET", path: "/api/categories", desc: "List all categories with counts", params: "" },
+    { method: "GET", path: "/api/new", desc: "Recently added or updated offers", params: "days" },
+    { method: "GET", path: "/api/newest", desc: "Newest deals by verification date", params: "limit" },
+    { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "vendors, categories" },
+    { method: "GET", path: "/api/details/:vendor", desc: "Vendor detail with alternatives", params: "" },
+    { method: "GET", path: "/api/compare", desc: "Compare two vendors side by side", params: "a, b" },
+    { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services" },
+    { method: "GET", path: "/api/vendor-risk/:vendor", desc: "Check vendor pricing risk", params: "" },
+    { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days" },
+    { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "" },
+    { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "" },
+    { method: "GET", path: "/api/stack", desc: "Free-tier stack recommendation", params: "use_case, requirements" },
+    { method: "GET", path: "/api/costs", desc: "Estimate infrastructure costs", params: "services, scale" },
+    { method: "GET", path: "/api/query-log", desc: "Recent request log", params: "limit" },
+    { method: "GET", path: "/api/pageviews", desc: "Page view analytics", params: "path, period" },
+    { method: "GET", path: "/api/stats", desc: "Service statistics", params: "" },
+    { method: "GET", path: "/api/feed", desc: "Atom feed of pricing changes", params: "" },
+  ];
+
+  const endpointRows = endpointTable.map(function(e) {
+    return "      <tr>"
+      + "<td><code>" + e.method + "</code></td>"
+      + "<td><a href=\"" + BASE_URL + e.path.replace(/:vendor/, "supabase") + "\">" + escHtmlServer(e.path) + "</a></td>"
+      + "<td>" + escHtmlServer(e.desc) + "</td>"
+      + "<td>" + (e.params ? "<code>" + escHtmlServer(e.params) + "</code>" : "&mdash;") + "</td>"
+      + "</tr>";
+  }).join("\n");
+
+  return "<!DOCTYPE html>\n"
+    + "<html lang=\"en\">\n"
+    + "<head>\n"
+    + "  <meta charset=\"utf-8\">\n"
+    + "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
+    + "  <title>REST API for Developer Tool Pricing — Free, No Auth Required | AgentDeals</title>\n"
+    + "  <meta name=\"description\" content=\"Free REST API with " + offers.length.toLocaleString() + "+ developer tool deals across " + categories.length + " categories. No API key needed. Search deals, compare vendors, track pricing changes. JSON responses, OpenAPI spec, zero rate limits.\">\n"
+    + "  <link rel=\"canonical\" href=\"" + BASE_URL + "/developers\">\n"
+    + "  <link rel=\"alternate\" type=\"application/atom+xml\" title=\"AgentDeals — Pricing Changes\" href=\"" + BASE_URL + "/feed.xml\">\n"
+    + "  <meta property=\"og:title\" content=\"REST API for Developer Tool Pricing — AgentDeals\">\n"
+    + "  <meta property=\"og:description\" content=\"Free REST API with " + offers.length.toLocaleString() + "+ developer tool deals. No API key needed. Search, compare, track pricing changes.\">\n"
+    + "  <meta property=\"og:url\" content=\"" + BASE_URL + "/developers\">\n"
+    + "  <meta property=\"og:type\" content=\"website\">\n"
+    + "  " + OG_IMAGE_META
+    + "  <script type=\"application/ld+json\">" + JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebAPI",
+      "name": "AgentDeals REST API",
+      "description": "Free REST API providing developer tool pricing data — " + offers.length + "+ deals across " + categories.length + " categories. No authentication required.",
+      "url": BASE_URL + "/developers",
+      "documentation": BASE_URL + "/api/docs",
+      "provider": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+      "termsOfService": BASE_URL + "/privacy",
+      "availableChannel": {
+        "@type": "ServiceChannel",
+        "serviceUrl": BASE_URL + "/api/offers",
+        "serviceType": "REST API"
+      }
+    }) + "</script>\n"
+    + "  <style>\n"
+    + "    :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:\"Georgia\",\"Times New Roman\",serif;--sans:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif;--mono:\"SFMono-Regular\",Consolas,\"Liberation Mono\",monospace}\n"
+    + "    *{box-sizing:border-box;margin:0}\n"
+    + "    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n"
+    + "    .container{max-width:960px;margin:0 auto;padding:1.5rem}\n"
+    + "    " + globalNavCss() + "\n"
+    + "    h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem}\n"
+    + "    h2{font-family:var(--serif);font-size:1.4rem;margin:2.5rem 0 .75rem;color:var(--text)}\n"
+    + "    h3{font-family:var(--serif);font-size:1.1rem;margin:1.5rem 0 .5rem;color:var(--text)}\n"
+    + "    p{color:var(--text-muted);margin:.5rem 0;font-size:.9rem}\n"
+    + "    a{color:var(--accent);text-decoration:none}\n"
+    + "    a:hover{text-decoration:underline}\n"
+    + "    .subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:1.5rem}\n"
+    + "    .highlight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin:1.5rem 0}\n"
+    + "    .highlight-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;text-align:center}\n"
+    + "    .highlight-card .num{font-size:1.8rem;font-weight:700;color:var(--accent)}\n"
+    + "    .highlight-card .label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n"
+    + "    .code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;font-family:var(--mono);font-size:.82rem;color:#c9d1d9;overflow-x:auto;white-space:pre;margin:.75rem 0;position:relative;line-height:1.5}\n"
+    + "    .code-block .lang-label{position:absolute;top:.5rem;right:.75rem;font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;font-family:var(--sans)}\n"
+    + "    .code-block .copy-btn{position:absolute;top:.4rem;right:4rem;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted);padding:.15rem .5rem;border-radius:4px;cursor:pointer;font-size:.65rem;font-family:var(--sans);transition:all .15s}\n"
+    + "    .code-block .copy-btn:hover{color:var(--text);border-color:var(--text-dim)}\n"
+    + "    .code-block .copy-btn.copied{color:var(--accent);border-color:var(--accent)}\n"
+    + "    .endpoint-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}\n"
+    + "    .endpoint-table th{text-align:left;padding:.6rem .75rem;border-bottom:2px solid var(--border);color:var(--text);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n"
+    + "    .endpoint-table td{padding:.5rem .75rem;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top}\n"
+    + "    .endpoint-table td:first-child{white-space:nowrap}\n"
+    + "    .endpoint-table td code{background:#0d1117;padding:.1rem .3rem;border-radius:3px;font-size:.8rem;color:#c9d1d9}\n"
+    + "    .endpoint-table a{font-family:var(--mono);font-size:.82rem}\n"
+    + "    .endpoint-table tr:hover{background:var(--accent-glow)}\n"
+    + "    .use-case{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin:.75rem 0}\n"
+    + "    .use-case h4{font-size:.95rem;color:var(--text);margin:0 0 .5rem}\n"
+    + "    .use-case p{font-size:.85rem;margin:0}\n"
+    + "    .badge-row{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.5rem 0}\n"
+    + "    .api-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border-radius:20px;font-size:.8rem;font-weight:500;border:1px solid var(--border);color:var(--text)}\n"
+    + "    .api-badge .dot{width:8px;height:8px;border-radius:50%;background:#3fb950}\n"
+    + "    .tab-bar{display:flex;gap:.25rem;margin-bottom:0;border-bottom:1px solid var(--border);padding-bottom:0}\n"
+    + "    .tab-btn{font-size:.8rem;padding:.5rem .8rem;border:none;background:transparent;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:var(--sans)}\n"
+    + "    .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}\n"
+    + "    .tab-panel{display:none}\n"
+    + "    .tab-panel.active{display:block}\n"
+    + "    " + mcpCtaCss() + "\n"
+    + "    .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}\n"
+    + "    .footer a{color:var(--accent)}\n"
+    + "    @media(max-width:768px){.endpoint-table{font-size:.75rem}.endpoint-table th,.endpoint-table td{padding:.4rem .5rem}.highlight-grid{grid-template-columns:repeat(2,1fr)}}\n"
+    + "  </style>\n"
+    + "</head>\n"
+    + "<body>\n"
+    + "  <div class=\"container\">\n"
+    + "    " + buildGlobalNav("developers") + "\n"
+    + "\n"
+    + "    <h1>REST API for Developer Tool Pricing</h1>\n"
+    + "    <p class=\"subtitle\">Free, open, and ready to use. No API key, no rate limits, no signup. Query " + offers.length.toLocaleString() + "+ deals across " + categories.length + " categories with plain HTTP requests.</p>\n"
+    + "\n"
+    + "    <div class=\"badge-row\">\n"
+    + "      <span class=\"api-badge\"><span class=\"dot\"></span>No Authentication</span>\n"
+    + "      <span class=\"api-badge\"><span class=\"dot\"></span>Free Forever</span>\n"
+    + "      <span class=\"api-badge\"><span class=\"dot\"></span>JSON Responses</span>\n"
+    + "      <span class=\"api-badge\"><span class=\"dot\"></span>OpenAPI 3.0 Spec</span>\n"
+    + "      <span class=\"api-badge\"><span class=\"dot\"></span>CORS Enabled</span>\n"
+    + "    </div>\n"
+    + "\n"
+    + "    <div class=\"highlight-grid\">\n"
+    + "      <div class=\"highlight-card\"><div class=\"num\">" + offers.length.toLocaleString() + "+</div><div class=\"label\">Verified Deals</div></div>\n"
+    + "      <div class=\"highlight-card\"><div class=\"num\">" + categories.length + "</div><div class=\"label\">Categories</div></div>\n"
+    + "      <div class=\"highlight-card\"><div class=\"num\">" + dealChanges.length + "</div><div class=\"label\">Tracked Price Changes</div></div>\n"
+    + "      <div class=\"highlight-card\"><div class=\"num\">" + endpointTable.length + "</div><div class=\"label\">Endpoints</div></div>\n"
+    + "    </div>\n"
+    + "\n"
+    + "    <h2>Quick Start</h2>\n"
+    + "    <p>Three examples to get you started. Every endpoint returns JSON.</p>\n"
+    + "\n"
+    + "    <div class=\"tab-bar\">\n"
+    + "      <button class=\"tab-btn active\" data-tab=\"curl\" onclick=\"switchTab(this)\">curl</button>\n"
+    + "      <button class=\"tab-btn\" data-tab=\"python\" onclick=\"switchTab(this)\">Python</button>\n"
+    + "      <button class=\"tab-btn\" data-tab=\"javascript\" onclick=\"switchTab(this)\">JavaScript</button>\n"
+    + "    </div>\n"
+    + "\n"
+    + "    <div class=\"tab-panel active\" id=\"panel-curl\">\n"
+    + "      <h3>Search for deals</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/offers?q=database&amp;limit=5\"</div>\n"
+    + "\n"
+    + "      <h3>List all categories</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/categories\"</div>\n"
+    + "\n"
+    + "      <h3>Get recent pricing changes</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/changes\"</div>\n"
+    + "    </div>\n"
+    + "\n"
+    + "    <div class=\"tab-panel\" id=\"panel-python\">\n"
+    + "      <h3>Search for deals</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">python</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>"
+    + "import requests\n"
+    + "\n"
+    + "resp = requests.get(\"" + BASE_URL + "/api/offers\", params={\"q\": \"database\", \"limit\": 5})\n"
+    + "data = resp.json()\n"
+    + "\n"
+    + "for offer in data[\"offers\"]:\n"
+    + "    print(f\"{offer['vendor']} — {offer['description'][:80]}\")</div>\n"
+    + "\n"
+    + "      <h3>List all categories</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">python</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>"
+    + "import requests\n"
+    + "\n"
+    + "resp = requests.get(\"" + BASE_URL + "/api/categories\")\n"
+    + "for cat in resp.json()[\"categories\"]:\n"
+    + "    print(f\"{cat['name']}: {cat['count']} deals\")</div>\n"
+    + "\n"
+    + "      <h3>Get recent pricing changes</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">python</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>"
+    + "import requests\n"
+    + "\n"
+    + "resp = requests.get(\"" + BASE_URL + "/api/changes\")\n"
+    + "for change in resp.json()[\"changes\"][:5]:\n"
+    + "    print(f\"{change['vendor']}: {change['summary']}\")</div>\n"
+    + "    </div>\n"
+    + "\n"
+    + "    <div class=\"tab-panel\" id=\"panel-javascript\">\n"
+    + "      <h3>Search for deals</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">javascript</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>"
+    + "const resp = await fetch(\"" + BASE_URL + "/api/offers?q=database&amp;limit=5\");\n"
+    + "const { offers } = await resp.json();\n"
+    + "\n"
+    + "offers.forEach(o =&gt; console.log(`${o.vendor} — ${o.description.slice(0, 80)}`));</div>\n"
+    + "\n"
+    + "      <h3>List all categories</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">javascript</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>"
+    + "const resp = await fetch(\"" + BASE_URL + "/api/categories\");\n"
+    + "const { categories } = await resp.json();\n"
+    + "\n"
+    + "categories.forEach(c =&gt; console.log(`${c.name}: ${c.count} deals`));</div>\n"
+    + "\n"
+    + "      <h3>Get recent pricing changes</h3>\n"
+    + "      <div class=\"code-block\"><span class=\"lang-label\">javascript</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>"
+    + "const resp = await fetch(\"" + BASE_URL + "/api/changes\");\n"
+    + "const { changes } = await resp.json();\n"
+    + "\n"
+    + "changes.slice(0, 5).forEach(c =&gt; console.log(`${c.vendor}: ${c.summary}`));</div>\n"
+    + "    </div>\n"
+    + "\n"
+    + "    <h2>Endpoint Reference</h2>\n"
+    + "    <p>All endpoints are read-only (GET). Responses are JSON. For full request/response schemas, see the <a href=\"/api/docs\">interactive Swagger documentation</a>.</p>\n"
+    + "    <div style=\"overflow-x:auto\">\n"
+    + "    <table class=\"endpoint-table\">\n"
+    + "      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Parameters</th></tr></thead>\n"
+    + "      <tbody>\n"
+    + endpointRows + "\n"
+    + "      </tbody>\n"
+    + "    </table>\n"
+    + "    </div>\n"
+    + "    <p style=\"margin-top:.75rem\">Full OpenAPI 3.0 spec: <a href=\"" + BASE_URL + "/api/openapi.json\">/api/openapi.json</a> &middot; Interactive docs: <a href=\"/api/docs\">Swagger UI</a></p>\n"
+    + "\n"
+    + "    <h2>Use Cases</h2>\n"
+    + "    <div class=\"use-case\">\n"
+    + "      <h4>CI/CD Cost Optimization</h4>\n"
+    + "      <p>Query <code>/api/offers?category=CI/CD</code> in your pipeline to compare build-minute pricing across providers. Use <code>/api/changes</code> to alert when a vendor changes their free tier.</p>\n"
+    + "    </div>\n"
+    + "    <div class=\"use-case\">\n"
+    + "      <h4>Stack Planning &amp; Cost Estimation</h4>\n"
+    + "      <p>Use <code>/api/stack</code> to get free-tier recommendations for your use case, then <code>/api/costs</code> to estimate what happens at scale. Feed results into architecture decision records.</p>\n"
+    + "    </div>\n"
+    + "    <div class=\"use-case\">\n"
+    + "      <h4>Vendor Comparison Dashboards</h4>\n"
+    + "      <p>Build internal tools that pull from <code>/api/compare?a=vercel&amp;b=netlify</code> for side-by-side feature comparison. Use <code>/api/vendor-risk/:vendor</code> to surface stability concerns.</p>\n"
+    + "    </div>\n"
+    + "    <div class=\"use-case\">\n"
+    + "      <h4>Pricing Change Monitoring</h4>\n"
+    + "      <p>Subscribe to the <a href=\"/feed.xml\">Atom feed</a> or poll <code>/api/changes</code> to monitor free tier removals, restrictions, and expansions across " + dealChanges.length + " tracked changes. Filter by vendor or category for personalized alerts.</p>\n"
+    + "    </div>\n"
+    + "\n"
+    + "    <h2>Response Format</h2>\n"
+    + "    <p>All responses return JSON with consistent structure. Offers include vendor name, category, description, tier, URL, tags, verification date, and stability indicators.</p>\n"
+    + "    <div class=\"code-block\"><span class=\"lang-label\">json</span>"
+    + "{\n"
+    + "  \"offers\": [\n"
+    + "    {\n"
+    + "      \"vendor\": \"Supabase\",\n"
+    + "      \"category\": \"Cloud Hosting\",\n"
+    + "      \"description\": \"Open-source Firebase alternative...\",\n"
+    + "      \"tier\": \"Free\",\n"
+    + "      \"url\": \"https://supabase.com/pricing\",\n"
+    + "      \"tags\": [\"database\", \"auth\", \"serverless\"],\n"
+    + "      \"verifiedDate\": \"2026-04-05\",\n"
+    + "      \"stability\": \"stable\"\n"
+    + "    }\n"
+    + "  ],\n"
+    + "  \"total\": 42\n"
+    + "}</div>\n"
+    + "\n"
+    + "    " + buildMcpCta("Prefer AI-native access? AgentDeals is also an MCP server — 4 tools that work in Claude, Cursor, Cline, and any MCP-compatible client.") + "\n"
+    + "\n"
+    + "    <h2>Related Resources</h2>\n"
+    + "    <p>\n"
+    + "      <a href=\"/api/docs\">Swagger UI (Interactive Docs)</a> &middot;\n"
+    + "      <a href=\"" + BASE_URL + "/api/openapi.json\">OpenAPI Spec (JSON)</a> &middot;\n"
+    + "      <a href=\"/setup\">MCP Server Setup</a> &middot;\n"
+    + "      <a href=\"/state-of-free-tiers\">State of Free Tiers Report</a> &middot;\n"
+    + "      <a href=\"/stability\">Vendor Stability Dashboard</a> &middot;\n"
+    + "      <a href=\"/feed.xml\">Atom Feed</a> &middot;\n"
+    + "      <a href=\"/badges\">Embeddable Badges</a> &middot;\n"
+    + "      <a href=\"https://github.com/robhunter/agentdeals\">GitHub</a>\n"
+    + "    </p>\n"
+    + "\n"
+    + "    <div class=\"footer\">\n"
+    + "      <p>Powered by <a href=\"/\">AgentDeals</a> &middot; <a href=\"/privacy\">Privacy</a> &middot; <a href=\"/feed.xml\">Feed</a> &middot; <a href=\"/sitemap.xml\">Sitemap</a></p>\n"
+    + "    </div>\n"
+    + "  </div>\n"
+    + "  <script>\n"
+    + "    function switchTab(btn) {\n"
+    + "      document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});\n"
+    + "      document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});\n"
+    + "      btn.classList.add('active');\n"
+    + "      document.getElementById('panel-' + btn.getAttribute('data-tab')).classList.add('active');\n"
+    + "    }\n"
+    + "    function copyBlock(btn) {\n"
+    + "      var block = btn.closest('.code-block');\n"
+    + "      var text = block.textContent.replace(/^(bash|python|javascript|json)Copy/, '').trim();\n"
+    + "      navigator.clipboard.writeText(text).then(function(){\n"
+    + "        btn.textContent = 'Copied!';\n"
+    + "        btn.classList.add('copied');\n"
+    + "        setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);\n"
+    + "      });\n"
+    + "    }\n"
+    + "  </script>\n"
+    + "</body>\n"
+    + "</html>";
 }
 
 function buildPricingChangesPage(): string {
@@ -39481,7 +39770,7 @@ ${buildDeadlinesHtml()}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically. 15 endpoints with search, filtering, risk analysis, and stack recommendations. <a href="/api/docs" style="color:var(--accent);text-decoration:underline">Interactive API Docs</a></p>
+        <p>Query deals programmatically. 18 endpoints with search, filtering, risk analysis, and stack recommendations. <a href="/developers" style="color:var(--accent);text-decoration:underline">Developer Hub</a> &middot; <a href="/api/docs" style="color:var(--accent);text-decoration:underline">Swagger Docs</a></p>
         <pre><code>GET /api/offers?q=database
 GET /api/categories
 GET /api/new?days=7
@@ -39719,7 +40008,7 @@ ${buildRecentChangesSection()}
     </div>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a></footer>
 </div>
 <script>
 /* Client tab switching */
@@ -40507,12 +40796,14 @@ AgentDeals helps developers find free tiers, startup credits, and deals on devel
 ## Connect
 
 - MCP endpoint: ${BASE_URL}/mcp
-- REST API docs: ${BASE_URL}/api/docs
+- REST API: ${BASE_URL}/developers
+- Swagger docs: ${BASE_URL}/api/docs
 - npm: npx agentdeals
 
 ## Links
 
-- [API Documentation](${BASE_URL}/api/docs)
+- [REST API Developer Hub](${BASE_URL}/developers)
+- [API Documentation (Swagger)](${BASE_URL}/api/docs)
 - [Setup Guide](${BASE_URL}/setup)
 - [Browse Categories](${BASE_URL}/category)
 - [Pricing Changes Feed](${BASE_URL}/feed.xml)
@@ -40715,6 +41006,12 @@ ${catList}
   </url>`).join("\n  ")}
   <url>
     <loc>${BASE_URL}/estimate</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${BASE_URL}/developers</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -41456,6 +41753,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/estimate", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildEstimatePage());
+  } else if (url.pathname === "/developers" && isGetOrHead) {
+    recordApiHit("/developers");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/developers", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDeveloperHubPage());
   } else if (url.pathname === "/badges" && isGetOrHead) {
     recordApiHit("/badges");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/badges", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -41489,6 +41791,7 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/digest/archive`,
     `${BASE_URL}/trends`,
     `${BASE_URL}/estimate`,
+    `${BASE_URL}/developers`,
     `${BASE_URL}/stacks`,
     ...STACK_TEMPLATES.map(t => `${BASE_URL}/stacks/${t.slug}`),
     `${BASE_URL}/vendor`,
