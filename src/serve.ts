@@ -5157,6 +5157,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Step-by-step HCP Terraform migration guide — decision matrix, 5 migration paths, March 31 deadline",
   },
   {
+    slug: "terraform-cloud-free-tier-removed",
+    title: "Terraform Cloud Free Tier Removed — Migration Paths and Cost Analysis",
+    metaDesc: "HCP Terraform Cloud free tier discontinued March 31, 2026. Migration cost analysis at 10-500 managed resources. Compare OpenTofu, Spacelift, Scalr, env0, Atlantis. Free IaC alternatives table.",
+    contextHtml: "",
+    tag: "terraform-free-tier-removed",
+    primaryVendor: "HCP Terraform",
+    hubDesc: "Terraform Cloud free tier removal guide — cost analysis, 8 alternatives compared, migration paths for affected teams",
+  },
+  {
     slug: "gemini-api-pricing-2026",
     title: "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives",
     metaDesc: "Gemini API billing overhaul April 2026: enforced spend caps ($250-$100K+/mo by tier), prepaid billing for new users, Gemini 3.1 Pro paid-only. Free tier preserved for Flash/Flash-Lite only. Compare 8 free LLM API alternatives.",
@@ -19042,7 +19051,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This guide covers HCP Terraform migration before the March 31, 2026 deadline. For a full comparison of IaC alternatives, see <a href="/terraform-alternatives">HCP Terraform Alternatives</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This guide covers HCP Terraform migration before the March 31, 2026 deadline. For post-deadline cost analysis and expanded alternatives, see <a href="/terraform-cloud-free-tier-removed">Terraform Cloud Free Tier Removed</a>. For a full comparison of IaC alternatives, see <a href="/terraform-alternatives">HCP Terraform Alternatives</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -19053,6 +19062,420 @@ ${mcpCtaCss()}
 <script>${mcpCtaScript()}</script>
 </body>
 </html>`;
+}
+
+function buildTerraformCloudFreeTierRemovedPage(): string {
+  const title = "Terraform Cloud Free Tier Removed — Migration Paths and Cost Analysis";
+  const metaDesc = "HCP Terraform Cloud free tier discontinued March 31, 2026. Migration cost analysis at 10-500 managed resources. Compare OpenTofu, Spacelift, Scalr, env0, Atlantis, Terraform CE. Free IaC alternatives table.";
+  const slug = "terraform-cloud-free-tier-removed";
+  const pubDate = "2026-04-08";
+
+  const stabilityMap = getStabilityMap();
+
+  // Terraform-related deal changes from our tracker
+  const tfChanges = dealChanges.filter(c =>
+    c.vendor?.toLowerCase().includes("terraform") || c.vendor?.toLowerCase().includes("opentofu") || c.vendor?.toLowerCase().includes("terragrunt")
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // IaC alternatives for comparison
+  interface IacAlternative {
+    name: string;
+    slug: string;
+    type: string;
+    freeResources: string;
+    freeUsers: string;
+    stateManagement: string;
+    hosting: string;
+    bestFor: string;
+    monthlyCost10: string;
+    monthlyCost50: string;
+    monthlyCost200: string;
+    monthlyCost500: string;
+  }
+
+  const alternatives: IacAlternative[] = [
+    { name: "HCP Terraform Enhanced Free", slug: "hcp-terraform", type: "Managed", freeResources: "500", freeUsers: "Unlimited", stateManagement: "Managed (HCP)", hosting: "Cloud (HashiCorp)", bestFor: "Teams already on Terraform Cloud, <500 resources", monthlyCost10: "$0", monthlyCost50: "$0", monthlyCost200: "$0", monthlyCost500: "$0" },
+    { name: "OpenTofu", slug: "opentofu", type: "Self-hosted", freeResources: "Unlimited", freeUsers: "Unlimited", stateManagement: "Self-managed (S3/GCS)", hosting: "Self-hosted", bestFor: "Teams wanting zero vendor lock-in, full control", monthlyCost10: "$0 + hosting", monthlyCost50: "$0 + hosting", monthlyCost200: "$0 + hosting", monthlyCost500: "$0 + hosting" },
+    { name: "Spacelift", slug: "spacelift", type: "Managed", freeResources: "Unlimited (1 stack)", freeUsers: "2", stateManagement: "Managed", hosting: "Cloud", bestFor: "Teams needing credential-less cloud integration", monthlyCost10: "$0", monthlyCost50: "$0", monthlyCost200: "$0", monthlyCost500: "$40/mo" },
+    { name: "Scalr", slug: "scalr", type: "Managed", freeResources: "Unlimited", freeUsers: "Unlimited", stateManagement: "Managed", hosting: "Cloud", bestFor: "Growing teams needing unlimited resources + users", monthlyCost10: "$0", monthlyCost50: "$0", monthlyCost200: "$0", monthlyCost500: "$0" },
+    { name: "env0", slug: "env0", type: "Managed", freeResources: "Unlimited", freeUsers: "5", stateManagement: "Managed or BYOB", hosting: "Cloud or self-hosted runner", bestFor: "Teams needing multi-IaC support (Terraform + Pulumi + CloudFormation)", monthlyCost10: "$0", monthlyCost50: "$0", monthlyCost200: "$0", monthlyCost500: "$0" },
+    { name: "Atlantis", slug: "atlantis", type: "Self-hosted", freeResources: "Unlimited", freeUsers: "Unlimited", stateManagement: "Self-managed", hosting: "Self-hosted (GitHub/GitLab integration)", bestFor: "Teams wanting PR-based Terraform automation with full control", monthlyCost10: "$0 + hosting", monthlyCost50: "$0 + hosting", monthlyCost200: "$0 + hosting", monthlyCost500: "$0 + hosting" },
+    { name: "Terragrunt Scale", slug: "terragrunt-scale", type: "Managed", freeResources: "500+", freeUsers: "N/A", stateManagement: "Managed", hosting: "Cloud (Gruntwork)", bestFor: "Terragrunt users wanting GitOps-native orchestration", monthlyCost10: "$0", monthlyCost50: "$0", monthlyCost200: "$0", monthlyCost500: "$0" },
+    { name: "Terraform CE (local)", slug: "terraform-ce", type: "CLI", freeResources: "Unlimited", freeUsers: "N/A", stateManagement: "Local/remote backend", hosting: "Local machine / CI runner", bestFor: "Solo developers or CI pipelines with simple state needs", monthlyCost10: "$0", monthlyCost50: "$0", monthlyCost200: "$0", monthlyCost500: "$0" },
+  ];
+
+  // Cost analysis by resource scale
+  const costTiers = [
+    { resources: "10", description: "Solo developer, side project", hcpBefore: "$0", hcpAfter: "$0 (enhanced free)", opentofu: "$0", spacelift: "$0", scalr: "$0", env0: "$0", atlantis: "$0 + ~$5 hosting" },
+    { resources: "50", description: "Small team, early-stage startup", hcpBefore: "$0", hcpAfter: "$0 (enhanced free)", opentofu: "$0", spacelift: "$0", scalr: "$0", env0: "$0", atlantis: "$0 + ~$5 hosting" },
+    { resources: "200", description: "Growing team, multiple environments", hcpBefore: "$0", hcpAfter: "$0 (enhanced free)", opentofu: "$0", spacelift: "$0", scalr: "$0", env0: "$0", atlantis: "$0 + ~$10 hosting" },
+    { resources: "500", description: "At the cap — the breaking point", hcpBefore: "$0", hcpAfter: "$0 (at limit)", opentofu: "$0", spacelift: "$40/mo", scalr: "$0", env0: "$0", atlantis: "$0 + ~$15 hosting" },
+  ];
+
+  // Related pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["hcp-terraform-migration", "terraform-alternatives", "ci-cd-alternatives", "free-devops-stack", "free-tier-risk", "free-tier-tracker"].includes(p.slug)
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
+    about: {
+      "@type": "Thing",
+      name: "HCP Terraform Cloud free tier removal March 2026",
+      description: "Post-removal guide for HCP Terraform free tier — cost analysis, migration paths, and free IaC alternatives",
+    },
+  };
+
+  const faqItems = [
+    { q: "What happened to the Terraform Cloud free tier?", a: "On March 31, 2026, HashiCorp discontinued the legacy HCP Terraform Cloud free plan. Existing users were auto-migrated to an enhanced free tier with a 500 managed resource cap (previously unlimited for small teams), 1 concurrent run, and SSO included. The legacy plan's unlimited resources for small teams is gone." },
+    { q: "Can I still use Terraform Cloud for free?", a: "Yes, but with limits. The enhanced free tier includes 500 managed resources, unlimited users, SSO, Sentinel + OPA policy as code, and 1 concurrent run. If you need more than 500 resources, you must upgrade to a paid plan or migrate to an alternative." },
+    { q: "What are the best free alternatives to Terraform Cloud?", a: "For managed platforms: Scalr (unlimited resources + users, 50 runs/month), env0 (unlimited resources, 5 users, multi-IaC support), and Spacelift (unlimited resources, 1 stack free). For self-hosted: OpenTofu (MPL 2.0 fork, unlimited everything) and Atlantis (PR-based automation). For CLI: Terraform CE remains free with no limits." },
+    { q: "How much does Terraform Cloud cost now for 500+ resources?", a: "After exceeding the 500 managed resource cap on the enhanced free tier, you need to move to a paid plan. HashiCorp's Standard tier starts at approximately $5/resource/month for additional resources. A team managing 600 resources would pay roughly $500/month for the 100 resources over the cap." },
+    { q: "Should I migrate from Terraform Cloud to OpenTofu?", a: "OpenTofu is a community fork of Terraform under the Linux Foundation with an MPL 2.0 license, offering full Terraform compatibility. It is the best choice if you want zero vendor lock-in, unlimited resources, and no licensing restrictions. The trade-off is that you must manage your own state backend (S3, GCS, etc.), CI/CD pipeline, and locking. For teams already comfortable with infrastructure management, this is the strongest long-term option." },
+    { q: "Is the Terraform BSL license change related to the free tier removal?", a: "Indirectly. HashiCorp switched Terraform from MPL 2.0 to BSL 1.1 in August 2023, which triggered the OpenTofu fork. The free tier restructuring in March 2026 is part of HashiCorp's broader shift to monetize their ecosystem after the IBM acquisition ($6.4B in 2024). Both changes signal increased commercial pressure on free-tier and open-source users." },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>' + escHtmlServer(title) + ' — AgentDeals</title>\n'
+    + '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n'
+    + '<meta property="og:title" content="' + escHtmlServer(title) + '">\n'
+    + '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<meta property="og:type" content="article">\n'
+    + '<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n'
+    + '<meta property="article:published_time" content="' + pubDate + '">\n'
+    + OG_IMAGE_META + GOOGLE_VERIFICATION_META
+    + '<link rel="icon" type="image/png" href="/favicon.png">\n'
+    + '<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">\n'
+    + '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n'
+    + '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n'
+    + '<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n'
+    + '<style>\n'
+    + '*{margin:0;padding:0;box-sizing:border-box}\n'
+    + ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:"Inter",-apple-system,sans-serif;--sans:"Inter",-apple-system,sans-serif;--mono:"JetBrains Mono",SFMono-Regular,monospace}\n'
+    + 'body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n'
+    + 'a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n'
+    + '.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n'
+    + '.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n'
+    + '.breadcrumb a{color:var(--text-muted)}\n'
+    + 'h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\n'
+    + 'h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\n'
+    + 'h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n'
+    + '.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n'
+    + '.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n'
+    + '.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n'
+    + '.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n'
+    + '.stat-number.red{color:#f85149}\n'
+    + '.stat-number.green{color:#3fb950}\n'
+    + '.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n'
+    + '.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n'
+    + '.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n'
+    + '.executive-summary p:last-child{margin-bottom:0}\n'
+    + '.executive-summary strong{color:var(--text)}\n'
+    + '.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n'
+    + '.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n'
+    + '.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n'
+    + '.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n'
+    + '.pricing-table tr:hover{background:var(--accent-glow)}\n'
+    + '.impact-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n'
+    + '.impact-card h3{margin:0 0 .5rem;font-size:1rem}\n'
+    + '.impact-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n'
+    + '.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n'
+    + '.context-box strong{color:var(--text)}\n'
+    + '.context-box ul{margin:.75rem 0 0 1.5rem}\n'
+    + '.context-box li{margin-bottom:.5rem}\n'
+    + '.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n'
+    + '.methodology strong{color:var(--text)}\n'
+    + '.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n'
+    + '.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n'
+    + '.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n'
+    + '.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n'
+    + '.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n'
+    + '.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}\n'
+    + '.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n'
+    + '.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n'
+    + '.toc ol{padding-left:1.25rem;margin:0}\n'
+    + '.toc li{margin-bottom:.35rem;font-size:.9rem}\n'
+    + '.toc a{color:var(--accent)}\n'
+    + '.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n'
+    + '.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n'
+    + '.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n'
+    + '.verdict-item strong{color:var(--text)}\n'
+    + '.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n'
+    + '.faq-section{margin:2rem 0}\n'
+    + '.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;overflow:hidden}\n'
+    + '.faq-q{padding:1rem 1.25rem;font-weight:600;font-size:.95rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center}\n'
+    + '.faq-q:hover{background:var(--accent-glow)}\n'
+    + '.faq-a{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7;display:none}\n'
+    + '.faq-item.open .faq-a{display:block}\n'
+    + '.faq-item.open .faq-arrow{transform:rotate(180deg)}\n'
+    + '.faq-arrow{transition:transform .2s;color:var(--text-dim)}\n'
+    + '.cost-highlight{font-family:var(--mono);font-weight:600}\n'
+    + '.cost-free{color:#3fb950}\n'
+    + '.cost-low{color:#d29922}\n'
+    + '.cost-high{color:#f85149}\n'
+    + 'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n'
+    + 'footer a{color:var(--accent)}\n'
+    + '@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.cost-table-scroll{overflow-x:auto}}\n'
+    + globalNavCss() + '\n'
+    + mcpCtaCss() + '\n'
+    + '</style>\n</head>\n<body>\n<div class="container">\n'
+    + buildGlobalNav("changes") + '\n'
+    + '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Terraform Cloud Free Tier Removed</div>\n'
+    + '  <h1>Terraform Cloud Free Tier Removed</h1>\n'
+    + '  <p class="pub-date">Published ' + pubDate + ' &middot; Effective March 31, 2026 &middot; Legacy plan discontinued &middot; 500 resource cap &middot; ' + alternatives.length + ' alternatives compared</p>\n'
+    + '\n'
+    // Summary stats
+    + '  <div class="summary-stats">\n'
+    + '    <div class="stat-card"><div class="stat-number red">500</div><div class="stat-label">Resource Cap (New)</div></div>\n'
+    + '    <div class="stat-card"><div class="stat-number red">1</div><div class="stat-label">Concurrent Run</div></div>\n'
+    + '    <div class="stat-card"><div class="stat-number green">' + alternatives.length + '</div><div class="stat-label">Free Alternatives</div></div>\n'
+    + '    <div class="stat-card"><div class="stat-number">$0</div><div class="stat-label">Best Alt Cost</div></div>\n'
+    + '  </div>\n'
+    + '\n'
+    // Executive summary
+    + '  <div class="executive-summary">\n'
+    + '    <p><strong>On March 31, 2026, HashiCorp discontinued the legacy HCP Terraform Cloud free plan.</strong> The plan that let small teams manage unlimited infrastructure resources for free has been replaced by an enhanced free tier capped at 500 managed resources with 1 concurrent run. Teams that grew beyond the cap must now pay or migrate.</p>\n'
+    + '    <p>This guide provides a <strong>complete cost analysis</strong> at 4 resource scales (10, 50, 200, 500), <strong>' + alternatives.length + ' alternative platforms compared</strong> (including OpenTofu, Spacelift, Scalr, env0, and Atlantis), <strong>a free alternatives table</strong>, and <strong>practical migration recommendations</strong> by team profile. For pre-deadline migration steps, see our <a href="/hcp-terraform-migration">HCP Terraform Migration Guide</a>.</p>\n'
+    + '  </div>\n'
+    + '\n'
+    // TOC
+    + '  <div class="toc">\n'
+    + '    <h3>In This Guide</h3>\n'
+    + '    <ol>\n'
+    + '      <li><a href="#what-changed">What Changed — Before vs After</a></li>\n'
+    + '      <li><a href="#who-affected">Who\'s Affected</a></li>\n'
+    + '      <li><a href="#cost-analysis">Migration Cost Analysis</a></li>\n'
+    + '      <li><a href="#alternatives">Alternative Platforms Comparison</a></li>\n'
+    + '      <li><a href="#free-alternatives">Free Alternatives Table</a></li>\n'
+    + '      <li><a href="#migration-guide">Migration Recommendations</a></li>\n'
+    + '      <li><a href="#faq">FAQ</a></li>\n'
+    + '    </ol>\n'
+    + '  </div>\n'
+    + '\n'
+    // Section 1: What Changed
+    + '  <h2 id="what-changed">1. What Changed — Before vs After</h2>\n'
+    + '  <p class="section-intro">A side-by-side comparison of HCP Terraform\'s legacy free plan versus the new enhanced free tier that replaced it on March 31, 2026.</p>\n'
+    + '\n'
+    + '  <table class="pricing-table">\n'
+    + '    <thead>\n'
+    + '      <tr><th>Feature</th><th>Legacy Free Plan</th><th>Enhanced Free Tier (New)</th><th>Change</th></tr>\n'
+    + '    </thead>\n'
+    + '    <tbody>\n'
+    + '      <tr><td style="font-weight:600">Managed resources</td><td style="font-family:var(--mono)">Unlimited (small teams)</td><td style="font-family:var(--mono);color:#f85149;font-weight:600">500 max</td><td style="color:#f85149;font-weight:600">Hard cap introduced</td></tr>\n'
+    + '      <tr><td style="font-weight:600">Concurrent runs</td><td style="font-family:var(--mono)">1</td><td style="font-family:var(--mono)">1</td><td style="color:#3fb950">Unchanged</td></tr>\n'
+    + '      <tr><td style="font-weight:600">Users</td><td>Limited (small team)</td><td style="color:#3fb950;font-weight:600">Unlimited</td><td style="color:#3fb950">Improved</td></tr>\n'
+    + '      <tr><td style="font-weight:600">SSO</td><td>Not included</td><td style="color:#3fb950;font-weight:600">Included</td><td style="color:#3fb950">New addition</td></tr>\n'
+    + '      <tr><td style="font-weight:600">Policy as code</td><td>Not included</td><td style="color:#3fb950;font-weight:600">Sentinel + OPA</td><td style="color:#3fb950">New addition</td></tr>\n'
+    + '      <tr><td style="font-weight:600">State management</td><td>Remote backend</td><td>Remote backend</td><td style="color:#3fb950">Unchanged</td></tr>\n'
+    + '      <tr><td style="font-weight:600">Workspaces</td><td>Unlimited</td><td style="color:#d29922;font-weight:600">Unlimited (within resource cap)</td><td style="color:#d29922">Effectively limited</td></tr>\n'
+    + '      <tr><td style="font-weight:600">License</td><td>BSL 1.1</td><td>BSL 1.1</td><td style="color:var(--text-dim)">Unchanged</td></tr>\n'
+    + '    </tbody>\n'
+    + '  </table>\n'
+    + '\n'
+    + '  <div class="context-box">\n'
+    + '    <strong>Context:</strong> HashiCorp switched Terraform from MPL 2.0 to BSL 1.1 in August 2023, triggering the <a href="/search?q=opentofu">OpenTofu</a> fork under the Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024. The free tier restructuring continues the trend of monetizing the Terraform ecosystem. The enhanced free tier adds SSO and policy features but imposes the 500-resource hard cap that affects growing teams.\n'
+    + '  </div>\n'
+    + '\n'
+    // Section 2: Who's Affected
+    + '  <h2 id="who-affected">2. Who\'s Affected</h2>\n'
+    + '  <p class="section-intro">The impact depends on your team size and resource count. Here\'s a breakdown by developer profile.</p>\n'
+    + '\n'
+    + '  <div class="impact-card" style="border-left-color:#3fb950">\n'
+    + '    <h3 style="color:#3fb950">Solo Developers (Minimal Impact)</h3>\n'
+    + '    <p class="impact-desc">If you manage fewer than 100 resources for personal projects, the enhanced free tier is actually better than the legacy plan &mdash; you now get SSO and policy as code for free. The 500-resource cap won\'t affect you. <strong>No action needed.</strong></p>\n'
+    + '  </div>\n'
+    + '  <div class="impact-card" style="border-left-color:#d29922">\n'
+    + '    <h3 style="color:#d29922">Small Teams (Moderate Impact)</h3>\n'
+    + '    <p class="impact-desc">Teams managing 200-500 resources are approaching the cap. You\'re safe for now but have no room to grow without upgrading. <strong>Start evaluating alternatives</strong> before you hit the ceiling &mdash; migrating under pressure is more expensive than migrating proactively.</p>\n'
+    + '  </div>\n'
+    + '  <div class="impact-card" style="border-left-color:#f85149">\n'
+    + '    <h3 style="color:#f85149">Growing Teams (High Impact)</h3>\n'
+    + '    <p class="impact-desc">Teams with 500+ resources are immediately affected. You were previously unlimited on the legacy plan; now you must either pay for HCP Terraform or migrate. At $5/resource/month on the Standard tier, <strong>a team managing 600 resources would pay ~$500/month</strong> for just 100 resources over the cap.</p>\n'
+    + '  </div>\n'
+    + '  <div class="impact-card" style="border-left-color:#f85149">\n'
+    + '    <h3 style="color:#f85149">Open Source Projects (High Impact)</h3>\n'
+    + '    <p class="impact-desc">Open source projects using Terraform Cloud for free CI/CD runs are constrained by both the resource cap and 1 concurrent run. Combined with the BSL license, many OSS projects are migrating to <strong>OpenTofu</strong> (MPL 2.0, Linux Foundation) for both ideological and practical reasons.</p>\n'
+    + '  </div>\n'
+    + '  <div class="impact-card" style="border-left-color:#d29922">\n'
+    + '    <h3 style="color:#d29922">CI/CD Pipelines (Moderate Impact)</h3>\n'
+    + '    <p class="impact-desc">Teams running Terraform in CI/CD pipelines hit the 1 concurrent run bottleneck. Multiple PRs trigger sequential runs, slowing development velocity. Alternatives like Scalr (5 concurrent runs free), Atlantis (unlimited), or self-hosted OpenTofu offer parallel execution.</p>\n'
+    + '  </div>\n'
+    + '\n'
+    // Section 3: Cost Analysis
+    + '  <h2 id="cost-analysis">3. Migration Cost Analysis</h2>\n'
+    + '  <p class="section-intro">What does it cost to manage your infrastructure at different scales? We compare HCP Terraform\'s legacy and new pricing against the top alternatives at 4 resource levels.</p>\n'
+    + '\n'
+    + '  <div class="cost-table-scroll">\n'
+    + '  <table class="pricing-table">\n'
+    + '    <thead>\n'
+    + '      <tr><th>Resources</th><th>Profile</th><th>HCP (Legacy)</th><th>HCP (New)</th><th>OpenTofu</th><th>Spacelift</th><th>Scalr</th><th>env0</th><th>Atlantis</th></tr>\n'
+    + '    </thead>\n'
+    + '    <tbody>\n'
+    + costTiers.map(t =>
+      '      <tr><td style="font-weight:600;font-family:var(--mono)">' + escHtmlServer(t.resources) + '</td>'
+      + '<td style="font-size:.8rem;color:var(--text-dim)">' + escHtmlServer(t.description) + '</td>'
+      + '<td class="cost-highlight cost-free">' + escHtmlServer(t.hcpBefore) + '</td>'
+      + '<td class="cost-highlight ' + (t.resources === "500" ? "cost-low" : "cost-free") + '">' + escHtmlServer(t.hcpAfter) + '</td>'
+      + '<td class="cost-highlight cost-free">' + escHtmlServer(t.opentofu) + '</td>'
+      + '<td class="cost-highlight ' + (t.resources === "500" ? "cost-low" : "cost-free") + '">' + escHtmlServer(t.spacelift) + '</td>'
+      + '<td class="cost-highlight cost-free">' + escHtmlServer(t.scalr) + '</td>'
+      + '<td class="cost-highlight cost-free">' + escHtmlServer(t.env0) + '</td>'
+      + '<td class="cost-highlight cost-free">' + escHtmlServer(t.atlantis) + '</td>'
+      + '</tr>\n'
+    ).join("")
+    + '    </tbody>\n'
+    + '  </table>\n'
+    + '  </div>\n'
+    + '\n'
+    + '  <div class="context-box">\n'
+    + '    <strong>Key insight:</strong> For teams under 500 resources, the enhanced free tier still works &mdash; and it\'s actually better than the legacy plan (SSO, policy as code). The pain point is the <strong>500 resource ceiling</strong> and <strong>1 concurrent run</strong>. For teams at or near 500 resources, <strong>Scalr and env0 offer unlimited resources for free</strong> with no cap. OpenTofu and Atlantis are also $0 but require self-hosting. Spacelift\'s free tier is limited to 1 stack but has no resource cap within that stack.\n'
+    + '  </div>\n'
+    + '\n'
+    // Section 4: Alternatives Comparison
+    + '  <h2 id="alternatives">4. Alternative Platforms Comparison</h2>\n'
+    + '  <p class="section-intro">' + alternatives.length + ' IaC platforms compared by free tier resources, user limits, state management, and hosting model. Sorted by platform type.</p>\n'
+    + '\n'
+    + '  <div class="cost-table-scroll">\n'
+    + '  <table class="pricing-table">\n'
+    + '    <thead>\n'
+    + '      <tr><th>Platform</th><th>Type</th><th>Free Resources</th><th>Free Users</th><th>State Mgmt</th><th>Best For</th><th>Stability</th></tr>\n'
+    + '    </thead>\n'
+    + '    <tbody>\n'
+    + alternatives.map(a => {
+      const stability = stabilityMap.get(a.slug) ?? "stable";
+      const stabilityColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "#3fb950";
+      const stabilityLabel = stability === "volatile" ? "Volatile" : stability === "watch" ? "Watch" : stability === "improving" ? "Improving" : "Stable";
+      return '      <tr><td style="font-weight:600"><a href="/' + (a.slug === "terraform-ce" || a.slug === "atlantis" || a.slug === "env0" || a.slug === "opentofu" ? "search?q=" + encodeURIComponent(a.name) : "vendor/" + a.slug) + '">' + escHtmlServer(a.name) + '</a></td>'
+        + '<td>' + escHtmlServer(a.type) + '</td>'
+        + '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(a.freeResources) + '</td>'
+        + '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(a.freeUsers) + '</td>'
+        + '<td style="font-size:.85rem">' + escHtmlServer(a.stateManagement) + '</td>'
+        + '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(a.bestFor) + '</td>'
+        + '<td style="font-size:.85rem;color:' + stabilityColor + '">' + stabilityLabel + '</td>'
+        + '</tr>\n';
+    }).join("")
+    + '    </tbody>\n'
+    + '  </table>\n'
+    + '  </div>\n'
+    + '\n'
+    // Section 5: Free Alternatives Table
+    + '  <h2 id="free-alternatives">5. Free Alternatives Table</h2>\n'
+    + '  <p class="section-intro">Which IaC tools still have genuinely free tiers? Here\'s the definitive list, with the catch for each.</p>\n'
+    + '\n'
+    + '  <table class="pricing-table">\n'
+    + '    <thead>\n'
+    + '      <tr><th>Tool</th><th>Free Tier</th><th>The Catch</th><th>License</th></tr>\n'
+    + '    </thead>\n'
+    + '    <tbody>\n'
+    + '      <tr><td style="font-weight:600"><a href="/vendor/hcp-terraform">HCP Terraform</a></td><td class="cost-free">500 resources, unlimited users</td><td>1 concurrent run, 500 cap</td><td>BSL 1.1</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/vendor/scalr">Scalr</a></td><td class="cost-free">Unlimited resources + users</td><td>50 runs/month, 5 environments</td><td>Proprietary</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=env0">env0</a></td><td class="cost-free">Unlimited resources, 5 users</td><td>Limited deployments/month</td><td>Proprietary</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/vendor/spacelift">Spacelift</a></td><td class="cost-free">Unlimited resources (1 stack)</td><td>2 users, 1 public worker, 1 stack</td><td>Proprietary</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/vendor/terragrunt-scale">Terragrunt Scale</a></td><td class="cost-free">500+ resources</td><td>Requires Terragrunt adoption</td><td>Proprietary</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=terramate">Terramate</a></td><td class="cost-free">2 users, all features</td><td>2 user limit</td><td>Proprietary</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=digger">Digger</a></td><td class="cost-free">3 users, PR-driven workflows</td><td>3 user limit</td><td>Apache 2.0</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=opentofu">OpenTofu</a></td><td class="cost-free">Unlimited everything</td><td>Self-hosted, manage own state</td><td>MPL 2.0</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=atlantis">Atlantis</a></td><td class="cost-free">Unlimited everything</td><td>Self-hosted, no UI</td><td>Apache 2.0</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=terraform">Terraform CE</a></td><td class="cost-free">Unlimited, CLI only</td><td>No remote state, no collaboration</td><td>BSL 1.1</td></tr>\n'
+    + '    </tbody>\n'
+    + '  </table>\n'
+    + '\n'
+    // Section 6: Migration Guide
+    + '  <h2 id="migration-guide">6. Migration Recommendations</h2>\n'
+    + '  <p class="section-intro">Practical recommendations based on your team profile and needs. For detailed step-by-step migration instructions, see our <a href="/hcp-terraform-migration">HCP Terraform Migration Guide</a>.</p>\n'
+    + '\n'
+    + '  <div class="verdict-box">\n'
+    + '    <h3>Quick Decision Guide</h3>\n'
+    + '    <div class="verdict-item">\n'
+    + '      <strong>Under 500 resources, no urgency?</strong>\n'
+    + '      <p>Stay on the enhanced free tier. You get SSO and policy as code for free now. Revisit when you approach the cap.</p>\n'
+    + '    </div>\n'
+    + '    <div class="verdict-item">\n'
+    + '      <strong>Near or over 500 resources, want managed platform?</strong>\n'
+    + '      <p>Migrate to <strong>Scalr</strong> (unlimited resources + users, 50 runs/month) or <strong>env0</strong> (unlimited resources, 5 users, multi-IaC). Both are $0 with no resource cap.</p>\n'
+    + '    </div>\n'
+    + '    <div class="verdict-item">\n'
+    + '      <strong>Want zero vendor lock-in?</strong>\n'
+    + '      <p>Switch to <strong>OpenTofu</strong> (Linux Foundation, MPL 2.0). Full Terraform compatibility, state encryption, no resource or user limits. Trade-off: manage your own state backend and CI/CD.</p>\n'
+    + '    </div>\n'
+    + '    <div class="verdict-item">\n'
+    + '      <strong>Need PR-based automation with full control?</strong>\n'
+    + '      <p><strong>Atlantis</strong> gives you PR-driven plan/apply workflows with unlimited resources. Self-hosted, integrates with GitHub/GitLab/Bitbucket. No UI dashboard but minimal maintenance.</p>\n'
+    + '    </div>\n'
+    + '    <div class="verdict-item">\n'
+    + '      <strong>Already using Terragrunt?</strong>\n'
+    + '      <p><strong>Terragrunt Scale</strong> is the natural next step. GitOps-native orchestration, drift detection, dependency ordering. Free tier matches or exceeds HCP Terraform limits.</p>\n'
+    + '    </div>\n'
+    + '    <div class="verdict-item">\n'
+    + '      <strong>Multi-IaC team (Terraform + Pulumi + CloudFormation)?</strong>\n'
+    + '      <p><strong>env0</strong> is the only free platform supporting Terraform, Pulumi, CloudFormation, Ansible, and Kubernetes in a single tool. 5 users free with bring-your-own-backend state.</p>\n'
+    + '    </div>\n'
+    + '    <div class="verdict-item">\n'
+    + '      <strong>Open source project?</strong>\n'
+    + '      <p><strong>OpenTofu + GitHub Actions</strong>. MPL 2.0 license (no BSL restrictions), unlimited resources, and the OpenSSF community provides long-term governance stability.</p>\n'
+    + '    </div>\n'
+    + '  </div>\n'
+    + '\n'
+    // Section 7: FAQ
+    + '  <h2 id="faq">7. FAQ</h2>\n'
+    + '  <div class="faq-section">\n'
+    + faqItems.map(f =>
+      '    <div class="faq-item">\n'
+      + '      <div class="faq-q" onclick="this.parentElement.classList.toggle(\'open\')">' + escHtmlServer(f.q) + '<span class="faq-arrow">&#9660;</span></div>\n'
+      + '      <div class="faq-a">' + escHtmlServer(f.a) + '</div>\n'
+      + '    </div>\n'
+    ).join("")
+    + '  </div>\n'
+    + '\n'
+    // Related pages
+    + '  <h2>Related Guides</h2>\n'
+    + '  <div class="related-pages">\n'
+    + relatedPages.map(p =>
+      '    <a href="/' + p.slug + '" class="related-page-link">\n'
+      + '      <div class="link-title">' + escHtmlServer(p.title.split(" — ")[0]) + '</div>\n'
+      + '      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n'
+      + '    </a>\n'
+    ).join("")
+    + '    <a href="/changes" class="related-page-link">\n'
+    + '      <div class="link-title">All Pricing Changes Timeline</div>\n'
+    + '      <div class="link-desc">Full timeline of all ' + dealChanges.length + ' tracked developer tool pricing changes</div>\n'
+    + '    </a>\n'
+    + '  </div>\n'
+    + '\n'
+    + '  <div class="methodology">\n'
+    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp\'s pricing page</a> and verified against each alternative\'s pricing page as of April 2026. Cost estimates for self-hosted options assume a small cloud VM ($5-15/month for Atlantis/OpenTofu runners). Resource limits and features verified against each platform\'s free tier documentation. Stability indicators from our index of ' + offers.length.toLocaleString() + ' tracked developer tools. See also our <a href="/hcp-terraform-migration">pre-deadline migration guide</a> for step-by-step instructions.\n'
+    + '  </div>\n'
+    + '\n'
+    + '  <div class="search-cta">\n'
+    + '    <p>This guide covers the HCP Terraform free tier removal as of March 31, 2026. For step-by-step migration instructions, see <a href="/hcp-terraform-migration">HCP Terraform Migration Guide</a>. For the full IaC alternatives comparison, see <a href="/terraform-alternatives">HCP Terraform Alternatives</a>. Browse all ' + offers.length.toLocaleString() + ' developer tools at <a href="/search">/search</a>.</p>\n'
+    + '  </div>\n'
+    + '\n'
+    + buildMoreAlternativesGuides(slug) + '\n'
+    + '\n'
+    + buildMcpCta("Track Terraform Cloud pricing changes and find free IaC alternatives from your AI assistant. Get alerts on free tier changes and compare infrastructure tools — directly in your editor.") + '\n'
+    + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>\n'
+    + '</div>\n'
+    + '<script>' + mcpCtaScript() + '</script>\n'
+    + '</body>\n</html>';
 }
 
 function buildGeminiApiPricing2026Page(): string {
@@ -42926,6 +43349,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hcp-terraform-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildHcpTerraformMigrationPage());
+  } else if (url.pathname === "/terraform-cloud-free-tier-removed" && isGetOrHead) {
+    recordApiHit("/terraform-cloud-free-tier-removed");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/terraform-cloud-free-tier-removed", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildTerraformCloudFreeTierRemovedPage());
   } else if (url.pathname === "/startup-credits" && isGetOrHead) {
     recordApiHit("/startup-credits");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/startup-credits", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
