@@ -2400,15 +2400,48 @@ describe("HTTP transport", () => {
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
     assert.ok(html.includes("Q1 2026 Developer Pricing Report"), "Should have title");
+    assert.ok(html.includes("Great Free Tier Reckoning"), "Should have subtitle");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
+    // Executive summary and stats
+    assert.ok(html.includes("Executive Summary"), "Should have executive summary");
+    assert.ok(html.includes("By the Numbers"), "Should have by-the-numbers section");
+    assert.ok(html.includes("Change Type Breakdown"), "Should have change type breakdown");
+    // Impact analysis
+    assert.ok(html.includes("Impact Analysis"), "Should have impact analysis section");
+    assert.ok(html.includes("High Impact"), "Should show high impact count");
+    assert.ok(html.includes("Medium Impact"), "Should show medium impact count");
+    assert.ok(html.includes("Low Impact"), "Should show low impact count");
+    // Biggest stories
+    assert.ok(html.includes("Biggest Stories of Q1"), "Should have biggest stories section");
+    assert.ok(html.includes("X (Twitter) API Paywall"), "Should have X API story");
+    assert.ok(html.includes("MinIO Open Source Killed"), "Should have MinIO story");
+    assert.ok(html.includes("LocalStack Community Edition"), "Should have LocalStack story");
+    assert.ok(html.includes("Brave Search API Removal"), "Should have Brave story");
+    assert.ok(html.includes("Firebase Restrictions"), "Should have Firebase story");
+    assert.ok(html.includes("HCP Terraform"), "Should have Terraform story");
+    assert.ok(html.includes("Spotify API Lockdown"), "Should have Spotify story");
+    // Counter-trend
+    assert.ok(html.includes("Counter-Trend: Cloudflare"), "Should have Cloudflare counter-trend section");
+    assert.ok(html.includes("Free Queues"), "Should mention Cloudflare Queues");
+    assert.ok(html.includes("Startup Program"), "Should mention startup program");
+    // Category and monthly breakdowns
+    assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
+    assert.ok(html.includes("Monthly Timeline"), "Should have monthly timeline");
+    assert.ok(html.includes("January"), "Should show January data");
+    assert.ok(html.includes("March"), "Should show March data");
+    // Change cards by type
     assert.ok(html.includes("Free Tiers Removed"), "Should have removals section");
     assert.ok(html.includes("Limits Tightened"), "Should have restrictions section");
     assert.ok(html.includes("Pricing Restructured"), "Should have restructured section");
     assert.ok(html.includes("Bright Spots"), "Should have expansions section");
-    assert.ok(html.includes("LocalStack"), "Should mention LocalStack");
+    // Q2 outlook
+    assert.ok(html.includes("What to Watch in Q2"), "Should have Q2 outlook section");
+    assert.ok(html.includes("OpenAI Assistants API"), "Should mention OpenAI deadline");
+    assert.ok(html.includes("Google Tenor"), "Should mention Tenor deadline");
+    // Methodology and cross-links
     assert.ok(html.includes("Methodology"), "Should have methodology section");
     assert.ok(html.includes("Related Guides"), "Should have related guides");
     assert.ok(html.includes("/changes"), "Should link to changes page");

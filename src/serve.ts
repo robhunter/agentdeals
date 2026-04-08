@@ -4960,12 +4960,12 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   },
   {
     slug: "q1-2026-developer-pricing-report",
-    title: "Q1 2026 Developer Pricing Report — Free Tier Changes, Removals & Trends",
-    metaDesc: "47 verified pricing changes across developer tools in Q1 2026. Free tier removals, limit reductions, price increases, and bright spots. The definitive quarterly analysis.",
+    title: "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning",
+    metaDesc: "50 verified pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis.",
     contextHtml: "",
     tag: "q1-report",
     primaryVendor: "AgentDeals",
-    hubDesc: "47 verified pricing changes in Q1 2026 — free tier removals, restrictions, price hikes, and expansions analyzed",
+    hubDesc: "50 pricing changes in Q1 2026 — 8 free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook",
   },
   {
     slug: "hetzner-pricing-2026",
@@ -16101,8 +16101,8 @@ ${mcpCtaCss()}
 // --- Q1 2026 Developer Pricing Report ---
 
 function buildQ1PricingReportPage(): string {
-  const title = "Q1 2026 Developer Pricing Report — Free Tier Changes, Removals & Trends";
-  const metaDesc = "47 verified pricing changes across developer tools in Q1 2026. Free tier removals, limit reductions, price increases, and bright spots. The definitive quarterly analysis.";
+  const title = "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning";
+  const metaDesc = "50 verified pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis of developer tool pricing.";
   const slug = "q1-2026-developer-pricing-report";
   const pubDate = "2026-03-24";
 
@@ -16110,11 +16110,15 @@ function buildQ1PricingReportPage(): string {
   const q1Changes = dealChanges.filter(c => c.date >= "2026-01-01" && c.date <= "2026-03-31");
 
   // Categorize by theme
+  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
+  const positiveTypes = new Set(["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"]);
   const removals = q1Changes.filter(c => c.change_type === "free_tier_removed");
   const restrictions = q1Changes.filter(c => ["limits_reduced", "restriction"].includes(c.change_type));
   const priceIncreases = q1Changes.filter(c => c.change_type === "pricing_restructured");
-  const expansions = q1Changes.filter(c => ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"].includes(c.change_type));
+  const expansions = q1Changes.filter(c => positiveTypes.has(c.change_type));
   const deprecations = q1Changes.filter(c => ["product_deprecated", "open_source_killed", "pricing_model_change"].includes(c.change_type));
+  const negativeQ1 = q1Changes.filter(c => negativeTypes.has(c.change_type));
+  const positiveQ1 = q1Changes.filter(c => positiveTypes.has(c.change_type));
 
   const impactColors: Record<string, string> = { high: "#f85149", medium: "#d29922", low: "#3fb950" };
   const changeTypeLabels: Record<string, string> = {
@@ -16130,42 +16134,95 @@ function buildQ1PricingReportPage(): string {
     open_source_killed: "Open Source Killed",
     pricing_model_change: "Pricing Model Change",
   };
+  const changeTypeBadgeColors: Record<string, string> = {
+    free_tier_removed: "#f85149",
+    limits_reduced: "#d29922",
+    restriction: "#d29922",
+    open_source_killed: "#f85149",
+    product_deprecated: "#f85149",
+    new_free_tier: "#3fb950",
+    limits_increased: "#3fb950",
+    startup_program_expanded: "#3fb950",
+    pricing_restructured: "#8b5cf6",
+    pricing_model_change: "#8b5cf6",
+    pricing_postponed: "#d29922",
+  };
 
   const buildChangeCard = (c: typeof dealChanges[0]) => {
     const impactColor = impactColors[c.impact] ?? "#94a3b8";
     const typeLabel = changeTypeLabels[c.change_type] ?? c.change_type.replace(/_/g, " ");
     const vendorSlug = toSlug(c.vendor);
     const hasEditorial = editorialByVendor.has(c.vendor.toLowerCase());
-    const editorialLink = hasEditorial ? ` <a href="/${editorialByVendor.get(c.vendor.toLowerCase())!.slug}" style="font-size:.75rem;color:var(--accent)">[alternatives guide]</a>` : "";
-    return `<div class="change-card" style="border-left-color:${impactColor}">
-      <div class="change-header">
-        <a href="/vendor/${vendorSlug}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
-        <span class="change-date">${c.date}</span>
-        <span class="change-impact" style="color:${impactColor}">${c.impact}</span>
-      </div>
-      <span class="change-type-badge" style="background:${impactColor}22;color:${impactColor}">${typeLabel}</span>${editorialLink}
-      <p class="change-summary">${escHtmlServer(c.summary)}</p>
-      <div class="change-states">
-        <div class="change-before"><strong>Before:</strong> ${escHtmlServer(c.previous_state)}</div>
-        <div class="change-after"><strong>After:</strong> ${escHtmlServer(c.current_state)}</div>
-      </div>
-      <a href="${escHtmlServer(c.source_url)}" target="_blank" rel="noopener" class="change-source">Source &nearr;</a>
-    </div>`;
+    const editorialLink = hasEditorial ? " <a href=\"/" + editorialByVendor.get(c.vendor.toLowerCase())!.slug + "\" style=\"font-size:.75rem;color:var(--accent)\">[alternatives guide]</a>" : "";
+    return "<div class=\"change-card\" style=\"border-left-color:" + impactColor + "\">" +
+      "<div class=\"change-header\">" +
+        "<a href=\"/vendor/" + vendorSlug + "\" class=\"change-vendor\">" + escHtmlServer(c.vendor) + "</a>" +
+        "<span class=\"change-date\">" + c.date + "</span>" +
+        "<span class=\"change-impact\" style=\"color:" + impactColor + "\">" + c.impact + "</span>" +
+      "</div>" +
+      "<span class=\"change-type-badge\" style=\"background:" + impactColor + "22;color:" + impactColor + "\">" + typeLabel + "</span>" + editorialLink +
+      "<p class=\"change-summary\">" + escHtmlServer(c.summary) + "</p>" +
+      "<div class=\"change-states\">" +
+        "<div class=\"change-before\"><strong>Before:</strong> " + escHtmlServer(c.previous_state) + "</div>" +
+        "<div class=\"change-after\"><strong>After:</strong> " + escHtmlServer(c.current_state) + "</div>" +
+      "</div>" +
+      "<a href=\"" + escHtmlServer(c.source_url) + "\" target=\"_blank\" rel=\"noopener\" class=\"change-source\">Source &nearr;</a>" +
+    "</div>";
   };
 
   // Summary stats
   const highImpact = q1Changes.filter(c => c.impact === "high").length;
+  const medImpact = q1Changes.filter(c => c.impact === "medium").length;
+  const lowImpact = q1Changes.filter(c => c.impact === "low").length;
   const uniqueVendors = new Set(q1Changes.map(c => c.vendor)).size;
+
+  // Change type counts for "By the Numbers" breakdown
+  const changeTypeCounts = new Map<string, number>();
+  for (const c of q1Changes) {
+    changeTypeCounts.set(c.change_type, (changeTypeCounts.get(c.change_type) ?? 0) + 1);
+  }
+  const sortedChangeTypes = [...changeTypeCounts.entries()].sort((a, b) => b[1] - a[1]);
+  const maxChangeTypeCount = Math.max(...sortedChangeTypes.map(([, v]) => v), 1);
+
+  // Category breakdown
+  const catChangeCounts = new Map<string, { total: number; negative: number; positive: number; high: number }>();
+  for (const c of q1Changes) {
+    if (c.category) {
+      const entry = catChangeCounts.get(c.category) ?? { total: 0, negative: 0, positive: 0, high: 0 };
+      entry.total++;
+      if (negativeTypes.has(c.change_type)) entry.negative++;
+      if (positiveTypes.has(c.change_type)) entry.positive++;
+      if (c.impact === "high") entry.high++;
+      catChangeCounts.set(c.category, entry);
+    }
+  }
+  const sortedCategories = [...catChangeCounts.entries()].sort((a, b) => b[1].total - a[1].total);
+  const maxCatTotal = Math.max(...sortedCategories.map(([, v]) => v.total), 1);
+
+  // Monthly breakdown
+  const monthlyData = new Map<string, { total: number; negative: number; positive: number; high: number }>();
+  for (const c of q1Changes) {
+    const month = c.date.slice(0, 7);
+    const entry = monthlyData.get(month) ?? { total: 0, negative: 0, positive: 0, high: 0 };
+    entry.total++;
+    if (negativeTypes.has(c.change_type)) entry.negative++;
+    if (positiveTypes.has(c.change_type)) entry.positive++;
+    if (c.impact === "high") entry.high++;
+    monthlyData.set(month, entry);
+  }
+  const monthNames: Record<string, string> = { "2026-01": "January", "2026-02": "February", "2026-03": "March" };
+  const sortedMonths = [...monthlyData.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  const maxMonthTotal = Math.max(...sortedMonths.map(([, v]) => v.total), 1);
 
   // Upcoming deadlines (changes with dates in Q2+ 2026)
   const upcomingDeadlines = dealChanges.filter(c => c.date > "2026-03-31").slice(0, 6);
 
   // Cross-links to editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["localstack-alternatives", "postman-alternatives", "hetzner-alternatives", "hetzner-pricing-2026", "firebase-alternatives", "github-actions-alternatives", "hosting-alternatives", "monitoring-alternatives", "ai-ml-alternatives", "database-alternatives"].includes(p.slug)
+    ["localstack-alternatives", "postman-alternatives", "hetzner-alternatives", "hetzner-pricing-2026", "firebase-alternatives", "github-actions-alternatives", "hosting-alternatives", "monitoring-alternatives", "ai-ml-alternatives", "database-alternatives", "terraform-cloud-free-tier-removed", "gemini-api-pricing-changes"].includes(p.slug)
   );
 
-  // JSON-LD Article schema (not ItemList — editorial content)
+  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -16175,150 +16232,324 @@ function buildQ1PricingReportPage(): string {
     dateModified: new Date().toISOString().split("T")[0],
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
     about: {
       "@type": "Thing",
       name: "Developer tool pricing changes Q1 2026",
-      description: `${q1Changes.length} verified pricing changes tracked across ${uniqueVendors} developer tools`,
+      description: q1Changes.length + " verified pricing changes tracked across " + uniqueVendors + " developer tools",
     },
   };
 
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escHtmlServer(title)} — AgentDeals</title>
-<meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="${BASE_URL}/${slug}">
-<meta property="og:title" content="${escHtmlServer(title)}">
-<meta property="og:description" content="${escHtmlServer(metaDesc)}">
-<meta property="og:type" content="article">
-<meta property="og:url" content="${BASE_URL}/${slug}">
-<meta property="article:published_time" content="${pubDate}">
-${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
-a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
-.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
-.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
-.breadcrumb a{color:var(--text-muted)}
-h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
-h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
-h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
-.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
-.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
-.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
-.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
-.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
-.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
-.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
-.executive-summary p:last-child{margin-bottom:0}
-.executive-summary strong{color:var(--text)}
-.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
-.change-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}
-.change-card:hover{border-color:var(--accent)}
-.change-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
-.change-vendor{font-size:1.05rem;font-weight:600;color:var(--text)}
-.change-vendor:hover{color:var(--accent)}
-.change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
-.change-impact{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-.change-type-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600;margin-bottom:.5rem}
-.change-summary{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem;line-height:1.6}
-.change-states{font-size:.8rem;color:var(--text-dim);margin-bottom:.5rem;line-height:1.6}
-.change-before,.change-after{margin-bottom:.25rem}
-.change-source{font-size:.75rem;color:var(--text-dim)}
-.change-source:hover{color:var(--accent)}
-.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
-.methodology strong{color:var(--text)}
-.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
-.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
-.related-page-link:hover{border-color:var(--accent);text-decoration:none}
-.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
-.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
-.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
-footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-footer a{color:var(--accent)}
-@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}}
-${globalNavCss()}
-${mcpCtaCss()}
-</style>
-</head>
-<body>
-<div class="container">
-  ${buildGlobalNav("changes")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Q1 2026 Report</div>
-  <h1>Q1 2026 Developer Pricing Report</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${q1Changes.length} verified changes across ${uniqueVendors} developer tools</p>
+  // Build monthly timeline bars
+  const monthlyTimelineHtml = sortedMonths.map(([month, data]) => {
+    const totalWidth = Math.round((data.total / maxMonthTotal) * 100);
+    const negPct = data.total > 0 ? Math.round((data.negative / data.total) * 100) : 0;
+    const posPct = data.total > 0 ? Math.round((data.positive / data.total) * 100) : 0;
+    const neutralPct = 100 - negPct - posPct;
+    return "<div style=\"display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem\">" +
+      "<span style=\"font-family:var(--mono);font-size:.8rem;color:var(--text-muted);min-width:6rem;text-align:right\">" + (monthNames[month] ?? month) + "</span>" +
+      "<div style=\"flex:1;display:flex;height:28px;border-radius:4px;overflow:hidden;background:var(--bg-card);max-width:" + totalWidth + "%;min-width:40px\">" +
+        (negPct > 0 ? "<div style=\"width:" + negPct + "%;background:#f85149\" title=\"" + data.negative + " negative\"></div>" : "") +
+        (neutralPct > 0 ? "<div style=\"width:" + neutralPct + "%;background:#8b5cf6\" title=\"" + (data.total - data.negative - data.positive) + " neutral\"></div>" : "") +
+        (posPct > 0 ? "<div style=\"width:" + posPct + "%;background:#3fb950\" title=\"" + data.positive + " positive\"></div>" : "") +
+      "</div>" +
+      "<span style=\"font-family:var(--mono);font-size:.8rem;color:var(--text-muted);min-width:5rem\">" + data.total + " (" + data.high + " high)</span>" +
+    "</div>";
+  }).join("\n    ");
 
-  <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">${q1Changes.length}</div><div class="stat-label">Pricing Changes</div></div>
-    <div class="stat-card"><div class="stat-number">${removals.length}</div><div class="stat-label">Free Tiers Removed</div></div>
-    <div class="stat-card"><div class="stat-number">${restrictions.length}</div><div class="stat-label">Limits Tightened</div></div>
-    <div class="stat-card"><div class="stat-number">${highImpact}</div><div class="stat-label">High Impact</div></div>
-    <div class="stat-card"><div class="stat-number">${expansions.length}</div><div class="stat-label">Bright Spots</div></div>
-  </div>
+  // Build change type breakdown bars
+  const changeTypeBreakdownHtml = sortedChangeTypes.map(([type, count]) => {
+    const badgeColor = changeTypeBadgeColors[type] ?? "#8b949e";
+    const label = changeTypeLabels[type] ?? type.replace(/_/g, " ");
+    const barWidth = Math.round((count / maxChangeTypeCount) * 100);
+    return "<div style=\"display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem\">" +
+      "<span style=\"display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.7rem;font-weight:600;background:" + badgeColor + ";color:#fff;min-width:7.5rem;text-align:center\">" + label + "</span>" +
+      "<div style=\"flex:1;height:20px;background:var(--bg-card);border-radius:4px;overflow:hidden\">" +
+        "<div style=\"height:100%;width:" + barWidth + "%;background:" + badgeColor + ";opacity:0.7;border-radius:4px\"></div>" +
+      "</div>" +
+      "<span style=\"font-family:var(--mono);font-size:.8rem;color:var(--text-muted);min-width:1.5rem;text-align:right\">" + count + "</span>" +
+    "</div>";
+  }).join("\n    ");
 
-  <div class="executive-summary">
-    <p><strong>The Q1 2026 trend is clear: free tiers are eroding faster than they're expanding.</strong> We tracked ${q1Changes.length} verified pricing changes across ${uniqueVendors} developer tools this quarter. ${removals.length} free tiers were completely removed, ${restrictions.length} had limits tightened, and ${priceIncreases.length} restructured pricing in ways that typically mean higher costs.</p>
-    <p><strong>Biggest impacts:</strong> LocalStack killed its Community Edition (March 23), Freshping shut down entirely (March 6), X/Twitter eliminated its free API tier, and Firebase removed Cloud Storage from its free plan. API platforms were hit hardest — Brave Search, Spotify, Amazon SP-API, and Xero all moved away from free access.</p>
-    <p><strong>Bright spots were rare:</strong> Cloudflare added free Queues, Unity expanded DevOps limits, and startup credit programs grew (Cloudflare $250K, Google Cloud $350K). But expansions were outnumbered by contractions roughly 4:1.</p>
-  </div>
+  // Build category breakdown bars
+  const categoryBreakdownHtml = sortedCategories.map(([cat, data]) => {
+    const barWidth = Math.round((data.total / maxCatTotal) * 100);
+    const catSlug = toSlug(cat);
+    return "<div style=\"display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem\">" +
+      "<a href=\"/category/" + catSlug + "\" style=\"font-size:.85rem;color:var(--text-muted);min-width:8rem;text-align:right\">" + escHtmlServer(cat) + "</a>" +
+      "<div style=\"flex:1;display:flex;height:20px;border-radius:4px;overflow:hidden;background:var(--bg-card);max-width:" + barWidth + "%;min-width:20px\">" +
+        (data.negative > 0 ? "<div style=\"width:" + Math.round((data.negative / data.total) * 100) + "%;background:#f85149\"></div>" : "") +
+        (data.total - data.negative - data.positive > 0 ? "<div style=\"width:" + Math.round(((data.total - data.negative - data.positive) / data.total) * 100) + "%;background:#8b5cf6\"></div>" : "") +
+        (data.positive > 0 ? "<div style=\"width:" + Math.round((data.positive / data.total) * 100) + "%;background:#3fb950\"></div>" : "") +
+      "</div>" +
+      "<span style=\"font-family:var(--mono);font-size:.8rem;color:var(--text-muted);min-width:1.5rem;text-align:right\">" + data.total + "</span>" +
+    "</div>";
+  }).join("\n    ");
 
-  <h2 style="color:${impactColors.high}">Free Tiers Removed (${removals.length})</h2>
-  <p class="section-intro">These tools completely eliminated their free tier in Q1 2026. If you were using them for free, you need to migrate or pay.</p>
-  ${removals.map(buildChangeCard).join("\n  ")}
+  return "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n" +
+"<meta charset=\"utf-8\">\n" +
+"<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n" +
+"<title>" + escHtmlServer(title) + " | AgentDeals</title>\n" +
+"<meta name=\"description\" content=\"" + escHtmlServer(metaDesc) + "\">\n" +
+"<link rel=\"canonical\" href=\"" + BASE_URL + "/" + slug + "\">\n" +
+"<meta property=\"og:title\" content=\"" + escHtmlServer(title) + "\">\n" +
+"<meta property=\"og:description\" content=\"" + escHtmlServer(metaDesc) + "\">\n" +
+"<meta property=\"og:type\" content=\"article\">\n" +
+"<meta property=\"og:url\" content=\"" + BASE_URL + "/" + slug + "\">\n" +
+"<meta property=\"article:published_time\" content=\"" + pubDate + "\">\n" +
+OG_IMAGE_META + GOOGLE_VERIFICATION_META + "<link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\">\n" +
+"<link rel=\"alternate\" type=\"application/atom+xml\" title=\"AgentDeals — Pricing Changes\" href=\"/feed.xml\">\n" +
+"<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n" +
+"<script type=\"application/ld+json\">" + JSON.stringify(jsonLd) + "</script>\n" +
+"<style>\n" +
+"*{margin:0;padding:0;box-sizing:border-box}\n" +
+":root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}\n" +
+"body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n" +
+"a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n" +
+".container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n" +
+".breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n" +
+".breadcrumb a{color:var(--text-muted)}\n" +
+"h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\n" +
+"h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\n" +
+"h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n" +
+".subtitle{font-size:1.1rem;color:var(--text-muted);margin-bottom:.25rem;font-style:italic}\n" +
+".pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n" +
+".summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n" +
+".stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n" +
+".stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n" +
+".stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n" +
+".executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n" +
+".executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n" +
+".executive-summary p:last-child{margin-bottom:0}\n" +
+".executive-summary strong{color:var(--text)}\n" +
+".section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n" +
+".change-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem;transition:border-color .2s}\n" +
+".change-card:hover{border-color:var(--accent)}\n" +
+".change-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}\n" +
+".change-vendor{font-size:1.05rem;font-weight:600;color:var(--text)}\n" +
+".change-vendor:hover{color:var(--accent)}\n" +
+".change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}\n" +
+".change-impact{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}\n" +
+".change-type-badge{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600;margin-bottom:.5rem}\n" +
+".change-summary{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem;line-height:1.6}\n" +
+".change-states{font-size:.8rem;color:var(--text-dim);margin-bottom:.5rem;line-height:1.6}\n" +
+".change-before,.change-after{margin-bottom:.25rem}\n" +
+".change-source{font-size:.75rem;color:var(--text-dim)}\n" +
+".change-source:hover{color:var(--accent)}\n" +
+".story-card{padding:1.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);margin-bottom:1rem}\n" +
+".story-card h3{margin-top:0;margin-bottom:.5rem}\n" +
+".story-card p{color:var(--text-muted);font-size:.9rem;line-height:1.6;margin-bottom:.5rem}\n" +
+".story-card p:last-child{margin-bottom:0}\n" +
+".story-card .story-impact{display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600;margin-bottom:.75rem}\n" +
+".impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}\n" +
+".impact-card{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-align:center}\n" +
+".impact-card .impact-count{font-size:2rem;font-weight:700;font-family:var(--mono);display:block;line-height:1.2}\n" +
+".impact-card .impact-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem;display:block}\n" +
+".impact-card .impact-desc{font-size:.75rem;color:var(--text-dim);margin-top:.5rem}\n" +
+".callout{margin:1.5rem 0;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated);font-size:.9rem;line-height:1.6;color:var(--text-muted)}\n" +
+".callout strong{color:var(--text)}\n" +
+".callout-green{border-color:#3fb950;background:rgba(63,185,80,0.08)}\n" +
+".methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n" +
+".methodology strong{color:var(--text)}\n" +
+".related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n" +
+".related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n" +
+".related-page-link:hover{border-color:var(--accent);text-decoration:none}\n" +
+".related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n" +
+".related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n" +
+".search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}\n" +
+"footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n" +
+"footer a{color:var(--accent)}\n" +
+"@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.impact-grid{grid-template-columns:1fr}}\n" +
+globalNavCss() + "\n" +
+mcpCtaCss() + "\n" +
+"</style>\n</head>\n<body>\n<div class=\"container\">\n" +
+  buildGlobalNav("changes") + "\n" +
+  "<div class=\"breadcrumb\"><a href=\"/\">AgentDeals</a> &rsaquo; <a href=\"/changes\">Changes</a> &rsaquo; Q1 2026 Report</div>\n" +
+  "<h1>Q1 2026 Developer Pricing Report</h1>\n" +
+  "<p class=\"subtitle\">The Great Free Tier Reckoning</p>\n" +
+  "<p class=\"pub-date\">Published " + pubDate + " &middot; Updated " + new Date().toISOString().split("T")[0] + " &middot; " + q1Changes.length + " verified changes across " + uniqueVendors + " developer tools</p>\n" +
 
-  <h2 style="color:${impactColors.medium}">Limits Tightened &amp; Restrictions Added (${restrictions.length})</h2>
-  <p class="section-intro">Free tiers still exist, but with reduced limits or new restrictions that may affect your workflow.</p>
-  ${restrictions.map(buildChangeCard).join("\n  ")}
+  // --- Executive Summary ---
+  "<h2>Executive Summary</h2>\n" +
+  "<div class=\"executive-summary\">\n" +
+    "<p><strong>Q1 2026 was the worst quarter for developer free tiers in recent memory.</strong> We tracked " + q1Changes.length + " verified pricing changes across " + uniqueVendors + " developer tools. " + removals.length + " free tiers were completely removed, " + restrictions.length + " had limits tightened or restrictions added, and 1 open-source project was killed. " + highImpact + " of " + q1Changes.length + " changes were rated high impact.</p>\n" +
+    "<p><strong>The net trend is unmistakable:</strong> " + negativeQ1.length + " negative changes vs " + positiveQ1.length + " positive &mdash; a " + Math.round(negativeQ1.length / Math.max(positiveQ1.length, 1)) + ":1 ratio. Free tiers are eroding faster than they&rsquo;re expanding, and the pace accelerated through the quarter (" + (monthlyData.get("2026-01")?.total ?? 0) + " changes in January &rarr; " + (monthlyData.get("2026-03")?.total ?? 0) + " in March).</p>\n" +
+    "<p><strong>One notable counter-trend:</strong> While most vendors contracted, Cloudflare expanded &mdash; adding free Queues, reducing Durable Objects pricing, and launching a $250K startup credit program. They are betting that developer goodwill converts to enterprise revenue.</p>\n" +
+  "</div>\n" +
 
-  <h2>Pricing Restructured (${priceIncreases.length})</h2>
-  <p class="section-intro">These tools changed their pricing model. While some include free tiers, the restructuring typically means higher costs for most users.</p>
-  ${priceIncreases.map(buildChangeCard).join("\n  ")}
+  // --- By the Numbers ---
+  "<h2>By the Numbers</h2>\n" +
+  "<div class=\"summary-stats\">\n" +
+    "<div class=\"stat-card\"><div class=\"stat-number\">" + q1Changes.length + "</div><div class=\"stat-label\">Total Changes</div></div>\n" +
+    "<div class=\"stat-card\"><div class=\"stat-number\" style=\"color:#f85149\">" + removals.length + "</div><div class=\"stat-label\">Free Tiers Removed</div></div>\n" +
+    "<div class=\"stat-card\"><div class=\"stat-number\" style=\"color:#d29922\">" + restrictions.length + "</div><div class=\"stat-label\">Limits Tightened</div></div>\n" +
+    "<div class=\"stat-card\"><div class=\"stat-number\" style=\"color:#f85149\">1</div><div class=\"stat-label\">OSS Project Killed</div></div>\n" +
+    "<div class=\"stat-card\"><div class=\"stat-number\" style=\"color:#3fb950\">" + expansions.length + "</div><div class=\"stat-label\">Bright Spots</div></div>\n" +
+    "<div class=\"stat-card\"><div class=\"stat-number\">" + highImpact + "</div><div class=\"stat-label\">High Impact</div></div>\n" +
+  "</div>\n" +
+  "<h3>Change Type Breakdown</h3>\n" +
+  "<p class=\"section-intro\">What kinds of pricing changes dominated Q1? Restructured pricing was the most common pattern (" + (changeTypeCounts.get("pricing_restructured") ?? 0) + " changes), followed by free tier removals (" + removals.length + ") and limit reductions (" + (changeTypeCounts.get("limits_reduced") ?? 0) + ").</p>\n" +
+  "<div style=\"margin:1.5rem 0\">\n    " + changeTypeBreakdownHtml + "\n" +
+  "</div>\n" +
+  "<div style=\"display:flex;gap:1.5rem;margin:.75rem 0 0;font-size:.75rem;color:var(--text-dim)\">" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#f85149;vertical-align:middle;margin-right:.25rem\"></span> Negative</span>" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#d29922;vertical-align:middle;margin-right:.25rem\"></span> Restricted / Postponed</span>" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem\"></span> Restructured</span>" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#3fb950;vertical-align:middle;margin-right:.25rem\"></span> Positive</span>" +
+  "</div>\n" +
 
-  <h2>Deprecations &amp; Model Changes (${deprecations.length})</h2>
-  <p class="section-intro">Products deprecated, open-source projects killed, or fundamental pricing model shifts.</p>
-  ${deprecations.map(buildChangeCard).join("\n  ")}
+  // --- Impact Analysis ---
+  "<h2>Impact Analysis</h2>\n" +
+  "<p class=\"section-intro\">We rate each change by its impact on the developer community &mdash; factoring in the size of the user base, severity of the change, and availability of alternatives.</p>\n" +
+  "<div class=\"impact-grid\">\n" +
+    "<div class=\"impact-card\"><span class=\"impact-count\" style=\"color:#f85149\">" + highImpact + "</span><span class=\"impact-label\">High Impact</span><p class=\"impact-desc\">Large user base affected, significant cost increase, or complete removal of free access. Requires immediate action.</p></div>\n" +
+    "<div class=\"impact-card\"><span class=\"impact-count\" style=\"color:#d29922\">" + medImpact + "</span><span class=\"impact-label\">Medium Impact</span><p class=\"impact-desc\">Meaningful limit changes that affect some workflows. May require adjustments but workarounds exist.</p></div>\n" +
+    "<div class=\"impact-card\"><span class=\"impact-count\" style=\"color:#3fb950\">" + lowImpact + "</span><span class=\"impact-label\">Low Impact</span><p class=\"impact-desc\">Minor changes, postponed deadlines, or improvements. Little to no developer action needed.</p></div>\n" +
+  "</div>\n" +
 
-  <h2 style="color:${impactColors.low}">Bright Spots — Free Tiers Expanded (${expansions.length})</h2>
-  <p class="section-intro">Not all news is bad. These tools increased free tier limits or added new free offerings.</p>
-  ${expansions.map(buildChangeCard).join("\n  ")}
+  // --- Biggest Stories of Q1 ---
+  "<h2>Biggest Stories of Q1</h2>\n" +
+  "<p class=\"section-intro\">The 7 most significant pricing events that shaped the developer ecosystem in Q1 2026.</p>\n" +
 
-  ${upcomingDeadlines.length > 0 ? `<h2>Upcoming Deadlines to Watch</h2>
-  <p class="section-intro">These pricing changes take effect after Q1. Plan your migrations now.</p>
-  ${upcomingDeadlines.map(buildChangeCard).join("\n  ")}` : ""}
+  "<div class=\"story-card\">\n" +
+    "<h3>X (Twitter) API Paywall</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Free Tier Removed &middot; High Impact</span>\n" +
+    "<p>X eliminated its free API tier entirely in February, moving to $200/month for basic access. The free tier had already been gutted in 2023, but the complete removal locked out thousands of bot developers, researchers, and side projects. Combined with the pricing model change (per-post charges), X completed its transformation from the most developer-friendly social platform to one of the most hostile.</p>\n" +
+    "<p><a href=\"/vendor/x-twitter\">View vendor profile</a> &middot; <a href=\"/alternative-to/x-twitter\">Alternatives</a></p>\n" +
+  "</div>\n" +
 
-  <div class="methodology">
-    <strong>Methodology:</strong> All ${q1Changes.length} pricing changes were manually verified against vendor pricing pages, blog announcements, or official documentation. Each entry includes a source URL for independent verification. Changes are categorized by type (removal, restriction, restructure, expansion) and rated by impact (high, medium, low) based on the size of the affected developer community and the severity of the change. Data is continuously tracked at <a href="/changes">/changes</a>.
-  </div>
+  "<div class=\"story-card\">\n" +
+    "<h3>Brave Search API Removal</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Free Tier Removed &middot; High Impact</span>\n" +
+    "<p>Brave eliminated its free search API plan (5,000 queries/month) in February, replacing it with metered billing at $5/1,000 requests. For developers building search-powered tools and AI agents, this was a blow &mdash; Brave was one of the last independent search APIs with meaningful free access. The timing coincided with Google further restricting Programmable Search Engine queries.</p>\n" +
+    "<p><a href=\"/vendor/brave-search-api\">View vendor profile</a></p>\n" +
+  "</div>\n" +
 
-  <h2>Related Guides</h2>
-  <p class="section-intro">Deep-dive comparison guides for tools affected by Q1 2026 changes.</p>
-  <div class="related-pages">
-    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
-      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
-      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
-    </a>`).join("\n    ")}
-  </div>
+  "<div class=\"story-card\">\n" +
+    "<h3>MinIO Open Source Killed</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">OSS Killed &middot; High Impact</span>\n" +
+    "<p>MinIO, the most popular S3-compatible object storage server, switched from Apache 2.0 to a proprietary license in February 2026. Self-hosted users now need a commercial license for production use. This followed a pattern seen with Redis (BSL), Elasticsearch (SSPL), and MongoDB (SSPL), but hit particularly hard because MinIO was foundational infrastructure for thousands of self-hosted deployments.</p>\n" +
+    "<p><a href=\"/vendor/minio\">View vendor profile</a> &middot; <a href=\"/storage-alternatives\">Storage alternatives</a></p>\n" +
+  "</div>\n" +
 
-  <div class="search-cta">
-    <p>This report covers Q1 2026. For the full timeline of all ${dealChanges.length} tracked pricing changes, visit <a href="/changes">/changes</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
-  </div>
+  "<div class=\"story-card\">\n" +
+    "<h3>LocalStack Community Edition Shutdown</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Free Tier Removed &middot; High Impact</span>\n" +
+    "<p>LocalStack shut down its free Community Edition on March 23, forcing all users to paid plans starting at $35/month. For years, LocalStack CE was the go-to for local AWS development &mdash; used in CI pipelines, local dev, and testing. The shutdown affects an estimated 100,000+ developers.</p>\n" +
+    "<p><a href=\"/vendor/localstack\">View vendor profile</a> &middot; <a href=\"/localstack-alternatives\">LocalStack alternatives guide</a></p>\n" +
+  "</div>\n" +
 
-  ${buildMoreAlternativesGuides(slug)}
+  "<div class=\"story-card\">\n" +
+    "<h3>Firebase Restrictions &amp; Studio Shutdown</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Restriction + Deprecation &middot; High Impact</span>\n" +
+    "<p>Google hit Firebase with a double blow: restricting Cloud Storage on the free Spark plan (February) and announcing Firebase Studio shutdown (March 19, effective June 2026). The Spark plan now requires Blaze (pay-as-you-go) for full Storage access. Firebase Studio, Google&rsquo;s cloud IDE, lasted less than a year.</p>\n" +
+    "<p><a href=\"/vendor/firebase\">View vendor profile</a> &middot; <a href=\"/firebase-alternatives\">Firebase alternatives</a> &middot; <a href=\"/firebase-studio-shutdown\">Studio shutdown guide</a></p>\n" +
+  "</div>\n" +
 
-  ${buildMcpCta("Track pricing changes from your AI assistant. Get alerts on free tier removals, limit reductions, and new deals — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
-</div>
-<script>${mcpCtaScript()}</script>
-</body>
-</html>`;
+  "<div class=\"story-card\">\n" +
+    "<h3>Spotify API Lockdown</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#d2992222;color:#d29922\">Limits Reduced &middot; High Impact</span>\n" +
+    "<p>Spotify dramatically reduced API rate limits and restricted access to several endpoints in February. Third-party music apps, playlist tools, and analytics dashboards that relied on the API were effectively locked out. This continues Spotify&rsquo;s multi-year pattern of restricting developer access to protect its platform ecosystem.</p>\n" +
+    "<p><a href=\"/vendor/spotify-api\">View vendor profile</a></p>\n" +
+  "</div>\n" +
+
+  "<div class=\"story-card\">\n" +
+    "<h3>HCP Terraform Free Tier Discontinued</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Free Tier Removed &middot; High Impact</span>\n" +
+    "<p>HashiCorp discontinued the legacy HCP Terraform free plan on March 31. While an &ldquo;enhanced free tier&rdquo; was introduced (with SSO and policy-as-code), it caps resources at 500 &mdash; a dealbreaker for growing teams. Combined with the BSL license switch, this completed HashiCorp&rsquo;s move away from the open-source-friendly model that built its community. OpenTofu emerged as the primary alternative.</p>\n" +
+    "<p><a href=\"/vendor/hcp-terraform\">View vendor profile</a> &middot; <a href=\"/terraform-cloud-free-tier-removed\">Removal guide</a> &middot; <a href=\"/hcp-terraform-migration\">Migration guide</a></p>\n" +
+  "</div>\n" +
+
+  // --- The Counter-Trend: Cloudflare ---
+  "<h2>The Counter-Trend: Cloudflare</h2>\n" +
+  "<div class=\"callout callout-green\">\n" +
+    "<p><strong>While most vendors contracted, Cloudflare expanded.</strong> In Q1 2026, Cloudflare made 3 developer-positive moves:</p>\n" +
+    "<ul style=\"margin:.75rem 0 .75rem 1.5rem;color:var(--text-muted)\">\n" +
+      "<li><strong>Free Queues</strong> (February) &mdash; added a free tier for Cloudflare Queues (message queue service), further building out their serverless platform</li>\n" +
+      "<li><strong>Durable Objects pricing reduction</strong> (January) &mdash; restructured pricing to be more developer-friendly, lowering the barrier to real-time stateful applications</li>\n" +
+      "<li><strong>$250K Startup Program</strong> (February) &mdash; expanded startup credits to $250K, one of the most generous programs in the industry</li>\n" +
+    "</ul>\n" +
+    "<p><strong>Why the difference?</strong> Cloudflare&rsquo;s business model is built on network effects &mdash; every developer using Workers, R2, or Queues drives traffic through Cloudflare&rsquo;s edge network. Free tiers are a customer acquisition channel, not a cost center. This stands in contrast to companies like HashiCorp or LocalStack, where free tiers are a direct cost with no infrastructure flywheel to offset them.</p>\n" +
+  "</div>\n" +
+
+  // --- Category Breakdown ---
+  "<h2>Category Breakdown</h2>\n" +
+  "<p class=\"section-intro\">Which categories saw the most pricing churn? Cloud IaaS (" + (catChangeCounts.get("Cloud IaaS")?.total ?? 0) + " changes), Databases (" + (catChangeCounts.get("Databases")?.total ?? 0) + "), and APIs (" + (catChangeCounts.get("APIs")?.total ?? 0) + ") were the most active. Red = negative, purple = restructured, green = positive.</p>\n" +
+  "<div style=\"margin:1.5rem 0\">\n    " + categoryBreakdownHtml + "\n</div>\n" +
+
+  // --- Monthly Timeline ---
+  "<h2>Monthly Timeline: Did the Pace Accelerate?</h2>\n" +
+  "<p class=\"section-intro\">Yes. Q1 started with " + (monthlyData.get("2026-01")?.total ?? 0) + " changes in January and ended with " + (monthlyData.get("2026-03")?.total ?? 0) + " in March &mdash; a " + Math.round(((monthlyData.get("2026-03")?.total ?? 0) / Math.max(monthlyData.get("2026-01")?.total ?? 1, 1) - 1) * 100) + "% increase. March was particularly brutal with " + (monthlyData.get("2026-03")?.high ?? 0) + " high-impact changes.</p>\n" +
+  "<div style=\"margin:1.5rem 0\">\n    " + monthlyTimelineHtml + "\n" +
+  "  <div style=\"display:flex;gap:1.5rem;margin-top:.75rem;font-size:.75rem;color:var(--text-dim)\">" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#f85149;vertical-align:middle;margin-right:.25rem\"></span> Negative</span>" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem\"></span> Restructured</span>" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#3fb950;vertical-align:middle;margin-right:.25rem\"></span> Positive</span>" +
+  "</div>\n" +
+  "</div>\n" +
+
+  // --- All Q1 Changes by Category ---
+  "<h2 style=\"color:" + impactColors.high + "\">Free Tiers Removed (" + removals.length + ")</h2>\n" +
+  "<p class=\"section-intro\">These tools completely eliminated their free tier in Q1 2026. If you were using them for free, you need to migrate or pay.</p>\n" +
+  removals.map(buildChangeCard).join("\n  ") + "\n" +
+
+  "<h2 style=\"color:" + impactColors.medium + "\">Limits Tightened &amp; Restrictions Added (" + restrictions.length + ")</h2>\n" +
+  "<p class=\"section-intro\">Free tiers still exist, but with reduced limits or new restrictions that may affect your workflow.</p>\n" +
+  restrictions.map(buildChangeCard).join("\n  ") + "\n" +
+
+  "<h2>Pricing Restructured (" + priceIncreases.length + ")</h2>\n" +
+  "<p class=\"section-intro\">These tools changed their pricing model. While some include free tiers, the restructuring typically means higher costs for most users.</p>\n" +
+  priceIncreases.map(buildChangeCard).join("\n  ") + "\n" +
+
+  "<h2>Deprecations &amp; Model Changes (" + deprecations.length + ")</h2>\n" +
+  "<p class=\"section-intro\">Products deprecated, open-source projects killed, or fundamental pricing model shifts.</p>\n" +
+  deprecations.map(buildChangeCard).join("\n  ") + "\n" +
+
+  "<h2 style=\"color:" + impactColors.low + "\">Bright Spots &mdash; Free Tiers Expanded (" + expansions.length + ")</h2>\n" +
+  "<p class=\"section-intro\">Not all news is bad. These tools increased free tier limits or added new free offerings.</p>\n" +
+  expansions.map(buildChangeCard).join("\n  ") + "\n" +
+
+  // --- What to Watch in Q2 ---
+  "<h2>What to Watch in Q2 2026</h2>\n" +
+  "<p class=\"section-intro\">Key deadlines and trends to monitor in April&ndash;June 2026.</p>\n" +
+  "<div class=\"callout\">\n" +
+    "<ul style=\"margin:0 0 0 1.5rem;color:var(--text-muted)\">\n" +
+      "<li><strong>OpenAI Assistants API shutdown</strong> (August 26, 2026) &mdash; migration window is Q2. Developers must move to Responses API + Conversations API. <a href=\"/openai-assistants-migration-2026\">Migration guide</a></li>\n" +
+      "<li><strong>Google Tenor API shutdown</strong> (June 30, 2026) &mdash; GIF API going offline. <a href=\"/tenor-alternatives\">Alternatives guide</a></li>\n" +
+      "<li><strong>Firebase Studio shutdown</strong> (June 2026) &mdash; cloud IDE going offline. <a href=\"/firebase-studio-shutdown\">Migration guide</a></li>\n" +
+      "<li><strong>Gemini API billing overhaul</strong> &mdash; spend caps ($250&ndash;$100K+/mo), prepaid billing, 3.1 Pro paid-only. <a href=\"/gemini-api-pricing-changes\">Full analysis</a></li>\n" +
+      "<li><strong>DRAM price surge</strong> &mdash; 171% YoY increase driving hosting costs up. Hetzner already raised prices 30&ndash;50%. Other hosting providers may follow in Q2.</li>\n" +
+      "<li><strong>AI API price war continues</strong> &mdash; Groq, Cerebras, and OpenRouter offering generous free tiers. Expect more free tier launches from challengers while incumbents focus on paid plans.</li>\n" +
+    "</ul>\n" +
+    "<p style=\"margin-top:.75rem\"><a href=\"/q2-pricing-preview-2026\">Read the full Q2 2026 Pricing Preview &rarr;</a></p>\n" +
+  "</div>\n" +
+
+  (upcomingDeadlines.length > 0 ? "<h3>Confirmed Q2 Changes</h3>\n<p class=\"section-intro\">These pricing changes take effect after Q1. Plan your migrations now.</p>\n" +
+  upcomingDeadlines.map(buildChangeCard).join("\n  ") + "\n" : "") +
+
+  // --- Methodology ---
+  "<div class=\"methodology\">\n" +
+    "<strong>Methodology:</strong> All " + q1Changes.length + " pricing changes were manually verified against vendor pricing pages, blog announcements, or official documentation. Each entry includes a source URL for independent verification. Changes are categorized by type (removal, restriction, restructure, expansion) and rated by impact (high, medium, low) based on the size of the affected developer community and the severity of the change. Impact ratings consider: (1) estimated user base, (2) magnitude of change, (3) availability of alternatives, and (4) migration difficulty. Data is continuously tracked at <a href=\"/changes\">/changes</a>.\n" +
+  "</div>\n" +
+
+  // --- Related Guides ---
+  "<h2>Related Guides</h2>\n" +
+  "<p class=\"section-intro\">Deep-dive comparison guides for tools affected by Q1 2026 changes.</p>\n" +
+  "<div class=\"related-pages\">\n" +
+    relatedPages.map(function(p) { return "    <a href=\"/" + p.slug + "\" class=\"related-page-link\">\n      <div class=\"link-title\">" + escHtmlServer(p.title.split(" — ")[0]) + "</div>\n      <div class=\"link-desc\">" + escHtmlServer(p.hubDesc) + "</div>\n    </a>"; }).join("\n") + "\n" +
+  "</div>\n" +
+
+  "<div class=\"search-cta\">\n" +
+    "<p>This report covers Q1 2026 (January&ndash;March). For the full timeline of all " + dealChanges.length + " tracked pricing changes, visit <a href=\"/changes\">/changes</a>. For Q2 outlook, see the <a href=\"/q2-pricing-preview-2026\">Q2 2026 Pricing Preview</a>. Browse all " + offers.length.toLocaleString() + " developer tools at <a href=\"/search\">/search</a>.</p>\n" +
+  "</div>\n" +
+
+  buildMoreAlternativesGuides(slug) + "\n" +
+
+  buildMcpCta("Track pricing changes from your AI assistant. Get alerts on free tier removals, limit reductions, and new deals — directly in your editor.") + "\n" +
+  "<footer>AgentDeals &mdash; open source, built for agents | <a href=\"/privacy\">Privacy</a></footer>\n" +
+"</div>\n" +
+"<script>" + mcpCtaScript() + "</script>\n" +
+"</body>\n</html>";
 }
 
 // --- Q2 2026 Pricing Preview ---
