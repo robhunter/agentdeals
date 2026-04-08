@@ -936,7 +936,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers", "/stack-check"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -4835,5 +4835,87 @@ describe("shutdown tracker page", () => {
     assert.ok(xml.includes("/cockroachdb-vs-mongodb"), "Sitemap should include VS pages");
     assert.ok(xml.includes("/auth0-vs-clerk"), "Sitemap should include VS pages");
     assert.ok(xml.includes("/amplitude-vs-posthog"), "Sitemap should include VS pages");
+  });
+
+  it("GET /stack-check renders interactive health check page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/stack-check`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+
+    // Page structure
+    assert.ok(html.includes("<title>Stack Health Check"), "Should have health check page title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("WebApplication"), "Should have WebApplication JSON-LD type");
+    assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/stack-check"), "Should reference /stack-check");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+
+    // Input section
+    assert.ok(html.includes("stack-input"), "Should have stack input field");
+    assert.ok(html.includes("check-btn"), "Should have check button");
+    assert.ok(html.includes("checkStack"), "Should have checkStack function");
+
+    // Preset stacks (at least 3)
+    assert.ok(html.includes("preset-btn"), "Should have preset stack buttons");
+    assert.ok(html.includes("MERN Stack"), "Should have MERN preset");
+    assert.ok(html.includes("JAMstack"), "Should have JAMstack preset");
+    assert.ok(html.includes("Serverless"), "Should have Serverless preset");
+
+    // Results area
+    assert.ok(html.includes("grade-section"), "Should have grade section");
+    assert.ok(html.includes("risk-summary"), "Should have risk summary");
+    assert.ok(html.includes("service-cards"), "Should have service cards");
+    assert.ok(html.includes("gaps-section"), "Should have gaps section");
+    assert.ok(html.includes("recs-section"), "Should have recommendations section");
+
+    // Shareable URLs
+    assert.ok(html.includes("share-bar"), "Should have share bar");
+    assert.ok(html.includes("copyShareUrl"), "Should have copy share URL function");
+
+    // SEO
+    assert.ok(html.includes("free tier health check"), "Should have SEO keywords");
+    assert.ok(html.includes("og:title"), "Should have OG title");
+    assert.ok(html.includes("og:description"), "Should have OG description");
+
+    // Client-side data
+    assert.ok(html.includes("VENDOR_LOOKUP"), "Should embed vendor lookup data");
+    assert.ok(html.includes("/api/audit-stack"), "Should call audit-stack API");
+
+    // FAQ
+    assert.ok(html.includes("How does the Stack Health Check work"), "Should have FAQ");
+
+    // Related links
+    assert.ok(html.includes("/free-tier-risk"), "Should link to risk index");
+    assert.ok(html.includes("/estimate"), "Should link to cost estimator");
+
+    // MCP CTA
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+
+    // No unresolved template variables
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+
+    // Auto-check from URL params
+    assert.ok(html.includes("URLSearchParams"), "Should parse URL params for auto-check");
+  });
+
+  it("GET /stack-check is in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/stack-check"), "Sitemap should include /stack-check page");
+  });
+
+  it("GET /stack-check with ?s= param returns page ready for auto-check", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/stack-check?s=vercel,supabase`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Stack Health Check"), "Should render the page");
   });
 });
