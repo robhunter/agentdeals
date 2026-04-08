@@ -1232,6 +1232,55 @@
         "CockroachDB",
         "PlanetScale"
       ]
+    },
+    {
+      "vendor": "Amazon Kiro",
+      "change_type": "new_free_tier",
+      "date": "2026-04-07",
+      "summary": "Amazon Kiro AI coding assistant launched GA with tiered credit-based pricing: Free tier (50 credits/month), Pro ($20/month, 1,000 credits), Pro+ ($40/month, 2,000 credits). Credits consumed per AI interaction (specs, code generation, debugging)",
+      "previous_state": "Preview-only access, no public pricing",
+      "current_state": "Free tier: 50 credits/month. Pro: $20/month (1,000 credits). Pro+: $40/month (2,000 credits). GA availability",
+      "impact": "medium",
+      "source_url": "https://kiro.dev/pricing",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "Windsurf",
+        "GitHub Copilot",
+        "Claude Code"
+      ]
+    },
+    {
+      "vendor": "Replit",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-01",
+      "summary": "Replit Core plan dropped from $25/month to $20/month. New Pro plan added at $100/month with higher credit allocation. Free tier unchanged (limited AI credits, basic compute). Price reduction makes Core more competitive with Cursor Pro ($20/month)",
+      "previous_state": "Free tier + Core plan at $25/month",
+      "current_state": "Free tier + Core plan at $20/month + new Pro plan at $100/month",
+      "impact": "low",
+      "source_url": "https://replit.com/pricing",
+      "category": "Cloud IDE",
+      "alternatives": [
+        "GitHub Codespaces",
+        "Gitpod",
+        "CodeSandbox"
+      ]
+    },
+    {
+      "vendor": "SonarQube Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-01",
+      "summary": "SonarQube Cloud introduced more granular Team tier pricing with differentiated feature access. Free tier for open-source projects remains. Paid tiers restructured for clearer scaling path from small teams to enterprise",
+      "previous_state": "Free (open source) + Developer + Enterprise tiers",
+      "current_state": "Free (open source) + Team (granular tiers) + Enterprise. More pricing options for mid-size teams",
+      "impact": "low",
+      "source_url": "https://www.sonarsource.com/plans-and-pricing/sonarqube/cloud/",
+      "category": "Code Quality",
+      "alternatives": [
+        "CodeClimate",
+        "Codacy",
+        "DeepSource"
+      ]
     }
   ]
 }
