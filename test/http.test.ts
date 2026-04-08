@@ -936,7 +936,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/compare-tool", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers", "/stack-check"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/compare-tool", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers", "/stack-check", "/budget-builder"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -4975,5 +4975,108 @@ describe("shutdown tracker page", () => {
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("Compare Tool"), "Should render the page");
+  });
+
+  it("GET /budget-builder renders interactive budget stack builder page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/budget-builder`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+
+    // Page structure
+    assert.ok(html.includes("<title>Budget Stack Builder"), "Should have budget builder page title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("WebApplication"), "Should have WebApplication JSON-LD type");
+    assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/budget-builder"), "Should reference /budget-builder");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+
+    // Budget input section
+    assert.ok(html.includes("budget-input"), "Should have budget input field");
+    assert.ok(html.includes("budget-preset"), "Should have budget preset buttons");
+    assert.ok(html.includes("setBudget"), "Should have setBudget function");
+
+    // Budget preset amounts
+    assert.ok(html.includes("$0"), "Should have $0 budget preset");
+    assert.ok(html.includes("$10"), "Should have $10 budget preset");
+    assert.ok(html.includes("$25"), "Should have $25 budget preset");
+    assert.ok(html.includes("$50"), "Should have $50 budget preset");
+    assert.ok(html.includes("$100"), "Should have $100 budget preset");
+
+    // Project type presets (at least 3)
+    assert.ok(html.includes("project-preset"), "Should have project type presets");
+    assert.ok(html.includes("Side Project"), "Should have Side Project preset");
+    assert.ok(html.includes("Startup MVP"), "Should have Startup MVP preset");
+    assert.ok(html.includes("Production App"), "Should have Production App preset");
+    assert.ok(html.includes("Data / ML Project"), "Should have Data/ML preset");
+
+    // Category selection
+    assert.ok(html.includes("cat-toggle"), "Should have category toggle buttons");
+    assert.ok(html.includes("Database"), "Should have Database category");
+    assert.ok(html.includes("Hosting"), "Should have Hosting category");
+    assert.ok(html.includes("Auth"), "Should have Auth category");
+
+    // Build button
+    assert.ok(html.includes("build-btn"), "Should have build button");
+    assert.ok(html.includes("buildStack"), "Should have buildStack function");
+
+    // Results area
+    assert.ok(html.includes("budget-bar"), "Should have budget bar");
+    assert.ok(html.includes("summary-cards"), "Should have summary cards");
+    assert.ok(html.includes("stack-cards"), "Should have stack cards");
+    assert.ok(html.includes("risk-summary"), "Should have risk summary");
+    assert.ok(html.includes("savings-callout"), "Should have savings callout");
+
+    // Recommendation engine
+    assert.ok(html.includes("CATEGORY_VENDORS"), "Should embed category vendor data");
+    assert.ok(html.includes("recommendVendor"), "Should have recommendation function");
+
+    // Shareable URLs
+    assert.ok(html.includes("share-bar"), "Should have share bar");
+    assert.ok(html.includes("copyShareUrl"), "Should have copy share URL function");
+
+    // I'm Feeling Lucky
+    assert.ok(html.includes("feelingLucky"), "Should have feeling lucky function");
+
+    // FAQ
+    assert.ok(html.includes("How does the Budget Stack Builder work"), "Should have FAQ");
+
+    // Related links
+    assert.ok(html.includes("/estimate"), "Should link to cost estimator");
+    assert.ok(html.includes("/stack-check"), "Should link to health check");
+
+    // MCP CTA
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+
+    // SEO
+    assert.ok(html.includes("og:title"), "Should have OG title");
+    assert.ok(html.includes("og:description"), "Should have OG description");
+    assert.ok(html.includes("budget developer stack"), "Should have SEO keywords");
+
+    // No unresolved template variables
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+
+    // Auto-load from URL params
+    assert.ok(html.includes("URLSearchParams"), "Should parse URL params for auto-load");
+  });
+
+  it("GET /budget-builder is in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/budget-builder"), "Sitemap should include /budget-builder page");
+  });
+
+  it("GET /budget-builder with ?budget=&categories= params returns page ready for auto-build", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/budget-builder?budget=0&categories=hosting,database`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Budget Stack Builder"), "Should render the page");
   });
 });
