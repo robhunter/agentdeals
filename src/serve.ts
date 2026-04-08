@@ -488,7 +488,7 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 </svg>`;
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -520,6 +520,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/stacks", label: "Stacks", section: "stacks" },
     { href: "/estimate", label: "Estimate", section: "estimate" },
     { href: "/stack-check", label: "Health Check", section: "stack-check" },
+    { href: "/budget-builder", label: "Budget Builder", section: "budget-builder" },
     { href: "/badges", label: "Badges", section: "badges" },
     { href: "/developers", label: "API", section: "developers" },
     { href: "/setup", label: "Setup", section: "setup" },
@@ -39210,6 +39211,7 @@ function buildStackCheckPage(): string {
     <div class="related-links">
       <a href="/free-tier-risk" class="related-link">Free Tier Risk Index</a>
       <a href="/estimate" class="related-link">Stack Cost Estimator</a>
+      <a href="/budget-builder" class="related-link">Budget Stack Builder</a>
       <a href="/state-of-free-tiers" class="related-link">State of Free Tiers</a>
       <a href="/stacks" class="related-link">Curated Stacks</a>
       <a href="/freshness" class="related-link">Data Freshness</a>
@@ -40085,6 +40087,452 @@ function buildEstimatePage(): string {
   ${mcpCtaScript() ? `<script>${mcpCtaScript()}</script>` : ""}
 </body>
 </html>`;
+}
+
+function buildBudgetBuilderPage(): string {
+  const estimatorData = buildEstimatorData();
+  const allOffers = loadOffers();
+  const allChanges = loadDealChanges();
+  const stabilityMap = getStabilityMap();
+  const totalOffers = allOffers.length;
+  const totalChanges = allChanges.length;
+
+  // Build per-category vendor data with risk levels for client-side recommendation engine
+  const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string; recent_changes: number }>> = {};
+  for (const cat of estimatorData) {
+    categoryVendors[cat.id] = cat.vendors.map(v => {
+      const vendorChanges = allChanges.filter(c => toSlug(c.vendor) === v.slug || c.vendor.toLowerCase() === v.name.toLowerCase());
+      const stability = stabilityMap.get(v.slug) || "stable";
+      const riskLevel = vendorChanges.some(c => ["free_tier_removed", "product_deprecated", "open_source_killed"].includes(c.change_type)) ? "high"
+        : vendorChanges.some(c => ["limits_reduced", "restriction", "pricing_restructured", "pricing_model_change"].includes(c.change_type)) ? "medium"
+        : "low";
+      return { slug: v.slug, name: v.name, free: v.free, starter: v.starter, growth: v.growth, scale: v.scale, notes: v.notes, risk_level: riskLevel, recent_changes: vendorChanges.length };
+    });
+  }
+
+  const categoryLabels: Record<string, string> = {};
+  for (const cat of estimatorData) { categoryLabels[cat.id] = cat.label; }
+
+  // Project type presets — map project type to relevant categories
+  const projectPresets = [
+    { id: "side-project", name: "Side Project", categories: ["hosting", "database", "analytics"], icon: "&#x1f680;" },
+    { id: "startup-mvp", name: "Startup MVP", categories: ["hosting", "database", "auth", "email", "monitoring", "analytics"], icon: "&#x1f4a1;" },
+    { id: "production-app", name: "Production App", categories: ["hosting", "database", "auth", "monitoring", "storage", "email", "cicd", "analytics"], icon: "&#x1f3ed;" },
+    { id: "data-ml", name: "Data / ML Project", categories: ["hosting", "database", "storage", "monitoring"], icon: "&#x1f9e0;" },
+  ];
+
+  const title = "Budget Stack Builder — Build Your Developer Stack Within Budget";
+  const metaDesc = "Set your monthly budget and project requirements. Get a recommended developer stack optimized for cost and reliability from " + totalOffers + " verified vendor profiles. Free and paid options compared.";
+  const slug = "budget-builder";
+  const pubDate = "2026-04-08";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Budget Stack Builder",
+    "description": metaDesc,
+    "url": BASE_URL + "/" + slug,
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+    "datePublished": pubDate,
+  };
+
+  const faqItems = [
+    { q: "How does the Budget Stack Builder work?", a: "Select your monthly budget and the service categories your project needs. Our engine recommends the best vendor for each category based on cost, free tier generosity, and pricing stability — drawing from " + totalOffers + " verified vendor profiles and " + totalChanges + " tracked pricing changes." },
+    { q: "Can I really build a production app for $0/month?", a: "Yes. Most categories have generous free tiers that support side projects and early-stage startups. The builder shows which $0 options are stable and which carry risk, so you can make informed decisions." },
+    { q: "How are vendors recommended?", a: "The engine prioritizes free tiers when the budget allows, factors in pricing stability (vendors that have recently restricted their free tier are flagged), and suggests paid upgrades only when they provide meaningful value over free alternatives." },
+    { q: "Is my budget data saved or shared?", a: "No. Everything runs in your browser. Your selections are encoded in the URL for sharing, but nothing is stored on our servers." },
+    { q: "What if a category has no free options?", a: "The builder will show the most affordable paid option and clearly indicate there is no $0 alternative. It also suggests related free tools that partially cover the use case." },
+    { q: "How do the risk badges work?", a: "Low risk means the vendor\\'s free tier has been stable with no recent changes. Medium risk means some limits have been reduced recently. High risk means the free tier was removed or significantly restricted — consider alternatives." },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  };
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
+    + '  <meta charset="utf-8">\n'
+    + '  <meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '  <title>' + escHtmlServer(title) + ' | AgentDeals</title>\n'
+    + '  <meta name="description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '  <meta name="keywords" content="budget developer stack, free developer tools, cheapest developer stack, startup stack cost, $0 developer tools, free tier stack builder 2026">\n'
+    + '  <link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n'
+    + '  <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="' + BASE_URL + '/feed.xml">\n'
+    + '  <meta property="og:title" content="' + escHtmlServer(title) + ' | AgentDeals">\n'
+    + '  <meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '  <meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n'
+    + '  <meta property="og:type" content="website">\n'
+    + '  <meta property="og:image" content="' + BASE_URL + '/og-image.png">\n'
+    + '  ' + GOOGLE_VERIFICATION_META
+    + '  <script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n'
+    + '  <script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n'
+    + '  <style>\n'
+    + '    :root{--bg:#0f172a;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:"Georgia","Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;--green:#3fb950;--yellow:#d29922;--red:#f85149;--purple:#a78bfa}\n'
+    + '    *{box-sizing:border-box;margin:0}\n'
+    + '    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;padding:0 1.5rem;max-width:900px;margin:0 auto}\n'
+    + '    ' + globalNavCss() + '\n'
+    + '    ' + mcpCtaCss() + '\n'
+    + '    h1{font-family:var(--serif);font-size:1.8rem;margin:1.5rem 0 .5rem;letter-spacing:-.02em}\n'
+    + '    h2{font-family:var(--serif);font-size:1.3rem;margin:2rem 0 .75rem;color:var(--text)}\n'
+    + '    .subtitle{color:var(--text-muted);font-size:.95rem;margin-bottom:1.5rem;line-height:1.5}\n'
+    + '    .budget-section{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n'
+    + '    .budget-label{font-weight:600;color:var(--text);margin-bottom:.75rem;display:block}\n'
+    + '    .budget-presets{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}\n'
+    + '    .budget-preset{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.4rem .8rem;border-radius:6px;cursor:pointer;font-size:.85rem;transition:all .15s}\n'
+    + '    .budget-preset:hover,.budget-preset.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}\n'
+    + '    .budget-custom{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}\n'
+    + '    .budget-custom input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.5rem .75rem;border-radius:6px;font-size:1rem;width:120px;font-family:var(--mono)}\n'
+    + '    .budget-custom span{color:var(--text-muted);font-size:.85rem}\n'
+    + '    .project-presets{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0}\n'
+    + '    .project-preset{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.85rem;transition:all .15s}\n'
+    + '    .project-preset:hover,.project-preset.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}\n'
+    + '    .category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin:1rem 0}\n'
+    + '    .cat-toggle{background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:.5rem .75rem;border-radius:6px;cursor:pointer;font-size:.8rem;text-align:center;transition:all .15s}\n'
+    + '    .cat-toggle:hover,.cat-toggle.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}\n'
+    + '    .build-btn{background:var(--accent);color:#fff;border:none;padding:.75rem 2rem;border-radius:8px;font-size:1rem;cursor:pointer;margin:1.5rem 0;font-weight:600;transition:opacity .15s}\n'
+    + '    .build-btn:hover{opacity:.9}\n'
+    + '    .build-btn:disabled{opacity:.5;cursor:not-allowed}\n'
+    + '    #results{display:none}\n'
+    + '    .budget-bar{background:var(--bg);border:1px solid var(--border);border-radius:8px;height:32px;overflow:hidden;margin:1rem 0;position:relative}\n'
+    + '    .budget-bar-fill{height:100%;border-radius:7px;transition:width .3s;display:flex;align-items:center;justify-content:flex-end;padding:0 .75rem;font-size:.75rem;font-weight:600;color:#fff;min-width:fit-content}\n'
+    + '    .budget-bar-label{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);font-size:.75rem;color:var(--text-muted)}\n'
+    + '    .summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin:1rem 0}\n'
+    + '    .summary-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n'
+    + '    .summary-card .value{font-size:1.5rem;font-weight:700;font-family:var(--mono)}\n'
+    + '    .summary-card .label{font-size:.75rem;color:var(--text-muted);margin-top:.25rem}\n'
+    + '    .stack-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin:.75rem 0}\n'
+    + '    .stack-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}\n'
+    + '    .stack-card-category{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}\n'
+    + '    .stack-card-cost{font-family:var(--mono);font-weight:700;font-size:1.1rem}\n'
+    + '    .stack-card-vendor{font-size:1.1rem;font-weight:600;margin-bottom:.25rem}\n'
+    + '    .stack-card-vendor a{color:var(--accent);text-decoration:none}\n'
+    + '    .stack-card-vendor a:hover{text-decoration:underline}\n'
+    + '    .stack-card-free{color:var(--text-muted);font-size:.85rem;margin-bottom:.5rem}\n'
+    + '    .risk-badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.7rem;font-weight:600;text-transform:uppercase}\n'
+    + '    .risk-badge.low{background:rgba(63,185,80,.15);color:var(--green)}\n'
+    + '    .risk-badge.medium{background:rgba(210,153,34,.15);color:var(--yellow)}\n'
+    + '    .risk-badge.high{background:rgba(248,81,73,.15);color:var(--red)}\n'
+    + '    .alternatives{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}\n'
+    + '    .alternatives-label{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}\n'
+    + '    .alt-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--text-muted);padding:.2rem 0}\n'
+    + '    .alt-row a{color:var(--accent);text-decoration:none;font-size:.8rem}\n'
+    + '    .alt-row a:hover{text-decoration:underline}\n'
+    + '    .risk-summary{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin:1.5rem 0}\n'
+    + '    .risk-summary h3{font-family:var(--serif);font-size:1.1rem;margin-bottom:.75rem}\n'
+    + '    .risk-meter{display:flex;gap:.5rem;margin:.5rem 0}\n'
+    + '    .risk-meter-segment{height:8px;border-radius:4px;flex:1}\n'
+    + '    .savings-callout{background:linear-gradient(135deg,rgba(63,185,80,.1),rgba(59,130,246,.1));border:1px solid rgba(63,185,80,.3);border-radius:10px;padding:1.25rem;margin:1.5rem 0;text-align:center}\n'
+    + '    .savings-callout .amount{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--green)}\n'
+    + '    .savings-callout .desc{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}\n'
+    + '    .share-bar{display:flex;align-items:center;gap:.75rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;margin:1.5rem 0}\n'
+    + '    .share-url{flex:1;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}\n'
+    + '    .share-btn{background:var(--accent);color:#fff;border:none;padding:.4rem .8rem;border-radius:6px;font-size:.8rem;cursor:pointer;white-space:nowrap;transition:all .15s}\n'
+    + '    .share-btn:hover{opacity:.9}\n'
+    + '    .share-btn.copied{background:var(--green)}\n'
+    + '    .lucky-btn{background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-size:.85rem;transition:all .15s}\n'
+    + '    .lucky-btn:hover{color:var(--accent);border-color:var(--accent)}\n'
+    + '    .faq-section{margin:1.5rem 0}\n'
+    + '    .faq-item{border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:.5rem 0;background:var(--bg-elevated)}\n'
+    + '    .faq-q{font-weight:600;color:var(--text);margin-bottom:.5rem}\n'
+    + '    .faq-a{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n'
+    + '    .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.5rem 0}\n'
+    + '    .related-link{background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted);padding:.4rem .8rem;border-radius:6px;font-size:.8rem;text-decoration:none;transition:all .15s}\n'
+    + '    .related-link:hover{color:var(--accent);border-color:var(--accent)}\n'
+    + '    @media(max-width:600px){body{padding:0 1rem}.summary-cards{grid-template-columns:1fr 1fr}.category-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}}\n'
+    + '  </style>\n'
+    + '</head>\n'
+    + '<body>\n'
+    + buildGlobalNav("budget-builder") + '\n'
+    + '<h1>Budget Stack Builder</h1>\n'
+    + '<p class="subtitle">Set your monthly budget and project requirements. Get a recommended developer stack optimized for cost, free tier value, and pricing stability \u2014 powered by ' + totalOffers + ' vendor profiles and ' + totalChanges + ' tracked pricing changes.</p>\n'
+    + '\n'
+    + '<div class="budget-section">\n'
+    + '  <span class="budget-label">Monthly Budget</span>\n'
+    + '  <div class="budget-presets">\n'
+    + '    <button class="budget-preset active" onclick="setBudget(0)">$0</button>\n'
+    + '    <button class="budget-preset" onclick="setBudget(10)">$10</button>\n'
+    + '    <button class="budget-preset" onclick="setBudget(25)">$25</button>\n'
+    + '    <button class="budget-preset" onclick="setBudget(50)">$50</button>\n'
+    + '    <button class="budget-preset" onclick="setBudget(100)">$100</button>\n'
+    + '  </div>\n'
+    + '  <div class="budget-custom">\n'
+    + '    <span>$</span><input type="number" id="budget-input" value="0" min="0" max="10000" oninput="onBudgetInput()">\n'
+    + '    <span>/month</span>\n'
+    + '  </div>\n'
+    + '</div>\n'
+    + '\n'
+    + '<h2>Project Type</h2>\n'
+    + '<div class="project-presets">\n'
+    + projectPresets.map(p =>
+      '  <button class="project-preset" data-preset="' + p.id + '" onclick="selectPreset(\'' + p.id + '\')">' + p.icon + ' ' + escHtmlServer(p.name) + '</button>'
+    ).join('\n') + '\n'
+    + '  <button class="lucky-btn" onclick="feelingLucky()">&#x1f3b2; I\'m Feeling Lucky</button>\n'
+    + '</div>\n'
+    + '\n'
+    + '<h2>Service Categories</h2>\n'
+    + '<div class="category-grid">\n'
+    + estimatorData.map(c =>
+      '  <button class="cat-toggle" data-cat="' + c.id + '" onclick="toggleCategory(\'' + c.id + '\')">' + escHtmlServer(c.label) + '</button>'
+    ).join('\n') + '\n'
+    + '</div>\n'
+    + '\n'
+    + '<button class="build-btn" id="build-btn" onclick="buildStack()" disabled>Build My Stack</button>\n'
+    + '\n'
+    + '<div id="results">\n'
+    + '  <h2>Your Recommended Stack</h2>\n'
+    + '  <div class="budget-bar" id="budget-bar"><div class="budget-bar-fill" id="budget-bar-fill"></div><span class="budget-bar-label" id="budget-bar-label"></span></div>\n'
+    + '  <div class="summary-cards" id="summary-cards"></div>\n'
+    + '  <div class="savings-callout" id="savings-callout"></div>\n'
+    + '  <div class="risk-summary" id="risk-summary"></div>\n'
+    + '  <div id="stack-cards"></div>\n'
+    + '  <div class="share-bar" id="share-bar">\n'
+    + '    <span class="share-url" id="share-url"></span>\n'
+    + '    <button class="share-btn" onclick="copyShareUrl(this)">Copy Link</button>\n'
+    + '  </div>\n'
+    + '</div>\n'
+    + '\n'
+    + buildMcpCta("Build and optimize developer stacks programmatically \u2014 search_deals, plan_stack, compare_vendors, and track_changes in your AI editor.") + '\n'
+    + '\n'
+    + '<h2>Frequently Asked Questions</h2>\n'
+    + '<div class="faq-section">\n'
+    + faqItems.map(f => '  <div class="faq-item"><div class="faq-q">' + escHtmlServer(f.q) + '</div><div class="faq-a">' + escHtmlServer(f.a) + '</div></div>').join('\n') + '\n'
+    + '</div>\n'
+    + '\n'
+    + '<h2>Related Tools</h2>\n'
+    + '<div class="related-links">\n'
+    + '  <a href="/estimate" class="related-link">Stack Cost Estimator</a>\n'
+    + '  <a href="/stack-check" class="related-link">Stack Health Check</a>\n'
+    + '  <a href="/compare-tool" class="related-link">Vendor Comparison</a>\n'
+    + '  <a href="/stacks" class="related-link">Curated Stacks</a>\n'
+    + '  <a href="/free-tier-risk" class="related-link">Free Tier Risk Index</a>\n'
+    + '  <a href="/agent-stack" class="related-link">Agent Stack Guide</a>\n'
+    + '</div>\n'
+    + '\n'
+    + '<script>\n'
+    + 'var CATEGORY_VENDORS = ' + JSON.stringify(categoryVendors) + ';\n'
+    + 'var CATEGORY_LABELS = ' + JSON.stringify(categoryLabels) + ';\n'
+    + 'var PROJECT_PRESETS = ' + JSON.stringify(projectPresets) + ';\n'
+    + 'var selectedBudget = 0;\n'
+    + 'var selectedCategories = new Set();\n'
+    + '\n'
+    + 'function setBudget(amount) {\n'
+    + '  selectedBudget = amount;\n'
+    + '  document.getElementById("budget-input").value = amount;\n'
+    + '  var btns = document.querySelectorAll(".budget-preset");\n'
+    + '  btns.forEach(function(b) {\n'
+    + '    b.classList.toggle("active", parseInt(b.textContent.replace("$","")) === amount);\n'
+    + '  });\n'
+    + '  updateBuildBtn();\n'
+    + '}\n'
+    + '\n'
+    + 'function onBudgetInput() {\n'
+    + '  var val = parseInt(document.getElementById("budget-input").value) || 0;\n'
+    + '  selectedBudget = val;\n'
+    + '  var btns = document.querySelectorAll(".budget-preset");\n'
+    + '  btns.forEach(function(b) {\n'
+    + '    b.classList.toggle("active", parseInt(b.textContent.replace("$","")) === val);\n'
+    + '  });\n'
+    + '  updateBuildBtn();\n'
+    + '}\n'
+    + '\n'
+    + 'function selectPreset(presetId) {\n'
+    + '  var preset = PROJECT_PRESETS.find(function(p) { return p.id === presetId; });\n'
+    + '  if (!preset) return;\n'
+    + '  var btns = document.querySelectorAll(".project-preset");\n'
+    + '  btns.forEach(function(b) { b.classList.toggle("active", b.dataset.preset === presetId); });\n'
+    + '  selectedCategories = new Set(preset.categories);\n'
+    + '  var catBtns = document.querySelectorAll(".cat-toggle");\n'
+    + '  catBtns.forEach(function(b) { b.classList.toggle("active", selectedCategories.has(b.dataset.cat)); });\n'
+    + '  updateBuildBtn();\n'
+    + '}\n'
+    + '\n'
+    + 'function toggleCategory(catId) {\n'
+    + '  if (selectedCategories.has(catId)) { selectedCategories.delete(catId); }\n'
+    + '  else { selectedCategories.add(catId); }\n'
+    + '  var btn = document.querySelector(".cat-toggle[data-cat=\'" + catId + "\']");\n'
+    + '  if (btn) btn.classList.toggle("active", selectedCategories.has(catId));\n'
+    + '  // Clear project preset active state if manually changed\n'
+    + '  document.querySelectorAll(".project-preset").forEach(function(b) { b.classList.remove("active"); });\n'
+    + '  updateBuildBtn();\n'
+    + '}\n'
+    + '\n'
+    + 'function updateBuildBtn() {\n'
+    + '  document.getElementById("build-btn").disabled = selectedCategories.size === 0;\n'
+    + '}\n'
+    + '\n'
+    + 'function feelingLucky() {\n'
+    + '  var budgets = [0, 10, 25, 50, 100];\n'
+    + '  var allCats = Object.keys(CATEGORY_VENDORS);\n'
+    + '  var budget = budgets[Math.floor(Math.random() * budgets.length)];\n'
+    + '  var numCats = 3 + Math.floor(Math.random() * (allCats.length - 2));\n'
+    + '  var shuffled = allCats.slice().sort(function() { return Math.random() - 0.5; });\n'
+    + '  var cats = shuffled.slice(0, numCats);\n'
+    + '  setBudget(budget);\n'
+    + '  selectedCategories = new Set(cats);\n'
+    + '  document.querySelectorAll(".cat-toggle").forEach(function(b) { b.classList.toggle("active", selectedCategories.has(b.dataset.cat)); });\n'
+    + '  document.querySelectorAll(".project-preset").forEach(function(b) { b.classList.remove("active"); });\n'
+    + '  updateBuildBtn();\n'
+    + '  buildStack();\n'
+    + '}\n'
+    + '\n'
+    + 'function recommendVendor(catId, budget) {\n'
+    + '  var vendors = CATEGORY_VENDORS[catId] || [];\n'
+    + '  if (vendors.length === 0) return null;\n'
+    + '  // Score each vendor: lower cost + lower risk = better\n'
+    + '  var scored = vendors.map(function(v) {\n'
+    + '    var cost = v.starter; // use starter tier cost as baseline\n'
+    + '    if (budget === 0) {\n'
+    + '      // For $0 budget, only consider free tiers\n'
+    + '      cost = 0;\n'
+    + '    }\n'
+    + '    var riskPenalty = v.risk_level === "high" ? 100 : v.risk_level === "medium" ? 30 : 0;\n'
+    + '    var score = cost + riskPenalty - (v.free !== "" && cost === 0 ? 50 : 0); // bonus for free tier\n'
+    + '    return { vendor: v, cost: cost, score: score };\n'
+    + '  });\n'
+    + '  scored.sort(function(a, b) { return a.score - b.score; });\n'
+    + '  return scored[0].vendor;\n'
+    + '}\n'
+    + '\n'
+    + 'function buildStack() {\n'
+    + '  if (selectedCategories.size === 0) return;\n'
+    + '  var results = document.getElementById("results");\n'
+    + '  results.style.display = "block";\n'
+    + '  var totalCost = 0;\n'
+    + '  var riskCounts = { low: 0, medium: 0, high: 0 };\n'
+    + '  var stackHtml = "";\n'
+    + '  var catKeys = Array.from(selectedCategories);\n'
+    + '  var paidEquivalent = 0; // Estimate what these services would cost at paid tier\n'
+    + '\n'
+    + '  catKeys.forEach(function(catId) {\n'
+    + '    var rec = recommendVendor(catId, selectedBudget);\n'
+    + '    if (!rec) return;\n'
+    + '    var cost = selectedBudget === 0 ? 0 : rec.starter;\n'
+    + '    totalCost += cost;\n'
+    + '    riskCounts[rec.risk_level]++;\n'
+    + '    paidEquivalent += rec.growth > 0 ? rec.growth : rec.starter > 0 ? rec.starter : 25; // estimate paid value\n'
+    + '\n'
+    + '    // Get alternatives (next 2 vendors)\n'
+    + '    var vendors = CATEGORY_VENDORS[catId] || [];\n'
+    + '    var alts = vendors.filter(function(v) { return v.slug !== rec.slug; }).slice(0, 2);\n'
+    + '\n'
+    + '    stackHtml += \'<div class="stack-card">\';\n'
+    + '    stackHtml += \'<div class="stack-card-header">\';\n'
+    + '    stackHtml += \'<span class="stack-card-category">\' + (CATEGORY_LABELS[catId] || catId) + \'</span>\';\n'
+    + '    stackHtml += \'<span class="stack-card-cost">\' + (cost === 0 ? "FREE" : "$" + cost + "/mo") + \'</span>\';\n'
+    + '    stackHtml += \'</div>\';\n'
+    + '    stackHtml += \'<div class="stack-card-vendor"><a href="/vendor/\' + rec.slug + \'">\' + rec.name + \'</a> <span class="risk-badge \' + rec.risk_level + \'">\' + rec.risk_level + \' risk</span></div>\';\n'
+    + '    stackHtml += \'<div class="stack-card-free">\' + rec.free + \'</div>\';\n'
+    + '    if (rec.notes) stackHtml += \'<div style="color:var(--text-dim);font-size:.8rem">\' + rec.notes + \'</div>\';\n'
+    + '\n'
+    + '    if (alts.length > 0) {\n'
+    + '      stackHtml += \'<div class="alternatives">\';\n'
+    + '      stackHtml += \'<div class="alternatives-label">Alternatives</div>\';\n'
+    + '      alts.forEach(function(alt) {\n'
+    + '        var altCost = selectedBudget === 0 ? 0 : alt.starter;\n'
+    + '        stackHtml += \'<div class="alt-row"><a href="/vendor/\' + alt.slug + \'">\' + alt.name + \'</a>\';\n'
+    + '        stackHtml += \'<span>\' + (altCost === 0 ? "FREE" : "$" + altCost + "/mo") + \' · <span class="risk-badge \' + alt.risk_level + \'">\' + alt.risk_level + \'</span></span></div>\';\n'
+    + '      });\n'
+    + '      stackHtml += \'</div>\';\n'
+    + '    }\n'
+    + '    stackHtml += \'</div>\';\n'
+    + '  });\n'
+    + '\n'
+    + '  document.getElementById("stack-cards").innerHTML = stackHtml;\n'
+    + '\n'
+    + '  // Budget bar\n'
+    + '  var budgetMax = Math.max(selectedBudget, totalCost, 1);\n'
+    + '  var pct = Math.min(100, (totalCost / budgetMax) * 100);\n'
+    + '  var barColor = totalCost <= selectedBudget || selectedBudget === 0 ? "var(--green)" : "var(--red)";\n'
+    + '  var fill = document.getElementById("budget-bar-fill");\n'
+    + '  fill.style.width = Math.max(pct, 8) + "%";\n'
+    + '  fill.style.background = barColor;\n'
+    + '  fill.textContent = "$" + totalCost + "/mo";\n'
+    + '  var barLabel = document.getElementById("budget-bar-label");\n'
+    + '  barLabel.textContent = selectedBudget === 0 ? "Free tier only" : "of $" + selectedBudget + "/mo budget";\n'
+    + '\n'
+    + '  // Summary cards\n'
+    + '  var totalServices = catKeys.length;\n'
+    + '  var freeCount = 0;\n'
+    + '  catKeys.forEach(function(catId) {\n'
+    + '    var rec = recommendVendor(catId, selectedBudget);\n'
+    + '    if (rec && (selectedBudget === 0 || rec.starter === 0)) freeCount++;\n'
+    + '  });\n'
+    + '  document.getElementById("summary-cards").innerHTML = \'\n'
+    + '    <div class="summary-card"><div class="value">$\' + totalCost + \'</div><div class="label">Total Monthly Cost</div></div>\n'
+    + '    <div class="summary-card"><div class="value">\' + totalServices + \'</div><div class="label">Services</div></div>\n'
+    + '    <div class="summary-card"><div class="value">\' + freeCount + \'</div><div class="label">Free Services</div></div>\n'
+    + '    <div class="summary-card"><div class="value">\' + (totalServices - freeCount) + \'</div><div class="label">Paid Services</div></div>\n'
+    + '  \';\n'
+    + '\n'
+    + '  // Savings callout\n'
+    + '  var savings = paidEquivalent - totalCost;\n'
+    + '  if (savings > 0) {\n'
+    + '    document.getElementById("savings-callout").style.display = "block";\n'
+    + '    document.getElementById("savings-callout").innerHTML = \'<div class="amount">$\' + savings + \'/mo saved</div><div class="desc">This stack saves $\' + savings + \'/month vs. paid tier equivalents ($\' + paidEquivalent + \'/mo at growth tier)</div>\';\n'
+    + '  } else {\n'
+    + '    document.getElementById("savings-callout").style.display = "none";\n'
+    + '  }\n'
+    + '\n'
+    + '  // Risk summary\n'
+    + '  var total = riskCounts.low + riskCounts.medium + riskCounts.high;\n'
+    + '  var riskHtml = \'<h3>Stack Risk Assessment</h3>\';\n'
+    + '  riskHtml += \'<div class="risk-meter">\';\n'
+    + '  for (var i = 0; i < riskCounts.low; i++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--green)"></div>\';\n'
+    + '  for (var j = 0; j < riskCounts.medium; j++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--yellow)"></div>\';\n'
+    + '  for (var k = 0; k < riskCounts.high; k++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--red)"></div>\';\n'
+    + '  riskHtml += \'</div>\';\n'
+    + '  riskHtml += \'<p style="color:var(--text-muted);font-size:.85rem;margin-top:.5rem">\' + riskCounts.low + \' low risk, \' + riskCounts.medium + \' medium risk, \' + riskCounts.high + \' high risk</p>\';\n'
+    + '  if (riskCounts.high > 0) riskHtml += \'<p style="color:var(--red);font-size:.85rem;margin-top:.25rem">&#x26a0; \' + riskCounts.high + \' service(s) have recently restricted or removed their free tier. Consider alternatives.</p>\';\n'
+    + '  document.getElementById("risk-summary").innerHTML = riskHtml;\n'
+    + '\n'
+    + '  // Shareable URL\n'
+    + '  var shareUrl = window.location.origin + "/budget-builder?budget=" + selectedBudget + "&categories=" + Array.from(selectedCategories).join(",");\n'
+    + '  document.getElementById("share-url").textContent = shareUrl;\n'
+    + '  document.getElementById("share-bar").style.display = "flex";\n'
+    + '\n'
+    + '  results.scrollIntoView({ behavior: "smooth", block: "start" });\n'
+    + '}\n'
+    + '\n'
+    + 'function copyShareUrl(btn) {\n'
+    + '  var url = document.getElementById("share-url").textContent;\n'
+    + '  navigator.clipboard.writeText(url).then(function() {\n'
+    + '    btn.textContent = "Copied!";\n'
+    + '    btn.classList.add("copied");\n'
+    + '    setTimeout(function() { btn.textContent = "Copy Link"; btn.classList.remove("copied"); }, 2000);\n'
+    + '  });\n'
+    + '}\n'
+    + '\n'
+    + '// Auto-load from URL params\n'
+    + '(function() {\n'
+    + '  var params = new URLSearchParams(window.location.search);\n'
+    + '  var budget = params.get("budget");\n'
+    + '  var cats = params.get("categories");\n'
+    + '  if (budget !== null) setBudget(parseInt(budget) || 0);\n'
+    + '  if (cats) {\n'
+    + '    cats.split(",").forEach(function(c) {\n'
+    + '      c = c.trim();\n'
+    + '      if (CATEGORY_VENDORS[c]) {\n'
+    + '        selectedCategories.add(c);\n'
+    + '        var btn = document.querySelector(".cat-toggle[data-cat=\'" + c + "\']");\n'
+    + '        if (btn) btn.classList.add("active");\n'
+    + '      }\n'
+    + '    });\n'
+    + '    updateBuildBtn();\n'
+    + '    if (selectedCategories.size > 0) buildStack();\n'
+    + '  }\n'
+    + '})();\n'
+    + '</script>\n'
+    + (mcpCtaScript() ? '<script>' + mcpCtaScript() + '</script>' : '') + '\n'
+    + '</body>\n'
+    + '</html>';
 }
 
 // --- Pricing Changes Changelog page ---
@@ -44076,6 +44524,12 @@ ${catList}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/budget-builder</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/developers</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -44843,6 +45297,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/estimate", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildEstimatePage());
+  } else if (url.pathname === "/budget-builder" && isGetOrHead) {
+    recordApiHit("/budget-builder");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/budget-builder", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildBudgetBuilderPage());
   } else if (url.pathname === "/developers" && isGetOrHead) {
     recordApiHit("/developers");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/developers", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -44883,6 +45342,7 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/estimate`,
     `${BASE_URL}/stack-check`,
     `${BASE_URL}/compare-tool`,
+    `${BASE_URL}/budget-builder`,
     `${BASE_URL}/developers`,
     `${BASE_URL}/stacks`,
     ...STACK_TEMPLATES.map(t => `${BASE_URL}/stacks/${t.slug}`),
