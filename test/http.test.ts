@@ -936,7 +936,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -1535,6 +1535,38 @@ describe("HTTP transport", () => {
     const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/badges"), "Sitemap should include /badges page");
+  });
+
+  it("GET /developers renders REST API developer hub page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/developers`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>REST API for Developer Tool Pricing"), "Should have developer hub page title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("WebAPI"), "Should have WebAPI schema type");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/developers"), "Should reference /developers");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("/api/offers"), "Should show API endpoints");
+    assert.ok(html.includes("/api/categories"), "Should show categories endpoint");
+    assert.ok(html.includes("/api/changes"), "Should show changes endpoint");
+    assert.ok(html.includes("No Authentication"), "Should highlight no auth required");
+    assert.ok(html.includes("curl"), "Should have curl examples");
+    assert.ok(html.includes("Python"), "Should have Python examples");
+    assert.ok(html.includes("JavaScript"), "Should have JavaScript examples");
+    assert.ok(html.includes("/api/docs"), "Should link to Swagger docs");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("GET /developers page is in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/developers"), "Sitemap should include /developers page");
   });
 
   it("GET /estimate renders stack cost estimator page", async () => {
