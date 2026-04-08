@@ -3151,6 +3151,39 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("March 31"), "Should mention the deadline");
   });
 
+  it("GET /terraform-cloud-free-tier-removed renders Terraform free tier removal guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/terraform-cloud-free-tier-removed`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Terraform Cloud Free Tier Removed"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes('"FAQPage"'), "Should use FAQPage schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("What Changed"), "Should have what changed section");
+    assert.ok(html.includes("Who"), "Should have who's affected section");
+    assert.ok(html.includes("Migration Cost Analysis"), "Should have cost analysis section");
+    assert.ok(html.includes("Alternative Platforms"), "Should have alternatives section");
+    assert.ok(html.includes("Free Alternatives Table"), "Should have free alternatives table");
+    assert.ok(html.includes("Migration Recommendations"), "Should have migration guide section");
+    assert.ok(html.includes("FAQ"), "Should have FAQ section");
+    assert.ok(html.includes("OpenTofu"), "Should include OpenTofu");
+    assert.ok(html.includes("Spacelift"), "Should include Spacelift");
+    assert.ok(html.includes("Scalr"), "Should include Scalr");
+    assert.ok(html.includes("env0"), "Should include env0");
+    assert.ok(html.includes("Atlantis"), "Should include Atlantis");
+    assert.ok(html.includes("Terraform CE"), "Should include Terraform CE");
+    assert.ok(html.includes("500"), "Should mention 500 resource cap");
+    assert.ok(html.includes("/hcp-terraform-migration"), "Should cross-link to migration guide");
+    assert.ok(html.includes("/terraform-alternatives"), "Should cross-link to terraform alternatives");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("March 31"), "Should mention the effective date");
+  });
+
   it("GET /gemini-api-pricing-2026 renders Gemini API pricing analysis page", async () => {
     proc = await startHttpServer();
 
