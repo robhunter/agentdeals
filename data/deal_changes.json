@@ -1281,6 +1281,40 @@
         "Codacy",
         "DeepSource"
       ]
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "new_tier",
+      "date": "2026-04-07",
+      "summary": "Cursor introduced Pro+ tier at $60/month between Pro ($20) and Ultra ($200). Pro+ includes 10x premium model requests vs Pro, priority access, and expanded context window. Expands the pricing ladder from 3 tiers (Free/Pro/Ultra) to 4 (Free/Pro/Pro+/Ultra), filling the $20-$200 gap.",
+      "previous_state": "3-tier pricing: Free (2K completions, 50 slow requests), Pro $20/mo (unlimited completions, 500 fast requests), Ultra $200/mo",
+      "current_state": "4-tier pricing: Free (2K completions, 50 slow requests), Pro $20/mo, Pro+ $60/mo (10x premium requests, priority access, more context), Ultra $200/mo",
+      "impact": "medium",
+      "source_url": "https://www.cursor.com/pricing",
+      "category": "AI Coding",
+      "alternatives": [
+        "GitHub Copilot",
+        "Windsurf",
+        "Cline",
+        "Claude Code"
+      ]
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "restriction",
+      "date": "2026-04-08",
+      "summary": "Gemini API free tier restricted to Flash and Flash-Lite models only (April 2026). Gemini 2.5 Pro and other Pro models now require a paid billing account. Previously free users could access Pro models with rate limits. Combined with April 1 spend cap enforcement, this significantly narrows what is available at $0.",
+      "previous_state": "Free tier included access to both Flash and Pro models with rate limits. Gemini 2.5 Pro accessible to free users at reduced rates",
+      "current_state": "Free tier restricted to Flash and Flash-Lite models only. Pro models (Gemini 2.5 Pro) require paid billing account. Free users limited to lighter-weight models",
+      "impact": "high",
+      "source_url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "category": "AI / ML",
+      "alternatives": [
+        "OpenRouter",
+        "Groq",
+        "Together AI",
+        "Anthropic Claude API"
+      ]
     }
   ]
 }

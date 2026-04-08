@@ -148,7 +148,7 @@ export const openapiSpec = {
         description: "Returns tracked pricing and tier changes across vendors. Filter by date, change type, vendor, or category. When vendors or categories are provided, returns personalized results with advisory section for high-impact changes outside your filter.",
         parameters: [
           { name: "since", in: "query", description: "Filter changes after this date (YYYY-MM-DD)", schema: { type: "string", format: "date" }, example: "2025-01-01" },
-          { name: "type", in: "query", description: "Filter by change type", schema: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"] } },
+          { name: "type", in: "query", description: "Filter by change type", schema: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"] } },
           { name: "vendor", in: "query", description: "Filter by vendor name", schema: { type: "string" } },
           { name: "vendors", in: "query", description: "Comma-separated vendor names to filter by (e.g. 'Vercel,Supabase,Clerk'). Triggers personalized response.", schema: { type: "string" }, example: "Vercel,Supabase" },
           { name: "categories", in: "query", description: "Comma-separated category names to filter by (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match. Triggers personalized response.", schema: { type: "string" }, example: "Database,Hosting" }
@@ -801,7 +801,7 @@ export const openapiSpec = {
         type: "object",
         properties: {
           vendor: { type: "string" },
-          change_type: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"] },
+          change_type: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"] },
           date: { type: "string", format: "date" },
           summary: { type: "string" },
           previous_state: { type: "string" },
