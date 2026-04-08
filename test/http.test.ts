@@ -3065,6 +3065,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Free Tier Risk Index"), "Should have title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes('"FAQPage"'), "Should use FAQPage schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("How We Score Risk"), "Should have methodology section");
@@ -3075,12 +3076,24 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Cloudflare"), "Should include Cloudflare as low risk");
     assert.ok(html.includes("Heroku"), "Should include Heroku as high risk");
     assert.ok(html.includes("PlanetScale"), "Should include PlanetScale as dead");
-    assert.ok(html.includes("What To Do About It"), "Should have advice section");
+    assert.ok(html.includes("How to Protect Your Stack"), "Should have advice section");
     assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
     assert.ok(html.includes("/alternatives"), "Should cross-link to alternatives hub");
     assert.ok(html.includes("Methodology"), "Should have methodology section");
     assert.ok(html.includes("Full Scoring Table"), "Should have full scoring table");
     assert.ok(html.includes("/free-startup-stack"), "Should cross-link to startup stack");
+    // New sections added for issue #674
+    assert.ok(html.includes("Category Risk Heatmap"), "Should have category risk heatmap");
+    assert.ok(html.includes("Pattern Analysis"), "Should have pattern analysis section");
+    assert.ok(html.includes("Counter-Trends"), "Should have counter-trends section");
+    assert.ok(html.includes("Cloudflare Model"), "Should highlight Cloudflare counter-trend");
+    assert.ok(html.includes("Two-Strike Rule"), "Should have two-strike pattern");
+    assert.ok(html.includes("Acquisition Pattern"), "Should have acquisition pattern");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ section");
+    assert.ok(html.includes("free tier predictions 2026"), "Should have SEO keywords meta");
+    assert.ok(html.includes("% neg"), "Should have heatmap percentage indicators");
+    assert.ok(html.includes("/state-of-free-tiers") || html.includes("state-of-free-tiers"), "Should cross-link to state of free tiers");
+    assert.ok(html.includes("/q1-2026-developer-pricing-report") || html.includes("q1-2026-developer-pricing-report"), "Should cross-link to Q1 report");
   });
 
   it("GET /stability renders stability dashboard page", async () => {
