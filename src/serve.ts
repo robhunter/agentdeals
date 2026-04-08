@@ -488,6 +488,77 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 </svg>`;
 }
 
+function generateStackBadgeSvg(vendorsParam: string, style: "flat" | "flat-square" = "flat"): string {
+  const vendorNames = vendorsParam.split(",").map(v => v.trim()).filter(Boolean);
+  if (vendorNames.length === 0) {
+    // No vendors provided — return gray unknown badge
+    return generateShieldBadge("Stack Health", "no services", "#8b949e", style);
+  }
+
+  // Compute risk levels for each vendor using getBadgeStatus
+  let totalFound = 0;
+  let riskyCount = 0;
+  let cautionCount = 0;
+  for (const name of vendorNames) {
+    const slug = toSlug(name);
+    const { status } = getBadgeStatus(slug);
+    if (status === "unknown") continue;
+    totalFound++;
+    if (status === "removed") riskyCount++;
+    else if (status === "at-risk") cautionCount++;
+  }
+
+  if (totalFound === 0) {
+    return generateShieldBadge("Stack Health", "?", "#8b949e", style);
+  }
+
+  const riskyPct = riskyCount / totalFound;
+  const cautionPct = cautionCount / totalFound;
+  let grade: string;
+  if (riskyPct === 0 && cautionPct === 0) grade = "A";
+  else if (riskyPct === 0 && cautionPct <= 0.3) grade = "B";
+  else if (riskyPct <= 0.2 && cautionPct <= 0.5) grade = "C";
+  else if (riskyPct <= 0.4) grade = "D";
+  else grade = "F";
+
+  const gradeColors: Record<string, string> = {
+    A: "#3fb950", B: "#58a6ff", C: "#d29922", D: "#f0883e", F: "#f85149",
+  };
+  return generateShieldBadge("Stack Health", grade, gradeColors[grade], style);
+}
+
+function generateShieldBadge(leftText: string, rightText: string, color: string, style: "flat" | "flat-square" = "flat"): string {
+  const fontSize = 11;
+  const padding = 8;
+  const leftWidth = measureTextWidth(leftText, fontSize) + padding * 2;
+  const rightWidth = measureTextWidth(rightText, fontSize) + padding * 2;
+  const totalWidth = leftWidth + rightWidth;
+  const height = 20;
+  const radius = style === "flat-square" ? 0 : 3;
+
+  return '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + totalWidth + '" height="' + height + '" role="img" aria-label="' + escXml(leftText) + ': ' + escXml(rightText) + '">'
+    + '\n  <title>' + escXml(leftText) + ': ' + escXml(rightText) + '</title>'
+    + '\n  <linearGradient id="s" x2="0" y2="100%">'
+    + '\n    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>'
+    + '\n    <stop offset="1" stop-opacity=".1"/>'
+    + '\n  </linearGradient>'
+    + '\n  <clipPath id="r">'
+    + '\n    <rect width="' + totalWidth + '" height="' + height + '" rx="' + radius + '" fill="#fff"/>'
+    + '\n  </clipPath>'
+    + '\n  <g clip-path="url(#r)">'
+    + '\n    <rect width="' + leftWidth + '" height="' + height + '" fill="#555"/>'
+    + '\n    <rect x="' + leftWidth + '" width="' + rightWidth + '" height="' + height + '" fill="' + color + '"/>'
+    + '\n    <rect width="' + totalWidth + '" height="' + height + '" fill="url(#s)"/>'
+    + '\n  </g>'
+    + '\n  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="' + fontSize + '">'
+    + '\n    <text aria-hidden="true" x="' + (leftWidth / 2) + '" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="' + ((leftWidth - padding * 2) * 10) + '" lengthAdjust="spacing">' + escXml(leftText) + '</text>'
+    + '\n    <text x="' + (leftWidth / 2) + '" y="140" transform="scale(.1)" fill="#fff" textLength="' + ((leftWidth - padding * 2) * 10) + '" lengthAdjust="spacing">' + escXml(leftText) + '</text>'
+    + '\n    <text aria-hidden="true" x="' + ((leftWidth + leftWidth + rightWidth) / 2) + '" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="' + ((rightWidth - padding * 2) * 10) + '" lengthAdjust="spacing">' + escXml(rightText) + '</text>'
+    + '\n    <text x="' + ((leftWidth + leftWidth + rightWidth) / 2) + '" y="140" transform="scale(.1)" fill="#fff" textLength="' + ((rightWidth - padding * 2) * 10) + '" lengthAdjust="spacing">' + escXml(rightText) + '</text>'
+    + '\n  </g>'
+    + '\n</svg>';
+}
+
 type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder";
 
 function globalNavCss(): string {
@@ -40671,6 +40742,21 @@ ${previewBadges.map(v => `      <div class="preview-card">
       </ul>
     </div>
 
+    <h2>Stack Health Badge</h2>
+    <p>Show the overall health grade of your project's dependency stack. Pass vendor slugs as a comma-separated <code>v</code> parameter.</p>
+    <div class="how-to">
+      <p><strong>URL pattern:</strong></p>
+      <div class="embed-code" onclick="copyCode(this)" style="margin:.5rem 0">${BASE_URL}/badge/stack.svg?v=vercel,supabase,github</div>
+      <p style="margin-top:.75rem"><strong>Preview:</strong></p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin:.75rem 0">
+        <a href="/stack-check?s=vercel,supabase,github"><img src="${BASE_URL}/badge/stack.svg?v=vercel,supabase,github" alt="Stack Health badge"></a>
+        <a href="/stack-check?s=vercel,supabase,railway,neon,sentry"><img src="${BASE_URL}/badge/stack.svg?v=vercel,supabase,railway,neon,sentry" alt="Stack Health badge"></a>
+      </div>
+      <p style="margin-top:.75rem"><strong>Markdown example:</strong></p>
+      <div class="embed-code" onclick="copyCode(this)" style="margin:.5rem 0">[![Stack Health](${BASE_URL}/badge/stack.svg?v=vercel,supabase,github)](${BASE_URL}/stack-check?s=vercel,supabase,github)</div>
+      <p style="margin-top:.75rem"><strong>Grades:</strong> A (all stable) → B (minor caution) → C (moderate risk) → D (high risk) → F (critical). Badge links to the <a href="/stack-check">Stack Health Check</a> tool for full details.</p>
+    </div>
+
     <h2>All Available Badges</h2>
     <p>Click any badge to view the vendor's free tier details and copy the embed code.</p>
     <div class="vendor-grid">
@@ -45252,6 +45338,18 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       res.writeHead(404, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Not found" }));
     }
+  } else if (url.pathname === "/badge/stack.svg" && isGetOrHead) {
+    const vendorsParam = url.searchParams.get("v") || "";
+    const style = (url.searchParams.get("style") === "flat-square" ? "flat-square" : "flat") as "flat" | "flat-square";
+    recordApiHit("/badge/stack.svg");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/badge/stack.svg", params: { v: vendorsParam, style }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    const svg = generateStackBadgeSvg(vendorsParam, style);
+    res.writeHead(200, {
+      "Content-Type": "image/svg+xml",
+      "Cache-Control": "public, max-age=3600, s-maxage=3600",
+      "Content-Length": Buffer.byteLength(svg),
+    });
+    res.end(svg);
   } else if (url.pathname.startsWith("/badge/") && url.pathname.endsWith(".svg") && isGetOrHead) {
     const slug = url.pathname.slice("/badge/".length).replace(/\.svg$/, "");
     const style = (url.searchParams.get("style") === "flat-square" ? "flat-square" : "flat") as "flat" | "flat-square";

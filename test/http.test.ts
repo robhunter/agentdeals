@@ -1540,6 +1540,60 @@ describe("HTTP transport", () => {
     assert.ok(xml.includes("/badges"), "Sitemap should include /badges page");
   });
 
+  it("GET /badges page includes stack health badge section", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badges`);
+    const html = await response.text();
+    assert.ok(html.includes("Stack Health Badge"), "Should have stack health badge section");
+    assert.ok(html.includes("/badge/stack.svg"), "Should show stack badge URL");
+    assert.ok(html.includes("/stack-check"), "Should link to stack health check tool");
+  });
+
+  it("GET /badge/stack.svg returns valid SVG stack health badge", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badge/stack.svg?v=vercel,supabase,github`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("image/svg+xml"), "Should return SVG content type");
+    assert.ok(response.headers.get("cache-control")?.includes("max-age=3600"), "Should have 1-hour cache");
+    const svg = await response.text();
+    assert.ok(svg.includes("<svg"), "Should be valid SVG");
+    assert.ok(svg.includes("Stack Health"), "Should have Stack Health label");
+    assert.ok(/[A-F]/.test(svg), "Should contain a grade letter (A-F)");
+  });
+
+  it("GET /badge/stack.svg with no vendors returns gray badge", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badge/stack.svg`);
+    assert.strictEqual(response.status, 200);
+    const svg = await response.text();
+    assert.ok(svg.includes("<svg"), "Should be valid SVG");
+    assert.ok(svg.includes("no services"), "Should show 'no services' for empty input");
+    assert.ok(svg.includes("#8b949e"), "Should use gray color");
+  });
+
+  it("GET /badge/stack.svg with unknown vendors returns unknown grade", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badge/stack.svg?v=nonexistent1,nonexistent2`);
+    assert.strictEqual(response.status, 200);
+    const svg = await response.text();
+    assert.ok(svg.includes("<svg"), "Should be valid SVG");
+    assert.ok(svg.includes("?"), "Should show ? for all-unknown vendors");
+    assert.ok(svg.includes("#8b949e"), "Should use gray color for unknown");
+  });
+
+  it("GET /badge/stack.svg supports flat-square style", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/badge/stack.svg?v=vercel,supabase&style=flat-square`);
+    assert.strictEqual(response.status, 200);
+    const svg = await response.text();
+    assert.ok(svg.includes('rx="0"'), "flat-square should have zero border radius");
+  });
+
   it("GET /developers renders REST API developer hub page", async () => {
     proc = await startHttpServer();
 
