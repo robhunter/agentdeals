@@ -488,7 +488,7 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 </svg>`;
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -511,6 +511,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/alternatives", label: "Alternatives", section: "alternatives" },
     { href: "/guides", label: "Guides", section: "guides" },
     { href: "/compare", label: "Compare", section: "compare" },
+    { href: "/compare-tool", label: "Compare Tool", section: "compare-tool" },
     { href: "/digest", label: "Digest", section: "digest" },
     { href: "/pricing-changes", label: "Changes", section: "changes" },
     { href: "/state-of-free-tiers", label: "Report", section: "report" },
@@ -1466,7 +1467,7 @@ ${globalNavCss()}
   ${buildGlobalNav("compare")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Comparisons</div>
   <h1>Free Tier Comparisons</h1>
-  <p class="page-meta">${totalComparisons} side-by-side vendor comparisons. Verified pricing, change history, and risk indicators.</p>
+  <p class="page-meta">${totalComparisons} side-by-side vendor comparisons. Verified pricing, change history, and risk indicators. <a href="/compare-tool" style="font-weight:600">Compare any two vendors &rarr;</a></p>
 ${categorySections}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
@@ -39403,6 +39404,381 @@ function buildStackCheckPage(): string {
 </html>`;
 }
 
+function buildCompareToolPage(): string {
+  const allOffers = loadOffers();
+  const totalOffers = allOffers.length;
+
+  // Build vendor list for autocomplete
+  const vendorNames = allOffers.map(o => o.vendor).sort();
+
+  // Popular matchup presets
+  const presetMatchups = [
+    { label: "Vercel vs Netlify", a: "Vercel", b: "Netlify" },
+    { label: "Supabase vs Firebase", a: "Supabase", b: "Firebase" },
+    { label: "GitHub Copilot vs Cursor", a: "GitHub Copilot", b: "Cursor" },
+    { label: "Auth0 vs Clerk", a: "Auth0", b: "Clerk" },
+    { label: "Neon vs Supabase", a: "Neon", b: "Supabase" },
+    { label: "Railway vs Render", a: "Railway", b: "Render" },
+    { label: "Datadog vs Grafana Cloud", a: "Datadog", b: "Grafana Cloud" },
+    { label: "Claude Code vs Cursor", a: "Claude Code", b: "Cursor" },
+  ];
+
+  const title = "Compare Tool — Side-by-Side Free Tier Comparison";
+  const metaDesc = `Compare any two vendors from ${totalOffers}+ free tier offers. Side-by-side pricing, risk assessment, and change history. Shareable comparison URLs.`;
+  const slug = "compare-tool";
+  const pubDate = "2026-04-08";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Vendor Compare Tool",
+    "description": metaDesc,
+    "url": `${BASE_URL}/${slug}`,
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+    "datePublished": pubDate,
+  };
+
+  const faqItems = [
+    { q: "How does the comparison tool work?", a: `Enter any two vendor names from our index of ${totalOffers}+ services. The tool pulls verified free tier details, risk assessments based on pricing change history, and recent changes for both vendors side by side.` },
+    { q: "What data is included in comparisons?", a: "Each comparison shows free tier descriptions, category, verification date, risk level (stable/caution/risky based on pricing change history), and a timeline of recent pricing changes for both vendors." },
+    { q: "Can I share a comparison?", a: "Yes. Every comparison generates a shareable URL with both vendor names encoded in query parameters. Copy the link to share or bookmark it." },
+    { q: "What if a vendor isn't found?", a: "The tool will show an error with suggestions for similar vendor names. Try searching with a different spelling or check the vendor page for the full list." },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<meta name="keywords" content="vendor comparison, free tier comparison, X vs Y pricing, side-by-side comparison, developer tools pricing">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="og:image" content="${BASE_URL}/og-image.png">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace;--green:#22c55e;--yellow:#eab308;--red:#ef4444}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.25rem;color:var(--text);margin:1.5rem 0 .75rem}
+.page-meta{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem}
+.input-section{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+.input-row{display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap}
+.input-group{flex:1;min-width:200px}
+.input-group label{display:block;font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem;font-weight:500}
+.input-group input{width:100%;padding:.6rem .75rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:.9rem}
+.input-group input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
+.input-group input::placeholder{color:var(--text-dim)}
+.compare-btn{padding:.6rem 1.25rem;border:none;border-radius:6px;background:var(--accent);color:white;font-weight:600;font-size:.9rem;cursor:pointer;white-space:nowrap}
+.compare-btn:hover{background:var(--accent-hover)}
+.random-btn{padding:.6rem 1rem;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);font-size:.85rem;cursor:pointer;white-space:nowrap}
+.random-btn:hover{border-color:var(--accent);color:var(--text)}
+.presets{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.preset-btn{padding:.35rem .75rem;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);font-size:.8rem;cursor:pointer;transition:all .2s}
+.preset-btn:hover{border-color:var(--accent);color:var(--text);background:var(--accent-glow)}
+.share-bar{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;margin-bottom:1.5rem}
+.share-url{flex:1;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.share-btn{padding:.35rem .75rem;border:1px solid var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-size:.8rem;cursor:pointer;white-space:nowrap}
+.share-btn:hover{background:var(--accent-glow)}
+.comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.vendor-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.25rem;position:relative}
+.vendor-card h3{font-family:var(--serif);font-size:1.1rem;margin-bottom:.5rem}
+.vendor-card h3 a{color:var(--text)}
+.badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600;font-family:var(--mono)}
+.badge-category{background:rgba(59,130,246,0.15);color:#60a5fa;margin-right:.5rem}
+.badge-stable{background:rgba(34,197,94,0.15);color:#22c55e}
+.badge-caution{background:rgba(234,179,8,0.15);color:#eab308}
+.badge-risky{background:rgba(239,68,68,0.15);color:#ef4444}
+.vendor-desc{font-size:.85rem;color:var(--text-muted);margin:.75rem 0;line-height:1.5}
+.vendor-meta{font-size:.8rem;color:var(--text-dim);margin-top:.5rem}
+.vendor-links{display:flex;gap:.75rem;margin-top:.75rem;font-size:.85rem}
+.changes-timeline{margin-top:1rem}
+.change-item{padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,0.5);font-size:.85rem}
+.change-item:last-child{border-bottom:none}
+.change-date{color:var(--text-dim);font-family:var(--mono);font-size:.8rem}
+.change-type{font-family:var(--mono);font-size:.75rem;padding:.1rem .4rem;border-radius:3px;margin:0 .25rem}
+.change-neg{background:rgba(239,68,68,0.15);color:#ef4444}
+.change-pos{background:rgba(34,197,94,0.15);color:#22c55e}
+.change-neutral{background:rgba(148,163,184,0.15);color:#94a3b8}
+.error-box{padding:1rem 1.25rem;border:1px solid var(--red);border-radius:8px;background:rgba(239,68,68,0.1);color:var(--text);margin-bottom:1.5rem}
+.single-vendor{max-width:480px}
+.faq-section{margin-top:2.5rem}
+.faq-item{margin-bottom:1rem}
+.faq-item h3{font-size:.95rem;color:var(--text);margin-bottom:.25rem;font-weight:600}
+.faq-item p{font-size:.85rem;color:var(--text-muted)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.comparison-grid{grid-template-columns:1fr}.input-row{flex-direction:column}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("compare-tool")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/compare">Compare</a> &rsaquo; Compare Tool</div>
+  <h1>Compare Any Two Vendors</h1>
+  <p class="page-meta">Side-by-side free tier comparison from ${totalOffers.toLocaleString()} vendor profiles. Enter two names or pick a popular matchup.</p>
+
+  <div class="input-section">
+    <div class="input-row">
+      <div class="input-group">
+        <label for="vendor-a">Vendor A</label>
+        <input type="text" id="vendor-a" list="vendor-list" placeholder="e.g. Vercel" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label for="vendor-b">Vendor B</label>
+        <input type="text" id="vendor-b" list="vendor-list" placeholder="e.g. Netlify" autocomplete="off">
+      </div>
+      <button class="compare-btn" onclick="doCompare()">Compare</button>
+      <button class="random-btn" onclick="randomMatchup()">Random</button>
+    </div>
+    <datalist id="vendor-list">
+      ${vendorNames.map(v => `<option value="${escHtmlServer(v)}">`).join("")}
+    </datalist>
+    <div class="presets">
+      <span style="font-size:.8rem;color:var(--text-dim);margin-right:.25rem">Popular:</span>
+      ${presetMatchups.map(p => `<button class="preset-btn" onclick="usePreset('${p.a.replace(/'/g, "\\'")}','${p.b.replace(/'/g, "\\'")}')">${escHtmlServer(p.label)}</button>`).join("")}
+    </div>
+  </div>
+
+  <div id="results"></div>
+
+  <div id="share-bar" class="share-bar" style="display:none">
+    <span class="share-url" id="share-url"></span>
+    <button class="share-btn" onclick="copyShareUrl(this)">Copy Link</button>
+  </div>
+
+  ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
+
+  <div class="faq-section">
+    <h2>FAQ</h2>
+    ${faqItems.map(f => `<div class="faq-item"><h3>${escHtmlServer(f.q)}</h3><p>${escHtmlServer(f.a)}</p></div>`).join("")}
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+
+<script>
+  var VENDORS = ${JSON.stringify(vendorNames)};
+  var PRESETS = ${JSON.stringify(presetMatchups)};
+  var NEG_TYPES = ['free_tier_removed','limits_reduced','restriction','product_deprecated','open_source_killed','pricing_model_change','pricing_restructured'];
+  var POS_TYPES = ['new_free_tier','limits_increased','startup_program_expanded','new_tier'];
+
+  function usePreset(a, b) {
+    document.getElementById('vendor-a').value = a;
+    document.getElementById('vendor-b').value = b;
+    doCompare();
+  }
+
+  function randomMatchup() {
+    var a = VENDORS[Math.floor(Math.random() * VENDORS.length)];
+    var b = VENDORS[Math.floor(Math.random() * VENDORS.length)];
+    while (b === a) b = VENDORS[Math.floor(Math.random() * VENDORS.length)];
+    document.getElementById('vendor-a').value = a;
+    document.getElementById('vendor-b').value = b;
+    doCompare();
+  }
+
+  function toSlug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+
+  function doCompare() {
+    var a = document.getElementById('vendor-a').value.trim();
+    var b = document.getElementById('vendor-b').value.trim();
+    var results = document.getElementById('results');
+    var shareBar = document.getElementById('share-bar');
+
+    if (!a && !b) { results.innerHTML = ''; shareBar.style.display = 'none'; return; }
+
+    // Single-vendor mode
+    if (a && !b) { fetchSingle(a); return; }
+    if (b && !a) { fetchSingle(b); return; }
+
+    // Update URL
+    var params = new URLSearchParams();
+    params.set('a', a); params.set('b', b);
+    history.replaceState(null, '', '/compare-tool?' + params.toString());
+
+    fetch('/api/compare?a=' + encodeURIComponent(a) + '&b=' + encodeURIComponent(b))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) {
+          results.innerHTML = '<div class="error-box">' + escHtml(data.error) + '</div>';
+          shareBar.style.display = 'none';
+          return;
+        }
+        renderComparison(data);
+        var shareUrl = window.location.origin + '/compare-tool?a=' + encodeURIComponent(a) + '&b=' + encodeURIComponent(b);
+        document.getElementById('share-url').textContent = shareUrl;
+        shareBar.style.display = 'flex';
+      })
+      .catch(function(err) {
+        results.innerHTML = '<div class="error-box">Failed to load comparison: ' + escHtml(err.message) + '</div>';
+        shareBar.style.display = 'none';
+      });
+  }
+
+  function fetchSingle(vendor) {
+    var results = document.getElementById('results');
+    var shareBar = document.getElementById('share-bar');
+    history.replaceState(null, '', '/compare-tool?a=' + encodeURIComponent(vendor));
+
+    fetch('/api/vendor-risk/' + encodeURIComponent(vendor))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) {
+          results.innerHTML = '<div class="error-box">' + escHtml(data.error) + '</div>';
+          shareBar.style.display = 'none';
+          return;
+        }
+        renderSingleVendor(data);
+        shareBar.style.display = 'none';
+      })
+      .catch(function(err) {
+        results.innerHTML = '<div class="error-box">' + escHtml(err.message) + '</div>';
+        shareBar.style.display = 'none';
+      });
+  }
+
+  function riskBadge(level) {
+    var cls = level === 'stable' ? 'badge-stable' : level === 'caution' ? 'badge-caution' : 'badge-risky';
+    return '<span class="badge ' + cls + '">' + level + '</span>';
+  }
+
+  function changeTypeBadge(type) {
+    var cls = NEG_TYPES.indexOf(type) >= 0 ? 'change-neg' : POS_TYPES.indexOf(type) >= 0 ? 'change-pos' : 'change-neutral';
+    return '<span class="change-type ' + cls + '">' + type.replace(/_/g, ' ') + '</span>';
+  }
+
+  function renderVendorCard(v) {
+    var slug = toSlug(v.vendor);
+    var risk = v.risk_level || 'stable';
+    var changes = v.deal_changes || v.recent_changes || [];
+    var html = '<div class="vendor-card">';
+    html += '<h3><a href="/vendor/' + slug + '">' + escHtml(v.vendor) + '</a></h3>';
+    html += '<span class="badge badge-category">' + escHtml(v.category) + '</span> ' + riskBadge(risk);
+    html += '<div class="vendor-desc">' + escHtml(v.description) + '</div>';
+    html += '<div class="vendor-meta">Tier: ' + escHtml(v.tier) + ' &middot; Verified: ' + escHtml(v.verifiedDate || v.verified_date || '') + '</div>';
+    html += '<div class="vendor-links">';
+    html += '<a href="/vendor/' + slug + '">Details</a>';
+    html += '<a href="/alternative-to/' + slug + '">Alternatives</a>';
+    html += '</div>';
+    if (changes.length > 0) {
+      html += '<div class="changes-timeline"><strong style="font-size:.85rem">Recent Changes</strong>';
+      changes.slice(0, 5).forEach(function(c) {
+        html += '<div class="change-item"><span class="change-date">' + escHtml(c.date) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + escHtml(c.summary.length > 120 ? c.summary.slice(0, 120) + '...' : c.summary) + '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function renderComparison(data) {
+    var results = document.getElementById('results');
+    var a = data.vendor_a;
+    var b = data.vendor_b;
+
+    var html = '<div class="comparison-grid">';
+    html += renderVendorCard(a);
+    html += renderVendorCard(b);
+    html += '</div>';
+
+    // Category match info
+    if (data.shared_categories) {
+      html += '<p style="margin-top:1rem;font-size:.85rem;color:var(--text-muted)">Both vendors are in the <strong>' + escHtml(data.category_overlap[0]) + '</strong> category — direct competitors.</p>';
+    } else {
+      html += '<p style="margin-top:1rem;font-size:.85rem;color:var(--text-muted)">Cross-category comparison: <strong>' + escHtml(a.category) + '</strong> vs <strong>' + escHtml(b.category) + '</strong>.</p>';
+    }
+
+    // Links to related pages
+    html += '<div style="margin-top:1rem;font-size:.85rem;display:flex;gap:1rem;flex-wrap:wrap">';
+    html += '<a href="/compare">Browse all comparisons</a>';
+    html += '<a href="/category/' + toSlug(a.category) + '">' + escHtml(a.category) + ' category</a>';
+    if (!data.shared_categories) {
+      html += '<a href="/category/' + toSlug(b.category) + '">' + escHtml(b.category) + ' category</a>';
+    }
+    html += '</div>';
+
+    results.innerHTML = html;
+  }
+
+  function renderSingleVendor(data) {
+    var results = document.getElementById('results');
+    var html = '<div class="single-vendor">';
+    html += renderVendorCard({
+      vendor: data.vendor,
+      category: data.category,
+      description: data.description,
+      tier: data.tier,
+      risk_level: data.risk_level,
+      verifiedDate: data.verified_date,
+      deal_changes: data.recent_changes || []
+    });
+    if (data.safer_alternatives && data.safer_alternatives.length > 0) {
+      html += '<div style="margin-top:1rem;font-size:.85rem;color:var(--text-muted)"><strong>Alternatives:</strong> ';
+      html += data.safer_alternatives.map(function(alt) {
+        return '<a href="/vendor/' + toSlug(alt.vendor) + '">' + escHtml(alt.vendor) + '</a> (' + alt.risk_level + ')';
+      }).join(', ');
+      html += '</div>';
+    }
+    html += '</div>';
+    html += '<p style="margin-top:1rem;font-size:.85rem;color:var(--text-dim)">Enter a second vendor above for a side-by-side comparison.</p>';
+    results.innerHTML = html;
+  }
+
+  function escHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function copyShareUrl(btn) {
+    var url = document.getElementById('share-url').textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function() {
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy Link'; }, 2000);
+      });
+    }
+  }
+
+  // Auto-load from URL params
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var a = params.get('a');
+    var b = params.get('b');
+    if (a) document.getElementById('vendor-a').value = a;
+    if (b) document.getElementById('vendor-b').value = b;
+    if (a || b) doCompare();
+  })();
+</script>
+</body>
+</html>`;
+}
 function buildEstimatePage(): string {
   const estimatorData = buildEstimatorData();
   const allOffers = loadOffers();
@@ -43694,6 +44070,12 @@ ${catList}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/compare-tool</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/developers</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -44451,6 +44833,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/stack-check", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildStackCheckPage());
+  } else if (url.pathname === "/compare-tool" && isGetOrHead) {
+    recordApiHit("/compare-tool");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/compare-tool", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildCompareToolPage());
   } else if (url.pathname === "/estimate" && isGetOrHead) {
     recordApiHit("/estimate");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/estimate", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -44495,6 +44882,7 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/trends`,
     `${BASE_URL}/estimate`,
     `${BASE_URL}/stack-check`,
+    `${BASE_URL}/compare-tool`,
     `${BASE_URL}/developers`,
     `${BASE_URL}/stacks`,
     ...STACK_TEMPLATES.map(t => `${BASE_URL}/stacks/${t.slug}`),

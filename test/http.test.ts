@@ -936,7 +936,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers", "/stack-check"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/compare-tool", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers", "/stack-check"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -4917,5 +4917,63 @@ describe("shutdown tracker page", () => {
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("Stack Health Check"), "Should render the page");
+  });
+
+  it("GET /compare-tool renders interactive comparison page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/compare-tool`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+
+    // Page structure
+    assert.ok(html.includes("<title>Compare Tool"), "Should have compare tool page title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("WebApplication"), "Should have WebApplication JSON-LD type");
+    assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/compare-tool"), "Should reference /compare-tool");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+
+    // Input section
+    assert.ok(html.includes("vendor-a"), "Should have vendor A input");
+    assert.ok(html.includes("vendor-b"), "Should have vendor B input");
+    assert.ok(html.includes("doCompare"), "Should have compare function");
+    assert.ok(html.includes("vendor-list"), "Should have vendor datalist for autocomplete");
+
+    // Presets
+    assert.ok(html.includes("preset-btn"), "Should have preset matchup buttons");
+    assert.ok(html.includes("Vercel vs Netlify"), "Should have Vercel vs Netlify preset");
+
+    // Random button
+    assert.ok(html.includes("randomMatchup"), "Should have random matchup button");
+
+    // Share functionality
+    assert.ok(html.includes("share-bar"), "Should have share bar");
+    assert.ok(html.includes("copyShareUrl"), "Should have copy share URL function");
+
+    // FAQ
+    assert.ok(html.includes("How does the comparison tool work"), "Should have FAQ section");
+
+    // SEO
+    assert.ok(html.includes("og:title"), "Should have OG title");
+    assert.ok(html.includes("og:description"), "Should have OG description");
+  });
+
+  it("GET /compare-tool is in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/compare-tool"), "Sitemap should include /compare-tool page");
+  });
+
+  it("GET /compare-tool with ?a=&b= params returns page ready for auto-compare", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/compare-tool?a=Vercel&b=Netlify`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Compare Tool"), "Should render the page");
   });
 });
