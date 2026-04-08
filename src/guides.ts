@@ -50,7 +50,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "ide-code-editors-alternatives", title: "IDE & Code Editor Alternatives", description: "59+ free IDEs and coding tools — desktop editors, cloud IDEs, AI coding assistants" },
   { slug: "free-llm-apis", title: "Free LLM APIs", description: "25+ free LLM API providers — proprietary model APIs, open-model inference, AI gateways" },
   { slug: "api-development-alternatives", title: "API Development Alternatives", description: "39+ free API tools — REST/GraphQL clients, mocking, documentation, marketplaces" },
-  { slug: "q1-2026-developer-pricing-report", title: "Q1 2026 Developer Pricing Report", description: "47 verified pricing changes in Q1 2026 — removals, restrictions, price hikes, expansions" },
+  { slug: "q1-2026-developer-pricing-report", title: "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning", description: "50 pricing changes in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS killed. Biggest stories, category breakdown, monthly trend, Cloudflare counter-trend, Q2 outlook" },
   { slug: "hetzner-pricing-2026", title: "Hetzner Pricing 2026", description: "Hetzner April 2026 price increases — before/after tables, impact, alternatives" },
   { slug: "team-collaboration-alternatives", title: "Team Collaboration Alternatives", description: "60+ free team collaboration tools — chat, video, docs, scheduling, async communication" },
   { slug: "free-startup-stack", title: "Free Startup Stack", description: "Complete free SaaS infrastructure stack — 10 categories with recommended picks" },
