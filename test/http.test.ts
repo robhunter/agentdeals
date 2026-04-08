@@ -1440,12 +1440,15 @@ describe("HTTP transport", () => {
     const html = await response.text();
     assert.ok(html.includes("<title>Developer Tool Pricing Changes"), "Should have pricing changes title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
-    assert.ok(html.includes("ItemList"), "JSON-LD should use ItemList");
+    assert.ok(html.includes("Dataset"), "JSON-LD should use Dataset schema");
     assert.ok(html.includes("/pricing-changes"), "Should reference /pricing-changes");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("pc-filters"), "Should have filter controls");
     assert.ok(html.includes("data-filter-type"), "Should have filter type buttons");
     assert.ok(html.includes("data-filter-impact"), "Should have filter impact buttons");
+    assert.ok(html.includes("data-filter-year"), "Should have year filter buttons");
+    assert.ok(html.includes("pc-cat-filter"), "Should have category filter dropdown");
+    assert.ok(html.includes("trend-summary"), "Should have year-to-date trend summary");
     assert.ok(html.includes('id="'), "Should have anchor IDs on entries");
     assert.ok(html.includes("pc-states") || html.includes("pc-state-label"), "Should have before/after state rendering");
     assert.ok(html.includes("/pricing-changes/feed.xml"), "Should link to pricing changes feed");

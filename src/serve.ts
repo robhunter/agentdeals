@@ -37657,7 +37657,9 @@ function buildPricingChangesPage(): string {
           <div class="pc-state"><span class="pc-state-label">After:</span> ${escHtmlServer(c.current_state)}</div>
         </div>`
       : "";
-    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}">
+    const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const changeYear = c.date.slice(0, 4);
+    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date">${c.date}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
@@ -37682,8 +37684,37 @@ ${altHtml}
   const thisMonth = today.slice(0, 7);
   const thisMonthCount = sorted.filter(c => c.date.slice(0, 7) === thisMonth).length;
 
+  // Year-to-date stats for trend summary
+  const currentYearStr = String(currentYear);
+  const ytdChanges = sorted.filter(c => c.date.startsWith(currentYearStr) && c.date <= today);
+  const ytdRemovals = ytdChanges.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const ytdReductions = ytdChanges.filter(c => c.change_type === "limits_reduced" || c.change_type === "restriction").length;
+  const ytdNewFree = ytdChanges.filter(c => c.change_type === "new_free_tier" || c.change_type === "limits_increased" || c.change_type === "startup_program_expanded").length;
+  const ytdRestructured = ytdChanges.filter(c => c.change_type === "pricing_restructured" || c.change_type === "pricing_model_change" || c.change_type === "pricing_postponed").length;
+  const ytdNegative = ytdRemovals + ytdReductions;
+  const ytdPositive = ytdNewFree;
+  const ytdNet = ytdPositive - ytdNegative;
+  const ytdNetLabel = ytdNet > 0 ? "net positive" : ytdNet < 0 ? "net negative" : "neutral";
+  const ytdNetColor = ytdNet > 0 ? "#3fb950" : ytdNet < 0 ? "#f85149" : "#8b949e";
+
+  // Upcoming changes (future-dated)
+  const upcomingChanges = sorted.filter(c => c.date >= today);
+
+  // Collect unique vendor categories and years for filter dropdowns
+  const vendorCategories = [...new Set(sorted.map(c => c.category || "").filter(Boolean))].sort();
+  const years = [...new Set(sorted.map(c => c.date.slice(0, 4)))].sort().reverse();
+
   // Collect unique change types for filter buttons
   const changeTypes = [...new Set(sorted.map(c => c.change_type))];
+
+  const categoryOptionsHtml = vendorCategories.map(cat => {
+    const slug = cat.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return `<option value="${slug}">${escHtmlServer(cat)}</option>`;
+  }).join("");
+
+  const yearButtonsHtml = years.map(y =>
+    `<button class="pc-filter-btn" data-filter-year="${y}">${y}</button>`
+  ).join("\n        ");
 
   const filterButtonsHtml = `
     <div class="pc-filters">
@@ -37701,6 +37732,18 @@ ${altHtml}
         <button class="pc-filter-btn" data-filter-impact="medium">Medium</button>
         <button class="pc-filter-btn" data-filter-impact="low">Low</button>
       </div>
+      <div class="pc-filter-group">
+        <span class="pc-filter-label">Year:</span>
+        <button class="pc-filter-btn active" data-filter-year="all">All</button>
+        ${yearButtonsHtml}
+      </div>
+      <div class="pc-filter-group">
+        <span class="pc-filter-label">Category:</span>
+        <select id="pc-cat-filter" class="pc-cat-select">
+          <option value="all">All categories</option>
+          ${categoryOptionsHtml}
+        </select>
+      </div>
       <div class="pc-filter-count"><span id="pc-visible-count">${sorted.length}</span> of ${sorted.length} changes shown</div>
     </div>`;
 
@@ -37713,27 +37756,23 @@ ${entriesHtml}
   }).join("\n");
 
   const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
-  const metaDesc = `Track ${allChanges.length} developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Reverse-chronological timeline with filters.`;
+  const metaDesc = `Track ${allChanges.length}+ developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Interactive timeline filterable by type, impact, year, and category.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "ItemList",
+    "@type": "Dataset",
     name: title,
     description: metaDesc,
-    numberOfItems: allChanges.length,
     url: `${BASE_URL}/pricing-changes`,
-    itemListElement: sorted.slice(0, 50).map((c, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      item: {
-        "@type": "NewsArticle",
-        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label} \u2014 ${c.summary.slice(0, 100)}`,
-        description: c.summary,
-        datePublished: c.date,
-        url: `${BASE_URL}/pricing-changes#${changeAnchor(c)}`,
-        publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-      },
-    })),
+    keywords: ["developer tool pricing", "free tier removed", "free tier changelog", "developer pricing changes " + currentYear],
+    creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    dateModified: sorted.length > 0 ? sorted[0].date : today,
+    temporalCoverage: sorted.length > 0 ? `${sorted[sorted.length - 1].date}/${sorted[0].date}` : today,
+    variableMeasured: [
+      { "@type": "PropertyValue", name: "Total changes tracked", value: allChanges.length },
+      { "@type": "PropertyValue", name: "Free tiers removed", value: removedCount },
+      { "@type": "PropertyValue", name: "Changes in " + currentYear, value: ytdChanges.length },
+    ],
   };
 
   const filterScript = `
@@ -37741,13 +37780,17 @@ ${entriesHtml}
 (function() {
   var typeFilter = 'all';
   var impactFilter = 'all';
+  var yearFilter = 'all';
+  var catFilter = 'all';
   function applyFilters() {
     var entries = document.querySelectorAll('.pc-entry');
     var visible = 0;
     entries.forEach(function(el) {
       var typeMatch = typeFilter === 'all' || el.getAttribute('data-category') === typeFilter;
       var impactMatch = impactFilter === 'all' || el.getAttribute('data-impact') === impactFilter;
-      if (typeMatch && impactMatch) {
+      var yearMatch = yearFilter === 'all' || el.getAttribute('data-year') === yearFilter;
+      var catMatch = catFilter === 'all' || el.getAttribute('data-vendor-cat') === catFilter;
+      if (typeMatch && impactMatch && yearMatch && catMatch) {
         el.style.display = '';
         visible++;
       } else {
@@ -37760,6 +37803,12 @@ ${entriesHtml}
       var visEntries = g.querySelectorAll('.pc-entry:not([style*="display: none"])');
       g.style.display = visEntries.length > 0 ? '' : 'none';
     });
+    // Hide upcoming section entries too
+    var upSection = document.querySelector('.upcoming-section');
+    if (upSection) {
+      var upVis = upSection.querySelectorAll('.pc-entry:not([style*="display: none"])');
+      upSection.style.display = upVis.length > 0 ? '' : 'none';
+    }
   }
   document.querySelectorAll('[data-filter-type]').forEach(function(btn) {
     btn.addEventListener('click', function() {
@@ -37783,6 +37832,22 @@ ${entriesHtml}
       applyFilters();
     });
   });
+  document.querySelectorAll('[data-filter-year]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var group = document.querySelectorAll('[data-filter-year]');
+      group.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      yearFilter = btn.getAttribute('data-filter-year');
+      applyFilters();
+    });
+  });
+  var catSelect = document.getElementById('pc-cat-filter');
+  if (catSelect) {
+    catSelect.addEventListener('change', function() {
+      catFilter = catSelect.value;
+      applyFilters();
+    });
+  }
   // Highlight anchor on load
   if (window.location.hash) {
     var target = document.getElementById(window.location.hash.slice(1));
@@ -37862,6 +37927,24 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .pc-alts-label{font-weight:600;color:var(--text-muted)}
 .pc-alts a{color:var(--accent);font-size:.8rem}
 .badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.trend-summary{margin-bottom:1.5rem;padding:1.25rem;border:1px solid var(--border);border-radius:10px;background:var(--bg-card)}
+.trend-summary h2{font-family:var(--serif);font-size:1.1rem;margin-bottom:.75rem;color:var(--text)}
+.trend-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:.75rem}
+.trend-item{padding:.5rem .75rem;border-radius:8px;text-align:center}
+.trend-negative{background:rgba(248,81,73,0.1);border:1px solid rgba(248,81,73,0.25)}
+.trend-positive{background:rgba(63,185,80,0.1);border:1px solid rgba(63,185,80,0.25)}
+.trend-neutral{background:rgba(188,140,255,0.1);border:1px solid rgba(188,140,255,0.25)}
+.trend-num{font-family:var(--serif);font-size:1.5rem;font-weight:700;display:block}
+.trend-negative .trend-num{color:#f85149}
+.trend-positive .trend-num{color:#3fb950}
+.trend-neutral .trend-num{color:#bc8cff}
+.trend-label{font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-family:var(--mono)}
+.trend-net{font-size:.85rem;color:var(--text-muted);text-align:center;padding-top:.5rem;border-top:1px solid var(--border)}
+.upcoming-section{margin-bottom:2rem;padding:1.25rem;border:1px solid rgba(88,166,255,0.3);border-radius:10px;background:rgba(88,166,255,0.05)}
+.upcoming-section h2{font-family:var(--serif);font-size:1.15rem;color:#58a6ff;margin-bottom:.25rem}
+.upcoming-intro{font-size:.85rem;color:var(--text-muted);margin-bottom:.75rem}
+.pc-cat-select{padding:.25rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-elevated);color:var(--text);font-size:.75rem;font-family:var(--sans);cursor:pointer}
+.pc-cat-select:focus{border-color:var(--accent);outline:none}
 .mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
 .mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
 .mcp-cta a{font-weight:600}
@@ -37871,7 +37954,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .cross-links li a{display:inline-block;padding:.25rem .6rem;border:1px solid var(--border);border-radius:6px;font-size:.8rem;color:var(--text-muted)}
 .cross-links li a:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.pc-entry{flex-direction:column;gap:.25rem}.pc-left{text-align:left;min-width:auto;display:flex;gap:.75rem;align-items:center}.pc-filter-group{flex-direction:column;align-items:flex-start}.pc-anchor{opacity:1}}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.trend-grid{grid-template-columns:repeat(2,1fr)}.pc-entry{flex-direction:column;gap:.25rem}.pc-left{text-align:left;min-width:auto;display:flex;gap:.75rem;align-items:center}.pc-filter-group{flex-direction:column;align-items:flex-start}.pc-anchor{opacity:1}}
 ${globalNavCss()}
 </style>
 </head>
@@ -37902,6 +37985,23 @@ ${globalNavCss()}
     </div>
   </div>
 
+  <div class="trend-summary">
+    <h2>In ${currentYear} so far</h2>
+    <div class="trend-grid">
+      <div class="trend-item trend-negative"><span class="trend-num">${ytdRemovals}</span> <span class="trend-label">free tiers removed</span></div>
+      <div class="trend-item trend-negative"><span class="trend-num">${ytdReductions}</span> <span class="trend-label">limits reduced</span></div>
+      <div class="trend-item trend-positive"><span class="trend-num">${ytdNewFree}</span> <span class="trend-label">new or increased</span></div>
+      <div class="trend-item trend-neutral"><span class="trend-num">${ytdRestructured}</span> <span class="trend-label">restructured</span></div>
+    </div>
+    <div class="trend-net" style="color:${ytdNetColor}">Net: <strong>${ytdNet > 0 ? "+" : ""}${ytdNet}</strong> (${ytdNetLabel}) &mdash; ${ytdChanges.length} changes tracked in ${currentYear}</div>
+  </div>
+${upcomingChanges.length > 0 ? `
+  <div class="upcoming-section" id="upcoming">
+    <h2>Upcoming Changes</h2>
+    <p class="upcoming-intro">Announced pricing changes with future effective dates. Plan ahead.</p>
+${upcomingChanges.map(c => buildChangeEntry(c)).join("\n")}
+  </div>
+` : ""}
 ${filterButtonsHtml}
 
 ${monthsHtml}
