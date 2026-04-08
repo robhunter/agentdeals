@@ -1132,7 +1132,7 @@
     {
       "vendor": "Cursor",
       "category": "AI Coding",
-      "description": "AI-powered code editor built on VS Code. Free tier: 2,000 completions/month, 50 slow premium requests/month. Pro $20/month (unlimited completions, 500 fast premium requests). Business $40/seat/month. Ultra $200/month (launched June 2025 — highest credit limits for power users). Credit-based model since mid-2025.",
+      "description": "AI-powered code editor built on VS Code. Free tier: 2,000 completions/month, 50 slow premium requests/month. Pro $20/month (unlimited completions, 500 fast premium requests). Pro+ $60/month (10x premium requests vs Pro, priority access, more context). Business $40/seat/month. Ultra $200/month (highest credit limits for power users). 4-tier pricing ladder since April 2026.",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
@@ -1140,9 +1140,10 @@
         "ai",
         "code completion",
         "ide",
-        "free tier"
+        "free tier",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-04-08"
     },
     {
       "vendor": "Linear",

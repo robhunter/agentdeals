@@ -24626,10 +24626,10 @@ function buildAiCodingPricing2026Page(): string {
       slug: "cursor",
       free: "Limited requests",
       pro: "$20/mo",
-      power: "$200/mo (Ultra)",
+      power: "$60/mo (Pro+) / $200/mo (Ultra)",
       teams: "$40/seat",
       model: "Credit-based",
-      freeDetails: "2,000 completions/month, 50 slow premium requests/month. Enough for light exploration, but runs out fast under real coding sessions. Premium model access is throttled on free tier.",
+      freeDetails: "2,000 completions/month, 50 slow premium requests/month. Enough for light exploration, but runs out fast under real coding sessions. Pro+ ($60/mo) adds 10x premium requests and priority access.",
     },
     {
       name: "Windsurf",
@@ -25027,14 +25027,14 @@ function buildAiCodingToolsPricingPage(): string {
       category: "ide",
       free: "2K completions/mo",
       pro: "$20/mo",
-      power: "$200/mo (Ultra)",
+      power: "$60/mo (Pro+) / $200/mo (Ultra)",
       teams: "$40/seat",
       model: "Credit-based",
       freeDetails: "2,000 completions/month, 50 slow premium requests/month. Enough for light exploration, but runs out fast under real coding sessions. Premium model access is throttled on free tier.",
       freeType: "limited",
-      monthlyCostSolo: "$20",
+      monthlyCostSolo: "$20–$60",
       monthlyCostTeam5: "$200",
-      hiddenCosts: "Ultra tier ($200/mo) needed for heavy usage. Credit consumption varies by model — Opus burns 10x faster than Sonnet.",
+      hiddenCosts: "New Pro+ tier ($60/mo) fills the gap between Pro and Ultra. Credit consumption varies by model — Opus burns 10x faster than Sonnet. Ultra ($200/mo) still needed for highest limits.",
     },
     {
       name: "Windsurf",
@@ -43547,7 +43547,7 @@ Track recent pricing changes across developer tools.
 
 Parameters:
 - since (string, optional): ISO date (YYYY-MM-DD). Default: 7 days ago.
-- change_type (enum, optional): free_tier_removed, limits_reduced, restriction, limits_increased, new_free_tier, pricing_restructured, open_source_killed, pricing_model_change, startup_program_expanded, pricing_postponed, product_deprecated
+- change_type (enum, optional): free_tier_removed, limits_reduced, restriction, limits_increased, new_free_tier, new_tier, pricing_restructured, open_source_killed, pricing_model_change, startup_program_expanded, pricing_postponed, product_deprecated
 - vendor (string, optional): Filter to one vendor
 - vendors (string, optional): Comma-separated vendor names
 - include_expiring (boolean, optional): Include upcoming expirations (default: true)
