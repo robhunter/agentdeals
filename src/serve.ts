@@ -5287,11 +5287,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ai-coding-tools-pricing",
     title: "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown",
-    metaDesc: "Compare 16 AI coding tools: Cursor, Windsurf, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. Updated April 2026.",
+    metaDesc: "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. Updated April 2026.",
     contextHtml: "",
     tag: "ai-coding-tools-pricing",
     primaryVendor: "Cursor",
-    hubDesc: "The definitive AI coding tools comparison — 16 tools across IDE, CLI, cloud agent, and app builder categories with free tier analysis and cost breakdowns",
+    hubDesc: "The definitive AI coding tools comparison — 17 tools across IDE, CLI, cloud agent, and app builder categories with free tier analysis and cost breakdowns",
   },
   {
     slug: "aws-free-tier-2026",
@@ -6803,7 +6803,7 @@ ${buildCards(mlPlatforms)}
   <h2>Free AI Coding Tools</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">AI-powered code editors, assistants, and autonomous coding agents. From IDE plugins to fully autonomous engineers.</p>
   <div class="context-box" style="border-left:3px solid var(--accent)">
-    <p style="margin:0;font-size:.9rem">Looking specifically at <strong>Cursor alternatives</strong>? See our dedicated <a href="/cursor-alternatives">Cursor Alternatives</a> guide. For the full picture, see our <a href="/ai-coding-tools-pricing">definitive AI coding tools pricing comparison</a> covering 16 tools across IDE, CLI, cloud agent, and app builder categories.</p>
+    <p style="margin:0;font-size:.9rem">Looking specifically at <strong>Cursor alternatives</strong>? See our dedicated <a href="/cursor-alternatives">Cursor Alternatives</a> guide. For the full picture, see our <a href="/ai-coding-tools-pricing">definitive AI coding tools pricing comparison</a> covering 17 tools across IDE, CLI, cloud agent, and app builder categories.</p>
   </div>
 ${buildCards(enrichedCoding)}
 
@@ -25058,7 +25058,7 @@ ${mcpCtaCss()}
 
 function buildAiCodingToolsPricingPage(): string {
   const title = "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown";
-  const metaDesc = "Compare 16 AI coding tools: Cursor, Windsurf, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. Updated April 2026.";
+  const metaDesc = "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. Updated April 2026.";
   const slug = "ai-coding-tools-pricing";
   const pubDate = "2026-04-08";
 
@@ -25070,7 +25070,7 @@ function buildAiCodingToolsPricingPage(): string {
   const allAiCodingOffers = [...aiCodingOffers, ...ideCodingOffers];
 
   // Deal changes for AI coding tools
-  const aiVendors = ["Cursor", "Windsurf", "GitHub Copilot", "Augment Code", "Google Gemini Code Assist", "Claude Code", "Devin", "Bolt.new", "Lovable", "OpenAI Codex", "Google Antigravity", "Gemini CLI", "Amazon Q Developer", "Cline", "Aider", "MarsCode"];
+  const aiVendors = ["Cursor", "Windsurf", "GitHub Copilot", "Augment Code", "Google Gemini Code Assist", "Claude Code", "Devin", "Bolt.new", "Lovable", "OpenAI Codex", "Google Antigravity", "Gemini CLI", "Amazon Q Developer", "Cline", "Aider", "MarsCode", "Amazon Kiro"];
   const aiCodingChanges = dealChanges.filter(c =>
     aiVendors.includes(c.vendor)
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -25123,6 +25123,21 @@ function buildAiCodingToolsPricingPage(): string {
       monthlyCostSolo: "$20",
       monthlyCostTeam5: "$200",
       hiddenCosts: "Pro price rose 33% in March 2026 (was $15). Existing subscribers grandfathered, but new signups pay $20.",
+    },
+    {
+      name: "Amazon Kiro",
+      slug: "amazon-kiro",
+      category: "ide",
+      free: "50 interactions/mo",
+      pro: "$20/mo",
+      power: "$40/mo (Pro+) / $200/mo (Power)",
+      teams: "\u2014",
+      model: "Credit-based",
+      freeDetails: "Claude-powered IDE by Amazon focused on spec-driven development. Free tier: 50 interactions/month. Automated requirements, design docs, and test generation. Pro: 1,000 interactions, Pro+: 2,000, Power: 10,000. Newest entrant in the IDE space (GA April 2026).",
+      freeType: "limited",
+      monthlyCostSolo: "$0\u201320",
+      monthlyCostTeam5: "\u2014",
+      hiddenCosts: "Interaction-based pricing means complex tasks (spec generation, multi-file edits) consume credits faster than simple completions. No team plan yet. Power tier at $200/mo needed for heavy use.",
     },
     {
       name: "GitHub Copilot",
@@ -25447,7 +25462,7 @@ function buildAiCodingToolsPricingPage(): string {
 
   // FAQ structured data
   const faqEntries = [
-    { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist offers the most generous free tier with 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day." },
+    { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist offers the most generous free tier with 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free interactions/month — limited, but enough to try spec-driven development." },
     { q: "How much does Cursor cost vs Windsurf?", a: "Both now charge identical prices: $20/month Pro, $200/month Power (Ultra/Max), and $40/seat for teams. Windsurf raised its Pro price from $15 to $20 in March 2026. The main difference is feature set, not price." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes, GitHub Copilot Pro at $10/month is the cheapest paid AI coding subscription. It also offers a free tier with 2,000 completions/month, plus unlimited free access for students, teachers, and open-source maintainers." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
@@ -25455,6 +25470,7 @@ function buildAiCodingToolsPricingPage(): string {
     { q: "Are AI app builders like Bolt.new and Lovable worth it?", a: "For prototyping and MVPs, yes. Bolt.new offers 1M free tokens/month and Lovable gives 5 daily credits. Both generate full-stack apps from natural language. They are not designed for production-grade software development." },
     { q: "What is Google Antigravity?", a: "Google Antigravity is an agent-first IDE powered by Gemini 3, announced November 2025. It is 100% free during public preview with built-in browser automation and multi-agent orchestration. Pricing has not been announced yet." },
     { q: "How do cloud coding agents (Codex, Devin) differ from IDE tools?", a: "Cloud agents run code in sandboxed environments and work autonomously — they can execute tests, create branches, and open PRs. IDE tools assist while you code. Cloud agents are better for delegated tasks; IDE tools are better for interactive development." },
+    { q: "What is Amazon Kiro and how does it compare to Cursor?", a: "Amazon Kiro is a Claude-powered IDE that launched GA in April 2026. It focuses on spec-driven development — automated requirements, design docs, and test generation. Free tier: 50 interactions/month. Pro: $20/month (1,000 interactions), matching Cursor's price. The key difference is Kiro's spec-first workflow vs Cursor's chat-first approach. Kiro has no team plan yet." },
   ];
 
   const faqJsonLd = {
@@ -25561,7 +25577,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>The AI coding tools market in April 2026:</strong> 16 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Free tiers range from genuinely generous (Gemini Code Assist: 180K completions/month) to functionally absent (Devin: $20/mo minimum). The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
+    '    <p><strong>The AI coding tools market in April 2026:</strong> 17 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Free tiers range from genuinely generous (Gemini Code Assist: 180K completions/month) to functionally absent (Devin: $20/mo minimum). The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
     '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a new category that didn\'t exist a year ago. Google is flooding the market with free options (Gemini Code Assist, Antigravity, Gemini CLI) while competitors charge $20/mo.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, what you actually get for free, cost analysis for solo devs and teams, hidden costs, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
     '  </div>\n' +

@@ -3459,7 +3459,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // 16 tools across 4 categories
+    // 17 tools across 4 categories
     assert.ok(html.includes("Cursor"), "Should include Cursor");
     assert.ok(html.includes("Windsurf"), "Should include Windsurf");
     assert.ok(html.includes("GitHub Copilot"), "Should include GitHub Copilot");
@@ -3471,6 +3471,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Gemini CLI"), "Should include Gemini CLI");
     assert.ok(html.includes("MarsCode"), "Should include MarsCode");
     assert.ok(html.includes("Claude Code"), "Should include Claude Code");
+    assert.ok(html.includes("Amazon Kiro"), "Should include Amazon Kiro");
     // Key sections
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("IDE-Based"), "Should have IDE category");
