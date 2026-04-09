@@ -3488,6 +3488,40 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/developers"), "Should cross-link to developers");
   });
 
+  it("GET /openai-assistants-migration renders migration cost guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/openai-assistants-migration`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Assistants API Sunset"), "Should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    // Key content
+    assert.ok(html.includes("August 26, 2026"), "Should have shutdown date");
+    assert.ok(html.includes("days"), "Should have days countdown");
+    assert.ok(html.includes("Responses API"), "Should mention Responses API");
+    assert.ok(html.includes("Azure OpenAI"), "Should mention Azure");
+    assert.ok(html.includes("Anthropic Claude"), "Should mention Anthropic");
+    assert.ok(html.includes("Google Gemini API"), "Should mention Gemini");
+    assert.ok(html.includes("LangChain"), "Should mention LangChain");
+    assert.ok(html.includes("CrewAI"), "Should mention CrewAI");
+    // Key sections
+    assert.ok(html.includes("Cost Comparison"), "Should have cost comparison");
+    assert.ok(html.includes("Migration Paths Detailed"), "Should have migration paths");
+    assert.ok(html.includes("Free Tier Alternatives"), "Should have free tier section");
+    assert.ok(html.includes("Migration Timeline"), "Should have timeline");
+    assert.ok(html.includes("Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/pricing-changes"), "Should cross-link to changes");
+    assert.ok(html.includes("/vendor/openai"), "Should link to OpenAI vendor page");
+    assert.ok(html.includes("/vendor/azure"), "Should link to Azure vendor page");
+  });
+
   it("GET /aws-free-tier-2026 renders AWS free tier guide", async () => {
     proc = await startHttpServer();
 
