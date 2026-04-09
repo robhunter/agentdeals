@@ -559,7 +559,7 @@ function generateShieldBadge(leftText: string, rightText: string, color: string,
     + '\n</svg>';
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -593,6 +593,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/stack-check", label: "Health Check", section: "stack-check" },
     { href: "/budget-builder", label: "Budget Builder", section: "budget-builder" },
     { href: "/badges", label: "Badges", section: "badges" },
+    { href: "/embed", label: "Embed", section: "embed" },
     { href: "/developers", label: "API", section: "developers" },
     { href: "/setup", label: "Setup", section: "setup" },
   ];
@@ -41288,6 +41289,259 @@ ${allVendors.filter(v => v.status !== "unknown").map(v =>
 </html>`;
 }
 
+// --- Embeddable widget builders ---
+
+const EMBED_CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+function embedBaseCss(theme: "dark" | "light"): string {
+  const dark = theme === "dark";
+  return `:root{--bg:${dark ? "#0f172a" : "#ffffff"};--bg-el:${dark ? "#1e293b" : "#f8fafc"};--text:${dark ? "#f1f5f9" : "#0f172a"};--text-m:${dark ? "#94a3b8" : "#64748b"};--accent:#3b82f6;--border:${dark ? "rgba(148,163,184,.15)" : "rgba(15,23,42,.1)"};--badge-removed:#f85149;--badge-reduced:#d29922;--badge-increased:#3fb950;--badge-new:#58a6ff;--badge-restructured:#bc8cff}*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:14px}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}`;
+}
+
+function embedAttribution(): string {
+  return `<div style="margin-top:12px;padding-top:8px;border-top:1px solid var(--border);text-align:right;font-size:11px;color:var(--text-m)">Powered by <a href="${BASE_URL}" target="_blank" rel="noopener">AgentDeals</a></div>`;
+}
+
+function buildEmbedVendorWidget(slug: string, theme: "dark" | "light"): string | null {
+  const vendorName = vendorSlugMap.get(slug);
+  if (!vendorName) return null;
+  const vendorOffers = offers.filter(o => toSlug(o.vendor) === slug);
+  if (vendorOffers.length === 0) return null;
+
+  const { status, label: statusLabel } = getBadgeStatus(slug);
+  const vendorChanges = dealChanges
+    .filter(c => toSlug(c.vendor) === slug)
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 3);
+
+  const statusColor = status === "removed" ? "var(--badge-removed)" : status === "at-risk" ? "var(--badge-reduced)" : "var(--badge-increased)";
+
+  const offersHtml = vendorOffers.map(o => `<div style="padding:8px 0;border-bottom:1px solid var(--border)">
+    <div style="font-weight:600;font-size:13px">${escHtmlServer(o.category)}</div>
+    <div style="font-size:12px;color:var(--text-m);margin-top:2px">${escHtmlServer(o.tier)}</div>
+    <div style="font-size:11px;color:var(--text-m);margin-top:2px">${escHtmlServer(o.description)}</div>
+  </div>`).join("");
+
+  const changesHtml = vendorChanges.length > 0 ? `<div style="margin-top:12px">
+    <div style="font-weight:600;font-size:13px;margin-bottom:6px">Recent Changes</div>
+    ${vendorChanges.map(c => {
+      const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+      return `<div style="padding:4px 0;font-size:12px;color:var(--text-m)">
+        <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;color:#fff;background:${badge.color}">${badge.label}</span>
+        <span style="margin-left:4px">${escHtmlServer(c.summary)}</span>
+        <span style="opacity:.6;margin-left:4px">${c.date}</span>
+      </div>`;
+    }).join("")}
+  </div>` : "";
+
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${embedBaseCss(theme)}</style></head><body>
+<div style="padding:16px;max-width:600px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+    <a href="${BASE_URL}/vendor/${slug}" target="_blank" rel="noopener" style="font-size:18px;font-weight:700;color:var(--text)">${escHtmlServer(vendorName)}</a>
+    <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;color:#fff;background:${statusColor}">${statusLabel}</span>
+  </div>
+  ${offersHtml}${changesHtml}${embedAttribution()}
+</div></body></html>`;
+}
+
+function buildEmbedCategoryWidget(slug: string, theme: "dark" | "light"): string | null {
+  const categoryName = categorySlugMap.get(slug);
+  if (!categoryName) return null;
+
+  const catOffers = offers
+    .filter(o => toSlug(o.category) === slug)
+    .slice(0, 5);
+  if (catOffers.length === 0) return null;
+
+  const rowsHtml = catOffers.map(o => {
+    const vSlug = toSlug(o.vendor);
+    const { status } = getBadgeStatus(vSlug);
+    const dot = status === "removed" ? "var(--badge-removed)" : status === "at-risk" ? "var(--badge-reduced)" : "var(--badge-increased)";
+    return `<tr>
+      <td style="padding:8px;border-bottom:1px solid var(--border)"><a href="${BASE_URL}/vendor/${vSlug}" target="_blank" rel="noopener" style="font-weight:600;font-size:13px">${escHtmlServer(o.vendor)}</a></td>
+      <td style="padding:8px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text-m)">${escHtmlServer(o.tier)}</td>
+      <td style="padding:8px;border-bottom:1px solid var(--border);text-align:center"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot}" title="${status}"></span></td>
+    </tr>`;
+  }).join("");
+
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${embedBaseCss(theme)}table{width:100%;border-collapse:collapse}th{text-align:left;padding:8px;border-bottom:2px solid var(--border);font-size:12px;color:var(--text-m);text-transform:uppercase;letter-spacing:.05em}</style></head><body>
+<div style="padding:16px;max-width:600px">
+  <div style="margin-bottom:12px"><a href="${BASE_URL}/category/${slug}" target="_blank" rel="noopener" style="font-size:16px;font-weight:700;color:var(--text)">Top 5 Free ${escHtmlServer(categoryName)} Tools</a></div>
+  <table><thead><tr><th>Vendor</th><th>Free Tier</th><th>Status</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+  ${embedAttribution()}
+</div></body></html>`;
+}
+
+function buildEmbedChangesWidget(theme: "dark" | "light"): string {
+  const recent = [...dealChanges]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 10);
+
+  const itemsHtml = recent.map(c => {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const vSlug = toSlug(c.vendor);
+    return `<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px">
+      <span style="flex-shrink:0;display:inline-block;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;color:#fff;background:${badge.color};margin-top:2px">${badge.label}</span>
+      <div>
+        <a href="${BASE_URL}/vendor/${vSlug}" target="_blank" rel="noopener" style="font-weight:600;font-size:13px">${escHtmlServer(c.vendor)}</a>
+        <div style="font-size:12px;color:var(--text-m);margin-top:1px">${escHtmlServer(c.summary)}</div>
+        <div style="font-size:11px;color:var(--text-m);opacity:.6;margin-top:1px">${c.date}</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${embedBaseCss(theme)}</style></head><body>
+<div style="padding:16px;max-width:600px">
+  <div style="margin-bottom:12px"><a href="${BASE_URL}/pricing-changes" target="_blank" rel="noopener" style="font-size:16px;font-weight:700;color:var(--text)">Recent Pricing Changes</a></div>
+  ${itemsHtml}${embedAttribution()}
+</div></body></html>`;
+}
+
+function buildEmbedDocsPage(): string {
+  const previewVendor = "vercel";
+  const previewCategory = "databases";
+  const previewVendorName = vendorSlugMap.get(previewVendor) ?? "Vercel";
+  const previewCategoryName = categorySlugMap.get(previewCategory) ?? "Databases";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Embeddable Pricing Widgets — Free Tier Comparison Widgets | AgentDeals</title>
+  <meta name="description" content="Embed free tier pricing comparisons on your site. Vendor cards, category tables, and pricing change feeds — copy-paste iframe widgets with attribution backlinks.">
+  <link rel="canonical" href="${BASE_URL}/embed">
+  <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="${BASE_URL}/feed.xml">
+  <meta property="og:title" content="Embeddable Pricing Widgets — AgentDeals">
+  <meta property="og:description" content="Embed free tier pricing data on your blog or docs. Vendor cards, category tables, and change feeds.">
+  <meta property="og:url" content="${BASE_URL}/embed">
+  <meta property="og:type" content="website">
+  ${OG_IMAGE_META}
+  ${GOOGLE_VERIFICATION_META}
+  <script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Embeddable Pricing Widgets",
+    "description": "Embed free tier pricing comparisons on your site with copy-paste iframe widgets.",
+    "url": `${BASE_URL}/embed`,
+    "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+  })}</script>
+  <style>
+    :root{--bg:#0f172a;--bg-elevated:#1e293b;--text:#f1f5f9;--text-muted:#94a3b8;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:"Georgia","Times New Roman",serif;--mono:"SFMono-Regular",Consolas,monospace}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    .container{max-width:960px;margin:0 auto;padding:1.5rem}
+    ${globalNavCss()}
+    h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem}
+    h2{font-family:var(--serif);font-size:1.4rem;margin:2.5rem 0 .75rem;color:var(--text)}
+    h3{font-family:var(--serif);font-size:1.1rem;margin:1.5rem 0 .5rem;color:var(--text)}
+    p{color:var(--text-muted);margin:.5rem 0;font-size:.9rem}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:1.5rem}
+    .widget-section{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0}
+    .widget-preview{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:1rem 0;background:var(--bg)}
+    .widget-preview iframe{border:none;width:100%;display:block}
+    .embed-code-block{position:relative;background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;font-family:var(--mono);font-size:.8rem;color:#c9d1d9;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:.75rem 0;cursor:pointer}
+    .embed-code-block:hover{border-color:var(--accent)}
+    .embed-code-block .copy-btn{position:absolute;top:.5rem;right:.5rem;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted);padding:.2rem .5rem;border-radius:4px;cursor:pointer;font-size:.7rem;font-family:-apple-system,sans-serif;transition:all .15s}
+    .embed-code-block .copy-btn:hover{color:var(--text);border-color:var(--text-muted)}
+    .embed-code-block .copy-btn.copied{color:var(--accent);border-color:var(--accent)}
+    .theme-tabs{display:flex;gap:.25rem;margin:.75rem 0}
+    .theme-tab{font-size:.75rem;padding:.3rem .6rem;border-radius:4px;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer}
+    .theme-tab.active{background:var(--accent-glow);color:var(--accent);border-color:var(--accent)}
+    .customization{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0}
+    .customization table{width:100%;border-collapse:collapse;font-size:.85rem}
+    .customization th{text-align:left;padding:.5rem;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+    .customization td{padding:.5rem;border-bottom:1px solid var(--border)}
+    .customization code{background:#0d1117;padding:.15rem .4rem;border-radius:4px;font-size:.75rem;color:#c9d1d9}
+    .how-to{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0}
+    .how-to ol{padding-left:1.5rem;color:var(--text-muted);font-size:.9rem}
+    .how-to li{margin:.5rem 0}
+    .how-to code{background:#0d1117;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;color:#c9d1d9}
+    ${mcpCtaCss()}
+    @media(max-width:768px){h1{font-size:1.5rem}.widget-section{padding:1rem}}
+  </style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("embed" as NavSection)}
+  <h1>Embeddable Pricing Widgets</h1>
+  <p class="subtitle">Embed free tier pricing data on your blog, docs, or README. Copy-paste an iframe and get live data with attribution backlinks.</p>
+
+  <div class="how-to">
+    <h3>How It Works</h3>
+    <ol>
+      <li>Choose a widget type below</li>
+      <li>Copy the embed code</li>
+      <li>Paste the <code>&lt;iframe&gt;</code> into your HTML</li>
+      <li>The widget loads independently with no external JS dependencies</li>
+    </ol>
+    <p style="margin-top:.75rem;font-size:.85rem">All widgets include a small "Powered by AgentDeals" attribution link. Widgets are responsive and work at 300px&ndash;800px width.</p>
+  </div>
+
+  <h2>1. Vendor Pricing Card</h2>
+  <p>Show a single vendor's free tier details, status, and recent pricing changes.</p>
+  <div class="widget-section">
+    <h3>Preview &mdash; ${escHtmlServer(previewVendorName)}</h3>
+    <div class="widget-preview"><iframe src="/embed/vendor/${previewVendor}?theme=dark" height="300" loading="lazy"></iframe></div>
+    <div class="embed-code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button>&lt;iframe src="${BASE_URL}/embed/vendor/${previewVendor}" width="100%" height="300" frameborder="0" loading="lazy"&gt;&lt;/iframe&gt;</div>
+    <p style="font-size:.8rem;color:var(--text-muted)">Replace <code>${previewVendor}</code> with any vendor slug. Browse <a href="/vendor">all vendors</a> to find slugs.</p>
+  </div>
+
+  <h2>2. Category Comparison Table</h2>
+  <p>Mini table comparing the top 5 free tiers in a category.</p>
+  <div class="widget-section">
+    <h3>Preview &mdash; ${escHtmlServer(previewCategoryName)}</h3>
+    <div class="widget-preview"><iframe src="/embed/category/${previewCategory}?theme=dark" height="320" loading="lazy"></iframe></div>
+    <div class="embed-code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button>&lt;iframe src="${BASE_URL}/embed/category/${previewCategory}" width="100%" height="320" frameborder="0" loading="lazy"&gt;&lt;/iframe&gt;</div>
+    <p style="font-size:.8rem;color:var(--text-muted)">Replace <code>${previewCategory}</code> with any category slug. Browse <a href="/category">all categories</a> to find slugs.</p>
+  </div>
+
+  <h2>3. Deal Change Ticker</h2>
+  <p>Scrolling feed of the 10 most recent pricing changes across all vendors.</p>
+  <div class="widget-section">
+    <h3>Preview</h3>
+    <div class="widget-preview"><iframe src="/embed/changes?theme=dark" height="400" loading="lazy"></iframe></div>
+    <div class="embed-code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button>&lt;iframe src="${BASE_URL}/embed/changes" width="100%" height="400" frameborder="0" loading="lazy"&gt;&lt;/iframe&gt;</div>
+  </div>
+
+  <h2>Customization</h2>
+  <div class="customization">
+    <table>
+      <thead><tr><th>Parameter</th><th>Values</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>theme</code></td><td><code>dark</code>, <code>light</code></td><td><code>dark</code></td><td>Color theme to match your site</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:.75rem;font-size:.85rem">Add <code>?theme=light</code> to any embed URL for a light-themed widget.</p>
+  </div>
+
+  <h2>All Available Widgets</h2>
+  <div class="customization">
+    <table>
+      <thead><tr><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>/embed/vendor/:slug</code></td><td>Vendor pricing card &mdash; free tier summary, status, recent changes</td></tr>
+        <tr><td><code>/embed/category/:slug</code></td><td>Category comparison table &mdash; top 5 vendors in a category</td></tr>
+        <tr><td><code>/embed/changes</code></td><td>Deal change ticker &mdash; 10 most recent pricing changes</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  ${buildMcpCta("Access this pricing data programmatically via MCP tools — search vendors, compare free tiers, and track changes from your AI editor.")}
+</div>
+<script>
+${mcpCtaScript()}
+function copyCode(btn){var block=btn.parentElement;var text=block.textContent.replace(/^Copy/,"").trim();navigator.clipboard.writeText(text).then(function(){btn.textContent="Copied!";btn.classList.add("copied");setTimeout(function(){btn.textContent="Copy";btn.classList.remove("copied")},2000)})}
+</script>
+</body></html>`;
+}
+
 function buildDeveloperHubPage(): string {
   const endpointTable = [
     { method: "GET", path: "/api/offers", desc: "Search and browse offers", params: "q, category, limit, offset" },
@@ -45124,6 +45378,12 @@ ${catList}
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/embed</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/agent-stack</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -45911,6 +46171,43 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/badges", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildBadgesPage());
+  } else if (url.pathname === "/embed" && isGetOrHead) {
+    recordApiHit("/embed");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/embed", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildEmbedDocsPage());
+  } else if (url.pathname.startsWith("/embed/vendor/") && isGetOrHead) {
+    const slug = url.pathname.slice("/embed/vendor/".length).replace(/\/$/, "");
+    const theme = (url.searchParams.get("theme") === "light" ? "light" : "dark") as "dark" | "light";
+    const html = buildEmbedVendorWidget(slug, theme);
+    if (html) {
+      recordApiHit("/embed/vendor/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/embed/vendor/${slug}`, params: { theme }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600", ...EMBED_CORS_HEADERS });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json", ...EMBED_CORS_HEADERS });
+      res.end(JSON.stringify({ error: "Vendor not found" }));
+    }
+  } else if (url.pathname.startsWith("/embed/category/") && isGetOrHead) {
+    const slug = url.pathname.slice("/embed/category/".length).replace(/\/$/, "");
+    const theme = (url.searchParams.get("theme") === "light" ? "light" : "dark") as "dark" | "light";
+    const html = buildEmbedCategoryWidget(slug, theme);
+    if (html) {
+      recordApiHit("/embed/category/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/embed/category/${slug}`, params: { theme }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600", ...EMBED_CORS_HEADERS });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json", ...EMBED_CORS_HEADERS });
+      res.end(JSON.stringify({ error: "Category not found" }));
+    }
+  } else if (url.pathname === "/embed/changes" && isGetOrHead) {
+    const theme = (url.searchParams.get("theme") === "light" ? "light" : "dark") as "dark" | "light";
+    recordApiHit("/embed/changes");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/embed/changes", params: { theme }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600", ...EMBED_CORS_HEADERS });
+    res.end(buildEmbedChangesWidget(theme));
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
