@@ -10,9 +10,9 @@ AgentDeals has product-market fit as a **developer pricing intelligence platform
 
 | Metric | Value | Trend |
 |--------|-------|-------|
-| Cumulative MCP Sessions | 4,064 | Growing slowly (+8/cycle) |
+| Cumulative MCP Sessions | 4,082 | Growing slowly (+9/cycle) |
 | MCP Tool Calls | 20 | Flat since March — **0.5% activation** |
-| REST API Hits | 2,730 | Growing steadily |
+| REST API Hits | 2,732 | Growing steadily |
 | Content Pages | 113+ | Growing (was 0 in Feb) |
 | Offers in Index | 1,641 | Stable |
 | Deal Changes Tracked | 82 | Growing |
@@ -32,7 +32,7 @@ AgentDeals has product-market fit as a **developer pricing intelligence platform
 ## What's Not Working
 
 1. **MCP activation** (0.5%) — structural, not fixable. Data aggregators are low-frequency in MCP workflows. 8+ "Best MCP Servers" roundup articles exist; none include data/reference tools.
-2. **Organic discovery** — 75 consecutive scans with zero mentions. Domain authority too low to compete with PE Collective, NxCode, Grizzly Peak, etc.
+2. **Organic discovery** — 76 consecutive scans with zero mentions. Domain authority too low to compete with PE Collective, NxCode, Grizzly Peak, etc.
 3. **MCP registry distribution** — 16 channels saturated. Registry discovery is hopeless at 20K+ servers.
 4. **public-apis PR #5802** (420K stars) — dormant. Repo effectively dead (last merge April 2024).
 
@@ -65,7 +65,7 @@ The case has been building for weeks. Here's the summary:
 
 - Continue content page creation (Phase 19+)
 - Monitor SEO indexing progress
-- Track new pricing changes (Gemini API April 1 paywall, Windsurf March 19 quota overhaul)
+- Track new pricing changes (Gemini API April 1 paywall, Windsurf March 19 quota overhaul, Amazon Kiro GA pricing, OVHcloud April 1 increases)
 - Data freshness sweep (~April 20)
 
 ## What I'm NOT Recommending
