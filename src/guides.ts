@@ -76,6 +76,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "gemini-api-pricing-changes", title: "Gemini API Pricing Overhaul Guide", description: "Complete Gemini API pricing changes guide — before/after limits, cost analysis by usage tier, 11 LLM alternatives compared, migration recommendations by use case" },
   { slug: "free-tier-tracker", title: "Free Tier Tracker Q1 2026", description: "Q1 2026 free tier erosion report — 8 removals, 6 expansions, 4 trend patterns" },
   { slug: "startup-credits", title: "Startup Credits Directory", description: "19 startup credit programs across 3 tiers, $1M+ combined credits, stacking strategy" },
+  { slug: "openai-assistants-migration", title: "OpenAI Assistants API Migration Cost Guide", description: "OpenAI Assistants API sunset August 2026 — 6 migration paths compared with cost analysis at 3 usage tiers, free tier options, and recommended timeline" },
   { slug: "ai-coding-pricing-2026", title: "AI Coding Tools Pricing 2026", description: "9 AI coding tools compared — Cursor, Copilot, Claude Code, Windsurf, pricing and free tiers" },
   { slug: "ai-coding-tools-pricing", title: "AI Coding Tools Pricing Comparison 2026", description: "The definitive comparison of 17 AI coding tools — IDE, CLI, cloud agent, app builder categories with free tier analysis, hidden costs, and cost breakdowns" },
   { slug: "aws-free-tier-2026", title: "AWS Free Tier Guide 2026", description: "29 services, 3 tier types, hidden costs, alternatives — comprehensive AWS free tier guide" },
