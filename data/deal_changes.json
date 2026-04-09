@@ -1315,6 +1315,56 @@
         "Together AI",
         "Anthropic Claude API"
       ]
+    },
+    {
+      "vendor": "OVHcloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-01",
+      "summary": "OVHcloud raised prices 9-11% on newer infrastructure (Public Cloud, Bare Metal, VPS 2026 range) effective April 1, 2026. Free tier unchanged. Applies to 2026-range products only — legacy configurations retain previous pricing.",
+      "previous_state": "Previous pricing on Public Cloud, Bare Metal, and VPS 2026-range products",
+      "current_state": "9-11% price increase on newer infrastructure. Free tier and legacy configurations unaffected",
+      "impact": "medium",
+      "source_url": "https://www.ovhcloud.com/en/pricing/",
+      "category": "Cloud IaaS",
+      "alternatives": [
+        "Hetzner",
+        "DigitalOcean",
+        "Vultr",
+        "Linode"
+      ]
+    },
+    {
+      "vendor": "Amazon SP-API",
+      "change_type": "free_tier_removed",
+      "date": "2026-04-30",
+      "summary": "Amazon Selling Partner API (SP-API) moves to paid access starting April 30, 2026. New base fee of $1,400/year plus per-call fees. Previously free for registered developers. Major impact on Amazon marketplace integrators and third-party seller tools.",
+      "previous_state": "Free API access for registered Amazon developers with standard rate limits",
+      "current_state": "$1,400/year base fee plus per-call fees starting April 30, 2026. No free tier",
+      "impact": "high",
+      "source_url": "https://developer-docs.amazon.com/sp-api/",
+      "category": "E-Commerce",
+      "alternatives": [
+        "Shopify API",
+        "WooCommerce API",
+        "BigCommerce API"
+      ]
+    },
+    {
+      "vendor": "Amazon Kiro",
+      "change_type": "new_free_tier",
+      "date": "2026-04-09",
+      "summary": "Amazon Kiro launched GA with a free tier of 50 interactions/month. Claude-powered IDE focused on spec-driven development. Pro $20/mo (1,000 interactions), Pro+ $40/mo (2,000), Power $200/mo (10,000). Competes directly with Cursor, GitHub Copilot, and Windsurf.",
+      "previous_state": "Preview/beta with limited access",
+      "current_state": "GA with free tier (50 interactions/mo). Four paid tiers: Pro ($20), Pro+ ($40), Power ($200)",
+      "impact": "high",
+      "source_url": "https://kiro.dev/pricing",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "GitHub Copilot",
+        "Windsurf",
+        "Claude Code"
+      ]
     }
   ]
 }
