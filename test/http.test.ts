@@ -936,7 +936,7 @@ describe("HTTP transport", () => {
   it("RSS auto-discovery link present on all page types", async () => {
     proc = await startHttpServer();
     const atomLink = 'type="application/atom+xml"';
-    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/compare-tool", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers", "/stack-check", "/budget-builder"];
+    const pages = ["/", "/category", "/category/databases", "/best", "/best/free-databases", "/compare", "/compare-tool", "/vendor", "/search", "/changes", "/expiring", "/digest", "/freshness", "/setup", "/privacy", "/alternatives", "/trends", "/agent-stack", "/pricing-changes", "/badges", "/embed", "/estimate", "/stacks", "/stacks/saas-mvp", "/developers", "/stack-check", "/budget-builder"];
     for (const path of pages) {
       const response = await fetch(`http://localhost:${serverPort}${path}`);
       const html = await response.text();
@@ -5167,5 +5167,122 @@ describe("shutdown tracker page", () => {
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("Budget Stack Builder"), "Should render the page");
+  });
+
+  it("GET /embed renders embed documentation page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/embed`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("<title>Embeddable Pricing Widgets"), "Should have embed page title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("/embed"), "Should reference /embed");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Vendor Pricing Card"), "Should document vendor widget");
+    assert.ok(html.includes("Category Comparison Table"), "Should document category widget");
+    assert.ok(html.includes("Deal Change Ticker"), "Should document changes widget");
+    assert.ok(html.includes("iframe"), "Should show iframe embed codes");
+    assert.ok(html.includes("Powered by"), "Should mention attribution");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("GET /embed is in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/embed"), "Sitemap should include /embed page");
+  });
+
+  it("GET /embed/vendor/:slug returns vendor widget with CORS headers", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/embed/vendor/vercel`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const html = await response.text();
+    assert.ok(html.includes("Vercel"), "Should contain vendor name");
+    assert.ok(html.includes("Powered by"), "Should have attribution");
+    assert.ok(html.includes("AgentDeals"), "Should link back to AgentDeals");
+    assert.ok(!html.includes("global-nav"), "Should NOT have global nav (widget is standalone)");
+  });
+
+  it("GET /embed/vendor/:slug supports light theme", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/embed/vendor/vercel?theme=light`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("#ffffff"), "Light theme should use white background");
+  });
+
+  it("GET /embed/vendor/:slug returns 404 for unknown vendor", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/embed/vendor/nonexistent-vendor-xyz`);
+    assert.strictEqual(response.status, 404);
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+  });
+
+  it("GET /embed/category/:slug returns category widget with CORS headers", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/embed/category/databases`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const html = await response.text();
+    assert.ok(html.includes("Databases"), "Should contain category name");
+    assert.ok(html.includes("Top 5 Free"), "Should show top 5 heading");
+    assert.ok(html.includes("<table"), "Should contain a comparison table");
+    assert.ok(html.includes("Powered by"), "Should have attribution");
+    assert.ok(!html.includes("global-nav"), "Should NOT have global nav");
+  });
+
+  it("GET /embed/category/:slug returns 404 for unknown category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/embed/category/nonexistent-category-xyz`);
+    assert.strictEqual(response.status, 404);
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+  });
+
+  it("GET /embed/changes returns deal changes ticker with CORS headers", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/embed/changes`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const html = await response.text();
+    assert.ok(html.includes("Recent Pricing Changes"), "Should have changes heading");
+    assert.ok(html.includes("Powered by"), "Should have attribution");
+    assert.ok(!html.includes("global-nav"), "Should NOT have global nav");
+  });
+
+  it("GET /embed/changes supports light theme", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/embed/changes?theme=light`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("#ffffff"), "Light theme should use white background");
+  });
+
+  it("Embed widgets are under 50KB", async () => {
+    proc = await startHttpServer();
+
+    const endpoints = ["/embed/vendor/vercel", "/embed/category/databases", "/embed/changes"];
+    for (const endpoint of endpoints) {
+      const response = await fetch(`http://localhost:${serverPort}${endpoint}`);
+      const html = await response.text();
+      const sizeKB = Buffer.byteLength(html, "utf-8") / 1024;
+      assert.ok(sizeKB < 50, `${endpoint} should be under 50KB (was ${sizeKB.toFixed(1)}KB)`);
+    }
   });
 });
