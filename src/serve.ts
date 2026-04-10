@@ -4038,7 +4038,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     metaDesc: "GitHub Actions self-hosted runners now cost $0.002/min for private repos. Compare free CI/CD alternatives: GitLab CI, CircleCI, Buildkite, Harness, Drone CI, Google Cloud Build, and more. Verified limits.",
     contextHtml: `<p><strong>GitHub Actions</strong> introduced <strong>self-hosted runner charges ($0.002/min) for private repos on March 1, 2026</strong>. While the GitHub-hosted runner free tier (2,000 min/mo for private repos, unlimited for public) remains unchanged, teams running self-hosted runners for private repository builds now face per-minute costs.</p>
       <p>For public repositories, GitHub Actions remains the best free CI/CD option \u2014 unlimited minutes with no restrictions. But if you\u2019re running private repo pipelines on self-hosted infrastructure, these alternatives offer generous free tiers without per-minute runner fees.</p>
-      <p>Below are the best free CI/CD alternatives, compared by <strong>exact free tier limits</strong> \u2014 build minutes, concurrent jobs, storage, and platform support.</p>`,
+      <p>Below are the best free CI/CD alternatives, compared by <strong>exact free tier limits</strong> \u2014 build minutes, concurrent jobs, storage, and platform support. For the full picture, see our <a href="/ci-cd-pricing">definitive CI/CD pricing comparison</a> covering 17+ tools across general, cloud-native, mobile, and self-hosted categories.</p>`,
     tag: "github-actions-alternative",
     primaryVendor: "GitHub Actions",
     hubDesc: "Self-hosted runner costs introduced March 2026 \u2014 10 free CI/CD alternatives compared",
@@ -5293,6 +5293,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     tag: "ai-coding-tools-pricing",
     primaryVendor: "Cursor",
     hubDesc: "The definitive AI coding tools comparison — 17 tools across IDE, CLI, cloud agent, and app builder categories with free tier analysis and cost breakdowns",
+  },
+  {
+    slug: "ci-cd-pricing",
+    title: "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared",
+    metaDesc: "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. Updated April 2026.",
+    contextHtml: "",
+    tag: "ci-cd-pricing",
+    primaryVendor: "GitHub Actions",
+    hubDesc: "The definitive CI/CD pricing comparison — 17+ tools across general, cloud-native, mobile, and self-hosted categories with free tier analysis and cost breakdowns",
   },
   {
     slug: "aws-free-tier-2026",
@@ -26299,6 +26308,779 @@ function buildAiCodingToolsPricingPage(): string {
     '</body>\n</html>';
 }
 
+// --- CI/CD Pricing Comparison page ---
+
+function buildCiCdPricingPage(): string {
+  const title = "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared";
+  const metaDesc = "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. Updated April 2026.";
+  const slug = "ci-cd-pricing";
+  const pubDate = "2026-04-09";
+
+  // Pull verified data from our index
+  const cicdOffers = offers.filter(o => o.category === "CI/CD");
+
+  // Deal changes for CI/CD tools
+  const cicdVendors = ["GitHub Actions", "GitLab CI", "CircleCI", "Buildkite", "Semaphore CI", "Drone CI", "Bitbucket Pipelines", "Azure DevOps", "AWS CodeBuild", "Google Cloud Build", "Harness CI", "Codefresh", "Buddy", "Bitrise", "Codemagic", "Appcircle", "Woodpecker CI", "Travis CI", "Nx Cloud", "appveyor.com"];
+  const cicdChanges = dealChanges.filter(c =>
+    cicdVendors.includes(c.vendor)
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Tool data organized by category
+  interface CiCdTool {
+    name: string;
+    slug: string;
+    category: "general" | "cloud-native" | "mobile" | "self-hosted";
+    freeMinutes: string;
+    concurrency: string;
+    selfHosted: string;
+    paidFrom: string;
+    pricingModel: string;
+    freeDetails: string;
+    freeType: "generous" | "limited" | "oss-only" | "trial" | "none";
+    monthlyCostSmall: string;
+    monthlyCostTeam: string;
+    hiddenCosts: string;
+  }
+
+  const tools: CiCdTool[] = [
+    // General CI/CD
+    {
+      name: "GitHub Actions",
+      slug: "github-actions",
+      category: "general",
+      freeMinutes: "2,000 min/mo (private)",
+      concurrency: "20 concurrent jobs",
+      selfHosted: "Free (private: $0.002/min)",
+      paidFrom: "$4/seat (Team)",
+      pricingModel: "Per-seat + usage",
+      freeDetails: "Unlimited minutes for public repos. Private repos: 2,000 min/mo on GitHub-hosted runners, 500 MB artifact storage, 10 GB cache. Self-hosted runners are free for public repos; private repos pay $0.002/min for managed self-hosted runners (introduced March 2026). By far the most popular CI/CD platform for open-source.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$4/seat + overages",
+      hiddenCosts: "Linux minutes are 1x, macOS minutes are 10x, Windows are 2x. A 2,000-minute budget on macOS is really 200 minutes. Self-hosted runner per-minute fees add up at scale.",
+    },
+    {
+      name: "GitLab CI",
+      slug: "gitlab-ci",
+      category: "general",
+      freeMinutes: "400 min/mo",
+      concurrency: "Unlimited (limited by runners)",
+      selfHosted: "Free (unlimited)",
+      paidFrom: "$29/user/mo (Premium)",
+      pricingModel: "Per-user",
+      freeDetails: "400 compute minutes/month on shared runners, 10 GiB storage, 5 users, built-in container registry (5 GB), security scanning (SAST, dependency scanning). Self-hosted runners are completely free with no per-minute fees. New accounts limited to 3 top-level groups.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$29/user",
+      hiddenCosts: "400 minutes runs out fast on multi-stage pipelines. Premium ($29/user) adds merge request approvals, code owners, and more runners. Storage overage charges apply beyond 10 GiB.",
+    },
+    {
+      name: "CircleCI",
+      slug: "circleci",
+      category: "general",
+      freeMinutes: "6,000 min/mo",
+      concurrency: "30 concurrent jobs",
+      selfHosted: "Paid only",
+      paidFrom: "$15/seat (Performance)",
+      pricingModel: "Credit-based",
+      freeDetails: "30,000 credits/month (up to 6,000 build minutes on small Docker), 5 users, 30x concurrency, no credit card required. Credits consumed at different rates by resource class: small Docker is 5 credits/min, medium is 10, large is 20. Free plan includes parallelism and test splitting.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$15/seat + credits",
+      hiddenCosts: "Credit consumption varies dramatically by resource class. macOS builds cost 100 credits/min (20x Linux). GPU and Arm builds consume credits at premium rates. Self-hosted runners only on paid plans.",
+    },
+    {
+      name: "Buildkite",
+      slug: "buildkite",
+      category: "general",
+      freeMinutes: "500 hosted min/mo",
+      concurrency: "3 concurrent jobs",
+      selfHosted: "Free (unlimited)",
+      paidFrom: "$15/user/mo (Teams)",
+      pricingModel: "Per-user",
+      freeDetails: "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Unlimited self-hosted agents at no cost on all plans. Free for open-source projects (unlimited everything). Test analytics included.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$15/user",
+      hiddenCosts: "500 hosted minutes is tight. The real value is unlimited self-hosted agents — but you pay for your own infrastructure. Enterprise features (SSO, audit logs) require custom pricing.",
+    },
+    {
+      name: "Semaphore CI",
+      slug: "semaphore-ci",
+      category: "general",
+      freeMinutes: "Self-hosted only",
+      concurrency: "Unlimited (self-hosted)",
+      selfHosted: "Free (Community)",
+      paidFrom: "$25/user/mo (Startup)",
+      pricingModel: "Per-user + usage",
+      freeDetails: "Community plan is self-hosted only — free for small teams. Cloud-hosted plans start at $25/user/month (Startup). Known for fast build times with optimized caching and auto-scaling. Supports Docker, iOS, Android, and monorepo pipelines.",
+      freeType: "oss-only",
+      monthlyCostSmall: "$0 (self-hosted)",
+      monthlyCostTeam: "$25/user",
+      hiddenCosts: "No free cloud-hosted tier. Self-hosted Community plan lacks some features (role-based access, audit logs). Cloud plans charge per-minute on top of per-user fees.",
+    },
+    {
+      name: "Harness CI",
+      slug: "harness-ci",
+      category: "general",
+      freeMinutes: "2,000 min/mo",
+      concurrency: "Varies",
+      selfHosted: "Free (unlimited)",
+      paidFrom: "$25/dev/mo",
+      pricingModel: "Per-developer",
+      freeDetails: "2,000 free build minutes/month on Harness Cloud, unlimited self-hosted runners. Includes built-in test intelligence (ML-based test selection), caching, and parallelism. Free plan supports up to 5 developers. Part of the broader Harness DevOps platform.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$25/dev",
+      hiddenCosts: "The CI module is part of Harness platform — upsell to CD, feature flags, chaos engineering, etc. Test intelligence is a genuine differentiator but requires Harness-managed runners.",
+    },
+    {
+      name: "Buddy",
+      slug: "buddy",
+      category: "general",
+      freeMinutes: "120 min/mo",
+      concurrency: "1 concurrent",
+      selfHosted: "Paid only",
+      paidFrom: "$35/mo (Pro)",
+      pricingModel: "Per-pipeline",
+      freeDetails: "120 build minutes/month, 5 projects, 1 concurrent pipeline, 500 MB cache. Visual pipeline builder with drag-and-drop actions. Supports 100+ pre-configured actions. Free plan includes all integrations but limits execution time.",
+      freeType: "limited",
+      monthlyCostSmall: "$35",
+      monthlyCostTeam: "$35+ (per pipeline)",
+      hiddenCosts: "120 minutes is extremely limited. Pro plan at $35/mo is per-workspace, not per-user, which can be cost-effective for small teams but expensive at scale.",
+    },
+    {
+      name: "Codefresh",
+      slug: "codefresh",
+      category: "general",
+      freeMinutes: "1,200 min/mo",
+      concurrency: "1 concurrent",
+      selfHosted: "Paid only",
+      paidFrom: "Custom pricing",
+      pricingModel: "Per-user",
+      freeDetails: "1,200 build minutes/month, 1 concurrent build, 1 user. Kubernetes-native CI/CD — every build runs in a Docker container. Includes built-in Docker registry (500 MB), Helm dashboard, and GitOps support. Strong for container-based workflows.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "Custom",
+      hiddenCosts: "Free plan limited to 1 user. Kubernetes-native approach is powerful but has a learning curve. Enterprise pricing is opaque — requires sales call.",
+    },
+    // Cloud-native CI/CD
+    {
+      name: "AWS CodeBuild",
+      slug: "aws",
+      category: "cloud-native",
+      freeMinutes: "100 min/mo",
+      concurrency: "20+ concurrent",
+      selfHosted: "N/A (managed)",
+      paidFrom: "$0.005/min (general1.small)",
+      pricingModel: "Per-minute",
+      freeDetails: "100 build minutes/month on general1.small (Always Free). Pay-per-minute after that. Integrates with CodePipeline, CodeCommit, and all AWS services. Supports custom Docker images, caching to S3, and batch builds. No server management.",
+      freeType: "limited",
+      monthlyCostSmall: "$0\u201310",
+      monthlyCostTeam: "$20\u2013100+",
+      hiddenCosts: "100 free minutes is on the smallest instance (3 GB RAM, 2 vCPU). Larger instances cost 2\u20138x more per minute. Data transfer and S3 cache storage add to costs. CodePipeline charges separately ($1/pipeline/month).",
+    },
+    {
+      name: "Google Cloud Build",
+      slug: "google-cloud-build",
+      category: "cloud-native",
+      freeMinutes: "120 min/day",
+      concurrency: "10+ concurrent",
+      selfHosted: "N/A (managed)",
+      paidFrom: "$0.003/min (e2-medium)",
+      pricingModel: "Per-minute",
+      freeDetails: "120 build minutes/day (~3,600 min/month) on e2-medium (Always Free). By far the most generous cloud-native CI/CD free tier. Supports Docker, custom builders, and Cloud Deploy. Triggers from GitHub, Bitbucket, and Cloud Source Repos.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u201350",
+      hiddenCosts: "Free tier is genuinely generous at 120 min/day. But: Artifact Registry storage, Cloud Deploy, and network egress are charged separately. Larger machine types (e2-highcpu, custom) cost significantly more per minute.",
+    },
+    {
+      name: "Azure DevOps",
+      slug: "azure-devops",
+      category: "cloud-native",
+      freeMinutes: "1,800 min/mo",
+      concurrency: "1 parallel job",
+      selfHosted: "Free (1 agent, unlimited min)",
+      paidFrom: "$40/parallel job/mo",
+      pricingModel: "Per-parallel-job",
+      freeDetails: "1,800 minutes/month on Microsoft-hosted agents (1 parallel job), unlimited self-hosted agent minutes (1 free parallel job). Includes Azure Repos (unlimited private repos), Azure Boards, Azure Test Plans (basic). Up to 5 free users with Basic access.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$40/parallel job",
+      hiddenCosts: "1 parallel job means builds queue. Each additional parallel job is $40/month for hosted, $15/month for self-hosted. Visual Studio Enterprise subscribers get included CI/CD. Microsoft-hosted agents have limited disk/RAM.",
+    },
+    {
+      name: "Bitbucket Pipelines",
+      slug: "bitbucket-pipelines",
+      category: "cloud-native",
+      freeMinutes: "50 min/mo",
+      concurrency: "1 concurrent",
+      selfHosted: "Paid only (runners)",
+      paidFrom: "$15/user/mo (Standard)",
+      pricingModel: "Per-user + minutes",
+      freeDetails: "50 build minutes/month, 1 GB Git LFS, 5 users on free plan. Built into Bitbucket — no separate CI service to configure. Supports Docker, caching, and deployment environments. Integrates with Jira for deployment tracking.",
+      freeType: "limited",
+      monthlyCostSmall: "$15/user",
+      monthlyCostTeam: "$15/user + overages",
+      hiddenCosts: "50 minutes is extremely stingy — barely enough for a few builds. Standard plan ($15/user) includes 2,500 minutes. Self-hosted runners require Standard plan or higher. Additional minutes: $10/1,000 min.",
+    },
+    // Mobile CI/CD
+    {
+      name: "Bitrise",
+      slug: "bitrise",
+      category: "mobile",
+      freeMinutes: "300 min/mo",
+      concurrency: "1 concurrent",
+      selfHosted: "Paid only",
+      paidFrom: "$89/mo (Velocity)",
+      pricingModel: "Per-seat + minutes",
+      freeDetails: "300 build minutes/month on standard macOS VMs, 1 concurrent build, unlimited team members. Mobile-first CI/CD with 300+ pre-built integrations (Xcode, Gradle, Fastlane, CocoaPods). Visual workflow editor. iOS and Android builds on Apple Silicon (M1/M2) available on paid plans.",
+      freeType: "limited",
+      monthlyCostSmall: "$0\u201389",
+      monthlyCostTeam: "$89+",
+      hiddenCosts: "300 minutes on standard VMs. iOS builds are slow on non-Apple-Silicon runners (free tier). Velocity plan at $89/mo gets Apple Silicon and more minutes. Enterprise required for large teams.",
+    },
+    {
+      name: "Codemagic",
+      slug: "codemagic",
+      category: "mobile",
+      freeMinutes: "500 min/mo",
+      concurrency: "1 concurrent",
+      selfHosted: "N/A (managed)",
+      paidFrom: "$49/seat/mo (Pay-as-you-go)",
+      pricingModel: "Per-minute",
+      freeDetails: "500 build minutes/month on macOS standard VMs, 1 concurrent build. Optimized for Flutter, React Native, native iOS/Android, and Unity. Free plan includes Apple Silicon M2 builds. Automatic code signing and App Store/Play Store publishing.",
+      freeType: "limited",
+      monthlyCostSmall: "$0\u201349",
+      monthlyCostTeam: "$49/seat",
+      hiddenCosts: "500 minutes is reasonable for mobile. Pay-as-you-go charges per minute after free tier. macOS M2 Pro instances cost more per minute. Concurrent build limits can slow teams.",
+    },
+    {
+      name: "Appcircle",
+      slug: "appcircle",
+      category: "mobile",
+      freeMinutes: "300 min/mo",
+      concurrency: "1 concurrent",
+      selfHosted: "Enterprise only",
+      paidFrom: "$49/mo (Professional)",
+      pricingModel: "Per-plan",
+      freeDetails: "300 build minutes/month, 1 concurrent build, 2 build profiles. Mobile CI/CD with built-in distribution portal, Enterprise App Store, and in-app update support. Supports iOS (Xcode), Android (Gradle), React Native, and Flutter.",
+      freeType: "limited",
+      monthlyCostSmall: "$0\u201349",
+      monthlyCostTeam: "$49+ (Pro)",
+      hiddenCosts: "300 minutes is tight for iOS builds. Professional at $49/mo adds more minutes and concurrent builds. Self-hosted runners only on Enterprise tier. Testing distribution portal is a nice differentiator.",
+    },
+    // Self-hosted / OSS
+    {
+      name: "Jenkins",
+      slug: "jenkins",
+      category: "self-hosted",
+      freeMinutes: "Unlimited (self-hosted)",
+      concurrency: "Unlimited",
+      selfHosted: "100% self-hosted",
+      paidFrom: "$0 (OSS)",
+      pricingModel: "Free OSS",
+      freeDetails: "100% free and open-source (MIT license). The original CI/CD server — 1,800+ plugins, massive ecosystem. Runs on any infrastructure you provide. Pipeline as Code via Jenkinsfile. Requires server administration, plugin management, and security updates. No hosted option.",
+      freeType: "generous",
+      monthlyCostSmall: "$0 + infra",
+      monthlyCostTeam: "$0 + infra",
+      hiddenCosts: "The software is free but infrastructure and maintenance are not. A basic Jenkins server costs $20\u2013100/month in cloud hosting. Plugin compatibility issues, security patches, and upgrade pain are real operational costs. CloudBees offers commercial support.",
+    },
+    {
+      name: "Drone CI",
+      slug: "drone-ci",
+      category: "self-hosted",
+      freeMinutes: "Unlimited (self-hosted)",
+      concurrency: "Unlimited",
+      selfHosted: "100% self-hosted",
+      paidFrom: "$0 (Community)",
+      pricingModel: "Free community",
+      freeDetails: "Free Community edition (self-hosted). Container-native — every pipeline step runs in an isolated Docker container. Simple YAML configuration. Minimal resource footprint. Supports Linux, Windows, macOS, and Arm runners. Lightweight alternative to Jenkins.",
+      freeType: "oss-only",
+      monthlyCostSmall: "$0 + infra",
+      monthlyCostTeam: "$0 + infra",
+      hiddenCosts: "Community edition is single-machine. Enterprise features (autoscaling, high availability, advanced secrets) require Drone Enterprise license. Harness acquired Drone in 2020 — future unclear, but community edition remains available.",
+    },
+    {
+      name: "Woodpecker CI",
+      slug: "woodpecker-ci",
+      category: "self-hosted",
+      freeMinutes: "Unlimited (self-hosted)",
+      concurrency: "Unlimited",
+      selfHosted: "100% self-hosted",
+      paidFrom: "$0 (OSS)",
+      pricingModel: "Free OSS",
+      freeDetails: "100% free and open-source (Apache 2.0). Community fork of Drone CI with active development. Container-native with simple YAML pipelines. Supports Gitea, GitHub, GitLab, Bitbucket, and Forgejo. Minimal resource requirements. Growing community.",
+      freeType: "generous",
+      monthlyCostSmall: "$0 + infra",
+      monthlyCostTeam: "$0 + infra",
+      hiddenCosts: "Smaller ecosystem than Jenkins or Drone. Self-hosted only — no managed option. Plugin ecosystem is growing but smaller than Drone's. Community-driven with no commercial backing.",
+    },
+  ];
+
+  const categoryLabels: Record<string, string> = {
+    "general": "General CI/CD Platforms",
+    "cloud-native": "Cloud-Native CI/CD",
+    "mobile": "Mobile CI/CD",
+    "self-hosted": "Self-Hosted / Open Source",
+  };
+
+  const categoryDescs: Record<string, string> = {
+    "general": "Full-featured CI/CD platforms that work with any codebase. Most offer both cloud-hosted and self-hosted runner options.",
+    "cloud-native": "CI/CD services built into major cloud platforms. Best when you are already invested in that cloud ecosystem.",
+    "mobile": "Specialized for iOS and Android builds. Provide macOS runners, code signing, and app store publishing out of the box.",
+    "self-hosted": "Run on your own infrastructure at zero software cost. You manage servers, updates, and scaling.",
+  };
+
+  const freeTypeLabels: Record<string, string> = {
+    "generous": "Generous free tier",
+    "limited": "Limited free tier",
+    "oss-only": "Self-hosted / OSS only",
+    "trial": "Trial only",
+    "none": "No free tier",
+  };
+
+  const freeTypeColors: Record<string, string> = {
+    "generous": "#3fb950",
+    "limited": "#d29922",
+    "oss-only": "#58a6ff",
+    "trial": "#bc8cff",
+    "none": "#f85149",
+  };
+
+  // Summary stats
+  const freeCount = tools.filter(t => t.freeType === "generous" || t.freeType === "oss-only").length;
+  const limitedCount = tools.filter(t => t.freeType === "limited").length;
+
+  // Pricing table rows
+  const pricingTableRows = tools.map(t => {
+    const freeColor = freeTypeColors[t.freeType] || "var(--text-muted)";
+    return '<tr>' +
+      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(t.freeMinutes) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.concurrency) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.selfHosted) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.paidFrom) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.pricingModel) + '</td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  // Category sections
+  const categories: Array<"general" | "cloud-native" | "mobile" | "self-hosted"> = ["general", "cloud-native", "mobile", "self-hosted"];
+  const categorySections = categories.map(cat => {
+    const catTools = tools.filter(t => t.category === cat);
+    const cards = catTools.map(t => {
+      const borderColor = freeTypeColors[t.freeType] || "var(--accent)";
+      return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
+        '<h3><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a> ' +
+        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[t.freeType]) + '</span></h3>' +
+        '<p class="diff-desc">' + escHtmlServer(t.freeDetails) + '</p>' +
+        '</div>';
+    }).join("\n    ");
+    return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
+      '<p class="section-intro">' + escHtmlServer(categoryDescs[cat]) + '</p>' +
+      cards;
+  }).join("\n\n  ");
+
+  // Cost comparison table
+  const costRows = tools.map(t => {
+    return '<tr>' +
+      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostSmall) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostTeam) + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(t.hiddenCosts.substring(0, 80)) + (t.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  // Change timeline
+  const changeTimelineRows = cicdChanges.map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return '<tr>' +
+      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
+      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["ci-cd-alternatives", "cicd-free-tier-comparison-2026", "github-actions-alternatives", "free-devops-stack", "free-tier-risk", "testing-free-tier-comparison-2026"].includes(p.slug)
+  );
+
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
+    about: tools.map(t => ({ "@type": "SoftwareApplication", name: t.name })),
+  };
+
+  // FAQ structured data
+  const faqEntries = [
+    { q: "Which CI/CD tool has the best free tier?", a: "Google Cloud Build offers 120 build minutes/day (~3,600/month) on e2-medium instances for free. GitHub Actions offers unlimited minutes for public repos and 2,000 min/month for private repos. For self-hosted, Jenkins and Woodpecker CI are 100% free with no limits." },
+    { q: "Is Jenkins really free?", a: "Yes, Jenkins is 100% free and open-source (MIT license). The software costs nothing. However, you need to provide and maintain your own servers, which typically costs $20-100/month in cloud hosting. You also handle security patches, plugin updates, and scaling." },
+    { q: "How do CI/CD pricing models differ?", a: "There are four main models: per-seat (GitLab, Buildkite), per-minute/credit (CircleCI, AWS CodeBuild, Google Cloud Build), per-parallel-job (Azure DevOps), and per-pipeline (Buddy). Per-seat is predictable but penalizes large teams. Per-minute rewards fast builds but can spike. Per-parallel-job charges for concurrency." },
+    { q: "GitHub Actions vs GitLab CI — which is cheaper?", a: "For open-source: GitHub Actions (unlimited free minutes). For small private projects: both are effectively free (GitHub: 2,000 min, GitLab: 400 min + free self-hosted runners). For teams: GitLab Premium is $29/user/month, GitHub Team is $4/user/month but with limited CI minutes. GitLab includes more DevOps features (registry, security scanning) in its price." },
+    { q: "What is the cheapest CI/CD for mobile apps?", a: "Codemagic offers 500 free minutes/month with Apple Silicon (M2) builds included on the free tier. Bitrise offers 300 free minutes. For maximum savings, use GitHub Actions with self-hosted macOS runners — the CI/CD is free, you just pay for the Mac hardware or cloud Mac rental." },
+    { q: "How many build minutes do I need per month?", a: "A solo developer on a small project: 200-500 min/month. A small team (5 devs) with moderate CI: 2,000-5,000 min/month. An active team with comprehensive testing: 5,000-20,000 min/month. Mobile builds (especially iOS) consume 2-5x more minutes than web/backend builds." },
+    { q: "Should I use self-hosted CI/CD runners?", a: "Self-hosted runners make sense when: you need custom hardware (GPUs, Apple Silicon), your builds need access to internal resources, you want to avoid per-minute charges at scale, or you have strict data residency requirements. The trade-off is maintenance overhead — you handle updates, security, and scaling." },
+    { q: "Which CI/CD tools support Docker and Kubernetes natively?", a: "CircleCI, Codefresh, and Drone CI are container-native — every build step runs in Docker. Google Cloud Build uses containerized build steps. Buildkite supports Docker and Kubernetes agents. GitLab CI has strong Kubernetes integration with Auto DevOps." },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqEntries.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+    '<meta charset="utf-8">\n' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+    '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
+    '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="og:title" content="' + escHtmlServer(title) + '">\n' +
+    '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<meta property="og:type" content="article">\n' +
+    '<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="article:published_time" content="' + pubDate + '">\n' +
+    OG_IMAGE_META + GOOGLE_VERIFICATION_META +
+    '<link rel="icon" type="image/png" href="/favicon.png">\n' +
+    '<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n' +
+    '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n' +
+    '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n' +
+    '<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n' +
+    '<style>\n' +
+    '*{margin:0;padding:0;box-sizing:border-box}\n' +
+    ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n' +
+    'body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n' +
+    'a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n' +
+    '.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n' +
+    '.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n' +
+    '.breadcrumb a{color:var(--text-muted)}\n' +
+    'h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\n' +
+    'h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\n' +
+    'h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n' +
+    '.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n' +
+    '.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n' +
+    '.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n' +
+    '.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n' +
+    '.stat-number.green{color:#3fb950}\n' +
+    '.stat-number.yellow{color:#d29922}\n' +
+    '.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n' +
+    '.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n' +
+    '.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n' +
+    '.executive-summary p:last-child{margin-bottom:0}\n' +
+    '.executive-summary strong{color:var(--text)}\n' +
+    '.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n' +
+    '.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n' +
+    '.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n' +
+    '.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n' +
+    '.pricing-table tr:hover{background:var(--accent-glow)}\n' +
+    '.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n' +
+    '.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    '.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.context-box strong{color:var(--text)}\n' +
+    '.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n' +
+    '.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n' +
+    '.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n' +
+    '.verdict-item strong{color:var(--text)}\n' +
+    '.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n' +
+    '.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.methodology strong{color:var(--text)}\n' +
+    '.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n' +
+    '.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n' +
+    '.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n' +
+    '.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n' +
+    '.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n' +
+    '.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}\n' +
+    '.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n' +
+    '.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n' +
+    '.toc ol{padding-left:1.25rem;margin:0}\n' +
+    '.toc li{margin-bottom:.35rem;font-size:.9rem}\n' +
+    '.toc a{color:var(--accent)}\n' +
+    '.hidden-cost-card{padding:1rem 1.25rem;border:1px solid var(--border);border-left:3px solid #f85149;border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.hidden-cost-card h4{margin:0 0 .25rem;font-size:.95rem;color:var(--text)}\n' +
+    '.hidden-cost-card p{color:var(--text-muted);font-size:.85rem;line-height:1.5;margin:0}\n' +
+    '.faq-item{border-bottom:1px solid var(--border);padding:1rem 0}\n' +
+    '.faq-item:last-child{border-bottom:none}\n' +
+    '.faq-q{font-weight:600;color:var(--text);font-size:.95rem;margin-bottom:.5rem}\n' +
+    '.faq-a{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n' +
+    'footer a{color:var(--accent)}\n' +
+    '@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}\n' +
+    globalNavCss() + '\n' +
+    mcpCtaCss() + '\n' +
+    '</style>\n</head>\n<body>\n' +
+    '<div class="container">\n' +
+    '  ' + buildGlobalNav("changes") + '\n' +
+    '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ci-cd-alternatives">CI/CD</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
+    '  <h1>CI/CD Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + cicdOffers.length + ' CI/CD tools &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '\n' +
+    '  <div class="summary-stats">\n' +
+    '    <div class="stat-card"><div class="stat-number">' + tools.length + '</div><div class="stat-label">Tools Compared</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number green">' + freeCount + '</div><div class="stat-label">Generous / Free OSS</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number yellow">' + limitedCount + '</div><div class="stat-label">Limited Free Tier</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Tool Categories</div></div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="executive-summary">\n' +
+    '    <p><strong>The CI/CD landscape in April 2026:</strong> ' + tools.length + ' tools across four categories \u2014 general-purpose platforms, cloud-native services, mobile CI/CD specialists, and self-hosted open-source solutions. Pricing models are fragmented: per-seat, per-minute, per-credit, and per-parallel-job all coexist. Free tiers range from Google Cloud Build\'s generous 120 min/day to Bitbucket Pipelines\' tight 50 min/month.</p>\n' +
+    '    <p><strong>Key trends:</strong> Self-hosted runners are becoming the cost optimization strategy \u2014 GitHub Actions, GitLab CI, Buildkite, Harness CI, and Azure DevOps all offer free unlimited self-hosted execution. Cloud-native CI/CD (AWS CodeBuild, Google Cloud Build) charges per-minute with modest free tiers. Mobile CI/CD remains the most expensive category, with macOS build minutes costing 2\u201310x Linux minutes.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, build minute analysis, cost comparison for small teams and growing organizations, hidden costs, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="toc">\n' +
+    '    <h3>Jump to section</h3>\n' +
+    '    <ol>\n' +
+    '      <li><a href="#pricing-table">Pricing Comparison Table</a></li>\n' +
+    '      <li><a href="#categories">Category Breakdown</a> (General, Cloud-Native, Mobile, Self-Hosted)</li>\n' +
+    '      <li><a href="#free-tiers">What You Actually Get for Free</a></li>\n' +
+    '      <li><a href="#cost-analysis">Cost Analysis by Team Size</a></li>\n' +
+    '      <li><a href="#hidden-costs">Hidden Costs</a></li>\n' +
+    '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
+    '      <li><a href="#faq">FAQ</a></li>\n' +
+    '    </ol>\n' +
+    '  </div>\n' +
+    '\n' +
+    // Section 1: Pricing table
+    '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
+    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Tool</th>\n' +
+    '        <th>Free Minutes/mo</th>\n' +
+    '        <th>Concurrency</th>\n' +
+    '        <th>Self-Hosted</th>\n' +
+    '        <th>Paid From</th>\n' +
+    '        <th>Model</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + pricingTableRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The self-hosted advantage:</strong> GitHub Actions, GitLab CI, Buildkite, Harness CI, and Azure DevOps all offer free unlimited execution on self-hosted runners. If you have existing infrastructure or need custom hardware (GPUs, Apple Silicon), self-hosted runners eliminate per-minute CI/CD costs entirely. The trade-off: you maintain the infrastructure.\n' +
+    '  </div>\n' +
+    '\n' +
+    // Section 2: Category breakdown
+    '  <h2 id="categories">Category Breakdown</h2>\n' +
+    '  <p class="section-intro">CI/CD tools fall into four distinct categories, each optimized for different workflows and team sizes.</p>\n' +
+    '\n' +
+    '  ' + categorySections + '\n' +
+    '\n' +
+    // Section 3: What you actually get for free
+    '  <h2 id="free-tiers">What You Actually Get for Free</h2>\n' +
+    '  <p class="section-intro">Free tiers vary dramatically. Here\'s the honest breakdown of what you get at zero cost and when you\'ll need to upgrade.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Tool</th>\n' +
+    '        <th>Free Tier Type</th>\n' +
+    '        <th>Free Minutes</th>\n' +
+    '        <th>When You Hit the Wall</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    tools.map(t => {
+      const wallDesc = t.freeType === "generous" ? "Months of daily use" :
+        t.freeType === "oss-only" ? "Never (self-hosted)" :
+        t.freeType === "trial" ? "End of trial period" :
+        t.freeType === "none" ? "Immediately" :
+        "1\u20134 weeks for active team";
+      return '      <tr>' +
+        '<td style="font-weight:600">' + escHtmlServer(t.name) + '</td>' +
+        '<td><span style="color:' + (freeTypeColors[t.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(freeTypeLabels[t.freeType]) + '</span></td>' +
+        '<td style="font-size:.85rem">' + escHtmlServer(t.freeMinutes) + '</td>' +
+        '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(wallDesc) + '</td>' +
+        '</tr>';
+    }).join("\n") + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    // Section 4: Cost analysis
+    '  <h2 id="cost-analysis">Cost Comparison by Team Size</h2>\n' +
+    '  <p class="section-intro">What does each tool cost for a solo developer or small project versus a team of 5\u201310 running regular CI pipelines?</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Tool</th>\n' +
+    '        <th>Solo / Small /mo</th>\n' +
+    '        <th>Team /mo</th>\n' +
+    '        <th>Key Cost Factor</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + costRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>Best value picks:</strong> For open-source projects, <a href="/vendor/github-actions">GitHub Actions</a> (unlimited free minutes). For private repos on a budget, <a href="/vendor/google-cloud-build">Google Cloud Build</a> (120 min/day free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/mo). For teams wanting zero CI cost, self-hosted <a href="/vendor/jenkins">Jenkins</a> or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> with your own infrastructure.\n' +
+    '  </div>\n' +
+    '\n' +
+    // Section 5: Hidden costs
+    '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
+    '  <p class="section-intro">The sticker price rarely tells the full story. Here are CI/CD costs that catch teams off guard.</p>\n' +
+    '\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>macOS Build Minute Multipliers</h4>\n' +
+    '    <p>GitHub Actions charges macOS minutes at 10x the Linux rate. Your 2,000 free minutes become 200 macOS minutes. CircleCI\'s macOS builds cost 100 credits/min vs 5 for Linux. If you build iOS apps, budget 5\u201310x what you\'d expect from Linux-only CI.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Storage and Artifact Costs</h4>\n' +
+    '    <p>Most CI/CD free tiers limit artifact and cache storage. GitHub Actions: 500 MB artifacts (10 GB cache). GitLab: 10 GiB total. CircleCI: artifacts and workspaces count against your credit budget. Cloud-native providers charge separately for artifact registry storage (AWS ECR, Google Artifact Registry).</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Parallel Job Limits</h4>\n' +
+    '    <p>Free tiers typically allow 1\u20133 concurrent jobs. When you have 20 PRs open, builds queue. Azure DevOps charges $40/month per additional parallel job. This cost scales linearly \u2014 5 parallel jobs = $200/month. Self-hosted runners bypass this but require infrastructure.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Data Transfer and Egress</h4>\n' +
+    '    <p>Cloud-native CI services (AWS CodeBuild, Google Cloud Build) charge standard cloud egress rates on build outputs. Pulling large Docker images, pushing to external registries, or deploying large artifacts can add $10\u201350/month in data transfer fees that don\'t show up in CI pricing.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Self-Hosted Runner Infrastructure</h4>\n' +
+    '    <p>Self-hosted runners are "free" but your servers are not. A capable CI runner needs 4+ CPU cores, 8+ GB RAM, and fast SSD storage. Cloud cost: $40\u2013150/month per runner. At scale, this is still cheaper than per-minute pricing, but the break-even point is around 5,000\u201310,000 build minutes/month.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    // Section 6: Changes timeline
+    '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
+    '  <p class="section-intro">CI/CD pricing is generally stable, but runner costs and free tier limits are shifting. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
+    '\n' +
+    (cicdChanges.length > 0 ? (
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + changeTimelineRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n'
+    ) : '  <p class="section-intro">No CI/CD-specific pricing changes tracked recently. This category has been relatively stable.</p>\n') +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. GitHub Actions introduced per-minute fees for private self-hosted runners in March 2026 \u2014 previously free. The counter-trend: Google Cloud Build\'s generous 120 min/day free tier has remained stable, and Buildkite continues to offer unlimited free self-hosted agents.\n' +
+    '  </div>\n' +
+    '\n' +
+    // Section 7: Recommendations
+    '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
+    '\n' +
+    '  <div class="verdict-box">\n' +
+    '    <h3>Pick the Right CI/CD Tool</h3>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best free option for open source</strong>\n' +
+    '      <p><a href="/vendor/github-actions">GitHub Actions</a> \u2014 unlimited free minutes for public repos, massive marketplace of pre-built actions, and tight GitHub integration. No contest.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best free option for private repos</strong>\n' +
+    '      <p><a href="/vendor/google-cloud-build">Google Cloud Build</a> (120 min/day free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/month). Cloud Build wins on raw minutes; GitHub Actions wins on ecosystem and ease of setup.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for enterprise / large teams</strong>\n' +
+    '      <p><a href="/vendor/gitlab-ci">GitLab CI</a> Premium ($29/user) includes CI/CD + security scanning + container registry + package registry. <a href="/vendor/buildkite">Buildkite</a> for teams already running self-hosted infrastructure \u2014 unlimited free agents.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for mobile app development</strong>\n' +
+    '      <p><a href="/vendor/codemagic">Codemagic</a> (500 free min/month with Apple Silicon) for Flutter and cross-platform. <a href="/vendor/bitrise">Bitrise</a> (300 free min) for native iOS/Android with the largest mobile integration library.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for maximum control / zero vendor lock-in</strong>\n' +
+    '      <p><a href="/vendor/jenkins">Jenkins</a> for maximum plugin ecosystem and flexibility. <a href="/vendor/woodpecker-ci">Woodpecker CI</a> for a lightweight, modern, container-native alternative. Both are 100% free and open-source.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for Kubernetes-native workflows</strong>\n' +
+    '      <p><a href="/vendor/codefresh">Codefresh</a> (1,200 free min) with built-in Helm and ArgoCD integration. <a href="/vendor/drone-ci">Drone CI</a> for lightweight container-native pipelines on your own K8s cluster.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for AWS / GCP / Azure shops</strong>\n' +
+    '      <p>Use your cloud\'s native CI: <a href="/vendor/aws">AWS CodeBuild</a>, <a href="/vendor/google-cloud-build">Google Cloud Build</a>, or <a href="/vendor/azure-devops">Azure DevOps</a>. Deepest integration with cloud services, IAM, and artifact storage. Azure DevOps has the best free tier at 1,800 min/month.</p>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '\n' +
+    // Section 8: FAQ
+    '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
+    faqEntries.map(f =>
+      '  <div class="faq-item">\n' +
+      '    <div class="faq-q">' + escHtmlServer(f.q) + '</div>\n' +
+      '    <div class="faq-a">' + escHtmlServer(f.a) + '</div>\n' +
+      '  </div>'
+    ).join("\n") + '\n' +
+    '\n' +
+    // Data source
+    '  <h2>Data Source &amp; Methodology</h2>\n' +
+    '  <div class="methodology">\n' +
+    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for CI/CD tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  ' + buildMcpCta("Compare CI/CD tool pricing, search free tiers, and track pricing changes \u2014 all from your AI coding assistant.") + '\n' +
+    '\n' +
+    '  <h2>Related Guides</h2>\n' +
+    '  <div class="related-pages">\n' +
+    relatedPages.map(p =>
+      '    <a href="/' + p.slug + '" class="related-page-link">\n' +
+      '      <div class="link-title">' + escHtmlServer(p.title) + '</div>\n' +
+      '      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n' +
+      '    </a>'
+    ).join("\n") + '\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="search-cta">\n' +
+    '    Explore all ' + offers.length.toLocaleString() + ' developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>\n' +
+    '  </div>\n' +
+    '</div>\n' +
+    '<footer>\n' +
+    '  <div class="container">\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '  </div>\n' +
+    '</footer>\n' +
+    '<script>' + mcpCtaScript() + '</script>\n' +
+    '</body>\n</html>';
+}
+
 // --- AWS Free Tier 2026 guide page ---
 
 function buildAwsFreeTier2026Page(): string {
@@ -45948,6 +46730,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-coding-tools-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAiCodingToolsPricingPage());
+  } else if (url.pathname === "/ci-cd-pricing" && isGetOrHead) {
+    recordApiHit("/ci-cd-pricing");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ci-cd-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildCiCdPricingPage());
   } else if (url.pathname === "/aws-free-tier-2026" && isGetOrHead) {
     recordApiHit("/aws-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
