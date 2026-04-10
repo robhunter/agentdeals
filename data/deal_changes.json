@@ -49,13 +49,17 @@
             "vendor": "Amazon SP-API",
             "change_type": "pricing_restructured",
             "date": "2026-01-31",
-            "summary": "Free access ended after 10+ years, now $1,400/year + per-call fees starting April 30",
-            "previous_state": "Free API access for 10+ years",
-            "current_state": "$1,400/year subscription + per-call fees (effective April 30, 2026)",
+            "summary": "Free access ended after 10+ years. Annual fee of $1,400/year started January 31. Per-call fees begin April 30: $0.40 per 1,000 GET calls above tier allowance. Tiered model: Basic (2.5M free GET calls/month), Pro ($1K/mo, 25M calls), Plus ($10K/mo, 250M calls), Enterprise (custom). Private apps (sellers/vendors using SP-API for own business) are exempt.",
+            "previous_state": "Free API access for 10+ years for all registered developers",
+            "current_state": "$1,400/year + tiered per-call fees. Basic: 2.5M free GET calls/mo, Pro: $1K/mo (25M calls), Plus: $10K/mo (250M calls). $0.40/1K overage. Private apps exempt",
             "impact": "high",
             "source_url": "https://developer-docs.amazon.com/sp-api/",
-            "category": "APIs",
-            "alternatives": []
+            "category": "E-Commerce",
+            "alternatives": [
+                "Shopify API",
+                "WooCommerce API",
+                "BigCommerce API"
+            ]
         },
         {
             "vendor": "PythonAnywhere",
@@ -1320,10 +1324,10 @@
             "vendor": "OVHcloud",
             "change_type": "pricing_restructured",
             "date": "2026-04-01",
-            "summary": "OVHcloud raised prices 9-11% on newer infrastructure (Public Cloud, Bare Metal, VPS 2026 range) effective April 1, 2026. Free tier unchanged. Applies to 2026-range products only \u2014 legacy configurations retain previous pricing.",
-            "previous_state": "Previous pricing on Public Cloud, Bare Metal, and VPS 2026-range products",
-            "current_state": "9-11% price increase on newer infrastructure. Free tier and legacy configurations unaffected",
-            "impact": "medium",
+            "summary": "OVHcloud raised prices 9-11% on Public Cloud, Private Cloud, and Bare Metal deployed 2026-2028. VPS steep increases: VPS-1 from $4.90 to $7.60, VPS-4 from $26.00 to $43.50. Pre-2025 deployments see 2-6% increase depending on equipment age. IPv4 pricing also increased. Root cause: AI-driven DRAM/NVMe demand (250-300% RAM price increase projected by end of 2026).",
+            "previous_state": "VPS-1 $4.90/mo, VPS-4 $26.00/mo. Standard pricing on Public Cloud, Private Cloud, Bare Metal",
+            "current_state": "VPS-1 $7.60/mo (+55%), VPS-4 $43.50/mo (+67%). Cloud services 9-11% increase (2026-2028 deployments), 2-6% increase (pre-2025 deployments). IPv4 pricing increased",
+            "impact": "high",
             "source_url": "https://www.ovhcloud.com/en/pricing/",
             "category": "Cloud IaaS",
             "alternatives": [
@@ -1337,9 +1341,9 @@
             "vendor": "Amazon SP-API",
             "change_type": "free_tier_removed",
             "date": "2026-04-30",
-            "summary": "Amazon Selling Partner API (SP-API) moves to paid access starting April 30, 2026. New base fee of $1,400/year plus per-call fees. Previously free for registered developers. Major impact on Amazon marketplace integrators and third-party seller tools.",
+            "summary": "Amazon SP-API per-call fees begin April 30, 2026. $0.40 per 1,000 GET API calls above tier allowance. Tiered model: Basic (2.5M free GET calls/month included with $1,400/year subscription), Pro ($1K/mo, 25M calls), Plus ($10K/mo, 250M calls), Enterprise (custom). Private apps (sellers using SP-API for own business) exempt from fees.",
             "previous_state": "Free API access for registered Amazon developers with standard rate limits",
-            "current_state": "$1,400/year base fee plus per-call fees starting April 30, 2026. No free tier",
+            "current_state": "$1,400/year base + $0.40/1K GET overage. Basic: 2.5M free calls/mo, Pro: $1K/mo (25M), Plus: $10K/mo (250M). Private apps exempt",
             "impact": "high",
             "source_url": "https://developer-docs.amazon.com/sp-api/",
             "category": "E-Commerce",
@@ -1514,6 +1518,23 @@
                 "AWS CDK",
                 "Terraform",
                 "Pulumi"
+            ]
+        },
+        {
+            "vendor": "Vercel",
+            "change_type": "pricing_restructured",
+            "date": "2026-02-01",
+            "summary": "New Pro projects now default to Turbo build machines (30 vCPUs, 60GB memory) at $0.126/minute \u2014 9x more expensive than Standard machines ($0.014/min). Pro plan still $20/seat/month with $20 usage credit, but real-world build costs for moderate teams can hit $400+/month. Standard machines still available but must be manually selected.",
+            "previous_state": "Pro plan: Standard build machines at $0.014/min (default). Turbo available as opt-in upgrade",
+            "current_state": "Pro plan: Turbo build machines at $0.126/min (default, 30 vCPUs, 60GB RAM). Standard still available via manual opt-out. 9x cost increase for builds if not changed",
+            "impact": "medium",
+            "source_url": "https://vercel.com/pricing",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Netlify",
+                "Cloudflare Pages",
+                "Render",
+                "Railway"
             ]
         }
     ]
