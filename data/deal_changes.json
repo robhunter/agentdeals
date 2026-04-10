@@ -1,1408 +1,1429 @@
 {
-  "changes": [
-    {
-      "vendor": "Brave Search API",
-      "change_type": "free_tier_removed",
-      "date": "2026-02-12",
-      "summary": "Free plan (5,000 queries/month) replaced with metered billing at $5/1,000 requests. $5 monthly credit provided as offset (~1,000 queries). Credit cards now actively charged with no spending cap",
-      "previous_state": "Free plan: 5,000 queries/month, 3 QPS, no credit card required",
-      "current_state": "Metered billing at $5/1,000 requests with $5 monthly credit (~1,000 free queries). No free plan. Credit card required, no spending cap",
-      "impact": "high",
-      "source_url": "https://www.implicator.ai/brave-drops-free-search-api-tier-puts-all-developers-on-metered-billing/",
-      "category": "Search",
-      "alternatives": [
-        "SerpAPI",
-        "Google Custom Search"
-      ]
-    },
-    {
-      "vendor": "X API (Twitter)",
-      "change_type": "free_tier_removed",
-      "date": "2026-02-09",
-      "summary": "Free tier replaced with pay-per-use + $10 one-time credit",
-      "previous_state": "Free basic endpoints (Like, Follow, List, etc.)",
-      "current_state": "Pay-per-use pricing, $10 one-time credit for existing users, free plan expired Feb 13",
-      "impact": "high",
-      "source_url": "https://developer.x.com/en",
-      "category": "APIs",
-      "alternatives": [
-        "Bluesky API",
-        "Mastodon API"
-      ]
-    },
-    {
-      "vendor": "Spotify API",
-      "change_type": "limits_reduced",
-      "date": "2026-02-11",
-      "summary": "Premium subscription now required for development mode, test users cut from 25 to 5",
-      "previous_state": "Free developer access to Web API, 25 test users",
-      "current_state": "Spotify Premium subscription required for dev mode, 5 test users max, multiple endpoints deprecated",
-      "impact": "high",
-      "source_url": "https://developer.spotify.com/",
-      "category": "APIs",
-      "alternatives": [
-        "Last.fm API",
-        "MusicBrainz API"
-      ]
-    },
-    {
-      "vendor": "Amazon SP-API",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-31",
-      "summary": "Free access ended after 10+ years, now $1,400/year + per-call fees starting April 30",
-      "previous_state": "Free API access for 10+ years",
-      "current_state": "$1,400/year subscription + per-call fees (effective April 30, 2026)",
-      "impact": "high",
-      "source_url": "https://developer-docs.amazon.com/sp-api/",
-      "category": "APIs",
-      "alternatives": []
-    },
-    {
-      "vendor": "PythonAnywhere",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-15",
-      "summary": "$5 Hacker tier eliminated, features merged into free and higher tiers",
-      "previous_state": "$5/mo Hacker tier with custom domains and more storage",
-      "current_state": "Free tier and $10/mo+ paid tiers only, Hacker tier removed",
-      "impact": "medium",
-      "source_url": "https://www.pythonanywhere.com/pricing/",
-      "category": "Hosting",
-      "alternatives": [
-        "Render",
-        "Railway",
-        "Replit"
-      ]
-    },
-    {
-      "vendor": "Google Gemini",
-      "change_type": "limits_reduced",
-      "date": "2025-12-15",
-      "summary": "Google quietly slashed Gemini API free tier rate limits by 50-80% in late 2025. Gemini 2.5 Flash went from ~250 requests/day to 20-50. Pro model free tier removed entirely. A Google PM admitted generous limits were only supposed to be available for a single weekend",
-      "previous_state": "Pro model available on free tier, Flash ~250 RPD, Flash-Lite generous limits",
-      "current_state": "Pro free tier removed. Flash reduced to 10 RPM (~20-50 RPD). Flash-Lite 15 RPM. 50-80% reduction across the board. Gemini 2.0 Flash retiring March 2026",
-      "impact": "high",
-      "source_url": "https://ai.google.dev/gemini-api/docs/pricing",
-      "category": "AI / ML",
-      "alternatives": [
-        "OpenRouter",
-        "Groq",
-        "Together AI"
-      ]
-    },
-    {
-      "vendor": "Netlify",
-      "change_type": "pricing_restructured",
-      "date": "2025-09-04",
-      "summary": "Restructured to credit-based pricing; sites pause on credit exhaustion",
-      "previous_state": "Traditional tiered pricing with fixed monthly allowances",
-      "current_state": "300 credits/month free, sites pause on exhaustion",
-      "impact": "medium",
-      "source_url": "https://www.netlify.com/pricing/",
-      "category": "Hosting",
-      "alternatives": [
-        "Vercel",
-        "Cloudflare Pages",
-        "GitHub Pages"
-      ]
-    },
-    {
-      "vendor": "Netlify",
-      "change_type": "restriction",
-      "date": "2026-03-01",
-      "summary": "Every repo committer is now charged as a full Pro seat ($19/mo) when using Netlify CMS or Identity with a private repo. Previously only users who logged into the Netlify dashboard counted as seats",
-      "previous_state": "Only Netlify dashboard users counted as billable seats",
-      "current_state": "All repo committers to connected private repos count as Pro seats ($19/mo each) when using CMS or Identity features",
-      "impact": "high",
-      "source_url": "https://www.netlify.com/pricing/",
-      "category": "Hosting",
-      "alternatives": [
-        "Vercel",
-        "Cloudflare Pages",
-        "GitHub Pages"
-      ]
-    },
-    {
-      "vendor": "Supabase",
-      "change_type": "limits_reduced",
-      "date": "2026-02-01",
-      "summary": "Project pause policy tightened \u2014 inactive projects now pause after 1 week",
-      "previous_state": "Longer inactivity window before project pause",
-      "current_state": "Projects pause after 1 week of inactivity on free tier",
-      "impact": "medium",
-      "source_url": "https://supabase.com/pricing",
-      "category": "Databases",
-      "alternatives": [
-        "Neon",
-        "PlanetScale",
-        "CockroachDB"
-      ]
-    },
-    {
-      "vendor": "Cloudflare",
-      "change_type": "new_free_tier",
-      "date": "2026-02-04",
-      "summary": "Queues added to Workers free plan \u2014 message queuing now free",
-      "previous_state": "Queues was paid-only",
-      "current_state": "Queues included in free Workers plan",
-      "impact": "medium",
-      "source_url": "https://developers.cloudflare.com/queues/",
-      "category": "Cloud IaaS",
-      "alternatives": []
-    },
-    {
-      "vendor": "GitHub Actions",
-      "change_type": "pricing_postponed",
-      "date": "2026-01-01",
-      "summary": "Self-hosted runner per-minute fee ($0.002/min) announced for March 2026 was postponed indefinitely after community backlash. Self-hosted runners remain free. Separately, hosted runner prices were reduced up to 39% (Jan 2026)",
-      "previous_state": "Self-hosted runners free. Previous per-minute pricing for hosted runners",
-      "current_state": "Self-hosted runners remain free \u2014 no orchestration fees. Hosted runners 39% cheaper. GitHub re-evaluating self-hosted pricing approach",
-      "impact": "low",
-      "source_url": "https://github.com/orgs/community/discussions/182089",
-      "category": "CI/CD",
-      "alternatives": [
-        "GitLab CI",
-        "CircleCI",
-        "Buildkite"
-      ]
-    },
-    {
-      "vendor": "Bright Data MCP",
-      "change_type": "new_free_tier",
-      "date": "2025-08-14",
-      "summary": "Launched free tier for MCP Web Server \u2014 5,000 requests/month for agent developers",
-      "previous_state": "Paid-only web scraping API",
-      "current_state": "5,000 free monthly requests on Rapid mode, includes search_engine and scrape_as_markdown tools, handles JS rendering and CAPTCHAs",
-      "impact": "medium",
-      "source_url": "https://brightdata.com/pricing/mcp-server",
-      "category": "Web Scraping",
-      "alternatives": [
-        "Firecrawl",
-        "Apify"
-      ]
-    },
-    {
-      "vendor": "Stripe",
-      "change_type": "pricing_restructured",
-      "date": "2026-02-01",
-      "summary": "Managed Payments (Merchant of Record) service entering general availability \u2014 Stripe handles tax, billing, fraud, and disputes",
-      "previous_state": "Payment processing only \u2014 developers handled tax compliance, fraud, and disputes separately",
-      "current_state": "Managed Payments acts as Merchant of Record in 75+ countries, handling sales tax/VAT/GST, fraud prevention, dispute resolution, and transaction-level support",
-      "impact": "high",
-      "source_url": "https://docs.stripe.com/payments/managed-payments",
-      "category": "Payments",
-      "alternatives": [
-        "Paddle",
-        "Lemon Squeezy"
-      ]
-    },
-    {
-      "vendor": "Postman",
-      "change_type": "restriction",
-      "date": "2026-03-01",
-      "summary": "Free plan now single-user only. Team collaboration (shared workspaces, collection sharing) requires paid plan at $19/user/month",
-      "previous_state": "Free plan supported up to 3 users in shared workspaces with collection sharing and 25 monitoring calls/month",
-      "current_state": "Free plan = single user only with unlimited collections, environments, mock servers, basic monitoring. Teams require Team plan ($19/user/mo) or higher",
-      "impact": "high",
-      "source_url": "https://www.postman.com/pricing/",
-      "category": "Testing",
-      "alternatives": [
-        "Bruno",
-        "Insomnia",
-        "Hoppscotch",
-        "Apidog",
-        "Thunder Client"
-      ]
-    },
-    {
-      "vendor": "Atlassian Forge",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-01",
-      "summary": "Forge platform moved from free to consumption-based billing for compute and storage",
-      "previous_state": "Entirely free \u2014 no charges for compute, storage, or KV operations",
-      "current_state": "Free monthly allowances per app (100K GB-sec compute, 0.1 GB KVS, 1 GB logs, 1 hr SQL), usage above thresholds billed",
-      "impact": "medium",
-      "source_url": "https://www.atlassian.com/blog/developer/updates-to-forge-pricing-effective-january-2026",
-      "category": "Developer Tools",
-      "alternatives": [
-        "AWS Lambda",
-        "Self-hosted Connect apps"
-      ]
-    },
-    {
-      "vendor": "Fly.io",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-01",
-      "summary": "Volume snapshots now billed \u2014 previously free automatic snapshots now cost $0.08/GB-month",
-      "previous_state": "Automatic volume snapshots included at no cost, enabled by default",
-      "current_state": "$0.08/GB-month for snapshot storage, first 10 GB free. Snapshots can be disabled to avoid charges",
-      "impact": "medium",
-      "source_url": "https://fly.io/docs/about/pricing/",
-      "category": "Cloud Hosting",
-      "alternatives": [
-        "Render",
-        "Railway",
-        "Koyeb"
-      ]
-    },
-    {
-      "vendor": "Cloudflare Durable Objects",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-07",
-      "summary": "SQLite storage billing began for Durable Objects \u2014 previously free during beta",
-      "previous_state": "SQLite storage in Durable Objects was free during public beta (compute already billed)",
-      "current_state": "Storage charged per GB-hour on Workers Paid plan, first 10 GB included. Free plan users unaffected",
-      "impact": "low",
-      "source_url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "Upstash Redis",
-        "Cloudflare KV",
-        "Neon"
-      ]
-    },
-    {
-      "vendor": "Sentry",
-      "change_type": "pricing_restructured",
-      "date": "2025-08-15",
-      "summary": "Switched from performance units to spans-based metrics for error and performance monitoring",
-      "previous_state": "Performance units pricing model",
-      "current_state": "Spans-based metrics: Developer plan includes 50K errors + 10M spans/month free. Reserved volume pricing replaces on-demand",
-      "impact": "medium",
-      "source_url": "https://sentry.io/pricing/",
-      "category": "Monitoring",
-      "alternatives": [
-        "Datadog",
-        "New Relic",
-        "BetterStack"
-      ]
-    },
-    {
-      "vendor": "Neon",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-15",
-      "summary": "Moved to fully usage-based pricing model post-Databricks acquisition \u2014 free tier storage now per-project, projects increased 10\u2192100, branches capped at 10 per project, Neon Auth added",
-      "previous_state": "Free tier: 0.5 GB total storage, 191.9 compute hours, 10 projects, unlimited branches",
-      "current_state": "Free tier: 0.5 GB per project (up to 5 GB across 100 projects), 100 CU-hours/month per project, 10 branches/project, Neon Auth 60K MAU, auto-scaling up to 2 CU, scale-to-zero",
-      "impact": "medium",
-      "source_url": "https://neon.com/pricing",
-      "category": "Databases",
-      "alternatives": [
-        "Supabase",
-        "CockroachDB",
-        "Turso"
-      ]
-    },
-    {
-      "vendor": "Vercel",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-01",
-      "summary": "Pro plan moved to credit-based model ($20/mo credit pool), Hobby plan metrics renamed and restructured \u2014 bandwidth\u2192Fast Data Transfer, serverless split into Active CPU + Provisioned Memory, Blob Storage and Image Transformations added",
-      "previous_state": "Hobby: 100 GB bandwidth, 100 GB-hours serverless. Pro: fixed per-resource allocations",
-      "current_state": "Hobby: 100 GB/mo Fast Data Transfer, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage, 5K image transformations. Pro: $20/mo credit pool across all resources, SAML SSO and HIPAA included",
-      "impact": "medium",
-      "source_url": "https://vercel.com/pricing",
-      "category": "Cloud Hosting",
-      "alternatives": [
-        "Netlify",
-        "Cloudflare Pages",
-        "Render"
-      ]
-    },
-    {
-      "vendor": "Atlassian",
-      "change_type": "pricing_restructured",
-      "date": "2026-02-17",
-      "summary": "Data Center pricing increased 15-40% across Jira, Confluence, and JSM. New DC licenses end March 30 \u2014 cloud mandatory for new customers",
-      "previous_state": "Standard Data Center pricing with Advantaged/legacy discounts",
-      "current_state": "15% standard list increase, 18-40% for legacy Advantaged pricing tiers. No new DC licenses after March 30, 2026. Full DC end-of-life March 2029",
-      "impact": "high",
-      "source_url": "https://www.atlassian.com/licensing/future-pricing",
-      "category": "Developer Tools",
-      "alternatives": [
-        "Linear",
-        "Jira Cloud",
-        "Shortcut"
-      ]
-    },
-    {
-      "vendor": "Docker Hub",
-      "change_type": "pricing_restructured",
-      "date": "2024-12-10",
-      "summary": "Docker Pro +80% ($5\u2192$9/mo), Team +67% ($9\u2192$15/mo). Free tier: Build Cloud minutes removed, Scout repos cut 3\u21921, private repos limited to 1 with 2GB storage",
-      "previous_state": "Pro $5/user/month, Team $9/user/month. Free tier included Build Cloud minutes, 3 Scout repos",
-      "current_state": "Pro $9/user/month, Team $15/user/month. Free: 1 private repo (2GB), 1 Scout repo, no Build Cloud minutes, 40 pulls/hour",
-      "impact": "high",
-      "source_url": "https://www.docker.com/blog/november-2024-updated-plans-announcement/",
-      "category": "Container Registry",
-      "alternatives": [
-        "GitHub Container Registry",
-        "Quay.io",
-        "Podman"
-      ]
-    },
-    {
-      "vendor": "DigitalOcean",
-      "change_type": "limits_increased",
-      "date": "2025-01-22",
-      "summary": "Hatch startup program expanded to up to $100K compute credits plus up to 3 months free H100 GPU access for AI/ML startups",
-      "previous_state": "Standard Hatch startup credits program",
-      "current_state": "Up to $100K compute credits (12 months, excludes GPU). Separate GPU benefit: discounted H100 at ~$1.90/hr (vs $3.39 standard) plus up to 3 months free GPU access",
-      "impact": "medium",
-      "source_url": "https://investors.digitalocean.com/news/news-details/2025/DigitalOcean-Announces-New-Benefits-for-Hatch-Startup-Program/default.aspx",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "AWS Activate",
-        "Google Cloud for Startups",
-        "Azure for Startups"
-      ]
-    },
-    {
-      "vendor": "Google Cloud",
-      "change_type": "limits_increased",
-      "date": "2026-01-01",
-      "summary": "Google for Startups Cloud Program now offers up to $350K GCP credits for AI-first startups, plus $10K Anthropic (Claude) partner credits via Model Garden",
-      "previous_state": "Up to $200K GCP credits for standard startups",
-      "current_state": "Scale AI Tier: up to $350K GCP credits ($250K year 1, $100K year 2). Standard: $200K. Partner credits: $10K Anthropic/Claude via Model Garden, Fireworks AI, MongoDB Atlas, CockroachDB, 1yr free GitLab Ultimate",
-      "impact": "high",
-      "source_url": "https://cloud.google.com/startup/ai",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "AWS Activate",
-        "Azure for Startups",
-        "DigitalOcean Hatch"
-      ]
-    },
-    {
-      "vendor": "AWS",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-04",
-      "summary": "EC2 Capacity Blocks for ML GPU prices increased ~15% across regions. p5e.48xlarge went from $34.61 to $39.80/hr (US East) and $43.26 to $49.75/hr (US West N. California)",
-      "previous_state": "p5e.48xlarge at $34.61/hr (US East), $43.26/hr (US West N. California) for Capacity Blocks",
-      "current_state": "p5e.48xlarge at $39.80/hr (US East), $49.75/hr (US West N. California). ~15% increase across most GPU Capacity Block instances",
-      "impact": "medium",
-      "source_url": "https://www.theregister.com/2026/01/05/aws_price_increase/",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "Google Cloud GPUs",
-        "Azure GPU VMs",
-        "Lambda Cloud"
-      ]
-    },
-    {
-      "vendor": "Google",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-27",
-      "summary": "Google Developer Program Premium merged into Google One AI Pro ($19.99/mo, includes $10 Cloud credits) and AI Ultra ($100 Cloud credits). Developer benefits now bundled into consumer AI subscriptions",
-      "previous_state": "Separate Developer Program Premium subscription ($299/year) with dev tools and perks",
-      "current_state": "Developer benefits folded into AI Pro ($19.99/mo, $10 Cloud credits for Vertex AI/Cloud Run/Gemini API) and AI Ultra ($100 Cloud credits). Developer Program Premium being phased out for @gmail.com accounts",
-      "impact": "medium",
-      "source_url": "https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/",
-      "category": "Developer Tools",
-      "alternatives": [
-        "GitHub Copilot",
-        "JetBrains AI"
-      ]
-    },
-    {
-      "vendor": "OpenAI",
-      "change_type": "free_tier_removed",
-      "date": "2026-08-26",
-      "summary": "Assistants API deprecated, full shutdown August 26, 2026. Developers must migrate to Responses API + Conversations API",
-      "previous_state": "Assistants API available with code interpreter, file search, function calling, and Threads for conversation management",
-      "current_state": "Deprecated. Full shutdown Aug 26, 2026. Migration required: Assistants \u2192 Prompts + Responses API, Threads \u2192 Conversations API. No automated migration tool provided",
-      "impact": "high",
-      "source_url": "https://community.openai.com/t/assistants-api-beta-deprecation-august-26-2026-sunset/1354666",
-      "category": "AI/ML",
-      "alternatives": [
-        "Anthropic Claude API",
-        "Google Gemini API",
-        "Cohere API"
-      ]
-    },
-    {
-      "vendor": "Hetzner",
-      "change_type": "pricing_restructured",
-      "date": "2026-04-01",
-      "summary": "Cloud & dedicated server prices increasing 30-50%. Entry-level CX23: \u20ac2.99\u2192\u20ac3.99/mo (+33%). Applies to new and existing customers. Driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand",
-      "previous_state": "Lower cloud server pricing across Germany, Finland, US, and Singapore data centers (e.g., CX23 at \u20ac2.99/mo)",
-      "current_state": "30-37% increase on cloud servers, up to 50% on select dedicated/storage products. All regions and all customers (new and existing) affected. Announced Feb 23, 2026",
-      "impact": "high",
-      "source_url": "https://www.hetzner.com/pressroom/statement-price-adjustment/",
-      "category": "Cloud Hosting",
-      "alternatives": [
-        "DigitalOcean",
-        "Vultr",
-        "OVHcloud"
-      ]
-    },
-    {
-      "vendor": "Anthropic",
-      "change_type": "limits_increased",
-      "date": "2026-02-05",
-      "summary": "Claude Opus 4.6 API pricing at $5/$25 per MTok (input/output) \u2014 67% below previous Opus 4/4.1 pricing of $15/$75. Frontier AI model at mid-tier prices",
-      "previous_state": "Opus 4/4.1 priced at $15/$75 per million tokens (input/output)",
-      "current_state": "Opus 4.6 at $5/$25 per MTok. Extended context (>200K tokens): $10/$37.50. Batch API: $2.50/$12.50. Price reduction began with Opus 4.5 generation",
-      "impact": "high",
-      "source_url": "https://docs.anthropic.com/en/docs/about-claude/models",
-      "category": "AI/ML APIs",
-      "alternatives": [
-        "OpenAI GPT-4o",
-        "Google Gemini",
-        "Mistral"
-      ]
-    },
-    {
-      "vendor": "OpenAI",
-      "change_type": "limits_reduced",
-      "date": "2026-02-09",
-      "summary": "Ads launched in ChatGPT Free and Go ($8/mo) tiers. Sponsored units from major brands appear below responses on first prompt. $60 CPM, $200K minimum ad commitment",
-      "previous_state": "Ad-free experience across all ChatGPT tiers including Free",
-      "current_state": "Free and Go tiers show contextual ads (labeled 'sponsored') below responses. Plus/Pro/Business/Enterprise/Education tiers remain ad-free. Users can opt out at cost of reduced daily message limits",
-      "impact": "high",
-      "source_url": "https://openai.com/index/testing-ads-in-chatgpt/",
-      "category": "AI/ML",
-      "alternatives": [
-        "Anthropic Claude",
-        "Google Gemini",
-        "Perplexity"
-      ]
-    },
-    {
-      "vendor": "Google Programmable Search Engine",
-      "change_type": "limits_reduced",
-      "date": "2026-01-22",
-      "summary": "Free full-web search being discontinued. Free tier restricted to max 50 domains per search engine. Migration deadline January 1, 2027",
-      "previous_state": "Free search across the entire web with 10,000 queries/day limit via Custom Search JSON API",
-      "current_state": "Free tier restricted to searching up to 50 specified domains only. Full-web search requires paid Google Cloud Search or Vertex AI Search. Takes effect January 1, 2027",
-      "impact": "high",
-      "source_url": "https://developers.google.com/custom-search",
-      "category": "Search",
-      "alternatives": [
-        "Brave Search API",
-        "SerpAPI",
-        "Bing Web Search API",
-        "Meilisearch"
-      ]
-    },
-    {
-      "vendor": "odrive",
-      "change_type": "free_tier_removed",
-      "date": "2026-03-31",
-      "summary": "odrive free tier discontinued effective March 31, 2026. Previously offered free unified cloud storage sync across multiple providers (Google Drive, Dropbox, S3, etc.)",
-      "previous_state": "Free tier with basic sync across multiple cloud storage providers, file manager interface",
-      "current_state": "Free tier removed. Business plans at $20/user/month (min 5 users) or $200/year org subscription. March 31, 2026 deadline",
-      "impact": "medium",
-      "source_url": "https://www.odrive.com/pricing",
-      "category": "Storage",
-      "alternatives": [
-        "rclone",
-        "Cyberduck",
-        "MultCloud"
-      ]
-    },
-    {
-      "vendor": "MinIO",
-      "change_type": "open_source_killed",
-      "date": "2026-02-12",
-      "summary": "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. Only case-by-case critical security fixes",
-      "previous_state": "Open-source S3-compatible object storage under AGPL-3.0. Active GitHub repo with community contributions, regular Docker image releases",
-      "current_state": "GitHub repository archived. Development moved to proprietary AIStor product. No new open-source releases. Critical security fixes only on case-by-case basis",
-      "impact": "high",
-      "source_url": "https://linuxiac.com/minio-ends-active-development/",
-      "category": "Storage",
-      "alternatives": [
-        "Ceph",
-        "SeaweedFS",
-        "GarageHQ",
-        "Apache Ozone"
-      ]
-    },
-    {
-      "vendor": "Microsoft Partner Developer Benefits",
-      "change_type": "pricing_restructured",
-      "date": "2026-02-13",
-      "summary": "Per-user monthly Azure credits eliminated, replaced with organization-level bulk Azure credits. Visual Studio license in all benefit tiers now exclusively VS Enterprise IDE",
-      "previous_state": "Per-user monthly Azure credits allocated individually. Mix of Visual Studio Professional and Enterprise licenses across tiers",
-      "current_state": "Organization-level bulk Azure credits (shared pool). All tiers include VS Enterprise IDE only. Per-user monthly credits discontinued",
-      "impact": "medium",
-      "source_url": "https://techcommunity.microsoft.com/discussions/partnerbenefitsforum/new-updates-to-developer-benefits-february-2026/4495536",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "AWS Partner Network",
-        "Google Cloud Partner Advantage"
-      ]
-    },
-    {
-      "vendor": "Cloudflare Startup Program",
-      "change_type": "startup_program_expanded",
-      "date": "2026-02-01",
-      "summary": "Startup program revamped to 4 tiers with up to $250,000 in credits (previously lower). Tiers: Bootstrapped $5K, Up-and-Coming $25K, Seed-Funded $100K, High Growth $250K. Credits expire within 1 year",
-      "previous_state": "Smaller startup program with fewer tiers and lower credit amounts",
-      "current_state": "4 tiers: $5K, $25K, $100K, $250K credits. Covers Workers, R2, Workers AI, Stream. Caps: $10K for R2/Cache Reserve, $50K for Workers AI. Credits expire within 1 year",
-      "impact": "high",
-      "source_url": "https://blog.cloudflare.com/startup-program-250k-credits/",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "AWS Activate",
-        "Google for Startups Cloud Program",
-        "Azure for Startups"
-      ]
-    },
-    {
-      "vendor": "Google Gemini 2.0 Flash",
-      "change_type": "product_deprecated",
-      "date": "2026-03-03",
-      "summary": "Gemini 2.0 Flash and 2.0 Flash-Lite models deprecated, scheduled for retirement. Free tier continues with Gemini 2.5 models. Developers on 2.0 must migrate",
-      "previous_state": "Gemini 2.0 Flash and Flash-Lite available as free-tier models with standard rate limits",
-      "current_state": "2.0 Flash and Flash-Lite deprecated. Developers must migrate to Gemini 2.5 Flash or 2.5 Pro. Free tier preserved for 2.5 series",
-      "impact": "medium",
-      "source_url": "https://www.isumsoft.com/internet/gemini-2-flash-deprecation-migration-guide.html",
-      "category": "AI/ML",
-      "alternatives": [
-        "Google Gemini 2.5 Flash",
-        "Google Gemini 2.5 Pro",
-        "OpenRouter",
-        "Groq"
-      ]
-    },
-    {
-      "vendor": "Logz.io",
-      "change_type": "free_tier_removed",
-      "date": "2026-03-02",
-      "summary": "Free Community plan (1 GB/day, 1-day retention, 10 alerts) removed. Only 14-day free trial remains. Consumption-based pricing starts at $0.92/ingested GB/day",
-      "previous_state": "Free Community plan: 1 GB/day ingestion, 1-day retention, 10 alerts, ML-powered anomaly detection",
-      "current_state": "14-day free trial only. Pay-as-go: $0.92/GB/day logs, $0.40/1K metrics/day, $0.16/1M spans/day. No permanent free tier",
-      "impact": "medium",
-      "source_url": "https://logz.io/pricing/",
-      "category": "Logging",
-      "alternatives": [
-        "Grafana Cloud",
-        "BetterStack",
-        "Axiom",
-        "New Relic"
-      ]
-    },
-    {
-      "vendor": "X (Twitter)",
-      "change_type": "pricing_model_change",
-      "date": "2026-02-06",
-      "summary": "Pay-per-use pricing model introduced alongside existing fixed tiers. Legacy free tier users migrated to pay-per-use with $10 voucher. Free tier effectively reduced to proof-of-concept only (~500 posts/month read, no search)",
-      "previous_state": "Fixed tiers: Free (limited), Basic $100/mo, Pro $5,000/mo, Enterprise $42,000/mo",
-      "current_state": "Pay-per-use model added: per-operation billing (read, search, write priced separately). Fixed tiers remain: Free (very limited), Basic $200/mo, Pro $5,000/mo, Enterprise $42,000/mo",
-      "impact": "high",
-      "source_url": "https://devcommunity.x.com/t/announcing-the-launch-of-x-api-pay-per-use-pricing/256476",
-      "category": "API Gateway",
-      "alternatives": [
-        "Bluesky API",
-        "Mastodon API",
-        "Reddit API"
-      ]
-    },
-    {
-      "vendor": "OpenAI",
-      "change_type": "limits_reduced",
-      "date": "2025-06-01",
-      "summary": "Free trial credits ($5-$18 for new accounts) completely discontinued. Free tier now limited to GPT-3.5 Turbo at 3 RPM with no credits. All advanced models (GPT-4, DALL-E, Whisper) require paid access",
-      "previous_state": "$5-$18 in free trial credits for new accounts, 3-month expiry, access to all models",
-      "current_state": "No free credits. Free tier: GPT-3.5 Turbo only, 3 requests/minute. Must add payment method for any other model access",
-      "impact": "high",
-      "source_url": "https://openai.com/api/pricing/",
-      "category": "AI / ML",
-      "alternatives": [
-        "Google Gemini API",
-        "Anthropic Claude API",
-        "Mistral API",
-        "Groq"
-      ]
-    },
-    {
-      "vendor": "Xero Developer API",
-      "change_type": "pricing_model_change",
-      "date": "2026-03-02",
-      "summary": "Xero retiring revenue-share model, moving to 5-tier connection+egress pricing. No more free API access for developers. Costs jumping from ~$0 to $17K+/year for some. Also banning API data use for AI/ML model training",
-      "previous_state": "Revenue-share model with effective free API access for developers building Xero integrations",
-      "current_state": "5-tier usage-based pricing: connection fees + data egress charges. No free tier. Explicit prohibition on using API data for AI/ML training",
-      "impact": "high",
-      "source_url": "https://developer.xero.com/pricing",
-      "category": "API Gateway",
-      "alternatives": [
-        "QuickBooks API",
-        "FreshBooks API",
-        "Wave API"
-      ]
-    },
-    {
-      "vendor": "SendGrid",
-      "change_type": "free_tier_removed",
-      "date": "2025-05-27",
-      "summary": "Perpetual free tier (100 emails/day) eliminated. Replaced with 60-day trial only. Paid plans start at $19.95/month",
-      "previous_state": "Free plan: 100 emails/day forever, no credit card required",
-      "current_state": "60-day trial only (100 emails/day, 100 contacts). Paid plans from $19.95/month after trial",
-      "impact": "high",
-      "source_url": "https://sendgrid.com/en-us/pricing",
-      "category": "Email",
-      "alternatives": [
-        "Resend",
-        "Postmark",
-        "Mailgun",
-        "Amazon SES"
-      ]
-    },
-    {
-      "vendor": "Firebase",
-      "change_type": "limits_reduced",
-      "date": "2026-02-03",
-      "summary": "Cloud Storage removed from Spark (free) plan. Projects on Spark with default appspot.com buckets lose console access and API calls return 402/403 errors. Must upgrade to Blaze (pay-as-you-go) to use Cloud Storage",
-      "previous_state": "Spark plan included Cloud Storage: 5 GB storage, 1 GB/day download, 20K uploads/day, 50K downloads/day",
-      "current_state": "Cloud Storage requires Blaze plan. Blaze provides no-cost quota (1 GiB storage, 10 GB download/month) before charges begin, but credit card required. Other Spark limits unchanged (Firestore, Auth, Functions, Hosting)",
-      "impact": "high",
-      "source_url": "https://firebase.google.com/docs/storage/faqs-storage-changes-announced-sept-2024",
-      "category": "Cloud Storage",
-      "alternatives": [
-        "Supabase Storage",
-        "Cloudflare R2",
-        "AWS S3",
-        "Backblaze B2"
-      ]
-    },
-    {
-      "vendor": "PlanetScale",
-      "change_type": "free_tier_removed",
-      "date": "2024-04-08",
-      "summary": "PlanetScale removed free Hobby plan entirely. All databases on free tier deleted after 30-day grace period. Minimum plan now Scaler at $39/month",
-      "previous_state": "Free Hobby plan: 5 GB storage, 1B row reads/month, 10M row writes/month, 1 production branch, 1 development branch",
-      "current_state": "No free tier. Scaler plan starts at $39/month (25 GB storage). Enterprise custom pricing. Company pivoted to enterprise focus",
-      "impact": "high",
-      "source_url": "https://planetscale.com/blog/planetscale-forever",
-      "category": "Databases",
-      "alternatives": [
-        "Neon",
-        "Turso",
-        "Supabase",
-        "CockroachDB"
-      ]
-    },
-    {
-      "vendor": "Fauna",
-      "change_type": "product_deprecated",
-      "date": "2025-05-30",
-      "summary": "Fauna shut down entirely on May 30, 2025. The serverless document database ceased all operations. Over 80,000 development teams affected",
-      "previous_state": "Free tier: 100K read ops/day, 50K write ops/day, 500K compute ops/day, 5 GB storage. Consumption-based pricing above free limits",
-      "current_state": "Service discontinued. No longer available in any form. All customer data deleted",
-      "impact": "high",
-      "source_url": "https://fauna.com",
-      "category": "Databases",
-      "alternatives": [
-        "Supabase",
-        "MongoDB Atlas",
-        "CockroachDB",
-        "DynamoDB"
-      ]
-    },
-    {
-      "vendor": "LocalStack",
-      "change_type": "free_tier_removed",
-      "date": "2026-03-23",
-      "summary": "LocalStack drops open-source Community Edition. Single unified image requires auth token. Free tier replaced with non-commercial-only tier requiring registration. Commercial use requires paid plan starting at $39/month",
-      "previous_state": "Open-source Community Edition: 30+ emulated AWS services (S3, Lambda, DynamoDB, etc.), no registration required, Docker image freely available",
-      "current_state": "Non-commercial free tier requires registration and auth token. Commercial use starts at $39/month. CI credits system introduced. OSS projects, students, and nonprofits get free access",
-      "impact": "high",
-      "source_url": "https://blog.localstack.cloud/the-road-ahead-for-localstack/",
-      "category": "Testing",
-      "alternatives": [
-        "Moto (open-source AWS mock)",
-        "AWS Free Tier",
-        "Testcontainers"
-      ]
-    },
-    {
-      "vendor": "Google",
-      "change_type": "pricing_restructured",
-      "date": "2026-03-30",
-      "summary": "Google Developer Program annual subscription ending March 30. Replaced by Google AI Pro ($10/mo) and AI Ultra ($100/mo) tiers with bundled cloud credits and AI model access.",
-      "previous_state": "Google Developer Program: annual subscription with standalone cloud credits, developer tools access, and learning resources",
-      "current_state": "Google AI Pro ($10/mo) and AI Ultra ($100/mo) tiers bundle cloud credits with AI model access (Gemini, etc). Developer benefits folded into AI-centric subscriptions",
-      "impact": "high",
-      "source_url": "https://developers.google.com/profile/help/benefits",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "AWS Activate",
-        "Microsoft for Startups",
-        "Google for Startups Cloud"
-      ],
-      "verified_date": "2026-03-04"
-    },
-    {
-      "vendor": "Terragrunt Scale",
-      "change_type": "new_free_tier",
-      "date": "2025-12-15",
-      "summary": "Gruntwork launches free tier for Terragrunt Scale IaC orchestration platform, positioned as HCP Terraform free tier alternative ahead of HashiCorp March 31, 2026 EOL. Includes GitOps, drift detection, and module update automation",
-      "previous_state": "No free tier \u2014 Team plan at $500/month",
-      "current_state": "Free tier with limits matching or exceeding HCP Terraform (500+ managed resources, GitOps, drift detection, Patcher)",
-      "impact": "medium",
-      "source_url": "https://www.gruntwork.io/blog/announcing-the-terragrunt-scale-free-tier",
-      "category": "Infrastructure",
-      "alternatives": [
-        "Spacelift",
-        "env0",
-        "Scalr"
-      ]
-    },
-    {
-      "vendor": "HCP Terraform",
-      "change_type": "pricing_restructured",
-      "date": "2026-03-31",
-      "summary": "HashiCorp legacy free plan for HCP Terraform ends March 31, 2026. All legacy free plan users auto-migrated to enhanced free tier with different limits: 500 managed resources (previously unlimited for small teams), unlimited users, 1 concurrent run, SSO, and policy as code (Sentinel + OPA)",
-      "previous_state": "Legacy free plan with basic Terraform Cloud features",
-      "current_state": "Enhanced free tier: 500 managed resources, unlimited users, 1 concurrent run, SSO, policy as code (Sentinel + OPA). Auto-migration from legacy plan",
-      "impact": "high",
-      "source_url": "https://www.hashicorp.com/products/terraform/pricing",
-      "category": "Infrastructure",
-      "alternatives": [
-        "Spacelift",
-        "env0",
-        "Scalr",
-        "Terragrunt Scale"
-      ]
-    },
-    {
-      "vendor": "X (Twitter)",
-      "change_type": "free_tier_removed",
-      "date": "2026-02-01",
-      "summary": "X/Twitter API eliminated free tier in February 2026, replacing it with a pay-per-use credit model. Active free-tier users receive a $0 voucher. 'For-good' utility apps remain free. Basic fixed tier remains at $200/month",
-      "previous_state": "Free tier: ~500 posts/month read, 1,500 tweets/month write, no search, ~1 request per 15 minutes",
-      "current_state": "No free tier. Pay-per-use credit model replaces free access. $0 voucher for existing free-tier users. For-good utility apps exempted",
-      "impact": "high",
-      "source_url": "https://developer.x.com/en/portal/products",
-      "category": "API Gateway",
-      "alternatives": [
-        "Bluesky AT Protocol",
-        "Mastodon API"
-      ]
-    },
-    {
-      "vendor": "Cognition Devin",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-15",
-      "summary": "Launched $20/month Core plan with pay-as-you-go ACU pricing, down from previous $500/month-only Team plan",
-      "previous_state": "Team plan only at $500/month (250 credits)",
-      "current_state": "Core plan $20/month (pay-as-you-go at $2.25/ACU), Team plan $500/month remains",
-      "impact": "high",
-      "source_url": "https://devin.ai/pricing",
-      "category": "AI Coding",
-      "alternatives": [
-        "GitHub Copilot",
-        "Cline",
-        "Aider"
-      ]
-    },
-    {
-      "vendor": "Cursor",
-      "change_type": "pricing_restructured",
-      "date": "2025-06-01",
-      "summary": "Moved from flat monthly subscription to credit-based pricing model with new $200/month Ultra tier",
-      "previous_state": "Pro plan $20/month with 500 fast requests",
-      "current_state": "Pro plan $20/month (credit-based), Business $40/seat/month, Ultra $200/month (higher credit limits)",
-      "impact": "medium",
-      "source_url": "https://www.cursor.com/pricing",
-      "category": "AI Coding",
-      "alternatives": [
-        "Windsurf",
-        "GitHub Copilot"
-      ]
-    },
-    {
-      "vendor": "Augment Code",
-      "change_type": "pricing_restructured",
-      "date": "2025-10-01",
-      "summary": "Shifted from per-seat subscription to credit-based consumption model",
-      "previous_state": "Per-seat monthly subscription",
-      "current_state": "Credit-based consumption model with usage tiers",
-      "impact": "medium",
-      "source_url": "https://www.augmentcode.com/pricing",
-      "category": "AI Coding",
-      "alternatives": [
-        "GitHub Copilot",
-        "Cursor"
-      ]
-    },
-    {
-      "vendor": "Google Tenor API",
-      "change_type": "product_deprecated",
-      "date": "2026-06-30",
-      "summary": "Google Tenor public API shutting down June 30, 2026. New API key signups halted January 13, 2026. Only the public GIF search API is affected \u2014 Tenor website and app continue operating. Developers must migrate to alternative GIF APIs",
-      "previous_state": "Free public API for GIF search, trending GIFs, and autocomplete. No rate limits for reasonable use. Used by messaging apps and social platforms",
-      "current_state": "API shutdown June 30, 2026. No new API keys issued since Jan 13, 2026. Existing keys work until shutdown date. No replacement API from Google",
-      "impact": "high",
-      "source_url": "https://developers.google.com/tenor/guides/api-shutdown",
-      "category": "Media",
-      "alternatives": [
-        "Giphy API",
-        "Imgur API"
-      ]
-    },
-    {
-      "vendor": "Testcontainers Cloud",
-      "change_type": "pricing_restructured",
-      "date": "2024-06-01",
-      "summary": "Docker acquired AtomicJar (creators of Testcontainers Cloud). Standalone Testcontainers Cloud free tier retired \u2014 now bundled into Docker subscriptions. Docker Pro gets 100 min/month, Team 500 min/month, Business 1,500 min/month",
-      "previous_state": "Standalone Testcontainers Cloud with independent free tier (100 min/month)",
-      "current_state": "Bundled with Docker subscriptions. No standalone free tier. Open-source Testcontainers libraries remain MIT-licensed and fully free",
-      "impact": "medium",
-      "source_url": "https://testcontainers.com/cloud/",
-      "category": "Testing",
-      "alternatives": [
-        "Testcontainers (open-source)",
-        "Docker Desktop",
-        "Podman"
-      ]
-    },
-    {
-      "vendor": "Docker Desktop",
-      "change_type": "pricing_restructured",
-      "date": "2026-01-01",
-      "summary": "Docker Desktop subscription prices increased 67-80% across all tiers. Personal $7\u2192$11, Pro $9\u2192$14, Team $15\u2192$24, Business $24\u2192$35 per user/month. Separate from Docker Hub registry pricing changes",
-      "previous_state": "Personal $7/user/month, Pro $9/user/month, Team $15/user/month, Business $24/user/month",
-      "current_state": "Personal $11/user/month (+57%), Pro $14/user/month (+56%), Team $24/user/month (+60%), Business $35/user/month (+46%). All tiers affected",
-      "impact": "high",
-      "source_url": "https://www.docker.com/pricing/",
-      "category": "Container Registry",
-      "alternatives": [
-        "Podman Desktop",
-        "Rancher Desktop",
-        "OrbStack"
-      ]
-    },
-    {
-      "vendor": "Unity DevOps",
-      "change_type": "limits_increased",
-      "date": "2026-03-01",
-      "summary": "Free tier significantly expanded: storage 5x increase to 25 GB, 100 GB egress added (new), per-seat charges removed. Unity DevOps (formerly Plastic SCM) now offers generous free version control for game developers",
-      "previous_state": "5 GB storage, no egress allowance, per-seat pricing for teams",
-      "current_state": "25 GB storage (5x increase), 100 GB egress/month (new), per-seat charges removed. Free for individuals and small teams",
-      "impact": "medium",
-      "source_url": "https://unity.com/products/devops",
-      "category": "Version Control",
-      "alternatives": [
-        "Git LFS",
-        "Perforce",
-        "GitHub"
-      ]
-    },
-    {
-      "vendor": "Anthropic Claude",
-      "change_type": "limits_increased",
-      "date": "2026-03-13",
-      "summary": "Temporary usage promotion: double five-hour usage limits during off-peak hours, March 13-27, 2026. Applies to Claude Pro and Team subscribers",
-      "previous_state": "Standard five-hour usage limits for Pro and Team subscribers",
-      "current_state": "2x usage limits during off-peak hours (March 13-27, 2026 only). Temporary promotion to showcase increased capacity",
-      "impact": "low",
-      "source_url": "https://www.anthropic.com/news",
-      "category": "AI/ML",
-      "alternatives": [
-        "OpenAI ChatGPT Plus",
-        "Google Gemini Advanced"
-      ]
-    },
-    {
-      "vendor": "Heroku",
-      "change_type": "free_tier_removed",
-      "date": "2022-11-28",
-      "summary": "Heroku removed all free dynos, free Heroku Postgres, and free Heroku Data for Redis. The iconic PaaS that defined 'free tier' for a generation eliminated free offerings entirely after Salesforce acquisition",
-      "previous_state": "Free dyno: 550 hours/month (1,000 with credit card), free Postgres: 10K rows, free Redis: 25 MB. Dynos slept after 30 min inactivity",
-      "current_state": "No free tier. Mini plan starts at $5/month (Eco dynos $5/month for 1,000 shared hours). Postgres starts at $5/month",
-      "impact": "high",
-      "source_url": "https://blog.heroku.com/next-chapter",
-      "category": "Cloud Hosting",
-      "alternatives": [
-        "Render",
-        "Railway",
-        "Fly.io",
-        "Koyeb"
-      ]
-    },
-    {
-      "vendor": "GitHub Copilot",
-      "change_type": "new_free_tier",
-      "date": "2025-12-18",
-      "summary": "GitHub launched Copilot Free tier \u2014 AI code completion available to all GitHub users at no cost. 2,000 completions and 50 chat messages per month included",
-      "previous_state": "Paid only: Individual $10/month, Business $19/user/month. Free for verified students, teachers, and OSS maintainers only",
-      "current_state": "Free tier: 2,000 code completions/month, 50 chat messages/month. Individual $10/month, Business $19/month, Enterprise $39/month remain for higher limits",
-      "impact": "high",
-      "source_url": "https://github.blog/news-insights/product-news/github-copilot-in-vscode-free/",
-      "category": "AI Coding",
-      "alternatives": [
-        "Cline",
-        "Cody",
-        "Cursor"
-      ]
-    },
-    {
-      "vendor": "Auth0",
-      "change_type": "limits_increased",
-      "date": "2025-11-01",
-      "summary": "Auth0 increased free tier from 7,500 to 25,000 monthly active users. Largest free tier expansion since Okta acquisition. Makes Auth0 competitive with Clerk and Firebase Auth on free tier",
-      "previous_state": "Free tier: 7,500 MAU, unlimited social connections, 2 organizations",
-      "current_state": "Free tier: 25,000 MAU (+233%), unlimited social connections, 5 organizations. Actions, Branding, MFA included",
-      "impact": "high",
-      "source_url": "https://auth0.com/pricing",
-      "category": "Authentication",
-      "alternatives": [
-        "Clerk",
-        "Firebase Auth",
-        "Supabase Auth"
-      ]
-    },
-    {
-      "vendor": "Railway",
-      "change_type": "limits_increased",
-      "date": "2025-10-01",
-      "summary": "Railway expanded free tier following $100M Series B. Trial plan now includes $5 in free credits/month, sufficient for small hobby projects. Removed credit card requirement for trial",
-      "previous_state": "$5 free trial credit one-time, credit card required for Hobby plan",
-      "current_state": "Trial: $5/month in free credits, no credit card needed. Hobby: $5/month + usage. Pro: $20/month per seat",
-      "impact": "medium",
-      "source_url": "https://railway.com/pricing",
-      "category": "Cloud Hosting",
-      "alternatives": [
-        "Render",
-        "Fly.io",
-        "Koyeb"
-      ]
-    },
-    {
-      "vendor": "Render",
-      "change_type": "limits_reduced",
-      "date": "2025-09-01",
-      "summary": "Free web services now spin down after 15 minutes of inactivity (previously 30 minutes). Cold starts take 30-60 seconds. Free tier remains but with faster sleep times",
-      "previous_state": "Free web services slept after 30 minutes of inactivity",
-      "current_state": "Free web services sleep after 15 minutes of inactivity. 750 hours/month free compute unchanged. Cold start 30-60 seconds",
-      "impact": "low",
-      "source_url": "https://render.com/pricing",
-      "category": "Cloud Hosting",
-      "alternatives": [
-        "Railway",
-        "Fly.io",
-        "Koyeb"
-      ]
-    },
-    {
-      "vendor": "Redis",
-      "change_type": "pricing_restructured",
-      "date": "2024-03-20",
-      "summary": "Redis switched from BSD license to dual SSPL/RSALv2 license, effectively ending open-source status. Triggered creation of Valkey fork by Linux Foundation. Redis Cloud pricing unchanged but community trust impacted",
-      "previous_state": "BSD 3-Clause open-source license. Community-driven development. Multiple hosted providers (AWS ElastiCache, etc.)",
-      "current_state": "Dual SSPL + RSALv2 license. Cloud hosting by third parties restricted. Valkey fork (BSD) created by Linux Foundation with AWS, Google, Oracle backing",
-      "impact": "high",
-      "source_url": "https://redis.io/blog/redis-adopts-dual-source-available-licensing/",
-      "category": "Databases",
-      "alternatives": [
-        "Valkey",
-        "KeyDB",
-        "DragonflyDB",
-        "Upstash"
-      ]
-    },
-    {
-      "vendor": "HashiCorp",
-      "change_type": "pricing_restructured",
-      "date": "2023-08-10",
-      "summary": "HashiCorp switched Terraform, Vault, Consul, Nomad, and other products from MPL 2.0 to BSL 1.1 license. Triggered OpenTofu fork under Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024",
-      "previous_state": "Mozilla Public License 2.0 (open-source). Community-driven development with corporate stewardship",
-      "current_state": "Business Source License 1.1. Non-production use free, competitive commercial use restricted. OpenTofu fork (MPL 2.0) maintained by Linux Foundation",
-      "impact": "high",
-      "source_url": "https://www.hashicorp.com/blog/hashicorp-adopts-business-source-license",
-      "category": "Infrastructure",
-      "alternatives": [
-        "OpenTofu",
-        "Pulumi",
-        "Crossplane"
-      ]
-    },
-    {
-      "vendor": "DigitalOcean",
-      "change_type": "limits_increased",
-      "date": "2026-01-01",
-      "summary": "20% price cut on Basic Droplets (cheapest now $4/mo from $5/mo). Per-second billing introduced (minimum 60 seconds or $0.01). Functions free tier increased to 25,000 GiB-seconds/mo",
-      "previous_state": "Basic Droplets from $5/mo, hourly billing, Functions 90K GiB-seconds/mo free",
-      "current_state": "Basic Droplets from $4/mo (1 vCPU, 512 MB, 10 GB SSD). Per-second billing (min 60s/$0.01). Functions 25,000 GiB-seconds/mo free",
-      "impact": "medium",
-      "source_url": "https://www.digitalocean.com/pricing/droplets",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "Hetzner",
-        "Vultr",
-        "Linode"
-      ]
-    },
-    {
-      "vendor": "DigitalOcean",
-      "change_type": "restriction",
-      "date": "2026-03-21",
-      "summary": "Managed databases are not part of the free tier. Pricing starts at $15/month. Previous listing incorrectly included '1 basic cluster' as a free tier benefit",
-      "previous_state": "Listed as: Free static sites (up to 3), functions (90K GiB-seconds/mo), and managed databases (1 basic cluster)",
-      "current_state": "Free static sites (up to 3) and functions (90K GiB-seconds/mo). Managed databases start at $15/mo, not free",
-      "impact": "medium",
-      "source_url": "https://www.digitalocean.com/pricing",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "Neon",
-        "PlanetScale",
-        "Supabase"
-      ]
-    },
-    {
-      "vendor": "Freshping",
-      "change_type": "free_tier_removed",
-      "date": "2026-03-06",
-      "summary": "Freshping shut down entirely. Free accounts disabled March 6, 2026. Paid plans expire at end of term. All data deleted 90 days later (~June 4, 2026). No replacement product offered by Freshworks",
-      "previous_state": "Free plan: 50 monitors, 1-minute check intervals, public status pages, multi-location checks, email/Slack alerts",
-      "current_state": "Service discontinued. No free or paid plan available",
-      "impact": "high",
-      "source_url": "https://www.freshworks.com/freshping/",
-      "category": "Monitoring",
-      "alternatives": [
-        "UptimeRobot",
-        "BetterStack",
-        "Checkly",
-        "StatusCake",
-        "Pulsetic",
-        "Cronitor",
-        "Upptime"
-      ]
-    },
-    {
-      "vendor": "Firebase",
-      "change_type": "product_deprecated",
-      "date": "2026-03-19",
-      "summary": "Firebase Studio (formerly Project IDX) shut down March 19, 2026. Cloud IDE and AI code generation features discontinued. Existing projects accessible until March 2027 for migration",
-      "previous_state": "Firebase Studio: cloud IDE with AI code generation, Gemini integration, multi-platform preview",
-      "current_state": "Discontinued. Projects accessible until March 2027 for data export only. Google recommends migrating to other IDEs",
-      "impact": "medium",
-      "source_url": "https://firebase.google.com/docs/studio",
-      "category": "Databases",
-      "alternatives": [
-        "Supabase",
-        "Appwrite Cloud",
-        "PocketBase",
-        "Nhost",
-        "Convex"
-      ]
-    },
-    {
-      "vendor": "Firebase",
-      "change_type": "restriction",
-      "date": "2026-02-01",
-      "summary": "Spark plan projects using legacy *.appspot.com Cloud Storage buckets forced to upgrade to Blaze (pay-as-you-go) plan or lose Cloud Storage access. No billing caps on Blaze plan \u2014 developers risk unexpected charges",
-      "previous_state": "Spark plan: free Cloud Storage with *.appspot.com buckets, no credit card required",
-      "current_state": "Legacy bucket projects must upgrade to Blaze (pay-as-you-go). No hard billing caps. New projects use Firebase Storage buckets on Spark plan",
-      "impact": "high",
-      "source_url": "https://firebase.google.com/docs/storage/web/start",
-      "category": "Databases",
-      "alternatives": [
-        "Supabase",
-        "Appwrite Cloud",
-        "PocketBase",
-        "Nhost",
-        "Convex"
-      ]
-    },
-    {
-      "vendor": "Dub.co",
-      "change_type": "limits_reduced",
-      "date": "2026-03-22",
-      "summary": "Free tier link limit reduced 40x from 1,000 links to 25 new links/month. Added 30-day analytics retention limit and 1-user cap",
-      "previous_state": "1,000 links, 1,000 tracked clicks/month, up to 3 custom domains",
-      "current_state": "25 new links/month, 1,000 tracked events/month, 3 custom domains, 1 user, 30-day analytics retention",
-      "impact": "high",
-      "source_url": "https://dub.co/pricing",
-      "category": "Dev Utilities",
-      "alternatives": [
-        "Bitly",
-        "Short.io"
-      ]
-    },
-    {
-      "vendor": "Uploadthing",
-      "change_type": "free_tier_removed",
-      "date": "2025-01-15",
-      "summary": "Free tier eliminated. Uploadthing moved to usage-based pricing with minimum $25/month plan (250 GB storage). No free tier available",
-      "previous_state": "Free tier: 2 GB storage, 2 GB bandwidth/month",
-      "current_state": "Usage-based pricing only. Minimum $25/month plan with 250 GB storage. No free tier",
-      "impact": "high",
-      "source_url": "https://uploadthing.com/pricing",
-      "category": "Storage",
-      "alternatives": [
-        "Cloudinary",
-        "Vercel Blob",
-        "AWS S3"
-      ]
-    },
-    {
-      "vendor": "Neo4j AuraDB",
-      "change_type": "restriction",
-      "date": "2026-03-22",
-      "summary": "Data correction \u2014 previous entry incorrectly reduced limits to 50K nodes/175K relationships. Actual free tier is 200,000 nodes and 400,000 relationships per Neo4j AuraDB FAQ",
-      "previous_state": "50,000 nodes, 175,000 relationships (incorrectly listed)",
-      "current_state": "200,000 nodes, 400,000 relationships (restored to correct values)",
-      "impact": "low",
-      "source_url": "https://neo4j.com/cloud/platform/aura-graph-database/faq/",
-      "category": "Databases",
-      "alternatives": [
-        "Dgraph Cloud",
-        "Amazon Neptune"
-      ]
-    },
-    {
-      "vendor": "xAI (Grok)",
-      "change_type": "free_tier_removed",
-      "date": "2026-03-19",
-      "summary": "Grok Imagine free image/video generation locked behind SuperGrok subscription ($30/mo). Over 1B generations in first month overwhelmed capacity",
-      "previous_state": "Free image and video generation for all Grok users",
-      "current_state": "Image/video generation requires SuperGrok subscription ($30/month). Text-only Grok remains free with limits",
-      "impact": "medium",
-      "source_url": "https://x.com/xai",
-      "category": "AI / ML",
-      "alternatives": [
-        "DALL-E (credits)",
-        "Stable Diffusion (self-hosted)",
-        "Pollinations.AI"
-      ]
-    },
-    {
-      "vendor": "Google Gemini API",
-      "change_type": "restriction",
-      "date": "2026-04-01",
-      "summary": "Billing-account-level spend caps enforced starting April 1, 2026. When a tier's spend cap is reached, API requests pause until the next billing month. Affects pay-as-you-go developers who may see unexpected request pausing.",
-      "previous_state": "No hard spend caps \u2014 usage billed without automatic pausing",
-      "current_state": "Tier-level spend caps enforced at billing account level. Requests pause when cap is hit until next month",
-      "impact": "medium",
-      "source_url": "https://ai.google.dev/gemini-api/docs/billing",
-      "category": "AI / ML",
-      "alternatives": [
-        "OpenRouter",
-        "Anthropic Claude API",
-        "OpenAI API"
-      ]
-    },
-    {
-      "vendor": "Windsurf",
-      "change_type": "pricing_restructured",
-      "date": "2026-03-19",
-      "summary": "Windsurf replaced credits-based pricing with daily/weekly quotas (Mar 19, 2026). New tiers: Pro $20/mo (was $15), Ultimate $40/mo, Team $200/mo/seat. Free tier changed from flexible credits to hard quotas. Existing Pro subscribers grandfathered at $15/mo",
-      "previous_state": "Credits-based system allowing flexible allocation between completions and chat. Pro plan $15/month",
-      "current_state": "Daily/weekly quotas replace credits. Pro $20/mo (existing subs grandfathered at $15), Ultimate $40/mo, Team $200/mo/seat. Free tier gets limited daily completions and chat messages",
-      "impact": "medium",
-      "source_url": "https://windsurf.com/pricing",
-      "category": "AI Coding",
-      "alternatives": [
-        "Cursor",
-        "GitHub Copilot",
-        "Cline"
-      ]
-    },
-    {
-      "vendor": "Gemini Code Assist",
-      "change_type": "new_free_tier",
-      "date": "2025-12-18",
-      "summary": "Google launched Gemini Code Assist free tier for individual developers. Includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro. Available in VS Code, JetBrains, and Cloud Shell",
-      "previous_state": "No free tier \u2014 enterprise-only at $19/user/month",
-      "current_state": "Free individual tier with code completions, chat, and multi-file editing. Enterprise tier remains at $19/user/month",
-      "impact": "high",
-      "source_url": "https://cloud.google.com/gemini/docs/codeassist/overview",
-      "category": "AI Coding",
-      "alternatives": [
-        "GitHub Copilot Free",
-        "Cursor",
-        "Cline"
-      ]
-    },
-    {
-      "vendor": "Amazon Aurora PostgreSQL",
-      "change_type": "new_free_tier",
-      "date": "2026-03-25",
-      "summary": "Aurora PostgreSQL Serverless added to AWS Free Tier \u2014 managed PostgreSQL-compatible database now available at no cost with up to 4 ACUs per cluster and 1 GB storage. Part of AWS Free Plan (6 months + credits)",
-      "previous_state": "No free tier \u2014 Aurora was paid-only, starting at ~$0.08/ACU-hour",
-      "current_state": "Free plan with up to 4 ACUs per cluster, 1 GB storage, $100\u2013200 in credits for new accounts",
-      "impact": "high",
-      "source_url": "https://aws.amazon.com/rds/aurora/pricing/",
-      "category": "Databases",
-      "alternatives": [
-        "Neon",
-        "Supabase",
-        "CockroachDB",
-        "PlanetScale"
-      ]
-    },
-    {
-      "vendor": "Amazon Kiro",
-      "change_type": "new_free_tier",
-      "date": "2026-04-07",
-      "summary": "Amazon Kiro AI coding assistant launched GA with tiered credit-based pricing: Free tier (50 credits/month), Pro ($20/month, 1,000 credits), Pro+ ($40/month, 2,000 credits). Credits consumed per AI interaction (specs, code generation, debugging)",
-      "previous_state": "Preview-only access, no public pricing",
-      "current_state": "Free tier: 50 credits/month. Pro: $20/month (1,000 credits). Pro+: $40/month (2,000 credits). GA availability",
-      "impact": "medium",
-      "source_url": "https://kiro.dev/pricing",
-      "category": "AI Coding",
-      "alternatives": [
-        "Cursor",
-        "Windsurf",
-        "GitHub Copilot",
-        "Claude Code"
-      ]
-    },
-    {
-      "vendor": "Replit",
-      "change_type": "pricing_restructured",
-      "date": "2026-04-01",
-      "summary": "Replit Core plan dropped from $25/month to $20/month. New Pro plan added at $100/month with higher credit allocation. Free tier unchanged (limited AI credits, basic compute). Price reduction makes Core more competitive with Cursor Pro ($20/month)",
-      "previous_state": "Free tier + Core plan at $25/month",
-      "current_state": "Free tier + Core plan at $20/month + new Pro plan at $100/month",
-      "impact": "low",
-      "source_url": "https://replit.com/pricing",
-      "category": "Cloud IDE",
-      "alternatives": [
-        "GitHub Codespaces",
-        "Gitpod",
-        "CodeSandbox"
-      ]
-    },
-    {
-      "vendor": "SonarQube Cloud",
-      "change_type": "pricing_restructured",
-      "date": "2026-04-01",
-      "summary": "SonarQube Cloud introduced more granular Team tier pricing with differentiated feature access. Free tier for open-source projects remains. Paid tiers restructured for clearer scaling path from small teams to enterprise",
-      "previous_state": "Free (open source) + Developer + Enterprise tiers",
-      "current_state": "Free (open source) + Team (granular tiers) + Enterprise. More pricing options for mid-size teams",
-      "impact": "low",
-      "source_url": "https://www.sonarsource.com/plans-and-pricing/sonarqube/cloud/",
-      "category": "Code Quality",
-      "alternatives": [
-        "CodeClimate",
-        "Codacy",
-        "DeepSource"
-      ]
-    },
-    {
-      "vendor": "Cursor",
-      "change_type": "new_tier",
-      "date": "2026-04-07",
-      "summary": "Cursor introduced Pro+ tier at $60/month between Pro ($20) and Ultra ($200). Pro+ includes 10x premium model requests vs Pro, priority access, and expanded context window. Expands the pricing ladder from 3 tiers (Free/Pro/Ultra) to 4 (Free/Pro/Pro+/Ultra), filling the $20-$200 gap.",
-      "previous_state": "3-tier pricing: Free (2K completions, 50 slow requests), Pro $20/mo (unlimited completions, 500 fast requests), Ultra $200/mo",
-      "current_state": "4-tier pricing: Free (2K completions, 50 slow requests), Pro $20/mo, Pro+ $60/mo (10x premium requests, priority access, more context), Ultra $200/mo",
-      "impact": "medium",
-      "source_url": "https://www.cursor.com/pricing",
-      "category": "AI Coding",
-      "alternatives": [
-        "GitHub Copilot",
-        "Windsurf",
-        "Cline",
-        "Claude Code"
-      ]
-    },
-    {
-      "vendor": "Google Gemini API",
-      "change_type": "restriction",
-      "date": "2026-04-08",
-      "summary": "Gemini API free tier restricted to Flash and Flash-Lite models only (April 2026). Gemini 2.5 Pro and other Pro models now require a paid billing account. Previously free users could access Pro models with rate limits. Combined with April 1 spend cap enforcement, this significantly narrows what is available at $0.",
-      "previous_state": "Free tier included access to both Flash and Pro models with rate limits. Gemini 2.5 Pro accessible to free users at reduced rates",
-      "current_state": "Free tier restricted to Flash and Flash-Lite models only. Pro models (Gemini 2.5 Pro) require paid billing account. Free users limited to lighter-weight models",
-      "impact": "high",
-      "source_url": "https://ai.google.dev/gemini-api/docs/pricing",
-      "category": "AI / ML",
-      "alternatives": [
-        "OpenRouter",
-        "Groq",
-        "Together AI",
-        "Anthropic Claude API"
-      ]
-    },
-    {
-      "vendor": "OVHcloud",
-      "change_type": "pricing_restructured",
-      "date": "2026-04-01",
-      "summary": "OVHcloud raised prices 9-11% on newer infrastructure (Public Cloud, Bare Metal, VPS 2026 range) effective April 1, 2026. Free tier unchanged. Applies to 2026-range products only \u2014 legacy configurations retain previous pricing.",
-      "previous_state": "Previous pricing on Public Cloud, Bare Metal, and VPS 2026-range products",
-      "current_state": "9-11% price increase on newer infrastructure. Free tier and legacy configurations unaffected",
-      "impact": "medium",
-      "source_url": "https://www.ovhcloud.com/en/pricing/",
-      "category": "Cloud IaaS",
-      "alternatives": [
-        "Hetzner",
-        "DigitalOcean",
-        "Vultr",
-        "Linode"
-      ]
-    },
-    {
-      "vendor": "Amazon SP-API",
-      "change_type": "free_tier_removed",
-      "date": "2026-04-30",
-      "summary": "Amazon Selling Partner API (SP-API) moves to paid access starting April 30, 2026. New base fee of $1,400/year plus per-call fees. Previously free for registered developers. Major impact on Amazon marketplace integrators and third-party seller tools.",
-      "previous_state": "Free API access for registered Amazon developers with standard rate limits",
-      "current_state": "$1,400/year base fee plus per-call fees starting April 30, 2026. No free tier",
-      "impact": "high",
-      "source_url": "https://developer-docs.amazon.com/sp-api/",
-      "category": "E-Commerce",
-      "alternatives": [
-        "Shopify API",
-        "WooCommerce API",
-        "BigCommerce API"
-      ]
-    },
-    {
-      "vendor": "Amazon Kiro",
-      "change_type": "new_free_tier",
-      "date": "2026-04-09",
-      "summary": "Amazon Kiro launched GA with a free tier of 50 interactions/month. Claude-powered IDE focused on spec-driven development. Pro $20/mo (1,000 interactions), Pro+ $40/mo (2,000), Power $200/mo (10,000). Competes directly with Cursor, GitHub Copilot, and Windsurf.",
-      "previous_state": "Preview/beta with limited access",
-      "current_state": "GA with free tier (50 interactions/mo). Four paid tiers: Pro ($20), Pro+ ($40), Power ($200)",
-      "impact": "high",
-      "source_url": "https://kiro.dev/pricing",
-      "category": "AI Coding",
-      "alternatives": [
-        "Cursor",
-        "GitHub Copilot",
-        "Windsurf",
-        "Claude Code"
-      ]
-    },
-    {
-      "vendor": "OpenAI",
-      "change_type": "free_tier_removed",
-      "date": "2026-05-12",
-      "summary": "DALL-E 2 and DALL-E 3 API access discontinued. Developers must migrate to gpt-image-1 (different pricing model, quality tiers changed from standard/hd to low/medium/high) or switch to free alternatives like Pollinations.AI or Lumenfall.ai",
-      "previous_state": "DALL-E 3 API: $0.040-$0.120/image (1024x1024), paid via API credits",
-      "current_state": "DALL-E 2 & 3 API shut down. Replacement: gpt-image-1 at $0.011-$0.167/image with new quality tiers",
-      "impact": "high",
-      "source_url": "https://platform.openai.com/docs/deprecations",
-      "category": "AI / ML",
-      "alternatives": [
-        "gpt-image-1",
-        "Pollinations.AI",
-        "Lumenfall.ai",
-        "Cloudflare Workers AI",
-        "Stability AI",
-        "Replicate"
-      ]
-    },
-    {
-      "vendor": "OpenAI",
-      "change_type": "product_deprecated",
-      "date": "2026-05-07",
-      "summary": "Realtime API beta endpoints deprecated. Developers must remove OpenAI-Beta header, use new client_secrets endpoint, specify session_type, and update event names. GA Realtime API is the direct replacement.",
-      "previous_state": "Realtime API beta: required OpenAI-Beta: realtime=v1 header, single session type, beta event names",
-      "current_state": "Realtime API GA: no beta header, POST /v1/realtime/client_secrets for ephemeral keys, session_type required (speech-to-speech or transcription), updated event names",
-      "impact": "high",
-      "source_url": "https://platform.openai.com/docs/deprecations",
-      "category": "AI / ML",
-      "alternatives": [
-        "OpenAI Realtime API (GA)",
-        "Deepgram",
-        "AssemblyAI",
-        "Azure OpenAI Realtime",
-        "ElevenLabs",
-        "Google Cloud Speech-to-Text"
-      ]
-    }
-  ]
+    "changes": [
+        {
+            "vendor": "Brave Search API",
+            "change_type": "free_tier_removed",
+            "date": "2026-02-12",
+            "summary": "Free plan (5,000 queries/month) replaced with metered billing at $5/1,000 requests. $5 monthly credit provided as offset (~1,000 queries). Credit cards now actively charged with no spending cap",
+            "previous_state": "Free plan: 5,000 queries/month, 3 QPS, no credit card required",
+            "current_state": "Metered billing at $5/1,000 requests with $5 monthly credit (~1,000 free queries). No free plan. Credit card required, no spending cap",
+            "impact": "high",
+            "source_url": "https://www.implicator.ai/brave-drops-free-search-api-tier-puts-all-developers-on-metered-billing/",
+            "category": "Search",
+            "alternatives": [
+                "SerpAPI",
+                "Google Custom Search"
+            ]
+        },
+        {
+            "vendor": "X API (Twitter)",
+            "change_type": "free_tier_removed",
+            "date": "2026-02-09",
+            "summary": "Free tier replaced with pay-per-use + $10 one-time credit",
+            "previous_state": "Free basic endpoints (Like, Follow, List, etc.)",
+            "current_state": "Pay-per-use pricing, $10 one-time credit for existing users, free plan expired Feb 13",
+            "impact": "high",
+            "source_url": "https://developer.x.com/en",
+            "category": "APIs",
+            "alternatives": [
+                "Bluesky API",
+                "Mastodon API"
+            ]
+        },
+        {
+            "vendor": "Spotify API",
+            "change_type": "limits_reduced",
+            "date": "2026-02-11",
+            "summary": "Premium subscription now required for development mode, test users cut from 25 to 5",
+            "previous_state": "Free developer access to Web API, 25 test users",
+            "current_state": "Spotify Premium subscription required for dev mode, 5 test users max, multiple endpoints deprecated",
+            "impact": "high",
+            "source_url": "https://developer.spotify.com/",
+            "category": "APIs",
+            "alternatives": [
+                "Last.fm API",
+                "MusicBrainz API"
+            ]
+        },
+        {
+            "vendor": "Amazon SP-API",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-31",
+            "summary": "Free access ended after 10+ years, now $1,400/year + per-call fees starting April 30",
+            "previous_state": "Free API access for 10+ years",
+            "current_state": "$1,400/year subscription + per-call fees (effective April 30, 2026)",
+            "impact": "high",
+            "source_url": "https://developer-docs.amazon.com/sp-api/",
+            "category": "APIs",
+            "alternatives": []
+        },
+        {
+            "vendor": "PythonAnywhere",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-15",
+            "summary": "$5 Hacker tier eliminated, features merged into free and higher tiers",
+            "previous_state": "$5/mo Hacker tier with custom domains and more storage",
+            "current_state": "Free tier and $10/mo+ paid tiers only, Hacker tier removed",
+            "impact": "medium",
+            "source_url": "https://www.pythonanywhere.com/pricing/",
+            "category": "Hosting",
+            "alternatives": [
+                "Render",
+                "Railway",
+                "Replit"
+            ]
+        },
+        {
+            "vendor": "Google Gemini",
+            "change_type": "limits_reduced",
+            "date": "2025-12-15",
+            "summary": "Google quietly slashed Gemini API free tier rate limits by 50-80% in late 2025. Gemini 2.5 Flash went from ~250 requests/day to 20-50. Pro model free tier removed entirely. A Google PM admitted generous limits were only supposed to be available for a single weekend",
+            "previous_state": "Pro model available on free tier, Flash ~250 RPD, Flash-Lite generous limits",
+            "current_state": "Pro free tier removed. Flash reduced to 10 RPM (~20-50 RPD). Flash-Lite 15 RPM. 50-80% reduction across the board. Gemini 2.0 Flash retiring March 2026",
+            "impact": "high",
+            "source_url": "https://ai.google.dev/gemini-api/docs/pricing",
+            "category": "AI / ML",
+            "alternatives": [
+                "OpenRouter",
+                "Groq",
+                "Together AI"
+            ]
+        },
+        {
+            "vendor": "Netlify",
+            "change_type": "pricing_restructured",
+            "date": "2025-09-04",
+            "summary": "Restructured to credit-based pricing; sites pause on credit exhaustion",
+            "previous_state": "Traditional tiered pricing with fixed monthly allowances",
+            "current_state": "300 credits/month free, sites pause on exhaustion",
+            "impact": "medium",
+            "source_url": "https://www.netlify.com/pricing/",
+            "category": "Hosting",
+            "alternatives": [
+                "Vercel",
+                "Cloudflare Pages",
+                "GitHub Pages"
+            ]
+        },
+        {
+            "vendor": "Netlify",
+            "change_type": "restriction",
+            "date": "2026-03-01",
+            "summary": "Every repo committer is now charged as a full Pro seat ($19/mo) when using Netlify CMS or Identity with a private repo. Previously only users who logged into the Netlify dashboard counted as seats",
+            "previous_state": "Only Netlify dashboard users counted as billable seats",
+            "current_state": "All repo committers to connected private repos count as Pro seats ($19/mo each) when using CMS or Identity features",
+            "impact": "high",
+            "source_url": "https://www.netlify.com/pricing/",
+            "category": "Hosting",
+            "alternatives": [
+                "Vercel",
+                "Cloudflare Pages",
+                "GitHub Pages"
+            ]
+        },
+        {
+            "vendor": "Supabase",
+            "change_type": "limits_reduced",
+            "date": "2026-02-01",
+            "summary": "Project pause policy tightened \u2014 inactive projects now pause after 1 week",
+            "previous_state": "Longer inactivity window before project pause",
+            "current_state": "Projects pause after 1 week of inactivity on free tier",
+            "impact": "medium",
+            "source_url": "https://supabase.com/pricing",
+            "category": "Databases",
+            "alternatives": [
+                "Neon",
+                "PlanetScale",
+                "CockroachDB"
+            ]
+        },
+        {
+            "vendor": "Cloudflare",
+            "change_type": "new_free_tier",
+            "date": "2026-02-04",
+            "summary": "Queues added to Workers free plan \u2014 message queuing now free",
+            "previous_state": "Queues was paid-only",
+            "current_state": "Queues included in free Workers plan",
+            "impact": "medium",
+            "source_url": "https://developers.cloudflare.com/queues/",
+            "category": "Cloud IaaS",
+            "alternatives": []
+        },
+        {
+            "vendor": "GitHub Actions",
+            "change_type": "pricing_postponed",
+            "date": "2026-01-01",
+            "summary": "Self-hosted runner per-minute fee ($0.002/min) announced for March 2026 was postponed indefinitely after community backlash. Self-hosted runners remain free. Separately, hosted runner prices were reduced up to 39% (Jan 2026)",
+            "previous_state": "Self-hosted runners free. Previous per-minute pricing for hosted runners",
+            "current_state": "Self-hosted runners remain free \u2014 no orchestration fees. Hosted runners 39% cheaper. GitHub re-evaluating self-hosted pricing approach",
+            "impact": "low",
+            "source_url": "https://github.com/orgs/community/discussions/182089",
+            "category": "CI/CD",
+            "alternatives": [
+                "GitLab CI",
+                "CircleCI",
+                "Buildkite"
+            ]
+        },
+        {
+            "vendor": "Bright Data MCP",
+            "change_type": "new_free_tier",
+            "date": "2025-08-14",
+            "summary": "Launched free tier for MCP Web Server \u2014 5,000 requests/month for agent developers",
+            "previous_state": "Paid-only web scraping API",
+            "current_state": "5,000 free monthly requests on Rapid mode, includes search_engine and scrape_as_markdown tools, handles JS rendering and CAPTCHAs",
+            "impact": "medium",
+            "source_url": "https://brightdata.com/pricing/mcp-server",
+            "category": "Web Scraping",
+            "alternatives": [
+                "Firecrawl",
+                "Apify"
+            ]
+        },
+        {
+            "vendor": "Stripe",
+            "change_type": "pricing_restructured",
+            "date": "2026-02-01",
+            "summary": "Managed Payments (Merchant of Record) service entering general availability \u2014 Stripe handles tax, billing, fraud, and disputes",
+            "previous_state": "Payment processing only \u2014 developers handled tax compliance, fraud, and disputes separately",
+            "current_state": "Managed Payments acts as Merchant of Record in 75+ countries, handling sales tax/VAT/GST, fraud prevention, dispute resolution, and transaction-level support",
+            "impact": "high",
+            "source_url": "https://docs.stripe.com/payments/managed-payments",
+            "category": "Payments",
+            "alternatives": [
+                "Paddle",
+                "Lemon Squeezy"
+            ]
+        },
+        {
+            "vendor": "Postman",
+            "change_type": "restriction",
+            "date": "2026-03-01",
+            "summary": "Free plan now single-user only. Team collaboration (shared workspaces, collection sharing) requires paid plan at $19/user/month",
+            "previous_state": "Free plan supported up to 3 users in shared workspaces with collection sharing and 25 monitoring calls/month",
+            "current_state": "Free plan = single user only with unlimited collections, environments, mock servers, basic monitoring. Teams require Team plan ($19/user/mo) or higher",
+            "impact": "high",
+            "source_url": "https://www.postman.com/pricing/",
+            "category": "Testing",
+            "alternatives": [
+                "Bruno",
+                "Insomnia",
+                "Hoppscotch",
+                "Apidog",
+                "Thunder Client"
+            ]
+        },
+        {
+            "vendor": "Atlassian Forge",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-01",
+            "summary": "Forge platform moved from free to consumption-based billing for compute and storage",
+            "previous_state": "Entirely free \u2014 no charges for compute, storage, or KV operations",
+            "current_state": "Free monthly allowances per app (100K GB-sec compute, 0.1 GB KVS, 1 GB logs, 1 hr SQL), usage above thresholds billed",
+            "impact": "medium",
+            "source_url": "https://www.atlassian.com/blog/developer/updates-to-forge-pricing-effective-january-2026",
+            "category": "Developer Tools",
+            "alternatives": [
+                "AWS Lambda",
+                "Self-hosted Connect apps"
+            ]
+        },
+        {
+            "vendor": "Fly.io",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-01",
+            "summary": "Volume snapshots now billed \u2014 previously free automatic snapshots now cost $0.08/GB-month",
+            "previous_state": "Automatic volume snapshots included at no cost, enabled by default",
+            "current_state": "$0.08/GB-month for snapshot storage, first 10 GB free. Snapshots can be disabled to avoid charges",
+            "impact": "medium",
+            "source_url": "https://fly.io/docs/about/pricing/",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Render",
+                "Railway",
+                "Koyeb"
+            ]
+        },
+        {
+            "vendor": "Cloudflare Durable Objects",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-07",
+            "summary": "SQLite storage billing began for Durable Objects \u2014 previously free during beta",
+            "previous_state": "SQLite storage in Durable Objects was free during public beta (compute already billed)",
+            "current_state": "Storage charged per GB-hour on Workers Paid plan, first 10 GB included. Free plan users unaffected",
+            "impact": "low",
+            "source_url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "Upstash Redis",
+                "Cloudflare KV",
+                "Neon"
+            ]
+        },
+        {
+            "vendor": "Sentry",
+            "change_type": "pricing_restructured",
+            "date": "2025-08-15",
+            "summary": "Switched from performance units to spans-based metrics for error and performance monitoring",
+            "previous_state": "Performance units pricing model",
+            "current_state": "Spans-based metrics: Developer plan includes 50K errors + 10M spans/month free. Reserved volume pricing replaces on-demand",
+            "impact": "medium",
+            "source_url": "https://sentry.io/pricing/",
+            "category": "Monitoring",
+            "alternatives": [
+                "Datadog",
+                "New Relic",
+                "BetterStack"
+            ]
+        },
+        {
+            "vendor": "Neon",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-15",
+            "summary": "Moved to fully usage-based pricing model post-Databricks acquisition \u2014 free tier storage now per-project, projects increased 10\u2192100, branches capped at 10 per project, Neon Auth added",
+            "previous_state": "Free tier: 0.5 GB total storage, 191.9 compute hours, 10 projects, unlimited branches",
+            "current_state": "Free tier: 0.5 GB per project (up to 5 GB across 100 projects), 100 CU-hours/month per project, 10 branches/project, Neon Auth 60K MAU, auto-scaling up to 2 CU, scale-to-zero",
+            "impact": "medium",
+            "source_url": "https://neon.com/pricing",
+            "category": "Databases",
+            "alternatives": [
+                "Supabase",
+                "CockroachDB",
+                "Turso"
+            ]
+        },
+        {
+            "vendor": "Vercel",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-01",
+            "summary": "Pro plan moved to credit-based model ($20/mo credit pool), Hobby plan metrics renamed and restructured \u2014 bandwidth\u2192Fast Data Transfer, serverless split into Active CPU + Provisioned Memory, Blob Storage and Image Transformations added",
+            "previous_state": "Hobby: 100 GB bandwidth, 100 GB-hours serverless. Pro: fixed per-resource allocations",
+            "current_state": "Hobby: 100 GB/mo Fast Data Transfer, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage, 5K image transformations. Pro: $20/mo credit pool across all resources, SAML SSO and HIPAA included",
+            "impact": "medium",
+            "source_url": "https://vercel.com/pricing",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Netlify",
+                "Cloudflare Pages",
+                "Render"
+            ]
+        },
+        {
+            "vendor": "Atlassian",
+            "change_type": "pricing_restructured",
+            "date": "2026-02-17",
+            "summary": "Data Center pricing increased 15-40% across Jira, Confluence, and JSM. New DC licenses end March 30 \u2014 cloud mandatory for new customers",
+            "previous_state": "Standard Data Center pricing with Advantaged/legacy discounts",
+            "current_state": "15% standard list increase, 18-40% for legacy Advantaged pricing tiers. No new DC licenses after March 30, 2026. Full DC end-of-life March 2029",
+            "impact": "high",
+            "source_url": "https://www.atlassian.com/licensing/future-pricing",
+            "category": "Developer Tools",
+            "alternatives": [
+                "Linear",
+                "Jira Cloud",
+                "Shortcut"
+            ]
+        },
+        {
+            "vendor": "Docker Hub",
+            "change_type": "pricing_restructured",
+            "date": "2024-12-10",
+            "summary": "Docker Pro +80% ($5\u2192$9/mo), Team +67% ($9\u2192$15/mo). Free tier: Build Cloud minutes removed, Scout repos cut 3\u21921, private repos limited to 1 with 2GB storage",
+            "previous_state": "Pro $5/user/month, Team $9/user/month. Free tier included Build Cloud minutes, 3 Scout repos",
+            "current_state": "Pro $9/user/month, Team $15/user/month. Free: 1 private repo (2GB), 1 Scout repo, no Build Cloud minutes, 40 pulls/hour",
+            "impact": "high",
+            "source_url": "https://www.docker.com/blog/november-2024-updated-plans-announcement/",
+            "category": "Container Registry",
+            "alternatives": [
+                "GitHub Container Registry",
+                "Quay.io",
+                "Podman"
+            ]
+        },
+        {
+            "vendor": "DigitalOcean",
+            "change_type": "limits_increased",
+            "date": "2025-01-22",
+            "summary": "Hatch startup program expanded to up to $100K compute credits plus up to 3 months free H100 GPU access for AI/ML startups",
+            "previous_state": "Standard Hatch startup credits program",
+            "current_state": "Up to $100K compute credits (12 months, excludes GPU). Separate GPU benefit: discounted H100 at ~$1.90/hr (vs $3.39 standard) plus up to 3 months free GPU access",
+            "impact": "medium",
+            "source_url": "https://investors.digitalocean.com/news/news-details/2025/DigitalOcean-Announces-New-Benefits-for-Hatch-Startup-Program/default.aspx",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "AWS Activate",
+                "Google Cloud for Startups",
+                "Azure for Startups"
+            ]
+        },
+        {
+            "vendor": "Google Cloud",
+            "change_type": "limits_increased",
+            "date": "2026-01-01",
+            "summary": "Google for Startups Cloud Program now offers up to $350K GCP credits for AI-first startups, plus $10K Anthropic (Claude) partner credits via Model Garden",
+            "previous_state": "Up to $200K GCP credits for standard startups",
+            "current_state": "Scale AI Tier: up to $350K GCP credits ($250K year 1, $100K year 2). Standard: $200K. Partner credits: $10K Anthropic/Claude via Model Garden, Fireworks AI, MongoDB Atlas, CockroachDB, 1yr free GitLab Ultimate",
+            "impact": "high",
+            "source_url": "https://cloud.google.com/startup/ai",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "AWS Activate",
+                "Azure for Startups",
+                "DigitalOcean Hatch"
+            ]
+        },
+        {
+            "vendor": "AWS",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-04",
+            "summary": "EC2 Capacity Blocks for ML GPU prices increased ~15% across regions. p5e.48xlarge went from $34.61 to $39.80/hr (US East) and $43.26 to $49.75/hr (US West N. California)",
+            "previous_state": "p5e.48xlarge at $34.61/hr (US East), $43.26/hr (US West N. California) for Capacity Blocks",
+            "current_state": "p5e.48xlarge at $39.80/hr (US East), $49.75/hr (US West N. California). ~15% increase across most GPU Capacity Block instances",
+            "impact": "medium",
+            "source_url": "https://www.theregister.com/2026/01/05/aws_price_increase/",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "Google Cloud GPUs",
+                "Azure GPU VMs",
+                "Lambda Cloud"
+            ]
+        },
+        {
+            "vendor": "Google",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-27",
+            "summary": "Google Developer Program Premium merged into Google One AI Pro ($19.99/mo, includes $10 Cloud credits) and AI Ultra ($100 Cloud credits). Developer benefits now bundled into consumer AI subscriptions",
+            "previous_state": "Separate Developer Program Premium subscription ($299/year) with dev tools and perks",
+            "current_state": "Developer benefits folded into AI Pro ($19.99/mo, $10 Cloud credits for Vertex AI/Cloud Run/Gemini API) and AI Ultra ($100 Cloud credits). Developer Program Premium being phased out for @gmail.com accounts",
+            "impact": "medium",
+            "source_url": "https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/",
+            "category": "Developer Tools",
+            "alternatives": [
+                "GitHub Copilot",
+                "JetBrains AI"
+            ]
+        },
+        {
+            "vendor": "OpenAI",
+            "change_type": "free_tier_removed",
+            "date": "2026-08-26",
+            "summary": "Assistants API deprecated, full shutdown August 26, 2026. Developers must migrate to Responses API + Conversations API",
+            "previous_state": "Assistants API available with code interpreter, file search, function calling, and Threads for conversation management",
+            "current_state": "Deprecated. Full shutdown Aug 26, 2026. Migration required: Assistants \u2192 Prompts + Responses API, Threads \u2192 Conversations API. No automated migration tool provided",
+            "impact": "high",
+            "source_url": "https://community.openai.com/t/assistants-api-beta-deprecation-august-26-2026-sunset/1354666",
+            "category": "AI/ML",
+            "alternatives": [
+                "Anthropic Claude API",
+                "Google Gemini API",
+                "Cohere API"
+            ]
+        },
+        {
+            "vendor": "Hetzner",
+            "change_type": "pricing_restructured",
+            "date": "2026-04-01",
+            "summary": "Cloud & dedicated server prices increasing 30-50%. Entry-level CX23: \u20ac2.99\u2192\u20ac3.99/mo (+33%). Applies to new and existing customers. Driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand",
+            "previous_state": "Lower cloud server pricing across Germany, Finland, US, and Singapore data centers (e.g., CX23 at \u20ac2.99/mo)",
+            "current_state": "30-37% increase on cloud servers, up to 50% on select dedicated/storage products. All regions and all customers (new and existing) affected. Announced Feb 23, 2026",
+            "impact": "high",
+            "source_url": "https://www.hetzner.com/pressroom/statement-price-adjustment/",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "DigitalOcean",
+                "Vultr",
+                "OVHcloud"
+            ]
+        },
+        {
+            "vendor": "Anthropic",
+            "change_type": "limits_increased",
+            "date": "2026-02-05",
+            "summary": "Claude Opus 4.6 API pricing at $5/$25 per MTok (input/output) \u2014 67% below previous Opus 4/4.1 pricing of $15/$75. Frontier AI model at mid-tier prices",
+            "previous_state": "Opus 4/4.1 priced at $15/$75 per million tokens (input/output)",
+            "current_state": "Opus 4.6 at $5/$25 per MTok. Extended context (>200K tokens): $10/$37.50. Batch API: $2.50/$12.50. Price reduction began with Opus 4.5 generation",
+            "impact": "high",
+            "source_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+            "category": "AI/ML APIs",
+            "alternatives": [
+                "OpenAI GPT-4o",
+                "Google Gemini",
+                "Mistral"
+            ]
+        },
+        {
+            "vendor": "OpenAI",
+            "change_type": "limits_reduced",
+            "date": "2026-02-09",
+            "summary": "Ads launched in ChatGPT Free and Go ($8/mo) tiers. Sponsored units from major brands appear below responses on first prompt. $60 CPM, $200K minimum ad commitment",
+            "previous_state": "Ad-free experience across all ChatGPT tiers including Free",
+            "current_state": "Free and Go tiers show contextual ads (labeled 'sponsored') below responses. Plus/Pro/Business/Enterprise/Education tiers remain ad-free. Users can opt out at cost of reduced daily message limits",
+            "impact": "high",
+            "source_url": "https://openai.com/index/testing-ads-in-chatgpt/",
+            "category": "AI/ML",
+            "alternatives": [
+                "Anthropic Claude",
+                "Google Gemini",
+                "Perplexity"
+            ]
+        },
+        {
+            "vendor": "Google Programmable Search Engine",
+            "change_type": "limits_reduced",
+            "date": "2026-01-22",
+            "summary": "Free full-web search being discontinued. Free tier restricted to max 50 domains per search engine. Migration deadline January 1, 2027",
+            "previous_state": "Free search across the entire web with 10,000 queries/day limit via Custom Search JSON API",
+            "current_state": "Free tier restricted to searching up to 50 specified domains only. Full-web search requires paid Google Cloud Search or Vertex AI Search. Takes effect January 1, 2027",
+            "impact": "high",
+            "source_url": "https://developers.google.com/custom-search",
+            "category": "Search",
+            "alternatives": [
+                "Brave Search API",
+                "SerpAPI",
+                "Bing Web Search API",
+                "Meilisearch"
+            ]
+        },
+        {
+            "vendor": "odrive",
+            "change_type": "free_tier_removed",
+            "date": "2026-03-31",
+            "summary": "odrive free tier discontinued effective March 31, 2026. Previously offered free unified cloud storage sync across multiple providers (Google Drive, Dropbox, S3, etc.)",
+            "previous_state": "Free tier with basic sync across multiple cloud storage providers, file manager interface",
+            "current_state": "Free tier removed. Business plans at $20/user/month (min 5 users) or $200/year org subscription. March 31, 2026 deadline",
+            "impact": "medium",
+            "source_url": "https://www.odrive.com/pricing",
+            "category": "Storage",
+            "alternatives": [
+                "rclone",
+                "Cyberduck",
+                "MultCloud"
+            ]
+        },
+        {
+            "vendor": "MinIO",
+            "change_type": "open_source_killed",
+            "date": "2026-02-12",
+            "summary": "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. Only case-by-case critical security fixes",
+            "previous_state": "Open-source S3-compatible object storage under AGPL-3.0. Active GitHub repo with community contributions, regular Docker image releases",
+            "current_state": "GitHub repository archived. Development moved to proprietary AIStor product. No new open-source releases. Critical security fixes only on case-by-case basis",
+            "impact": "high",
+            "source_url": "https://linuxiac.com/minio-ends-active-development/",
+            "category": "Storage",
+            "alternatives": [
+                "Ceph",
+                "SeaweedFS",
+                "GarageHQ",
+                "Apache Ozone"
+            ]
+        },
+        {
+            "vendor": "Microsoft Partner Developer Benefits",
+            "change_type": "pricing_restructured",
+            "date": "2026-02-13",
+            "summary": "Per-user monthly Azure credits eliminated, replaced with organization-level bulk Azure credits. Visual Studio license in all benefit tiers now exclusively VS Enterprise IDE",
+            "previous_state": "Per-user monthly Azure credits allocated individually. Mix of Visual Studio Professional and Enterprise licenses across tiers",
+            "current_state": "Organization-level bulk Azure credits (shared pool). All tiers include VS Enterprise IDE only. Per-user monthly credits discontinued",
+            "impact": "medium",
+            "source_url": "https://techcommunity.microsoft.com/discussions/partnerbenefitsforum/new-updates-to-developer-benefits-february-2026/4495536",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "AWS Partner Network",
+                "Google Cloud Partner Advantage"
+            ]
+        },
+        {
+            "vendor": "Cloudflare Startup Program",
+            "change_type": "startup_program_expanded",
+            "date": "2026-02-01",
+            "summary": "Startup program revamped to 4 tiers with up to $250,000 in credits (previously lower). Tiers: Bootstrapped $5K, Up-and-Coming $25K, Seed-Funded $100K, High Growth $250K. Credits expire within 1 year",
+            "previous_state": "Smaller startup program with fewer tiers and lower credit amounts",
+            "current_state": "4 tiers: $5K, $25K, $100K, $250K credits. Covers Workers, R2, Workers AI, Stream. Caps: $10K for R2/Cache Reserve, $50K for Workers AI. Credits expire within 1 year",
+            "impact": "high",
+            "source_url": "https://blog.cloudflare.com/startup-program-250k-credits/",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "AWS Activate",
+                "Google for Startups Cloud Program",
+                "Azure for Startups"
+            ]
+        },
+        {
+            "vendor": "Google Gemini 2.0 Flash",
+            "change_type": "product_deprecated",
+            "date": "2026-03-03",
+            "summary": "Gemini 2.0 Flash and 2.0 Flash-Lite models deprecated, scheduled for retirement. Free tier continues with Gemini 2.5 models. Developers on 2.0 must migrate",
+            "previous_state": "Gemini 2.0 Flash and Flash-Lite available as free-tier models with standard rate limits",
+            "current_state": "2.0 Flash and Flash-Lite deprecated. Developers must migrate to Gemini 2.5 Flash or 2.5 Pro. Free tier preserved for 2.5 series",
+            "impact": "medium",
+            "source_url": "https://www.isumsoft.com/internet/gemini-2-flash-deprecation-migration-guide.html",
+            "category": "AI/ML",
+            "alternatives": [
+                "Google Gemini 2.5 Flash",
+                "Google Gemini 2.5 Pro",
+                "OpenRouter",
+                "Groq"
+            ]
+        },
+        {
+            "vendor": "Logz.io",
+            "change_type": "free_tier_removed",
+            "date": "2026-03-02",
+            "summary": "Free Community plan (1 GB/day, 1-day retention, 10 alerts) removed. Only 14-day free trial remains. Consumption-based pricing starts at $0.92/ingested GB/day",
+            "previous_state": "Free Community plan: 1 GB/day ingestion, 1-day retention, 10 alerts, ML-powered anomaly detection",
+            "current_state": "14-day free trial only. Pay-as-go: $0.92/GB/day logs, $0.40/1K metrics/day, $0.16/1M spans/day. No permanent free tier",
+            "impact": "medium",
+            "source_url": "https://logz.io/pricing/",
+            "category": "Logging",
+            "alternatives": [
+                "Grafana Cloud",
+                "BetterStack",
+                "Axiom",
+                "New Relic"
+            ]
+        },
+        {
+            "vendor": "X (Twitter)",
+            "change_type": "pricing_model_change",
+            "date": "2026-02-06",
+            "summary": "Pay-per-use pricing model introduced alongside existing fixed tiers. Legacy free tier users migrated to pay-per-use with $10 voucher. Free tier effectively reduced to proof-of-concept only (~500 posts/month read, no search)",
+            "previous_state": "Fixed tiers: Free (limited), Basic $100/mo, Pro $5,000/mo, Enterprise $42,000/mo",
+            "current_state": "Pay-per-use model added: per-operation billing (read, search, write priced separately). Fixed tiers remain: Free (very limited), Basic $200/mo, Pro $5,000/mo, Enterprise $42,000/mo",
+            "impact": "high",
+            "source_url": "https://devcommunity.x.com/t/announcing-the-launch-of-x-api-pay-per-use-pricing/256476",
+            "category": "API Gateway",
+            "alternatives": [
+                "Bluesky API",
+                "Mastodon API",
+                "Reddit API"
+            ]
+        },
+        {
+            "vendor": "OpenAI",
+            "change_type": "limits_reduced",
+            "date": "2025-06-01",
+            "summary": "Free trial credits ($5-$18 for new accounts) completely discontinued. Free tier now limited to GPT-3.5 Turbo at 3 RPM with no credits. All advanced models (GPT-4, DALL-E, Whisper) require paid access",
+            "previous_state": "$5-$18 in free trial credits for new accounts, 3-month expiry, access to all models",
+            "current_state": "No free credits. Free tier: GPT-3.5 Turbo only, 3 requests/minute. Must add payment method for any other model access",
+            "impact": "high",
+            "source_url": "https://openai.com/api/pricing/",
+            "category": "AI / ML",
+            "alternatives": [
+                "Google Gemini API",
+                "Anthropic Claude API",
+                "Mistral API",
+                "Groq"
+            ]
+        },
+        {
+            "vendor": "Xero Developer API",
+            "change_type": "pricing_model_change",
+            "date": "2026-03-02",
+            "summary": "Xero retiring revenue-share model, moving to 5-tier connection+egress pricing. No more free API access for developers. Costs jumping from ~$0 to $17K+/year for some. Also banning API data use for AI/ML model training",
+            "previous_state": "Revenue-share model with effective free API access for developers building Xero integrations",
+            "current_state": "5-tier usage-based pricing: connection fees + data egress charges. No free tier. Explicit prohibition on using API data for AI/ML training",
+            "impact": "high",
+            "source_url": "https://developer.xero.com/pricing",
+            "category": "API Gateway",
+            "alternatives": [
+                "QuickBooks API",
+                "FreshBooks API",
+                "Wave API"
+            ]
+        },
+        {
+            "vendor": "SendGrid",
+            "change_type": "free_tier_removed",
+            "date": "2025-05-27",
+            "summary": "Perpetual free tier (100 emails/day) eliminated. Replaced with 60-day trial only. Paid plans start at $19.95/month",
+            "previous_state": "Free plan: 100 emails/day forever, no credit card required",
+            "current_state": "60-day trial only (100 emails/day, 100 contacts). Paid plans from $19.95/month after trial",
+            "impact": "high",
+            "source_url": "https://sendgrid.com/en-us/pricing",
+            "category": "Email",
+            "alternatives": [
+                "Resend",
+                "Postmark",
+                "Mailgun",
+                "Amazon SES"
+            ]
+        },
+        {
+            "vendor": "Firebase",
+            "change_type": "limits_reduced",
+            "date": "2026-02-03",
+            "summary": "Cloud Storage removed from Spark (free) plan. Projects on Spark with default appspot.com buckets lose console access and API calls return 402/403 errors. Must upgrade to Blaze (pay-as-you-go) to use Cloud Storage",
+            "previous_state": "Spark plan included Cloud Storage: 5 GB storage, 1 GB/day download, 20K uploads/day, 50K downloads/day",
+            "current_state": "Cloud Storage requires Blaze plan. Blaze provides no-cost quota (1 GiB storage, 10 GB download/month) before charges begin, but credit card required. Other Spark limits unchanged (Firestore, Auth, Functions, Hosting)",
+            "impact": "high",
+            "source_url": "https://firebase.google.com/docs/storage/faqs-storage-changes-announced-sept-2024",
+            "category": "Cloud Storage",
+            "alternatives": [
+                "Supabase Storage",
+                "Cloudflare R2",
+                "AWS S3",
+                "Backblaze B2"
+            ]
+        },
+        {
+            "vendor": "PlanetScale",
+            "change_type": "free_tier_removed",
+            "date": "2024-04-08",
+            "summary": "PlanetScale removed free Hobby plan entirely. All databases on free tier deleted after 30-day grace period. Minimum plan now Scaler at $39/month",
+            "previous_state": "Free Hobby plan: 5 GB storage, 1B row reads/month, 10M row writes/month, 1 production branch, 1 development branch",
+            "current_state": "No free tier. Scaler plan starts at $39/month (25 GB storage). Enterprise custom pricing. Company pivoted to enterprise focus",
+            "impact": "high",
+            "source_url": "https://planetscale.com/blog/planetscale-forever",
+            "category": "Databases",
+            "alternatives": [
+                "Neon",
+                "Turso",
+                "Supabase",
+                "CockroachDB"
+            ]
+        },
+        {
+            "vendor": "Fauna",
+            "change_type": "product_deprecated",
+            "date": "2025-05-30",
+            "summary": "Fauna shut down entirely on May 30, 2025. The serverless document database ceased all operations. Over 80,000 development teams affected",
+            "previous_state": "Free tier: 100K read ops/day, 50K write ops/day, 500K compute ops/day, 5 GB storage. Consumption-based pricing above free limits",
+            "current_state": "Service discontinued. No longer available in any form. All customer data deleted",
+            "impact": "high",
+            "source_url": "https://fauna.com",
+            "category": "Databases",
+            "alternatives": [
+                "Supabase",
+                "MongoDB Atlas",
+                "CockroachDB",
+                "DynamoDB"
+            ]
+        },
+        {
+            "vendor": "LocalStack",
+            "change_type": "free_tier_removed",
+            "date": "2026-03-23",
+            "summary": "LocalStack drops open-source Community Edition. Single unified image requires auth token. Free tier replaced with non-commercial-only tier requiring registration. Commercial use requires paid plan starting at $39/month",
+            "previous_state": "Open-source Community Edition: 30+ emulated AWS services (S3, Lambda, DynamoDB, etc.), no registration required, Docker image freely available",
+            "current_state": "Non-commercial free tier requires registration and auth token. Commercial use starts at $39/month. CI credits system introduced. OSS projects, students, and nonprofits get free access",
+            "impact": "high",
+            "source_url": "https://blog.localstack.cloud/the-road-ahead-for-localstack/",
+            "category": "Testing",
+            "alternatives": [
+                "Moto (open-source AWS mock)",
+                "AWS Free Tier",
+                "Testcontainers"
+            ]
+        },
+        {
+            "vendor": "Google",
+            "change_type": "pricing_restructured",
+            "date": "2026-03-30",
+            "summary": "Google Developer Program annual subscription ending March 30. Replaced by Google AI Pro ($10/mo) and AI Ultra ($100/mo) tiers with bundled cloud credits and AI model access.",
+            "previous_state": "Google Developer Program: annual subscription with standalone cloud credits, developer tools access, and learning resources",
+            "current_state": "Google AI Pro ($10/mo) and AI Ultra ($100/mo) tiers bundle cloud credits with AI model access (Gemini, etc). Developer benefits folded into AI-centric subscriptions",
+            "impact": "high",
+            "source_url": "https://developers.google.com/profile/help/benefits",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "AWS Activate",
+                "Microsoft for Startups",
+                "Google for Startups Cloud"
+            ],
+            "verified_date": "2026-03-04"
+        },
+        {
+            "vendor": "Terragrunt Scale",
+            "change_type": "new_free_tier",
+            "date": "2025-12-15",
+            "summary": "Gruntwork launches free tier for Terragrunt Scale IaC orchestration platform, positioned as HCP Terraform free tier alternative ahead of HashiCorp March 31, 2026 EOL. Includes GitOps, drift detection, and module update automation",
+            "previous_state": "No free tier \u2014 Team plan at $500/month",
+            "current_state": "Free tier with limits matching or exceeding HCP Terraform (500+ managed resources, GitOps, drift detection, Patcher)",
+            "impact": "medium",
+            "source_url": "https://www.gruntwork.io/blog/announcing-the-terragrunt-scale-free-tier",
+            "category": "Infrastructure",
+            "alternatives": [
+                "Spacelift",
+                "env0",
+                "Scalr"
+            ]
+        },
+        {
+            "vendor": "HCP Terraform",
+            "change_type": "pricing_restructured",
+            "date": "2026-03-31",
+            "summary": "HashiCorp legacy free plan for HCP Terraform ends March 31, 2026. All legacy free plan users auto-migrated to enhanced free tier with different limits: 500 managed resources (previously unlimited for small teams), unlimited users, 1 concurrent run, SSO, and policy as code (Sentinel + OPA)",
+            "previous_state": "Legacy free plan with basic Terraform Cloud features",
+            "current_state": "Enhanced free tier: 500 managed resources, unlimited users, 1 concurrent run, SSO, policy as code (Sentinel + OPA). Auto-migration from legacy plan",
+            "impact": "high",
+            "source_url": "https://www.hashicorp.com/products/terraform/pricing",
+            "category": "Infrastructure",
+            "alternatives": [
+                "Spacelift",
+                "env0",
+                "Scalr",
+                "Terragrunt Scale"
+            ]
+        },
+        {
+            "vendor": "X (Twitter)",
+            "change_type": "free_tier_removed",
+            "date": "2026-02-01",
+            "summary": "X/Twitter API eliminated free tier in February 2026, replacing it with a pay-per-use credit model. Active free-tier users receive a $0 voucher. 'For-good' utility apps remain free. Basic fixed tier remains at $200/month",
+            "previous_state": "Free tier: ~500 posts/month read, 1,500 tweets/month write, no search, ~1 request per 15 minutes",
+            "current_state": "No free tier. Pay-per-use credit model replaces free access. $0 voucher for existing free-tier users. For-good utility apps exempted",
+            "impact": "high",
+            "source_url": "https://developer.x.com/en/portal/products",
+            "category": "API Gateway",
+            "alternatives": [
+                "Bluesky AT Protocol",
+                "Mastodon API"
+            ]
+        },
+        {
+            "vendor": "Cognition Devin",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-15",
+            "summary": "Launched $20/month Core plan with pay-as-you-go ACU pricing, down from previous $500/month-only Team plan",
+            "previous_state": "Team plan only at $500/month (250 credits)",
+            "current_state": "Core plan $20/month (pay-as-you-go at $2.25/ACU), Team plan $500/month remains",
+            "impact": "high",
+            "source_url": "https://devin.ai/pricing",
+            "category": "AI Coding",
+            "alternatives": [
+                "GitHub Copilot",
+                "Cline",
+                "Aider"
+            ]
+        },
+        {
+            "vendor": "Cursor",
+            "change_type": "pricing_restructured",
+            "date": "2025-06-01",
+            "summary": "Moved from flat monthly subscription to credit-based pricing model with new $200/month Ultra tier",
+            "previous_state": "Pro plan $20/month with 500 fast requests",
+            "current_state": "Pro plan $20/month (credit-based), Business $40/seat/month, Ultra $200/month (higher credit limits)",
+            "impact": "medium",
+            "source_url": "https://www.cursor.com/pricing",
+            "category": "AI Coding",
+            "alternatives": [
+                "Windsurf",
+                "GitHub Copilot"
+            ]
+        },
+        {
+            "vendor": "Augment Code",
+            "change_type": "pricing_restructured",
+            "date": "2025-10-01",
+            "summary": "Shifted from per-seat subscription to credit-based consumption model",
+            "previous_state": "Per-seat monthly subscription",
+            "current_state": "Credit-based consumption model with usage tiers",
+            "impact": "medium",
+            "source_url": "https://www.augmentcode.com/pricing",
+            "category": "AI Coding",
+            "alternatives": [
+                "GitHub Copilot",
+                "Cursor"
+            ]
+        },
+        {
+            "vendor": "Google Tenor API",
+            "change_type": "product_deprecated",
+            "date": "2026-06-30",
+            "summary": "Google Tenor public API shutting down June 30, 2026. New API key signups halted January 13, 2026. Only the public GIF search API is affected \u2014 Tenor website and app continue operating. Developers must migrate to alternative GIF APIs",
+            "previous_state": "Free public API for GIF search, trending GIFs, and autocomplete. No rate limits for reasonable use. Used by messaging apps and social platforms",
+            "current_state": "API shutdown June 30, 2026. No new API keys issued since Jan 13, 2026. Existing keys work until shutdown date. No replacement API from Google",
+            "impact": "high",
+            "source_url": "https://developers.google.com/tenor/guides/api-shutdown",
+            "category": "Media",
+            "alternatives": [
+                "Giphy API",
+                "Imgur API"
+            ]
+        },
+        {
+            "vendor": "Testcontainers Cloud",
+            "change_type": "pricing_restructured",
+            "date": "2024-06-01",
+            "summary": "Docker acquired AtomicJar (creators of Testcontainers Cloud). Standalone Testcontainers Cloud free tier retired \u2014 now bundled into Docker subscriptions. Docker Pro gets 100 min/month, Team 500 min/month, Business 1,500 min/month",
+            "previous_state": "Standalone Testcontainers Cloud with independent free tier (100 min/month)",
+            "current_state": "Bundled with Docker subscriptions. No standalone free tier. Open-source Testcontainers libraries remain MIT-licensed and fully free",
+            "impact": "medium",
+            "source_url": "https://testcontainers.com/cloud/",
+            "category": "Testing",
+            "alternatives": [
+                "Testcontainers (open-source)",
+                "Docker Desktop",
+                "Podman"
+            ]
+        },
+        {
+            "vendor": "Docker Desktop",
+            "change_type": "pricing_restructured",
+            "date": "2026-01-01",
+            "summary": "Docker Desktop subscription prices increased 67-80% across all tiers. Personal $7\u2192$11, Pro $9\u2192$14, Team $15\u2192$24, Business $24\u2192$35 per user/month. Separate from Docker Hub registry pricing changes",
+            "previous_state": "Personal $7/user/month, Pro $9/user/month, Team $15/user/month, Business $24/user/month",
+            "current_state": "Personal $11/user/month (+57%), Pro $14/user/month (+56%), Team $24/user/month (+60%), Business $35/user/month (+46%). All tiers affected",
+            "impact": "high",
+            "source_url": "https://www.docker.com/pricing/",
+            "category": "Container Registry",
+            "alternatives": [
+                "Podman Desktop",
+                "Rancher Desktop",
+                "OrbStack"
+            ]
+        },
+        {
+            "vendor": "Unity DevOps",
+            "change_type": "limits_increased",
+            "date": "2026-03-01",
+            "summary": "Free tier significantly expanded: storage 5x increase to 25 GB, 100 GB egress added (new), per-seat charges removed. Unity DevOps (formerly Plastic SCM) now offers generous free version control for game developers",
+            "previous_state": "5 GB storage, no egress allowance, per-seat pricing for teams",
+            "current_state": "25 GB storage (5x increase), 100 GB egress/month (new), per-seat charges removed. Free for individuals and small teams",
+            "impact": "medium",
+            "source_url": "https://unity.com/products/devops",
+            "category": "Version Control",
+            "alternatives": [
+                "Git LFS",
+                "Perforce",
+                "GitHub"
+            ]
+        },
+        {
+            "vendor": "Anthropic Claude",
+            "change_type": "limits_increased",
+            "date": "2026-03-13",
+            "summary": "Temporary usage promotion: double five-hour usage limits during off-peak hours, March 13-27, 2026. Applies to Claude Pro and Team subscribers",
+            "previous_state": "Standard five-hour usage limits for Pro and Team subscribers",
+            "current_state": "2x usage limits during off-peak hours (March 13-27, 2026 only). Temporary promotion to showcase increased capacity",
+            "impact": "low",
+            "source_url": "https://www.anthropic.com/news",
+            "category": "AI/ML",
+            "alternatives": [
+                "OpenAI ChatGPT Plus",
+                "Google Gemini Advanced"
+            ]
+        },
+        {
+            "vendor": "Heroku",
+            "change_type": "free_tier_removed",
+            "date": "2022-11-28",
+            "summary": "Heroku removed all free dynos, free Heroku Postgres, and free Heroku Data for Redis. The iconic PaaS that defined 'free tier' for a generation eliminated free offerings entirely after Salesforce acquisition",
+            "previous_state": "Free dyno: 550 hours/month (1,000 with credit card), free Postgres: 10K rows, free Redis: 25 MB. Dynos slept after 30 min inactivity",
+            "current_state": "No free tier. Mini plan starts at $5/month (Eco dynos $5/month for 1,000 shared hours). Postgres starts at $5/month",
+            "impact": "high",
+            "source_url": "https://blog.heroku.com/next-chapter",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Render",
+                "Railway",
+                "Fly.io",
+                "Koyeb"
+            ]
+        },
+        {
+            "vendor": "GitHub Copilot",
+            "change_type": "new_free_tier",
+            "date": "2025-12-18",
+            "summary": "GitHub launched Copilot Free tier \u2014 AI code completion available to all GitHub users at no cost. 2,000 completions and 50 chat messages per month included",
+            "previous_state": "Paid only: Individual $10/month, Business $19/user/month. Free for verified students, teachers, and OSS maintainers only",
+            "current_state": "Free tier: 2,000 code completions/month, 50 chat messages/month. Individual $10/month, Business $19/month, Enterprise $39/month remain for higher limits",
+            "impact": "high",
+            "source_url": "https://github.blog/news-insights/product-news/github-copilot-in-vscode-free/",
+            "category": "AI Coding",
+            "alternatives": [
+                "Cline",
+                "Cody",
+                "Cursor"
+            ]
+        },
+        {
+            "vendor": "Auth0",
+            "change_type": "limits_increased",
+            "date": "2025-11-01",
+            "summary": "Auth0 increased free tier from 7,500 to 25,000 monthly active users. Largest free tier expansion since Okta acquisition. Makes Auth0 competitive with Clerk and Firebase Auth on free tier",
+            "previous_state": "Free tier: 7,500 MAU, unlimited social connections, 2 organizations",
+            "current_state": "Free tier: 25,000 MAU (+233%), unlimited social connections, 5 organizations. Actions, Branding, MFA included",
+            "impact": "high",
+            "source_url": "https://auth0.com/pricing",
+            "category": "Authentication",
+            "alternatives": [
+                "Clerk",
+                "Firebase Auth",
+                "Supabase Auth"
+            ]
+        },
+        {
+            "vendor": "Railway",
+            "change_type": "limits_increased",
+            "date": "2025-10-01",
+            "summary": "Railway expanded free tier following $100M Series B. Trial plan now includes $5 in free credits/month, sufficient for small hobby projects. Removed credit card requirement for trial",
+            "previous_state": "$5 free trial credit one-time, credit card required for Hobby plan",
+            "current_state": "Trial: $5/month in free credits, no credit card needed. Hobby: $5/month + usage. Pro: $20/month per seat",
+            "impact": "medium",
+            "source_url": "https://railway.com/pricing",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Render",
+                "Fly.io",
+                "Koyeb"
+            ]
+        },
+        {
+            "vendor": "Render",
+            "change_type": "limits_reduced",
+            "date": "2025-09-01",
+            "summary": "Free web services now spin down after 15 minutes of inactivity (previously 30 minutes). Cold starts take 30-60 seconds. Free tier remains but with faster sleep times",
+            "previous_state": "Free web services slept after 30 minutes of inactivity",
+            "current_state": "Free web services sleep after 15 minutes of inactivity. 750 hours/month free compute unchanged. Cold start 30-60 seconds",
+            "impact": "low",
+            "source_url": "https://render.com/pricing",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Railway",
+                "Fly.io",
+                "Koyeb"
+            ]
+        },
+        {
+            "vendor": "Redis",
+            "change_type": "pricing_restructured",
+            "date": "2024-03-20",
+            "summary": "Redis switched from BSD license to dual SSPL/RSALv2 license, effectively ending open-source status. Triggered creation of Valkey fork by Linux Foundation. Redis Cloud pricing unchanged but community trust impacted",
+            "previous_state": "BSD 3-Clause open-source license. Community-driven development. Multiple hosted providers (AWS ElastiCache, etc.)",
+            "current_state": "Dual SSPL + RSALv2 license. Cloud hosting by third parties restricted. Valkey fork (BSD) created by Linux Foundation with AWS, Google, Oracle backing",
+            "impact": "high",
+            "source_url": "https://redis.io/blog/redis-adopts-dual-source-available-licensing/",
+            "category": "Databases",
+            "alternatives": [
+                "Valkey",
+                "KeyDB",
+                "DragonflyDB",
+                "Upstash"
+            ]
+        },
+        {
+            "vendor": "HashiCorp",
+            "change_type": "pricing_restructured",
+            "date": "2023-08-10",
+            "summary": "HashiCorp switched Terraform, Vault, Consul, Nomad, and other products from MPL 2.0 to BSL 1.1 license. Triggered OpenTofu fork under Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024",
+            "previous_state": "Mozilla Public License 2.0 (open-source). Community-driven development with corporate stewardship",
+            "current_state": "Business Source License 1.1. Non-production use free, competitive commercial use restricted. OpenTofu fork (MPL 2.0) maintained by Linux Foundation",
+            "impact": "high",
+            "source_url": "https://www.hashicorp.com/blog/hashicorp-adopts-business-source-license",
+            "category": "Infrastructure",
+            "alternatives": [
+                "OpenTofu",
+                "Pulumi",
+                "Crossplane"
+            ]
+        },
+        {
+            "vendor": "DigitalOcean",
+            "change_type": "limits_increased",
+            "date": "2026-01-01",
+            "summary": "20% price cut on Basic Droplets (cheapest now $4/mo from $5/mo). Per-second billing introduced (minimum 60 seconds or $0.01). Functions free tier increased to 25,000 GiB-seconds/mo",
+            "previous_state": "Basic Droplets from $5/mo, hourly billing, Functions 90K GiB-seconds/mo free",
+            "current_state": "Basic Droplets from $4/mo (1 vCPU, 512 MB, 10 GB SSD). Per-second billing (min 60s/$0.01). Functions 25,000 GiB-seconds/mo free",
+            "impact": "medium",
+            "source_url": "https://www.digitalocean.com/pricing/droplets",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "Hetzner",
+                "Vultr",
+                "Linode"
+            ]
+        },
+        {
+            "vendor": "DigitalOcean",
+            "change_type": "restriction",
+            "date": "2026-03-21",
+            "summary": "Managed databases are not part of the free tier. Pricing starts at $15/month. Previous listing incorrectly included '1 basic cluster' as a free tier benefit",
+            "previous_state": "Listed as: Free static sites (up to 3), functions (90K GiB-seconds/mo), and managed databases (1 basic cluster)",
+            "current_state": "Free static sites (up to 3) and functions (90K GiB-seconds/mo). Managed databases start at $15/mo, not free",
+            "impact": "medium",
+            "source_url": "https://www.digitalocean.com/pricing",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "Neon",
+                "PlanetScale",
+                "Supabase"
+            ]
+        },
+        {
+            "vendor": "Freshping",
+            "change_type": "free_tier_removed",
+            "date": "2026-03-06",
+            "summary": "Freshping shut down entirely. Free accounts disabled March 6, 2026. Paid plans expire at end of term. All data deleted 90 days later (~June 4, 2026). No replacement product offered by Freshworks",
+            "previous_state": "Free plan: 50 monitors, 1-minute check intervals, public status pages, multi-location checks, email/Slack alerts",
+            "current_state": "Service discontinued. No free or paid plan available",
+            "impact": "high",
+            "source_url": "https://www.freshworks.com/freshping/",
+            "category": "Monitoring",
+            "alternatives": [
+                "UptimeRobot",
+                "BetterStack",
+                "Checkly",
+                "StatusCake",
+                "Pulsetic",
+                "Cronitor",
+                "Upptime"
+            ]
+        },
+        {
+            "vendor": "Firebase",
+            "change_type": "product_deprecated",
+            "date": "2026-03-19",
+            "summary": "Firebase Studio (formerly Project IDX) shut down March 19, 2026. Cloud IDE and AI code generation features discontinued. Existing projects accessible until March 2027 for migration",
+            "previous_state": "Firebase Studio: cloud IDE with AI code generation, Gemini integration, multi-platform preview",
+            "current_state": "Discontinued. Projects accessible until March 2027 for data export only. Google recommends migrating to other IDEs",
+            "impact": "medium",
+            "source_url": "https://firebase.google.com/docs/studio",
+            "category": "Databases",
+            "alternatives": [
+                "Supabase",
+                "Appwrite Cloud",
+                "PocketBase",
+                "Nhost",
+                "Convex"
+            ]
+        },
+        {
+            "vendor": "Firebase",
+            "change_type": "restriction",
+            "date": "2026-02-01",
+            "summary": "Spark plan projects using legacy *.appspot.com Cloud Storage buckets forced to upgrade to Blaze (pay-as-you-go) plan or lose Cloud Storage access. No billing caps on Blaze plan \u2014 developers risk unexpected charges",
+            "previous_state": "Spark plan: free Cloud Storage with *.appspot.com buckets, no credit card required",
+            "current_state": "Legacy bucket projects must upgrade to Blaze (pay-as-you-go). No hard billing caps. New projects use Firebase Storage buckets on Spark plan",
+            "impact": "high",
+            "source_url": "https://firebase.google.com/docs/storage/web/start",
+            "category": "Databases",
+            "alternatives": [
+                "Supabase",
+                "Appwrite Cloud",
+                "PocketBase",
+                "Nhost",
+                "Convex"
+            ]
+        },
+        {
+            "vendor": "Dub.co",
+            "change_type": "limits_reduced",
+            "date": "2026-03-22",
+            "summary": "Free tier link limit reduced 40x from 1,000 links to 25 new links/month. Added 30-day analytics retention limit and 1-user cap",
+            "previous_state": "1,000 links, 1,000 tracked clicks/month, up to 3 custom domains",
+            "current_state": "25 new links/month, 1,000 tracked events/month, 3 custom domains, 1 user, 30-day analytics retention",
+            "impact": "high",
+            "source_url": "https://dub.co/pricing",
+            "category": "Dev Utilities",
+            "alternatives": [
+                "Bitly",
+                "Short.io"
+            ]
+        },
+        {
+            "vendor": "Uploadthing",
+            "change_type": "free_tier_removed",
+            "date": "2025-01-15",
+            "summary": "Free tier eliminated. Uploadthing moved to usage-based pricing with minimum $25/month plan (250 GB storage). No free tier available",
+            "previous_state": "Free tier: 2 GB storage, 2 GB bandwidth/month",
+            "current_state": "Usage-based pricing only. Minimum $25/month plan with 250 GB storage. No free tier",
+            "impact": "high",
+            "source_url": "https://uploadthing.com/pricing",
+            "category": "Storage",
+            "alternatives": [
+                "Cloudinary",
+                "Vercel Blob",
+                "AWS S3"
+            ]
+        },
+        {
+            "vendor": "Neo4j AuraDB",
+            "change_type": "restriction",
+            "date": "2026-03-22",
+            "summary": "Data correction \u2014 previous entry incorrectly reduced limits to 50K nodes/175K relationships. Actual free tier is 200,000 nodes and 400,000 relationships per Neo4j AuraDB FAQ",
+            "previous_state": "50,000 nodes, 175,000 relationships (incorrectly listed)",
+            "current_state": "200,000 nodes, 400,000 relationships (restored to correct values)",
+            "impact": "low",
+            "source_url": "https://neo4j.com/cloud/platform/aura-graph-database/faq/",
+            "category": "Databases",
+            "alternatives": [
+                "Dgraph Cloud",
+                "Amazon Neptune"
+            ]
+        },
+        {
+            "vendor": "xAI (Grok)",
+            "change_type": "free_tier_removed",
+            "date": "2026-03-19",
+            "summary": "Grok Imagine free image/video generation locked behind SuperGrok subscription ($30/mo). Over 1B generations in first month overwhelmed capacity",
+            "previous_state": "Free image and video generation for all Grok users",
+            "current_state": "Image/video generation requires SuperGrok subscription ($30/month). Text-only Grok remains free with limits",
+            "impact": "medium",
+            "source_url": "https://x.com/xai",
+            "category": "AI / ML",
+            "alternatives": [
+                "DALL-E (credits)",
+                "Stable Diffusion (self-hosted)",
+                "Pollinations.AI"
+            ]
+        },
+        {
+            "vendor": "Google Gemini API",
+            "change_type": "restriction",
+            "date": "2026-04-01",
+            "summary": "Billing-account-level spend caps enforced starting April 1, 2026. When a tier's spend cap is reached, API requests pause until the next billing month. Affects pay-as-you-go developers who may see unexpected request pausing.",
+            "previous_state": "No hard spend caps \u2014 usage billed without automatic pausing",
+            "current_state": "Tier-level spend caps enforced at billing account level. Requests pause when cap is hit until next month",
+            "impact": "medium",
+            "source_url": "https://ai.google.dev/gemini-api/docs/billing",
+            "category": "AI / ML",
+            "alternatives": [
+                "OpenRouter",
+                "Anthropic Claude API",
+                "OpenAI API"
+            ]
+        },
+        {
+            "vendor": "Windsurf",
+            "change_type": "pricing_restructured",
+            "date": "2026-03-19",
+            "summary": "Windsurf replaced credits-based pricing with daily/weekly quotas (Mar 19, 2026). New tiers: Pro $20/mo (was $15), Ultimate $40/mo, Team $200/mo/seat. Free tier changed from flexible credits to hard quotas. Existing Pro subscribers grandfathered at $15/mo",
+            "previous_state": "Credits-based system allowing flexible allocation between completions and chat. Pro plan $15/month",
+            "current_state": "Daily/weekly quotas replace credits. Pro $20/mo (existing subs grandfathered at $15), Ultimate $40/mo, Team $200/mo/seat. Free tier gets limited daily completions and chat messages",
+            "impact": "medium",
+            "source_url": "https://windsurf.com/pricing",
+            "category": "AI Coding",
+            "alternatives": [
+                "Cursor",
+                "GitHub Copilot",
+                "Cline"
+            ]
+        },
+        {
+            "vendor": "Gemini Code Assist",
+            "change_type": "new_free_tier",
+            "date": "2025-12-18",
+            "summary": "Google launched Gemini Code Assist free tier for individual developers. Includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro. Available in VS Code, JetBrains, and Cloud Shell",
+            "previous_state": "No free tier \u2014 enterprise-only at $19/user/month",
+            "current_state": "Free individual tier with code completions, chat, and multi-file editing. Enterprise tier remains at $19/user/month",
+            "impact": "high",
+            "source_url": "https://cloud.google.com/gemini/docs/codeassist/overview",
+            "category": "AI Coding",
+            "alternatives": [
+                "GitHub Copilot Free",
+                "Cursor",
+                "Cline"
+            ]
+        },
+        {
+            "vendor": "Amazon Aurora PostgreSQL",
+            "change_type": "new_free_tier",
+            "date": "2026-03-25",
+            "summary": "Aurora PostgreSQL Serverless added to AWS Free Tier \u2014 managed PostgreSQL-compatible database now available at no cost with up to 4 ACUs per cluster and 1 GB storage. Part of AWS Free Plan (6 months + credits)",
+            "previous_state": "No free tier \u2014 Aurora was paid-only, starting at ~$0.08/ACU-hour",
+            "current_state": "Free plan with up to 4 ACUs per cluster, 1 GB storage, $100\u2013200 in credits for new accounts",
+            "impact": "high",
+            "source_url": "https://aws.amazon.com/rds/aurora/pricing/",
+            "category": "Databases",
+            "alternatives": [
+                "Neon",
+                "Supabase",
+                "CockroachDB",
+                "PlanetScale"
+            ]
+        },
+        {
+            "vendor": "Amazon Kiro",
+            "change_type": "new_free_tier",
+            "date": "2026-04-07",
+            "summary": "Amazon Kiro AI coding assistant launched GA with tiered credit-based pricing: Free tier (50 credits/month), Pro ($20/month, 1,000 credits), Pro+ ($40/month, 2,000 credits). Credits consumed per AI interaction (specs, code generation, debugging)",
+            "previous_state": "Preview-only access, no public pricing",
+            "current_state": "Free tier: 50 credits/month. Pro: $20/month (1,000 credits). Pro+: $40/month (2,000 credits). GA availability",
+            "impact": "medium",
+            "source_url": "https://kiro.dev/pricing",
+            "category": "AI Coding",
+            "alternatives": [
+                "Cursor",
+                "Windsurf",
+                "GitHub Copilot",
+                "Claude Code"
+            ]
+        },
+        {
+            "vendor": "Replit",
+            "change_type": "pricing_restructured",
+            "date": "2026-04-01",
+            "summary": "Replit Core plan dropped from $25/month to $20/month. New Pro plan added at $100/month with higher credit allocation. Free tier unchanged (limited AI credits, basic compute). Price reduction makes Core more competitive with Cursor Pro ($20/month)",
+            "previous_state": "Free tier + Core plan at $25/month",
+            "current_state": "Free tier + Core plan at $20/month + new Pro plan at $100/month",
+            "impact": "low",
+            "source_url": "https://replit.com/pricing",
+            "category": "Cloud IDE",
+            "alternatives": [
+                "GitHub Codespaces",
+                "Gitpod",
+                "CodeSandbox"
+            ]
+        },
+        {
+            "vendor": "SonarQube Cloud",
+            "change_type": "pricing_restructured",
+            "date": "2026-04-01",
+            "summary": "SonarQube Cloud introduced more granular Team tier pricing with differentiated feature access. Free tier for open-source projects remains. Paid tiers restructured for clearer scaling path from small teams to enterprise",
+            "previous_state": "Free (open source) + Developer + Enterprise tiers",
+            "current_state": "Free (open source) + Team (granular tiers) + Enterprise. More pricing options for mid-size teams",
+            "impact": "low",
+            "source_url": "https://www.sonarsource.com/plans-and-pricing/sonarqube/cloud/",
+            "category": "Code Quality",
+            "alternatives": [
+                "CodeClimate",
+                "Codacy",
+                "DeepSource"
+            ]
+        },
+        {
+            "vendor": "Cursor",
+            "change_type": "new_tier",
+            "date": "2026-04-07",
+            "summary": "Cursor introduced Pro+ tier at $60/month between Pro ($20) and Ultra ($200). Pro+ includes 10x premium model requests vs Pro, priority access, and expanded context window. Expands the pricing ladder from 3 tiers (Free/Pro/Ultra) to 4 (Free/Pro/Pro+/Ultra), filling the $20-$200 gap.",
+            "previous_state": "3-tier pricing: Free (2K completions, 50 slow requests), Pro $20/mo (unlimited completions, 500 fast requests), Ultra $200/mo",
+            "current_state": "4-tier pricing: Free (2K completions, 50 slow requests), Pro $20/mo, Pro+ $60/mo (10x premium requests, priority access, more context), Ultra $200/mo",
+            "impact": "medium",
+            "source_url": "https://www.cursor.com/pricing",
+            "category": "AI Coding",
+            "alternatives": [
+                "GitHub Copilot",
+                "Windsurf",
+                "Cline",
+                "Claude Code"
+            ]
+        },
+        {
+            "vendor": "Google Gemini API",
+            "change_type": "restriction",
+            "date": "2026-04-08",
+            "summary": "Gemini API free tier restricted to Flash and Flash-Lite models only (April 2026). Gemini 2.5 Pro and other Pro models now require a paid billing account. Previously free users could access Pro models with rate limits. Combined with April 1 spend cap enforcement, this significantly narrows what is available at $0.",
+            "previous_state": "Free tier included access to both Flash and Pro models with rate limits. Gemini 2.5 Pro accessible to free users at reduced rates",
+            "current_state": "Free tier restricted to Flash and Flash-Lite models only. Pro models (Gemini 2.5 Pro) require paid billing account. Free users limited to lighter-weight models",
+            "impact": "high",
+            "source_url": "https://ai.google.dev/gemini-api/docs/pricing",
+            "category": "AI / ML",
+            "alternatives": [
+                "OpenRouter",
+                "Groq",
+                "Together AI",
+                "Anthropic Claude API"
+            ]
+        },
+        {
+            "vendor": "OVHcloud",
+            "change_type": "pricing_restructured",
+            "date": "2026-04-01",
+            "summary": "OVHcloud raised prices 9-11% on newer infrastructure (Public Cloud, Bare Metal, VPS 2026 range) effective April 1, 2026. Free tier unchanged. Applies to 2026-range products only \u2014 legacy configurations retain previous pricing.",
+            "previous_state": "Previous pricing on Public Cloud, Bare Metal, and VPS 2026-range products",
+            "current_state": "9-11% price increase on newer infrastructure. Free tier and legacy configurations unaffected",
+            "impact": "medium",
+            "source_url": "https://www.ovhcloud.com/en/pricing/",
+            "category": "Cloud IaaS",
+            "alternatives": [
+                "Hetzner",
+                "DigitalOcean",
+                "Vultr",
+                "Linode"
+            ]
+        },
+        {
+            "vendor": "Amazon SP-API",
+            "change_type": "free_tier_removed",
+            "date": "2026-04-30",
+            "summary": "Amazon Selling Partner API (SP-API) moves to paid access starting April 30, 2026. New base fee of $1,400/year plus per-call fees. Previously free for registered developers. Major impact on Amazon marketplace integrators and third-party seller tools.",
+            "previous_state": "Free API access for registered Amazon developers with standard rate limits",
+            "current_state": "$1,400/year base fee plus per-call fees starting April 30, 2026. No free tier",
+            "impact": "high",
+            "source_url": "https://developer-docs.amazon.com/sp-api/",
+            "category": "E-Commerce",
+            "alternatives": [
+                "Shopify API",
+                "WooCommerce API",
+                "BigCommerce API"
+            ]
+        },
+        {
+            "vendor": "Amazon Kiro",
+            "change_type": "new_free_tier",
+            "date": "2026-04-09",
+            "summary": "Amazon Kiro launched GA with a free tier of 50 interactions/month. Claude-powered IDE focused on spec-driven development. Pro $20/mo (1,000 interactions), Pro+ $40/mo (2,000), Power $200/mo (10,000). Competes directly with Cursor, GitHub Copilot, and Windsurf.",
+            "previous_state": "Preview/beta with limited access",
+            "current_state": "GA with free tier (50 interactions/mo). Four paid tiers: Pro ($20), Pro+ ($40), Power ($200)",
+            "impact": "high",
+            "source_url": "https://kiro.dev/pricing",
+            "category": "AI Coding",
+            "alternatives": [
+                "Cursor",
+                "GitHub Copilot",
+                "Windsurf",
+                "Claude Code"
+            ]
+        },
+        {
+            "vendor": "OpenAI",
+            "change_type": "free_tier_removed",
+            "date": "2026-05-12",
+            "summary": "DALL-E 2 and DALL-E 3 API access discontinued. Developers must migrate to gpt-image-1 (different pricing model, quality tiers changed from standard/hd to low/medium/high) or switch to free alternatives like Pollinations.AI or Lumenfall.ai",
+            "previous_state": "DALL-E 3 API: $0.040-$0.120/image (1024x1024), paid via API credits",
+            "current_state": "DALL-E 2 & 3 API shut down. Replacement: gpt-image-1 at $0.011-$0.167/image with new quality tiers",
+            "impact": "high",
+            "source_url": "https://platform.openai.com/docs/deprecations",
+            "category": "AI / ML",
+            "alternatives": [
+                "gpt-image-1",
+                "Pollinations.AI",
+                "Lumenfall.ai",
+                "Cloudflare Workers AI",
+                "Stability AI",
+                "Replicate"
+            ]
+        },
+        {
+            "vendor": "OpenAI",
+            "change_type": "product_deprecated",
+            "date": "2026-05-07",
+            "summary": "Realtime API beta endpoints deprecated. Developers must remove OpenAI-Beta header, use new client_secrets endpoint, specify session_type, and update event names. GA Realtime API is the direct replacement.",
+            "previous_state": "Realtime API beta: required OpenAI-Beta: realtime=v1 header, single session type, beta event names",
+            "current_state": "Realtime API GA: no beta header, POST /v1/realtime/client_secrets for ephemeral keys, session_type required (speech-to-speech or transcription), updated event names",
+            "impact": "high",
+            "source_url": "https://platform.openai.com/docs/deprecations",
+            "category": "AI / ML",
+            "alternatives": [
+                "OpenAI Realtime API (GA)",
+                "Deepgram",
+                "AssemblyAI",
+                "Azure OpenAI Realtime",
+                "ElevenLabs",
+                "Google Cloud Speech-to-Text"
+            ]
+        },
+        {
+            "vendor": "AWS",
+            "change_type": "product_deprecated",
+            "date": "2026-04-30",
+            "summary": "AWS App Runner closed to new customers. Service enters maintenance mode with no new features. AWS recommends migrating to Amazon ECS Express Mode for simplified container deployment.",
+            "previous_state": "App Runner: fully available to all customers, source code and container image deployment, automatic scaling, managed HTTPS",
+            "current_state": "App Runner: closed to new customers April 30, maintenance mode only, existing services continue but no new features planned",
+            "impact": "high",
+            "source_url": "https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Amazon ECS Express Mode",
+                "AWS Fargate",
+                "Google Cloud Run",
+                "Azure Container Apps",
+                "Railway",
+                "Render",
+                "Fly.io",
+                "DigitalOcean App Platform"
+            ]
+        }
+    ]
 }
