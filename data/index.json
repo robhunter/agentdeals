@@ -1128,7 +1128,7 @@
     {
       "vendor": "Windsurf",
       "category": "IDE & Code Editors",
-      "description": "AI coding assistant (formerly Codeium). Free tier: daily/weekly quotas for completions and chat (replaced credits Mar 2026). Pro $20/mo, Ultimate $40/mo, Team $200/mo. Existing Pro subscribers grandfathered at $15/mo",
+      "description": "AI coding assistant (formerly Codeium). Free tier: daily/weekly quotas for completions and chat (replaced credits Mar 2026). Pro $20/mo, Ultimate $40/mo, Team $200/mo. Existing Pro subscribers grandfathered at $15/mo through April 2026",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -1139,7 +1139,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-03-31"
+      "verifiedDate": "2026-04-10"
     },
     {
       "vendor": "GitHub Copilot",
@@ -16550,14 +16550,15 @@
     {
       "vendor": "Replit",
       "category": "IDE & Code Editors",
-      "description": "Cloud IDE with AI code assistant — 10 GiB account storage, multiplayer collaboration, unlimited public Repls. Supports 50+ languages. Built-in hosting, version history, and package management",
+      "description": "Cloud IDE with AI code assistant — 10 GiB account storage, multiplayer collaboration, unlimited public Repls. Supports 50+ languages. Built-in hosting, version history, and package management. Core plan $20/month (was $25), new Pro plan $100/month with higher AI credit allocation. Free tier unchanged (limited AI credits, basic compute)",
       "tier": "Free",
-      "url": "https://replit.com/",
+      "url": "https://replit.com/pricing",
       "tags": [
         "developer-tools",
-        "free-for-dev"
+        "free-for-dev",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-18"
+      "verifiedDate": "2026-04-10"
     },
     {
       "vendor": "SoloLearn",
@@ -21662,7 +21663,7 @@
     {
       "vendor": "Windsurf",
       "category": "AI Coding",
-      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: daily/weekly quotas for Cascade AI flows, code completions, AI chat (quotas replaced credits Mar 2026). Pro $20/mo (was $15, existing subscribers grandfathered), Ultimate $40/mo, Team $200/mo/seat. All tiers include premium models",
+      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: daily/weekly quotas for Cascade AI flows, code completions, AI chat (quotas replaced credits Mar 2026). Pro $20/mo (was $15, existing subscribers grandfathered through April 2026), Ultimate $40/mo, Team $200/mo/seat. All tiers include premium models",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -21674,7 +21675,7 @@
         "cursor-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-03-31"
+      "verifiedDate": "2026-04-10"
     },
     {
       "vendor": "Augment Code",
