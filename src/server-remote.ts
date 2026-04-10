@@ -80,13 +80,14 @@ export function createServer(): McpServer {
         eligibility: z.enum(["public", "accelerator", "oss", "student", "fintech", "geographic", "enterprise"]).optional().describe("Filter by eligibility type"),
         sort: z.enum(["vendor", "category", "newest"]).optional().describe("Sort: vendor (A-Z), category, newest (recently verified first)"),
         stability: z.enum(["stable", "watch", "volatile", "improving"]).optional().describe("Filter by free tier stability class. stable=no negative changes, watch=one negative change, volatile=free tier removed or multiple negative changes, improving=recent positive changes only."),
+        payment_protocol: z.enum(["x402", "mpp"]).optional().describe("Filter by agent payment protocol. x402=HTTP 402 agent payments (Coinbase/Linux Foundation standard), mpp=Stripe Machine-to-Machine Payments."),
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Only return deals verified/added after this date."),
         limit: z.number().optional().describe("Max results (default: 20)"),
         offset: z.number().optional().describe("Pagination offset (default: 0)"),
         response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor name, tier, one-line description, URL only. 'detailed': full response (default)."),
       },
     },
-    async ({ query, category, vendor, eligibility, sort, stability, since, limit, offset, response_format }) => {
+    async ({ query, category, vendor, eligibility, sort, stability, payment_protocol, since, limit, offset, response_format }) => {
       try {
         // Mode: list categories
         if (category === "list") {
@@ -124,6 +125,7 @@ export function createServer(): McpServer {
           eligibility_type: eligibility,
           sort,
           stability,
+          payment_protocol,
           limit: effectiveLimit,
           offset: effectiveOffset,
         }) as { offers: Record<string, unknown>[]; total: number };

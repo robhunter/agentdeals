@@ -140,7 +140,8 @@ export function searchOffers(
   category?: string,
   eligibilityType?: string,
   sort?: string,
-  stability?: StabilityClass
+  stability?: StabilityClass,
+  paymentProtocol?: string
 ): Offer[] {
   let results = loadOffers();
 
@@ -162,6 +163,13 @@ export function searchOffers(
     const stabilityMap = getStabilityMap();
     results = results.filter(
       (o) => (stabilityMap.get(o.vendor.toLowerCase()) ?? "stable") === stability
+    );
+  }
+
+  if (paymentProtocol) {
+    const lowerProto = paymentProtocol.toLowerCase();
+    results = results.filter(
+      (o) => o.payment_protocols?.some(p => p.toLowerCase() === lowerProto) ?? false
     );
   }
 

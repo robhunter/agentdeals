@@ -12,7 +12,10 @@
         "frontend",
         "jamstack"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-21",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Render",
@@ -46,7 +49,10 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-03-22"
+      "verifiedDate": "2026-03-22",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Netlify",
@@ -78,7 +84,10 @@
         "deployment",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-05",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Railway",
@@ -460,7 +469,10 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-05",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Nhost",
@@ -892,7 +904,10 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-14",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Backblaze B2",
@@ -968,7 +983,10 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-21",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Cloudflare KV",
@@ -983,7 +1001,10 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-21",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Cloudflare Durable Objects",
@@ -999,7 +1020,10 @@
         "websocket",
         "free tier"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-21",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "QStash",
@@ -1080,7 +1104,10 @@
         "crawling",
         "free tier"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-20",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Apify",
@@ -1240,7 +1267,10 @@
         "ssl",
         "free tier"
       ],
-      "verifiedDate": "2026-03-14"
+      "verifiedDate": "2026-03-14",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "Hurricane Electric DNS",
@@ -1547,7 +1577,10 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-05",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "PostHog",
@@ -14509,7 +14542,10 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-20",
+      "payment_protocols": [
+        "x402"
+      ]
     },
     {
       "vendor": "plot.ly",

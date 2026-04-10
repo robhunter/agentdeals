@@ -51,6 +51,7 @@ export async function fetchOffers(params: {
   eligibility_type?: string;
   sort?: string;
   stability?: string;
+  payment_protocol?: string;
   limit?: number;
   offset?: number;
 }): Promise<unknown> {
@@ -60,6 +61,7 @@ export async function fetchOffers(params: {
   if (params.eligibility_type) p.eligibility_type = params.eligibility_type;
   if (params.sort) p.sort = params.sort;
   if (params.stability) p.stability = params.stability;
+  if (params.payment_protocol) p.payment_protocol = params.payment_protocol;
   if (params.limit !== undefined) p.limit = String(params.limit);
   if (params.offset !== undefined) p.offset = String(params.offset);
   return apiFetch("/api/offers", p);
