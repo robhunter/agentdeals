@@ -3539,6 +3539,56 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted column");
   });
 
+  it("GET /database-pricing renders definitive database pricing comparison", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/database-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("The Definitive"), "Should have definitive title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    // 25+ services across 5 categories
+    assert.ok(html.includes("Supabase"), "Should include Supabase");
+    assert.ok(html.includes("Neon"), "Should include Neon");
+    assert.ok(html.includes("CockroachDB"), "Should include CockroachDB");
+    assert.ok(html.includes("MongoDB Atlas"), "Should include MongoDB Atlas");
+    assert.ok(html.includes("Firebase Firestore"), "Should include Firebase Firestore");
+    assert.ok(html.includes("Turso"), "Should include Turso");
+    assert.ok(html.includes("Cloudflare D1"), "Should include Cloudflare D1");
+    assert.ok(html.includes("Upstash"), "Should include Upstash");
+    assert.ok(html.includes("DynamoDB"), "Should include DynamoDB");
+    assert.ok(html.includes("Redis Cloud"), "Should include Redis Cloud");
+    assert.ok(html.includes("PlanetScale"), "Should include PlanetScale");
+    assert.ok(html.includes("Convex"), "Should include Convex");
+    assert.ok(html.includes("Neo4j AuraDB"), "Should include Neo4j AuraDB");
+    assert.ok(html.includes("Weaviate"), "Should include Weaviate");
+    assert.ok(html.includes("Hasura Cloud"), "Should include Hasura Cloud");
+    assert.ok(html.includes("BigQuery"), "Should include BigQuery");
+    // Key sections
+    assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
+    assert.ok(html.includes("Managed PostgreSQL"), "Should have managed postgres category");
+    assert.ok(html.includes("Serverless / Edge"), "Should have serverless/edge category");
+    assert.ok(html.includes("Document / NoSQL"), "Should have document/NoSQL category");
+    assert.ok(html.includes("Cloud Provider"), "Should have cloud provider category");
+    assert.ok(html.includes("Specialized"), "Should have specialized category");
+    assert.ok(html.includes("What You Actually Get for Free"), "Should have free tier section");
+    assert.ok(html.includes("Cost Comparison by Team Size"), "Should have cost analysis");
+    assert.ok(html.includes("Hidden Costs"), "Should have hidden costs section");
+    assert.ok(html.includes("Best-for-Use-Case Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/pricing-changes"), "Should cross-link to changes");
+    assert.ok(html.includes("/developers"), "Should cross-link to developers");
+    // Database-specific columns
+    assert.ok(html.includes("Free Storage"), "Should have storage column");
+    assert.ok(html.includes("Free Connections"), "Should have connections column");
+    assert.ok(html.includes("FREE TIER REMOVED"), "Should flag PlanetScale removal");
+  });
+
   it("GET /openai-assistants-migration renders migration cost guide", async () => {
     proc = await startHttpServer();
 

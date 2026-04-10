@@ -5304,6 +5304,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "The definitive CI/CD pricing comparison — 17+ tools across general, cloud-native, mobile, and self-hosted categories with free tier analysis and cost breakdowns",
   },
   {
+    slug: "database-pricing",
+    title: "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared",
+    metaDesc: "Compare 25+ database services: Supabase, Neon, PlanetScale, MongoDB Atlas, Firebase, CockroachDB, Turso, Upstash, Redis Cloud, DynamoDB and more. Free tiers, storage limits, connections, pricing models, and hidden costs. Updated April 2026.",
+    contextHtml: "",
+    tag: "database-pricing",
+    primaryVendor: "Supabase",
+    hubDesc: "The definitive database pricing comparison — 25+ services across managed Postgres, serverless/edge, document/NoSQL, cloud provider, and specialized categories with free tier analysis and cost breakdowns",
+  },
+  {
     slug: "aws-free-tier-2026",
     title: "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
     metaDesc: "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.",
@@ -27081,6 +27090,889 @@ function buildCiCdPricingPage(): string {
     '</body>\n</html>';
 }
 
+// --- Database Pricing Comparison page ---
+
+function buildDatabasePricingPage(): string {
+  const title = "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared";
+  const metaDesc = "Compare 25+ database services: Supabase, Neon, PlanetScale, MongoDB Atlas, Firebase, CockroachDB, Turso, Upstash, Redis Cloud, DynamoDB and more. Free tiers, storage limits, connections, pricing models, and hidden costs. Updated April 2026.";
+  const slug = "database-pricing";
+  const pubDate = "2026-04-09";
+
+  const dbOffers = offers.filter(o => o.category === "Databases");
+
+  const dbVendorNames = ["Supabase", "Neon", "PlanetScale", "MongoDB Atlas", "Firebase", "CockroachDB", "Turso", "Upstash", "Redis Cloud", "Xata", "Cloudflare D1", "Cloudflare KV", "Hasura Cloud", "Convex", "Aiven", "Momento", "Neo4j AuraDB", "InfluxDB Cloud", "Weaviate", "Couchbase Capella", "Amazon Aurora PostgreSQL", "Google Cloud BigQuery", "DynamoDB Local", "Redis", "Cloudflare Durable Objects", "Nhost", "Nile", "SurrealDB Cloud", "Zilliz Cloud"];
+  const dbChanges = dealChanges.filter(c =>
+    dbVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  interface DbService {
+    name: string;
+    slug: string;
+    category: "managed-postgres" | "serverless-edge" | "document-nosql" | "cloud-provider" | "specialized";
+    dbType: string;
+    freeStorage: string;
+    freeConnections: string;
+    freeCompute: string;
+    paidFrom: string;
+    pricingModel: string;
+    freeDetails: string;
+    freeType: "generous" | "limited" | "removed" | "trial" | "oss-only";
+    monthlyCostSmall: string;
+    monthlyCostTeam: string;
+    hiddenCosts: string;
+  }
+
+  const services: DbService[] = [
+    {
+      name: "Supabase",
+      slug: "supabase",
+      category: "managed-postgres",
+      dbType: "PostgreSQL",
+      freeStorage: "500 MB",
+      freeConnections: "Unlimited (pooled)",
+      freeCompute: "Shared CPU",
+      paidFrom: "$25/mo (Pro)",
+      pricingModel: "Per-project",
+      freeDetails: "500 MB Postgres database, 50K monthly active users (Auth), 1 GB file storage, 5 GB bandwidth, 500K edge function invocations, 200 concurrent realtime connections, 2 free projects. Includes Auth, Storage, Realtime, and Edge Functions. Full PostgREST API, pgvector for embeddings, branching on paid plans.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$25/project",
+      hiddenCosts: "Free projects pause after 1 week of inactivity (tightened Feb 2026). 2-project limit. Egress is shared across all services (5 GB total). No database branching on free tier. Compute is shared — expect cold starts.",
+    },
+    {
+      name: "Neon",
+      slug: "neon",
+      category: "managed-postgres",
+      dbType: "PostgreSQL (Serverless)",
+      freeStorage: "512 MB",
+      freeConnections: "Unlimited (pooled)",
+      freeCompute: "0.25 CU",
+      paidFrom: "$19/mo (Launch)",
+      pricingModel: "Usage-based",
+      freeDetails: "512 MB storage, 0.25 compute units (CU), unlimited projects and databases, connection pooling via PgBouncer, autoscaling to zero. Post-Databricks acquisition: moved to fully usage-based pricing (Jan 2026). Branching included on all plans. Built-in connection pooler.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$19+",
+      hiddenCosts: "0.25 CU is limited for concurrent queries. Fully usage-based model post-Databricks means costs scale with usage — no flat-rate predictability. Storage scales in 50 MB increments on paid plans.",
+    },
+    {
+      name: "CockroachDB",
+      slug: "cockroachdb",
+      category: "managed-postgres",
+      dbType: "PostgreSQL-compatible (Distributed)",
+      freeStorage: "10 GiB",
+      freeConnections: "Unlimited",
+      freeCompute: "50M RUs/mo",
+      paidFrom: "$0 (usage-based)",
+      pricingModel: "Usage-based (RUs)",
+      freeDetails: "10 GiB storage, 50M Request Units/month on Serverless plan. PostgreSQL-compatible wire protocol. Automatic sharding and replication. Multi-region on paid plans. Single-region free cluster with 3-node high availability. SQL API compatible with most PostgreSQL drivers.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u201350+",
+      hiddenCosts: "Request Unit pricing is hard to predict — depends on query complexity, data size, and cross-region traffic. 50M RUs sounds generous but complex queries consume RUs quickly. No multi-region on free tier.",
+    },
+    {
+      name: "Amazon Aurora PostgreSQL",
+      slug: "amazon-aurora-postgresql",
+      category: "managed-postgres",
+      dbType: "PostgreSQL (Managed)",
+      freeStorage: "20 GiB",
+      freeConnections: "Standard",
+      freeCompute: "750 hrs/mo (db.t3.micro)",
+      paidFrom: "$0.073/hr (db.t3.medium)",
+      pricingModel: "Per-instance-hour",
+      freeDetails: "Aurora PostgreSQL Serverless added to AWS Free Tier (March 2026). 750 hours/month of db.t3.micro (or Serverless v2 equivalent), 20 GiB storage, 20 GiB backup. 12-month free tier for new AWS accounts. Full PostgreSQL compatibility with Aurora performance (3-5x faster).",
+      freeType: "limited",
+      monthlyCostSmall: "$0 (year 1)",
+      monthlyCostTeam: "$50\u2013200+",
+      hiddenCosts: "12-month free tier only — costs jump significantly after. db.t3.micro is minimal (2 vCPU, 1 GB RAM). I/O costs on Aurora are separate. Backup beyond 20 GiB costs extra. Multi-AZ doubles the instance cost.",
+    },
+    {
+      name: "Nile",
+      slug: "nile",
+      category: "managed-postgres",
+      dbType: "PostgreSQL (Multi-tenant)",
+      freeStorage: "10 GiB",
+      freeConnections: "Unlimited",
+      freeCompute: "Shared",
+      paidFrom: "$30/mo (Pro)",
+      pricingModel: "Per-project",
+      freeDetails: "10 GiB storage, unlimited tenants, built-in tenant isolation for SaaS applications. PostgreSQL-compatible with virtual tenant databases — each tenant gets logical isolation without separate instances. AI-native embeddings and vector search included.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$30+",
+      hiddenCosts: "Newer service with smaller ecosystem. Tenant isolation adds overhead vs raw PostgreSQL. Limited managed tooling compared to Supabase or Neon.",
+    },
+    {
+      name: "Turso",
+      slug: "turso",
+      category: "serverless-edge",
+      dbType: "SQLite (libSQL, Edge)",
+      freeStorage: "9 GB total",
+      freeConnections: "Unlimited",
+      freeCompute: "500 DBs, 1B rows read",
+      paidFrom: "$29/mo (Scaler)",
+      pricingModel: "Usage-based",
+      freeDetails: "9 GB total storage, 500 databases, 1 billion row reads/month, 25 million row writes/month. Built on libSQL (SQLite fork). Embedded replicas for zero-latency reads at the edge. Databases replicate to 26+ locations. No cold starts — SQLite is always fast.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$29+",
+      hiddenCosts: "SQLite semantics differ from PostgreSQL — no concurrent writers. 25M row writes/month can be limiting for write-heavy apps. Edge replication adds eventual consistency considerations.",
+    },
+    {
+      name: "Cloudflare D1",
+      slug: "cloudflare-d1",
+      category: "serverless-edge",
+      dbType: "SQLite (Edge)",
+      freeStorage: "5 GB",
+      freeConnections: "N/A (HTTP)",
+      freeCompute: "5M rows read/day, 100K writes/day",
+      paidFrom: "$0.75/M reads (pay-as-you-go)",
+      pricingModel: "Usage-based",
+      freeDetails: "5 GB storage, 5 million rows read/day, 100,000 rows written/day. SQLite-based database running on Cloudflare's edge network. Works best with Workers. Automatic replication across Cloudflare's network. Point-in-time recovery on paid plans.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u20135",
+      hiddenCosts: "Tightly coupled to Cloudflare Workers — not a general-purpose database. Daily (not monthly) quotas. No TCP connections — HTTP API only. Limited SQL dialect compared to full SQLite.",
+    },
+    {
+      name: "Upstash",
+      slug: "upstash",
+      category: "serverless-edge",
+      dbType: "Redis + Kafka + QStash",
+      freeStorage: "256 MB (Redis)",
+      freeConnections: "N/A (HTTP)",
+      freeCompute: "10K commands/day",
+      paidFrom: "$0.2/100K commands",
+      pricingModel: "Per-command",
+      freeDetails: "Redis: 256 MB, 10,000 commands/day, 1 database. QStash: 500 messages/day, 3 retries. Kafka: removed from free tier. REST-based Redis — works in serverless/edge environments where TCP connections are unavailable. Global replication on paid plans.",
+      freeType: "limited",
+      monthlyCostSmall: "$0\u20135",
+      monthlyCostTeam: "$10\u201350+",
+      hiddenCosts: "10K commands/day is tight for production use. Per-command pricing can spike with chatty applications. Kafka free tier was removed. REST-based means higher latency than native Redis protocol.",
+    },
+    {
+      name: "Convex",
+      slug: "convex",
+      category: "serverless-edge",
+      dbType: "Document (Reactive)",
+      freeStorage: "512 MB",
+      freeConnections: "Unlimited (WebSocket)",
+      freeCompute: "Shared",
+      paidFrom: "$25/mo (Pro)",
+      pricingModel: "Per-project",
+      freeDetails: "512 MB database + file storage, 2 free projects, automatic real-time sync, built-in auth, serverless functions, cron jobs, file storage. TypeScript-first with end-to-end type safety. Automatic caching and reactivity — queries re-run when data changes.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$25+",
+      hiddenCosts: "Proprietary query language (not SQL). Vendor lock-in — no standard protocol for data export. Limited community compared to PostgreSQL ecosystem. 2-project limit on free tier.",
+    },
+    {
+      name: "PlanetScale",
+      slug: "planetscale",
+      category: "serverless-edge",
+      dbType: "MySQL (Vitess)",
+      freeStorage: "REMOVED",
+      freeConnections: "N/A",
+      freeCompute: "N/A",
+      paidFrom: "$39/mo (Scaler)",
+      pricingModel: "Usage-based",
+      freeDetails: "Free tier REMOVED (April 2024). PlanetScale eliminated the Hobby plan entirely — all free databases were deleted after a 30-day grace period. Previously offered 5 GB storage, 1 billion row reads/month. Now minimum is Scaler at $39/month. Vitess-based MySQL with branching and deploy requests.",
+      freeType: "removed",
+      monthlyCostSmall: "$39",
+      monthlyCostTeam: "$39+",
+      hiddenCosts: "No free option at all. The $39/mo Scaler plan includes 10 GB storage and 1B row reads. Significant community backlash after free tier removal. Consider alternatives: Neon, Turso, or CockroachDB for free database hosting.",
+    },
+    {
+      name: "Prisma Accelerate",
+      slug: "prisma-accelerate",
+      category: "serverless-edge",
+      dbType: "Connection pooler + Cache",
+      freeStorage: "N/A (proxy)",
+      freeConnections: "1,000 queries/day",
+      freeCompute: "Edge caching",
+      paidFrom: "$49/mo (Pro)",
+      pricingModel: "Per-query",
+      freeDetails: "1,000 cached queries/day, global edge caching, connection pooling for serverless. Not a database — sits in front of your existing database to provide connection pooling (essential for serverless) and edge caching. Works with any Prisma-supported database.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$49+",
+      hiddenCosts: "1,000 queries/day is very limited. Requires Prisma ORM — doesn't work with other query builders. Cache invalidation complexity. Pro plan at $49/mo for higher query limits.",
+    },
+    {
+      name: "MongoDB Atlas",
+      slug: "mongodb-atlas",
+      category: "document-nosql",
+      dbType: "Document (MongoDB)",
+      freeStorage: "512 MB",
+      freeConnections: "500",
+      freeCompute: "Shared (M0)",
+      paidFrom: "$0.08/hr (M10)",
+      pricingModel: "Per-cluster",
+      freeDetails: "512 MB storage, shared M0 cluster, 500 connections, 100 operations/second max. Includes Atlas Search (full-text), Charts (visualization), App Services (serverless functions), and Triggers. Available on AWS, GCP, and Azure. MongoDB drivers for every major language.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$57+ (M10)",
+      hiddenCosts: "M0 free tier has no backups, no VPC peering, limited to 100 ops/sec. Jump from free to paid is steep: M10 cluster starts at ~$57/month. Atlas Search and App Services have separate usage limits on free tier. No dedicated cluster — noisy neighbor issues possible.",
+    },
+    {
+      name: "Firebase Firestore",
+      slug: "firebase",
+      category: "document-nosql",
+      dbType: "Document (NoSQL)",
+      freeStorage: "1 GiB",
+      freeConnections: "50K reads/day",
+      freeCompute: "20K writes/day",
+      paidFrom: "$0.06/100K reads",
+      pricingModel: "Per-operation",
+      freeDetails: "1 GiB storage, 50,000 reads/day, 20,000 writes/day, 20,000 deletes/day, 10 GiB/month network egress. Part of Firebase Spark (free) plan. Real-time sync, offline support, security rules. Note: Cloud Storage was REMOVED from Spark plan (Feb 2026).",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u201325+",
+      hiddenCosts: "Per-operation pricing adds up fast — reading a list of 100 items costs 100 reads. Cloud Storage removed from free plan (Feb 2026). Firestore is tightly coupled to Firebase/GCP ecosystem. Complex queries consume more reads. Vendor lock-in is significant.",
+    },
+    {
+      name: "Couchbase Capella",
+      slug: "couchbase-capella",
+      category: "document-nosql",
+      dbType: "Document + Key-Value",
+      freeStorage: "Shared",
+      freeConnections: "Unlimited",
+      freeCompute: "Shared",
+      paidFrom: "$0.093/hr",
+      pricingModel: "Per-node-hour",
+      freeDetails: "Free tier cluster with shared resources. Couchbase Capella is a managed Couchbase service with SQL++ query language, full-text search, key-value access, and mobile sync (via Couchbase Lite). Multi-model: document, key-value, and search in one platform.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$67+",
+      hiddenCosts: "Free tier is minimal shared resources. Paid clusters start at 3 nodes minimum. Multi-model is powerful but adds complexity. Smaller community than MongoDB.",
+    },
+    {
+      name: "SurrealDB Cloud",
+      slug: "surrealdb-cloud",
+      category: "document-nosql",
+      dbType: "Multi-model (Document/Graph/SQL)",
+      freeStorage: "1 GiB",
+      freeConnections: "Unlimited",
+      freeCompute: "Shared",
+      paidFrom: "Usage-based",
+      pricingModel: "Usage-based",
+      freeDetails: "1 GiB storage on free tier. Multi-model database — document, graph, and relational in one. SurrealQL query language with SQL-like syntax. Real-time subscriptions, authentication, and permissions built in. Newer entrant but growing rapidly.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "TBD",
+      hiddenCosts: "Relatively new cloud service — stability and ecosystem are still maturing. SurrealQL is not SQL — learning curve. Limited managed tooling compared to established databases.",
+    },
+    {
+      name: "Amazon DynamoDB",
+      slug: "dynamodb-local",
+      category: "cloud-provider",
+      dbType: "Key-Value / Document",
+      freeStorage: "25 GB",
+      freeConnections: "N/A (HTTP)",
+      freeCompute: "25 WCU, 25 RCU",
+      paidFrom: "$0.25/M WCU",
+      pricingModel: "Per-capacity-unit",
+      freeDetails: "25 GB storage, 25 Write Capacity Units, 25 Read Capacity Units (Always Free). Enough for ~200 million requests/month with on-demand pricing. Global tables, streams, and point-in-time recovery available. Fully managed NoSQL with single-digit millisecond latency at any scale.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u201325+",
+      hiddenCosts: "Capacity unit pricing is confusing — WCUs and RCUs differ based on item size and consistency. On-demand pricing is simpler but 6x more expensive than provisioned. Global tables double the WCU cost. DynamoDB Streams charges separately.",
+    },
+    {
+      name: "Google Cloud BigQuery",
+      slug: "google-cloud-bigquery",
+      category: "cloud-provider",
+      dbType: "Analytical (Data Warehouse)",
+      freeStorage: "10 GiB",
+      freeConnections: "N/A (HTTP)",
+      freeCompute: "1 TiB queries/mo",
+      paidFrom: "$5/TiB queried",
+      pricingModel: "Per-query-volume",
+      freeDetails: "10 GiB storage, 1 TiB queries/month (Always Free). Serverless data warehouse — no infrastructure management. Standard SQL, ML models via BigQuery ML, real-time analytics via streaming inserts. Integrates with all GCP services and most BI tools.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u201350+",
+      hiddenCosts: "Per-TiB pricing rewards narrow queries but punishes SELECT *. Streaming inserts cost $0.01/200 MB. Storage pricing splits between active ($0.02/GB/mo) and long-term ($0.01/GB/mo). Slot-based pricing for predictable costs requires commitment.",
+    },
+    {
+      name: "Cloudflare KV",
+      slug: "cloudflare-kv",
+      category: "cloud-provider",
+      dbType: "Key-Value (Edge)",
+      freeStorage: "1 GB",
+      freeConnections: "N/A (HTTP)",
+      freeCompute: "100K reads/day, 1K writes/day",
+      paidFrom: "$0.50/M reads",
+      pricingModel: "Per-operation",
+      freeDetails: "1 GB storage, 100,000 reads/day, 1,000 writes/day on Workers free plan. Eventually consistent global key-value store optimized for read-heavy workloads. Distributed across Cloudflare's 300+ data centers. Best for configuration, feature flags, and caching.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u20135",
+      hiddenCosts: "Eventually consistent — writes take up to 60 seconds to propagate globally. 1,000 writes/day is very limited for write-heavy use cases. Values limited to 25 MiB. Requires Cloudflare Workers runtime.",
+    },
+    {
+      name: "Redis Cloud",
+      slug: "redis-cloud",
+      category: "specialized",
+      dbType: "In-Memory (Redis)",
+      freeStorage: "30 MB",
+      freeConnections: "30",
+      freeCompute: "Shared",
+      paidFrom: "$7/mo (Essentials)",
+      pricingModel: "Per-plan",
+      freeDetails: "30 MB dataset size, 30 connections on free tier. Managed Redis with persistence, replication, and high availability on paid plans. Supports Redis modules (Search, JSON, TimeSeries, Graph, Bloom) on paid tiers. Available on AWS, GCP, and Azure.",
+      freeType: "limited",
+      monthlyCostSmall: "$0\u20137",
+      monthlyCostTeam: "$7\u201350+",
+      hiddenCosts: "30 MB is extremely small — barely enough for caching. Redis license changed to SSPL/RSALv2 (March 2024) — no longer open source. Modules like RedisSearch and RedisJSON only on paid plans. Consider Upstash or Valkey/KeyDB as alternatives.",
+    },
+    {
+      name: "Neo4j AuraDB",
+      slug: "neo4j-auradb",
+      category: "specialized",
+      dbType: "Graph",
+      freeStorage: "200K nodes, 400K relationships",
+      freeConnections: "Unlimited",
+      freeCompute: "Shared",
+      paidFrom: "$15/mo (Pro)",
+      pricingModel: "Per-instance",
+      freeDetails: "200,000 nodes, 400,000 relationships on free tier. Managed Neo4j graph database with Cypher query language. Includes Graph Data Science library (limited) and Bloom visualization. Single database on free tier. Available on AWS, GCP, and Azure.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$15+",
+      hiddenCosts: "200K nodes is enough for development but limiting for production graph applications. Free tier has no backups, no VPC, and limited performance. Graph Data Science algorithms limited on free tier. Cypher has a learning curve.",
+    },
+    {
+      name: "InfluxDB Cloud",
+      slug: "influxdb-cloud",
+      category: "specialized",
+      dbType: "Time-Series",
+      freeStorage: "Unlimited cardinality",
+      freeConnections: "Unlimited",
+      freeCompute: "Limited writes",
+      paidFrom: "$0 (usage-based)",
+      pricingModel: "Usage-based",
+      freeDetails: "Free plan with limited write and query rates. Purpose-built time-series database for metrics, events, and IoT data. InfluxQL and Flux query languages. Built-in dashboarding, alerting, and downsampling. InfluxDB 3.0 (new engine) in preview.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u201350+",
+      hiddenCosts: "Write and query rate limits on free tier can throttle during spikes. Flux query language has a steep learning curve. InfluxDB 3.0 migration may require query rewrites. Cardinality explosions can cause performance issues.",
+    },
+    {
+      name: "Weaviate",
+      slug: "weaviate",
+      category: "specialized",
+      dbType: "Vector",
+      freeStorage: "Sandbox (limited)",
+      freeConnections: "Unlimited",
+      freeCompute: "Sandbox",
+      paidFrom: "$25/mo (Serverless)",
+      pricingModel: "Per-dimension-stored",
+      freeDetails: "Free sandbox cluster with limited resources and 14-day data retention. AI-native vector database for semantic search, RAG, and generative AI applications. Supports hybrid search (vector + keyword), multi-tenancy, and 20+ ML model integrations.",
+      freeType: "trial",
+      monthlyCostSmall: "$25+",
+      monthlyCostTeam: "$25\u2013100+",
+      hiddenCosts: "Sandbox is trial-only — 14-day data retention. Serverless tier starts at $25/mo. Vector storage costs scale with dimensions (1536-dim OpenAI embeddings are 6x more expensive per object than 384-dim). Bring-your-own-cloud for data sovereignty costs extra.",
+    },
+    {
+      name: "Zilliz Cloud",
+      slug: "zilliz-cloud",
+      category: "specialized",
+      dbType: "Vector (Milvus)",
+      freeStorage: "2 collections",
+      freeConnections: "Unlimited",
+      freeCompute: "Serverless free tier",
+      paidFrom: "Usage-based",
+      pricingModel: "Per-CU",
+      freeDetails: "Free tier with 2 collections and limited storage on Zilliz Cloud Serverless. Managed Milvus — the most widely deployed open-source vector database. Supports ANN search, hybrid search, multi-vector, and filtering. GPU-accelerated indexing on paid plans.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "Usage-based",
+      hiddenCosts: "2-collection limit on free tier is restrictive. CU-based pricing is opaque. Milvus is open-source but Zilliz Cloud adds proprietary features. GPU acceleration only on higher tiers.",
+    },
+    {
+      name: "Momento",
+      slug: "momento",
+      category: "specialized",
+      dbType: "Cache + Topics (Serverless)",
+      freeStorage: "N/A (cache)",
+      freeConnections: "N/A (HTTP)",
+      freeCompute: "5 GiB transfer/mo",
+      paidFrom: "$0.50/GiB transfer",
+      pricingModel: "Per-transfer",
+      freeDetails: "5 GiB data transfer/month free. Serverless caching (Cache) and pub/sub messaging (Topics). No connections to manage — HTTP-based. Compatible with Redis and Memcached protocols. Instant provisioning, no clusters to configure.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$0\u201310+",
+      hiddenCosts: "5 GiB transfer can be consumed quickly with chatty applications. Per-transfer pricing differs from Redis per-operation model. Limited ecosystem compared to Redis. Topics is newer and less battle-tested.",
+    },
+    {
+      name: "Hasura Cloud",
+      slug: "hasura-cloud",
+      category: "specialized",
+      dbType: "GraphQL Engine (over Postgres)",
+      freeStorage: "N/A (connects to your DB)",
+      freeConnections: "60 req/min",
+      freeCompute: "Shared",
+      paidFrom: "$99/mo (Professional)",
+      pricingModel: "Per-project",
+      freeDetails: "Free tier with 60 requests/minute, 1 GB data passthrough/month. Not a database itself — auto-generates a GraphQL API over your existing PostgreSQL database. Includes subscriptions, event triggers, scheduled triggers, and remote schemas. Supports multiple database sources.",
+      freeType: "limited",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$99+",
+      hiddenCosts: "60 req/min is very restrictive for production. Professional plan jumps to $99/mo. You still need to host and pay for the underlying database. GraphQL API adds latency vs direct database queries. Complex joins can generate inefficient SQL.",
+    },
+  ];
+
+  const categoryLabels: Record<string, string> = {
+    "managed-postgres": "Managed PostgreSQL",
+    "serverless-edge": "Serverless / Edge Databases",
+    "document-nosql": "Document / NoSQL",
+    "cloud-provider": "Cloud Provider Databases",
+    "specialized": "Specialized (Vector, Graph, Time-Series, Cache)",
+  };
+
+  const categoryDescs: Record<string, string> = {
+    "managed-postgres": "Fully managed PostgreSQL services with serverless scaling, branching, and modern DX. The default choice for most applications in 2026.",
+    "serverless-edge": "Databases designed for serverless and edge computing. No connection management, scale to zero, and global distribution.",
+    "document-nosql": "Document-oriented databases for flexible schemas. Best for rapid prototyping, mobile apps, and content management.",
+    "cloud-provider": "Database services from major cloud platforms. Best when you are already invested in that ecosystem.",
+    "specialized": "Purpose-built databases for specific data models: vectors (AI/ML), graphs (relationships), time-series (metrics), caching (performance), and GraphQL.",
+  };
+
+  const freeTypeLabels: Record<string, string> = {
+    "generous": "Generous free tier",
+    "limited": "Limited free tier",
+    "removed": "FREE TIER REMOVED",
+    "trial": "Trial / Sandbox only",
+    "oss-only": "Self-hosted / OSS only",
+  };
+
+  const freeTypeColors: Record<string, string> = {
+    "generous": "#3fb950",
+    "limited": "#d29922",
+    "removed": "#f85149",
+    "trial": "#bc8cff",
+    "oss-only": "#58a6ff",
+  };
+
+  const generousCount = services.filter(s => s.freeType === "generous").length;
+  const limitedCount = services.filter(s => s.freeType === "limited" || s.freeType === "trial").length;
+  const removedCount = services.filter(s => s.freeType === "removed").length;
+
+  const pricingTableRows = services.map(s => {
+    const freeColor = freeTypeColors[s.freeType] || "var(--text-muted)";
+    return '<tr>' +
+      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.dbType) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(s.freeStorage) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.freeConnections) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.paidFrom) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.pricingModel) + '</td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  const categorySections = (["managed-postgres", "serverless-edge", "document-nosql", "cloud-provider", "specialized"] as const).map(cat => {
+    const catServices = services.filter(s => s.category === cat);
+    const cards = catServices.map(s => {
+      const borderColor = freeTypeColors[s.freeType] || "var(--accent)";
+      return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
+        '<h3><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a> ' +
+        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(s.dbType) + ' \u00b7 ' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></h3>' +
+        '<p class="diff-desc">' + escHtmlServer(s.freeDetails) + '</p>' +
+        '</div>';
+    }).join("\n    ");
+    return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
+      '<p class="section-intro">' + escHtmlServer(categoryDescs[cat]) + '</p>' +
+      cards;
+  }).join("\n\n  ");
+
+  const costRows = services.map(s => {
+    return '<tr>' +
+      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSmall) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.hiddenCosts.substring(0, 80)) + (s.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  const changeTimelineRows = dbChanges.map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return '<tr>' +
+      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
+      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["database-free-tier-comparison-2026", "database-alternatives", "supabase-alternatives", "free-startup-stack", "free-tier-risk", "cloud-free-tier-comparison-2026"].includes(p.slug)
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
+    about: services.map(s => ({ "@type": "SoftwareApplication", name: s.name })),
+  };
+
+  const faqEntries = [
+    { q: "Which database has the best free tier in 2026?", a: "Supabase and CockroachDB offer the most generous free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. CockroachDB offers 10 GiB storage with 50M Request Units/month. For edge/serverless, Turso (9 GB, 500 databases) and Cloudflare D1 (5 GB) are standouts." },
+    { q: "Is Supabase really free?", a: "Yes, but with caveats. Supabase free tier includes 500 MB Postgres, Auth, Storage, Edge Functions, and Realtime. However, free projects now pause after 1 week of inactivity (tightened Feb 2026), you are limited to 2 projects, and egress is capped at 5 GB total across all services. For active projects, it is genuinely free." },
+    { q: "What happened to PlanetScale's free tier?", a: "PlanetScale removed its free Hobby plan entirely in April 2024. All free databases were deleted after a 30-day grace period. The minimum plan is now Scaler at $39/month. This was one of the most impactful free tier removals in developer tools. Alternatives: Neon (512 MB free), Turso (9 GB free), CockroachDB (10 GiB free)." },
+    { q: "Neon vs Supabase: which is cheaper?", a: "For solo developers: both are free. Neon offers 512 MB storage with serverless autoscaling to zero. Supabase offers 500 MB with more bundled services (Auth, Storage, Functions). For growing teams: Neon starts at $19/mo (Launch) with usage-based scaling. Supabase Pro is $25/project. Neon is cheaper for pure database needs; Supabase is cheaper if you need the full BaaS platform." },
+    { q: "Should I use a managed database or self-host?", a: "Managed databases (Supabase, Neon, MongoDB Atlas) are better for small teams — zero ops overhead, automatic backups, and scaling. Self-hosting (PostgreSQL, MongoDB, Redis) makes sense when you need full control, have strict data residency requirements, or are optimizing costs at scale. The break-even point is typically around $200-500/month in managed database costs." },
+    { q: "Which database is best for AI/ML applications?", a: "For vector search: Weaviate, Zilliz Cloud (Milvus), or Supabase (pgvector). Weaviate offers the richest AI integrations but only has a trial sandbox. Supabase pgvector is the cheapest option — included in the free tier. For RAG applications, Turso (edge) + any vector store gives low-latency retrieval." },
+    { q: "What are the hidden costs of database free tiers?", a: "The biggest gotchas: connection limits (MongoDB Atlas: 500, Redis Cloud: 30), storage caps that force upgrades (Supabase: 500 MB, Neon: 512 MB), operation-based pricing that spikes unpredictably (Firestore, DynamoDB), project pausing on inactivity (Supabase), and egress charges not included in free tier marketing." },
+    { q: "How do I migrate away from a database if pricing changes?", a: "PostgreSQL-compatible databases (Supabase, Neon, CockroachDB, Aurora) offer the easiest migration path — pg_dump works across all of them. MongoDB Atlas data can be exported via mongodump. For serverless databases (Turso, D1, Convex), migration is harder due to proprietary APIs. Choose PostgreSQL-compatible databases to minimize lock-in risk." },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqEntries.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+    '<meta charset="utf-8">\n' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+    '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
+    '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="og:title" content="' + escHtmlServer(title) + '">\n' +
+    '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<meta property="og:type" content="article">\n' +
+    '<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="article:published_time" content="' + pubDate + '">\n' +
+    OG_IMAGE_META + GOOGLE_VERIFICATION_META +
+    '<link rel="icon" type="image/png" href="/favicon.png">\n' +
+    '<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n' +
+    '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n' +
+    '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n' +
+    '<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n' +
+    '<style>\n' +
+    '*{margin:0;padding:0;box-sizing:border-box}\n' +
+    ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n' +
+    'body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n' +
+    'a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n' +
+    '.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n' +
+    '.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n' +
+    '.breadcrumb a{color:var(--text-muted)}\n' +
+    'h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\n' +
+    'h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\n' +
+    'h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n' +
+    '.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n' +
+    '.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n' +
+    '.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n' +
+    '.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n' +
+    '.stat-number.green{color:#3fb950}\n' +
+    '.stat-number.yellow{color:#d29922}\n' +
+    '.stat-number.red{color:#f85149}\n' +
+    '.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n' +
+    '.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n' +
+    '.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n' +
+    '.executive-summary p:last-child{margin-bottom:0}\n' +
+    '.executive-summary strong{color:var(--text)}\n' +
+    '.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n' +
+    '.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n' +
+    '.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n' +
+    '.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n' +
+    '.pricing-table tr:hover{background:var(--accent-glow)}\n' +
+    '.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n' +
+    '.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    '.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.context-box strong{color:var(--text)}\n' +
+    '.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n' +
+    '.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n' +
+    '.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n' +
+    '.verdict-item strong{color:var(--text)}\n' +
+    '.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n' +
+    '.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.methodology strong{color:var(--text)}\n' +
+    '.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n' +
+    '.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n' +
+    '.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n' +
+    '.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n' +
+    '.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n' +
+    '.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}\n' +
+    '.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n' +
+    '.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n' +
+    '.toc ol{padding-left:1.25rem;margin:0}\n' +
+    '.toc li{margin-bottom:.35rem;font-size:.9rem}\n' +
+    '.toc a{color:var(--accent)}\n' +
+    '.hidden-cost-card{padding:1rem 1.25rem;border:1px solid var(--border);border-left:3px solid #f85149;border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.hidden-cost-card h4{margin:0 0 .25rem;font-size:.95rem;color:var(--text)}\n' +
+    '.hidden-cost-card p{color:var(--text-muted);font-size:.85rem;line-height:1.5;margin:0}\n' +
+    '.faq-item{border-bottom:1px solid var(--border);padding:1rem 0}\n' +
+    '.faq-item:last-child{border-bottom:none}\n' +
+    '.faq-q{font-weight:600;color:var(--text);font-size:.95rem;margin-bottom:.5rem}\n' +
+    '.faq-a{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n' +
+    'footer a{color:var(--accent)}\n' +
+    '@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}\n' +
+    globalNavCss() + '\n' +
+    mcpCtaCss() + '\n' +
+    '</style>\n</head>\n<body>\n' +
+    '<div class="container">\n' +
+    '  ' + buildGlobalNav("changes") + '\n' +
+    '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
+    '  <h1>Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + dbOffers.length + ' database services &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '\n' +
+    '  <div class="summary-stats">\n' +
+    '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Services Compared</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number green">' + generousCount + '</div><div class="stat-label">Generous Free Tier</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number yellow">' + limitedCount + '</div><div class="stat-label">Limited / Trial</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number red">' + removedCount + '</div><div class="stat-label">Free Tier Removed</div></div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="executive-summary">\n' +
+    '    <p><strong>The database landscape in April 2026:</strong> ' + services.length + ' services across five categories \u2014 managed PostgreSQL, serverless/edge, document/NoSQL, cloud provider, and specialized (vector, graph, time-series, cache). The market is volatile: PlanetScale killed its free tier (April 2024), Supabase tightened pause policies, Neon pivoted to usage-based pricing post-Databricks acquisition, and Aurora PostgreSQL joined the AWS free tier.</p>\n' +
+    '    <p><strong>Key trends:</strong> PostgreSQL has won the developer database war \u2014 Supabase, Neon, CockroachDB, and Aurora all offer PostgreSQL-compatible free tiers. Edge/serverless databases (Turso, D1) are the fastest-growing category. Vector databases (Weaviate, Zilliz) are essential for AI applications but most only offer limited free tiers. The biggest shift: managed databases are converging on usage-based pricing, making costs harder to predict but scaling more efficient.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, storage and connection analysis, cost comparison for solo developers and teams, hidden costs, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="toc">\n' +
+    '    <h3>Jump to section</h3>\n' +
+    '    <ol>\n' +
+    '      <li><a href="#pricing-table">Pricing Comparison Table</a></li>\n' +
+    '      <li><a href="#categories">Category Breakdown</a> (Managed Postgres, Serverless/Edge, Document/NoSQL, Cloud, Specialized)</li>\n' +
+    '      <li><a href="#free-tiers">What You Actually Get for Free</a></li>\n' +
+    '      <li><a href="#cost-analysis">Cost Analysis by Team Size</a></li>\n' +
+    '      <li><a href="#hidden-costs">Hidden Costs</a></li>\n' +
+    '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
+    '      <li><a href="#faq">FAQ</a></li>\n' +
+    '    </ol>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
+    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click service names for full vendor profiles with free tier details.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Service</th>\n' +
+    '        <th>Type</th>\n' +
+    '        <th>Free Storage</th>\n' +
+    '        <th>Free Connections</th>\n' +
+    '        <th>Paid From</th>\n' +
+    '        <th>Model</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + pricingTableRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The PostgreSQL advantage:</strong> Supabase, Neon, CockroachDB, and Aurora all offer PostgreSQL-compatible free tiers. Choosing PostgreSQL-compatible means you can migrate between providers using pg_dump \u2014 the lowest lock-in risk of any database choice. If you are starting a new project and have no strong reason to choose otherwise, start with PostgreSQL.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="categories">Category Breakdown</h2>\n' +
+    '  <p class="section-intro">Databases fall into five distinct categories, each optimized for different data models, access patterns, and deployment targets.</p>\n' +
+    '\n' +
+    '  ' + categorySections + '\n' +
+    '\n' +
+    '  <h2 id="free-tiers">What You Actually Get for Free</h2>\n' +
+    '  <p class="section-intro">Free tiers vary wildly. Here is the honest breakdown of what you get at zero cost and when you will outgrow it.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Service</th>\n' +
+    '        <th>Free Tier Type</th>\n' +
+    '        <th>Free Storage</th>\n' +
+    '        <th>When You Hit the Wall</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    services.map(s => {
+      const wallDesc = s.freeType === "generous" ? "Months of active development" :
+        s.freeType === "removed" ? "Day 1 \u2014 no free tier" :
+        s.freeType === "trial" ? "End of trial / sandbox expiry" :
+        s.freeType === "oss-only" ? "Never (self-hosted)" :
+        "1\u20134 weeks for active project";
+      return '      <tr>' +
+        '<td style="font-weight:600">' + escHtmlServer(s.name) + '</td>' +
+        '<td><span style="color:' + (freeTypeColors[s.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></td>' +
+        '<td style="font-size:.85rem">' + escHtmlServer(s.freeStorage) + '</td>' +
+        '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(wallDesc) + '</td>' +
+        '</tr>';
+    }).join("\n") + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="cost-analysis">Cost Comparison by Team Size</h2>\n' +
+    '  <p class="section-intro">What does each database cost for a solo developer or small project versus a team of 5\u201310?</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Service</th>\n' +
+    '        <th>Solo / Small /mo</th>\n' +
+    '        <th>Team /mo</th>\n' +
+    '        <th>Key Cost Factor</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + costRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>Best value picks:</strong> For most projects, <a href="/vendor/supabase">Supabase</a> (500 MB + Auth + Storage + Functions) or <a href="/vendor/neon">Neon</a> (512 MB, scales to zero) offer the best free-to-paid journey. For maximum free storage, <a href="/vendor/cockroachdb">CockroachDB</a> (10 GiB) or <a href="/vendor/turso">Turso</a> (9 GB) lead. For serverless edge use cases, <a href="/vendor/cloudflare-d1">Cloudflare D1</a> pairs naturally with Workers.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
+    '  <p class="section-intro">The sticker price rarely tells the full story. Here are database costs that catch teams off guard.</p>\n' +
+    '\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Connection Limits</h4>\n' +
+    '    <p>Traditional databases charge per-connection. MongoDB Atlas free tier: 500 connections. Redis Cloud: 30 connections. In serverless environments, each function invocation opens a connection \u2014 without pooling, you will exhaust limits instantly. Supabase and Neon include built-in connection pooling; others require PgBouncer or similar.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Project Pausing and Cold Starts</h4>\n' +
+    '    <p>Supabase pauses free projects after 1 week of inactivity (tightened Feb 2026). Neon scales to zero (fast wake-up but not instant). This means free-tier databases are unsuitable for always-on production use. If uptime matters, budget for a paid tier or choose a service without pausing (CockroachDB, DynamoDB).</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Per-Operation Pricing Surprises</h4>\n' +
+    '    <p>Firestore charges per document read \u2014 loading a list of 100 items costs 100 reads. DynamoDB charges per Request Unit (RU) where complex queries consume more. CockroachDB charges per Request Unit where pricing depends on query complexity. These models reward efficient queries but punish exploration during development.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Egress and Transfer Fees</h4>\n' +
+    '    <p>Cloud-provider databases (Aurora, DynamoDB, BigQuery) charge standard cloud egress rates. Supabase shares 5 GB egress across all services (database + storage + functions). High-traffic applications can hit egress limits before storage limits. Edge databases (Turso, D1) include replication but may charge for cross-region reads.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Vendor Lock-in Migration Costs</h4>\n' +
+    '    <p>Migrating from Firestore, DynamoDB, or Convex requires rewriting queries and data access layers. PostgreSQL-compatible databases (Supabase, Neon, CockroachDB) minimize this risk \u2014 pg_dump works across all of them. PlanetScale users learned this lesson the hard way when the free tier was removed with 30 days notice.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
+    '  <p class="section-intro">Database pricing is the most volatile category in developer tools. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
+    '\n' +
+    (dbChanges.length > 0 ? (
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + changeTimelineRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n'
+    ) : '  <p class="section-intro">No database-specific pricing changes tracked recently.</p>\n') +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The trend:</strong> Database pricing is in upheaval. PlanetScale killed its free tier entirely (2024). Supabase tightened inactivity pausing to 1 week. Neon moved to fully usage-based pricing post-Databricks acquisition. Firebase removed Cloud Storage from the free plan. The counter-trend: Amazon Aurora PostgreSQL joined the AWS Free Tier (March 2026), and CockroachDB continues to offer one of the most generous free tiers at 10 GiB.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
+    '\n' +
+    '  <div class="verdict-box">\n' +
+    '    <h3>Pick the Right Database</h3>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best overall free tier</strong>\n' +
+    '      <p><a href="/vendor/supabase">Supabase</a> \u2014 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. The most batteries-included free database. Or <a href="/vendor/cockroachdb">CockroachDB</a> for 10 GiB storage with distributed PostgreSQL.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for serverless / edge</strong>\n' +
+    '      <p><a href="/vendor/turso">Turso</a> (9 GB, 500 databases, edge replicas) or <a href="/vendor/cloudflare-d1">Cloudflare D1</a> (5 GB, integrated with Workers). Both use SQLite \u2014 zero cold starts, global distribution, no connection management.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for prototyping / hackathons</strong>\n' +
+    '      <p><a href="/vendor/supabase">Supabase</a> or <a href="/vendor/convex">Convex</a>. Supabase for PostgreSQL with instant APIs. Convex for real-time reactive apps with TypeScript-first DX and zero config.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for AI / ML applications</strong>\n' +
+    '      <p><a href="/vendor/supabase">Supabase</a> (pgvector, included free) for basic vector search. <a href="/vendor/weaviate">Weaviate</a> or <a href="/vendor/zilliz-cloud">Zilliz Cloud</a> (Milvus) for production vector search with ML integrations. <a href="/vendor/turso">Turso</a> for low-latency RAG retrieval at the edge.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for scale-out / global</strong>\n' +
+    '      <p><a href="/vendor/cockroachdb">CockroachDB</a> for distributed PostgreSQL with automatic sharding. <a href="/vendor/dynamodb-local">DynamoDB</a> for single-digit millisecond latency at any scale (25 GB free). <a href="/vendor/firebase">Firebase Firestore</a> for real-time mobile sync.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for minimizing lock-in</strong>\n' +
+    '      <p>Any PostgreSQL-compatible database: <a href="/vendor/supabase">Supabase</a>, <a href="/vendor/neon">Neon</a>, <a href="/vendor/cockroachdb">CockroachDB</a>, or <a href="/vendor/amazon-aurora-postgresql">Aurora PostgreSQL</a>. pg_dump works across all \u2014 migration is a single command.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for SaaS multi-tenancy</strong>\n' +
+    '      <p><a href="/vendor/nile">Nile</a> \u2014 purpose-built for multi-tenant SaaS with virtual tenant databases and built-in isolation. 10 GiB free. The only database with first-class tenant primitives.</p>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
+    faqEntries.map(f =>
+      '  <div class="faq-item">\n' +
+      '    <div class="faq-q">' + escHtmlServer(f.q) + '</div>\n' +
+      '    <div class="faq-a">' + escHtmlServer(f.a) + '</div>\n' +
+      '  </div>'
+    ).join("\n") + '\n' +
+    '\n' +
+    '  <h2>Data Source &amp; Methodology</h2>\n' +
+    '  <div class="methodology">\n' +
+    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for database services, compare vendors, or track pricing changes from your AI coding assistant.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  ' + buildMcpCta("Compare database pricing, search free tiers, and track pricing changes \u2014 all from your AI coding assistant.") + '\n' +
+    '\n' +
+    '  <h2>Related Guides</h2>\n' +
+    '  <div class="related-pages">\n' +
+    relatedPages.map(p =>
+      '    <a href="/' + p.slug + '" class="related-page-link">\n' +
+      '      <div class="link-title">' + escHtmlServer(p.title) + '</div>\n' +
+      '      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n' +
+      '    </a>'
+    ).join("\n") + '\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="search-cta">\n' +
+    '    Explore all ' + offers.length.toLocaleString() + ' developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>\n' +
+    '  </div>\n' +
+    '</div>\n' +
+    '<footer>\n' +
+    '  <div class="container">\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '  </div>\n' +
+    '</footer>\n' +
+    '<script>' + mcpCtaScript() + '</script>\n' +
+    '</body>\n</html>';
+}
+
 // --- AWS Free Tier 2026 guide page ---
 
 function buildAwsFreeTier2026Page(): string {
@@ -46735,6 +47627,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ci-cd-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCiCdPricingPage());
+  } else if (url.pathname === "/database-pricing" && isGetOrHead) {
+    recordApiHit("/database-pricing");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDatabasePricingPage());
   } else if (url.pathname === "/aws-free-tier-2026" && isGetOrHead) {
     recordApiHit("/aws-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
