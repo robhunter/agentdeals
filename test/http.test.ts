@@ -5144,6 +5144,14 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("/stability"), "Should cross-link to stability dashboard");
     assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
     assert.ok(html.includes("Migration path"), "Should show migration paths");
+    assert.ok(html.includes("AWS WorkSpaces Thin Client"), "Should list AWS WorkSpaces Thin Client");
+    assert.ok(html.includes("Node.js 20 AWS Lambda Runtime"), "Should list Node.js 20 Lambda deprecation");
+    assert.ok(html.includes("Google Maps Platform Client IDs"), "Should list Google Maps Client ID sunset");
+    assert.ok(html.includes("AWS Fargate Platform Version 1.3.0"), "Should list Fargate PV 1.3.0 deprecation");
+    assert.ok(html.includes("AWS App Mesh"), "Should list AWS App Mesh shutdown");
+    assert.ok(html.includes("AWS Proton"), "Should list AWS Proton shutdown");
+    assert.ok(html.includes("AWS CodeCommit"), "Should list AWS CodeCommit maintenance mode");
+    assert.ok(html.includes("AWS Cloud9"), "Should list AWS Cloud9 maintenance mode");
   });
 
   it("GET /cockroachdb-vs-mongodb renders programmatic VS page", async () => {
