@@ -5018,6 +5018,39 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("/shutdowns"), "Should cross-link to shutdowns tracker");
   });
 
+  it("GET /aws-app-runner-migration renders App Runner migration guide", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/aws-app-runner-migration`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("App Runner"), "Should have App Runner in title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Article"'), "Should use Article schema");
+    assert.ok(html.includes('"FAQPage"'), "Should have FAQPage schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("April 30, 2026"), "Should show deadline date");
+    assert.ok(html.includes("days"), "Should show days remaining");
+    assert.ok(html.includes("ECS Express Mode"), "Should list ECS Express Mode");
+    assert.ok(html.includes("Google Cloud Run"), "Should list Cloud Run");
+    assert.ok(html.includes("Railway"), "Should list Railway");
+    assert.ok(html.includes("Render"), "Should list Render");
+    assert.ok(html.includes("Fly.io"), "Should list Fly.io");
+    assert.ok(html.includes("Azure Container Apps"), "Should list Azure Container Apps");
+    assert.ok(html.includes("DigitalOcean"), "Should list DigitalOcean");
+    assert.ok(html.includes("Source"), "Should discuss source code deployment");
+    assert.ok(html.includes("Custom Domain"), "Should discuss custom domain migration");
+    assert.ok(html.includes("Auto-Scaling"), "Should discuss auto-scaling differences");
+    assert.ok(html.includes("Migration"), "Should have migration section");
+    assert.ok(html.includes("Pricing"), "Should have pricing comparison");
+    assert.ok(html.includes("Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
+    assert.ok(html.includes("/shutdowns"), "Should cross-link to shutdowns tracker");
+  });
+
   it("GET /tenor-alternatives renders Tenor API shutdown guide", async () => {
     proc = await startHttpServer();
 
