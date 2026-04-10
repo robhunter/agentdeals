@@ -47109,7 +47109,7 @@ const httpServer = createHttpServer(async (req, res) => {
   }
 
   // Monitoring comparison alias — redirect old slug to new canonical
-  if (url.pathname === "/monitoring-free-tier-comparison-2026" && isGetOrHead) {
+  if ((url.pathname === "/monitoring-free-tier-comparison-2026" || url.pathname === "/monitoring-pricing" || url.pathname === "/monitoring-observability-pricing") && isGetOrHead) {
     res.writeHead(301, { Location: "/monitoring-comparison-2026" });
     res.end();
     return;

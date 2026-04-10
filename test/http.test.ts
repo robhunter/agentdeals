@@ -4026,6 +4026,22 @@ describe("HTTP transport", () => {
     assert.ok(response.headers.get("location")?.includes("/auth-comparison-2026"), "Should redirect /auth-pricing to canonical auth comparison");
   });
 
+  it("GET /monitoring-pricing redirects to /monitoring-comparison-2026", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/monitoring-pricing`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/monitoring-comparison-2026"), "Should redirect /monitoring-pricing to canonical monitoring comparison");
+  });
+
+  it("GET /monitoring-observability-pricing redirects to /monitoring-comparison-2026", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/monitoring-observability-pricing`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/monitoring-comparison-2026"), "Should redirect /monitoring-observability-pricing to canonical monitoring comparison");
+  });
+
   it("GET /storage-comparison-2026 renders expanded storage and CDN comparison page", async () => {
     proc = await startHttpServer();
 
