@@ -5555,6 +5555,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "OpenAI",
     hubDesc: "OpenAI Realtime API beta deprecated May 7, 2026 — migration guide to GA API and real-time audio alternatives with code examples and pricing",
   },
+  {
+    slug: "aws-app-runner-migration",
+    title: "AWS App Runner Migration Guide: Alternatives with Free Tiers & Pricing (2026)",
+    metaDesc: "AWS App Runner closes to new customers April 30, 2026. Migrate to ECS Express Mode, Google Cloud Run, Railway, Render, Fly.io, or Azure Container Apps. Free tier comparison, pricing, and migration paths.",
+    contextHtml: "",
+    tag: "app-runner-shutdown",
+    primaryVendor: "AWS",
+    hubDesc: "AWS App Runner closed to new customers April 30, 2026 — migration guide to ECS Express Mode and container deployment alternatives with pricing comparison",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -23937,6 +23946,17 @@ function buildShutdownTrackerPage(): string {
 
   const shutdowns: ShutdownEntry[] = [
     {
+      service: "AWS App Runner (New Customers)",
+      vendorSlug: "aws",
+      what: "App Runner closed to new customers — existing users can continue, but no new features. AWS recommends ECS Express Mode.",
+      deadline: "2026-04-30",
+      impact: "Cannot create new App Runner services. Existing services continue but service is in maintenance mode.",
+      whoAffected: "Developers looking to deploy new containerized web apps on App Runner, existing users planning long-term",
+      migrationPath: "Migrate to ECS Express Mode (AWS recommended), Google Cloud Run, Railway, Render, or Fly.io",
+      migrationLink: "/aws-app-runner-migration",
+      status: "active",
+    },
+    {
       service: "HubSpot Contact Lists API v1",
       vendorSlug: "hubspot",
       what: "Legacy Contact Lists API v1 sunset \u2014 replaced by Lists API v3",
@@ -28915,6 +28935,583 @@ function buildOpenAIRealtimeMigrationPage(): string {
   };
 
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + ' &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data verified against official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
+}
+
+// --- AWS App Runner Migration Guide page ---
+
+function buildAppRunnerMigrationPage(): string {
+  const title = "AWS App Runner Migration Guide: Alternatives with Free Tiers & Pricing (2026)";
+  const metaDesc = "AWS App Runner closes to new customers April 30, 2026. Migrate to ECS Express Mode, Google Cloud Run, Railway, Render, Fly.io, or Azure Container Apps. Free tier comparison, pricing, and migration paths.";
+  const slug = "aws-app-runner-migration";
+  const pubDate = "2026-04-10";
+
+  const stabilityMap = getStabilityMap();
+
+  // AWS deal changes
+  const awsChanges = dealChanges.filter(c =>
+    c.vendor === "AWS" || c.vendor === "Amazon AWS" || c.summary.toLowerCase().includes("app runner")
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  interface ContainerProvider {
+    name: string;
+    slug: string;
+    freeTier: string;
+    startingPrice: string;
+    pricingModel: string;
+    sourceCodeDeploy: string;
+    autoScaling: string;
+    migrationEffort: string;
+    bestFor: string;
+  }
+
+  const providers: ContainerProvider[] = [
+    { name: "Amazon ECS Express Mode", slug: "aws", freeTier: "AWS Free Tier (750 hrs t2.micro/mo, 12 months)", startingPrice: "~$0.01/hr (Fargate)", pricingModel: "Per-hour (Fargate vCPU + memory)", sourceCodeDeploy: "No — container images only", autoScaling: "Yes (Service Auto Scaling)", migrationEffort: "Moderate — different API, same AWS ecosystem", bestFor: "Existing AWS users (official recommendation)" },
+    { name: "AWS Fargate", slug: "aws", freeTier: "AWS Free Tier (limited)", startingPrice: "$0.04048/vCPU-hr + $0.004445/GB-hr", pricingModel: "Per-second (vCPU + memory)", sourceCodeDeploy: "No — container images only", autoScaling: "Yes (ECS Service Auto Scaling)", migrationEffort: "Moderate — different API, same ECR", bestFor: "Serverless containers on AWS" },
+    { name: "Elastic Beanstalk", slug: "aws", freeTier: "No EB fee (pay for underlying resources)", startingPrice: "EC2 pricing (t2.micro free 12 mo)", pricingModel: "Per-hour (underlying EC2/RDS)", sourceCodeDeploy: "Yes — source code + Dockerfiles", autoScaling: "Yes (EC2 Auto Scaling)", migrationEffort: "Low — supports source code deploy like App Runner", bestFor: "Source code deploy with full AWS control" },
+    { name: "Google Cloud Run", slug: "google-cloud-run", freeTier: "2M requests/mo, 360K vCPU-sec, 180K GiB-sec free", startingPrice: "$0.00002400/vCPU-sec", pricingModel: "Per-request + per-second (scale to zero)", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (scale to zero)", migrationEffort: "Moderate — different cloud, similar DX", bestFor: "Pay-per-request with generous free tier" },
+    { name: "Azure Container Apps", slug: "azure", freeTier: "180K vCPU-sec, 360K GiB-sec/mo free", startingPrice: "$0.000024/vCPU-sec", pricingModel: "Per-second (consumption) or dedicated", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (KEDA-based, scale to zero)", migrationEffort: "Moderate — different cloud, similar concepts", bestFor: "Azure ecosystem, event-driven scaling" },
+    { name: "Railway", slug: "railway", freeTier: "$5/mo free credit (trial)", startingPrice: "$5/mo + usage ($0.000463/vCPU-min)", pricingModel: "Per-minute (vCPU + memory) + subscription", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (horizontal + vertical)", migrationEffort: "Low — push to deploy, minimal config", bestFor: "Developer experience, fast deployment" },
+    { name: "Render", slug: "render", freeTier: "Free tier (750 hrs/mo, sleeps after inactivity)", startingPrice: "$7/mo (Starter)", pricingModel: "Per-service fixed monthly", sourceCodeDeploy: "Yes — GitHub auto-deploy", autoScaling: "Yes (paid plans)", migrationEffort: "Low — similar DX to App Runner", bestFor: "Simple web services, closest App Runner experience" },
+    { name: "Fly.io", slug: "fly-io", freeTier: "3 shared-cpu-1x VMs, 160GB bandwidth free", startingPrice: "$1.94/mo (shared-cpu-1x)", pricingModel: "Per-VM + bandwidth", sourceCodeDeploy: "Yes — Dockerfiles + buildpacks", autoScaling: "Yes (scale to zero, multi-region)", migrationEffort: "Low-Moderate — CLI-driven, different paradigm", bestFor: "Multi-region, edge deployment" },
+    { name: "DigitalOcean App Platform", slug: "digitalocean", freeTier: "3 static sites free, starter apps $5/mo", startingPrice: "$5/mo (Basic)", pricingModel: "Fixed monthly per app", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (Pro+ plans)", migrationEffort: "Low — similar source code deploy model", bestFor: "Simple apps, predictable pricing" },
+    { name: "Northflank", slug: "northflank", freeTier: "Free tier (2 services, 0.2 vCPU, 512MB RAM)", startingPrice: "$10/mo (Developer)", pricingModel: "Per-service + resource usage", sourceCodeDeploy: "Yes — buildpacks + Dockerfiles", autoScaling: "Yes", migrationEffort: "Low — designed as PaaS, similar concepts", bestFor: "Full PaaS with CI/CD built-in" },
+  ];
+
+  const awsStability = stabilityMap.get("aws") ?? "stable";
+  const stabilityColor = awsStability === "volatile" ? "#f85149" : awsStability === "watch" ? "#d29922" : awsStability === "improving" ? "#3fb950" : "var(--text-muted)";
+
+  // Calculate days until deadline
+  const deadlineDate = new Date("2026-04-30");
+  const today = new Date();
+  const daysLeft = Math.max(0, Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+
+  const freeProviderCount = providers.filter(p => p.freeTier.toLowerCase().includes("free")).length;
+
+  const providerTableRows = providers.map(p => {
+    const freeColor = p.freeTier.toLowerCase().includes("free") ? "#3fb950" : "var(--accent)";
+    const effortColor = p.migrationEffort.startsWith("Low") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
+    const vendorLink = p.slug ? `<a href="/vendor/${escHtmlServer(p.slug)}" style="color:var(--text)">${escHtmlServer(p.name)}</a>` : escHtmlServer(p.name);
+    return `<tr>
+      <td style="font-weight:600">${vendorLink}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.startingPrice)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(p.pricingModel)}</td>
+      <td style="font-size:.8rem">${p.sourceCodeDeploy.startsWith("Yes") ? '<span style="color:#3fb950">Yes</span>' : '<span style="color:#f85149">No</span>'}</td>
+      <td><span style="color:${effortColor};font-size:.8rem;font-weight:600">${escHtmlServer(p.migrationEffort.split(" — ")[0])}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  const pricingComparisonRows = [
+    { name: "App Runner (closing)", free: "None for new customers", monthly: "From $5/mo (1 vCPU, 2GB)", scaling: "Per-request auto-scaling", color: "#f85149" },
+    { name: "ECS Express Mode (Fargate)", free: "AWS Free Tier (limited)", monthly: "~$30/mo (0.5 vCPU, 1GB 24/7)", scaling: "Per-second, service auto-scaling", color: "var(--accent)" },
+    { name: "Google Cloud Run", free: "2M req + 360K vCPU-sec/mo", monthly: "Pay-per-use (scale to zero)", scaling: "Per-request, scale to zero", color: "#3fb950" },
+    { name: "Azure Container Apps", free: "180K vCPU-sec/mo", monthly: "Pay-per-use (scale to zero)", scaling: "Per-second, KEDA events", color: "#3fb950" },
+    { name: "Railway", free: "$5/mo credit (trial)", monthly: "From $5/mo + usage", scaling: "Per-minute, horizontal", color: "#d29922" },
+    { name: "Render", free: "750 hrs/mo (sleeps)", monthly: "From $7/mo (Starter)", scaling: "Fixed + auto-scaling (paid)", color: "#3fb950" },
+    { name: "Fly.io", free: "3 shared VMs free", monthly: "From $1.94/mo per VM", scaling: "Per-VM, multi-region", color: "#3fb950" },
+    { name: "DigitalOcean App Platform", free: "Static sites free", monthly: "From $5/mo (Basic)", scaling: "Fixed monthly per app", color: "#d29922" },
+  ].map(r => `<tr>
+      <td style="font-weight:600">${escHtmlServer(r.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:${r.color}">${escHtmlServer(r.free)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(r.monthly)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(r.scaling)}</td>
+    </tr>`).join("\n        ");
+
+  const changeTimelineRows = awsChanges.slice(0, 10).map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["shutdowns", "aws-free-tier-2026", "cloud-comparison-2026", "free-tier-risk", "state-of-free-tiers"].includes(p.slug)
+  );
+
+  // FAQ data
+  const faqs = [
+    { q: "When does AWS App Runner shut down?", a: "AWS App Runner stops accepting new customers on April 30, 2026. Existing customers can continue using the service, but it has entered maintenance mode with no new features planned. AWS has not announced a final shutdown date for existing services, but recommends migrating to Amazon ECS Express Mode." },
+    { q: "What is ECS Express Mode and how does it replace App Runner?", a: "ECS Express Mode is AWS's recommended migration path. It simplifies Amazon ECS by providing a streamlined container deployment experience similar to App Runner — easier configuration, managed networking, and automatic scaling — while giving you access to the full ECS ecosystem. The main difference is that ECS Express Mode only supports container images (no source code deploy), so you'll need to build your container first." },
+    { q: "Can I still use App Runner if I'm already a customer?", a: "Yes. Existing App Runner services will continue to run after April 30, 2026. You can update existing services and deploy new versions. However, the service is in maintenance mode — no new features will be added, and AWS strongly recommends planning a migration." },
+    { q: "What are the best free alternatives to App Runner?", a: "Google Cloud Run offers the most generous free tier (2 million requests/month, 360K vCPU-seconds, scale to zero). Fly.io provides 3 free shared VMs. Render has a free tier with 750 hours/month (services sleep after inactivity). Azure Container Apps offers 180K vCPU-seconds/month free. For AWS-native options, Elastic Beanstalk has no management fee — you only pay for underlying resources." },
+    { q: "Which alternative supports source code deployment like App Runner?", a: "App Runner's source code deployment (push code, AWS builds the container) is available on: Google Cloud Run (Cloud Build + buildpacks), Railway (GitHub auto-deploy), Render (GitHub auto-deploy), Fly.io (Dockerfiles + buildpacks), DigitalOcean App Platform (GitHub/GitLab auto-deploy), Azure Container Apps (source code via buildpacks), Elastic Beanstalk (source bundles + Dockerfiles), and Northflank (buildpacks + Dockerfiles). ECS Express Mode does NOT support source code deploy — you must provide a container image." },
+  ];
+
+  // JSON-LD — Article
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
+  };
+
+  // JSON-LD — FAQPage
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  // JSON-LD — BreadcrumbList
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Guides", item: `${BASE_URL}/alternatives` },
+      { "@type": "ListItem", position: 3, name: "App Runner Migration Guide", item: `${BASE_URL}/${slug}` },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+<meta name="keywords" content="aws app runner shutdown, app runner alternative, app runner migration, ecs express mode, google cloud run, railway, render, fly.io, container deployment free tier, aws app runner replacement 2026">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
+.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}
+.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}
+.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}
+.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}
+.decision-path:hover{border-color:var(--accent)}
+.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}
+.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}
+.code-block .comment{color:#8b949e}
+.code-block .keyword{color:#ff7b72}
+.code-block .string{color:#a5d6ff}
+.code-block .highlight{color:#ffa657}
+.faq-section{margin:2rem 0}
+.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}
+.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}
+.faq-question:hover{background:var(--accent-glow)}
+.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; App Runner Migration Guide</div>
+  <h1>AWS App Runner Migration Guide: Alternatives with Free Tiers &amp; Pricing</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${awsChanges.length} AWS pricing change${awsChanges.length !== 1 ? "s" : ""} tracked</p>
+
+  <div class="deadline-banner">
+    <div class="deadline-days">${daysLeft} days</div>
+    <div class="deadline-label">until App Runner closes to new customers</div>
+    <div class="deadline-date">April 30, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">AWS stability: ${awsStability.toUpperCase()}</span></div>
+  </div>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
+    <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">${freeProviderCount}</div><div class="stat-label">With Free Tiers</div></div>
+    <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Migration Paths</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>What&rsquo;s happening:</strong> AWS App Runner will <strong>stop accepting new customers on April 30, 2026</strong>. The service has entered maintenance mode with no new features planned. Existing services continue to run, but AWS officially recommends migrating to <strong>Amazon ECS Express Mode</strong>.</p>
+    <p><strong>AWS&rsquo;s recommendation:</strong> <strong>ECS Express Mode</strong> provides a simplified ECS experience designed to replace App Runner. It supports auto-scaling, managed networking, and integration with ECR. The key difference: ECS Express Mode requires container images — it does not support App Runner&rsquo;s source code deployment.</p>
+    <p><strong>Free alternatives exist:</strong> If you want to leave AWS, <strong>Google Cloud Run</strong> (2M requests/mo free, scale to zero), <strong>Fly.io</strong> (3 free VMs), and <strong>Render</strong> (free tier with 750 hrs/mo) all offer container deployment with free tiers and source code deployment support.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#timeline">Deprecation Timeline</a></li>
+      <li><a href="#comparison-table">Alternative Comparison Table</a></li>
+      <li><a href="#pricing">Pricing Comparison</a></li>
+      <li><a href="#migration-paths">Migration Paths</a></li>
+      <li><a href="#migration-considerations">Migration Considerations</a></li>
+      <li><a href="#code-migration">Migration Examples</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#aws-timeline">AWS Change Timeline</a></li>
+      <li><a href="#recommendations">Recommendations</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+    </ol>
+  </div>
+
+  <h2 id="timeline">Deprecation Timeline</h2>
+  <p class="section-intro">Key dates for the App Runner deprecation. Existing services continue, but plan your migration.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Event</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Apr 2026</td>
+        <td style="font-size:.85rem">AWS announces App Runner will stop accepting new customers. Service enters maintenance mode. ECS Express Mode recommended as replacement.</td>
+        <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Apr 30, 2026</td>
+        <td style="font-size:.85rem"><strong>New customer cutoff.</strong> No new App Runner services can be created by new accounts. Existing customers can continue deploying.</td>
+        <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Post-cutoff</td>
+        <td style="font-size:.85rem">Existing services continue to run. Updates and deployments allowed for current customers. No new features will be added to App Runner.</td>
+        <td><span style="color:#d29922;font-size:.8rem;font-weight:600">MEDIUM</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">TBD</td>
+        <td style="font-size:.85rem">AWS has not announced a final shutdown date for existing services. However, maintenance mode typically precedes full deprecation. Plan migration proactively.</td>
+        <td><span style="color:var(--text-dim);font-size:.8rem;font-weight:600">INFO</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>What&rsquo;s NOT affected (yet):</strong> Existing App Runner services continue to run after April 30. You can still deploy updates and new versions to existing services. The key concern is long-term viability — with no new features and maintenance mode status, App Runner&rsquo;s future is limited. Plan your migration timeline accordingly.
+  </div>
+
+  <h2 id="comparison-table">Container Deployment Alternatives</h2>
+  <p class="section-intro">All ${providers.length} alternatives compared. Migration effort rated from the perspective of an App Runner integration.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Starting Price</th>
+        <th>Pricing Model</th>
+        <th>Source Deploy</th>
+        <th>Migration</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${providerTableRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Source code deploy matters:</strong> One of App Runner&rsquo;s key features was deploying directly from source code (GitHub) without building a Docker image. ECS Express Mode does <strong>not</strong> support this — you must provide a container image. If source code deployment is important to your workflow, consider Railway, Render, Google Cloud Run, or DigitalOcean App Platform, all of which support auto-deploy from GitHub.
+  </div>
+
+  <h2 id="pricing">Pricing Comparison</h2>
+  <p class="section-intro">Monthly cost comparison across alternatives. App Runner pricing shown for reference.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Typical Monthly Cost</th>
+        <th>Scaling Model</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${pricingComparisonRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>Scale-to-zero advantage:</strong> Google Cloud Run and Azure Container Apps can scale to zero — you pay nothing when there&rsquo;s no traffic. App Runner supported auto-scaling but not true scale-to-zero (minimum provisioned instances were always billed). This makes Cloud Run and Container Apps significantly cheaper for low-traffic or intermittent workloads.
+  </div>
+
+  <h2 id="migration-paths">Migration Paths</h2>
+  <p class="section-intro">Three paths depending on your cloud strategy. The right choice depends on whether you want to stay on AWS, go multi-cloud, or use a developer PaaS.</p>
+
+  <div class="decision-tree">
+    <div class="decision-path" style="border-left:3px solid #3fb950">
+      <h3>Path 1: Stay on AWS (ECS Express Mode)</h3>
+      <p>AWS&rsquo;s official recommendation. ECS Express Mode simplifies container deployment on ECS with managed networking and auto-scaling. Your ECR images, IAM roles, VPC config, and CloudWatch logs continue to work. The main change: you must containerize your app if you used App Runner&rsquo;s source code deployment — ECS Express Mode requires container images.</p>
+      <p class="best-for">Best for: Teams invested in AWS ecosystem, using ECR, IAM, and other AWS services</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid var(--accent)">
+      <h3>Path 2: Multi-Cloud PaaS (Cloud Run, Container Apps)</h3>
+      <p>Google Cloud Run and Azure Container Apps offer the closest experience to App Runner — fully managed, auto-scaling, and pay-per-use with generous free tiers. Both support source code deployment and scale-to-zero, which App Runner didn&rsquo;t offer. Cloud Run&rsquo;s 2M free requests/month makes it the strongest free tier option.</p>
+      <p class="best-for">Best for: Cost-sensitive workloads, intermittent traffic, multi-cloud strategy</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid #8b5cf6">
+      <h3>Path 3: Developer PaaS (Railway, Render, Fly.io)</h3>
+      <p>Developer-focused platforms with the simplest deployment experience. Push to GitHub, get a running service. Railway and Render offer the closest DX to App Runner&rsquo;s source code deploy. Fly.io excels at multi-region deployment. All have free tiers or trial credits to get started.</p>
+      <p class="best-for">Best for: Fast deployment, great DX, small teams, side projects</p>
+    </div>
+  </div>
+
+  <h2 id="migration-considerations">Migration Considerations</h2>
+  <p class="section-intro">Key differences to evaluate when choosing your migration target.</p>
+
+  <div class="diff-card">
+    <h3>Source Code vs. Container Image Deployment</h3>
+    <div class="diff-desc">App Runner supported both source code (auto-built by AWS) and container image deployment. <strong>ECS Express Mode only supports container images.</strong> If your team doesn&rsquo;t maintain Dockerfiles, consider adding a build step (GitHub Actions, AWS CodeBuild) or choose a platform that builds from source (Cloud Run, Railway, Render).</div>
+  </div>
+  <div class="diff-card">
+    <h3>Custom Domain Migration</h3>
+    <div class="diff-desc">Custom domains configured in App Runner need to be reconfigured on your new platform. Update DNS records (CNAME or A records) to point to your new provider. Most platforms provide managed TLS certificates via Let&rsquo;s Encrypt. Plan for a brief DNS propagation period.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Auto-Scaling Differences</h3>
+    <div class="diff-desc">App Runner scaled based on concurrent requests. ECS Express Mode uses ECS Service Auto Scaling (CPU/memory-based). Cloud Run and Container Apps support request-based scaling AND scale-to-zero. Railway and Render offer auto-scaling on paid plans. Consider your scaling triggers when migrating.</div>
+  </div>
+  <div class="diff-card">
+    <h3>Cold Start Behavior</h3>
+    <div class="diff-desc">App Runner had configurable provisioned concurrency to minimize cold starts. On Cloud Run and Container Apps, cold starts occur when scaling from zero. Fly.io keeps VMs warm by default. Railway and Render keep services running continuously on paid plans. Factor cold start requirements into your decision.</div>
+  </div>
+  <div class="diff-card">
+    <h3>VPC and Networking</h3>
+    <div class="diff-desc">If your App Runner service connected to VPC resources (RDS, ElastiCache), staying on AWS (ECS Express Mode or Fargate) preserves those network connections. Moving to another cloud requires exposing those resources publicly or setting up VPN/peering — a significant migration consideration for data-heavy applications.</div>
+  </div>
+
+  <h2 id="code-migration">Migration Examples</h2>
+
+  <h3>App Runner to ECS Express Mode (AWS CLI)</h3>
+  <p class="section-intro">If your App Runner service uses ECR, the ECS migration is straightforward:</p>
+
+  <div class="code-block">
+<span class="comment"># Step 1: Get your current App Runner image URI</span>
+aws apprunner describe-service \\
+  --service-arn <span class="string">arn:aws:apprunner:us-east-1:123456789:service/my-app</span> \\
+  --query <span class="string">"Service.SourceConfiguration.ImageRepository.ImageIdentifier"</span>
+
+<span class="comment"># Step 2: Create ECS cluster (Express Mode simplifies this)</span>
+aws ecs create-cluster --cluster-name <span class="string">my-app-cluster</span>
+
+<span class="comment"># Step 3: Register task definition</span>
+aws ecs register-task-definition \\
+  --family <span class="string">my-app</span> \\
+  --requires-compatibilities <span class="highlight">FARGATE</span> \\
+  --network-mode <span class="string">awsvpc</span> \\
+  --cpu <span class="string">"256"</span> \\
+  --memory <span class="string">"512"</span> \\
+  --container-definitions <span class="string">'[{"name":"my-app","image":"YOUR_ECR_IMAGE","portMappings":[{"containerPort":8080}]}]'</span>
+
+<span class="comment"># Step 4: Create service with auto-scaling</span>
+aws ecs create-service \\
+  --cluster <span class="string">my-app-cluster</span> \\
+  --service-name <span class="string">my-app-service</span> \\
+  --task-definition <span class="string">my-app</span> \\
+  --desired-count <span class="highlight">1</span> \\
+  --launch-type <span class="highlight">FARGATE</span>
+  </div>
+
+  <h3>App Runner to Google Cloud Run</h3>
+  <p class="section-intro">Deploy from source code or container image with a single command:</p>
+
+  <div class="code-block">
+<span class="comment"># Deploy from source code (like App Runner source deploy)</span>
+gcloud run deploy <span class="string">my-app</span> \\
+  --source <span class="string">.</span> \\
+  --region <span class="string">us-central1</span> \\
+  --allow-unauthenticated
+
+<span class="comment"># Or deploy from container image</span>
+gcloud run deploy <span class="string">my-app</span> \\
+  --image <span class="string">gcr.io/my-project/my-app:latest</span> \\
+  --region <span class="string">us-central1</span> \\
+  --allow-unauthenticated \\
+  --min-instances <span class="highlight">0</span> \\
+  --max-instances <span class="highlight">10</span>
+  </div>
+
+  <h3>App Runner to Railway</h3>
+  <p class="section-intro">The simplest migration — connect your GitHub repo and deploy:</p>
+
+  <div class="code-block">
+<span class="comment"># Install Railway CLI</span>
+npm install -g @railway/cli
+
+<span class="comment"># Login and initialize</span>
+railway login
+railway init
+
+<span class="comment"># Deploy from current directory</span>
+railway up
+
+<span class="comment"># Or connect GitHub repo for auto-deploy</span>
+<span class="comment"># (done via Railway dashboard — push to main = auto deploy)</span>
+  </div>
+
+  <div class="context-box">
+    <strong>Dockerfile optional:</strong> Railway, Render, and Google Cloud Run all support deploying without a Dockerfile — they auto-detect your language and build accordingly using buildpacks (Nixpacks on Railway, Heroku buildpacks on Render, Google Cloud buildpacks on Cloud Run). This matches App Runner&rsquo;s source code deployment experience.
+  </div>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+
+  <div class="faq-section">
+    ${faqs.map(f => `<div class="faq-item">
+      <div class="faq-question">${escHtmlServer(f.q)}<span style="color:var(--text-dim)">\u25BC</span></div>
+      <div class="faq-answer">${escHtmlServer(f.a)}</div>
+    </div>`).join("\n    ")}
+  </div>
+
+  ${awsChanges.length > 0 ? `<h2 id="aws-timeline">AWS Change Timeline</h2>
+  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<h2 id="aws-timeline">AWS Change Timeline</h2>
+  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest AWS updates.</p>`}
+
+  <h2 id="recommendations">Recommendations</h2>
+
+  <div class="verdict-box">
+    <h3>Best Alternative for Each Use Case</h3>
+    <div class="verdict-item">
+      <strong>Staying on AWS (recommended for AWS-heavy stacks):</strong>
+      <p>ECS Express Mode — AWS&rsquo;s official replacement. Keeps your ECR images, IAM roles, VPC connections, and CloudWatch monitoring. Requires container images (no source code deploy).</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Best free tier:</strong>
+      <p>Google Cloud Run — 2M requests/month, 360K vCPU-seconds, scale to zero. The most generous free tier for container workloads. Source code deployment supported via buildpacks.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Closest App Runner experience:</strong>
+      <p>Render — similar DX with GitHub auto-deploy, managed TLS, and simple dashboard. Free tier available (750 hrs/mo, services sleep after inactivity). Paid plans start at $7/mo.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Best developer experience:</strong>
+      <p>Railway — push to deploy with zero config. $5/mo free trial credit. Auto-detects language and builds without Dockerfiles. Closest to App Runner&rsquo;s simplicity.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Multi-region deployment:</strong>
+      <p>Fly.io — deploy to multiple regions with a single config. 3 free shared VMs. Scale to zero supported. Ideal for latency-sensitive applications serving global users.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Full PaaS with CI/CD:</strong>
+      <p>Northflank — built-in CI/CD pipelines, buildpacks, preview environments. Free tier with 2 services. Good for teams that want a complete platform, not just deployment.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Event-driven scaling:</strong>
+      <p>Azure Container Apps — KEDA-based auto-scaling that responds to events (queues, HTTP, custom metrics). 180K vCPU-seconds/month free. Best for event-driven architectures.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>AWS source code deploy replacement:</strong>
+      <p>Elastic Beanstalk — if you need to stay on AWS with source code deployment, Beanstalk supports source bundles and Dockerfiles. No management fee — pay only for underlying EC2/RDS resources.</p>
+    </div>
+  </div>
+
+  <h2 id="methodology">Methodology</h2>
+
+  <div class="methodology">
+    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. The App Runner deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>
+    <p><strong>Migration recommendations:</strong> Based on official AWS documentation, provider pricing pages, and community migration reports. Free tier availability confirmed against official documentation as of ${pubDate}. Pricing data verified across all ${providers.length} alternatives.</p>
+    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" — ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track cloud service deprecations and compare container deployment free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons — directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
 }
 
 // --- AWS Free Tier 2026 guide page ---
@@ -47881,7 +48478,7 @@ ${catList}
     // Most recent verifiedDate across all offers — used for index/hub pages
     const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
     // Editorial pages use their deploy date (when content was created/last updated)
-    const editorialDate = "2026-04-08";
+    const editorialDate = "2026-04-10";
     // Comparison pages enrichment deploy date
     const comparisonDate = "2026-04-04";
     const categoryUrls = categories.map((c) => {
@@ -48593,6 +49190,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-realtime-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildOpenAIRealtimeMigrationPage());
+  } else if (url.pathname === "/aws-app-runner-migration" && isGetOrHead) {
+    recordApiHit("/aws-app-runner-migration");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-app-runner-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAppRunnerMigrationPage());
   } else if (url.pathname === "/aws-free-tier-2026" && isGetOrHead) {
     recordApiHit("/aws-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
