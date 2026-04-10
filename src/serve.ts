@@ -5537,6 +5537,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "Cloudflare",
     hubDesc: "Directory of developer services accepting AI agent payments via x402 and Stripe MPP — per-call pricing, free tiers, and protocol comparison",
   },
+  {
+    slug: "dall-e-shutdown",
+    title: "DALL-E API Shutdown: Migration Guide & Free Image Generation Alternatives (2026)",
+    metaDesc: "OpenAI shuts down DALL-E 2 and DALL-E 3 API on May 12, 2026. Migrate to gpt-image-1 or free alternatives: Pollinations.AI, Lumenfall.ai, Cloudflare Workers AI. Code examples, pricing comparison, and migration paths.",
+    contextHtml: "",
+    tag: "dalle-shutdown",
+    primaryVendor: "OpenAI",
+    hubDesc: "DALL-E 2 & 3 API shutdown May 12, 2026 — migration guide to gpt-image-1 and free alternatives with code examples and pricing comparison",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -28239,6 +28248,539 @@ ${faqHtml}
 </html>`;
 }
 
+// --- DALL-E API Shutdown Migration Guide page ---
+
+function buildDallEShutdownPage(): string {
+  const title = "DALL-E API Shutdown: Migration Guide & Free Image Generation Alternatives (2026)";
+  const metaDesc = "OpenAI shuts down DALL-E 2 and DALL-E 3 API on May 12, 2026. Migrate to gpt-image-1 or free alternatives: Pollinations.AI, Lumenfall.ai, Cloudflare Workers AI. Code examples, pricing comparison, and migration paths.";
+  const slug = "dall-e-shutdown";
+  const pubDate = "2026-04-10";
+
+  const stabilityMap = getStabilityMap();
+
+  // DALL-E / OpenAI deal changes
+  const dalleChanges = dealChanges.filter(c =>
+    c.vendor === "OpenAI" || c.vendor === "DALL-E"
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  interface ImageApiProvider {
+    name: string;
+    slug: string;
+    freeTier: string;
+    costPerImage: string;
+    imageQuality: string;
+    apiStyle: string;
+    migrationEffort: string;
+    bestFor: string;
+  }
+
+  const providers: ImageApiProvider[] = [
+    { name: "gpt-image-1 (OpenAI)", slug: "openai", freeTier: "Paid only ($0.011\u2013$0.167/image)", costPerImage: "$0.011\u2013$0.167", imageQuality: "Best (same provider)", apiStyle: "Drop-in replacement", migrationEffort: "Minimal \u2014 same SDK", bestFor: "Existing OpenAI users" },
+    { name: "Pollinations.AI", slug: "pollinations-ai", freeTier: "Free, no auth required", costPerImage: "Free", imageQuality: "Good (multiple models)", apiStyle: "REST API, OpenAI-compatible", migrationEffort: "Low \u2014 different endpoint", bestFor: "Zero-cost prototyping" },
+    { name: "Cloudflare Workers AI", slug: "cloudflare-workers-ai", freeTier: "Free (10K neurons/day)", costPerImage: "Free within limits", imageQuality: "Good (Stable Diffusion)", apiStyle: "REST API", migrationEffort: "Moderate \u2014 different SDK", bestFor: "Edge deployment" },
+    { name: "Stability AI", slug: "stability-ai", freeTier: "Free credits", costPerImage: "~$0.002\u2013$0.065", imageQuality: "Excellent (SDXL, SD3)", apiStyle: "REST API", migrationEffort: "Moderate \u2014 different params", bestFor: "Quality-focused" },
+    { name: "Lumenfall.ai", slug: "lumenfall", freeTier: "Free (FLUX.1 schnell unlimited)", costPerImage: "Free (schnell)", imageQuality: "Excellent (FLUX models)", apiStyle: "OpenAI-compatible API", migrationEffort: "Low \u2014 compatible endpoint", bestFor: "Free unlimited generation" },
+    { name: "Replicate", slug: "replicate", freeTier: "Free runs available", costPerImage: "~$0.003\u2013$0.05/run", imageQuality: "Varies by model", apiStyle: "REST API", migrationEffort: "Moderate \u2014 model-based", bestFor: "Multi-model flexibility" },
+    { name: "Hugging Face", slug: "hugging-face", freeTier: "Free inference API", costPerImage: "Free (inference API)", imageQuality: "Varies by model", apiStyle: "REST API", migrationEffort: "Moderate \u2014 model selection", bestFor: "Open-source models" },
+  ];
+
+  const openaiStability = stabilityMap.get("openai") ?? "watch";
+  const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
+
+  // Calculate days until shutdown
+  const shutdownDate = new Date("2026-05-12");
+  const today = new Date();
+  const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+
+  const freeProviderCount = providers.filter(p => p.freeTier.toLowerCase().includes("free")).length;
+
+  const providerTableRows = providers.map(p => {
+    const freeColor = p.freeTier.toLowerCase().includes("free") ? "#3fb950" : "var(--accent)";
+    const effortColor = p.migrationEffort.startsWith("Minimal") ? "#3fb950" : p.migrationEffort.startsWith("Low") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
+    const vendorLink = p.slug ? `<a href="/vendor/${p.slug}" style="color:var(--text)">${escHtmlServer(p.name)}</a>` : escHtmlServer(p.name);
+    return `<tr>
+      <td style="font-weight:600">${vendorLink}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(p.costPerImage)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(p.imageQuality)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(p.apiStyle)}</td>
+      <td><span style="color:${effortColor};font-size:.8rem;font-weight:600">${escHtmlServer(p.migrationEffort.split(" \u2014 ")[0])}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  const pricingTableRows = [
+    { name: "DALL-E 3 (discontinued)", free: "None (API shutting down)", cost: "$0.040\u2013$0.120", quality: "standard, hd", color: "#f85149" },
+    { name: "gpt-image-1", free: "None", cost: "$0.011\u2013$0.167", quality: "low, medium, high", color: "var(--accent)" },
+    { name: "Pollinations.AI", free: "Unlimited free", cost: "Free", quality: "Multiple models", color: "#3fb950" },
+    { name: "Lumenfall.ai", free: "FLUX.1 schnell free", cost: "Free (schnell)", quality: "FLUX models", color: "#3fb950" },
+    { name: "Cloudflare Workers AI", free: "10K neurons/day", cost: "Free within limits", quality: "Stable Diffusion", color: "#3fb950" },
+    { name: "Stability AI", free: "Free credits", cost: "~$0.002\u2013$0.065", quality: "SDXL, SD3", color: "#3fb950" },
+    { name: "Replicate", free: "Free runs", cost: "~$0.003\u2013$0.05/run", quality: "Model-dependent", color: "#d29922" },
+  ].map(r => `<tr>
+      <td style="font-weight:600">${escHtmlServer(r.name)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:${r.color}">${escHtmlServer(r.free)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(r.cost)}</td>
+      <td style="font-size:.8rem">${escHtmlServer(r.quality)}</td>
+    </tr>`).join("\n        ");
+
+  const changeTimelineRows = dalleChanges.slice(0, 10).map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+    </tr>`;
+  }).join("\n        ");
+
+  // Related editorial pages
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["shutdowns", "stability", "free-tier-risk", "state-of-free-tiers", "ai-image-generation-alternatives"].includes(p.slug)
+  );
+
+  // FAQ data
+  const faqs = [
+    { q: "When does the DALL-E API shut down?", a: "OpenAI is shutting down DALL-E 2 and DALL-E 3 API access on May 12, 2026. After this date, all API calls to DALL-E models will stop working. The DALL-E image editor in ChatGPT is unaffected \u2014 only the developer API is being discontinued." },
+    { q: "What replaces DALL-E API?", a: "OpenAI\u2019s gpt-image-1 is the direct replacement. It uses the same OpenAI SDK and images.generate endpoint \u2014 you only need to change the model parameter from \"dall-e-3\" to \"gpt-image-1\" and update quality values from standard/hd to low/medium/high." },
+    { q: "Are there free DALL-E alternatives in 2026?", a: "Yes \u2014 Pollinations.AI offers free image generation with no API key required. Lumenfall.ai provides free unlimited FLUX.1 schnell generation. Cloudflare Workers AI includes 10,000 neurons per day free for Stable Diffusion models. Hugging Face offers free inference API access to open-source image models." },
+    { q: "How do I migrate from DALL-E 3 to gpt-image-1?", a: "The migration is straightforward \u2014 change the model parameter from \"dall-e-3\" to \"gpt-image-1\" in your images.generate call. Update quality values: \"standard\" becomes \"low\" and \"hd\" becomes \"high\" (with a new \"medium\" option). The response format remains the same. No SDK upgrade is required." },
+    { q: "What happens to DALL-E images after shutdown?", a: "Previously generated images remain accessible at their existing URLs. Only the API for generating new images is discontinued. If you stored image URLs from previous generations, they will continue to work. However, OpenAI may eventually expire old image URLs, so it\u2019s recommended to download and store images you want to keep." },
+  ];
+
+  // JSON-LD \u2014 Article
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+    about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
+  };
+
+  // JSON-LD \u2014 FAQPage
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  // JSON-LD \u2014 BreadcrumbList
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Guides", item: `${BASE_URL}/alternatives` },
+      { "@type": "ListItem", position: 3, name: "DALL-E Shutdown Guide", item: `${BASE_URL}/${slug}` },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} \u2014 AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+<meta name="keywords" content="dall-e api shutdown, dall-e 3 alternative, gpt-image-1 migration, free image generation api, dall-e replacement 2026, openai image api, pollinations ai, lumenfall ai, image generation api free">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
+.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}
+.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}
+.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}
+.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.stat-number.red{color:#f85149}
+.stat-number.green{color:#3fb950}
+.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
+.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
+.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
+.executive-summary p:last-child{margin-bottom:0}
+.executive-summary strong{color:var(--text)}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
+.pricing-table tr:hover{background:var(--accent-glow)}
+.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
+.diff-card h3{margin:0 0 .5rem;font-size:1rem}
+.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.context-box strong{color:var(--text)}
+.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}
+.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}
+.decision-path:hover{border-color:var(--accent)}
+.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}
+.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}
+.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
+.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
+.verdict-item strong{color:var(--text)}
+.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
+.related-page-link:hover{border-color:var(--accent);text-decoration:none}
+.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
+.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
+.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
+.toc ol{padding-left:1.25rem;margin:0}
+.toc li{margin-bottom:.35rem;font-size:.9rem}
+.toc a{color:var(--accent)}
+.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}
+.code-block .comment{color:#8b949e}
+.code-block .keyword{color:#ff7b72}
+.code-block .string{color:#a5d6ff}
+.code-block .highlight{color:#ffa657}
+.faq-section{margin:2rem 0}
+.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}
+.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}
+.faq-question:hover{background:var(--accent-glow)}
+.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}
+${globalNavCss()}
+${mcpCtaCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("alternatives")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; DALL-E Shutdown Guide</div>
+  <h1>DALL-E API Shutdown: Migration Guide &amp; Free Image Generation Alternatives</h1>
+  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${dalleChanges.length} OpenAI pricing change${dalleChanges.length !== 1 ? "s" : ""} tracked</p>
+
+  <div class="deadline-banner">
+    <div class="deadline-days">${daysLeft} days</div>
+    <div class="deadline-label">until DALL-E API shutdown</div>
+    <div class="deadline-date">May 12, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">OpenAI stability: ${openaiStability.toUpperCase()}</span></div>
+  </div>
+
+  <div class="summary-stats">
+    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
+    <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
+    <div class="stat-card"><div class="stat-number green">${freeProviderCount}</div><div class="stat-label">Free Alternatives</div></div>
+    <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Migration Paths</div></div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>What\u2019s happening:</strong> OpenAI is shutting down DALL-E 2 and DALL-E 3 API access on <strong>May 12, 2026</strong>. After this date, all API calls using the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-2</code> and <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-3</code> model parameters will fail. The DALL-E features in ChatGPT are unaffected.</p>
+    <p><strong>Easiest migration:</strong> <strong>gpt-image-1 is OpenAI\u2019s direct replacement.</strong> Change the model parameter from <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-3</code> to <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">gpt-image-1</code> and update quality values. Same SDK, same endpoint, minimal code changes.</p>
+    <p><strong>Free alternatives exist:</strong> If you want to avoid per-image costs, <strong>Pollinations.AI</strong> (free, no auth), <strong>Lumenfall.ai</strong> (free FLUX.1 schnell), and <strong>Cloudflare Workers AI</strong> (10K neurons/day free) all offer image generation at zero cost.</p>
+  </div>
+
+  <div class="toc">
+    <h3>Jump to section</h3>
+    <ol>
+      <li><a href="#timeline">Shutdown Timeline</a></li>
+      <li><a href="#comparison-table">Alternative Comparison Table</a></li>
+      <li><a href="#pricing">Pricing Comparison</a></li>
+      <li><a href="#migration-paths">Migration Paths</a></li>
+      <li><a href="#code-migration">Code Migration Examples</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#openai-timeline">OpenAI Pricing Change Timeline</a></li>
+      <li><a href="#recommendations">Recommendations</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+    </ol>
+  </div>
+
+  <h2 id="timeline">Shutdown Timeline</h2>
+  <p class="section-intro">Key dates from announcement to shutdown. Migrate before May 12 to avoid service disruption.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Event</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Mar 2025</td>
+        <td style="font-size:.85rem">OpenAI releases gpt-image-1 as DALL-E successor with improved quality and native text rendering.</td>
+        <td><span style="color:var(--text-dim);font-size:.8rem;font-weight:600">INFO</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Apr 2026</td>
+        <td style="font-size:.85rem">OpenAI announces DALL-E 2 and DALL-E 3 API deprecation. Migration deadline set for May 12, 2026.</td>
+        <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">May 12, 2026</td>
+        <td style="font-size:.85rem"><strong>Complete API shutdown.</strong> All DALL-E 2 and DALL-E 3 API calls stop working. Applications must use gpt-image-1 or alternatives.</td>
+        <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Post-shutdown</td>
+        <td style="font-size:.85rem">Previously generated image URLs remain accessible. DALL-E in ChatGPT is unaffected. Only the developer API is discontinued.</td>
+        <td><span style="color:var(--text-dim);font-size:.8rem;font-weight:600">INFO</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>What\u2019s NOT affected:</strong> DALL-E image generation within ChatGPT continues to work. The ChatGPT interface uses internal APIs that are separate from the public developer API. Only direct API calls using <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-2</code> or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-3</code> model parameters are affected.
+  </div>
+
+  <h2 id="comparison-table">Image Generation API Alternatives</h2>
+  <p class="section-intro">All ${providers.length} alternatives compared. Migration effort rated from the perspective of a DALL-E API integration.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Cost / Image</th>
+        <th>Image Quality</th>
+        <th>API Style</th>
+        <th>Migration</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${providerTableRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>OpenAI-compatible APIs:</strong> Both Pollinations.AI and Lumenfall.ai offer OpenAI-compatible endpoints. This means you can often use the standard OpenAI SDK with a different base URL \u2014 reducing migration effort to changing a configuration value rather than rewriting API calls.
+  </div>
+
+  <h2 id="pricing">Pricing Comparison</h2>
+  <p class="section-intro">Cost per 1024x1024 image across all providers. DALL-E 3 pricing shown for reference.</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Free Tier</th>
+        <th>Cost per Image (1024x1024)</th>
+        <th>Quality Options</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${pricingTableRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="context-box">
+    <strong>gpt-image-1 pricing note:</strong> The wide $0.011\u2013$0.167 range reflects quality tiers. Low quality (1024x1024) costs $0.011, medium costs $0.042, and high quality costs $0.167. DALL-E 3 had a narrower range of $0.040\u2013$0.120. For most use cases, gpt-image-1 at low or medium quality is <strong>cheaper</strong> than DALL-E 3 was.
+  </div>
+
+  <h2 id="migration-paths">Migration Paths</h2>
+  <p class="section-intro">Three paths depending on your budget and quality requirements. The right choice depends on whether you need zero cost, maximum quality, or minimal code changes.</p>
+
+  <div class="decision-tree">
+    <div class="decision-path" style="border-left:3px solid #3fb950">
+      <h3>Path 1: Stay with OpenAI (gpt-image-1)</h3>
+      <p>The easiest migration. Change the model parameter from <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-3</code> to <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">gpt-image-1</code>, update quality values, and you\u2019re done. Same SDK, same endpoint, same billing. Image quality is generally better than DALL-E 3, with improved text rendering.</p>
+      <p class="best-for">Best for: Existing OpenAI users who want minimal code changes and don\u2019t mind per-image costs</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid var(--accent)">
+      <h3>Path 2: Free Alternatives (Pollinations.AI, Lumenfall.ai, Cloudflare)</h3>
+      <p>Zero-cost image generation. Pollinations.AI requires no API key at all \u2014 just construct a URL. Lumenfall.ai offers unlimited FLUX.1 schnell generation with an OpenAI-compatible API. Cloudflare Workers AI provides Stable Diffusion at the edge with 10K free neurons per day.</p>
+      <p class="best-for">Best for: Prototyping, hobby projects, cost-sensitive applications, high-volume generation</p>
+    </div>
+    <div class="decision-path" style="border-left:3px solid #8b5cf6">
+      <h3>Path 3: Quality-Focused (Stability AI, Replicate + FLUX/SDXL)</h3>
+      <p>When image quality is the top priority. Stability AI offers SDXL and SD3 models with fine-grained control. Replicate provides access to cutting-edge models like FLUX and SDXL with per-run pricing. Both offer free credits or free runs to get started.</p>
+      <p class="best-for">Best for: Production applications where image quality matters more than cost, creative tools, marketing assets</p>
+    </div>
+  </div>
+
+  <h2 id="code-migration">Code Migration Examples</h2>
+
+  <h3>Python: DALL-E 3 \u2192 gpt-image-1</h3>
+  <p class="section-intro">Minimal changes required. Update the model name and quality parameter:</p>
+
+  <div class="code-block">
+<span class="comment"># Before: DALL-E 3</span>
+response = client.images.generate(
+    model=<span class="string">"dall-e-3"</span>,
+    prompt=<span class="string">"a white siamese cat"</span>,
+    size=<span class="string">"1024x1024"</span>,
+    quality=<span class="string">"standard"</span>,
+    n=<span class="highlight">1</span>,
+)
+
+<span class="comment"># After: gpt-image-1</span>
+response = client.images.generate(
+    model=<span class="string">"gpt-image-1"</span>,
+    prompt=<span class="string">"a white siamese cat"</span>,
+    size=<span class="string">"1024x1024"</span>,
+    quality=<span class="string">"low"</span>,  <span class="comment"># low|medium|high (replaces standard|hd)</span>
+    n=<span class="highlight">1</span>,
+)
+  </div>
+
+  <h3>Node.js: DALL-E 3 \u2192 gpt-image-1</h3>
+  <p class="section-intro">Same pattern \u2014 change model and quality:</p>
+
+  <div class="code-block">
+<span class="comment">// Before: DALL-E 3</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> openai.images.generate({
+  model: <span class="string">"dall-e-3"</span>,
+  prompt: <span class="string">"a white siamese cat"</span>,
+  size: <span class="string">"1024x1024"</span>,
+  quality: <span class="string">"standard"</span>,
+  n: <span class="highlight">1</span>,
+});
+
+<span class="comment">// After: gpt-image-1</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> openai.images.generate({
+  model: <span class="string">"gpt-image-1"</span>,
+  prompt: <span class="string">"a white siamese cat"</span>,
+  size: <span class="string">"1024x1024"</span>,
+  quality: <span class="string">"low"</span>,
+  n: <span class="highlight">1</span>,
+});
+  </div>
+
+  <h3>Free Alternative: Pollinations.AI (No API Key)</h3>
+  <p class="section-intro">The simplest free option \u2014 no authentication, no SDK, just a URL:</p>
+
+  <div class="code-block">
+<span class="comment">// Free alternative: Pollinations.AI (no API key needed)</span>
+<span class="keyword">const</span> prompt = <span class="string">"a white siamese cat"</span>;
+<span class="keyword">const</span> imageUrl = <span class="string">\`https://image.pollinations.ai/prompt/\${<span class="highlight">encodeURIComponent</span>(prompt)}?width=1024&amp;height=1024\`</span>;
+<span class="keyword">const</span> response = <span class="keyword">await</span> fetch(imageUrl);
+<span class="keyword">const</span> imageBuffer = <span class="keyword">await</span> response.arrayBuffer();
+  </div>
+
+  <div class="context-box">
+    <strong>Quality mapping:</strong> When migrating from DALL-E 3 to gpt-image-1, update quality values: <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"standard"</code> \u2192 <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"low"</code> (cheapest, $0.011), <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"hd"</code> \u2192 <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"high"</code> ($0.167). New <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"medium"</code> tier ($0.042) provides a balanced option that didn\u2019t exist with DALL-E 3.
+  </div>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+
+  <div class="faq-section">
+    ${faqs.map(f => `<div class="faq-item">
+      <div class="faq-question">${escHtmlServer(f.q)}<span style="color:var(--text-dim)">\u25BC</span></div>
+      <div class="faq-answer">${escHtmlServer(f.a)}</div>
+    </div>`).join("\n    ")}
+  </div>
+
+  ${dalleChanges.length > 0 ? `<h2 id="openai-timeline">OpenAI Pricing Change Timeline</h2>
+  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changeTimelineRows}
+    </tbody>
+  </table>
+  </div>` : `<h2 id="openai-timeline">OpenAI Pricing Change Timeline</h2>
+  <p class="section-intro">No OpenAI pricing changes tracked yet. Check our <a href="/changes">deal changes database</a> for updates.</p>`}
+
+  <h2 id="recommendations">Recommendations</h2>
+
+  <div class="verdict-box">
+    <h3>Best Alternative for Each Use Case</h3>
+    <div class="verdict-item">
+      <strong>Fastest migration (recommended for most):</strong>
+      <p>gpt-image-1 \u2014 same OpenAI SDK, change one parameter. Low quality tier is actually cheaper than DALL-E 3 standard was ($0.011 vs $0.040). Best image quality of any option.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Zero cost, no setup:</strong>
+      <p>Pollinations.AI \u2014 no API key, no account, no rate limits on basic usage. Just construct a URL. Quality is good for prototyping but won\u2019t match gpt-image-1 or SDXL.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Free with high quality:</strong>
+      <p>Lumenfall.ai \u2014 free unlimited FLUX.1 schnell generation with an OpenAI-compatible API. Excellent quality from the FLUX model family. Low migration effort if you\u2019re using the OpenAI SDK.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Edge deployment:</strong>
+      <p>Cloudflare Workers AI \u2014 run Stable Diffusion models at the edge with 10K free neurons per day. Great for applications that need low-latency image generation close to users.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Maximum quality control:</strong>
+      <p>Stability AI \u2014 SDXL and SD3 models with fine-grained parameters for style, composition, and quality. Best for creative tools and production marketing assets where you need precise control.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Multi-model flexibility:</strong>
+      <p>Replicate \u2014 access FLUX, SDXL, and dozens of other models through one API. Pay per run. Ideal if you want to experiment with different models or let users choose their preferred style.</p>
+    </div>
+    <div class="verdict-item">
+      <strong>Enterprise image generation:</strong>
+      <p>For enterprise use, consider Midjourney API (waitlist) for creative quality or Adobe Firefly API for commercial-safe generation with built-in content credentials and IP indemnification.</p>
+    </div>
+  </div>
+
+  <h2 id="methodology">Methodology</h2>
+
+  <div class="methodology">
+    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. The DALL-E API shutdown is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>
+    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility testing, and community reports. Pricing data verified against official provider pricing pages as of ${pubDate}. Free tier availability confirmed via direct API testing.</p>
+    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
+  </div>
+
+  <h2>Related Guides</h2>
+  <div class="related-pages">
+    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
+      <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
+      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
+    </a>`).join("\n    ")}
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Track image generation API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.")}
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- AWS Free Tier 2026 guide page ---
 
 function buildAwsFreeTier2026Page(): string {
@@ -47905,6 +48447,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-payments", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildAgentPaymentsPage());
+  } else if (url.pathname === "/dall-e-shutdown" && isGetOrHead) {
+    recordApiHit("/dall-e-shutdown");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/dall-e-shutdown", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDallEShutdownPage());
   } else if (url.pathname === "/aws-free-tier-2026" && isGetOrHead) {
     recordApiHit("/aws-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

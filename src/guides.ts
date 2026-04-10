@@ -106,6 +106,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "guides/crewai", title: "Using AgentDeals with CrewAI", description: "CrewAI MCP integration guide — native mcps field configuration, multi-agent pricing research workflows" },
   { slug: "guides/n8n", title: "Using AgentDeals with n8n", description: "n8n MCP integration guide — MCP Server Trigger node setup, no-code automation workflows for pricing monitoring" },
   { slug: "guides/vercel-ai-sdk", title: "Using AgentDeals with Vercel AI SDK", description: "Vercel AI SDK MCP integration guide — experimental_createMCPClient() setup, React/Next.js code examples" },
+  { slug: "dall-e-shutdown", title: "DALL-E API Shutdown Migration Guide", description: "OpenAI DALL-E 2 & 3 API shuts down May 12, 2026 — migration to gpt-image-1, free alternatives (Pollinations.AI, Lumenfall.ai, Cloudflare Workers AI), code examples, pricing comparison" },
 ];
 
 export function getGuideList(): GuideMetadata[] {

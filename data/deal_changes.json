@@ -1365,6 +1365,25 @@
         "Windsurf",
         "Claude Code"
       ]
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "free_tier_removed",
+      "date": "2026-05-12",
+      "summary": "DALL-E 2 and DALL-E 3 API access discontinued. Developers must migrate to gpt-image-1 (different pricing model, quality tiers changed from standard/hd to low/medium/high) or switch to free alternatives like Pollinations.AI or Lumenfall.ai",
+      "previous_state": "DALL-E 3 API: $0.040-$0.120/image (1024x1024), paid via API credits",
+      "current_state": "DALL-E 2 & 3 API shut down. Replacement: gpt-image-1 at $0.011-$0.167/image with new quality tiers",
+      "impact": "high",
+      "source_url": "https://platform.openai.com/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [
+        "gpt-image-1",
+        "Pollinations.AI",
+        "Lumenfall.ai",
+        "Cloudflare Workers AI",
+        "Stability AI",
+        "Replicate"
+      ]
     }
   ]
 }
