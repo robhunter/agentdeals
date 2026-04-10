@@ -5528,6 +5528,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     primaryVendor: "AgentDeals",
     hubDesc: "Living tracker of developer tool shutdowns, API sunsets, and deprecation deadlines in 2026 — with migration paths and alternatives",
   },
+  {
+    slug: "agent-payments",
+    title: "Developer Services That Accept Agent Payments (2026) — x402 & MPP Directory",
+    metaDesc: "Directory of developer services accepting autonomous AI agent payments via x402 and Stripe MPP. Firecrawl, Cloudflare, Vercel, Pinata and more. Per-call pricing, free tiers, and integration guides.",
+    contextHtml: "",
+    tag: "agent-payments",
+    primaryVendor: "Cloudflare",
+    hubDesc: "Directory of developer services accepting AI agent payments via x402 and Stripe MPP — per-call pricing, free tiers, and protocol comparison",
+  },
 ];
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
@@ -27973,6 +27982,263 @@ function buildDatabasePricingPage(): string {
     '</body>\n</html>';
 }
 
+// --- Agent Payments page ---
+
+function buildAgentPaymentsPage(): string {
+  const title = "Developer Services That Accept Agent Payments (2026) — x402 & MPP Directory";
+  const metaDesc = "Directory of developer services accepting autonomous AI agent payments via x402 and Stripe MPP. Firecrawl, Cloudflare, Vercel, Pinata and more. Per-call pricing, free tiers, and integration guides.";
+  const slug = "agent-payments";
+  const pubDate = "2026-04-09";
+
+  // Get all offers with payment_protocols
+  const x402Offers = offers.filter(o => o.payment_protocols?.includes("x402"));
+  const mppOffers = offers.filter(o => o.payment_protocols?.includes("mpp"));
+  const allPaymentOffers = offers.filter(o => o.payment_protocols && o.payment_protocols.length > 0);
+
+  // Group x402 offers by category
+  const x402ByCategory = new Map<string, typeof x402Offers>();
+  for (const o of x402Offers) {
+    const cat = o.category;
+    if (!x402ByCategory.has(cat)) x402ByCategory.set(cat, []);
+    x402ByCategory.get(cat)!.push(o);
+  }
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    url: `${BASE_URL}/${slug}`,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().slice(0, 10),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const faqItems = [
+    { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine payments. Launched by the x402 Foundation (Linux Foundation) in April 2026 with backing from Stripe, Cloudflare, Shopify, Visa, and Mastercard. It allows AI agents to autonomously pay for API calls without pre-provisioned accounts or API keys." },
+    { q: "Which developer services accept x402 payments?", a: `Currently ${x402Offers.length} developer services indexed on AgentDeals accept x402 payments, including Firecrawl (web scraping), Cloudflare Workers/Pages/D1/R2/KV (cloud infrastructure), Vercel (hosting), and Pinata IPFS (storage). The ecosystem is growing rapidly with 130+ services industry-wide.` },
+    { q: "What is Stripe MPP (Machine-to-Machine Payments)?", a: "MPP (Machine Payments Protocol) is Stripe's framework for agent-to-service payments launched March 2026. It builds on Stripe's existing payment infrastructure to add agent identity, budget controls, and audit trails. MPP uses familiar Stripe APIs, making adoption simpler for services already using Stripe." },
+    { q: "How do AI agents pay for services autonomously?", a: "Agents use payment protocols like x402 or MPP to negotiate and complete payments in real-time. With x402, the agent receives a 402 response with payment requirements, completes the crypto payment, and retries with proof of payment. With MPP, agents use Stripe-managed wallets with configurable spending limits." },
+    { q: "Do x402 services still have free tiers?", a: `Yes. All ${x402Offers.length} x402-enabled services indexed here also offer traditional free tiers. x402 is an additional payment option — it doesn't replace free tier access. Agents can use free tiers first and fall back to x402 when limits are exceeded.` },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  // Build the service table rows
+  const serviceRows = x402Offers.map(o => {
+    const vendorSlug = toSlug(o.vendor);
+    const shortDesc = o.description.split(". ")[0].substring(0, 120);
+    return `<tr>
+      <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a></td>
+      <td>${escHtmlServer(o.category)}</td>
+      <td class="proto-cell"><span class="proto-badge x402">x402</span></td>
+      <td class="tier-cell">${escHtmlServer(o.tier)}</td>
+      <td class="desc-cell">${escHtmlServer(shortDesc)}</td>
+    </tr>`;
+  }).join("\n");
+
+  // Build category breakdown sections
+  const categorySections = Array.from(x402ByCategory.entries()).sort((a, b) => b[1].length - a[1].length).map(([cat, catOffers]) => {
+    const catSlug = toSlug(cat);
+    const serviceList = catOffers.map(o => {
+      const vendorSlug = toSlug(o.vendor);
+      const shortDesc = o.description.split(". ")[0].substring(0, 100);
+      return `<div class="service-card">
+        <div class="service-header">
+          <a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a>
+          <span class="proto-badge x402">x402</span>
+        </div>
+        <p class="service-tier">${escHtmlServer(o.tier)}</p>
+        <p class="service-desc">${escHtmlServer(shortDesc)}</p>
+      </div>`;
+    }).join("\n");
+    return `<div class="category-group">
+      <h3><a href="/category/${catSlug}">${escHtmlServer(cat)}</a> <span class="count">${catOffers.length} service${catOffers.length === 1 ? "" : "s"}</span></h3>
+      <div class="service-grid">${serviceList}</div>
+    </div>`;
+  }).join("\n");
+
+  const faqHtml = faqItems.map(f => `<details class="faq-item">
+    <summary>${escHtmlServer(f.q)}</summary>
+    <p>${escHtmlServer(f.a)}</p>
+  </details>`).join("\n");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--purple:#8b5cf6;--purple-glow:rgba(139,92,246,0.15);--green:#10b981;--green-glow:rgba(16,185,129,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.3rem;color:var(--text);margin:2rem 0 1rem}
+h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:0}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;max-width:640px}
+.stats-row{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;flex:1;min-width:140px}
+.stat-value{font-family:var(--mono);font-size:1.5rem;font-weight:700;color:var(--accent)}
+.stat-label{font-size:.8rem;color:var(--text-dim);margin-top:.25rem}
+.proto-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+.proto-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.proto-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;font-family:var(--mono)}
+.proto-icon.x402{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.3)}
+.proto-icon.mpp{background:var(--purple-glow);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
+.proto-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5}
+.proto-meta{display:flex;gap:1.5rem;margin-top:.75rem;font-size:.8rem;color:var(--text-dim)}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0}
+th{text-align:left;font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;padding:.5rem .75rem;border-bottom:1px solid var(--border)}
+td{padding:.5rem .75rem;font-size:.85rem;color:var(--text-muted);border-bottom:1px solid rgba(51,65,85,0.5)}
+.vendor-link{color:var(--accent);font-weight:500}
+.proto-badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-family:var(--mono);font-size:.7rem;font-weight:600}
+.proto-badge.x402{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.3)}
+.proto-badge.mpp{background:var(--purple-glow);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
+.proto-cell{white-space:nowrap}
+.tier-cell{max-width:150px}
+.desc-cell{max-width:200px;color:var(--text-dim);font-size:.8rem}
+.category-group{margin-bottom:1.5rem}
+.category-group h3{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem}
+.category-group .count{font-size:.75rem;color:var(--text-dim);font-weight:400;font-family:var(--mono)}
+.service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem}
+.service-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;transition:border-color .2s}
+.service-card:hover{border-color:var(--border-hover)}
+.service-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.service-tier{font-size:.8rem;color:var(--green);margin-bottom:.25rem}
+.service-desc{font-size:.8rem;color:var(--text-dim)}
+.why-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.why-section h3{margin-bottom:.75rem}
+.why-list{list-style:none;padding:0}
+.why-list li{padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,0.3);color:var(--text-muted);font-size:.9rem}
+.why-list li:last-child{border-bottom:none}
+.why-list li strong{color:var(--text)}
+.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;background:var(--bg-card)}
+.faq-item summary{padding:.75rem 1rem;cursor:pointer;font-weight:500;font-size:.9rem;color:var(--text)}
+.faq-item summary:hover{color:var(--accent)}
+.faq-item p{padding:0 1rem .75rem;color:var(--text-muted);font-size:.85rem;line-height:1.6}
+.search-cta{margin:2rem 0;padding:1.25rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--text-muted);font-size:.9rem}
+.search-cta a{font-weight:500}
+${globalNavCss()}
+.mcp-cta{margin:2rem 0;padding:1.5rem;background:linear-gradient(135deg,var(--accent-glow),var(--purple-glow));border:1px solid var(--border);border-radius:12px}
+.mcp-cta h3{font-size:1rem;margin-bottom:.5rem}
+.mcp-cta .cta-value{color:var(--text-muted);font-size:.85rem;margin-bottom:.75rem}
+.mcp-cta .cta-install{display:flex;align-items:center;gap:.5rem;background:var(--bg);padding:.5rem .75rem;border-radius:8px;font-family:var(--mono);font-size:.8rem;overflow-x:auto}
+.mcp-cta .cta-install code{flex:1;color:var(--text)}
+.mcp-cta .copy-btn{background:var(--accent);color:#fff;border:none;padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-size:.75rem;flex-shrink:0}
+.mcp-cta .copy-btn.copied{background:var(--green)}
+.mcp-cta .cta-links{margin-top:.5rem;font-size:.8rem;color:var(--text-dim)}
+@media(max-width:640px){.stats-row{flex-direction:column}.service-grid{grid-template-columns:1fr}table{font-size:.75rem}.desc-cell{display:none}}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Agent Payments</div>
+  <h1>Developer Services That Accept Agent Payments</h1>
+  <p class="page-intro">AI agents can now pay for API calls autonomously. This directory tracks which developer services accept payments via x402 (HTTP 402 protocol) and Stripe MPP (Machine Payments Protocol) &mdash; the two leading standards for machine-to-machine payments.</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-value">${allPaymentOffers.length}</div><div class="stat-label">Services indexed</div></div>
+    <div class="stat-card"><div class="stat-value">${x402Offers.length}</div><div class="stat-label">x402 services</div></div>
+    <div class="stat-card"><div class="stat-value">${mppOffers.length}</div><div class="stat-label">MPP services</div></div>
+    <div class="stat-card"><div class="stat-value">${x402ByCategory.size}</div><div class="stat-label">Categories</div></div>
+  </div>
+
+  <h2>Payment Protocols</h2>
+
+  <div class="proto-section">
+    <div class="proto-header">
+      <div class="proto-icon x402">402</div>
+      <div>
+        <h3>x402 &mdash; HTTP Native Agent Payments</h3>
+        <div class="proto-meta"><span>Linux Foundation</span><span>Launched April 2026</span><span>130+ services</span></div>
+      </div>
+    </div>
+    <p class="proto-desc">x402 uses the HTTP 402 &ldquo;Payment Required&rdquo; status code to enable pay-per-call API access. When an agent hits a 402 response, it reads the payment requirements from the response headers, completes the payment (typically via stablecoin on Base), and retries the request with proof of payment. No accounts or API keys needed &mdash; just a wallet. Founded by Coinbase with backing from Stripe, Cloudflare, Shopify, Visa, and Mastercard.</p>
+  </div>
+
+  <div class="proto-section">
+    <div class="proto-header">
+      <div class="proto-icon mpp">MPP</div>
+      <div>
+        <h3>MPP &mdash; Stripe Machine Payments Protocol</h3>
+        <div class="proto-meta"><span>Stripe</span><span>Launched March 2026</span><span>100+ integrations</span></div>
+      </div>
+    </div>
+    <p class="proto-desc">Stripe&rsquo;s Machine Payments Protocol (MPP) extends Stripe&rsquo;s payment infrastructure for agent-to-service transactions. MPP adds agent identity verification, configurable spending limits, budget controls, and full audit trails. Built on familiar Stripe APIs, making adoption straightforward for services already using Stripe for billing. Agents pay with Stripe-managed wallets rather than crypto.</p>
+  </div>
+
+  <h2>x402-Enabled Services</h2>
+  <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1rem">${x402Offers.length} developer services accepting autonomous agent payments via x402.</p>
+
+  <div style="overflow-x:auto">
+  <table>
+    <thead><tr><th>Service</th><th>Category</th><th>Protocol</th><th>Free Tier</th><th>Details</th></tr></thead>
+    <tbody>
+${serviceRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Services by Category</h2>
+${categorySections}
+
+  <div class="why-section">
+    <h3>Why Agent Payments Matter</h3>
+    <ul class="why-list">
+      <li><strong>No pre-provisioned accounts.</strong> Agents can access any x402-enabled API instantly &mdash; no signup, no API key management, no billing configuration.</li>
+      <li><strong>Pay-per-call economics.</strong> Agents pay only for what they use, at per-request granularity. No monthly minimums or commitment tiers.</li>
+      <li><strong>Autonomous operation.</strong> Agents can discover, negotiate, and pay for services without human intervention &mdash; enabling truly autonomous workflows.</li>
+      <li><strong>Budget controls.</strong> Both x402 (wallet limits) and MPP (Stripe controls) provide guardrails to prevent runaway spending.</li>
+      <li><strong>Free tier fallback.</strong> All services listed here also offer traditional free tiers. Agents can use free tiers first and fall back to paid access when limits are exceeded.</li>
+    </ul>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+${faqHtml}
+
+  <div class="search-cta">
+    <p>Filter services by payment protocol: <a href="/api/offers?payment_protocol=x402">/api/offers?payment_protocol=x402</a> &middot; Or use the <code>search_deals</code> MCP tool with <code>payment_protocol: "x402"</code></p>
+  </div>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  ${buildMcpCta("Search for agent-payment-enabled services, compare pricing, and build autonomous stacks \u2014 directly in your AI editor.")}
+
+  <footer style="text-align:center;padding:2rem 0;color:var(--text-dim);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
+    <p>Data verified ${pubDate}. ${offers.length.toLocaleString()} total offers indexed.</p>
+    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-stack">Agent Stacks</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a></p>
+  </footer>
+</div>
+<script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
 // --- AWS Free Tier 2026 guide page ---
 
 function buildAwsFreeTier2026Page(): string {
@@ -46547,9 +46813,11 @@ const httpServer = createHttpServer(async (req, res) => {
     const validStability = stabilityParam && ["stable", "watch", "volatile", "improving"].includes(stabilityParam)
       ? stabilityParam as import("./types.js").StabilityClass
       : undefined;
+    const paymentProtocol = url.searchParams.get("payment_protocol") || undefined;
+    const validPaymentProtocol = paymentProtocol && ["x402", "mpp"].includes(paymentProtocol) ? paymentProtocol : undefined;
     const limit = parseInt(url.searchParams.get("limit") ?? "20", 10);
     const offset = parseInt(url.searchParams.get("offset") ?? "0", 10);
-    const results = searchOffers(q, category, eligibilityType, sort, validStability);
+    const results = searchOffers(q, category, eligibilityType, sort, validStability, validPaymentProtocol);
     const total = results.length;
     const paged = enrichOffers(results.slice(offset, offset + limit));
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
@@ -47632,6 +47900,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildDatabasePricingPage());
+  } else if (url.pathname === "/agent-payments" && isGetOrHead) {
+    recordApiHit("/agent-payments");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-payments", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAgentPaymentsPage());
   } else if (url.pathname === "/aws-free-tier-2026" && isGetOrHead) {
     recordApiHit("/aws-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

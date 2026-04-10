@@ -14,6 +14,7 @@ export interface Offer {
   verifiedDate: string;
   eligibility?: Eligibility;
   expires_date?: string;
+  payment_protocols?: string[];
 }
 
 export type StabilityClass = "stable" | "watch" | "volatile" | "improving";
