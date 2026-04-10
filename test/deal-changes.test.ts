@@ -76,7 +76,7 @@ describe("track_changes tool", () => {
 
     assert.ok(Array.isArray(body.changes));
     assert.strictEqual(body.total, body.changes.length);
-    assert.strictEqual(body.total, 92);
+    assert.strictEqual(body.total, 93);
   });
 
   it("filters by date (since)", async () => {

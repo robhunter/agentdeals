@@ -3,7 +3,7 @@
     {
       "vendor": "Vercel",
       "category": "Cloud Hosting",
-      "description": "Hobby plan with 100 GB/month Fast Data Transfer, 1M function invocations, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage, 5K image transformations/month",
+      "description": "Hobby plan with 100 GB/month Fast Data Transfer, 1M function invocations, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage, 5K image transformations/month. Note: Pro plan ($20/seat/mo) now defaults to Turbo build machines at $0.126/min (9x standard cost)",
       "tier": "Hobby",
       "url": "https://vercel.com/pricing",
       "tags": [
@@ -12,7 +12,7 @@
         "frontend",
         "jamstack"
       ],
-      "verifiedDate": "2026-03-21",
+      "verifiedDate": "2026-04-10",
       "payment_protocols": [
         "x402"
       ]
