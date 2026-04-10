@@ -3488,6 +3488,57 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/developers"), "Should cross-link to developers");
   });
 
+  it("GET /ci-cd-pricing renders definitive CI/CD pricing comparison", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/ci-cd-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("The Definitive"), "Should have definitive title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    // 17+ tools across 4 categories
+    assert.ok(html.includes("GitHub Actions"), "Should include GitHub Actions");
+    assert.ok(html.includes("GitLab CI"), "Should include GitLab CI");
+    assert.ok(html.includes("CircleCI"), "Should include CircleCI");
+    assert.ok(html.includes("Buildkite"), "Should include Buildkite");
+    assert.ok(html.includes("Harness CI"), "Should include Harness CI");
+    assert.ok(html.includes("Google Cloud Build"), "Should include Google Cloud Build");
+    assert.ok(html.includes("Azure DevOps"), "Should include Azure DevOps");
+    assert.ok(html.includes("AWS CodeBuild"), "Should include AWS CodeBuild");
+    assert.ok(html.includes("Bitrise"), "Should include Bitrise");
+    assert.ok(html.includes("Codemagic"), "Should include Codemagic");
+    assert.ok(html.includes("Jenkins"), "Should include Jenkins");
+    assert.ok(html.includes("Drone CI"), "Should include Drone CI");
+    assert.ok(html.includes("Woodpecker CI"), "Should include Woodpecker CI");
+    assert.ok(html.includes("Buddy"), "Should include Buddy");
+    assert.ok(html.includes("Codefresh"), "Should include Codefresh");
+    assert.ok(html.includes("Bitbucket Pipelines"), "Should include Bitbucket Pipelines");
+    assert.ok(html.includes("Semaphore CI"), "Should include Semaphore CI");
+    // Key sections
+    assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
+    assert.ok(html.includes("General CI/CD Platforms"), "Should have general category");
+    assert.ok(html.includes("Cloud-Native CI/CD"), "Should have cloud-native category");
+    assert.ok(html.includes("Mobile CI/CD"), "Should have mobile category");
+    assert.ok(html.includes("Self-Hosted / Open Source"), "Should have self-hosted category");
+    assert.ok(html.includes("What You Actually Get for Free"), "Should have free tier section");
+    assert.ok(html.includes("Cost Comparison by Team Size"), "Should have cost analysis");
+    assert.ok(html.includes("Hidden Costs"), "Should have hidden costs section");
+    assert.ok(html.includes("Best-for-Use-Case Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/pricing-changes"), "Should cross-link to changes");
+    assert.ok(html.includes("/developers"), "Should cross-link to developers");
+    assert.ok(html.includes("/ci-cd-alternatives"), "Should cross-link to CI/CD hub");
+    // CI/CD-specific columns
+    assert.ok(html.includes("Free Minutes/mo"), "Should have minutes column");
+    assert.ok(html.includes("Concurrency"), "Should have concurrency column");
+    assert.ok(html.includes("Self-Hosted"), "Should have self-hosted column");
+  });
+
   it("GET /openai-assistants-migration renders migration cost guide", async () => {
     proc = await startHttpServer();
 
