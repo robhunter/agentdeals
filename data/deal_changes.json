@@ -1424,6 +1424,97 @@
                 "Fly.io",
                 "DigitalOcean App Platform"
             ]
+        },
+        {
+            "vendor": "AWS",
+            "change_type": "product_deprecated",
+            "date": "2026-04-20",
+            "summary": "AWS WorkSpaces Thin Client end of availability. AWS stopping sales of Thin Client devices. Existing devices continue working but no new hardware can be purchased.",
+            "previous_state": "WorkSpaces Thin Client: available for purchase, managed endpoint devices for Amazon WorkSpaces",
+            "current_state": "WorkSpaces Thin Client: end of availability April 20, existing devices continue working, no new purchases",
+            "impact": "low",
+            "source_url": "https://aws.amazon.com/workspaces/thin-client/",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Standard WorkSpaces clients",
+                "Windows client",
+                "Mac client",
+                "Web client"
+            ]
+        },
+        {
+            "vendor": "AWS",
+            "change_type": "product_deprecated",
+            "date": "2026-04-30",
+            "summary": "Node.js 20 AWS Lambda runtime 3-phase deprecation begins. Phase 1 (April 30): no new function creation. Phase 2 (June 30): no function updates. Phase 3 (August 30): no invocations.",
+            "previous_state": "Lambda nodejs20.x: fully supported runtime for creating, updating, and invoking Lambda functions",
+            "current_state": "Lambda nodejs20.x: Phase 1 deprecation April 30 (no new functions), Phase 2 June 30 (no updates), Phase 3 August 30 (no invocations)",
+            "impact": "high",
+            "source_url": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
+            "category": "Serverless",
+            "alternatives": [
+                "Node.js 22 Lambda runtime"
+            ]
+        },
+        {
+            "vendor": "Google Maps",
+            "change_type": "product_deprecated",
+            "date": "2026-05-31",
+            "summary": "Google Maps Platform Client ID authentication sunset. All Client ID-based authentication will stop working. Migration to API key authentication required.",
+            "previous_state": "Google Maps Platform: supported both Client ID and API key authentication methods",
+            "current_state": "Google Maps Platform: Client ID auth removed May 31, API key authentication only",
+            "impact": "high",
+            "source_url": "https://developers.google.com/maps/documentation/javascript/get-api-key",
+            "category": "APIs",
+            "alternatives": [
+                "Google Maps API key authentication"
+            ]
+        },
+        {
+            "vendor": "AWS",
+            "change_type": "product_deprecated",
+            "date": "2026-06-30",
+            "summary": "AWS Fargate Platform Version 1.3.0 end of support. Tasks on PV 1.3.0 will stop running. Migration to Platform Version 1.4.0+ required.",
+            "previous_state": "Fargate PV 1.3.0: supported platform version for ECS tasks",
+            "current_state": "Fargate PV 1.3.0: end of support June 30, tasks will fail to launch",
+            "impact": "medium",
+            "source_url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform-versions.html",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Fargate Platform Version 1.4.0+"
+            ]
+        },
+        {
+            "vendor": "AWS",
+            "change_type": "product_deprecated",
+            "date": "2026-09-30",
+            "summary": "AWS App Mesh end of support. Service mesh for ECS/EKS being fully retired. All configurations, virtual nodes, and routes will stop functioning.",
+            "previous_state": "App Mesh: fully managed service mesh for ECS and EKS microservice networking",
+            "current_state": "App Mesh: end of support September 30, complete service retirement",
+            "impact": "medium",
+            "source_url": "https://docs.aws.amazon.com/app-mesh/",
+            "category": "Cloud Hosting",
+            "alternatives": [
+                "Istio",
+                "Linkerd",
+                "Amazon EKS native service mesh"
+            ]
+        },
+        {
+            "vendor": "AWS",
+            "change_type": "product_deprecated",
+            "date": "2026-10-07",
+            "summary": "AWS Proton end of support. Infrastructure-as-code provisioning service being retired. All environments, services, and templates will stop working.",
+            "previous_state": "Proton: managed IaC provisioning with developer self-service templates",
+            "current_state": "Proton: end of support October 7, complete service retirement",
+            "impact": "medium",
+            "source_url": "https://docs.aws.amazon.com/proton/",
+            "category": "DevOps",
+            "alternatives": [
+                "AWS CDK",
+                "Terraform",
+                "Pulumi"
+            ]
         }
     ]
 }
