@@ -46559,8 +46559,8 @@ const httpServer = createHttpServer(async (req, res) => {
     return;
   }
 
-  // Auth comparison alias — redirect old slug to new canonical
-  if (url.pathname === "/auth-free-tier-comparison-2026" && isGetOrHead) {
+  // Auth comparison aliases — redirect old/short slugs to canonical
+  if ((url.pathname === "/auth-free-tier-comparison-2026" || url.pathname === "/auth-pricing" || url.pathname === "/auth-identity-pricing") && isGetOrHead) {
     res.writeHead(301, { Location: "/auth-comparison-2026" });
     res.end();
     return;

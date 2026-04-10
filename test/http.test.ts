@@ -4018,6 +4018,14 @@ describe("HTTP transport", () => {
     assert.ok(response.headers.get("location")?.includes("/auth-comparison-2026"), "Should redirect to new slug");
   });
 
+  it("GET /auth-pricing redirects to /auth-comparison-2026", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/auth-pricing`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.ok(response.headers.get("location")?.includes("/auth-comparison-2026"), "Should redirect /auth-pricing to canonical auth comparison");
+  });
+
   it("GET /storage-comparison-2026 renders expanded storage and CDN comparison page", async () => {
     proc = await startHttpServer();
 
