@@ -3629,6 +3629,39 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-llm-apis"), "Should cross-link to free LLM APIs");
   });
 
+  it("pricing comparison pages have BreadcrumbList JSON-LD and Last updated date", async () => {
+    proc = await startHttpServer();
+    const pages = [
+      "/ai-coding-tools-pricing",
+      "/ci-cd-pricing",
+      "/database-pricing",
+      "/vector-database-pricing",
+    ];
+    for (const page of pages) {
+      const response = await fetch(`http://localhost:${serverPort}${page}`);
+      assert.strictEqual(response.status, 200);
+      const html = await response.text();
+      assert.ok(html.includes("BreadcrumbList"), `${page} should have BreadcrumbList JSON-LD`);
+      assert.ok(html.includes("Last updated"), `${page} should show Last updated date`);
+    }
+  });
+
+  it("auth and monitoring comparison pages have Last updated date", async () => {
+    proc = await startHttpServer();
+    const pages = [
+      "/auth-comparison-2026",
+      "/monitoring-comparison-2026",
+    ];
+    for (const page of pages) {
+      const response = await fetch(`http://localhost:${serverPort}${page}`);
+      assert.strictEqual(response.status, 200);
+      const html = await response.text();
+      assert.ok(html.includes("Last updated"), `${page} should show Last updated date`);
+      assert.ok(html.includes("FAQPage"), `${page} should have FAQPage schema`);
+      assert.ok(html.includes("BreadcrumbList"), `${page} should have BreadcrumbList schema`);
+    }
+  });
+
   it("GET /openai-assistants-migration renders migration cost guide", async () => {
     proc = await startHttpServer();
 

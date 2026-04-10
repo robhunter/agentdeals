@@ -26119,6 +26119,16 @@ function buildAiCodingToolsPricingPage(): string {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "AI Coding", item: BASE_URL + "/ide-code-editors-alternatives" },
+      { "@type": "ListItem", position: 3, name: title, item: BASE_URL + "/" + slug },
+    ],
+  };
+
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
@@ -26203,7 +26213,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">AI Coding</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>AI Coding Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + aiCodingChanges.length + ' pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + aiCodingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + tools.length + '</div><div class="stat-label">Tools Compared</div></div>\n' +
@@ -26428,6 +26438,8 @@ function buildAiCodingToolsPricingPage(): string {
     '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for AI coding tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
+    '\n' +
+    '  <script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
     '\n' +
     '  ' + buildMcpCta("Compare AI coding tool pricing, search free tiers, and track pricing changes \u2014 all from your AI coding assistant.") + '\n' +
     '\n' +
@@ -26892,6 +26904,16 @@ function buildCiCdPricingPage(): string {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "CI/CD", item: BASE_URL + "/ci-cd-alternatives" },
+      { "@type": "ListItem", position: 3, name: title, item: BASE_URL + "/" + slug },
+    ],
+  };
+
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
@@ -26976,7 +26998,7 @@ function buildCiCdPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ci-cd-alternatives">CI/CD</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>CI/CD Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + cicdOffers.length + ' CI/CD tools &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + cicdOffers.length + ' CI/CD tools &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + tools.length + '</div><div class="stat-label">Tools Compared</div></div>\n' +
@@ -27201,6 +27223,8 @@ function buildCiCdPricingPage(): string {
     '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for CI/CD tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
+    '\n' +
+    '  <script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
     '\n' +
     '  ' + buildMcpCta("Compare CI/CD tool pricing, search free tiers, and track pricing changes \u2014 all from your AI coding assistant.") + '\n' +
     '\n' +
@@ -27783,6 +27807,16 @@ function buildDatabasePricingPage(): string {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Databases", item: BASE_URL + "/category/databases" },
+      { "@type": "ListItem", position: 3, name: title, item: BASE_URL + "/" + slug },
+    ],
+  };
+
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
@@ -27800,6 +27834,7 @@ function buildDatabasePricingPage(): string {
     '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n' +
     '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n' +
     '<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n' +
+    '<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
     '<style>\n' +
     '*{margin:0;padding:0;box-sizing:border-box}\n' +
     ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n' +
@@ -27868,7 +27903,7 @@ function buildDatabasePricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + dbOffers.length + ' database services &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + dbOffers.length + ' database services &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Services Compared</div></div>\n' +
@@ -28084,6 +28119,8 @@ function buildDatabasePricingPage(): string {
     '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for database services, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
+    '\n' +
+    '  <script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
     '\n' +
     '  ' + buildMcpCta("Compare database pricing, search free tiers, and track pricing changes \u2014 all from your AI coding assistant.") + '\n' +
     '\n' +
@@ -28435,6 +28472,16 @@ function buildVectorDatabasePricingPage(): string {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Databases", item: BASE_URL + "/category/databases" },
+      { "@type": "ListItem", position: 3, name: title, item: BASE_URL + "/" + slug },
+    ],
+  };
+
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["database-pricing", "free-llm-apis", "ai-ml-alternatives", "database-alternatives"].includes(p.slug)
   );
@@ -28523,7 +28570,7 @@ function buildVectorDatabasePricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Vector Database Pricing</div>\n' +
     '  <h1>Vector Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + vectorOffers.length + ' vector database entries &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + vectorOffers.length + ' vector database entries &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Services Compared</div></div>\n' +
@@ -28731,6 +28778,8 @@ function buildVectorDatabasePricingPage(): string {
     '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for vector database services, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
+    '\n' +
+    '  <script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
     '\n' +
     '  ' + buildMcpCta("Compare vector database pricing, search free tiers, and track pricing changes \u2014 all from your AI coding assistant.") + '\n' +
     '\n' +
@@ -34989,7 +35038,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/auth">Auth</a> &rsaquo; Auth &amp; Identity Comparison</div>
   <h1>Auth &amp; Identity Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ auth services compared</p>
+  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ auth services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -36914,7 +36963,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/monitoring">Monitoring</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
   <h1>Monitoring &amp; Observability Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 25+ monitoring services compared</p>
+  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 25+ monitoring services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
