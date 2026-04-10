@@ -267,7 +267,8 @@
         "baas",
         "firebase-alternative",
         "auth0-alternative",
-        "mongodb-alternative"
+        "mongodb-alternative",
+        "vector-database"
       ],
       "verifiedDate": "2026-04-02"
     },
@@ -282,14 +283,15 @@
         "postgres",
         "serverless",
         "branching",
-        "mongodb-alternative"
+        "mongodb-alternative",
+        "vector-database"
       ],
       "verifiedDate": "2026-03-21"
     },
     {
       "vendor": "MongoDB Atlas",
       "category": "Databases",
-      "description": "Free 512 MB shared cluster (M0), always free, available on AWS/Azure/GCP",
+      "description": "Free 512 MB shared cluster (M0), always free, available on AWS/Azure/GCP. Includes Atlas Vector Search for AI/RAG applications",
       "tier": "M0 Free",
       "url": "https://www.mongodb.com/pricing",
       "tags": [
@@ -297,7 +299,8 @@
         "mongodb",
         "nosql",
         "document",
-        "free tier"
+        "free tier",
+        "vector-database"
       ],
       "verifiedDate": "2026-04-05"
     },
@@ -4990,6 +4993,36 @@
         "free tier"
       ],
       "verifiedDate": "2026-03-23"
+    },
+    {
+      "vendor": "Chroma",
+      "category": "Databases",
+      "description": "Open-source AI-native embedding database — self-hosted: fully free with no limits. Chroma Cloud: free tier with 1M embeddings, 1 collection, 10K queries/day. Python and JavaScript SDKs",
+      "tier": "Open Source",
+      "url": "https://www.trychroma.com/pricing",
+      "tags": [
+        "vector-database",
+        "ai",
+        "embeddings",
+        "open-source",
+        "search"
+      ],
+      "verifiedDate": "2026-04-10"
+    },
+    {
+      "vendor": "Turbopuffer",
+      "category": "Databases",
+      "description": "Serverless vector database — pay-per-use with no minimum. $0.30/M vectors stored/month, $0.04/M vectors queried. No free tier but extremely low entry cost for small workloads",
+      "tier": "Pay-as-you-go",
+      "url": "https://turbopuffer.com/pricing",
+      "tags": [
+        "vector-database",
+        "ai",
+        "embeddings",
+        "serverless",
+        "search"
+      ],
+      "verifiedDate": "2026-04-10"
     },
     {
       "vendor": "AssemblyAI",

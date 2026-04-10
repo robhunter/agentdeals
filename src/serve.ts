@@ -5313,6 +5313,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "The definitive database pricing comparison — 25+ services across managed Postgres, serverless/edge, document/NoSQL, cloud provider, and specialized categories with free tier analysis and cost breakdowns",
   },
   {
+    slug: "vector-database-pricing",
+    title: "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI",
+    metaDesc: "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. Updated April 2026.",
+    contextHtml: "",
+    tag: "vector-database-pricing",
+    primaryVendor: "Pinecone",
+    hubDesc: "The definitive vector database pricing comparison — 11 services across dedicated cloud, open-source, pgvector, embedded, and serverless categories with free tier analysis for RAG/AI",
+  },
+  {
     slug: "aws-free-tier-2026",
     title: "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
     metaDesc: "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.",
@@ -27657,7 +27666,7 @@ function buildDatabasePricingPage(): string {
   }).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["database-free-tier-comparison-2026", "database-alternatives", "supabase-alternatives", "free-startup-stack", "free-tier-risk", "cloud-free-tier-comparison-2026"].includes(p.slug)
+    ["database-free-tier-comparison-2026", "database-alternatives", "supabase-alternatives", "free-startup-stack", "free-tier-risk", "cloud-free-tier-comparison-2026", "vector-database-pricing"].includes(p.slug)
   );
 
   const jsonLd = {
@@ -28000,6 +28009,665 @@ function buildDatabasePricingPage(): string {
     '\n' +
     '  <h2>Related Guides</h2>\n' +
     '  <div class="related-pages">\n' +
+    relatedPages.map(p =>
+      '    <a href="/' + p.slug + '" class="related-page-link">\n' +
+      '      <div class="link-title">' + escHtmlServer(p.title) + '</div>\n' +
+      '      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n' +
+      '    </a>'
+    ).join("\n") + '\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="search-cta">\n' +
+    '    Explore all ' + offers.length.toLocaleString() + ' developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>\n' +
+    '  </div>\n' +
+    '</div>\n' +
+    '<footer>\n' +
+    '  <div class="container">\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '  </div>\n' +
+    '</footer>\n' +
+    '<script>' + mcpCtaScript() + '</script>\n' +
+    '</body>\n</html>';
+}
+
+// --- Vector Database Pricing page ---
+
+function buildVectorDatabasePricingPage(): string {
+  const title = "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI";
+  const metaDesc = "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. Updated April 2026.";
+  const slug = "vector-database-pricing";
+  const pubDate = "2026-04-10";
+
+  const vectorOffers = offers.filter(o => o.tags.includes("vector-database"));
+
+  const vectorVendorNames = ["Pinecone", "Qdrant", "Weaviate", "Zilliz Cloud", "LanceDB", "Upstash Vector", "Chroma", "Turbopuffer", "Supabase", "Neon", "MongoDB Atlas"];
+  const vectorChanges = dealChanges.filter((c: any) =>
+    vectorVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  interface VectorService {
+    name: string;
+    slug: string;
+    category: "dedicated-cloud" | "dedicated-oss" | "pgvector" | "embedded" | "serverless";
+    vectorType: string;
+    freeVectors: string;
+    freeStorage: string;
+    freeDimensions: string;
+    freeQueries: string;
+    paidFrom: string;
+    pricingModel: string;
+    freeDetails: string;
+    freeType: "generous" | "limited" | "trial" | "oss-only" | "pay-as-you-go";
+    monthlyCostSmall: string;
+    monthlyCostTeam: string;
+    hiddenCosts: string;
+    selfHosted: boolean;
+  }
+
+  const services: VectorService[] = [
+    {
+      name: "Pinecone",
+      slug: "pinecone",
+      category: "dedicated-cloud",
+      vectorType: "Managed (Serverless)",
+      freeVectors: "~1M (2 GB)",
+      freeStorage: "2 GB",
+      freeDimensions: "Up to 20,000",
+      freeQueries: "1M read units/mo",
+      paidFrom: "$0.33/M reads (Standard)",
+      pricingModel: "Usage-based (read/write units)",
+      freeDetails: "Starter plan: 2 GB storage, 2M write units/month, 1M read units/month, 5 serverless indexes, 5M embedding tokens/month. Pinecone Assistant: 100 documents / 1 GB. Supports metadata filtering, namespaces, and sparse-dense hybrid search. No credit card required.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$70+ (Standard)",
+      hiddenCosts: "Read/write units vary by vector dimensions — higher dimensions consume more units per operation. Starter plan limited to 5 indexes. No pod-based deployment option on free tier. Pinecone Assistant has separate limits.",
+      selfHosted: false,
+    },
+    {
+      name: "Qdrant Cloud",
+      slug: "qdrant",
+      category: "dedicated-cloud",
+      vectorType: "Managed (Dedicated)",
+      freeVectors: "~1M (1 GB)",
+      freeStorage: "1 GB",
+      freeDimensions: "Unlimited",
+      freeQueries: "Unlimited",
+      paidFrom: "~$10/mo",
+      pricingModel: "Per-cluster (RAM/disk)",
+      freeDetails: "Free forever cluster: 1 GB storage on AWS/GCP/Azure. Fully managed with backups included. Supports filtering, payload indexing, quantization, multi-tenancy. Open-source Qdrant can also be self-hosted with no limits. Rust-based for high performance.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$10\u201350",
+      hiddenCosts: "1 GB limits you to ~500K\u20131M vectors depending on dimensions. No high-availability on free cluster. Self-hosted requires managing infrastructure. Cloud pricing scales with RAM, which is the primary cost driver for in-memory indexes.",
+      selfHosted: true,
+    },
+    {
+      name: "Weaviate Cloud",
+      slug: "weaviate",
+      category: "dedicated-cloud",
+      vectorType: "Managed (Multi-model)",
+      freeVectors: "Sandbox only",
+      freeStorage: "Sandbox (14-day)",
+      freeDimensions: "Unlimited",
+      freeQueries: "Unlimited (during trial)",
+      paidFrom: "$25/mo (Shared)",
+      pricingModel: "Per-cluster",
+      freeDetails: "Cloud: 14-day free sandbox with full features (hybrid search, multi-tenancy, generative search, reranking). Sandbox expires — not a permanent free tier. Self-hosted: completely free and open-source with all features. Shared cloud from $25/month for 1M vectors.",
+      freeType: "trial",
+      monthlyCostSmall: "$25",
+      monthlyCostTeam: "$45+ (Flex)",
+      hiddenCosts: "No permanent cloud free tier — 14-day sandbox only. Self-hosted requires significant infrastructure for production use (multi-node for HA). Vectorization modules (OpenAI, Cohere) add API costs on top. Memory-intensive at scale.",
+      selfHosted: true,
+    },
+    {
+      name: "Zilliz Cloud",
+      slug: "zilliz-cloud",
+      category: "dedicated-cloud",
+      vectorType: "Managed Milvus",
+      freeVectors: "~5M (5 GB)",
+      freeStorage: "5 GB",
+      freeDimensions: "Up to 32,768",
+      freeQueries: "2.5M CU/mo",
+      paidFrom: "$65/mo (Standard)",
+      pricingModel: "Compute units (CU)",
+      freeDetails: "Free tier: 5 GB storage, 2.5M vector compute units/month, up to 5 collections. Based on Milvus (most popular open-source vector DB). Supports GPU-accelerated search, scalar filtering, hybrid search. Milvus open-source is also fully free to self-host.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$65+",
+      hiddenCosts: "Compute unit consumption depends on query complexity and vector dimensions. 5 collection limit on free tier. Milvus self-hosted requires significant ops expertise (etcd, MinIO, Pulsar dependencies). Zilliz Dedicated is significantly more expensive than Serverless.",
+      selfHosted: true,
+    },
+    {
+      name: "Chroma",
+      slug: "chroma",
+      category: "dedicated-oss",
+      vectorType: "Embedded / Cloud",
+      freeVectors: "Unlimited (self-hosted)",
+      freeStorage: "Unlimited (self-hosted)",
+      freeDimensions: "Unlimited",
+      freeQueries: "Unlimited (self-hosted)",
+      paidFrom: "Cloud pricing TBA",
+      pricingModel: "Self-hosted: free; Cloud: usage-based",
+      freeDetails: "Open-source AI-native embedding database. Self-hosted: fully free with no limits — runs in-process with Python or JavaScript, or as a standalone server. Chroma Cloud in early access with managed hosting. Simple API: add, query, filter. Automatic embedding generation with pluggable models.",
+      freeType: "oss-only",
+      monthlyCostSmall: "$0 (self-hosted)",
+      monthlyCostTeam: "$0\u201350 (self-hosted + cloud TBA)",
+      hiddenCosts: "Self-hosted means you manage infrastructure, backups, and scaling. In-process mode stores data on local disk — not distributed. No built-in replication or HA. Cloud offering is early-stage with limited docs. Performance degrades past ~10M vectors without tuning.",
+      selfHosted: true,
+    },
+    {
+      name: "LanceDB",
+      slug: "lancedb",
+      category: "embedded",
+      vectorType: "Embedded (Lance format)",
+      freeVectors: "Unlimited (OSS)",
+      freeStorage: "Unlimited (OSS)",
+      freeDimensions: "Unlimited",
+      freeQueries: "Unlimited (OSS)",
+      paidFrom: "Cloud: usage-based after $100 credits",
+      pricingModel: "Self-hosted: free; Cloud: usage-based",
+      freeDetails: "Embedded vector database built on Lance columnar format. OSS: fully free, runs locally or on your cloud storage (S3, GCS, Azure). Zero-copy reads, automatic versioning, multi-modal (text, images, video). LanceDB Cloud: $100 one-time free credits for serverless managed offering.",
+      freeType: "oss-only",
+      monthlyCostSmall: "$0 (self-hosted)",
+      monthlyCostTeam: "$0\u2013100+ (cloud)",
+      hiddenCosts: "Lance format is newer with smaller ecosystem than HNSW-based alternatives. Cloud offering still maturing. Self-hosted requires managing storage backend. No built-in distributed query — single-node only for OSS. Cloud credits are one-time, not recurring.",
+      selfHosted: true,
+    },
+    {
+      name: "Upstash Vector",
+      slug: "upstash-vector",
+      category: "serverless",
+      vectorType: "Serverless (HTTP)",
+      freeVectors: "10K",
+      freeStorage: "~10K vectors",
+      freeDimensions: "1,536",
+      freeQueries: "150K query units/day",
+      paidFrom: "$0.4/100K queries (Pay-as-you-go)",
+      pricingModel: "Per-query + per-vector",
+      freeDetails: "Serverless vector database: 10,000 vectors, 1,536 dimensions, 150,000 query units/day. REST API — works in serverless/edge environments. Built-in embedding generation (no separate API call needed). Metadata filtering. No connection management required.",
+      freeType: "limited",
+      monthlyCostSmall: "$0\u20135",
+      monthlyCostTeam: "$10\u201330",
+      hiddenCosts: "10K vectors is very limited for production RAG. Fixed 1,536 dimensions on free tier (matches OpenAI text-embedding-3-small). Daily query quotas, not monthly. Higher dimensions require paid plan. REST-only means higher latency than native gRPC protocols.",
+      selfHosted: false,
+    },
+    {
+      name: "Turbopuffer",
+      slug: "turbopuffer",
+      category: "serverless",
+      vectorType: "Serverless (S3-backed)",
+      freeVectors: "None (pay-per-use)",
+      freeStorage: "None",
+      freeDimensions: "Unlimited",
+      freeQueries: "None",
+      paidFrom: "$0.30/M vectors/mo stored",
+      pricingModel: "Pay-per-use (storage + queries)",
+      freeDetails: "No free tier but extremely low entry cost. $0.30 per million vectors stored per month, $0.04 per million vectors queried. S3-native architecture — vectors stored on S3 with warm cache layer. No minimum commitment. Supports namespaces, metadata filtering, hybrid search.",
+      freeType: "pay-as-you-go",
+      monthlyCostSmall: "$0.30\u20135",
+      monthlyCostTeam: "$5\u201350",
+      hiddenCosts: "No free tier at all — charges from first vector. S3-backed means higher p99 latency than in-memory solutions for cold queries. Cache hit rate is critical for performance. Newer service with smaller community. Limited SDK ecosystem compared to Pinecone/Qdrant.",
+      selfHosted: false,
+    },
+    {
+      name: "Supabase pgvector",
+      slug: "supabase",
+      category: "pgvector",
+      vectorType: "PostgreSQL + pgvector",
+      freeVectors: "~100K (within 500 MB)",
+      freeStorage: "500 MB (shared with all data)",
+      freeDimensions: "Up to 2,000",
+      freeQueries: "Unlimited",
+      paidFrom: "$25/mo (Pro)",
+      pricingModel: "Per-project",
+      freeDetails: "pgvector extension included on all Supabase plans (including free). 500 MB database shared across all tables including vector data. HNSW and IVFFlat indexing. Works alongside Auth, Storage, Edge Functions, Realtime. Full SQL access for hybrid queries combining vector search with relational filters.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$25/project",
+      hiddenCosts: "500 MB is shared across ALL data, not just vectors — a full-featured app leaves little room for vector storage. Free projects pause after 1 week of inactivity. pgvector performance degrades past ~500K vectors without careful index tuning. No GPU acceleration. 2-project limit on free tier.",
+      selfHosted: false,
+    },
+    {
+      name: "Neon pgvector",
+      slug: "neon",
+      category: "pgvector",
+      vectorType: "PostgreSQL + pgvector (Serverless)",
+      freeVectors: "~50K (within 512 MB)",
+      freeStorage: "512 MB (shared with all data)",
+      freeDimensions: "Up to 2,000",
+      freeQueries: "Unlimited",
+      paidFrom: "$19/mo (Launch)",
+      pricingModel: "Usage-based",
+      freeDetails: "pgvector included on all Neon plans. 512 MB storage per project, up to 100 projects. Serverless with scale-to-zero — no cold start for reads. Branching included (great for testing different index strategies). Post-Databricks acquisition: fully usage-based pricing.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$19+",
+      hiddenCosts: "512 MB shared across all data. Scale-to-zero means brief cold starts on first query after idle. 0.25 CU compute is limited for index-building operations on large vector datasets. Branching helps test but each branch counts toward storage.",
+      selfHosted: false,
+    },
+    {
+      name: "MongoDB Atlas Vector Search",
+      slug: "mongodb-atlas",
+      category: "pgvector",
+      vectorType: "Document DB + Vector Search",
+      freeVectors: "~100K (within 512 MB)",
+      freeStorage: "512 MB (M0 cluster)",
+      freeDimensions: "Up to 4,096",
+      freeQueries: "Unlimited",
+      paidFrom: "$57/mo (M10 Dedicated)",
+      pricingModel: "Per-cluster",
+      freeDetails: "Atlas Vector Search included on M0 free clusters (512 MB, shared, always free on AWS/Azure/GCP). Supports approximate nearest neighbor search, pre-filtering, exact match. Integrates with MongoDB aggregation pipeline — combine vector search with document queries in a single query. Atlas Search (full-text) also included.",
+      freeType: "generous",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "$57+",
+      hiddenCosts: "M0 cluster has limited IOPS — vector search performance may be inconsistent under load. 512 MB shared with all document data. No dedicated compute for vector indexing. Vector Search is a separate index type from regular MongoDB indexes — requires learning $vectorSearch aggregation stage. Shared cluster has no SLA.",
+      selfHosted: false,
+    },
+  ];
+
+  const generousCount = services.filter(s => s.freeType === "generous").length;
+  const ossCount = services.filter(s => s.freeType === "oss-only").length;
+  const trialCount = services.filter(s => s.freeType === "trial" || s.freeType === "limited").length;
+  const selfHostedCount = services.filter(s => s.selfHosted).length;
+
+  const freeTypeLabels: Record<string, string> = { generous: "Generous", limited: "Limited", trial: "Trial Only", "oss-only": "OSS (Free)", "pay-as-you-go": "Pay-as-you-go" };
+  const freeTypeColors: Record<string, string> = { generous: "#3fb950", limited: "#d29922", trial: "#f85149", "oss-only": "#58a6ff", "pay-as-you-go": "#d29922" };
+
+  const categoryLabels: Record<string, string> = {
+    "dedicated-cloud": "Dedicated Vector DB (Cloud)",
+    "dedicated-oss": "Dedicated Vector DB (OSS)",
+    "pgvector": "PostgreSQL / Document DB + Vector",
+    "embedded": "Embedded / Local",
+    "serverless": "Serverless Vector DB",
+  };
+
+  const pricingTableRows = services.map(s =>
+    '<tr>' +
+    '<td style="font-weight:600"><a href="/vendor/' + s.slug + '">' + escHtmlServer(s.name) + '</a></td>' +
+    '<td style="font-size:.85rem">' + escHtmlServer(s.vectorType) + '</td>' +
+    '<td style="font-size:.85rem">' + escHtmlServer(s.freeVectors) + '</td>' +
+    '<td style="font-size:.85rem">' + escHtmlServer(s.freeStorage) + '</td>' +
+    '<td style="font-size:.85rem">' + escHtmlServer(s.freeDimensions) + '</td>' +
+    '<td style="font-size:.85rem">' + escHtmlServer(s.paidFrom) + '</td>' +
+    '<td style="font-size:.85rem">' + escHtmlServer(s.pricingModel) + '</td>' +
+    '</tr>'
+  ).join("\n        ");
+
+  const costRows = services.map(s =>
+    '<tr>' +
+    '<td style="font-weight:600">' + escHtmlServer(s.name) + '</td>' +
+    '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSmall) + '</td>' +
+    '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
+    '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.pricingModel) + '</td>' +
+    '</tr>'
+  ).join("\n        ");
+
+  const categories = ["dedicated-cloud", "dedicated-oss", "pgvector", "embedded", "serverless"] as const;
+  const categorySections = categories.map(cat => {
+    const catServices = services.filter(s => s.category === cat);
+    if (catServices.length === 0) return "";
+    return '<h3>' + escHtmlServer(categoryLabels[cat]) + '</h3>\n' +
+      '<div class="section-intro">' + catServices.length + ' service' + (catServices.length !== 1 ? "s" : "") + ' in this category.</div>\n' +
+      catServices.map(s =>
+        '<div class="diff-card">\n' +
+        '  <h3><a href="/vendor/' + s.slug + '">' + escHtmlServer(s.name) + '</a></h3>\n' +
+        '  <div class="diff-desc">' + escHtmlServer(s.freeDetails) + '</div>\n' +
+        '</div>'
+      ).join("\n");
+  }).join("\n\n  ");
+
+  const changeTimelineRows = vectorChanges.slice(0, 15).map((c: any) =>
+    '<tr>' +
+    '<td style="font-size:.85rem;white-space:nowrap">' + escHtmlServer(c.date) + '</td>' +
+    '<td style="font-weight:600;font-size:.85rem"><a href="/vendor/' + escHtmlServer(c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "")) + '">' + escHtmlServer(c.vendor) + '</a></td>' +
+    '<td style="font-size:.85rem">' + escHtmlServer(c.change_type || "update") + '</td>' +
+    '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(c.description || c.summary || "") + '</td>' +
+    '</tr>'
+  ).join("\n        ");
+
+  const faqEntries = [
+    { q: "What is a vector database and why do I need one?", a: "A vector database stores high-dimensional numerical representations (embeddings) of data like text, images, or audio, and enables fast similarity search. You need one if you're building RAG (Retrieval-Augmented Generation) pipelines, semantic search, recommendation systems, or any AI application that needs to find similar items. Traditional databases can't efficiently search across hundreds of dimensions." },
+    { q: "Should I use a dedicated vector database or pgvector?", a: "For prototypes and small-to-medium workloads (under 1M vectors), pgvector in Supabase or Neon is the simplest choice — no extra infrastructure, SQL queries, and your vectors live alongside your relational data. For production RAG at scale (1M+ vectors), dedicated solutions like Pinecone, Qdrant, or Weaviate offer better query performance, more indexing options, and purpose-built features like hybrid search and reranking." },
+    { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone (2 GB, ~1M vectors) and Zilliz Cloud (5 GB, ~5M vectors) offer the most generous free tiers. For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (512 MB) require zero extra infrastructure." },
+    { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant or Milvus on a $5-10/month VPS is the absolute cheapest for small-to-medium scale. For managed services, Turbopuffer's pay-per-use model ($0.30/M vectors/month) is cheapest for workloads under ~10M vectors. Qdrant Cloud ($10/month) and Upstash Vector (150K queries/day free) are also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
+    { q: "How many vectors can I store in 1 GB?", a: "It depends on dimensions. With 1,536 dimensions (OpenAI text-embedding-3-small): ~170K vectors per GB raw, but with indexing overhead expect ~100K-150K. With 768 dimensions (many open-source models): ~340K vectors per GB raw, ~200K-250K with indexes. With 3,072 dimensions (OpenAI text-embedding-3-large): ~85K vectors per GB. Lower-dimension models are more cost-effective for storage." },
+  ];
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": title,
+    "description": metaDesc,
+    "datePublished": pubDate,
+    "dateModified": pubDate,
+    "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
+    "about": { "@type": "SoftwareApplication", "applicationCategory": "Vector Database", "name": "Vector Database Pricing Comparison" },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqEntries.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  };
+
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["database-pricing", "free-llm-apis", "ai-ml-alternatives", "database-alternatives"].includes(p.slug)
+  );
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+    '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+    '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
+    '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="og:title" content="' + escHtmlServer(title) + '">\n' +
+    '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<meta property="og:type" content="article">\n' +
+    '<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="article:published_time" content="' + pubDate + '">\n' +
+    OG_IMAGE_META + GOOGLE_VERIFICATION_META +
+    '<link rel="icon" type="image/png" href="/favicon.png">\n' +
+    '<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n' +
+    '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n' +
+    '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n' +
+    '<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n' +
+    '<style>\n' +
+    '*{margin:0;padding:0;box-sizing:border-box}\n' +
+    ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n' +
+    'body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n' +
+    'a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n' +
+    '.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n' +
+    '.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n' +
+    '.breadcrumb a{color:var(--text-muted)}\n' +
+    'h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\n' +
+    'h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\n' +
+    'h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n' +
+    '.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n' +
+    '.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n' +
+    '.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n' +
+    '.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n' +
+    '.stat-number.green{color:#3fb950}\n' +
+    '.stat-number.yellow{color:#d29922}\n' +
+    '.stat-number.blue{color:#58a6ff}\n' +
+    '.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n' +
+    '.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n' +
+    '.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n' +
+    '.executive-summary p:last-child{margin-bottom:0}\n' +
+    '.executive-summary strong{color:var(--text)}\n' +
+    '.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n' +
+    '.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n' +
+    '.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n' +
+    '.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n' +
+    '.pricing-table tr:hover{background:var(--accent-glow)}\n' +
+    '.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n' +
+    '.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    '.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.context-box strong{color:var(--text)}\n' +
+    '.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n' +
+    '.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n' +
+    '.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n' +
+    '.verdict-item strong{color:var(--text)}\n' +
+    '.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n' +
+    '.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.methodology strong{color:var(--text)}\n' +
+    '.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n' +
+    '.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n' +
+    '.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n' +
+    '.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n' +
+    '.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n' +
+    '.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}\n' +
+    '.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n' +
+    '.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n' +
+    '.toc ol{padding-left:1.25rem;margin:0}\n' +
+    '.toc li{margin-bottom:.35rem;font-size:.9rem}\n' +
+    '.toc a{color:var(--accent)}\n' +
+    '.hidden-cost-card{padding:1rem 1.25rem;border:1px solid var(--border);border-left:3px solid #f85149;border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.hidden-cost-card h4{margin:0 0 .25rem;font-size:.95rem;color:var(--text)}\n' +
+    '.hidden-cost-card p{color:var(--text-muted);font-size:.85rem;line-height:1.5;margin:0}\n' +
+    '.faq-item{border-bottom:1px solid var(--border);padding:1rem 0}\n' +
+    '.faq-item:last-child{border-bottom:none}\n' +
+    '.faq-q{font-weight:600;color:var(--text);font-size:.95rem;margin-bottom:.5rem}\n' +
+    '.faq-a{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n' +
+    'footer a{color:var(--accent)}\n' +
+    '@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}\n' +
+    globalNavCss() + '\n' +
+    mcpCtaCss() + '\n' +
+    '</style>\n</head>\n<body>\n' +
+    '<div class="container">\n' +
+    '  ' + buildGlobalNav("changes") + '\n' +
+    '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Vector Database Pricing</div>\n' +
+    '  <h1>Vector Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + vectorOffers.length + ' vector database entries &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '\n' +
+    '  <div class="summary-stats">\n' +
+    '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Services Compared</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number green">' + generousCount + '</div><div class="stat-label">Generous Free Tier</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number blue">' + ossCount + '</div><div class="stat-label">Open Source (Free)</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number yellow">' + trialCount + '</div><div class="stat-label">Limited / Trial</div></div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="executive-summary">\n' +
+    '    <p><strong>The vector database landscape in April 2026:</strong> ' + services.length + ' services across five categories \u2014 dedicated cloud vector DBs, open-source self-hosted, PostgreSQL + pgvector, embedded/local, and serverless. Vector databases are the fastest-growing infrastructure category in developer tooling, driven by RAG pipelines and AI applications.</p>\n' +
+    '    <p><strong>Key trends:</strong> pgvector has democratized vector search \u2014 Supabase, Neon, and any PostgreSQL instance now support similarity search with zero extra infrastructure. Dedicated vector DBs (Pinecone, Qdrant, Weaviate) differentiate on scale, performance, and advanced features like hybrid search and reranking. The open-source ecosystem is strong: Qdrant, Milvus, Chroma, and LanceDB are all fully free to self-host. Serverless options (Upstash Vector, Turbopuffer) offer pay-per-use with no infrastructure management.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, vector storage and dimension analysis, self-hosted vs managed cost comparison, cost analysis for solo developers and teams, hidden costs, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="toc">\n' +
+    '    <h3>Jump to section</h3>\n' +
+    '    <ol>\n' +
+    '      <li><a href="#pricing-table">Free Tier Comparison Table</a></li>\n' +
+    '      <li><a href="#categories">Category Breakdown</a> (Cloud, OSS, pgvector, Embedded, Serverless)</li>\n' +
+    '      <li><a href="#self-hosted">Self-Hosted vs Managed Cost Comparison</a></li>\n' +
+    '      <li><a href="#cost-analysis">Cost Analysis by Team Size</a></li>\n' +
+    '      <li><a href="#hidden-costs">Hidden Costs</a></li>\n' +
+    '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
+    '      <li><a href="#faq">FAQ</a></li>\n' +
+    '    </ol>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="pricing-table">Free Tier Comparison Table</h2>\n' +
+    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click service names for full vendor profiles with free tier details.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Service</th>\n' +
+    '        <th>Type</th>\n' +
+    '        <th>Free Vectors</th>\n' +
+    '        <th>Free Storage</th>\n' +
+    '        <th>Dimensions</th>\n' +
+    '        <th>Paid From</th>\n' +
+    '        <th>Model</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + pricingTableRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The pgvector advantage:</strong> If you are already using PostgreSQL (Supabase, Neon, or self-hosted), pgvector adds vector search with a single `CREATE EXTENSION vector` \u2014 no extra infrastructure, no extra cost, no extra API to learn. For production RAG at scale (1M+ vectors), dedicated vector databases offer better performance and more features, but pgvector is the fastest path from zero to working semantic search.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="categories">Category Breakdown</h2>\n' +
+    '  <p class="section-intro">Vector databases fall into five categories, each optimized for different scale, deployment model, and integration needs.</p>\n' +
+    '\n' +
+    '  ' + categorySections + '\n' +
+    '\n' +
+    '  <h2 id="self-hosted">Self-Hosted vs Managed Cost Comparison</h2>\n' +
+    '  <p class="section-intro">Self-hosting can dramatically reduce costs but requires ops expertise. Here is the honest comparison.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Approach</th>\n' +
+    '        <th>Cost (1M vectors)</th>\n' +
+    '        <th>Cost (10M vectors)</th>\n' +
+    '        <th>Ops Burden</th>\n' +
+    '        <th>Best For</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '      <tr><td style="font-weight:600">Qdrant self-hosted</td><td>$5\u201310/mo (VPS)</td><td>$20\u201350/mo</td><td>Medium (Docker)</td><td>Cost-sensitive teams with ops skills</td></tr>\n' +
+    '      <tr><td style="font-weight:600">Milvus self-hosted</td><td>$15\u201330/mo (VPS)</td><td>$50\u2013100/mo</td><td>High (etcd, MinIO, Pulsar)</td><td>Large-scale with dedicated infra team</td></tr>\n' +
+    '      <tr><td style="font-weight:600">Chroma self-hosted</td><td>$5\u201310/mo (VPS)</td><td>$20\u201340/mo</td><td>Low (single binary)</td><td>Prototypes, small-to-medium RAG</td></tr>\n' +
+    '      <tr><td style="font-weight:600">pgvector (self-hosted PG)</td><td>$5\u201315/mo</td><td>$30\u201380/mo</td><td>Medium (PG admin)</td><td>Teams already running PostgreSQL</td></tr>\n' +
+    '      <tr><td style="font-weight:600">Pinecone (managed)</td><td>$0 (free tier)</td><td>$70\u2013200/mo</td><td>None</td><td>Zero-ops requirement</td></tr>\n' +
+    '      <tr><td style="font-weight:600">Qdrant Cloud (managed)</td><td>$0 (free tier)</td><td>$30\u2013100/mo</td><td>None</td><td>Easy start with OSS escape hatch</td></tr>\n' +
+    '      <tr><td style="font-weight:600">Zilliz Cloud (managed)</td><td>$0 (free tier)</td><td>$65\u2013200/mo</td><td>None</td><td>Milvus users wanting managed service</td></tr>\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The self-hosted trade-off:</strong> Self-hosting Qdrant or Chroma on a $10/mo VPS can handle 1\u20135M vectors comfortably. But you own backups, monitoring, security patches, and scaling. Managed services cost 2\u20135x more but eliminate ops entirely. The sweet spot: start on a managed free tier (Pinecone, Qdrant Cloud), move to self-hosted when costs matter and you have the ops capacity.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="cost-analysis">Cost Comparison by Team Size</h2>\n' +
+    '  <p class="section-intro">What does each vector database cost for a solo developer versus a team building production RAG?</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Service</th>\n' +
+    '        <th>Solo / Prototype /mo</th>\n' +
+    '        <th>Team / Production /mo</th>\n' +
+    '        <th>Key Cost Factor</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + costRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
+    '  <p class="section-intro">Vector database pricing has unique gotchas beyond the sticker price.</p>\n' +
+    '\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Embedding API Costs</h4>\n' +
+    '    <p>The vector database is only half the cost. You also pay to generate embeddings. OpenAI text-embedding-3-small: $0.02/M tokens (~$0.01 per 10K documents). Cohere embed-v3: $0.10/M tokens. For 1M documents, embedding costs can exceed vector storage costs. Consider open-source embedding models (Sentence Transformers, Nomic) to eliminate this recurring cost.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Dimension vs Cost Trade-off</h4>\n' +
+    '    <p>Higher-dimension embeddings (3,072 for OpenAI text-embedding-3-large) use ~4x more storage than lower-dimension ones (768 for many open-source models). This directly multiplies your storage costs. For most RAG applications, 768\u20131,536 dimensions provide sufficient quality at 2\u20134x lower cost. Use Matryoshka dimensionality reduction (supported by modern embedding models) to tune this trade-off.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Index Building Costs</h4>\n' +
+    '    <p>HNSW indexes (used by most vector DBs) consume significant CPU and memory during construction. On free tiers with limited compute, indexing 100K+ vectors can take hours. Some services (Pinecone, Turbopuffer) handle this transparently; self-hosted solutions require you to provision sufficient RAM (typically 2\u20134x the vector data size for HNSW).</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Query Latency at Scale</h4>\n' +
+    '    <p>Free-tier performance varies dramatically. Pinecone Starter and Qdrant free clusters share resources \u2014 p99 latency can spike during peak hours. Serverless options (Turbopuffer, Upstash) have cold-start latency. pgvector on shared Postgres (Supabase free, Neon free) competes with other queries for CPU. Budget for dedicated compute if sub-100ms p99 latency matters.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Vendor Lock-in Risk</h4>\n' +
+    '    <p>Proprietary vector databases (Pinecone, Turbopuffer) have no standard export format \u2014 migrating requires re-indexing all vectors. Open-source solutions (Qdrant, Milvus, Chroma) let you export and move freely. pgvector stores vectors in standard PostgreSQL \u2014 pg_dump includes your vector data. If portability matters, weight open-source or pgvector-based solutions.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
+    '  <p class="section-intro">Vector database pricing is evolving rapidly as the market matures. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
+    '\n' +
+    (vectorChanges.length > 0 ? (
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + changeTimelineRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n'
+    ) : '  <p class="section-intro">No vector database-specific pricing changes tracked recently. This is a new and rapidly evolving category \u2014 check back for updates.</p>\n') +
+    '\n' +
+    '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
+    '\n' +
+    '  <div class="verdict-box">\n' +
+    '    <h3>Pick the Right Vector Database</h3>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for prototyping / getting started</strong>\n' +
+    '      <p><a href="/vendor/supabase">Supabase pgvector</a> or <a href="/vendor/neon">Neon pgvector</a> \u2014 zero extra infrastructure, SQL queries, vectors live alongside your relational data. Go from zero to working semantic search in under an hour.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best managed free tier</strong>\n' +
+    '      <p><a href="/vendor/pinecone">Pinecone</a> (2 GB, ~1M vectors) or <a href="/vendor/zilliz-cloud">Zilliz Cloud</a> (5 GB, ~5M vectors). Both offer generous free tiers with zero ops. Zilliz has more free storage; Pinecone has a larger ecosystem and simpler API.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for production RAG at scale</strong>\n' +
+    '      <p><a href="/vendor/qdrant">Qdrant</a> (self-hosted or cloud) or <a href="/vendor/pinecone">Pinecone</a> (fully managed). Qdrant offers the best price-to-performance for self-hosted; Pinecone for zero-ops. Both support hybrid search, metadata filtering, and handle 10M+ vectors reliably.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for self-hosted / maximum control</strong>\n' +
+    '      <p><a href="/vendor/qdrant">Qdrant</a> (Rust, high performance, Docker-friendly) or <a href="/vendor/chroma">Chroma</a> (Python-native, simplest setup). For enterprise scale: <a href="/vendor/zilliz-cloud">Milvus</a> (Zilliz-backed, GPU-accelerated). All three are fully open-source with no feature gating.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for serverless / edge</strong>\n' +
+    '      <p><a href="/vendor/upstash-vector">Upstash Vector</a> (REST API, edge-native, free tier) or <a href="/vendor/turbopuffer">Turbopuffer</a> (S3-backed, pay-per-use, no minimum). Both work in serverless environments where TCP connections are unavailable.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for multi-modal (text + images)</strong>\n' +
+    '      <p><a href="/vendor/weaviate">Weaviate</a> \u2014 built-in vectorization modules for text (OpenAI, Cohere, Hugging Face) and images (CLIP). Generative search combines retrieval with LLM generation in a single query. Multi-tenancy built-in for SaaS.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for existing MongoDB users</strong>\n' +
+    '      <p><a href="/vendor/mongodb-atlas">MongoDB Atlas Vector Search</a> \u2014 add vector search to your existing MongoDB cluster with no extra infrastructure. Combine $vectorSearch with aggregation pipeline for hybrid queries. Free on M0 clusters.</p>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
+    faqEntries.map(f =>
+      '  <div class="faq-item">\n' +
+      '    <div class="faq-q">' + escHtmlServer(f.q) + '</div>\n' +
+      '    <div class="faq-a">' + escHtmlServer(f.a) + '</div>\n' +
+      '  </div>'
+    ).join("\n") + '\n' +
+    '\n' +
+    '  <h2>Data Source &amp; Methodology</h2>\n' +
+    '  <div class="methodology">\n' +
+    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for vector database services, compare vendors, or track pricing changes from your AI coding assistant.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  ' + buildMcpCta("Compare vector database pricing, search free tiers, and track pricing changes \u2014 all from your AI coding assistant.") + '\n' +
+    '\n' +
+    '  <h2>Related Guides</h2>\n' +
+    '  <div class="related-pages">\n' +
+    '    <a href="/database-pricing" class="related-page-link">\n' +
+    '      <div class="link-title">Database Pricing Comparison 2026</div>\n' +
+    '      <div class="link-desc">25+ database services compared — managed Postgres, serverless/edge, document/NoSQL, and more</div>\n' +
+    '    </a>\n' +
+    '    <a href="/free-llm-apis" class="related-page-link">\n' +
+    '      <div class="link-title">Free LLM APIs Comparison</div>\n' +
+    '      <div class="link-desc">LLM APIs + vector databases = complete RAG stack. Compare free LLM API tiers.</div>\n' +
+    '    </a>\n' +
+    '    <a href="/ai-ml-alternatives" class="related-page-link">\n' +
+    '      <div class="link-title">AI/ML Free Tier Alternatives</div>\n' +
+    '      <div class="link-desc">65+ AI/ML services with free tiers — LLMs, speech, vision, and more</div>\n' +
+    '    </a>\n' +
     relatedPages.map(p =>
       '    <a href="/' + p.slug + '" class="related-page-link">\n' +
       '      <div class="link-title">' + escHtmlServer(p.title) + '</div>\n' +
@@ -49175,6 +49843,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildDatabasePricingPage());
+  } else if (url.pathname === "/vector-database-pricing" && isGetOrHead) {
+    recordApiHit("/vector-database-pricing");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vector-database-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildVectorDatabasePricingPage());
   } else if (url.pathname === "/agent-payments" && isGetOrHead) {
     recordApiHit("/agent-payments");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-payments", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
