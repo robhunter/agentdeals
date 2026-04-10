@@ -3589,6 +3589,46 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("FREE TIER REMOVED"), "Should flag PlanetScale removal");
   });
 
+  it("GET /vector-database-pricing renders definitive vector database pricing comparison", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vector-database-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("The Definitive"), "Should have definitive title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    // 11 services across 5 categories
+    assert.ok(html.includes("Pinecone"), "Should include Pinecone");
+    assert.ok(html.includes("Qdrant"), "Should include Qdrant");
+    assert.ok(html.includes("Weaviate"), "Should include Weaviate");
+    assert.ok(html.includes("Zilliz Cloud"), "Should include Zilliz Cloud");
+    assert.ok(html.includes("Chroma"), "Should include Chroma");
+    assert.ok(html.includes("LanceDB"), "Should include LanceDB");
+    assert.ok(html.includes("Upstash Vector"), "Should include Upstash Vector");
+    assert.ok(html.includes("Turbopuffer"), "Should include Turbopuffer");
+    assert.ok(html.includes("Supabase pgvector"), "Should include Supabase pgvector");
+    assert.ok(html.includes("Neon pgvector"), "Should include Neon pgvector");
+    assert.ok(html.includes("MongoDB Atlas Vector Search"), "Should include MongoDB Atlas Vector Search");
+    // Key sections
+    assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
+    assert.ok(html.includes("Self-Hosted vs Managed"), "Should have self-hosted vs managed section");
+    assert.ok(html.includes("Cost Comparison by Team Size"), "Should have cost analysis");
+    assert.ok(html.includes("Hidden Costs"), "Should have hidden costs section");
+    assert.ok(html.includes("Best-for-Use-Case Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    // Vector-specific columns
+    assert.ok(html.includes("Free Vectors"), "Should have vectors column");
+    assert.ok(html.includes("Dimensions"), "Should have dimensions column");
+    // Cross-links
+    assert.ok(html.includes("/database-pricing"), "Should cross-link to database pricing");
+    assert.ok(html.includes("/free-llm-apis"), "Should cross-link to free LLM APIs");
+  });
+
   it("GET /openai-assistants-migration renders migration cost guide", async () => {
     proc = await startHttpServer();
 
