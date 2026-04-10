@@ -107,6 +107,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "guides/n8n", title: "Using AgentDeals with n8n", description: "n8n MCP integration guide — MCP Server Trigger node setup, no-code automation workflows for pricing monitoring" },
   { slug: "guides/vercel-ai-sdk", title: "Using AgentDeals with Vercel AI SDK", description: "Vercel AI SDK MCP integration guide — experimental_createMCPClient() setup, React/Next.js code examples" },
   { slug: "dall-e-shutdown", title: "DALL-E API Shutdown Migration Guide", description: "OpenAI DALL-E 2 & 3 API shuts down May 12, 2026 — migration to gpt-image-1, free alternatives (Pollinations.AI, Lumenfall.ai, Cloudflare Workers AI), code examples, pricing comparison" },
+  { slug: "openai-realtime-migration", title: "OpenAI Realtime API Beta Migration Guide", description: "OpenAI Realtime API beta deprecated May 7, 2026 — migration to GA API, alternative real-time audio services (Deepgram, AssemblyAI, ElevenLabs, Azure OpenAI, Google Cloud Speech-to-Text), code examples, pricing" },
 ];
 
 export function getGuideList(): GuideMetadata[] {
