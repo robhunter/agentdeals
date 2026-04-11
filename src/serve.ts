@@ -10,6 +10,7 @@ import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
+import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey } from "./agents.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -50411,6 +50412,87 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/embed/changes", params: { theme }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600", ...EMBED_CORS_HEADERS });
     res.end(buildEmbedChangesWidget(theme));
+  // --- Agent Registry API ---
+
+  } else if (url.pathname === "/api/agents/register" && req.method === "POST") {
+    let body = "";
+    for await (const chunk of req) {
+      body += chunk;
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(body);
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+
+    if (!parsed.name || typeof parsed.name !== "string" || parsed.name.trim().length === 0) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "name is required and must be a non-empty string" }));
+      return;
+    }
+
+    try {
+      // If vestauth URL provided, validate it before registering
+      if (parsed.vestauth_public_key_url) {
+        const validation = await validateVestauthUrl(parsed.vestauth_public_key_url);
+        if (!validation.valid) {
+          res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+          res.end(JSON.stringify({ error: `Invalid vestauth URL: ${validation.error}` }));
+          return;
+        }
+      }
+
+      const result = registerAgent({
+        name: parsed.name.trim(),
+        api_key: parsed.api_key,
+        vestauth_public_key_url: parsed.vestauth_public_key_url,
+      });
+
+      const responseBody: any = {
+        id: result.agent.id,
+        name: result.agent.name,
+        status: result.agent.status,
+        registered_at: result.agent.registered_at,
+        vestauth_public_key_url: result.agent.vestauth_public_key_url,
+      };
+      if (result.api_key) {
+        responseBody.api_key = result.api_key;
+        responseBody.api_key_note = "Save this key — it will not be shown again.";
+      }
+
+      recordApiHit("/api/agents/register");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/agents/register", params: { name: parsed.name }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(responseBody));
+    } catch (err: any) {
+      const status = err.message.includes("already exists") ? 409 : 500;
+      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+
+  } else if (url.pathname === "/api/agents/me" && isGetOrHead) {
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    recordApiHit("/api/agents/me");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/agents/me", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({
+      id: agent.id,
+      name: agent.name,
+      status: agent.status,
+      registered_at: agent.registered_at,
+      vestauth_public_key_url: agent.vestauth_public_key_url,
+      x402_address: agent.x402_address,
+    }));
+
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
