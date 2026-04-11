@@ -4,6 +4,20 @@ export interface Eligibility {
   program?: string;
 }
 
+export interface Referral {
+  code?: string;
+  url: string;
+  referee_value: string;
+  referrer_value?: string;
+  type: "dual-sided" | "referrer-only" | "referee-only";
+  source: "curated" | "sovrn" | "agent-submitted";
+  submitted_by?: string | null;
+  terms_url?: string;
+  verified_date: string;
+  restrictions?: string[];
+  phase1_eligible: boolean;
+}
+
 export interface Offer {
   vendor: string;
   category: string;
@@ -15,6 +29,7 @@ export interface Offer {
   eligibility?: Eligibility;
   expires_date?: string;
   payment_protocols?: string[];
+  referral?: Referral;
 }
 
 export type StabilityClass = "stable" | "watch" | "volatile" | "improving";
