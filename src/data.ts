@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass, Referral } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
@@ -80,9 +80,9 @@ export function getOfferDetails(
     const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
     const result: Offer & { relatedVendors: string[]; alternatives?: Offer[] } = { ...match, relatedVendors };
     if (includeAlternatives) {
-      result.alternatives = sameCategoryOffers;
+      result.alternatives = sameCategoryOffers.map(o => stripReferrerValue(o));
     }
-    return { offer: result };
+    return { offer: stripReferrerValue(result) };
   }
 
   // No exact match — suggest similar vendors
@@ -340,7 +340,8 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     );
 
-    return { ...offer, recent_change, expires_soon, risk_level, stability, days_since_verified };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, stability, days_since_verified };
+    return stripReferrerValue(enriched);
   });
 }
 
@@ -352,7 +353,8 @@ export function getNewOffers(days: number = 7): { offers: Offer[]; total: number
   const offers = loadOffers();
   const results = offers
     .filter((o) => o.verifiedDate >= cutoff)
-    .sort((a, b) => b.verifiedDate.localeCompare(a.verifiedDate));
+    .sort((a, b) => b.verifiedDate.localeCompare(a.verifiedDate))
+    .map(o => stripReferrerValue(o));
   return { offers: results, total: results.length };
 }
 
@@ -798,8 +800,8 @@ export function compareServices(
 
   return {
     comparison: {
-      vendor_a: { ...matchA.offer, deal_changes: changesA },
-      vendor_b: { ...matchB.offer, deal_changes: changesB },
+      vendor_a: stripReferrerValue({ ...matchA.offer, deal_changes: changesA }),
+      vendor_b: stripReferrerValue({ ...matchB.offer, deal_changes: changesB }),
       shared_categories: sharedCategories,
       category_overlap: categoryOverlap,
     },
@@ -827,7 +829,7 @@ export function getNewestDeals(params: {
 
   results.sort((a, b) => b.verifiedDate.localeCompare(a.verifiedDate));
 
-  const deals = results.slice(0, limit).map((o) => ({
+  const deals = results.slice(0, limit).map((o) => stripReferrerValue({
     ...o,
     days_since_update: Math.floor(
       (now.getTime() - new Date(o.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
@@ -1015,4 +1017,39 @@ export function getWeeklyDigest(): {
     upcoming_deadlines: deadlines,
     summary,
   };
+}
+
+const VALID_REFERRAL_TYPES = new Set(["dual-sided", "referrer-only", "referee-only"]);
+const VALID_REFERRAL_SOURCES = new Set(["curated", "sovrn", "agent-submitted"]);
+
+export function validateReferral(referral: Referral, vendor: string): string[] {
+  const errors: string[] = [];
+  if (!referral.url || !/^https?:\/\/.+/.test(referral.url)) {
+    errors.push(`${vendor}: referral.url must be a valid URL`);
+  }
+  if (!VALID_REFERRAL_TYPES.has(referral.type)) {
+    errors.push(`${vendor}: referral.type must be one of: dual-sided, referrer-only, referee-only`);
+  }
+  if (!VALID_REFERRAL_SOURCES.has(referral.source)) {
+    errors.push(`${vendor}: referral.source must be one of: curated, sovrn, agent-submitted`);
+  }
+  if ((referral.type === "dual-sided" || referral.type === "referee-only") && !referral.referee_value) {
+    errors.push(`${vendor}: referral.referee_value is required for ${referral.type} type`);
+  }
+  if (!referral.verified_date || !/^\d{4}-\d{2}-\d{2}$/.test(referral.verified_date)) {
+    errors.push(`${vendor}: referral.verified_date must be a valid ISO date (YYYY-MM-DD)`);
+  } else {
+    const verifiedMs = new Date(referral.verified_date).getTime();
+    const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000;
+    if (Date.now() - verifiedMs > ninetyDaysMs) {
+      errors.push(`${vendor}: referral.verified_date is older than 90 days`);
+    }
+  }
+  return errors;
+}
+
+export function stripReferrerValue<T extends { referral?: Referral }>(offer: T): T {
+  if (!offer.referral) return offer;
+  const { referrer_value, ...publicReferral } = offer.referral;
+  return { ...offer, referral: publicReferral as Referral };
 }

@@ -1686,6 +1686,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
       <div class="desc-block">${escHtmlServer(a.description)}</div>
+      ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value)} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
     <div class="vendor-col">
       <h2><a href="${escHtmlServer(b.url)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB.risk_level)}</h2>
@@ -1694,6 +1695,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
       <div class="desc-block">${escHtmlServer(b.description)}</div>
+      ${b.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(b.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(b.referral.referee_value)} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
   </div>
 
@@ -2882,6 +2884,13 @@ ${enrichedAlts.map(a => {
     </div>`;
   })() : "";
 
+  // Referral callout
+  const referralCalloutHtml = primary.referral ? `
+  <div class="referral-callout" style="margin:1rem 0;padding:.75rem 1rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 8px 8px 0;background:#3fb95010">
+    <span style="font-size:.9rem">\ud83d\udd17 <strong>Sign up bonus:</strong> <a href="${escHtmlServer(primary.referral.url)}" rel="noopener sponsored" target="_blank">Use our referral link</a> to get ${escHtmlServer(primary.referral.referee_value)}</span>
+    <span style="display:block;font-size:.75rem;margin-top:.25rem;color:var(--text-muted)"><a href="/disclosure" style="color:var(--text-muted)">Affiliate disclosure</a></span>
+  </div>` : "";
+
   // Alternatives HTML
   const alternativesHtml = alternatives.length > 0 ? `
   <div class="section">
@@ -3121,6 +3130,7 @@ ${mcpCtaCss()}
 ${quickVerdictHtml}
 ${categoryContextHtml}
 ${changeNoticeHtml}
+${referralCalloutHtml}
 
   <div class="detail-grid">
     <div class="detail-card">
@@ -47149,6 +47159,106 @@ ${bundleHtml}
 
 // --- Privacy policy page ---
 
+function buildDisclosurePage(): string {
+  const title = "Affiliate Disclosure — AgentDeals";
+  const metaDesc = "AgentDeals affiliate disclosure. How we use referral links, what you get, and how our recommendations work.";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description: metaDesc,
+    url: `${BASE_URL}/disclosure`,
+    dateModified: new Date().toISOString().slice(0, 10),
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  // Find all offers with referral data
+  const referralOffers = offers.filter(o => o.referral);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/disclosure">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/disclosure">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:720px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.2rem;color:var(--text);margin:2rem 0 .75rem}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;max-width:640px}
+.section{border:1px solid var(--border);border-radius:12px;background:var(--bg-card);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.section p,.section ul{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.section ul{margin-left:1.25rem}
+.section li{margin-bottom:.35rem}
+.section p:last-child,.section ul:last-child{margin-bottom:0}
+.updated{color:var(--text-dim);font-size:.8rem;font-style:italic;margin-top:2rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--text-muted)}
+@media(max-width:768px){h1{font-size:1.5rem}.section{padding:1rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("home")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Affiliate Disclosure</div>
+  <h1>Affiliate Disclosure</h1>
+  <p class="page-intro">Transparency about how AgentDeals uses referral links and earns revenue.</p>
+
+  <div class="section">
+    <h2>Material Connection Statement</h2>
+    <p>AgentDeals may financially benefit when you use referral links on this site. We only feature referral codes where you, the user, also receive value (sign-up credits, discounts, or extended trials). Our recommendations are based on product quality, not affiliate status.</p>
+  </div>
+
+  <div class="section">
+    <h2>How Referral Links Work</h2>
+    <ul>
+      <li>Some vendor listings include referral links marked with a \ud83d\udd17 icon</li>
+      <li>When you sign up through a referral link, you receive a bonus (credits, discount, or extended trial)</li>
+      <li>AgentDeals may also receive a commission or credit from the vendor</li>
+      <li>Referral links are clearly labeled and always optional &mdash; the regular pricing page link is always available</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>What Doesn't Change</h2>
+    <ul>
+      <li>Our data is the same whether or not a vendor has a referral program</li>
+      <li>Pricing change tracking, risk assessments, and stability ratings are objective and unaffected</li>
+      <li>Vendors without referral programs are not ranked lower or excluded</li>
+      <li>We track ${offers.length.toLocaleString()} vendor offers &mdash; only ${referralOffers.length} currently have referral links</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Current Referral Partners</h2>
+    ${referralOffers.length > 0 ? `<ul>${referralOffers.map(o => `<li><a href="/vendor/${toSlug(o.vendor)}">${escHtmlServer(o.vendor)}</a>: ${escHtmlServer(o.referral!.referee_value)}${o.referral!.terms_url ? ` (<a href="${escHtmlServer(o.referral!.terms_url)}" rel="noopener" target="_blank">program terms</a>)` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
+  </div>
+
+  <p class="updated">Last updated: ${new Date().toISOString().split("T")[0]}</p>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+</body>
+</html>`;
+}
+
 function buildPrivacyPage(): string {
   const title = "Privacy Policy — AgentDeals";
   const metaDesc = "AgentDeals privacy policy. We are a read-only data server — no accounts, no cookies, no personal data collected.";
@@ -49353,6 +49463,12 @@ ${catList}
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/disclosure</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/expiring</loc>
     <lastmod>${latestVerified}</lastmod>
     <changefreq>daily</changefreq>
@@ -49701,6 +49817,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSetupPage());
+  } else if (url.pathname === "/disclosure" && isGetOrHead) {
+    recordApiHit("/disclosure");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/disclosure", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDisclosurePage());
   } else if (url.pathname === "/privacy" && isGetOrHead) {
     recordApiHit("/privacy");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/privacy", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

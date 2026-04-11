@@ -106,7 +106,20 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-02"
+      "verifiedDate": "2026-04-02",
+      "referral": {
+        "code": "PLACEHOLDER",
+        "url": "https://railway.app?referralCode=PLACEHOLDER",
+        "referee_value": "$20 in Railway credits",
+        "referrer_value": "15% commission on first 12 months",
+        "type": "dual-sided",
+        "source": "curated",
+        "submitted_by": null,
+        "terms_url": "https://railway.com/affiliate-program",
+        "verified_date": "2026-04-11",
+        "restrictions": [],
+        "phase1_eligible": true
+      }
     },
     {
       "vendor": "Fly.io",
