@@ -3662,6 +3662,22 @@ describe("HTTP transport", () => {
     }
   });
 
+  it("migration guides have BreadcrumbList JSON-LD and Last updated date", async () => {
+    proc = await startHttpServer();
+    const pages = [
+      "/openai-assistants-migration",
+      "/hcp-terraform-migration",
+      "/openai-assistants-migration-2026",
+    ];
+    for (const page of pages) {
+      const response = await fetch(`http://localhost:${serverPort}${page}`);
+      assert.strictEqual(response.status, 200);
+      const html = await response.text();
+      assert.ok(html.includes("BreadcrumbList"), `${page} should have BreadcrumbList JSON-LD`);
+      assert.ok(html.includes("Last updated"), `${page} should show Last updated date`);
+    }
+  });
+
   it("GET /openai-assistants-migration renders migration cost guide", async () => {
     proc = await startHttpServer();
 
