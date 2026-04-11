@@ -2,6 +2,7 @@ import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mc
 import { z } from "zod";
 import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
+import { registerAgent, validateVestauthUrl } from "./agents.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
@@ -877,6 +878,70 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       }
 
       return { contents: [{ uri: `agentdeals://guide/${slug}`, text, mimeType: "text/plain" }] };
+    }
+  );
+
+  // --- Tool 5: register_agent ---
+
+  server.registerTool(
+    "register_agent",
+    {
+      description:
+        "Register as an agent with AgentDeals to enable referral attribution and commission tracking. Returns a one-time API key for authenticating future requests. Save the API key — it will not be shown again.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        name: z.string().describe("A unique name for your agent"),
+        vestauth_public_key_url: z.string().optional().describe("Your .well-known vestauth public key URL for cryptographic identity (alternative to API key auth)"),
+      },
+    },
+    async ({ name, vestauth_public_key_url }) => {
+      try {
+        recordToolCall("register_agent");
+
+        if (vestauth_public_key_url) {
+          const validation = await validateVestauthUrl(vestauth_public_key_url);
+          if (!validation.valid) {
+            return {
+              isError: true,
+              content: [{ type: "text" as const, text: `Invalid vestauth URL: ${validation.error}` }],
+            };
+          }
+        }
+
+        const result = registerAgent({
+          name,
+          api_key: true,
+          vestauth_public_key_url,
+        });
+
+        const response: any = {
+          id: result.agent.id,
+          name: result.agent.name,
+          status: result.agent.status,
+          registered_at: result.agent.registered_at,
+        };
+        if (result.api_key) {
+          response.api_key = result.api_key;
+          response.note = "Save this API key — it will not be shown again. Include it as Authorization: Bearer <key> in future requests.";
+        }
+        if (result.agent.vestauth_public_key_url) {
+          response.vestauth_public_key_url = result.agent.vestauth_public_key_url;
+        }
+
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "register_agent", params: { name }, result_count: 1, session_id: getSessionId?.() });
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(response, null, 2) }],
+        };
+      } catch (err: any) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: err.message }],
+        };
+      }
     }
   );
 

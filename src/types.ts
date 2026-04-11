@@ -62,3 +62,13 @@ export interface DealChange {
 export interface DealChangesIndex {
   changes: DealChange[];
 }
+
+export interface Agent {
+  id: string;
+  name: string;
+  api_key_hash: string;
+  vestauth_public_key_url: string | null;
+  x402_address: string | null;
+  status: "active" | "suspended";
+  registered_at: string;
+}
