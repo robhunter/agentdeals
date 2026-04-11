@@ -19130,6 +19130,16 @@ function buildHcpTerraformMigrationPage(): string {
     },
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Guides", item: `${BASE_URL}/guides` },
+      { "@type": "ListItem", position: 3, name: "HCP Terraform Migration", item: `${BASE_URL}/${slug}` },
+    ],
+  };
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19147,6 +19157,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -19226,7 +19237,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; HCP Terraform Migration</div>
   <h1>HCP Terraform Migration Guide — March 31 Deadline</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Deadline: March 31, 2026 &middot; Affects legacy free plan users</p>
+  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Deadline: March 31, 2026 &middot; Affects legacy free plan users</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">Mar 31</div><div class="stat-label">Legacy Plan Ends</div></div>
@@ -22122,6 +22133,16 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     about: [...apiProviders.map(p => ({ "@type": "SoftwareApplication", name: p.name })), ...frameworks.map(f => ({ "@type": "SoftwareApplication", name: f.name }))],
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Guides", item: `${BASE_URL}/guides` },
+      { "@type": "ListItem", position: 3, name: "Assistants API Migration", item: `${BASE_URL}/${slug}` },
+    ],
+  };
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22139,6 +22160,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -22215,7 +22237,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; <a href="/shutdowns">Shutdowns</a> &rsaquo; Assistants API Migration</div>
   <h1>OpenAI Assistants API Migration Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -23674,6 +23696,16 @@ function buildOpenAIAssistantsMigrationPage(): string {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Shutdown Tracker", item: BASE_URL + "/shutdowns" },
+      { "@type": "ListItem", position: 3, name: "OpenAI Assistants API", item: BASE_URL + "/" + slug },
+    ],
+  };
+
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
@@ -23691,6 +23723,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n' +
     '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n' +
     '<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n' +
+    '<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
     '<style>\n' +
     '*{margin:0;padding:0;box-sizing:border-box}\n' +
     ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n' +
@@ -23753,7 +23786,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/shutdowns">Shutdown Tracker</a> &rsaquo; OpenAI Assistants API</div>\n' +
     '  <h1>OpenAI Assistants API Sunset \u2014 Migration Cost Guide</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + migrationPaths.length + ' migration paths compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + openaiChanges.length + ' OpenAI pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + migrationPaths.length + ' migration paths compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + openaiChanges.length + ' OpenAI pricing changes tracked</p>\n' +
     '\n' +
     // Deadline banner
     '  <div class="deadline-banner">\n' +
