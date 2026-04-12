@@ -69,6 +69,7 @@ export interface Agent {
   api_key_hash: string;
   vestauth_public_key_url: string | null;
   x402_address: string | null;
+  trust_tier: "new" | "verified" | "trusted";
   status: "active" | "suspended";
   registered_at: string;
 }

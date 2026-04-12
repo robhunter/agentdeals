@@ -4,7 +4,8 @@ import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, ge
 import { recordToolCall, logRequest } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
-import { getAgentBalance, recordPayout, MINIMUM_PAYOUT_AMOUNT } from "./ledger.js";
+import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT } from "./ledger.js";
+import { submitReferralCode, getCodesByAgent, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getActiveCodesForVendor } from "./referral-codes.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -120,7 +121,21 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
           };
         }
 
-        const outputResults = response_format === "concise" ? results.map(toConciseOffer) : results;
+        // Append agent-submitted referral codes for each vendor
+        const resultsWithAgentCodes = results.map(offer => {
+          const agentCodes = getActiveCodesForVendor(offer.vendor);
+          if (agentCodes.length === 0) return offer;
+          return {
+            ...offer,
+            agent_referral_codes: agentCodes.map(c => ({
+              code: c.code,
+              referral_url: c.referral_url,
+              description: c.description,
+              source: c.source,
+            })),
+          };
+        });
+        const outputResults = response_format === "concise" ? resultsWithAgentCodes.map(toConciseOffer) : resultsWithAgentCodes;
         return {
           content: [{ type: "text" as const, text: JSON.stringify({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset }, null, 2) }],
         };
@@ -1149,6 +1164,129 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
               chain: transferResult.chain ?? null,
               correlation_id: correlationId,
             },
+          }, null, 2) }],
+        };
+      } catch (err: any) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: err.message }],
+        };
+      }
+    }
+  );
+
+  // --- Tool 9: submit_referral_code ---
+  server.registerTool(
+    "submit_referral_code",
+    {
+      description:
+        "Submit your own referral code for a vendor in the AgentDeals index. Requires authentication via API key (from register_agent). New agents' codes are pending review; verified/trusted agents' codes are auto-approved.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        vendor: z.string().describe("Vendor name (must exist in the AgentDeals index)"),
+        code: z.string().max(100).describe("The referral code (max 100 chars)"),
+        referral_url: z.string().url().describe("The referral URL"),
+        description: z.string().optional().describe("Description of the referral offer"),
+        commission_rate: z.number().min(0).max(1).optional().describe("Commission rate as a decimal (e.g. 0.15 for 15%)"),
+        expiry: z.string().optional().describe("Expiry date in ISO format (optional)"),
+        api_key: z.string().describe("Your API key from register_agent."),
+      },
+    },
+    async ({ vendor, code, referral_url, description, commission_rate, expiry, api_key }) => {
+      try {
+        recordToolCall("submit_referral_code");
+
+        const hash = hashApiKey(api_key);
+        const agent = getAgentByApiKeyHash(hash);
+        if (!agent) {
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }],
+          };
+        }
+
+        const ledgerEntries = getAgentLedgerEntries(agent.id);
+        const trustTier = calculateTrustTier(agent.id, ledgerEntries);
+
+        const submitted = submitReferralCode({
+          vendor,
+          code,
+          referral_url,
+          description: description ?? "",
+          commission_rate,
+          expiry,
+          agent_id: agent.id,
+          trust_tier: trustTier,
+        });
+
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "submit_referral_code", params: { vendor, status: submitted.status }, result_count: 1, session_id: getSessionId?.() });
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify({
+            success: true,
+            code: submitted,
+            trust_tier: trustTier,
+            message: submitted.status === "pending"
+              ? "Code submitted and pending review (new agent tier). It will be visible in search results once approved."
+              : "Code submitted and active. It is now visible in search results.",
+          }, null, 2) }],
+        };
+      } catch (err: any) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: err.message }],
+        };
+      }
+    }
+  );
+
+  // --- Tool 10: my_referral_codes ---
+  server.registerTool(
+    "my_referral_codes",
+    {
+      description:
+        "List your submitted referral codes with performance stats (impressions, clicks, conversions). Requires authentication via API key (from register_agent).",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        api_key: z.string().describe("Your API key from register_agent."),
+      },
+    },
+    async ({ api_key }) => {
+      try {
+        recordToolCall("my_referral_codes");
+
+        const hash = hashApiKey(api_key);
+        const agent = getAgentByApiKeyHash(hash);
+        if (!agent) {
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }],
+          };
+        }
+
+        const codes = getCodesByAgent(agent.id);
+        const ledgerEntries = getAgentLedgerEntries(agent.id);
+        const trustTier = calculateTrustTier(agent.id, ledgerEntries);
+        const dailyCount = getDailySubmissionCount(agent.id);
+        const dailyLimit = getDailyLimit(trustTier);
+
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "my_referral_codes", params: { agent_id: agent.id, count: codes.length }, result_count: codes.length, session_id: getSessionId?.() });
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify({
+            codes,
+            trust_tier: trustTier,
+            daily_submissions: dailyCount,
+            daily_limit: dailyLimit,
+            total_codes: codes.length,
+            active_codes: codes.filter(c => c.status === "active").length,
+            pending_codes: codes.filter(c => c.status === "pending").length,
           }, null, 2) }],
         };
       } catch (err: any) {

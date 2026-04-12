@@ -3,6 +3,8 @@ import path from "node:path";
 import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { attributeConversion, markConversion, getRequestsByAgent } from "./referral-requests.js";
+import { updateAgentTrustTier } from "./agents.js";
+import { calculateTrustTier } from "./referral-codes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
@@ -277,6 +279,17 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
   if (confirmed.length > 0) {
     saveLedger(ledger);
     saveBalances(loadBalances());
+
+    // Recalculate trust tiers for affected agents
+    const affectedAgents = new Set<string>();
+    for (const entryId of confirmed) {
+      const entry = ledger.find(e => e.id === entryId);
+      if (entry?.agent_id) affectedAgents.add(entry.agent_id);
+    }
+    for (const agentId of affectedAgents) {
+      const newTier = calculateTrustTier(agentId, ledger);
+      updateAgentTrustTier(agentId, newTier);
+    }
   }
 
   return confirmed;
@@ -322,6 +335,13 @@ export function clawbackEntry(entryId: string, reason?: string): boolean {
 
   saveLedger(ledger);
   saveBalances(loadBalances());
+
+  // Recalculate trust tier for affected agent
+  if (entry.agent_id) {
+    const newTier = calculateTrustTier(entry.agent_id, ledger);
+    updateAgentTrustTier(entry.agent_id, newTier);
+  }
+
   return true;
 }
 
