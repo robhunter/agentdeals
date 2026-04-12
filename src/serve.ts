@@ -10,9 +10,10 @@ import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
-import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey } from "./agents.js";
+import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
-import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries } from "./ledger.js";
+import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT } from "./ledger.js";
+import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -50657,6 +50658,155 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/conversions/clawback", params: { entry_id: parsed.entry_id }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ success: true, entry_id: parsed.entry_id }));
+
+  // --- PATCH /api/agents/me: Update agent profile (x402_address) ---
+  } else if (url.pathname === "/api/agents/me" && req.method === "PATCH") {
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    let body = "";
+    for await (const chunk of req) {
+      body += chunk;
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(body);
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+
+    if (parsed.x402_address !== undefined) {
+      if (parsed.x402_address !== null) {
+        const validation = validateX402Address(parsed.x402_address);
+        if (!validation.valid) {
+          res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+          res.end(JSON.stringify({ error: `Invalid x402_address: ${validation.error}` }));
+          return;
+        }
+      }
+      try {
+        const updated = updateAgentX402Address(agent.id, parsed.x402_address);
+        recordApiHit("/api/agents/me");
+        logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "PATCH /api/agents/me", params: { x402_address: !!parsed.x402_address }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({
+          id: updated.id,
+          name: updated.name,
+          status: updated.status,
+          registered_at: updated.registered_at,
+          vestauth_public_key_url: updated.vestauth_public_key_url,
+          x402_address: updated.x402_address,
+        }));
+      } catch (err: any) {
+        res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+    } else {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "No updatable fields provided. Supported: x402_address" }));
+    }
+
+  // --- POST /api/agents/:id/payout: Request payout ---
+  } else if (url.pathname.match(/^\/api\/agents\/[^/]+\/payout$/) && req.method === "POST") {
+    const parts = url.pathname.split("/");
+    const agentId = decodeURIComponent(parts[3]);
+
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    if (agent.id !== agentId) {
+      res.writeHead(403, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "You can only request payout for your own account" }));
+      return;
+    }
+
+    // Check x402 address
+    if (!agent.x402_address) {
+      res.writeHead(402, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({
+        error: "No x402 address registered. Set your x402_address first via PATCH /api/agents/me.",
+        hint: "Your credits are still accruing. Register an Ethereum (0x) or Solana address to enable withdrawal.",
+      }));
+      return;
+    }
+
+    // Check balance
+    const balance = getAgentBalance(agentId);
+    const confirmedBalance = balance ? balance.confirmed_balance : 0;
+    if (confirmedBalance < MINIMUM_PAYOUT_AMOUNT) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({
+        error: `Insufficient confirmed balance: $${confirmedBalance.toFixed(2)}. Minimum payout is $${MINIMUM_PAYOUT_AMOUNT}.`,
+        confirmed_balance: confirmedBalance,
+        minimum_payout: MINIMUM_PAYOUT_AMOUNT,
+      }));
+      return;
+    }
+
+    // Execute x402 transfer
+    const correlationId = generateCorrelationId();
+    try {
+      const transferResult = await executeTransfer({
+        to_address: agent.x402_address,
+        amount: confirmedBalance,
+        correlation_id: correlationId,
+      });
+
+      if (!transferResult.success) {
+        recordApiHit("/api/agents/:id/payout");
+        logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/agents/${agentId}/payout`, params: { correlation_id: correlationId, status: "transfer_failed" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+        res.writeHead(502, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({
+          error: "x402 transfer failed. Balance unchanged.",
+          detail: transferResult.error,
+          correlation_id: correlationId,
+        }));
+        return;
+      }
+
+      // Transfer succeeded — record payout in ledger
+      const entry = recordPayout({
+        agent_id: agentId,
+        x402_address: agent.x402_address,
+        tx_hash: transferResult.tx_hash,
+        correlation_id: correlationId,
+        metadata: {
+          chain: transferResult.chain,
+          token: transferResult.token,
+        },
+      });
+
+      recordApiHit("/api/agents/:id/payout");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/agents/${agentId}/payout`, params: { correlation_id: correlationId, amount: confirmedBalance, status: "success" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({
+        success: true,
+        payout: {
+          ledger_entry_id: entry.id,
+          amount: confirmedBalance,
+          x402_address: agent.x402_address,
+          tx_hash: transferResult.tx_hash ?? null,
+          chain: transferResult.chain ?? null,
+          token: transferResult.token ?? null,
+          correlation_id: correlationId,
+        },
+      }));
+    } catch (err: any) {
+      recordApiHit("/api/agents/:id/payout");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/agents/${agentId}/payout`, params: { correlation_id: correlationId, status: "error" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+      res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message, correlation_id: correlationId }));
+    }
 
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
