@@ -14,6 +14,7 @@ import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, up
 import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT } from "./ledger.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
+import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getActiveCodesForVendor } from "./referral-codes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49039,9 +49040,24 @@ const httpServer = createHttpServer(async (req, res) => {
     const results = searchOffers(q, category, eligibilityType, sort, validStability, validPaymentProtocol);
     const total = results.length;
     const paged = enrichOffers(results.slice(offset, offset + limit));
+    // Append agent-submitted referral codes for each vendor (curated codes shown first via offer.referral)
+    const offersWithAgentCodes = paged.map(offer => {
+      const agentCodes = getActiveCodesForVendor(offer.vendor);
+      if (agentCodes.length === 0) return offer;
+      return {
+        ...offer,
+        agent_referral_codes: agentCodes.map(c => ({
+          code: c.code,
+          referral_url: c.referral_url,
+          description: c.description,
+          source: c.source,
+          submitted_by: c.submitted_by,
+        })),
+      };
+    });
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ offers: paged, total }));
+    res.end(JSON.stringify({ offers: offersWithAgentCodes, total }));
   } else if (url.pathname === "/api/compare" && isGetOrHead) {
     recordApiHit("/api/compare");
     const a = url.searchParams.get("a") || "";
@@ -50491,6 +50507,7 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       id: agent.id,
       name: agent.name,
       status: agent.status,
+      trust_tier: agent.trust_tier ?? "new",
       registered_at: agent.registered_at,
       vestauth_public_key_url: agent.vestauth_public_key_url,
       x402_address: agent.x402_address,
@@ -50806,6 +50823,162 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/agents/${agentId}/payout`, params: { correlation_id: correlationId, status: "error" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
       res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: err.message, correlation_id: correlationId }));
+    }
+
+  // --- POST /api/referral-codes: Submit a referral code ---
+  } else if (url.pathname === "/api/referral-codes" && req.method === "POST") {
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    let body = "";
+    for await (const chunk of req) {
+      body += chunk;
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(body);
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+
+    if (!parsed.vendor || typeof parsed.vendor !== "string") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "vendor is required and must be a string" }));
+      return;
+    }
+    if (!parsed.code || typeof parsed.code !== "string") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "code is required and must be a string" }));
+      return;
+    }
+    if (!parsed.referral_url || typeof parsed.referral_url !== "string") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "referral_url is required and must be a string" }));
+      return;
+    }
+
+    try {
+      // Calculate current trust tier from ledger
+      const ledgerEntries = getAgentLedgerEntries(agent.id);
+      const trustTier = calculateTrustTier(agent.id, ledgerEntries);
+
+      const code = submitReferralCode({
+        vendor: parsed.vendor,
+        code: parsed.code,
+        referral_url: parsed.referral_url,
+        description: parsed.description ?? "",
+        commission_rate: parsed.commission_rate,
+        expiry: parsed.expiry,
+        agent_id: agent.id,
+        trust_tier: trustTier,
+      });
+
+      recordApiHit("/api/referral-codes");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "POST /api/referral-codes", params: { vendor: parsed.vendor, status: code.status }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(code));
+    } catch (err: any) {
+      const status = err.message.includes("limit reached") ? 429 : 400;
+      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+
+  // --- GET /api/referral-codes/mine: List my submitted codes ---
+  } else if (url.pathname === "/api/referral-codes/mine" && isGetOrHead) {
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    const codes = getCodesByAgent(agent.id);
+    const dailyCount = getDailySubmissionCount(agent.id);
+    const ledgerEntries = getAgentLedgerEntries(agent.id);
+    const trustTier = calculateTrustTier(agent.id, ledgerEntries);
+    const dailyLimit = getDailyLimit(trustTier);
+
+    recordApiHit("/api/referral-codes/mine");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "GET /api/referral-codes/mine", params: { agent_id: agent.id }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: codes.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({
+      codes,
+      trust_tier: trustTier,
+      daily_submissions: dailyCount,
+      daily_limit: dailyLimit,
+    }));
+
+  // --- PUT /api/referral-codes/:id: Update a code ---
+  } else if (url.pathname.match(/^\/api\/referral-codes\/[^/]+$/) && req.method === "PUT") {
+    const codeId = decodeURIComponent(url.pathname.split("/").pop()!);
+
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    let body = "";
+    for await (const chunk of req) {
+      body += chunk;
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(body);
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+
+    try {
+      const updated = updateCode(codeId, agent.id, {
+        code: parsed.code,
+        referral_url: parsed.referral_url,
+        description: parsed.description,
+        commission_rate: parsed.commission_rate,
+        expiry: parsed.expiry,
+      });
+
+      recordApiHit("/api/referral-codes/:id");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `PUT /api/referral-codes/${codeId}`, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(updated));
+    } catch (err: any) {
+      const status = err.message.includes("not found") ? 404 : err.message.includes("only update your own") ? 403 : 400;
+      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+
+  // --- DELETE /api/referral-codes/:id: Revoke a code ---
+  } else if (url.pathname.match(/^\/api\/referral-codes\/[^/]+$/) && req.method === "DELETE") {
+    const codeId = decodeURIComponent(url.pathname.split("/").pop()!);
+
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    try {
+      const revoked = revokeCode(codeId, agent.id);
+
+      recordApiHit("/api/referral-codes/:id");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `DELETE /api/referral-codes/${codeId}`, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(revoked));
+    } catch (err: any) {
+      const status = err.message.includes("not found") ? 404 : err.message.includes("only revoke your own") ? 403 : 400;
+      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
     }
 
   } else {
