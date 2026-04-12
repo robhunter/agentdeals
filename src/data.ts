@@ -987,7 +987,7 @@ export function getWeeklyDigest(): {
       seen.add(key);
       return true;
     })
-    .slice(0, 10);
+    .slice(0, 25);
 
   // Week label
   const weekStart = new Date(now.getTime() - now.getUTCDay() * 86400000 + 86400000); // Monday
