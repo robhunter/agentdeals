@@ -2,9 +2,10 @@ import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mc
 import { z } from "zod";
 import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, getVendorReferral } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
-import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey } from "./agents.js";
+import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
-import { getAgentBalance } from "./ledger.js";
+import { getAgentBalance, recordPayout, MINIMUM_PAYOUT_AMOUNT } from "./ledger.js";
+import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
@@ -1055,6 +1056,100 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
         return {
           content: [{ type: "text" as const, text: JSON.stringify(summary, null, 2) }],
+        };
+      } catch (err: any) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: err.message }],
+        };
+      }
+    }
+  );
+
+  // --- Tool 8: request_payout ---
+  server.registerTool(
+    "request_payout",
+    {
+      description:
+        "Request a payout of your confirmed referral credits via x402 stablecoin transfer. Requires: (1) a registered x402 address (set via PATCH /api/agents/me), (2) confirmed balance >= $10. Full balance is withdrawn — no partial payouts in Phase 2.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        api_key: z.string().describe("Your API key from register_agent."),
+      },
+    },
+    async ({ api_key }) => {
+      try {
+        recordToolCall("request_payout");
+
+        const hash = hashApiKey(api_key);
+        const agent = getAgentByApiKeyHash(hash);
+        if (!agent) {
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }],
+          };
+        }
+
+        // Check x402 address
+        if (!agent.x402_address) {
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: "No x402 address registered. Set your x402_address first via PATCH /api/agents/me with your Ethereum (0x) or Solana address." }],
+          };
+        }
+
+        // Check balance
+        const balance = getAgentBalance(agent.id);
+        const confirmedBalance = balance ? balance.confirmed_balance : 0;
+        if (confirmedBalance < MINIMUM_PAYOUT_AMOUNT) {
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: `Insufficient confirmed balance: $${confirmedBalance.toFixed(2)}. Minimum payout is $${MINIMUM_PAYOUT_AMOUNT}. Pending balance must pass the clawback window before it can be withdrawn.` }],
+          };
+        }
+
+        // Execute x402 transfer
+        const correlationId = generateCorrelationId();
+        const transferResult = await executeTransfer({
+          to_address: agent.x402_address,
+          amount: confirmedBalance,
+          correlation_id: correlationId,
+        });
+
+        if (!transferResult.success) {
+          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "request_payout", params: { agent_id: agent.id, correlation_id: correlationId, status: "transfer_failed" }, result_count: 0, session_id: getSessionId?.() });
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: `x402 transfer failed: ${transferResult.error}. Balance unchanged. Correlation ID: ${correlationId}` }],
+          };
+        }
+
+        // Record payout
+        const entry = recordPayout({
+          agent_id: agent.id,
+          x402_address: agent.x402_address,
+          tx_hash: transferResult.tx_hash,
+          correlation_id: correlationId,
+          metadata: { chain: transferResult.chain, token: transferResult.token },
+        });
+
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "request_payout", params: { agent_id: agent.id, correlation_id: correlationId, amount: confirmedBalance, status: "success" }, result_count: 1, session_id: getSessionId?.() });
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify({
+            success: true,
+            payout: {
+              ledger_entry_id: entry.id,
+              amount: confirmedBalance,
+              x402_address: agent.x402_address,
+              tx_hash: transferResult.tx_hash ?? null,
+              chain: transferResult.chain ?? null,
+              correlation_id: correlationId,
+            },
+          }, null, 2) }],
         };
       } catch (err: any) {
         return {
