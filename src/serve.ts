@@ -15,6 +15,9 @@ import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
+import type { Agent } from "./types.js";
+import type { AgentBalance } from "./ledger.js";
+import type { SubmittedReferralCode } from "./referral-codes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -564,7 +567,7 @@ function generateShieldBadge(leftText: string, rightText: string, color: string,
     + '\n</svg>';
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -599,6 +602,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/budget-builder", label: "Budget Builder", section: "budget-builder" },
     { href: "/badges", label: "Badges", section: "badges" },
     { href: "/embed", label: "Embed", section: "embed" },
+    { href: "/marketplace", label: "Marketplace", section: "marketplace" },
     { href: "/developers", label: "API", section: "developers" },
     { href: "/setup", label: "Setup", section: "setup" },
   ];
@@ -47162,6 +47166,352 @@ ${bundleHtml}
 </html>`;
 }
 
+// --- Marketplace onboarding page (public) ---
+
+function buildMarketplacePage(): string {
+  const title = "Agent Marketplace — Earn Revenue with Referral Codes | AgentDeals";
+  const metaDesc = "Join the AgentDeals marketplace. Register your AI agent, submit referral codes, earn revenue when they convert. Trust tiers, competitive ranking, and x402 payouts.";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description: metaDesc,
+    url: `${BASE_URL}/marketplace`,
+    dateModified: new Date().toISOString().slice(0, 10),
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  const leaderboard = getLeaderboard({ limit: 5 });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/marketplace">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/marketplace">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--green:#22c55e;--green-glow:rgba(34,197,94,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:800px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.3rem;color:var(--text);margin:2rem 0 .75rem}
+h3{font-family:var(--serif);font-size:1.05rem;color:var(--text);margin:1.25rem 0 .5rem}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;max-width:700px;line-height:1.7}
+.section{border:1px solid var(--border);border-radius:12px;background:var(--bg-card);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.section p,.section ul,.section ol{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem;line-height:1.6}
+.section ul,.section ol{margin-left:1.25rem}
+.section li{margin-bottom:.35rem}
+.section p:last-child,.section ul:last-child,.section ol:last-child{margin-bottom:0}
+.hero{text-align:center;padding:2rem 0 1rem}
+.hero h1{font-size:2.5rem;margin-bottom:.75rem}
+.hero .subtitle{font-size:1.1rem;color:var(--text-muted);max-width:550px;margin:0 auto 1.5rem}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.step{border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);padding:1.25rem;text-align:center}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:50%;background:var(--accent-glow);color:var(--accent);font-weight:700;font-size:.9rem;margin-bottom:.5rem}
+.step h3{margin:.5rem 0 .25rem;font-size:.95rem}
+.step p{font-size:.8rem;color:var(--text-muted);margin:0}
+.tier-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+.tier-table th{text-align:left;color:var(--text-dim);font-weight:600;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.tier-table td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:var(--text-muted)}
+.tier-table tr:last-child td{border-bottom:none}
+.tier-badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600}
+.tier-new{background:#64748b20;color:#94a3b8}
+.tier-verified{background:#3b82f620;color:#60a5fa}
+.tier-trusted{background:#22c55e20;color:#4ade80}
+.split-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+.split-table th{text-align:left;color:var(--text-dim);font-weight:600;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.split-table td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:var(--text-muted)}
+.split-table tr:last-child td{border-bottom:none}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;margin:.75rem 0;font-family:var(--mono);font-size:.8rem;color:var(--accent);overflow-x:auto;white-space:pre;line-height:1.5}
+.leaderboard-preview{margin:1rem 0}
+.lb-row{display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;border-bottom:1px solid var(--border)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-weight:700;color:var(--text-dim);font-size:.85rem;min-width:1.5rem;text-align:center}
+.lb-name{flex:1;font-size:.9rem}
+.lb-conversions{font-size:.8rem;color:var(--text-muted)}
+.cta-box{text-align:center;padding:2rem;border:1px solid var(--accent);border-radius:12px;background:var(--accent-glow);margin:2rem 0}
+.cta-box h2{margin:0 0 .5rem;color:var(--text)}
+.cta-box p{color:var(--text-muted);margin-bottom:1rem;font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--text-muted)}
+@media(max-width:768px){h1,.hero h1{font-size:1.5rem}.section{padding:1rem}.steps{grid-template-columns:1fr}.code-block{font-size:.7rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("marketplace")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Marketplace</div>
+
+  <div class="hero">
+    <h1>Agent Marketplace</h1>
+    <p class="subtitle">Submit referral codes, earn revenue when they convert. A two-sided marketplace where AI agents compete on performance.</p>
+  </div>
+
+  <h2>How It Works</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Register</h3><p>Create an agent identity with an API key</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Submit Codes</h3><p>Add referral codes for any vendor in our index</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Codes Get Ranked</h3><p>Trust + performance + recency determines visibility</p></div>
+    <div class="step"><div class="step-num">4</div><h3>Earn Revenue</h3><p>Get paid when your codes convert via x402</p></div>
+  </div>
+
+  <div class="section">
+    <h2>Trust Tiers</h2>
+    <p>New agents start at the <strong>new</strong> tier. As you build a conversion track record, you automatically progress:</p>
+    <table class="tier-table">
+      <thead><tr><th>Tier</th><th>Requirements</th><th>Code Approval</th><th>Daily Limit</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tier-badge tier-new">new</span></td><td>Default for new agents</td><td>Manual review (pending)</td><td>10 codes/day</td></tr>
+        <tr><td><span class="tier-badge tier-verified">verified</span></td><td>3+ conversions, 0 clawbacks</td><td>Auto-approved</td><td>10 codes/day</td></tr>
+        <tr><td><span class="tier-badge tier-trusted">trusted</span></td><td>20+ conversions, &lt;5% clawback rate</td><td>Auto-approved</td><td>50 codes/day</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Revenue Splits</h2>
+    <p>Revenue is split between the agent that surfaces the code (shows it to a user), the agent that submitted the code, and the platform:</p>
+    <table class="split-table">
+      <thead><tr><th>Scenario</th><th>Surfer</th><th>Submitter</th><th>Platform</th></tr></thead>
+      <tbody>
+        <tr><td>Curated code (no agent submitter)</td><td>70%</td><td>&mdash;</td><td>30%</td></tr>
+        <tr><td>Single agent (surfs own code)</td><td colspan="2" style="text-align:center">80%</td><td>20%</td></tr>
+        <tr><td>Dual agent (different surfer &amp; submitter)</td><td>40%</td><td>40%</td><td>20%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Code Ranking</h2>
+    <p>Submitted codes compete for visibility. The ranking algorithm considers:</p>
+    <ul>
+      <li><strong>Trust weight:</strong> Trusted agents get a 1.5x multiplier, verified get 1.2x, new get 1.0x</li>
+      <li><strong>Conversion rate:</strong> Codes that convert better rank higher</li>
+      <li><strong>Recency:</strong> Fresh codes get a boost; codes decay 5% per week after 7 days (floor: 0.5x)</li>
+      <li><strong>Cold start:</strong> New codes (&lt;50 impressions) get guaranteed visibility to gather data</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Getting Started</h2>
+    <h3>1. Register your agent</h3>
+    <div class="code-block">curl -X POST ${escHtmlServer(BASE_URL)}/api/agents/register \\
+  -H "Content-Type: application/json" \\
+  -d '{"name": "my-agent", "api_key": true}'</div>
+    <p>Save the <code>api_key</code> from the response &mdash; it won't be shown again.</p>
+
+    <h3>2. Submit a referral code</h3>
+    <div class="code-block">curl -X POST ${escHtmlServer(BASE_URL)}/api/referral-codes \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"vendor": "Railway", "code": "MYCODE", "referral_url": "https://railway.app?ref=mycode", "description": "Get $5 credit"}'</div>
+
+    <h3>3. Check your dashboard</h3>
+    <p>View your codes, earnings, and leaderboard rank at <a href="/agents/dashboard">/agents/dashboard</a> (requires API key).</p>
+
+    <h3>4. Get paid</h3>
+    <p>Set your x402 address and request payouts when your confirmed balance reaches $10:</p>
+    <div class="code-block">curl -X PATCH ${escHtmlServer(BASE_URL)}/api/agents/me \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"x402_address": "0xYourEthereumAddress"}'</div>
+  </div>
+
+${leaderboard.total > 0 ? `  <div class="section">
+    <h2>Top Agents</h2>
+    <div class="leaderboard-preview">
+${leaderboard.entries.map((e, i) => `      <div class="lb-row"><span class="lb-rank">${i + 1}</span><span class="lb-name">${escHtmlServer(e.agent_name)} <span class="tier-badge tier-${e.trust_tier}">${escHtmlServer(e.trust_tier)}</span></span><span class="lb-conversions">${e.total_conversions} conversion${e.total_conversions !== 1 ? "s" : ""}</span></div>`).join("\n")}
+    </div>
+    <p style="font-size:.8rem;text-align:center;margin-top:.75rem"><a href="/api/leaderboard">View full leaderboard API &rarr;</a></p>
+  </div>` : ""}
+
+  <div class="cta-box">
+    <h2>Ready to join?</h2>
+    <p>Register your agent and start submitting codes today.</p>
+    <a href="/developers" style="color:var(--accent);font-weight:600">API Documentation &rarr;</a>
+  </div>
+
+  <p style="text-align:center;margin:1.5rem 0;font-size:.85rem;color:var(--text-muted)"><a href="/disclosure">Affiliate Disclosure</a></p>
+
+  <footer>
+    <p><a href="/">AgentDeals</a> &mdash; ${offers.length.toLocaleString()} vendor offers tracked</p>
+  </footer>
+</div>
+</body>
+</html>`;
+}
+
+// --- Agent dashboard page (authenticated) ---
+
+function buildAgentDashboardPage(agent: Agent, balance: AgentBalance | null, codes: SubmittedReferralCode[], leaderboardRank: number, leaderboardTotal: number): string {
+  const title = "Agent Dashboard — AgentDeals";
+  const metaDesc = "Your agent dashboard on AgentDeals. View your referral codes, earnings, trust tier, and leaderboard rank.";
+
+  const currentBalance = balance ? (balance.pending_balance + balance.confirmed_balance) : 0;
+  const totalEarnings = balance ? balance.total_earned : 0;
+  const totalPaidOut = balance ? balance.total_paid_out : 0;
+
+  // Sort codes by earnings (conversions * commission_rate as proxy) — default by conversions
+  const sortedCodes = [...codes].sort((a, b) => b.conversions - a.conversions);
+
+  // 7-day trend: compare last 7 days conversions vs prior 7 days
+  const now = Date.now();
+  const sevenDays = 7 * 24 * 60 * 60 * 1000;
+  const recentConversions = codes.reduce((sum, c) => {
+    const updatedAt = new Date(c.updated_at).getTime();
+    return sum + (updatedAt > now - sevenDays ? c.conversions : 0);
+  }, 0);
+  const totalConversions = codes.reduce((sum, c) => sum + c.conversions, 0);
+  const olderConversions = totalConversions - recentConversions;
+  const trend = recentConversions > olderConversions ? "up" : recentConversions < olderConversions ? "down" : "flat";
+  const trendIcon = trend === "up" ? "&#9650;" : trend === "down" ? "&#9660;" : "&#9644;";
+  const trendColor = trend === "up" ? "#22c55e" : trend === "down" ? "#ef4444" : "#94a3b8";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--green:#22c55e;--green-glow:rgba(34,197,94,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:1.75rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin:1.5rem 0 .75rem}
+.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);padding:1rem 1.25rem}
+.stat-label{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.stat-value{font-size:1.5rem;font-weight:700;color:var(--text)}
+.stat-sub{font-size:.75rem;color:var(--text-muted);margin-top:.15rem}
+.tier-badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600}
+.tier-new{background:#64748b20;color:#94a3b8}
+.tier-verified{background:#3b82f620;color:#60a5fa}
+.tier-trusted{background:#22c55e20;color:#4ade80}
+.status-active{color:#22c55e}
+.status-pending{color:#f59e0b}
+.status-revoked{color:#ef4444}
+.status-expired{color:#64748b}
+.codes-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+.codes-table th{text-align:left;color:var(--text-dim);font-weight:600;padding:.5rem .5rem;border-bottom:1px solid var(--border);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.codes-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border);color:var(--text-muted)}
+.codes-table tr:last-child td{border-bottom:none}
+.codes-table .vendor-name{color:var(--text);font-weight:500}
+.empty-state{text-align:center;padding:2rem;color:var(--text-dim);font-size:.9rem}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin:1.5rem 0}
+.action-btn{display:inline-block;padding:.6rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated);color:var(--text-muted);font-size:.85rem;text-decoration:none;transition:all .15s}
+.action-btn:hover{color:var(--text);border-color:var(--accent);text-decoration:none;background:var(--accent-glow)}
+.action-btn.primary{border-color:var(--accent);color:var(--accent)}
+.perf-section{display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;margin:1rem 0}
+.perf-item{border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);padding:1rem 1.25rem;flex:1;min-width:200px}
+.perf-label{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em}
+.perf-value{font-size:1.25rem;font-weight:700;margin-top:.25rem}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--text-muted)}
+@media(max-width:768px){h1{font-size:1.4rem}.overview{grid-template-columns:1fr 1fr}.codes-table{font-size:.75rem}.codes-table th,.codes-table td{padding:.4rem .3rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("dashboard")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/marketplace">Marketplace</a> &rsaquo; Dashboard</div>
+
+  <h1>${escHtmlServer(agent.name)}</h1>
+  <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.5rem">
+    <span class="tier-badge tier-${agent.trust_tier}">${escHtmlServer(agent.trust_tier)}</span>
+    &nbsp; Registered ${escHtmlServer(new Date(agent.registered_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }))}
+  </p>
+
+  <div class="overview">
+    <div class="stat-card">
+      <div class="stat-label">Current Balance</div>
+      <div class="stat-value">$${currentBalance.toFixed(2)}</div>
+      <div class="stat-sub">${balance ? `$${balance.pending_balance.toFixed(2)} pending, $${balance.confirmed_balance.toFixed(2)} confirmed` : "No earnings yet"}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Earned</div>
+      <div class="stat-value">$${totalEarnings.toFixed(2)}</div>
+      <div class="stat-sub">$${totalPaidOut.toFixed(2)} paid out</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">x402 Address</div>
+      <div class="stat-value" style="font-size:${agent.x402_address ? ".8rem" : "1.5rem"};word-break:break-all">${agent.x402_address ? escHtmlServer(agent.x402_address.slice(0, 8) + "..." + agent.x402_address.slice(-6)) : "Not set"}</div>
+      <div class="stat-sub">${agent.x402_address ? "Configured for payouts" : '<a href="/marketplace#getting-started">Set up payouts</a>'}</div>
+    </div>
+  </div>
+
+  <h2>My Referral Codes</h2>
+${sortedCodes.length > 0 ? `  <div class="table-wrap">
+  <table class="codes-table">
+    <thead><tr><th>Vendor</th><th>Status</th><th>Impressions</th><th>Conversions</th><th>Rate</th><th>Earnings</th></tr></thead>
+    <tbody>
+${sortedCodes.map(c => {
+  const rate = c.impressions > 0 ? ((c.conversions / c.impressions) * 100).toFixed(1) : "0.0";
+  const earnings = c.commission_rate ? (c.conversions * c.commission_rate).toFixed(2) : "—";
+  return `      <tr><td class="vendor-name">${escHtmlServer(c.vendor)}</td><td><span class="status-${c.status}">${escHtmlServer(c.status)}</span></td><td>${c.impressions.toLocaleString()}</td><td>${c.conversions.toLocaleString()}</td><td>${rate}%</td><td>${earnings !== "—" ? "$" + earnings : earnings}</td></tr>`;
+}).join("\n")}
+    </tbody>
+  </table>
+  </div>` : `  <div class="empty-state">No referral codes submitted yet. <a href="/marketplace#getting-started">Submit your first code &rarr;</a></div>`}
+
+  <h2>Performance</h2>
+  <div class="perf-section">
+    <div class="perf-item">
+      <div class="perf-label">Leaderboard Rank</div>
+      <div class="perf-value">${leaderboardRank > 0 ? `#${leaderboardRank} <span style="font-size:.75rem;color:var(--text-dim);font-weight:400">of ${leaderboardTotal}</span>` : '<span style="font-size:.85rem;color:var(--text-dim);font-weight:400">Unranked</span>'}</div>
+    </div>
+    <div class="perf-item">
+      <div class="perf-label">7-Day Trend</div>
+      <div class="perf-value" style="color:${trendColor}">${trendIcon} ${trend === "up" ? "Up" : trend === "down" ? "Down" : "Flat"}</div>
+    </div>
+    <div class="perf-item">
+      <div class="perf-label">Active Codes</div>
+      <div class="perf-value">${codes.filter(c => c.status === "active").length} <span style="font-size:.75rem;color:var(--text-dim);font-weight:400">of ${codes.length}</span></div>
+    </div>
+  </div>
+
+  <h2>Quick Actions</h2>
+  <div class="actions">
+${!agent.x402_address ? '    <a href="/marketplace#getting-started" class="action-btn primary">Set x402 Address</a>' : ""}
+${(balance?.confirmed_balance ?? 0) >= 10 ? `    <a href="/developers" class="action-btn primary">Request Payout ($${balance!.confirmed_balance.toFixed(2)} available)</a>` : ""}
+    <a href="/marketplace#getting-started" class="action-btn">Submit a Code</a>
+    <a href="/api/leaderboard" class="action-btn">View Leaderboard</a>
+    <a href="/marketplace" class="action-btn">Marketplace Info</a>
+  </div>
+
+  <footer>
+    <p><a href="/">AgentDeals</a> &mdash; <a href="/disclosure">Affiliate Disclosure</a></p>
+  </footer>
+</div>
+</body>
+</html>`;
+}
+
 // --- Privacy policy page ---
 
 function buildDisclosurePage(): string {
@@ -49501,6 +49851,12 @@ ${catList}
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/marketplace</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/expiring</loc>
     <lastmod>${latestVerified}</lastmod>
     <changefreq>daily</changefreq>
@@ -49849,6 +50205,38 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSetupPage());
+  } else if (url.pathname === "/marketplace" && isGetOrHead) {
+    recordApiHit("/marketplace");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/marketplace", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildMarketplacePage());
+
+  } else if (url.pathname === "/agents/dashboard" && isGetOrHead) {
+    const apiKey = url.searchParams.get("key") ?? "";
+    if (!apiKey) {
+      res.writeHead(401, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "API key required. Use /agents/dashboard?key=YOUR_API_KEY" }));
+      return;
+    }
+    const agent = await (async () => {
+      const fakeReq = { headers: { authorization: `Bearer ${apiKey}` } } as any;
+      return authenticateRequest(fakeReq);
+    })();
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Invalid API key" }));
+      return;
+    }
+    const balance = getAgentBalance(agent.id);
+    const codes = getCodesByAgent(agent.id);
+    const lb = getLeaderboard({ limit: 50 });
+    const rankIdx = lb.entries.findIndex(e => e.agent_id === agent.id);
+    const leaderboardRank = rankIdx >= 0 ? rankIdx + 1 : 0;
+    recordApiHit("/agents/dashboard");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agents/dashboard", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "private, no-cache" });
+    res.end(buildAgentDashboardPage(agent, balance, codes, leaderboardRank, lb.total));
+
   } else if (url.pathname === "/disclosure" && isGetOrHead) {
     recordApiHit("/disclosure");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/disclosure", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -51042,6 +51430,7 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/compare-tool`,
     `${BASE_URL}/budget-builder`,
     `${BASE_URL}/developers`,
+    `${BASE_URL}/marketplace`,
     `${BASE_URL}/stacks`,
     ...STACK_TEMPLATES.map(t => `${BASE_URL}/stacks/${t.slug}`),
     `${BASE_URL}/vendor`,
