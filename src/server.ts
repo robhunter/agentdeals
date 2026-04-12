@@ -1,8 +1,9 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap } from "./data.js";
+import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, getVendorReferral } from "./data.js";
 import { recordToolCall, logRequest } from "./stats.js";
-import { registerAgent, validateVestauthUrl } from "./agents.js";
+import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey } from "./agents.js";
+import { logReferralRequest } from "./referral-requests.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
@@ -932,6 +933,73 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         }
 
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "register_agent", params: { name }, result_count: 1, session_id: getSessionId?.() });
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(response, null, 2) }],
+        };
+      } catch (err: any) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: err.message }],
+        };
+      }
+    }
+  );
+
+  // --- Tool 6: get_referral_code ---
+
+  server.registerTool(
+    "get_referral_code",
+    {
+      description:
+        "Get the referral code and URL for a specific vendor. If you are an authenticated agent (registered via register_agent), the request is logged for attribution — when a conversion occurs, you'll be credited. Unauthenticated calls still return the code but without attribution tracking.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        vendor: z.string().describe("Vendor name to get the referral code for (e.g. 'Railway')"),
+        api_key: z.string().optional().describe("Your API key from register_agent, for attribution tracking. Optional — unauthenticated calls still return the code."),
+      },
+    },
+    async ({ vendor, api_key }) => {
+      try {
+        recordToolCall("get_referral_code");
+
+        const referralData = getVendorReferral(vendor);
+        if (!referralData) {
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: `No referral found for vendor "${vendor}"` }],
+          };
+        }
+
+        // If API key provided, authenticate and log attribution
+        let attributed = false;
+        if (api_key) {
+          const hash = hashApiKey(api_key);
+          const agent = getAgentByApiKeyHash(hash);
+          if (agent) {
+            logReferralRequest({
+              agent_id: agent.id,
+              vendor: referralData.vendor,
+              referral_code: referralData.referral.code ?? "",
+              referral_url: referralData.referral.url,
+            });
+            attributed = true;
+          }
+        }
+
+        const response = {
+          vendor: referralData.vendor,
+          referral_code: referralData.referral.code ?? null,
+          referral_url: referralData.referral.url,
+          referee_value: referralData.referral.referee_value,
+          type: referralData.referral.type,
+          attributed,
+        };
+
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_referral_code", params: { vendor, attributed }, result_count: 1, session_id: getSessionId?.() });
 
         return {
           content: [{ type: "text" as const, text: JSON.stringify(response, null, 2) }],
