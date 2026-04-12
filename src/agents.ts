@@ -92,6 +92,7 @@ export function registerAgent(opts: {
     api_key_hash: apiKeyHash,
     vestauth_public_key_url: opts.vestauth_public_key_url ?? null,
     x402_address: null,
+    trust_tier: "new",
     status: "active",
     registered_at: new Date().toISOString(),
   };
@@ -208,6 +209,20 @@ export function updateAgentX402Address(agentId: string, x402Address: string | nu
     throw new Error(`Agent not found: ${agentId}`);
   }
   agent.x402_address = x402Address;
+  saveAgents(agents);
+  return agent;
+}
+
+/**
+ * Update an agent's trust tier. Called after conversion confirmation or clawback events.
+ */
+export function updateAgentTrustTier(agentId: string, newTier: "new" | "verified" | "trusted"): Agent {
+  const agents = loadAgents();
+  const agent = agents.find(a => a.id === agentId);
+  if (!agent) {
+    throw new Error(`Agent not found: ${agentId}`);
+  }
+  agent.trust_tier = newTier;
   saveAgents(agents);
   return agent;
 }
