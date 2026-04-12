@@ -325,6 +325,70 @@ export function clawbackEntry(entryId: string, reason?: string): boolean {
   return true;
 }
 
+const MINIMUM_PAYOUT_AMOUNT = 10;
+
+/**
+ * Record a payout. Deducts from confirmed_balance, increments total_paid_out,
+ * creates a "payout" event in the ledger. Returns the ledger entry.
+ * Throws if balance insufficient or below minimum.
+ */
+export function recordPayout(opts: {
+  agent_id: string;
+  x402_address: string;
+  tx_hash?: string;
+  correlation_id: string;
+  metadata?: Record<string, unknown>;
+}): LedgerEntry {
+  const balances = loadBalances();
+  const balance = balances.find(b => b.agent_id === opts.agent_id);
+  const confirmedBalance = balance ? balance.confirmed_balance : 0;
+
+  if (confirmedBalance < MINIMUM_PAYOUT_AMOUNT) {
+    throw new Error(`Insufficient confirmed balance: $${confirmedBalance.toFixed(2)}. Minimum payout is $${MINIMUM_PAYOUT_AMOUNT}.`);
+  }
+
+  const payoutAmount = confirmedBalance;
+
+  const entry: LedgerEntry = {
+    id: generateLedgerId(),
+    agent_id: opts.agent_id,
+    vendor: "AgentDeals",
+    referral_code: "",
+    event_type: "payout",
+    commission_amount: payoutAmount,
+    agent_share: payoutAmount,
+    status: "paid_out",
+    conversion_date: new Date().toISOString().split("T")[0],
+    clawback_window_ends: new Date().toISOString().split("T")[0],
+    confirmed_at: null,
+    paid_out_at: new Date().toISOString(),
+    created_at: new Date().toISOString(),
+    metadata: {
+      x402_address: opts.x402_address,
+      tx_hash: opts.tx_hash ?? null,
+      correlation_id: opts.correlation_id,
+      ...opts.metadata,
+    },
+  };
+
+  // Append to ledger (append-only)
+  const ledger = loadLedger();
+  ledger.push(entry);
+  saveLedger(ledger);
+
+  // Update balance
+  if (balance) {
+    balance.confirmed_balance = 0;
+    balance.total_paid_out = roundCents(balance.total_paid_out + payoutAmount);
+    balance.updated_at = new Date().toISOString();
+    saveBalances(balances);
+  }
+
+  return entry;
+}
+
+export { MINIMUM_PAYOUT_AMOUNT };
+
 /**
  * Get an agent's balance summary.
  */

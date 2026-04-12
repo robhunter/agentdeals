@@ -198,6 +198,20 @@ async function verifyVestauthSignature(
  * Validate a vestauth public key URL by fetching it.
  * Returns true if the URL is reachable and returns valid JSON with a public_key field.
  */
+/**
+ * Update an agent's x402 address. Validates format before persisting.
+ */
+export function updateAgentX402Address(agentId: string, x402Address: string | null): Agent {
+  const agents = loadAgents();
+  const agent = agents.find(a => a.id === agentId);
+  if (!agent) {
+    throw new Error(`Agent not found: ${agentId}`);
+  }
+  agent.x402_address = x402Address;
+  saveAgents(agents);
+  return agent;
+}
+
 export async function validateVestauthUrl(url: string): Promise<{ valid: boolean; error?: string }> {
   try {
     new URL(url);
