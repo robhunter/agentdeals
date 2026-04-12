@@ -5,12 +5,13 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFreshnessMetrics, getStabilityMap } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey } from "./agents.js";
+import { logReferralRequest } from "./referral-requests.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -50491,6 +50492,46 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       registered_at: agent.registered_at,
       vestauth_public_key_url: agent.vestauth_public_key_url,
       x402_address: agent.x402_address,
+    }));
+
+  // --- Referral Attribution API ---
+
+  } else if (url.pathname.startsWith("/api/referral/") && isGetOrHead) {
+    const vendor = decodeURIComponent(url.pathname.slice("/api/referral/".length));
+    if (!vendor) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Vendor name is required: GET /api/referral/:vendor" }));
+      return;
+    }
+
+    const referralData = getVendorReferral(vendor);
+    if (!referralData) {
+      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: `No referral found for vendor "${vendor}"` }));
+      return;
+    }
+
+    // If authenticated, log the attribution request
+    const agent = await authenticateRequest(req as any);
+    if (agent) {
+      logReferralRequest({
+        agent_id: agent.id,
+        vendor: referralData.vendor,
+        referral_code: referralData.referral.code ?? "",
+        referral_url: referralData.referral.url,
+      });
+    }
+
+    recordApiHit("/api/referral/:vendor");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral/${vendor}`, params: { authenticated: !!agent }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({
+      vendor: referralData.vendor,
+      referral_code: referralData.referral.code ?? null,
+      referral_url: referralData.referral.url,
+      referee_value: referralData.referral.referee_value,
+      type: referralData.referral.type,
+      attributed: !!agent,
     }));
 
   } else {

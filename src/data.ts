@@ -1053,3 +1053,16 @@ export function stripReferrerValue<T extends { referral?: Referral }>(offer: T):
   const { referrer_value, ...publicReferral } = offer.referral;
   return { ...offer, referral: publicReferral as Referral };
 }
+
+/**
+ * Get the referral data for a specific vendor (with referrer_value stripped).
+ * Returns null if the vendor has no referral or vendor not found.
+ */
+export function getVendorReferral(vendorName: string): { vendor: string; referral: Omit<Referral, "referrer_value"> } | null {
+  const offers = loadOffers();
+  const lowerName = vendorName.toLowerCase();
+  const match = offers.find(o => o.vendor.toLowerCase() === lowerName);
+  if (!match || !match.referral) return null;
+  const { referrer_value, ...publicReferral } = match.referral;
+  return { vendor: match.vendor, referral: publicReferral };
+}
