@@ -108,8 +108,8 @@
       ],
       "verifiedDate": "2026-04-02",
       "referral": {
-        "code": "PLACEHOLDER",
-        "url": "https://railway.app?referralCode=PLACEHOLDER",
+        "code": "7RZL9q",
+        "url": "https://railway.com?referralCode=7RZL9q",
         "referee_value": "$20 in Railway credits",
         "referrer_value": "15% commission on first 12 months",
         "type": "dual-sided",
@@ -11484,7 +11484,16 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-03-20",
+      "referral": {
+        "url": "https://pr.tn/ref/60QXGJSB",
+        "type": "referral_link",
+        "source": "curated",
+        "submitted_by": null,
+        "verified_date": "2026-04-12",
+        "restrictions": [],
+        "phase1_eligible": true
+      }
     },
     {
       "vendor": "Sendpulse",
