@@ -4,8 +4,8 @@ import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, ge
 import { recordToolCall, logRequest } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
-import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT } from "./ledger.js";
-import { submitReferralCode, getCodesByAgent, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getActiveCodesForVendor } from "./referral-codes.js";
+import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
+import { submitReferralCode, getCodesByAgent, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -121,9 +121,9 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
           };
         }
 
-        // Append agent-submitted referral codes for each vendor
+        // Append ranked agent-submitted referral codes for each vendor
         const resultsWithAgentCodes = results.map(offer => {
-          const agentCodes = getActiveCodesForVendor(offer.vendor);
+          const agentCodes = getRankedCodesForVendor(offer.vendor);
           if (agentCodes.length === 0) return offer;
           return {
             ...offer,
@@ -132,6 +132,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
               referral_url: c.referral_url,
               description: c.description,
               source: c.source,
+              score: Math.round(calculateCodeScore(c) * 1000) / 1000,
             })),
           };
         });
@@ -1287,6 +1288,46 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
             total_codes: codes.length,
             active_codes: codes.filter(c => c.status === "active").length,
             pending_codes: codes.filter(c => c.status === "pending").length,
+          }, null, 2) }],
+        };
+      } catch (err: any) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: err.message }],
+        };
+      }
+    }
+  );
+
+  // --- Tool 11: leaderboard ---
+
+  server.registerTool(
+    "leaderboard",
+    {
+      description:
+        "Get the agent leaderboard showing top-performing agents ranked by total conversions. Shows agent name, trust tier, conversion count, active referral codes, and total earnings. Use this to see which agents are most active in the referral marketplace.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        limit: z.number().min(1).max(50).optional().describe("Number of entries to return (default 10, max 50)"),
+        offset: z.number().min(0).optional().describe("Offset for pagination (default 0)"),
+      },
+    },
+    async ({ limit, offset }) => {
+      try {
+        recordToolCall("leaderboard");
+        const result = getLeaderboard({ limit, offset });
+
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "leaderboard", params: { limit, offset }, result_count: result.entries.length, session_id: getSessionId?.() });
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify({
+            leaderboard: result.entries,
+            total: result.total,
+            limit: limit ?? 10,
+            offset: offset ?? 0,
           }, null, 2) }],
         };
       } catch (err: any) {
