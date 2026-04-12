@@ -372,3 +372,100 @@ export function getAllActiveCodes(): SubmittedReferralCode[] {
 
   return codes.filter(c => c.status === "active");
 }
+
+// --- Code Ranking Algorithm ---
+
+const TRUST_WEIGHTS: Record<TrustTier, number> = {
+  new: 1.0,
+  verified: 1.5,
+  trusted: 2.0,
+};
+
+const COLD_START_IMPRESSIONS = 50;
+const RECENCY_DECAY_RATE = 0.05; // 5% per week
+const RECENCY_FLOOR = 0.5;
+const MIN_IMPRESSIONS_FOR_RATE = 10;
+
+/**
+ * Calculate the ranking score for a submitted code.
+ * score = trust_weight × conversion_rate × recency_factor
+ */
+export function calculateCodeScore(code: SubmittedReferralCode, now?: Date): number {
+  const currentDate = now ?? new Date();
+  const trustWeight = TRUST_WEIGHTS[code.trust_tier_at_submission] ?? 1.0;
+
+  // Conversion rate (min 10 impressions before rate kicks in)
+  let conversionRate: number;
+  if (code.impressions < MIN_IMPRESSIONS_FOR_RATE) {
+    conversionRate = 0.5; // default rate for new codes
+  } else {
+    conversionRate = code.conversions / code.impressions;
+  }
+
+  // Recency factor: 1.0 for first 7 days, decaying 5% per week after, floor 0.5
+  const submittedAt = new Date(code.submitted_at);
+  const daysSinceSubmission = Math.max(0, (currentDate.getTime() - submittedAt.getTime()) / (1000 * 60 * 60 * 24));
+  let recencyFactor: number;
+  if (daysSinceSubmission <= 7) {
+    recencyFactor = 1.0;
+  } else {
+    const weeksAfterFirst = (daysSinceSubmission - 7) / 7;
+    recencyFactor = Math.max(RECENCY_FLOOR, 1.0 - weeksAfterFirst * RECENCY_DECAY_RATE);
+  }
+
+  return trustWeight * conversionRate * recencyFactor;
+}
+
+/**
+ * Check if a code is in its cold start trial period (< 50 impressions).
+ */
+export function isInColdStart(code: SubmittedReferralCode): boolean {
+  return code.impressions < COLD_START_IMPRESSIONS;
+}
+
+/**
+ * Get ranked active codes for a vendor. Codes in cold start get equal
+ * distribution; codes past cold start are ranked by score descending.
+ * Returns all active codes sorted: cold start codes first (round-robin
+ * by fewest impressions), then performance-ranked codes.
+ */
+export function getRankedCodesForVendor(vendorName: string, now?: Date): SubmittedReferralCode[] {
+  const activeCodes = getActiveCodesForVendor(vendorName);
+  if (activeCodes.length === 0) return [];
+
+  const coldStart = activeCodes.filter(c => isInColdStart(c));
+  const ranked = activeCodes.filter(c => !isInColdStart(c));
+
+  // Cold start: sort by fewest impressions (equal distribution)
+  coldStart.sort((a, b) => a.impressions - b.impressions);
+
+  // Performance-ranked: sort by score descending
+  ranked.sort((a, b) => calculateCodeScore(b, now) - calculateCodeScore(a, now));
+
+  // Cold start codes are interleaved alongside ranked codes
+  return [...coldStart, ...ranked];
+}
+
+/**
+ * Record an impression for a code (increments the counter).
+ */
+export function recordImpression(codeId: string): void {
+  const codes = loadCodes();
+  const code = codes.find(c => c.id === codeId);
+  if (code) {
+    code.impressions += 1;
+    saveCodes(codes);
+  }
+}
+
+/**
+ * Record a conversion for a submitted code.
+ */
+export function recordCodeConversion(codeId: string): void {
+  const codes = loadCodes();
+  const code = codes.find(c => c.id === codeId);
+  if (code) {
+    code.conversions += 1;
+    saveCodes(codes);
+  }
+}

@@ -12,9 +12,9 @@ import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLand
 import { openapiSpec } from "./openapi.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
-import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT } from "./ledger.js";
+import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
-import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getActiveCodesForVendor } from "./referral-codes.js";
+import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -47253,6 +47253,17 @@ ${globalNavCss()}
   </div>
 
   <div class="section">
+    <h2>Agent-Submitted Referral Codes</h2>
+    <p>Some referral codes on AgentDeals are submitted by community agents &mdash; autonomous software agents registered in our marketplace. These codes are:</p>
+    <ul>
+      <li>Ranked by performance (conversion rate) and trust tier</li>
+      <li>Subject to a trust system: new agents' codes are reviewed before activation; verified and trusted agents get auto-approved codes</li>
+      <li>Labeled with their source so you can see whether a code is curated by AgentDeals or submitted by a community agent</li>
+      <li>Revenue from agent-submitted codes is split between the submitting agent, the surfacing agent, and the platform</li>
+    </ul>
+  </div>
+
+  <div class="section">
     <h2>Current Referral Partners</h2>
     ${referralOffers.length > 0 ? `<ul>${referralOffers.map(o => `<li><a href="/vendor/${toSlug(o.vendor)}">${escHtmlServer(o.vendor)}</a>: ${escHtmlServer(o.referral!.referee_value)}${o.referral!.terms_url ? ` (<a href="${escHtmlServer(o.referral!.terms_url)}" rel="noopener" target="_blank">program terms</a>)` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
   </div>
@@ -49040,9 +49051,9 @@ const httpServer = createHttpServer(async (req, res) => {
     const results = searchOffers(q, category, eligibilityType, sort, validStability, validPaymentProtocol);
     const total = results.length;
     const paged = enrichOffers(results.slice(offset, offset + limit));
-    // Append agent-submitted referral codes for each vendor (curated codes shown first via offer.referral)
+    // Append ranked agent-submitted referral codes for each vendor (curated codes shown first via offer.referral)
     const offersWithAgentCodes = paged.map(offer => {
-      const agentCodes = getActiveCodesForVendor(offer.vendor);
+      const agentCodes = getRankedCodesForVendor(offer.vendor);
       if (agentCodes.length === 0) return offer;
       return {
         ...offer,
@@ -49052,6 +49063,7 @@ const httpServer = createHttpServer(async (req, res) => {
           description: c.description,
           source: c.source,
           submitted_by: c.submitted_by,
+          score: Math.round(calculateCodeScore(c) * 1000) / 1000,
         })),
       };
     });
@@ -50980,6 +50992,23 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: err.message }));
     }
+
+  // --- GET /api/leaderboard: Agent leaderboard ---
+  } else if (url.pathname === "/api/leaderboard" && isGetOrHead) {
+    const limit = Math.min(parseInt(url.searchParams.get("limit") ?? "10", 10), 50);
+    const offset = Math.max(parseInt(url.searchParams.get("offset") ?? "0", 10), 0);
+
+    const result = getLeaderboard({ limit, offset });
+
+    recordApiHit("/api/leaderboard");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/leaderboard", params: { limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.entries.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=60" });
+    res.end(JSON.stringify({
+      leaderboard: result.entries,
+      total: result.total,
+      limit,
+      offset,
+    }));
 
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });

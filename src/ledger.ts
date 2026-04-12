@@ -3,16 +3,21 @@ import path from "node:path";
 import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { attributeConversion, markConversion, getRequestsByAgent } from "./referral-requests.js";
-import { updateAgentTrustTier } from "./agents.js";
-import { calculateTrustTier } from "./referral-codes.js";
+import { updateAgentTrustTier, getAgentById } from "./agents.js";
+import { calculateTrustTier, getCodesByAgent } from "./referral-codes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
 const BALANCES_PATH = path.join(__dirname, "..", "data", "agent_balances.json");
 const CLAWBACK_CONFIG_PATH = path.join(__dirname, "..", "data", "vendor_clawback.json");
 
-// Revenue split: 70% to agent, 30% to AgentDeals
-const AGENT_SHARE_RATE = 0.7;
+// Revenue splits
+// Standard (curated codes): 70% to surfacing agent, 30% to AgentDeals
+const STANDARD_AGENT_SHARE_RATE = 0.7;
+// Agent-submitted codes — same agent submitted and surfaced: 80% agent, 20% platform
+const SINGLE_AGENT_SHARE_RATE = 0.8;
+// Agent-submitted codes — different agents: 40% submitter, 40% surfer, 20% platform
+const DUAL_AGENT_SHARE_RATE = 0.4;
 
 export type EventType = "conversion" | "confirmation" | "clawback" | "payout";
 export type LedgerStatus = "pending" | "confirmed" | "paid_out" | "clawed_back";
@@ -20,11 +25,13 @@ export type LedgerStatus = "pending" | "confirmed" | "paid_out" | "clawed_back";
 export interface LedgerEntry {
   id: string;
   agent_id: string | null;
+  submitter_id?: string | null;
   vendor: string;
   referral_code: string;
   event_type: EventType;
   commission_amount: number;
   agent_share: number;
+  submitter_share?: number;
   status: LedgerStatus;
   conversion_date: string;
   clawback_window_ends: string;
@@ -161,14 +168,20 @@ function roundCents(n: number): number {
 // --- Core operations ---
 
 /**
- * Record a new conversion. Looks up attribution, creates a ledger entry with
- * status "pending", and updates the agent's pending balance.
+ * Record a new conversion. Looks up attribution, creates ledger entries with
+ * status "pending", and updates agent balances.
+ *
+ * When submitter_id is provided (agent-submitted code):
+ * - Same agent submitted AND surfaced: 80% agent / 20% platform
+ * - Different agents: 40% submitter / 40% surfer / 20% platform
+ * When no submitter_id (curated code): 70% surfer / 30% platform
  */
 export function recordConversion(opts: {
   vendor: string;
   referral_code: string;
   commission_amount: number;
   conversion_date?: string;
+  submitter_id?: string | null;
   metadata?: Record<string, unknown>;
 }): LedgerEntry {
   const conversionDate = opts.conversion_date
@@ -176,22 +189,46 @@ export function recordConversion(opts: {
     : new Date();
   const conversionDateStr = conversionDate.toISOString().split("T")[0];
 
-  // Look up attribution
-  const agentId = attributeConversion(opts.vendor, conversionDate);
+  // Look up attribution (surfacing agent)
+  const surfacingAgentId = attributeConversion(opts.vendor, conversionDate);
+  const submitterId = opts.submitter_id ?? null;
 
-  const agentShare = roundCents(opts.commission_amount * AGENT_SHARE_RATE);
   const clawbackDays = getClawbackDays(opts.vendor);
   const clawbackEnd = new Date(conversionDate);
   clawbackEnd.setDate(clawbackEnd.getDate() + clawbackDays);
 
+  // Calculate shares based on agent-submitted vs curated
+  let surferShare = 0;
+  let submitterShare = 0;
+  const commission = roundCents(opts.commission_amount);
+
+  if (submitterId && surfacingAgentId) {
+    if (submitterId === surfacingAgentId) {
+      // Same agent submitted and surfaced: 80/20
+      surferShare = roundCents(commission * SINGLE_AGENT_SHARE_RATE);
+    } else {
+      // Different agents: 40/40/20
+      surferShare = roundCents(commission * DUAL_AGENT_SHARE_RATE);
+      submitterShare = roundCents(commission * DUAL_AGENT_SHARE_RATE);
+    }
+  } else if (submitterId && !surfacingAgentId) {
+    // Agent submitted code but no surfacing attribution — submitter gets 40%
+    submitterShare = roundCents(commission * DUAL_AGENT_SHARE_RATE);
+  } else if (surfacingAgentId) {
+    // Curated code with surfacing agent: 70/30
+    surferShare = roundCents(commission * STANDARD_AGENT_SHARE_RATE);
+  }
+
   const entry: LedgerEntry = {
     id: generateLedgerId(),
-    agent_id: agentId,
+    agent_id: surfacingAgentId,
+    submitter_id: submitterId,
     vendor: opts.vendor,
     referral_code: opts.referral_code,
     event_type: "conversion",
-    commission_amount: roundCents(opts.commission_amount),
-    agent_share: agentId ? agentShare : 0,
+    commission_amount: commission,
+    agent_share: surferShare,
+    submitter_share: submitterShare,
     status: "pending",
     conversion_date: conversionDateStr,
     clawback_window_ends: clawbackEnd.toISOString().split("T")[0],
@@ -206,15 +243,15 @@ export function recordConversion(opts: {
   ledger.push(entry);
   saveLedger(ledger);
 
-  // Update agent balance if attributed
-  if (agentId) {
-    const balance = getOrCreateBalance(agentId);
-    balance.pending_balance = roundCents(balance.pending_balance + agentShare);
+  // Update surfacing agent balance
+  if (surfacingAgentId && surferShare > 0) {
+    const balance = getOrCreateBalance(surfacingAgentId);
+    balance.pending_balance = roundCents(balance.pending_balance + surferShare);
     balance.updated_at = new Date().toISOString();
     saveBalances(loadBalances());
 
     // Mark the referral request as converted
-    const requests = getRequestsByAgent(agentId);
+    const requests = getRequestsByAgent(surfacingAgentId);
     const vendorLower = opts.vendor.toLowerCase();
     const matchingRequest = requests
       .filter(r => r.vendor.toLowerCase() === vendorLower && !r.conversion_id)
@@ -222,6 +259,14 @@ export function recordConversion(opts: {
     if (matchingRequest) {
       markConversion(matchingRequest.id, entry.id);
     }
+  }
+
+  // Update submitter balance if different from surfer
+  if (submitterId && submitterShare > 0 && submitterId !== surfacingAgentId) {
+    const submitterBalance = getOrCreateBalance(submitterId);
+    submitterBalance.pending_balance = roundCents(submitterBalance.pending_balance + submitterShare);
+    submitterBalance.updated_at = new Date().toISOString();
+    saveBalances(loadBalances());
   }
 
   return entry;
@@ -246,11 +291,13 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
     const confirmEntry: LedgerEntry = {
       id: generateLedgerId(),
       agent_id: entry.agent_id,
+      submitter_id: entry.submitter_id,
       vendor: entry.vendor,
       referral_code: entry.referral_code,
       event_type: "confirmation",
       commission_amount: entry.commission_amount,
       agent_share: entry.agent_share,
+      submitter_share: entry.submitter_share,
       status: "confirmed",
       conversion_date: entry.conversion_date,
       clawback_window_ends: entry.clawback_window_ends,
@@ -266,13 +313,23 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
     entry.confirmed_at = new Date().toISOString();
     confirmed.push(entry.id);
 
-    // Update balance
-    if (entry.agent_id) {
+    // Update surfacing agent balance
+    if (entry.agent_id && entry.agent_share > 0) {
       const balance = getOrCreateBalance(entry.agent_id);
       balance.pending_balance = roundCents(balance.pending_balance - entry.agent_share);
       balance.confirmed_balance = roundCents(balance.confirmed_balance + entry.agent_share);
       balance.total_earned = roundCents(balance.total_earned + entry.agent_share);
       balance.updated_at = new Date().toISOString();
+    }
+
+    // Update submitter balance if different from surfer
+    const submitterShare = entry.submitter_share ?? 0;
+    if (entry.submitter_id && submitterShare > 0 && entry.submitter_id !== entry.agent_id) {
+      const submitterBalance = getOrCreateBalance(entry.submitter_id);
+      submitterBalance.pending_balance = roundCents(submitterBalance.pending_balance - submitterShare);
+      submitterBalance.confirmed_balance = roundCents(submitterBalance.confirmed_balance + submitterShare);
+      submitterBalance.total_earned = roundCents(submitterBalance.total_earned + submitterShare);
+      submitterBalance.updated_at = new Date().toISOString();
     }
   }
 
@@ -308,11 +365,13 @@ export function clawbackEntry(entryId: string, reason?: string): boolean {
   const clawbackEvent: LedgerEntry = {
     id: generateLedgerId(),
     agent_id: entry.agent_id,
+    submitter_id: entry.submitter_id,
     vendor: entry.vendor,
     referral_code: entry.referral_code,
     event_type: "clawback",
     commission_amount: entry.commission_amount,
     agent_share: entry.agent_share,
+    submitter_share: entry.submitter_share,
     status: "clawed_back",
     conversion_date: entry.conversion_date,
     clawback_window_ends: entry.clawback_window_ends,
@@ -326,11 +385,19 @@ export function clawbackEntry(entryId: string, reason?: string): boolean {
   // Update original entry
   entry.status = "clawed_back";
 
-  // Update balance
-  if (entry.agent_id) {
+  // Update surfacing agent balance
+  if (entry.agent_id && entry.agent_share > 0) {
     const balance = getOrCreateBalance(entry.agent_id);
     balance.pending_balance = roundCents(balance.pending_balance - entry.agent_share);
     balance.updated_at = new Date().toISOString();
+  }
+
+  // Update submitter balance if different from surfer
+  const submitterShare = entry.submitter_share ?? 0;
+  if (entry.submitter_id && submitterShare > 0 && entry.submitter_id !== entry.agent_id) {
+    const submitterBalance = getOrCreateBalance(entry.submitter_id);
+    submitterBalance.pending_balance = roundCents(submitterBalance.pending_balance - submitterShare);
+    submitterBalance.updated_at = new Date().toISOString();
   }
 
   saveLedger(ledger);
@@ -436,4 +503,69 @@ export function getLedgerEntry(id: string): LedgerEntry | null {
  */
 export function getAllConversions(): LedgerEntry[] {
   return loadLedger().filter(e => e.event_type === "conversion");
+}
+
+// --- Leaderboard ---
+
+export interface LeaderboardEntry {
+  agent_id: string;
+  agent_name: string;
+  trust_tier: string;
+  total_conversions: number;
+  active_codes: number;
+  total_earnings: number;
+}
+
+/**
+ * Get the agent leaderboard ranked by total conversions.
+ * Public endpoint — no auth required.
+ */
+export function getLeaderboard(opts?: { limit?: number; offset?: number }): { entries: LeaderboardEntry[]; total: number } {
+  const limit = Math.min(opts?.limit ?? 10, 50);
+  const offset = opts?.offset ?? 0;
+
+  const ledger = loadLedger();
+  const balances = loadBalances();
+
+  // Collect per-agent conversion counts from ledger
+  const agentConversions = new Map<string, number>();
+  for (const entry of ledger) {
+    if (entry.event_type === "conversion" && entry.agent_id && entry.status !== "clawed_back") {
+      agentConversions.set(entry.agent_id, (agentConversions.get(entry.agent_id) ?? 0) + 1);
+    }
+    // Also count submitter contributions
+    if (entry.event_type === "conversion" && entry.submitter_id && entry.submitter_id !== entry.agent_id && entry.status !== "clawed_back") {
+      agentConversions.set(entry.submitter_id, (agentConversions.get(entry.submitter_id) ?? 0) + 1);
+    }
+  }
+
+  // Build leaderboard from agents that have at least one conversion
+  const entries: LeaderboardEntry[] = [];
+  for (const [agentId, conversions] of agentConversions) {
+    const agent = getAgentById(agentId);
+    if (!agent) continue;
+
+    const agentCodes = getCodesByAgent(agentId);
+    const activeCodes = agentCodes.filter(c => c.status === "active").length;
+
+    const balance = balances.find(b => b.agent_id === agentId);
+    const totalEarnings = balance ? balance.total_earned + balance.pending_balance + balance.confirmed_balance : 0;
+
+    entries.push({
+      agent_id: agentId,
+      agent_name: agent.name,
+      trust_tier: agent.trust_tier,
+      total_conversions: conversions,
+      active_codes: activeCodes,
+      total_earnings: roundCents(totalEarnings),
+    });
+  }
+
+  // Sort by total conversions descending
+  entries.sort((a, b) => b.total_conversions - a.total_conversions);
+
+  return {
+    entries: entries.slice(offset, offset + limit),
+    total: entries.length,
+  };
 }
