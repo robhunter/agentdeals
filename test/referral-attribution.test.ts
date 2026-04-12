@@ -36,14 +36,14 @@ describe("Referral Request Logging", () => {
     const req = logReferralRequest({
       agent_id: "agent_abc123",
       vendor: "Railway",
-      referral_code: "PLACEHOLDER",
-      referral_url: "https://railway.app?referralCode=PLACEHOLDER",
+      referral_code: "7RZL9q",
+      referral_url: "https://railway.com?referralCode=7RZL9q",
     });
     assert.ok(req.id.startsWith("rr_"));
     assert.strictEqual(req.agent_id, "agent_abc123");
     assert.strictEqual(req.vendor, "Railway");
-    assert.strictEqual(req.referral_code, "PLACEHOLDER");
-    assert.strictEqual(req.referral_url, "https://railway.app?referralCode=PLACEHOLDER");
+    assert.strictEqual(req.referral_code, "7RZL9q");
+    assert.strictEqual(req.referral_url, "https://railway.com?referralCode=7RZL9q");
     assert.ok(req.requested_at);
     assert.strictEqual(req.conversion_id, null);
   });
@@ -52,8 +52,8 @@ describe("Referral Request Logging", () => {
     logReferralRequest({
       agent_id: "agent_abc123",
       vendor: "Railway",
-      referral_code: "PLACEHOLDER",
-      referral_url: "https://railway.app?referralCode=PLACEHOLDER",
+      referral_code: "7RZL9q",
+      referral_url: "https://railway.com?referralCode=7RZL9q",
     });
     resetReferralRequestsCache();
     const raw = JSON.parse(fs.readFileSync(REQUESTS_PATH, "utf-8"));
