@@ -1,0 +1,20 @@
+{
+  "vendors": [
+    {
+      "vendor": "Railway",
+      "clawback_days": 45
+    },
+    {
+      "vendor": "DigitalOcean",
+      "clawback_days": 60
+    },
+    {
+      "vendor": "Vercel",
+      "clawback_days": 30
+    },
+    {
+      "vendor": "Render",
+      "clawback_days": 30
+    }
+  ]
+}

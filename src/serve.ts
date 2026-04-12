@@ -12,6 +12,7 @@ import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLand
 import { openapiSpec } from "./openapi.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
+import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries } from "./ledger.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -50533,6 +50534,129 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       type: referralData.referral.type,
       attributed: !!agent,
     }));
+
+  // --- POST /api/conversions: Record a new conversion ---
+  } else if (url.pathname === "/api/conversions" && req.method === "POST") {
+    let body = "";
+    for await (const chunk of req) {
+      body += chunk;
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(body);
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+
+    if (!parsed.vendor || typeof parsed.vendor !== "string") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "vendor is required and must be a string" }));
+      return;
+    }
+    if (typeof parsed.commission_amount !== "number" || parsed.commission_amount <= 0) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "commission_amount is required and must be a positive number" }));
+      return;
+    }
+
+    try {
+      const entry = recordConversion({
+        vendor: parsed.vendor,
+        referral_code: parsed.referral_code ?? "",
+        commission_amount: parsed.commission_amount,
+        conversion_date: parsed.conversion_date,
+        metadata: parsed.metadata,
+      });
+
+      recordApiHit("/api/conversions");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/conversions", params: { vendor: parsed.vendor }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(entry));
+    } catch (err: any) {
+      res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+
+  // --- GET /api/agents/:id/balance: Get agent balance ---
+  } else if (url.pathname.match(/^\/api\/agents\/[^/]+\/balance$/) && isGetOrHead) {
+    const parts = url.pathname.split("/");
+    const agentId = decodeURIComponent(parts[3]);
+
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    if (agent.id !== agentId) {
+      res.writeHead(403, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "You can only view your own balance" }));
+      return;
+    }
+
+    const balance = getAgentBalance(agentId);
+    const summary = balance ?? {
+      agent_id: agentId,
+      pending_balance: 0,
+      confirmed_balance: 0,
+      total_earned: 0,
+      total_paid_out: 0,
+      updated_at: null,
+    };
+
+    recordApiHit("/api/agents/:id/balance");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/agents/${agentId}/balance`, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(summary));
+
+  // --- POST /api/conversions/confirm: Confirm eligible entries ---
+  } else if (url.pathname === "/api/conversions/confirm" && req.method === "POST") {
+    try {
+      const confirmed = confirmEligibleEntries();
+      recordApiHit("/api/conversions/confirm");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/conversions/confirm", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: confirmed.length });
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ confirmed_count: confirmed.length, confirmed_ids: confirmed }));
+    } catch (err: any) {
+      res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+
+  // --- POST /api/conversions/clawback: Clawback a pending entry ---
+  } else if (url.pathname === "/api/conversions/clawback" && req.method === "POST") {
+    let body = "";
+    for await (const chunk of req) {
+      body += chunk;
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(body);
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+
+    if (!parsed.entry_id || typeof parsed.entry_id !== "string") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "entry_id is required and must be a string" }));
+      return;
+    }
+
+    const success = clawbackEntry(parsed.entry_id, parsed.reason);
+    if (!success) {
+      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Entry not found or not in pending status" }));
+      return;
+    }
+
+    recordApiHit("/api/conversions/clawback");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/conversions/clawback", params: { entry_id: parsed.entry_id }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ success: true, entry_id: parsed.entry_id }));
 
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });

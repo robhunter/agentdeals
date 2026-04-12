@@ -4,6 +4,7 @@ import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, ge
 import { recordToolCall, logRequest } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
+import { getAgentBalance } from "./ledger.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
@@ -1003,6 +1004,57 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
         return {
           content: [{ type: "text" as const, text: JSON.stringify(response, null, 2) }],
+        };
+      } catch (err: any) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: err.message }],
+        };
+      }
+    }
+  );
+
+  // --- Tool 7: check_balance ---
+  server.registerTool(
+    "check_balance",
+    {
+      description:
+        "Check your referral credit balance. Requires authentication via API key (from register_agent). Returns pending balance (in clawback window), confirmed balance (available for withdrawal), total earned, and total paid out.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        api_key: z.string().describe("Your API key from register_agent."),
+      },
+    },
+    async ({ api_key }) => {
+      try {
+        recordToolCall("check_balance");
+
+        const hash = hashApiKey(api_key);
+        const agent = getAgentByApiKeyHash(hash);
+        if (!agent) {
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }],
+          };
+        }
+
+        const balance = getAgentBalance(agent.id);
+        const summary = balance ?? {
+          agent_id: agent.id,
+          pending_balance: 0,
+          confirmed_balance: 0,
+          total_earned: 0,
+          total_paid_out: 0,
+          updated_at: null,
+        };
+
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "check_balance", params: { agent_id: agent.id }, result_count: 1, session_id: getSessionId?.() });
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(summary, null, 2) }],
         };
       } catch (err: any) {
         return {
