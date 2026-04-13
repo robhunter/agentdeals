@@ -119,6 +119,13 @@
         "verified_date": "2026-04-11",
         "restrictions": [],
         "phase1_eligible": true
+      },
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "15% commission (first 12 months)",
+        "referee_benefit": "$20 in credits",
+        "program_url": "https://railway.com/affiliate-program",
+        "type": "self-service"
       }
     },
     {
@@ -246,6 +253,13 @@
         "static_sites": "3 apps, 1 GiB outbound/mo each",
         "functions": "25,000 GiB-seconds/mo",
         "droplets_from": "$4/mo (1 vCPU, 512 MB, 10 GB SSD)"
+      },
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "$25 credit",
+        "referee_benefit": "$200 credit (60 days)",
+        "program_url": "https://www.digitalocean.com/referral-program",
+        "type": "self-service"
       }
     },
     {
@@ -299,7 +313,14 @@
         "mongodb-alternative",
         "vector-database"
       ],
-      "verifiedDate": "2026-03-21"
+      "verifiedDate": "2026-03-21",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "$20 cash per referral",
+        "referee_benefit": "Free tier access",
+        "program_url": "https://neon.tech/docs/introduction/referral-program",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "MongoDB Atlas",
@@ -842,7 +863,14 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-12",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "20% recurring commission (12 months)",
+        "referee_benefit": "Standard pricing",
+        "program_url": "https://postmarkapp.com/partner-program",
+        "type": "affiliate-network"
+      }
     },
     {
       "vendor": "Mailchimp",
@@ -890,7 +918,14 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-12",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "~$5 per free signup, ~$100 per paid signup",
+        "referee_benefit": "Standard pricing",
+        "program_url": "https://www.brevo.com/partners/",
+        "type": "affiliate-network"
+      }
     },
     {
       "vendor": "Algolia",
@@ -938,7 +973,14 @@
         "backup",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-12",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "1 free month per referral",
+        "referee_benefit": "1 free month",
+        "program_url": "https://www.backblaze.com/cloud-storage/refer-a-friend",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "Tigris",
@@ -1268,7 +1310,14 @@
         "budget",
         "eu"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-12",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "€10 credit",
+        "referee_benefit": "€20 credit",
+        "program_url": "https://www.hetzner.com/tell-a-friend",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "Cloudflare DNS",
@@ -2595,7 +2644,14 @@
         ],
         "program": "DigitalOcean Hatch"
       },
-      "expires_date": "2026-06-30"
+      "expires_date": "2026-06-30",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "$25 credit",
+        "referee_benefit": "$200 credit (60 days)",
+        "program_url": "https://www.digitalocean.com/referral-program",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "Atlassian",
@@ -7810,7 +7866,14 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-12",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "Free months of service",
+        "referee_benefit": "Free months of service",
+        "program_url": "https://proton.me/support/referral-program",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "Pullflow",
@@ -11356,6 +11419,13 @@
         "verified_date": "2026-04-12",
         "restrictions": [],
         "phase1_eligible": true
+      },
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "Free months of service",
+        "referee_benefit": "Free months of service",
+        "program_url": "https://proton.me/support/referral-program",
+        "type": "self-service"
       }
     },
     {
@@ -14392,7 +14462,14 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-12",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "Free months of service",
+        "referee_benefit": "Free months of service",
+        "program_url": "https://proton.me/support/referral-program",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "QRME.SH",
@@ -20388,7 +20465,14 @@
         "anycast",
         "dnssec"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-13",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "Up to $100 cash per referral",
+        "referee_benefit": "$100 credit",
+        "program_url": "https://www.vultr.com/docs/vultr-referral-program/",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "Hetzner DNS",
@@ -21582,7 +21666,14 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-02"
+      "verifiedDate": "2026-04-02",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "Free months of service",
+        "referee_benefit": "Free months of service",
+        "program_url": "https://proton.me/support/referral-program",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "Apple Passwords",
@@ -21972,7 +22063,14 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-02"
+      "verifiedDate": "2026-04-02",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "Free months of service",
+        "referee_benefit": "Free months of service",
+        "program_url": "https://proton.me/support/referral-program",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "Windscribe",
@@ -22119,7 +22217,14 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-02"
+      "verifiedDate": "2026-04-02",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "Free months of service",
+        "referee_benefit": "Free months of service",
+        "program_url": "https://proton.me/support/referral-program",
+        "type": "self-service"
+      }
     },
     {
       "vendor": "Tutanota",

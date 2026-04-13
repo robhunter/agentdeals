@@ -18,6 +18,14 @@ export interface Referral {
   phase1_eligible: boolean;
 }
 
+export interface ReferralProgram {
+  available: boolean;
+  referrer_benefit: string;
+  referee_benefit: string;
+  program_url: string;
+  type: "self-service" | "application" | "affiliate-network";
+}
+
 export interface Offer {
   vendor: string;
   category: string;
@@ -30,6 +38,7 @@ export interface Offer {
   expires_date?: string;
   payment_protocols?: string[];
   referral?: Referral;
+  referral_program?: ReferralProgram;
 }
 
 export type StabilityClass = "stable" | "watch" | "volatile" | "improving";
