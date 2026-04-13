@@ -11997,6 +11997,20 @@
       "verifiedDate": "2026-04-13"
     },
     {
+      "vendor": "LangSmith",
+      "category": "AI / ML",
+      "description": "LLM observability and evaluation platform by LangChain. Developer (Free) tier includes 5,000 traces/month, 14-day data retention, 1 seat, 1 workspace. Provides prompt playground, dataset management, annotation queues, and monitoring dashboards. Plus plan at $39/seat/month adds 10,000 traces, 3 workspaces, and unlimited Agent Builder agents. Overage at $0.50 per 1,000 traces",
+      "tier": "Free",
+      "url": "https://www.langchain.com/pricing",
+      "tags": [
+        "ai",
+        "ml",
+        "generative-ai",
+        "free-for-dev"
+      ],
+      "verifiedDate": "2026-04-13"
+    },
+    {
       "vendor": "Langtrace",
       "category": "AI / ML",
       "description": "enables developers to trace, evaluate, manage prompts and datasets, and debug issues related to an LLM application’s performance. It creates open telemetry standard traces for any LLM which helps with observability and works with any observability client. Free plan offers 50K traces/month.",
@@ -16332,7 +16346,7 @@
     {
       "vendor": "Replit",
       "category": "IDE & Code Editors",
-      "description": "Cloud IDE with AI code assistant — 10 GiB account storage, multiplayer collaboration, unlimited public Repls. Supports 50+ languages. Built-in hosting, version history, and package management. Core plan $20/month (was $25), new Pro plan $100/month with higher AI credit allocation. Free tier unchanged (limited AI credits, basic compute)",
+      "description": "Cloud IDE with AI code assistant — 10 GiB account storage, multiplayer collaboration, unlimited public Repls. Supports 50+ languages. Built-in hosting, version history, and package management. Core plan $20/month (was $25, now includes up to 5 collaborators), new Pro plan $100/month with Agent modes and up to 15 builders. Teams plan sunset (migrated to Pro). Free tier unchanged (limited AI credits, basic compute)",
       "tier": "Free",
       "url": "https://replit.com/pricing",
       "tags": [
@@ -16340,7 +16354,7 @@
         "free-for-dev",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-10"
+      "verifiedDate": "2026-04-13"
     },
     {
       "vendor": "SoloLearn",
