@@ -827,7 +827,7 @@
         "transactional",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Postmark",
@@ -842,7 +842,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mailchimp",
@@ -858,7 +858,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mailjet",
@@ -890,7 +890,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Algolia",
@@ -1201,7 +1201,7 @@
         "agile",
         "free tier"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Snyk",
@@ -1744,7 +1744,7 @@
         "startup credits",
         "data pipeline"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2345,7 +2345,7 @@
         "automation",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ClouDNS",
@@ -2559,7 +2559,7 @@
         "startup-credits",
         "cloud-storage"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2610,7 +2610,7 @@
         "jira",
         "confluence"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2978,7 +2978,7 @@
         "collaboration",
         "free tier"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Canva",
@@ -3009,7 +3009,7 @@
         "collaboration",
         "figma alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "GitGuardian",
@@ -3024,7 +3024,7 @@
         "devsecops",
         "pre-commit"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Sendbird",
@@ -3211,7 +3211,7 @@
         "storage",
         "image optimization"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "IBM Cloud",
@@ -3298,7 +3298,7 @@
         "video",
         "storage"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Expo",
@@ -3740,7 +3740,7 @@
         "collaboration",
         "open source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Lunacy",
@@ -3754,7 +3754,7 @@
         "prototyping",
         "figma alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Pixlr",
@@ -3768,7 +3768,7 @@
         "online",
         "graphics"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Harbor",
@@ -4087,7 +4087,7 @@
         "gdpr",
         "open source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Umami",
@@ -4101,7 +4101,7 @@
         "self-hosted",
         "open source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Woodpecker CI",
@@ -4392,7 +4392,7 @@
         "sbom",
         "licensing"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Twingate",
@@ -4455,7 +4455,7 @@
     {
       "vendor": "Tailscale",
       "category": "Security",
-      "description": "Mesh VPN with WireGuard — 3 users, 100 devices, MagicDNS, exit nodes, subnet routers, ACLs, split tunneling. Requires personal email domain",
+      "description": "Mesh VPN with WireGuard — 6 users, unlimited devices, MagicDNS, exit nodes, subnet routing. Free Personal plan.",
       "tier": "Personal",
       "url": "https://tailscale.com/pricing",
       "tags": [
@@ -4465,7 +4465,7 @@
         "zero-trust",
         "wireguard"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Redis Cloud",
@@ -4641,7 +4641,7 @@
         "static-analysis",
         "code-scanning"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Cronitor",
@@ -4883,7 +4883,7 @@
         "api",
         "malware"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "VirusTotal",
@@ -4898,7 +4898,7 @@
         "threat-intelligence",
         "api"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Kaggle",
@@ -5808,7 +5808,7 @@
         "marketing",
         "zoho"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Zoho Forms",
@@ -6538,7 +6538,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "FreeIPAPI",
@@ -6830,7 +6830,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Market Data API",
@@ -7615,14 +7615,14 @@
     {
       "vendor": "Fibery",
       "category": "Project Management",
-      "description": "Connected workspace platform. Free for single users, up to 2 GB disk space.",
+      "description": "Connected workspace platform. Free for up to 10 users, 10 databases, unlimited entities.",
       "tier": "Free",
-      "url": "https://fibery.io/",
+      "url": "https://fibery.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Fibo",
@@ -7634,7 +7634,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Fizzy",
@@ -7646,7 +7646,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "flat.social",
@@ -7706,7 +7706,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Hackmd.io",
@@ -7714,18 +7714,6 @@
       "description": "Real time collaboration & writing tool for markdown format docs/files. Like Google Docs but for markdown files. Free unlimited number of \"notes\", but the number of collaborators (invitee) for private notes & template [will be limited](https://hackmd.io/pricing).",
       "tier": "Free",
       "url": "https://hackmd.io/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "HeySpace",
-      "category": "Project Management",
-      "description": "Task management tool with chat, calendar, timeline and video calls. Free for up to 5 users.",
-      "tier": "Free",
-      "url": "https://hey.space",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -7742,7 +7730,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Keybase",
@@ -7838,7 +7826,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Proton Pass",
@@ -7850,7 +7838,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Pullflow",
@@ -7870,18 +7858,6 @@
       "description": "Free team chat app. Unlimited users and message history, free forever.",
       "tier": "Free",
       "url": "https://pumble.com",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Quidlo Timesheets",
-      "category": "Project Management",
-      "description": "A simple timesheet and time tracking app for teams. The free plan has time tracking and generating reports features for up to 10 users.",
-      "tier": "Free",
-      "url": "https://www.quidlo.com/timesheets",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -7958,7 +7934,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "SiteDots",
@@ -8042,19 +8018,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Teamhood",
-      "category": "Project Management",
-      "description": "Free Project, Task, and Issue-tracking software. Supports Kanban with Swimlanes and full Scrum implementation. Has integrated time tracking. Free for five users and three project portfolios.",
-      "tier": "Free",
-      "url": "https://teamhood.com/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Teamplify",
@@ -8066,7 +8030,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Telegram",
@@ -8102,7 +8066,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "tldraw.com",
@@ -8126,7 +8090,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tugboat",
@@ -8162,7 +8126,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Visual Debug",
@@ -8234,7 +8198,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Wormhole",
@@ -8246,7 +8210,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "zoom.us",
@@ -8282,7 +8246,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Cosmic",
@@ -9301,7 +9265,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CertKit",
@@ -9313,7 +9277,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Corgea",
@@ -9325,7 +9289,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "crypteron.com",
@@ -9337,7 +9301,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CyberChef",
@@ -9349,7 +9313,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Datree",
@@ -9361,7 +9325,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "DJ Checkup",
@@ -9373,7 +9337,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Dotenv",
@@ -9385,31 +9349,19 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Have I been pwned?",
       "category": "Security",
-      "description": "REST API for fetching the information on the breaches.",
+      "description": "REST API for fetching information on data breaches. Free web search; API requires subscription for some endpoints.",
       "tier": "Free",
       "url": "https://haveibeenpwned.com",
       "tags": [
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "hostedscan.com",
-      "category": "Security",
-      "description": "Online vulnerability scanner for web applications, servers, and networks. Ten free scans per month.",
-      "tier": "Free",
-      "url": "https://hostedscan.com",
-      "tags": [
-        "security",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Internet.nl",
@@ -9421,7 +9373,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "letsencrypt.org",
@@ -9433,7 +9385,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "meterian.io",
@@ -9445,19 +9397,19 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mozilla Observatory",
       "category": "Security",
-      "description": "Find and fix security vulnerabilities in your site.",
+      "description": "HTTP security header testing tool. Now integrated into MDN as HTTP Observatory.",
       "tier": "Free",
-      "url": "https://observatory.mozilla.org/",
+      "url": "https://developer.mozilla.org/en-US/observatory",
       "tags": [
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Project Gatekeeper",
@@ -9472,18 +9424,6 @@
       "verifiedDate": "2026-04-05"
     },
     {
-      "vendor": "Protectumus",
-      "category": "Security",
-      "description": "Free website security check, site antivirus, and server firewall (WAF) for PHP. Email notifications for registered users in the free tier.",
-      "tier": "Free",
-      "url": "https://protectumus.com",
-      "tags": [
-        "security",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
       "vendor": "Public Cloud Threat Intelligence",
       "category": "Security",
       "description": "High confidence Indicator of Compromise(IOC) targeting public cloud infrastructure, A portion is available on github (https://github.com/unknownhad/AWSAttacks). Full list is available via API",
@@ -9493,19 +9433,19 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "pyup.io",
+      "vendor": "Safety",
       "category": "Security",
-      "description": "Monitor Python dependencies for security vulnerabilities and update them automatically. Free for one private project, unlimited projects for open source.",
+      "description": "AI-powered development security platform. Rebranded from PyUp to Safety (getsafety.com). Monitors dependencies for vulnerabilities.",
       "tier": "Free",
-      "url": "https://pyup.io",
+      "url": "https://getsafety.com/",
       "tags": [
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "qualys.com",
@@ -9517,7 +9457,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Smart Grow Vault",
@@ -9529,7 +9469,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "SOOS",
@@ -9541,7 +9481,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ssllabs.com",
@@ -9553,7 +9493,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Sucuri SiteCheck",
@@ -9565,7 +9505,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "TestTLS.com",
@@ -9577,7 +9517,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Virgil Security",
@@ -9589,7 +9529,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "360username",
@@ -11037,7 +10977,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "AhaSend",
@@ -11053,16 +10993,16 @@
       "verifiedDate": "2026-03-24"
     },
     {
-      "vendor": "AnonAddy",
+      "vendor": "addy.io",
       "category": "Email",
-      "description": "Open-source anonymous email forwarding, create unlimited email aliases for free",
+      "description": "Open-source email alias/forwarding. Rebranded to addy.io. Free tier: unlimited standard aliases, 10 shared domain aliases.",
       "tier": "Free",
-      "url": "https://anonaddy.com",
+      "url": "https://addy.io/",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Antideo",
@@ -11074,19 +11014,19 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "Bump",
+      "vendor": "Alias.email",
       "category": "Email",
-      "description": "Free 10 Bump email addresses, one custom domain",
+      "description": "Free 10 email aliases, one custom domain. Rebranded from Bump to Alias.email.",
       "tier": "Free",
-      "url": "https://bump.email/",
+      "url": "https://alias.email/",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Burnermail",
@@ -11098,32 +11038,20 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Buttondown",
       "category": "Email",
       "description": "Newsletter service. Up to 100 subscribers free",
       "tier": "Free",
-      "url": "https://buttondown.email/",
+      "url": "https://buttondown.com/",
       "tags": [
         "email",
         "free-for-dev",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Contact.do",
-      "category": "Email",
-      "description": "Contact form in a link (bitly for contact forms)",
-      "tier": "Free",
-      "url": "https://contact.do/",
-      "tags": [
-        "email",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "debugmail.io",
@@ -11135,7 +11063,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "dkimvalidator.com",
@@ -11147,7 +11075,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "DNSExit",
@@ -11159,7 +11087,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "EmailJS",
@@ -11171,7 +11099,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "EmailLabs.io",
@@ -11183,7 +11111,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "EmailOctopus",
@@ -11195,19 +11123,19 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Emailvalidation.io",
       "category": "Email",
-      "description": "100 free email verifications per month",
+      "description": "100 free email verifications total (one-time, not monthly)",
       "tier": "Free",
       "url": "https://emailvalidation.io",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "EtherealMail",
@@ -11219,7 +11147,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "forwardemail.net",
@@ -11231,7 +11159,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Imitate Email",
@@ -11243,7 +11171,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ImprovMX",
@@ -11255,7 +11183,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Inboxes App",
@@ -11267,7 +11195,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "inboxkitten.com",
@@ -11279,7 +11207,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "mail-tester.com",
@@ -11291,19 +11219,19 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Maileroo",
       "category": "Email",
-      "description": "SMTP relay and email API for developers. 5,000 emails per month, unlimited domains, free email verification, blacklist monitoring, mail tester and more.",
+      "description": "SMTP relay and email API for developers. 3,000 emails per month, unlimited domains, webhooks free",
       "tier": "Free",
       "url": "https://maileroo.com",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "mailcatcher.me",
@@ -11315,7 +11243,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "mailchannels.com",
@@ -11327,55 +11255,55 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "Mailcheck.ai",
+      "vendor": "UserCheck",
       "category": "Email",
-      "description": "Prevent users to sign up with temporary email addresses, 120 requests/hour (~86,400 per month)",
+      "description": "Prevent users from signing up with temporary email addresses, 120 requests/hour. Rebranded to UserCheck.",
       "tier": "Free",
-      "url": "https://www.mailcheck.ai/",
+      "url": "https://www.usercheck.com/",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Maildroppa",
       "category": "Email",
-      "description": "Up to 100 subscribers and unlimited emails as well as automations for free.",
+      "description": "Up to 100 subscribers and 2,500 emails/month free",
       "tier": "Free",
       "url": "https://maildroppa.com",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "MailerLite.com",
       "category": "Email",
-      "description": "1,000 subscribers/month, 12,000 emails/month free",
+      "description": "500 subscribers/month, 12,000 emails/month free",
       "tier": "Free",
       "url": "https://www.mailerlite.com",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "MailerSend.com",
       "category": "Email",
-      "description": "Email API, SMTP, 3,000 emails/month free for transactional emails",
+      "description": "Email API, SMTP, 500 emails/month free for transactional emails",
       "tier": "Free",
       "url": "https://www.mailersend.com",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "mailinator.com",
@@ -11387,7 +11315,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "mailsac.com",
@@ -11399,19 +11327,19 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mailtrap.io",
       "category": "Email",
-      "description": "Email API, SMTP, 3,500 emails/month free for transactional and marketing emails. Email Sandbox - fake SMTP server for development, free plan with one inbox, 100 messages, no team member, two emails/second, no forward rules.",
+      "description": "Email API, SMTP, 4,000 emails/month free for transactional and marketing emails.",
       "tier": "Free",
       "url": "https://mailtrap.io/",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mutant Mail",
@@ -11423,31 +11351,19 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Parsio.io",
-      "category": "Email",
-      "description": "Free email parser (Forward email, extract the data, send it to your server)",
-      "tier": "Free",
-      "url": "https://parsio.io",
-      "tags": [
-        "email",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Plunk",
       "category": "Email",
-      "description": "Open-source email platform with 3,000 transactional/marketing emails/month free",
+      "description": "Open-source email platform with 1,000 transactional/marketing emails/month free",
       "tier": "Free",
       "url": "https://useplunk.com",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Proton Mail",
@@ -11459,7 +11375,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "referral": {
         "url": "https://pr.tn/ref/60QXGJSB",
         "type": "referral_link",
@@ -11480,7 +11396,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "SendStreak",
@@ -11492,7 +11408,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "SimpleLogin",
@@ -11504,7 +11420,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Substack",
@@ -11528,7 +11444,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "temp-mail.io",
@@ -11540,7 +11456,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "TempMailDetector.com",
@@ -11552,19 +11468,19 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "trashmail.com",
+      "vendor": "Aionda Mail",
       "category": "Email",
-      "description": "Free disposable email addresses with forwarding and automatic address expiration",
+      "description": "Free disposable email addresses with forwarding and automatic address expiration. Now at mail.aionda.com.",
       "tier": "Free",
-      "url": "https://www.trashmail.com",
+      "url": "https://mail.aionda.com/",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tuta",
@@ -11576,7 +11492,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Verifalia",
@@ -11588,7 +11504,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "verimail.io",
@@ -11600,7 +11516,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Waitlio",
@@ -11612,7 +11528,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Wraps",
@@ -11624,7 +11540,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Abby",
@@ -13597,7 +13513,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "asana.com",
@@ -13621,7 +13537,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Basecamp",
@@ -13633,7 +13549,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "bitrix24.com",
@@ -13645,7 +13561,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "cacoo.com",
@@ -13705,7 +13621,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "diagrams.net",
@@ -13729,7 +13645,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "freedcamp.com",
@@ -13741,7 +13657,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "GForge",
@@ -13753,7 +13669,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "gleek.io",
@@ -13789,7 +13705,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Ilograph",
@@ -13813,7 +13729,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "kanbanflow.com",
@@ -13825,7 +13741,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "kanbantool.com",
@@ -13837,19 +13753,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Kitemaker.co",
-      "category": "Project Management",
-      "description": "Collaborate through all phases of the product development process and keep track of work across Slack, Discord, Figma, and Github. Unlimited users, unlimited spaces. Free plan up to 250 work items.",
-      "tier": "Free",
-      "url": "https://kitemaker.co",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Kumu.io",
@@ -13873,7 +13777,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Lucidchart",
@@ -13897,19 +13801,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "MeuScrum",
-      "category": "Project Management",
-      "description": "Free online scrum tool with kanban board",
-      "tier": "Free",
-      "url": "https://www.meuscrum.com/en",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "nTask",
@@ -13921,7 +13813,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Plane",
@@ -13933,7 +13825,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "planitpoker.com",
@@ -13945,7 +13837,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "point.poker",
@@ -13957,7 +13849,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Pulse.red",
@@ -13969,7 +13861,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ScrumFast",
@@ -13981,19 +13873,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Sflow",
-      "category": "Project Management",
-      "description": "sflow.io is a project management tool built for agile software development, marketing, sales, and customer support, especially for outsourcing and cross-organization collaboration projects. Free plan up to 3 projects and five members.",
-      "tier": "Free",
-      "url": "https://sflow.io",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Shake",
@@ -14017,7 +13897,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "taiga.io",
@@ -14029,7 +13909,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "taskade.com",
@@ -14041,7 +13921,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Teaminal",
@@ -14053,7 +13933,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "teamwork.com",
@@ -14070,14 +13950,14 @@
     {
       "vendor": "teleretro.com",
       "category": "Project Management",
-      "description": "Simple and fun retrospective tool with icebreakers, gifs and emojis. The free plan includes three retros and unlimited members.",
+      "description": "Sprint retrospective tool. Free plan limited to 3 retrospectives per account (14 days each), 1 team.",
       "tier": "Free",
       "url": "https://www.teleretro.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tenzu",
@@ -14089,7 +13969,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "titanapps.io",
@@ -14101,7 +13981,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "todoist.com",
@@ -14113,7 +13993,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Toggl",
@@ -14125,7 +14005,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "trello.com",
@@ -14137,7 +14017,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tweek",
@@ -14149,19 +14029,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Wikifactory",
-      "category": "Project Management",
-      "description": "Product designing Service with Projects, VCS & Issues. The free plan offers unlimited projects & collaborators and 3GB storage.",
-      "tier": "Free",
-      "url": "https://wikifactory.com/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Yodiz",
@@ -14173,7 +14041,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "zenhub.com",
@@ -14185,19 +14053,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "zenkit.com",
-      "category": "Project Management",
-      "description": "Project management and collaboration tool. Free for up to 5 members, 5 GB attachments.",
-      "tier": "Free",
-      "url": "https://zenkit.com",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Zube",
@@ -14209,7 +14065,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "borgbase.com",
@@ -14222,7 +14078,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "degoo.com",
@@ -14235,7 +14091,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Dropshare",
@@ -14248,7 +14104,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "embed.ly",
@@ -14261,20 +14117,20 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Ente",
       "category": "Storage",
-      "description": "Ente is an end-to-end encrypted cloud for photos, videos and 2FA secrets. Can also be self-hosted along with a generous forever free-tier of 10GB. For free tier users, only single replica of data is kept.",
+      "description": "Ente is an end-to-end encrypted cloud for photos, videos and 2FA secrets. URL moved to ente.com.",
       "tier": "Free",
-      "url": "https://ente.io/",
+      "url": "https://ente.com/",
       "tags": [
         "storage",
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "file.io",
@@ -14287,7 +14143,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "freetools.site",
@@ -14300,7 +14156,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "getpantry.cloud",
@@ -14313,7 +14169,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "GoFile.io",
@@ -14326,7 +14182,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "gumlet.com",
@@ -14339,7 +14195,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "icedrive.net",
@@ -14352,7 +14208,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "image-charts.com",
@@ -14365,7 +14221,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ImageEngine",
@@ -14378,7 +14234,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ImgBB",
@@ -14391,7 +14247,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "imgen",
@@ -14404,7 +14260,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "internxt.com",
@@ -14417,12 +14273,12 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "kraken.io",
       "category": "Storage",
-      "description": "Image optimization for website performance as a service, free plan up to 1 MB file size",
+      "description": "Image optimization for website performance as a service, free 100 MB testing quota. Paid plans start at $5/mo.",
       "tier": "Free",
       "url": "https://kraken.io/",
       "tags": [
@@ -14430,20 +14286,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "LibreQR",
-      "category": "Storage",
-      "description": "Free QR code generator focused on privacy and no tracking. Free to use with no data collection.",
-      "tier": "Free",
-      "url": "https://libreqr.com",
-      "tags": [
-        "storage",
-        "media",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "MConverter",
@@ -14456,7 +14299,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "nitropack.io",
@@ -14469,7 +14312,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "npoint.io",
@@ -14482,7 +14325,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "MantleDB",
@@ -14495,20 +14338,20 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "otixo.com",
+      "vendor": "We.Team",
       "category": "Storage",
-      "description": "Encrypt, share, copy, and move all your cloud storage files from one place. The basic plan provides unlimited file transfer with 250 MB max. file size and allows five encrypted files",
+      "description": "Cloud storage sync and collaboration platform. Rebranded to We.Team.",
       "tier": "Free",
-      "url": "https://www.otixo.com/",
+      "url": "https://we.team/",
       "tags": [
         "storage",
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "packagecloud.io",
@@ -14521,7 +14364,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "pcloud.com",
@@ -14534,7 +14377,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Pinata IPFS",
@@ -14547,7 +14390,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "payment_protocols": [
         "x402"
       ]
@@ -14557,13 +14400,13 @@
       "category": "Storage",
       "description": "Graph and share your data. The free tier includes unlimited public files and ten private files",
       "tier": "Free",
-      "url": "https://plot.ly/",
+      "url": "https://plotly.com/",
       "tags": [
         "storage",
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "podio.com",
@@ -14589,7 +14432,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "QRME.SH",
@@ -14615,7 +14458,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "QuickChart",
@@ -14628,20 +14471,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "redbooth.com",
-      "category": "Storage",
-      "description": "P2P file syncing, free for up to 2 users",
-      "tier": "Free",
-      "url": "https://redbooth.com",
-      "tags": [
-        "storage",
-        "media",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "resmush.it",
@@ -14654,7 +14484,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "sirv.com",
@@ -14667,7 +14497,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "SlingSite",
@@ -14680,7 +14510,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "sync.com",
@@ -14693,7 +14523,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "tinypng.com",
@@ -14706,7 +14536,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "transloadit.com",
@@ -14719,7 +14549,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "twicpics.com",
@@ -14732,7 +14562,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "VaocherApp QR Code Generator",
@@ -14745,7 +14575,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "odrive",
@@ -14759,7 +14589,7 @@
         "cloud-storage",
         "file-management"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "AllTheFreeStock",
@@ -14772,7 +14602,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Ant Design Landing Page",
@@ -14785,20 +14615,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Backlight",
-      "category": "Design",
-      "description": "With collaboration between developers and designers at heart, Backlight is a complete coding platform where teams build, document, publish, scale, and maintain Design Systems. The free plan allows up to 3 editors to work on one design system with unlimited viewers.",
-      "tier": "Free",
-      "url": "https://backlight.dev/",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "BoxySVG",
@@ -14811,20 +14628,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Branition",
-      "category": "Design",
-      "description": "Hand-curated color pallets best fitted for brands.",
-      "tier": "Free",
-      "url": "https://branition.com/colors",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Calendar Icons Generator",
@@ -14837,7 +14641,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Carousel Hero",
@@ -14850,7 +14654,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Circum Icons",
@@ -14863,7 +14667,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "clevebrush.com",
@@ -14876,7 +14680,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "cloudconvert.com",
@@ -14889,7 +14693,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CMYK Pantone",
@@ -14902,7 +14706,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CodedThemes",
@@ -14915,7 +14719,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CodeMyUI",
@@ -14928,7 +14732,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ColorKit",
@@ -14941,7 +14745,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "colorr.me",
@@ -14954,7 +14758,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "coolors",
@@ -14967,7 +14771,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "css-gradient.com",
@@ -14980,7 +14784,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "css.glass",
@@ -14993,7 +14797,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "DaisyUI",
@@ -15006,7 +14810,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Float UI",
@@ -15019,7 +14823,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Flows",
@@ -15032,7 +14836,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Flyon UI",
@@ -15045,7 +14849,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "framer.com",
@@ -15058,20 +14862,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "freeforcommercialuse.net",
-      "category": "Design",
-      "description": "FFCU Worry-free model/property release stock photos",
-      "tier": "Free",
-      "url": "https://freeforcommercialuse.net/",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Glyphs",
@@ -15084,7 +14875,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Gradientos",
@@ -15097,7 +14888,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Grapedrop",
@@ -15110,7 +14901,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "haikei.app",
@@ -15123,7 +14914,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "hypercolor.dev",
@@ -15136,7 +14927,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "HyperUI",
@@ -15149,7 +14940,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Icon Horse",
@@ -15162,7 +14953,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "iconify.design",
@@ -15175,7 +14966,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Iconoir",
@@ -15188,7 +14979,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Image BG Blurer",
@@ -15201,20 +14992,20 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "landen.co",
+      "vendor": "Umso",
       "category": "Design",
-      "description": "Generate, edit, and publish beautiful websites and landing pages for your startup. All without code. The free tier allows you to have one website, fully customizable and published on the web.",
+      "description": "AI website builder. Generate, edit, and publish beautiful websites and landing pages for your startup. One website for free. Formerly Landen.",
       "tier": "Free",
-      "url": "https://www.landen.co",
+      "url": "https://www.umso.com/",
       "tags": [
         "design",
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "lensdump.com",
@@ -15227,7 +15018,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Logo.dev",
@@ -15240,7 +15031,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Lorem Picsum",
@@ -15253,7 +15044,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "LottieFiles",
@@ -15279,7 +15070,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "MagicPattern",
@@ -15292,7 +15083,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "marvelapp.com",
@@ -15305,7 +15096,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mastershot",
@@ -15318,7 +15109,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "MDBootstrap",
@@ -15331,7 +15122,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mindmup.com",
@@ -15344,7 +15135,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mockplus iDoc",
@@ -15357,7 +15148,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "mockupmark.com",
@@ -15370,7 +15161,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Mossaik",
@@ -15383,20 +15174,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "movingpencils.com",
-      "category": "Design",
-      "description": "Fast, browser-based vector editor. Completely free.",
-      "tier": "Free",
-      "url": "https://movingpencils.com",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Nappy",
@@ -15409,20 +15187,20 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "NextUI",
+      "vendor": "HeroUI",
       "category": "Design",
-      "description": "Free. Beautiful, fast, and modern React & Next.js UI library.",
+      "description": "Free. Beautiful, fast, and modern React & Next.js UI library. Rebranded from NextUI to HeroUI.",
       "tier": "Free",
-      "url": "https://nextui.org/",
+      "url": "https://heroui.com/",
       "tags": [
         "design",
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "NSPolygon",
@@ -15435,7 +15213,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Octopus.do",
@@ -15448,7 +15226,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "OKLCH",
@@ -15461,7 +15239,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "okso.app",
@@ -15474,7 +15252,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "pexels.com",
@@ -15500,20 +15278,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Pixelixe",
-      "category": "Design",
-      "description": "Create and edit engaging, unique graphics and images online.",
-      "tier": "Free",
-      "url": "https://pixelixe.com/",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Plasmic",
@@ -15526,7 +15291,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "PNG to WebP Converter",
@@ -15539,7 +15304,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Pravatar",
@@ -15565,7 +15330,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Quant Ux",
@@ -15578,7 +15343,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "resizeappicon.com",
@@ -15591,7 +15356,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Responsively App",
@@ -15604,7 +15369,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Rive",
@@ -15617,7 +15382,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Scrollbar.app",
@@ -15630,7 +15395,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Shadcn Studio",
@@ -15643,7 +15408,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ShadcnUI",
@@ -15656,7 +15421,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "smartmockups.com",
@@ -15682,7 +15447,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tailwindadmin",
@@ -15695,7 +15460,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "storyset.com",
@@ -15708,7 +15473,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Superdesigner",
@@ -15721,7 +15486,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "SVG Converter",
@@ -15734,20 +15499,20 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "tabler-icons.io",
       "category": "Design",
-      "description": "Over 1500 free copy-and-paste SVG editable icons.",
+      "description": "Over 5,800 free copy-and-paste SVG editable icons.",
       "tier": "Free",
-      "url": "https://tabler-icons.io/",
+      "url": "https://tabler.io/icons",
       "tags": [
         "design",
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tailark",
@@ -15760,7 +15525,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tailcolors",
@@ -15773,7 +15538,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tailkits",
@@ -15786,7 +15551,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "TeleportHQ",
@@ -15799,7 +15564,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "TW Elements",
@@ -15812,7 +15577,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "tweakcn",
@@ -15825,7 +15590,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "UI Avatars",
@@ -15838,7 +15603,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "unDraw",
@@ -15851,7 +15616,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Unicorn Platform",
@@ -15864,7 +15629,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "unsplash.com",
@@ -15877,7 +15642,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Updrafts.app",
@@ -15890,7 +15655,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "vector.express",
@@ -15903,7 +15668,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "vectr.com",
@@ -15916,7 +15681,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Vertopal",
@@ -15929,7 +15694,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Volume",
@@ -15942,20 +15707,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "walkme.com",
-      "category": "Design",
-      "description": "Enterprise Class Guidance and Engagement Platform, free plan three walk-thru up to 5 steps/walk.",
-      "tier": "Free",
-      "url": "https://www.walkme.com/",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Wdrfree SVG",
@@ -15968,7 +15720,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Webflow",
@@ -15994,12 +15746,12 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "whimsical.com",
       "category": "Design",
-      "description": "Collaborative flowcharts, wireframes, sticky notes and mind maps. Create up to 4 free boards.",
+      "description": "Collaborative flowcharts, wireframes, sticky notes and mind maps. Free plan: 3 team boards, 100 AI actions per editor.",
       "tier": "Free",
       "url": "https://whimsical.com/",
       "tags": [
@@ -16007,7 +15759,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Zeplin",
@@ -16696,7 +16448,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Aptabase",
@@ -16709,7 +16461,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Avo",
@@ -16722,7 +16474,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Beampipe.io",
@@ -16735,20 +16487,20 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "Census",
+      "vendor": "Fivetran Activations",
       "category": "Analytics",
-      "description": "Reverse ETL & Operational Analytics Platform. Sync 10 fields from your data warehouse to 60+ SaaS like Salesforce, Zendesk, or Amplitude.",
+      "description": "Reverse ETL platform. Acquired by Fivetran. Now part of Fivetran Activations.",
       "tier": "Free",
-      "url": "https://www.getcensus.com/",
+      "url": "https://fivetran.com/",
       "tags": [
         "analytics",
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Clicky",
@@ -16761,7 +16513,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "counter.dev",
@@ -16774,7 +16526,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "DocBeacon",
@@ -16787,7 +16539,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Dwh.dev",
@@ -16800,7 +16552,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Expensify",
@@ -16826,7 +16578,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "GoatCounter",
@@ -16839,7 +16591,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Google Analytics",
@@ -16852,7 +16604,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "heap.io",
@@ -16865,7 +16617,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Hightouch",
@@ -16878,12 +16630,12 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Hotjar",
       "category": "Analytics",
-      "description": "Website Analytics and Reports . Free Plan allows 2000 pageviews/day. One hundred snapshots/day (max capacity: 300). Three snapshot heatmaps can be stored for 365 days. Unlimited Team Members. Also in App and standalone surveys, feedback widgets with screenshots. Free tier allows creating 3 surveys & 3 feedback widgets and collecting 20 responses per month.",
+      "description": "Website Analytics and Reports. Now part of Contentsquare. Free Plan allows 20,000 sessions. Heatmaps, recordings, surveys.",
       "tier": "Free",
       "url": "https://hotjar.com",
       "tags": [
@@ -16891,7 +16643,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "LogSpot",
@@ -16904,7 +16656,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "MetricsWave",
@@ -16917,7 +16669,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Moesif",
@@ -16930,7 +16682,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Repohistory",
@@ -16943,46 +16695,33 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Row Zero",
       "category": "Analytics",
       "description": "Blazingly fast, connected spreadsheet. Connect directly to data databases, S3, and APIs. Import, analyze, graph, and share millions of rows instantly. Three free (forever) workbooks.",
       "tier": "Free",
-      "url": "https://rowzero.io",
+      "url": "https://rowzero.com/",
       "tags": [
         "analytics",
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Rybbit",
       "category": "Analytics",
       "description": "Open-source and cookieless alternative to Google Analytics that is 10x more intuitive. Free plans has 3,000 monthly events.",
       "tier": "Free",
-      "url": "https://rybbit.io",
+      "url": "https://rybbit.com/",
       "tags": [
         "analytics",
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Seline",
-      "category": "Analytics",
-      "description": "Seline is a simple & private website and product analytics. Cookieless, lightweight, independent. Free plan includes 3,000 events per month and provides access to all our features, such as the dashboard, user journeys, funnels, and more.",
-      "tier": "Free",
-      "url": "https://seline.so",
-      "tags": [
-        "analytics",
-        "statistics",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "StatCounter",
@@ -16995,7 +16734,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "TraceLog",
@@ -17008,7 +16747,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Trackingplan",
@@ -17021,7 +16760,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "TrackWith Dicloud",
@@ -17034,38 +16773,25 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "usabilityhub.com",
+      "vendor": "Lyssna",
       "category": "Analytics",
-      "description": "Test designs and mockups on real people and track visitors. Free for one user, unlimited tests",
+      "description": "Test designs and mockups on real people. Rebranded to Lyssna. Free plan available.",
       "tier": "Free",
-      "url": "https://usabilityhub.com/",
+      "url": "https://lyssna.com/",
       "tags": [
         "analytics",
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Userbird",
-      "category": "Analytics",
-      "description": "Google Analytics alternative with heatmaps, session recordings and revenue tracking.",
-      "tier": "Free",
-      "url": "https://userbird.com",
-      "tags": [
-        "analytics",
-        "statistics",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "FullStory.com",
       "category": "Analytics",
-      "description": "1,000 sessions/month with one month data retention and three user seats. More information [here](https://help.fullstory.com/hc/en-us/articles/360020623354-FullStory-Free-Edition).",
+      "description": "30,000 sessions/month with 12 months data retention and three user seats.",
       "tier": "Free",
       "url": "https://www.fullstory.com",
       "tags": [
@@ -17073,7 +16799,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "howuku.com",
@@ -17086,7 +16812,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "inspectlet.com",
@@ -17099,7 +16825,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Microsoft Clarity",
@@ -17112,7 +16838,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "mouseflow.com",
@@ -17125,7 +16851,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "OpenReplay.com",
@@ -17138,12 +16864,12 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "smartlook.com",
       "category": "Analytics",
-      "description": "free packages for web and mobile apps (1500 sessions/month), three heatmaps, one funnel, 1-month data history",
+      "description": "Free plan: 3,000 sessions/month, three heatmaps, one funnel. Note: reaching End of Sale May 2026.",
       "tier": "Free",
       "url": "https://www.smartlook.com/",
       "tags": [
@@ -17151,12 +16877,12 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "UXtweak.com",
       "category": "Analytics",
-      "description": "Record and watch how visitors use your website or app. Free unlimited time for small projects",
+      "description": "UX testing platform with free plan for limited UX testing tools. Session recordings require paid Business plan (EUR 125/mo).",
       "tier": "Free",
       "url": "https://www.uxtweak.com/",
       "tags": [
@@ -17164,7 +16890,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "numverify",
@@ -17533,19 +17259,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Cookiefirst",
-      "category": "Security",
-      "description": "Cookie banners, auditing, and multi-language consent management solution. The free tier offers a one-time scan and a single banner.",
-      "tier": "Free",
-      "url": "https://cookiefirst.com/",
-      "tags": [
-        "security",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Iubenda",
@@ -17557,7 +17271,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Ketch",
@@ -17569,7 +17283,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "BackgroundStyler.com",
@@ -17833,7 +17547,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ray.so",
@@ -18565,7 +18279,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18633,27 +18347,6 @@
           "Free for Brex customers"
         ],
         "program": "Amazon AWS Startup Deal"
-      }
-    },
-    {
-      "vendor": "Amazon Redshift",
-      "category": "Cloud IaaS",
-      "description": "$25k in free credits for AWS Redshift. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "cloud",
-        "iaas",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Amazon Redshift Startup Deal"
       }
     },
     {
@@ -18937,26 +18630,6 @@
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Crowdfire Startup Deal"
-      }
-    },
-    {
-      "vendor": "Customer.io",
-      "category": "Communication",
-      "description": "Basic plan free for 12 months (up to 12k profiles), and 90% off 12 months of Customer.io Premium (up to 100k profiles).. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "communication",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Customer.io Startup Deal"
       }
     },
     {
@@ -19318,27 +18991,6 @@
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Harvestr Startup Deal"
-      }
-    },
-    {
-      "vendor": "Indicative",
-      "category": "Analytics",
-      "description": "3 months of Indicative Pro (the analytics platform is free for non-Pro plans). Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "analytics",
-        "statistics",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Indicative Startup Deal"
       }
     },
     {
@@ -19734,7 +19386,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20582,7 +20234,7 @@
         "git",
         "open-source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "TruffleHog",
@@ -20596,7 +20248,7 @@
         "scanning",
         "open-source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Checkov",
@@ -20613,7 +20265,7 @@
         "open-source",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Trivy",
@@ -20628,7 +20280,7 @@
         "vulnerabilities",
         "open-source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Grype",
@@ -20643,7 +20295,7 @@
         "vulnerabilities",
         "open-source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "OWASP ZAP",
@@ -20658,7 +20310,7 @@
         "scanning",
         "open-source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Nuclei",
@@ -20673,7 +20325,7 @@
         "templates",
         "open-source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CodeQL",
@@ -20687,7 +20339,7 @@
         "code-analysis",
         "github"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Dependabot",
@@ -20701,7 +20353,7 @@
         "automation",
         "github"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Renovate",
@@ -20715,7 +20367,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Probely",
@@ -20730,21 +20382,7 @@
         "api",
         "scanning"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "StackHawk",
-      "category": "Security",
-      "description": "Free Developer plan: 1 application with unlimited DAST scans, CI/CD integration, historical scan data, cURL reproduction steps, finding triage, and Slack integration.",
-      "tier": "Free",
-      "url": "https://www.stackhawk.com/",
-      "tags": [
-        "security",
-        "dast",
-        "api",
-        "ci-cd"
-      ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Falco",
@@ -20759,7 +20397,7 @@
         "containers",
         "open-source"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "BuddyNS",

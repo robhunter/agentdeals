@@ -76,7 +76,7 @@ describe("track_changes tool", () => {
 
     assert.ok(Array.isArray(body.changes));
     assert.strictEqual(body.total, body.changes.length);
-    assert.strictEqual(body.total, 154);
+    assert.strictEqual(body.total, 201);
   });
 
   it("filters by date (since)", async () => {
@@ -409,7 +409,7 @@ describe("track_changes tool", () => {
       "free_tier_removed", "limits_reduced", "restriction", "limits_increased",
       "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed",
       "pricing_model_change", "startup_program_expanded",
-      "pricing_postponed", "product_deprecated",
+      "pricing_postponed", "product_deprecated", "rebranded",
     ]);
 
     const dataPath = path.join(__dirname, "..", "data", "deal_changes.json");

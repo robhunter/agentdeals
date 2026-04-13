@@ -342,7 +342,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
       _meta: TOOL_UI_META.track_changes,
       inputSchema: {
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
-        change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated"]).optional().describe("Filter by type of change"),
+        change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated", "rebranded"]).optional().describe("Filter by type of change"),
         vendor: z.string().optional().describe("Filter to one vendor (case-insensitive)"),
         vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),
         categories: z.string().optional().describe("Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match."),
