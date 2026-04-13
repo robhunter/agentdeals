@@ -567,7 +567,7 @@ function generateShieldBadge(leftText: string, rightText: string, color: string,
     + '\n</svg>';
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "deadlines" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -593,6 +593,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/compare-tool", label: "Compare Tool", section: "compare-tool" },
     { href: "/digest", label: "Digest", section: "digest" },
     { href: "/pricing-changes", label: "Changes", section: "changes" },
+    { href: "/deadlines", label: "Deadlines", section: "deadlines" },
     { href: "/state-of-free-tiers", label: "Report", section: "report" },
     { href: "/expiring", label: "Expiring", section: "expiring" },
     { href: "/freshness", label: "Freshness", section: "freshness" },
@@ -45657,6 +45658,7 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/compare", desc: "Compare two vendors side by side", params: "a, b" },
     { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services" },
     { method: "GET", path: "/api/vendor-risk/:vendor", desc: "Check vendor pricing risk", params: "" },
+    { method: "GET", path: "/api/deadlines", desc: "Future-dated changes with countdown", params: "type" },
     { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days" },
     { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "" },
     { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "" },
@@ -46566,6 +46568,7 @@ ${globalNavCss()}
   <h1>Deal Change Timeline</h1>
   <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. Subscribe to stay ahead.</p>
   <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to deal changes</a>
+  <a href="/deadlines" class="rss-link" style="margin-left:.5rem">\u{1F6A8} See upcoming deadlines &rarr;</a>
 
   <div class="stats-bar">
     <div class="stat-card">
@@ -47002,6 +47005,300 @@ ${freshestRows}
 
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
+</body>
+</html>`;
+}
+
+// --- Deadline Tracker page ---
+
+function buildDeadlinesPage(): string {
+  const allChanges = loadDealChanges();
+  const today = new Date().toISOString().slice(0, 10);
+  const todayMs = new Date(today + "T00:00:00Z").getTime();
+
+  // Filter to future-dated changes only
+  const deadlines = allChanges
+    .filter(c => c.date > today)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  // Migration guide mapping for known deadlines
+  const migrationGuides: Record<string, string> = {
+    "dall-e": "/dall-e-shutdown",
+    "tenor": "/tenor-alternatives",
+    "openai assistants": "/openai-assistants-migration-2026",
+    "openai realtime": "/openai-realtime-migration",
+    "aws app runner": "/aws-app-runner-migration",
+    "gemini": "/gemini-api-pricing-2026",
+  };
+
+  function findMigrationGuide(vendor: string, summary: string): string | null {
+    const text = `${vendor} ${summary}`.toLowerCase();
+    for (const [keyword, url] of Object.entries(migrationGuides)) {
+      if (text.includes(keyword)) return url;
+    }
+    return null;
+  }
+
+  function urgencyBadge(dateStr: string): { label: string; color: string; cssClass: string } {
+    const d = new Date(dateStr + "T00:00:00Z").getTime();
+    const diff = Math.ceil((d - todayMs) / 86400000);
+    if (diff <= 14) return { label: "Critical", color: "#f85149", cssClass: "urgency-critical" };
+    if (diff <= 30) return { label: "Warning", color: "#d29922", cssClass: "urgency-warning" };
+    return { label: "Upcoming", color: "#3fb950", cssClass: "urgency-upcoming" };
+  }
+
+  function countdownText(dateStr: string): string {
+    const d = new Date(dateStr + "T00:00:00Z").getTime();
+    const diff = Math.ceil((d - todayMs) / 86400000);
+    if (diff === 0) return "today";
+    if (diff === 1) return "tomorrow";
+    if (diff < 7) return `${diff} days`;
+    if (diff < 30) return `${Math.ceil(diff / 7)} weeks`;
+    return `${Math.ceil(diff / 30)} months`;
+  }
+
+  // Count by change type for filter display
+  const typeGroups = new Map<string, number>();
+  for (const c of deadlines) {
+    const count = typeGroups.get(c.change_type) ?? 0;
+    typeGroups.set(c.change_type, count + 1);
+  }
+
+  const criticalCount = deadlines.filter(c => {
+    const d = new Date(c.date + "T00:00:00Z").getTime();
+    return Math.ceil((d - todayMs) / 86400000) <= 14;
+  }).length;
+  const warningCount = deadlines.filter(c => {
+    const d = new Date(c.date + "T00:00:00Z").getTime();
+    const diff = Math.ceil((d - todayMs) / 86400000);
+    return diff > 14 && diff <= 30;
+  }).length;
+
+  // Build deadline cards
+  const cardsHtml = deadlines.map(c => {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const urgency = urgencyBadge(c.date);
+    const countdown = countdownText(c.date);
+    const vendorSlug = toSlug(c.vendor);
+    const guide = findMigrationGuide(c.vendor, c.summary);
+    const altHtml = c.alternatives && c.alternatives.length > 0
+      ? `<div class="dl-alts"><span class="dl-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
+      : "";
+    const guideHtml = guide
+      ? `<a href="${guide}" class="dl-guide">Migration guide &rarr;</a>`
+      : "";
+
+    return `      <div class="dl-card ${urgency.cssClass}">
+        <div class="dl-header">
+          <div class="dl-urgency" style="background:${urgency.color}">${urgency.label}</div>
+          <div class="dl-countdown">${countdown}</div>
+        </div>
+        <div class="dl-body">
+          <div class="dl-meta">
+            <span class="badge" style="background:${badge.color}">${badge.label}</span>
+            <a href="/vendor/${vendorSlug}" class="dl-vendor">${escHtmlServer(c.vendor)}</a>
+            <span class="dl-category">${escHtmlServer(c.category)}</span>
+          </div>
+          <div class="dl-date">${c.date}</div>
+          <div class="dl-summary">${escHtmlServer(c.summary)}</div>
+${altHtml}${guideHtml}
+        </div>
+      </div>`;
+  }).join("\n");
+
+  // Build filter buttons
+  const filterButtons = Array.from(typeGroups.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([type, count]) => {
+      const badge = changeTypeBadge[type] ?? { label: type, color: "#8b949e" };
+      return `<button class="filter-btn" data-type="${type}"><span class="badge" style="background:${badge.color}">${badge.label}</span> (${count})</button>`;
+    }).join("\n      ");
+
+  const title = "Developer Tool Deadlines 2026 \u2014 API Shutdowns, Free Tier Removals & Price Changes";
+  const metaDesc = `Track ${deadlines.length} upcoming developer tool deadlines. API shutdowns, free tier removals, and price increases across cloud, databases, CI/CD, monitoring, and more.`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    description: metaDesc,
+    numberOfItems: deadlines.length,
+    url: `${BASE_URL}/deadlines`,
+    itemListElement: deadlines.slice(0, 50).map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "NewsArticle",
+        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+        description: c.summary,
+        datePublished: c.date,
+        url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
+        publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+      },
+    })),
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What developer APIs are shutting down in 2026?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `We're tracking ${deadlines.length} upcoming developer tool deadlines including API shutdowns, free tier removals, and pricing changes across cloud infrastructure, databases, CI/CD, monitoring, and more. Major shutdowns include Google Tenor API (June 2026), OpenAI Assistants API (August 2026), and several AWS service deprecations.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Which free tiers are being removed?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Multiple developer tools are removing or restructuring their free tiers. We track all changes with deadlines, countdown timers, and migration guides so you can plan ahead.`,
+        },
+      },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/deadlines">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/deadlines">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1rem}
+.stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.stat-card{flex:1;min-width:120px;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-align:center}
+.stat-value{font-family:var(--serif);font-size:1.5rem;color:var(--text)}
+.stat-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.filter-label{font-size:.8rem;color:var(--text-muted);margin-right:.25rem}
+.filter-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:.3rem .6rem;cursor:pointer;color:var(--text-muted);font-size:.8rem;font-family:var(--sans);display:flex;align-items:center;gap:.35rem;transition:all .15s}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--text);background:var(--accent-glow)}
+.filter-btn .badge{font-size:.6rem}
+.dl-card{border:1px solid var(--border);border-radius:10px;background:var(--bg-card);margin-bottom:.75rem;overflow:hidden;transition:border-color .2s}
+.dl-card:hover{border-color:var(--accent)}
+.dl-card.urgency-critical{border-color:rgba(248,81,73,0.4)}
+.dl-card.urgency-warning{border-color:rgba(210,153,34,0.3)}
+.dl-header{display:flex;align-items:center;justify-content:space-between;padding:.5rem .75rem;background:rgba(255,255,255,0.02)}
+.dl-urgency{display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.65rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em}
+.dl-countdown{font-family:var(--mono);font-size:.85rem;color:var(--text);font-weight:600}
+.dl-body{padding:.75rem}
+.dl-meta{display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem;flex-wrap:wrap}
+.dl-vendor{color:var(--text);font-weight:600;font-size:.9rem}
+.dl-vendor:hover{color:var(--accent)}
+.dl-category{font-family:var(--mono);font-size:.7rem;color:var(--text-dim)}
+.dl-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted);margin-bottom:.35rem}
+.dl-summary{font-size:.85rem;color:var(--text-muted);line-height:1.5}
+.dl-alts{font-size:.8rem;color:var(--text-dim);margin-top:.35rem}
+.dl-alts-label{font-weight:600;color:var(--text-muted)}
+.dl-alts a{color:var(--accent);font-size:.8rem}
+.dl-guide{display:inline-block;margin-top:.5rem;font-size:.8rem;color:var(--accent);font-weight:600}
+.badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.rss-link{display:inline-block;color:var(--accent);font-size:.85rem;margin-bottom:1.5rem;padding:.3rem .6rem;border:1px solid var(--border);border-radius:6px}
+.rss-link:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
+.api-hint{font-size:.8rem;color:var(--text-dim);margin-top:1.5rem}
+.no-results{text-align:center;color:var(--text-muted);padding:2rem;font-size:.9rem}
+.mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
+.mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.mcp-cta a{font-weight:600}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.dl-header{flex-direction:column;align-items:flex-start;gap:.25rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("deadlines")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Deadlines</div>
+  <h1>Developer Tool Deadline Tracker</h1>
+  <p class="page-intro">${deadlines.length} upcoming deadlines across developer infrastructure \u2014 API shutdowns, free tier removals, and price changes sorted by urgency.</p>
+  <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to changes</a>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value">${deadlines.length}</div>
+      <div class="stat-label">Upcoming</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${criticalCount}</div>
+      <div class="stat-label">Critical (\u226414d)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${warningCount}</div>
+      <div class="stat-label">Warning (\u226430d)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${typeGroups.size}</div>
+      <div class="stat-label">Change Types</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-type="all">All (${deadlines.length})</button>
+    ${filterButtons}
+  </div>
+
+  <div id="deadline-list">
+${cardsHtml}
+  </div>
+
+  <p class="api-hint">API: <a href="/api/deadlines">/api/deadlines</a> \u2014 get this data as JSON</p>
+
+  <div class="mcp-cta">
+    <p>Get real-time deadline alerts in your AI coding assistant.</p>
+    <a href="/setup">Connect via MCP &rarr;</a>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+</div>
+<script>
+(function() {
+  var btns = document.querySelectorAll('.filter-btn');
+  var cards = document.querySelectorAll('.dl-card');
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var type = btn.getAttribute('data-type');
+      cards.forEach(function(card) {
+        if (type === 'all') { card.style.display = ''; return; }
+        var badge = card.querySelector('.badge');
+        var cardType = badge ? badge.textContent.trim() : '';
+        var expectedLabel = ({
+          free_tier_removed: 'removed', limits_reduced: 'reduced', limits_increased: 'increased',
+          new_free_tier: 'new', pricing_restructured: 'restructured', open_source_killed: 'oss killed',
+          pricing_model_change: 'model change', startup_program_expanded: 'expanded',
+          pricing_postponed: 'postponed', product_deprecated: 'deprecated'
+        })[type] || type;
+        card.style.display = cardType === expectedLabel ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>
 </body>
 </html>`;
 }
@@ -49738,6 +50035,23 @@ const httpServer = createHttpServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify(result));
     }
+  } else if (url.pathname === "/api/deadlines" && isGetOrHead) {
+    recordApiHit("/api/deadlines");
+    const allChanges = loadDealChanges();
+    const today = new Date().toISOString().slice(0, 10);
+    const todayMs = new Date(today + "T00:00:00Z").getTime();
+    const typeFilter = url.searchParams.get("type") || undefined;
+    const deadlines = allChanges
+      .filter(c => c.date > today)
+      .filter(c => !typeFilter || c.change_type === typeFilter)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map(c => ({
+        ...c,
+        countdown_days: Math.ceil((new Date(c.date + "T00:00:00Z").getTime() - todayMs) / 86400000),
+      }));
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/deadlines", params: { type: typeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: deadlines.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ deadlines, count: deadlines.length }));
   } else if (url.pathname === "/api/audit-stack" && isGetOrHead) {
     recordApiHit("/api/audit-stack");
     const servicesParam = url.searchParams.get("services");
@@ -50121,6 +50435,12 @@ ${catList}
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/deadlines</loc>
+    <lastmod>${latestVerified}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/pricing-changes</loc>
     <lastmod>${latestVerified}</lastmod>
     <changefreq>daily</changefreq>
@@ -50442,6 +50762,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/expiring", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildExpiringPage());
+  } else if (url.pathname === "/deadlines" && isGetOrHead) {
+    recordApiHit("/deadlines");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/deadlines", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildDeadlinesPage());
   } else if (url.pathname === "/agent-stack" && isGetOrHead) {
     recordApiHit("/agent-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
