@@ -5602,6 +5602,75 @@ describe("shutdown tracker page", () => {
     }
   });
 
+  it("GET /hosting-pricing renders cloud hosting pricing comparison", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/hosting-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Cloud Hosting"), "Should have hosting title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    // Key platforms
+    assert.ok(html.includes("Railway"), "Should include Railway");
+    assert.ok(html.includes("Vercel"), "Should include Vercel");
+    assert.ok(html.includes("Render"), "Should include Render");
+    assert.ok(html.includes("Netlify"), "Should include Netlify");
+    assert.ok(html.includes("Cloudflare Workers"), "Should include Cloudflare Workers");
+    assert.ok(html.includes("Cloudflare Pages"), "Should include Cloudflare Pages");
+    assert.ok(html.includes("Deno Deploy"), "Should include Deno Deploy");
+    assert.ok(html.includes("Google Cloud Run"), "Should include Google Cloud Run");
+    assert.ok(html.includes("Heroku"), "Should include Heroku");
+    // Key sections
+    assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
+    assert.ok(html.includes("Traditional PaaS"), "Should have PaaS category");
+    assert.ok(html.includes("Edge / Serverless"), "Should have edge category");
+    assert.ok(html.includes("What You Actually Get for Free"), "Should have free tier section");
+    assert.ok(html.includes("Pricing Gotchas"), "Should have gotchas section");
+    assert.ok(html.includes("Best-for-Use-Case Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/api/hosting-pricing"), "Should link to API endpoint");
+  });
+
+  it("GET /api/hosting-pricing returns hosting platforms as JSON", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/hosting-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.platforms), "Should have platforms array");
+    assert.ok(body.count > 10, "Should have 10+ hosting platforms");
+    assert.ok(Array.isArray(body.changes), "Should have changes array");
+    assert.ok(Array.isArray(body.categories), "Should have categories list");
+    assert.deepStrictEqual(body.categories, ["traditional-paas", "edge-serverless", "full-featured", "static-specialized"]);
+    const platform = body.platforms[0];
+    assert.ok(platform.vendor, "Platform should have vendor");
+    assert.ok(platform.category, "Platform should have category");
+    assert.ok(platform.vendor_page, "Platform should have vendor_page link");
+    const vendors = body.platforms.map((p: any) => p.vendor);
+    assert.ok(vendors.includes("Railway"), "Should include Railway");
+    assert.ok(vendors.includes("Vercel"), "Should include Vercel");
+    assert.ok(vendors.includes("Cloudflare Workers"), "Should include Cloudflare Workers");
+  });
+
+  it("GET /api/hosting-pricing?type=edge-serverless filters by category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/hosting-pricing?type=edge-serverless`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.count > 0, "Should have edge-serverless platforms");
+    for (const platform of body.platforms) {
+      assert.strictEqual(platform.category, "edge-serverless", `${platform.vendor} should be categorized as edge-serverless`);
+    }
+  });
+
   it("GET /api/ai-coding-pricing returns AI coding tools as JSON", async () => {
     proc = await startHttpServer();
 

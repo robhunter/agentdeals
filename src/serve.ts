@@ -2650,7 +2650,7 @@ ${categorySections}
 // Category-to-page mappings for vendor page enrichment
 const categoryComparisonMap: Record<string, { comparison?: string; hub?: string }> = {
   "Databases": { comparison: "/database-free-tier-comparison-2026", hub: "/database-alternatives" },
-  "Cloud Hosting": { comparison: "/hosting-free-tier-comparison-2026", hub: "/hosting-alternatives" },
+  "Cloud Hosting": { comparison: "/hosting-pricing", hub: "/hosting-alternatives" },
   "Monitoring": { comparison: "/monitoring-comparison-2026", hub: "/monitoring-alternatives" },
   "CI/CD": { comparison: "/cicd-free-tier-comparison-2026", hub: "/ci-cd-alternatives" },
   "Security": { comparison: "/security-free-tier-comparison-2026", hub: "/security-alternatives" },
@@ -5361,6 +5361,15 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     tag: "vector-database-pricing",
     primaryVendor: "Pinecone",
     hubDesc: "The definitive vector database pricing comparison — 11 services across dedicated cloud, open-source, pgvector, embedded, and serverless categories with free tier analysis for RAG/AI",
+  },
+  {
+    slug: "hosting-pricing",
+    title: "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs",
+    metaDesc: "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. Updated April 2026.",
+    contextHtml: "",
+    tag: "hosting-pricing",
+    primaryVendor: "Railway",
+    hubDesc: "The definitive cloud hosting pricing comparison — 15 platforms across PaaS, edge/serverless, full-featured, and static categories with free tier analysis, pricing gotchas, and Railway referral",
   },
   {
     slug: "aws-free-tier-2026",
@@ -28911,6 +28920,732 @@ function buildVectorDatabasePricingPage(): string {
     '</body>\n</html>';
 }
 
+// --- Cloud Hosting / PaaS Pricing Comparison page ---
+
+function buildHostingPricingPage(): string {
+  const title = "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs";
+  const metaDesc = "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. Updated April 2026.";
+  const slug = "hosting-pricing";
+  const pubDate = "2026-04-13";
+
+  const hostingOffers = offers.filter(o => o.category === "Cloud Hosting");
+
+  const hostingVendorNames = ["Railway", "Vercel", "Render", "Netlify", "Fly.io", "Cloudflare Workers", "Cloudflare Pages", "Deno Deploy", "Koyeb", "Val Town", "Google Cloud Run", "Heroku", "GitHub Pages", "PythonAnywhere", "Northflank"];
+  const hostingChanges = dealChanges.filter(c =>
+    hostingVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  interface HostingService {
+    name: string;
+    slug: string;
+    category: "traditional-paas" | "edge-serverless" | "full-featured" | "static-specialized";
+    freeTier: string;
+    paidFrom: string;
+    freeBandwidth: string;
+    freeBuildMinutes: string;
+    freeCompute: string;
+    freeDetails: string;
+    freeType: "generous" | "limited" | "removed" | "trial" | "credits";
+    monthlyCostSolo: string;
+    monthlyCostTeam: string;
+    hiddenCosts: string;
+  }
+
+  const services: HostingService[] = [
+    // Traditional PaaS
+    {
+      name: "Railway",
+      slug: "railway",
+      category: "traditional-paas",
+      freeTier: "$5 free credit",
+      paidFrom: "$5/mo (Hobby)",
+      freeBandwidth: "100 GB",
+      freeBuildMinutes: "Included",
+      freeCompute: "Trial: $5 one-time credit, 500 exec hours",
+      freeDetails: "$5 one-time credit on Trial plan (no credit card required). 512 MB RAM, 1 vCPU, 100 GB outbound bandwidth, 500 execution hours. Hobby plan ($5/mo) gives $5 monthly credit with usage-based billing. Supports Docker, Node, Python, Go, Rust, and more. Built-in Postgres, Redis, MySQL.",
+      freeType: "credits",
+      monthlyCostSolo: "$0–5",
+      monthlyCostTeam: "$20/seat",
+      hiddenCosts: "Trial $5 credit is one-time only — once exhausted, services stop. Hobby plan $5 credit resets monthly but usage can exceed it. Network egress beyond 100 GB billed at $0.10/GB.",
+    },
+    {
+      name: "Render",
+      slug: "render",
+      category: "traditional-paas",
+      freeTier: "Free web services",
+      paidFrom: "$7/mo (Individual)",
+      freeBandwidth: "100 GB",
+      freeBuildMinutes: "750 hrs/mo",
+      freeCompute: "0.1 CPU, 512 MB RAM (spins down)",
+      freeDetails: "Free web services with 0.1 CPU, 512 MB RAM, auto-sleep after 15 minutes of inactivity. 750 build hours/month, 100 GB bandwidth/month. Free PostgreSQL (90-day expiry, 256 MB). Free Redis (25 MB, 50 connections). Supports Docker, Node, Python, Go, Ruby, Rust.",
+      freeType: "limited",
+      monthlyCostSolo: "$0–7",
+      monthlyCostTeam: "$19/seat + usage",
+      hiddenCosts: "Free web services spin down after 15 minutes (was 30, tightened Sep 2025). Free Postgres expires after 90 days. Cold starts add 30–60 seconds on free tier.",
+    },
+    {
+      name: "Fly.io",
+      slug: "fly-io",
+      category: "traditional-paas",
+      freeTier: "Trial only",
+      paidFrom: "$0 (usage-based)",
+      freeBandwidth: "100 GB",
+      freeBuildMinutes: "N/A (Docker)",
+      freeCompute: "3 shared VMs, 160 GB volumes",
+      freeDetails: "Trial plan: 3 shared-cpu-1x VMs (256 MB RAM each), 3 GB persistent volumes, 160 GB outbound bandwidth. Credit card required. No permanent free tier — trial credits only. Usage-based pricing after trial. Supports Docker containers, Postgres, Redis, S3-compatible storage.",
+      freeType: "trial",
+      monthlyCostSolo: "$0–5",
+      monthlyCostTeam: "$29/mo (Scale) + usage",
+      hiddenCosts: "No permanent free tier — everything is trial-based. Volume snapshots now billed at $0.08/GB-month (previously free, changed Jan 2026). Credit card required to start. Egress beyond trial billed per GB.",
+    },
+    {
+      name: "Koyeb",
+      slug: "koyeb",
+      category: "traditional-paas",
+      freeTier: "1 nano service",
+      paidFrom: "$0.000463/hr",
+      freeBandwidth: "100 GB",
+      freeBuildMinutes: "Included",
+      freeCompute: "1 nano instance (0.1 vCPU, 256 MB)",
+      freeDetails: "Starter plan: 1 free nano service (0.1 vCPU, 256 MB RAM). 100 GB outbound bandwidth/month. Supports Docker, buildpacks, GitHub auto-deploy. Edge deployment in 6+ regions. Built-in PostgreSQL. No credit card required.",
+      freeType: "limited",
+      monthlyCostSolo: "$0–5",
+      monthlyCostTeam: "Usage-based",
+      hiddenCosts: "Nano instance is very limited (0.1 vCPU). Only 1 free service. Scaling requires paid usage-based pricing.",
+    },
+    {
+      name: "Northflank",
+      slug: "northflank",
+      category: "traditional-paas",
+      freeTier: "2 services",
+      paidFrom: "$0.007/hr",
+      freeBandwidth: "Included",
+      freeBuildMinutes: "Included",
+      freeCompute: "2 services (0.2 vCPU, 512 MB each)",
+      freeDetails: "Developer plan: 2 free services with 0.2 vCPU and 512 MB RAM each. Supports containers, buildpacks, and databases. Auto-deploy from Git. Built-in secrets management, job scheduling, and observability.",
+      freeType: "limited",
+      monthlyCostSolo: "$0–10",
+      monthlyCostTeam: "Usage-based",
+      hiddenCosts: "Limited to 2 services on free tier. Database add-ons are separate. Scaling beyond free resources is usage-based.",
+    },
+    // Edge / Serverless
+    {
+      name: "Cloudflare Workers",
+      slug: "cloudflare-workers",
+      category: "edge-serverless",
+      freeTier: "100K requests/day",
+      paidFrom: "$5/mo (Workers Paid)",
+      freeBandwidth: "Unlimited",
+      freeBuildMinutes: "N/A",
+      freeCompute: "100K requests/day, 10ms CPU/req",
+      freeDetails: "100,000 requests/day, 10ms CPU time per invocation, 1 MB script size. Runs on Cloudflare's 300+ edge locations. V8 isolates — no cold starts. KV storage: 100K reads/day, 1K writes/day. R2 storage: 10 GB free. Workers AI: 10K neurons/day.",
+      freeType: "generous",
+      monthlyCostSolo: "$0–5",
+      monthlyCostTeam: "$5+",
+      hiddenCosts: "10ms CPU time limit is restrictive for compute-heavy tasks. 1 MB script size limit. Daily (not monthly) request quota means bursts get throttled. KV eventual consistency — not suitable for real-time state.",
+    },
+    {
+      name: "Cloudflare Pages",
+      slug: "cloudflare-pages",
+      category: "edge-serverless",
+      freeTier: "Unlimited sites",
+      paidFrom: "$5/mo (via Workers Paid)",
+      freeBandwidth: "Unlimited",
+      freeBuildMinutes: "500/mo",
+      freeCompute: "Unlimited requests, 100K functions/day",
+      freeDetails: "Unlimited sites, unlimited bandwidth, 500 builds/month. Pages Functions (serverless): 100K requests/day free. Deploy from Git or direct upload. Custom domains, SSL included. Preview deployments for every commit. 25 MB max file size.",
+      freeType: "generous",
+      monthlyCostSolo: "$0",
+      monthlyCostTeam: "$0–5",
+      hiddenCosts: "500 builds/month can be limiting for active repos with many commits. Functions share the Workers 100K/day limit. Large sites may hit the 25 MB per-file limit.",
+    },
+    {
+      name: "Netlify",
+      slug: "netlify",
+      category: "edge-serverless",
+      freeTier: "100 GB bandwidth",
+      paidFrom: "$19/mo (Pro)",
+      freeBandwidth: "100 GB",
+      freeBuildMinutes: "300/mo",
+      freeCompute: "125K function invocations/mo",
+      freeDetails: "100 GB bandwidth/month, 300 build minutes/month, 125K serverless function invocations/month, 1 concurrent build. Deploy from Git. Instant rollbacks, preview deploys, custom domains, SSL. Edge Functions (Deno-based) included.",
+      freeType: "limited",
+      monthlyCostSolo: "$0–19",
+      monthlyCostTeam: "$19/seat",
+      hiddenCosts: "CRITICAL: Every repo committer is now charged as a full Pro seat ($19/mo) when using CMS/Identity with private repos (changed March 2026). Credit-based pricing can pause sites on exhaustion. 300 build minutes is tight for large sites. Bandwidth overage is $55/100 GB.",
+    },
+    {
+      name: "Deno Deploy",
+      slug: "deno-deploy",
+      category: "edge-serverless",
+      freeTier: "1M requests/mo",
+      paidFrom: "$20/mo (Pro)",
+      freeBandwidth: "100 GB",
+      freeBuildMinutes: "N/A (instant)",
+      freeCompute: "1M requests/mo, 50ms CPU/req",
+      freeDetails: "1 million requests/month, 100 GB outbound bandwidth, 50ms CPU time per request, 1 GB KV storage, 10ms KV reads. Runs on 35+ edge locations globally. Zero cold starts. Built-in KV storage (Deno KV). Instant deployments from Git.",
+      freeType: "generous",
+      monthlyCostSolo: "$0",
+      monthlyCostTeam: "$20+",
+      hiddenCosts: "Deno runtime only — no Node.js compatibility layer for all packages. 50ms CPU limit per request. 1M requests/month is generous but production traffic can exceed it.",
+    },
+    {
+      name: "Val Town",
+      slug: "val-town",
+      category: "edge-serverless",
+      freeTier: "Free tier",
+      paidFrom: "$10/mo (Pro)",
+      freeBandwidth: "Included",
+      freeBuildMinutes: "N/A",
+      freeCompute: "Free requests with limits",
+      freeDetails: "Code snippets (\"vals\") that run as HTTP endpoints, cron jobs, or email handlers. Free tier includes public vals, SQLite storage, email sending. Community-driven code sharing. TypeScript/JavaScript runtime. Instant deployment.",
+      freeType: "generous",
+      monthlyCostSolo: "$0–10",
+      monthlyCostTeam: "$10+",
+      hiddenCosts: "Free tier vals are public. Private vals require Pro ($10/mo). Limited compute per val execution. Not designed for traditional full-stack apps.",
+    },
+    // Full-featured platforms
+    {
+      name: "Vercel",
+      slug: "vercel",
+      category: "full-featured",
+      freeTier: "Hobby plan (free)",
+      paidFrom: "$20/mo (Pro)",
+      freeBandwidth: "100 GB",
+      freeBuildMinutes: "6000/mo",
+      freeCompute: "100 GB bandwidth, serverless functions",
+      freeDetails: "Hobby plan: 100 GB bandwidth/month, 6,000 build minutes/month, 100K function invocations/day, 10s function duration, 1 concurrent build. Deploy from Git with preview deployments. Optimized for Next.js, supports all frameworks. Edge Functions, Image Optimization, Analytics (limited).",
+      freeType: "generous",
+      monthlyCostSolo: "$0",
+      monthlyCostTeam: "$20/seat",
+      hiddenCosts: "WATCH: New Pro projects default to Turbo build machines ($0.126/min vs $0.014/min Standard — 9x cost difference). Credit-based Pro plan ($20/mo credit pool, changed Jan 2026). Hobby plan is personal use only — commercial use requires Pro. Image Optimization has separate quotas.",
+    },
+    {
+      name: "Google Cloud Run",
+      slug: "google-cloud-run",
+      category: "full-featured",
+      freeTier: "Always free tier",
+      paidFrom: "Usage-based",
+      freeBandwidth: "1 GB North America",
+      freeBuildMinutes: "120/day (Cloud Build)",
+      freeCompute: "2M requests/mo, 360K vCPU-sec, 180K GiB-sec",
+      freeDetails: "Always Free tier: 2 million requests/month, 360,000 vCPU-seconds, 180,000 GiB-seconds of memory, 1 GB outbound (North America). Runs containers, auto-scales to zero. Supports any language/framework via Docker. Integrated with Google Cloud ecosystem.",
+      freeType: "generous",
+      monthlyCostSolo: "$0",
+      monthlyCostTeam: "Usage-based",
+      hiddenCosts: "Google Cloud account required with billing enabled. Egress to other regions is expensive. Cloud Build minutes for container builds are separate (120 free/day). Cold starts for scaled-to-zero services.",
+    },
+    {
+      name: "GitHub Pages",
+      slug: "github-pages",
+      category: "static-specialized",
+      freeTier: "Free (static sites)",
+      paidFrom: "N/A (free only)",
+      freeBandwidth: "100 GB/mo",
+      freeBuildMinutes: "10/hr (Actions)",
+      freeCompute: "N/A (static hosting)",
+      freeDetails: "Free static site hosting from GitHub repos. 100 GB bandwidth/month, 1 GB storage, 10 builds per hour via GitHub Actions. Custom domains, SSL. Perfect for docs, portfolios, blogs. Jekyll built-in, supports any static site generator.",
+      freeType: "generous",
+      monthlyCostSolo: "$0",
+      monthlyCostTeam: "$0",
+      hiddenCosts: "Static sites only — no server-side code. Public repos only on free GitHub (private repos need GitHub Pro $4/mo for Pages). 1 GB storage limit. 100 GB/month bandwidth — sufficient for most projects.",
+    },
+    {
+      name: "PythonAnywhere",
+      slug: "pythonanywhere",
+      category: "static-specialized",
+      freeTier: "1 web app",
+      paidFrom: "$0 (Hacker tier removed)",
+      freeBandwidth: "Included",
+      freeBuildMinutes: "N/A",
+      freeCompute: "1 web app, 512 MB storage",
+      freeDetails: "1 free web app on yourusername.pythonanywhere.com. 512 MB storage, daily CPU seconds limit. Python 2.7/3.x. Built-in Bash console, MySQL database. No custom domain on free tier. Good for learning and small projects.",
+      freeType: "limited",
+      monthlyCostSolo: "$0–12",
+      monthlyCostTeam: "Per-account",
+      hiddenCosts: "$5 Hacker tier was eliminated (Jan 2026). Jump from free to $12/month for custom domain and more resources. Limited outbound HTTP on free tier (whitelist only).",
+    },
+    {
+      name: "Heroku",
+      slug: "heroku",
+      category: "full-featured",
+      freeTier: "Removed (2022)",
+      paidFrom: "$5/mo (Eco dynos)",
+      freeBandwidth: "Included",
+      freeBuildMinutes: "Included",
+      freeCompute: "None free",
+      freeDetails: "Free tier completely removed November 2022. Cheapest option: Eco dynos at $5/month (shared, sleeps after 30 min inactivity) or Basic at $7/month (always on). Still widely used for its developer experience. Heroku Startups program offers credits for qualifying startups.",
+      freeType: "removed",
+      monthlyCostSolo: "$5–7",
+      monthlyCostTeam: "$7/dyno + add-ons",
+      hiddenCosts: "No free tier at all. Add-on costs stack up fast (Postgres Mini $5/mo, Redis Mini $3/mo). Eco dynos sleep and have shared compute. Basic dynos ($7) are the real minimum for production use.",
+    },
+  ];
+
+  const categoryLabels: Record<string, string> = {
+    "traditional-paas": "Traditional PaaS",
+    "edge-serverless": "Edge / Serverless",
+    "full-featured": "Full-Featured Platforms",
+    "static-specialized": "Static & Specialized",
+  };
+
+  const categoryDescs: Record<string, string> = {
+    "traditional-paas": "Deploy containers or code with familiar push-to-deploy workflows. Best for traditional web apps, APIs, and background workers that need persistent compute.",
+    "edge-serverless": "Run code at the edge with zero cold starts and automatic global distribution. Best for APIs, static sites with functions, and latency-sensitive applications.",
+    "full-featured": "Enterprise-grade platforms with rich ecosystems. Best for production applications that need the full toolchain — CI/CD, monitoring, databases, and team management.",
+    "static-specialized": "Focused hosting for specific use cases. Static sites, Python apps, or developer documentation. Simple and free for what they do well.",
+  };
+
+  const freeTypeLabels: Record<string, string> = {
+    "generous": "Generous free tier",
+    "limited": "Limited free tier",
+    "removed": "No free tier",
+    "trial": "Trial only",
+    "credits": "Free credits",
+  };
+
+  const freeTypeColors: Record<string, string> = {
+    "generous": "#3fb950",
+    "limited": "#d29922",
+    "removed": "#f85149",
+    "trial": "#bc8cff",
+    "credits": "#58a6ff",
+  };
+
+  const freeCount = services.filter(s => s.freeType === "generous").length;
+  const limitedCount = services.filter(s => s.freeType === "limited" || s.freeType === "credits" || s.freeType === "trial").length;
+
+  // Check for Railway referral
+  const railwayOffer = offers.find(o => o.vendor === "Railway");
+  const hasRailwayReferral = railwayOffer?.referral_program?.available === true;
+
+  const pricingTableRows = services.map(s => {
+    const freeColor = freeTypeColors[s.freeType] || "var(--text-muted)";
+    return '<tr>' +
+      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(s.freeTier) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.paidFrom) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.freeBandwidth) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.freeCompute) + '</td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  const categories: Array<"traditional-paas" | "edge-serverless" | "full-featured" | "static-specialized"> = ["traditional-paas", "edge-serverless", "full-featured", "static-specialized"];
+  const categorySections = categories.map(cat => {
+    const catServices = services.filter(s => s.category === cat);
+    const cards = catServices.map(s => {
+      const borderColor = freeTypeColors[s.freeType] || "var(--accent)";
+      return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
+        '<h3><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a> ' +
+        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></h3>' +
+        '<p class="diff-desc">' + escHtmlServer(s.freeDetails) + '</p>' +
+        '</div>';
+    }).join("\n    ");
+    return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
+      '<p class="section-intro">' + escHtmlServer(categoryDescs[cat]) + '</p>' +
+      cards;
+  }).join("\n\n  ");
+
+  const costRows = services.map(s => {
+    return '<tr>' +
+      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSolo) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.hiddenCosts.substring(0, 80)) + (s.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  const changeTimelineRows = hostingChanges.map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return '<tr>' +
+      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
+      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
+    ["hosting-alternatives", "heroku-alternatives", "database-alternatives", "ci-cd-alternatives", "storage-alternatives"].includes(p.slug)
+  );
+
+  const faqEntries = [
+    { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers the most generous free tier: unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB bandwidth, 6,000 build minutes) and Deno Deploy (1M requests/month) are strong free options. Railway offers $5 in free credits to get started." },
+    { q: "Is Heroku still worth it without a free tier?", a: "Heroku removed its free tier in November 2022. The cheapest option is now Eco dynos at $5/month (shared compute, sleeps after 30 min). For most use cases, Railway ($5/mo with $5 credit), Render (free tier with spin-down), or Fly.io provide better value." },
+    { q: "What are the hidden costs of Vercel?", a: "New Pro projects default to Turbo build machines at $0.126/min — 9x the cost of Standard builds ($0.014/min). The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
+    { q: "Which PaaS is best for side projects?", a: "For static sites: Cloudflare Pages (unlimited free bandwidth) or GitHub Pages. For full-stack: Railway ($5 free credit, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby. For serverless APIs: Cloudflare Workers (100K req/day free) or Deno Deploy (1M req/month)." },
+    { q: "Which hosting platform is best for production apps?", a: "Vercel for Next.js/React apps ($20/seat). Railway for general-purpose apps ($5/mo hobby, $20/seat team). Google Cloud Run for container workloads with auto-scaling. Fly.io for latency-sensitive apps needing multi-region deployment. Avoid Netlify for teams — the per-committer billing ($19/seat per repo committer) can be expensive." },
+  ];
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
+    about: services.map(s => ({ "@type": "SoftwareApplication", name: s.name })),
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqEntries.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Cloud Hosting", item: BASE_URL + "/hosting-alternatives" },
+      { "@type": "ListItem", position: 3, name: title, item: BASE_URL + "/" + slug },
+    ],
+  };
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+    '<meta charset="utf-8">\n' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+    '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
+    '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="og:title" content="' + escHtmlServer(title) + '">\n' +
+    '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<meta property="og:type" content="article">\n' +
+    '<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="article:published_time" content="' + pubDate + '">\n' +
+    OG_IMAGE_META + GOOGLE_VERIFICATION_META +
+    '<link rel="icon" type="image/png" href="/favicon.png">\n' +
+    '<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n' +
+    '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n' +
+    '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n' +
+    '<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n' +
+    '<style>\n' +
+    '*{margin:0;padding:0;box-sizing:border-box}\n' +
+    ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n' +
+    'body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n' +
+    'a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n' +
+    '.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n' +
+    '.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n' +
+    '.breadcrumb a{color:var(--text-muted)}\n' +
+    'h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\n' +
+    'h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\n' +
+    'h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n' +
+    '.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n' +
+    '.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n' +
+    '.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n' +
+    '.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n' +
+    '.stat-number.green{color:#3fb950}\n' +
+    '.stat-number.yellow{color:#d29922}\n' +
+    '.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n' +
+    '.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n' +
+    '.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n' +
+    '.executive-summary p:last-child{margin-bottom:0}\n' +
+    '.executive-summary strong{color:var(--text)}\n' +
+    '.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n' +
+    '.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n' +
+    '.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n' +
+    '.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n' +
+    '.pricing-table tr:hover{background:var(--accent-glow)}\n' +
+    '.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n' +
+    '.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    '.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.context-box strong{color:var(--text)}\n' +
+    '.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n' +
+    '.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n' +
+    '.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n' +
+    '.verdict-item strong{color:var(--text)}\n' +
+    '.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n' +
+    '.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.methodology strong{color:var(--text)}\n' +
+    '.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n' +
+    '.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n' +
+    '.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n' +
+    '.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n' +
+    '.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n' +
+    '.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}\n' +
+    '.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n' +
+    '.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n' +
+    '.toc ol{padding-left:1.25rem;margin:0}\n' +
+    '.toc li{margin-bottom:.35rem;font-size:.9rem}\n' +
+    '.toc a{color:var(--accent)}\n' +
+    '.hidden-cost-card{padding:1rem 1.25rem;border:1px solid var(--border);border-left:3px solid #f85149;border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.hidden-cost-card h4{margin:0 0 .25rem;font-size:.95rem;color:var(--text)}\n' +
+    '.hidden-cost-card p{color:var(--text-muted);font-size:.85rem;line-height:1.5;margin:0}\n' +
+    '.referral-box{background:rgba(63,185,80,0.08);border:1px solid #3fb950;border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n' +
+    '.referral-box h3{color:#3fb950;margin:0 0 .5rem;font-size:1rem}\n' +
+    '.referral-box p{color:var(--text-muted);font-size:.9rem;margin:0}\n' +
+    '.referral-box a{color:#3fb950}\n' +
+    '.faq-item{border-bottom:1px solid var(--border);padding:1rem 0}\n' +
+    '.faq-item:last-child{border-bottom:none}\n' +
+    '.faq-q{font-weight:600;color:var(--text);font-size:.95rem;margin-bottom:.5rem}\n' +
+    '.faq-a{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n' +
+    'footer a{color:var(--accent)}\n' +
+    '@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}\n' +
+    globalNavCss() + '\n' +
+    mcpCtaCss() + '\n' +
+    '</style>\n</head>\n<body>\n' +
+    '<div class="container">\n' +
+    '  ' + buildGlobalNav("changes") + '\n' +
+    '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Cloud Hosting</a> &rsaquo; Pricing Comparison</div>\n' +
+    '  <h1>Cloud Hosting &amp; PaaS Pricing \u2014 The 2026 Comparison</h1>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + services.length + ' platforms compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + hostingChanges.length + ' pricing changes tracked</p>\n' +
+    '\n' +
+    '  <div class="summary-stats">\n' +
+    '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Platforms Compared</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number green">' + freeCount + '</div><div class="stat-label">Generous Free Tier</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number yellow">' + limitedCount + '</div><div class="stat-label">Limited / Trial / Credits</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Platform Categories</div></div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="executive-summary">\n' +
+    '    <p><strong>Cloud hosting in April 2026:</strong> ' + services.length + ' platforms across four categories \u2014 traditional PaaS, edge/serverless, full-featured platforms, and static/specialized hosts. $5/month has become the entry price for always-on compute (Railway Hobby, Heroku Eco). Cloudflare dominates the free tier with unlimited bandwidth and 100K requests/day. The big shift: credit-based pricing is replacing flat-rate plans (Vercel Jan 2026, Netlify Sep 2025).</p>\n' +
+    '    <p><strong>Key trends:</strong> Heroku\'s free tier removal (2022) drove a migration wave to Railway, Render, and Fly.io. Netlify\'s per-committer billing (March 2026) is pushing teams to Vercel or Cloudflare Pages. Google is flooding the market with generous always-free tiers (Cloud Run: 2M requests/month). Edge computing is making traditional PaaS less necessary for many workloads.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, free tier analysis, cost comparison for solo devs and teams, hidden costs, pricing gotchas, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    (hasRailwayReferral ? (
+    '  <div class="referral-box">\n' +
+    '    <h3>\u{1F680} Railway \u2014 $20 in free credits with our referral</h3>\n' +
+    '    <p>Get $20 in Railway credits (4x the standard $5 trial credit). Railway is our top pick for side projects and production apps alike. <a href="' + escHtmlServer(railwayOffer?.referral_program?.program_url ?? "/vendor/railway") + '" rel="noopener sponsored">Claim your $20 credit</a> &middot; <a href="/disclosure" style="color:var(--text-dim);font-size:.8rem">Affiliate disclosure</a></p>\n' +
+    '  </div>\n'
+    ) : '') +
+    '\n' +
+    '  <div class="toc">\n' +
+    '    <h3>Jump to section</h3>\n' +
+    '    <ol>\n' +
+    '      <li><a href="#pricing-table">Pricing Comparison Table</a></li>\n' +
+    '      <li><a href="#categories">Category Breakdown</a> (PaaS, Edge/Serverless, Full-Featured, Static)</li>\n' +
+    '      <li><a href="#free-tiers">What You Actually Get for Free</a></li>\n' +
+    '      <li><a href="#cost-analysis">Cost Analysis by Use Case</a></li>\n' +
+    '      <li><a href="#hidden-costs">Pricing Gotchas</a></li>\n' +
+    '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
+    '      <li><a href="#faq">FAQ</a></li>\n' +
+    '    </ol>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
+    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click platform names for full vendor profiles with free tier details.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Platform</th>\n' +
+    '        <th>Free Tier</th>\n' +
+    '        <th>Paid From</th>\n' +
+    '        <th>Free Bandwidth</th>\n' +
+    '        <th>Free Compute</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + pricingTableRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The $5/month floor:</strong> Railway, Heroku, and Cloudflare Workers Paid all land at $5/month as the entry price for always-on compute. Free tiers exist but come with spin-down (Render, Koyeb), time limits (Fly.io trial), or usage caps (Cloudflare 100K/day). Vercel and Cloudflare Pages are the standout exceptions \u2014 genuinely generous free tiers with no spin-down for static/JAMstack sites.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="categories">Category Breakdown</h2>\n' +
+    '  <p class="section-intro">Cloud hosting platforms fall into four categories, each optimized for different workloads and developer preferences.</p>\n' +
+    '\n' +
+    '  ' + categorySections + '\n' +
+    '\n' +
+    '  <h2 id="free-tiers">What You Actually Get for Free</h2>\n' +
+    '  <p class="section-intro">Free tiers range from genuinely production-ready (Cloudflare, Vercel) to barely-functional trials (Fly.io). Here\'s the honest breakdown.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Platform</th>\n' +
+    '        <th>Free Tier Type</th>\n' +
+    '        <th>Bandwidth</th>\n' +
+    '        <th>Build Minutes</th>\n' +
+    '        <th>When You Hit the Wall</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    services.map(s => {
+      const wallDesc = s.freeType === "generous" ? "Months of real traffic" :
+        s.freeType === "credits" ? "When credits run out" :
+        s.freeType === "removed" ? "Immediately ($5/mo minimum)" :
+        s.freeType === "trial" ? "When trial expires" :
+        "Weeks of moderate use";
+      return '      <tr>' +
+        '<td style="font-weight:600">' + escHtmlServer(s.name) + '</td>' +
+        '<td><span style="color:' + (freeTypeColors[s.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></td>' +
+        '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.freeBandwidth) + '</td>' +
+        '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.freeBuildMinutes) + '</td>' +
+        '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(wallDesc) + '</td>' +
+        '</tr>';
+    }).join("\n") + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="cost-analysis">Cost Comparison by Use Case</h2>\n' +
+    '  <p class="section-intro">What does each platform actually cost for a solo developer running a side project versus a team of 5 with production traffic?</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Platform</th>\n' +
+    '        <th>Solo Dev /mo</th>\n' +
+    '        <th>Team of 5 /mo</th>\n' +
+    '        <th>Key Cost Factor</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + costRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>Best value picks:</strong> For side projects, <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> ($0) or <a href="/vendor/vercel">Vercel Hobby</a> ($0) for static/JAMstack. <a href="/vendor/railway">Railway</a> ($5/mo with $5 credit) for full-stack apps. For production teams, <a href="/vendor/google-cloud-run">Google Cloud Run</a> (usage-based, generous free tier) or <a href="/vendor/vercel">Vercel Pro</a> ($20/seat) for Next.js apps.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="hidden-costs">Pricing Gotchas</h2>\n' +
+    '  <p class="section-intro">The sticker price is rarely the full story. These are the costs that surprise developers after they commit to a platform.</p>\n' +
+    '\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Vercel Turbo Builds: 9x Cost Multiplier</h4>\n' +
+    '    <p>New Pro projects on Vercel default to Turbo build machines at $0.126/min \u2014 9 times the cost of Standard builds ($0.014/min). A 5-minute build costs $0.63 on Turbo vs $0.07 on Standard. Switch to Standard builds in project settings unless you genuinely need faster builds.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Netlify Per-Committer Billing</h4>\n' +
+    '    <p>Since March 2026, every repo committer on a Netlify-connected private repo is charged as a full Pro seat ($19/month) when using CMS or Identity. A team of 10 with 3 occasional committers pays for all 10. This is the most controversial pricing change in the hosting space.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Render Free Tier Spin-Down</h4>\n' +
+    '    <p>Free web services on Render spin down after 15 minutes of inactivity (tightened from 30 minutes in Sep 2025). Cold starts take 30\u201360 seconds. Not viable for APIs that need to respond quickly. The workaround costs $7/month (Individual plan, always-on).</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Railway Credit Exhaustion</h4>\n' +
+    '    <p>Railway\'s Trial plan gives a one-time $5 credit. Once it\'s gone, services stop. Hobby plan ($5/mo) resets monthly but usage can exceed the credit \u2014 a busy API can cost $10\u201320/month. Monitor your usage dashboard closely.</p>\n' +
+    '  </div>\n' +
+    '  <div class="hidden-cost-card">\n' +
+    '    <h4>Cloudflare Workers Daily Quotas</h4>\n' +
+    '    <p>Cloudflare Workers free tier uses daily quotas (100K requests/day), not monthly. A traffic spike on one day gets throttled even if your monthly average is well under limits. The 10ms CPU time limit per request also restricts compute-heavy operations.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
+    '  <p class="section-intro">Cloud hosting pricing has been volatile. Here are the changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
+    '\n' +
+    (hostingChanges.length > 0 ? (
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + changeTimelineRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n'
+    ) : '  <p class="section-intro">No hosting pricing changes tracked yet.</p>\n') +
+    '\n' +
+    '  <div class="context-box">\n' +
+    '    <strong>The pattern:</strong> Free tiers are shrinking across the board. Heroku removed theirs entirely (2022). Render shortened spin-down time (Sep 2025). Netlify moved to credit-based pricing (Sep 2025). Vercel moved to credits (Jan 2026). The edge platforms (Cloudflare, Deno Deploy) have bucked this trend with genuinely generous free tiers \u2014 likely subsidized by their broader platform ecosystems.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
+    '\n' +
+    '  <div class="verdict-box">\n' +
+    '    <h3>Pick the Right Platform</h3>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for side projects</strong>\n' +
+    '      <p><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> for static/JAMstack (unlimited free bandwidth). <a href="/vendor/railway">Railway</a> for full-stack apps ($5 free credit, no credit card). <a href="/vendor/vercel">Vercel Hobby</a> for Next.js (100 GB bandwidth, 6K build min).</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for production apps</strong>\n' +
+    '      <p><a href="/vendor/vercel">Vercel Pro</a> ($20/seat) for frontend/Next.js. <a href="/vendor/railway">Railway</a> ($20/seat) for general-purpose backends. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for container workloads with auto-scale-to-zero and generous always-free tier.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for APIs / serverless</strong>\n' +
+    '      <p><a href="/vendor/cloudflare-workers">Cloudflare Workers</a> (100K req/day free, zero cold starts, 300+ edge locations). <a href="/vendor/deno-deploy">Deno Deploy</a> (1M req/month free). Both offer sub-millisecond cold starts and global distribution.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best free static hosting</strong>\n' +
+    '      <p><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited bandwidth, 500 builds/month). <a href="/vendor/github-pages">GitHub Pages</a> (100 GB/month, free with any GitHub account). <a href="/vendor/vercel">Vercel Hobby</a> (100 GB bandwidth, best for Next.js).</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best for teams on a budget</strong>\n' +
+    '      <p><a href="/vendor/railway">Railway</a> ($20/seat) or <a href="/vendor/render">Render</a> ($19/seat). Avoid Netlify for teams due to per-committer billing. <a href="/vendor/google-cloud-run">Google Cloud Run</a> has no per-seat pricing \u2014 purely usage-based.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Best Heroku replacement</strong>\n' +
+    '      <p><a href="/vendor/railway">Railway</a> \u2014 closest developer experience to Heroku with better pricing ($5/mo vs Heroku\'s $5\u20137/mo minimum). Similar push-to-deploy workflow, built-in databases, and add-on ecosystem.</p>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
+    faqEntries.map(f =>
+      '  <div class="faq-item">\n' +
+      '    <div class="faq-q">' + escHtmlServer(f.q) + '</div>\n' +
+      '    <div class="faq-a">' + escHtmlServer(f.a) + '</div>\n' +
+      '  </div>'
+    ).join("\n") + '\n' +
+    '\n' +
+    '  <h2>Data Source &amp; Methodology</h2>\n' +
+    '  <div class="methodology">\n' +
+    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Query this data programmatically</strong> via <a href="/api/hosting-pricing">/api/hosting-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for hosting platforms, compare vendors, or track pricing changes from your AI coding assistant.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
+    '\n' +
+    '  ' + buildMcpCta("Compare cloud hosting pricing, search free tiers, and track pricing changes \u2014 all from your AI coding assistant.") + '\n' +
+    '\n' +
+    '  <h2>Related Guides</h2>\n' +
+    '  <div class="related-pages">\n' +
+    relatedPages.map(p =>
+      '    <a href="/' + p.slug + '" class="related-page-link">\n' +
+      '      <div class="link-title">' + escHtmlServer(p.title) + '</div>\n' +
+      '      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n' +
+      '    </a>'
+    ).join("\n") + '\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="search-cta">\n' +
+    '    Explore all ' + offers.length.toLocaleString() + ' developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>\n' +
+    '  </div>\n' +
+    '</div>\n' +
+    '<footer>\n' +
+    '  <div class="container">\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '  </div>\n' +
+    '</footer>\n' +
+    '<script>' + mcpCtaScript() + '</script>\n' +
+    '</body>\n</html>';
+}
+
 // --- Agent Payments page ---
 
 function buildAgentPaymentsPage(): string {
@@ -45660,6 +46395,7 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/vendor-risk/:vendor", desc: "Check vendor pricing risk", params: "" },
     { method: "GET", path: "/api/deadlines", desc: "Future-dated changes with countdown", params: "type" },
     { method: "GET", path: "/api/ai-coding-pricing", desc: "AI coding tools pricing comparison data", params: "type (ide, cli, cloud-agent, app-builder)" },
+    { method: "GET", path: "/api/hosting-pricing", desc: "Cloud hosting & PaaS pricing comparison data", params: "type (traditional-paas, edge-serverless, full-featured, static-specialized)" },
     { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days" },
     { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "" },
     { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "" },
@@ -50090,6 +50826,40 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/ai-coding-pricing", params: { type: categoryFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: tools.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ tools, changes: aiChanges, count: tools.length, categories: Object.keys(categoryMap) }));
+  } else if (url.pathname === "/api/hosting-pricing" && isGetOrHead) {
+    recordApiHit("/api/hosting-pricing");
+    const hostingOffers = offers.filter(o => o.category === "Cloud Hosting");
+    const hostingCategoryMap: Record<string, string[]> = {
+      "traditional-paas": ["Railway", "Render", "Fly.io", "Koyeb", "Northflank"],
+      "edge-serverless": ["Cloudflare Workers", "Cloudflare Pages", "Netlify", "Deno Deploy", "Val Town"],
+      "full-featured": ["Vercel", "Google Cloud Run", "Heroku"],
+      "static-specialized": ["GitHub Pages", "PythonAnywhere"],
+    };
+    const hostingVendorNames = Object.values(hostingCategoryMap).flat();
+    const hostingTypeFilter = url.searchParams.get("type") || undefined;
+    const validHostingTypes = ["traditional-paas", "edge-serverless", "full-featured", "static-specialized"];
+    const hostingApiChanges = dealChanges.filter(c =>
+      hostingVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
+    ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const hostingTools = hostingOffers.map(o => {
+      const toolCat = Object.entries(hostingCategoryMap).find(([, vendors]) =>
+        vendors.some(v => o.vendor.includes(v) || v.includes(o.vendor))
+      )?.[0] || "traditional-paas";
+      return {
+        vendor: o.vendor,
+        category: toolCat,
+        description: o.description,
+        tier: o.tier,
+        url: o.url,
+        tags: o.tags,
+        verifiedDate: o.verifiedDate,
+        vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+        has_referral: !!(o.referral_program?.available),
+      };
+    }).filter(t => !hostingTypeFilter || !validHostingTypes.includes(hostingTypeFilter) || t.category === hostingTypeFilter);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/hosting-pricing", params: { type: hostingTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: hostingTools.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ platforms: hostingTools, changes: hostingApiChanges, count: hostingTools.length, categories: Object.keys(hostingCategoryMap) }));
   } else if (url.pathname === "/api/audit-stack" && isGetOrHead) {
     recordApiHit("/api/audit-stack");
     const servicesParam = url.searchParams.get("services");
@@ -51172,6 +51942,11 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vector-database-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildVectorDatabasePricingPage());
+  } else if (url.pathname === "/hosting-pricing" && isGetOrHead) {
+    recordApiHit("/hosting-pricing");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hosting-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildHostingPricingPage());
   } else if (url.pathname === "/agent-payments" && isGetOrHead) {
     recordApiHit("/agent-payments");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-payments", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
