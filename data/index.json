@@ -1186,7 +1186,7 @@
     {
       "vendor": "Windsurf",
       "category": "IDE & Code Editors",
-      "description": "AI coding assistant (formerly Codeium). Free tier: daily/weekly quotas for completions and chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Ultimate $40/mo, Team $200/mo. Grandfathered Pro subscribers keep $15/mo indefinitely",
+      "description": "AI coding assistant (formerly Codeium). Free tier: limited daily quotas for completions and chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Teams $40/mo, Max $200/mo. SWE-1.5 Fast Agent model. Grandfathered Pro subscribers keep $15/mo indefinitely",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -1197,12 +1197,12 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-10"
+      "verifiedDate": "2026-04-13"
     },
     {
       "vendor": "GitHub Copilot",
       "category": "IDE & Code Editors",
-      "description": "AI code assistant — 2,000 completions/month, 50 premium requests/month, works in VS Code/JetBrains/GitHub.com. Premium requests use advanced models (Claude Opus 4, o3); overage $0.04/request. Students and OSS maintainers get Pro free",
+      "description": "AI code assistant — 2,000 completions/month, 50 premium requests/month, works in VS Code/JetBrains/GitHub.com. Premium requests use advanced models (Claude Opus 4, o3); overage $0.04/request. Students get dedicated Copilot Student plan (Mar 2026) — premium models available via Auto mode only, no manual model selection for GPT-5.4/Claude Opus/Sonnet. OSS maintainers get Pro free",
       "tier": "Free",
       "url": "https://github.com/features/copilot/plans",
       "tags": [
@@ -1210,14 +1210,15 @@
         "ai",
         "code completion",
         "ide",
-        "free tier"
+        "free tier",
+        "deal-change"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-13"
     },
     {
       "vendor": "Cursor",
       "category": "AI Coding",
-      "description": "AI-powered code editor built on VS Code. Free tier: 2,000 completions/month, 50 slow premium requests/month. Pro $20/month (unlimited completions, 500 fast premium requests). Pro+ $60/month (10x premium requests vs Pro, priority access, more context). Business $40/seat/month. Ultra $200/month (highest credit limits for power users). 4-tier pricing ladder since April 2026.",
+      "description": "AI-powered code editor built on VS Code. 6-plan structure: Free (2,000 completions/month, 50 slow premium requests), Hobby $10/month (lighter paid tier), Pro $20/month (unlimited completions, 500 fast premium requests), Pro+ $60/month (10x premium requests vs Pro, priority access, more context), Business $40/seat/month, Ultra $200/month (highest credit limits for power users). Credit-based pricing model since June 2025.",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
@@ -1228,7 +1229,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-08"
+      "verifiedDate": "2026-04-13"
     },
     {
       "vendor": "Linear",
@@ -20631,7 +20632,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "AI Coding",
-      "description": "AI coding assistant by GitHub/Microsoft. Free tier: 2,000 code completions/month, 50 premium requests/month. Pro $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo (1,500 premium requests, all models incl. Claude Opus 4, o3). Business $19/seat/mo (300/user). Enterprise $39/seat/mo (1,000/user). Overage $0.04/premium request. Model multipliers: advanced reasoning 5x-20x per interaction.",
+      "description": "AI coding assistant by GitHub/Microsoft. Free tier: 2,000 code completions/month, 50 premium requests/month. Pro $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo (1,500 premium requests, all models incl. Claude Opus 4, o3). Business $19/seat/mo (300/user). Enterprise $39/seat/mo (1,000/user). Overage $0.04/premium request. Model multipliers: advanced reasoning 5x-20x per interaction. Student plan (Mar 2026): premium models only via Auto mode, no manual selection.",
       "tier": "Free",
       "url": "https://github.com/features/copilot",
       "tags": [
@@ -20640,9 +20641,10 @@
         "code completion",
         "ide",
         "developer tools",
-        "cursor-alternative"
+        "cursor-alternative",
+        "deal-change"
       ],
-      "verifiedDate": "2026-03-22"
+      "verifiedDate": "2026-04-13"
     },
     {
       "vendor": "Amazon Q Developer",
@@ -20696,7 +20698,7 @@
     {
       "vendor": "Windsurf",
       "category": "AI Coding",
-      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: daily/weekly quotas for Cascade AI flows, code completions, AI chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Ultimate $40/mo, Team $200/mo/seat. Grandfathered Pro subscribers keep $15/mo indefinitely. All tiers include premium models",
+      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: limited daily quotas for Cascade AI flows, code completions, AI chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Teams $40/mo, Max $200/mo. SWE-1.5 Fast Agent model for faster iteration. Grandfathered Pro subscribers keep $15/mo indefinitely. All tiers include premium models",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -20708,7 +20710,7 @@
         "cursor-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-10"
+      "verifiedDate": "2026-04-13"
     },
     {
       "vendor": "Augment Code",

@@ -3545,6 +3545,54 @@
         "Cursor",
         "Windsurf"
       ]
+    },
+    {
+      "vendor": "Windsurf",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-13",
+      "summary": "Windsurf Max plan ($200/mo) confirmed as power-user tier alongside Teams ($40/mo/seat). SWE-1.5 Fast Agent model announced for faster iteration. Full tier lineup: Free (limited daily quotas), Pro ($20/mo), Teams ($40/mo), Max ($200/mo).",
+      "previous_state": "Pro $20/mo and Ultimate $40/mo listed; Max tier and SWE-1.5 model missing",
+      "current_state": "4-tier structure: Free, Pro ($20), Teams ($40), Max ($200). SWE-1.5 Fast Agent model available.",
+      "impact": "medium",
+      "source_url": "https://windsurf.com/pricing",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "GitHub Copilot",
+        "Claude Code"
+      ]
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "restriction",
+      "date": "2026-03-12",
+      "summary": "Student plan now managed under dedicated 'GitHub Copilot Student' plan. Premium models (GPT-5.4, Claude Opus, Claude Sonnet) removed from manual self-selection — still available via Auto mode (system picks the model).",
+      "previous_state": "Students shared Copilot Free quotas with full model self-selection",
+      "current_state": "Dedicated Student plan — premium models only via Auto mode, no manual model selection",
+      "impact": "medium",
+      "source_url": "https://github.com/features/copilot/plans",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "Windsurf",
+        "Gemini Code Assist"
+      ]
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-13",
+      "summary": "Cursor now offers 6 plans: Free, Hobby ($10/mo), Pro ($20/mo), Pro+ ($60/mo), Business ($40/seat), Ultra ($200/mo). Hobby tier added as lighter paid option between Free and Pro. Credit-based pricing model since June 2025.",
+      "previous_state": "5-tier structure (Free, Pro, Pro+, Business, Ultra)",
+      "current_state": "6-tier structure with new Hobby ($10/mo) tier between Free and Pro",
+      "impact": "low",
+      "source_url": "https://www.cursor.com/pricing",
+      "category": "AI Coding",
+      "alternatives": [
+        "Windsurf",
+        "GitHub Copilot",
+        "Claude Code"
+      ]
     }
   ]
 }
