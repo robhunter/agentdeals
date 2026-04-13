@@ -49746,7 +49746,7 @@ Track recent pricing changes across developer tools.
 
 Parameters:
 - since (string, optional): ISO date (YYYY-MM-DD). Default: 7 days ago.
-- change_type (enum, optional): free_tier_removed, limits_reduced, restriction, limits_increased, new_free_tier, new_tier, pricing_restructured, open_source_killed, pricing_model_change, startup_program_expanded, pricing_postponed, product_deprecated
+- change_type (enum, optional): free_tier_removed, limits_reduced, restriction, limits_increased, new_free_tier, new_tier, pricing_restructured, open_source_killed, pricing_model_change, startup_program_expanded, pricing_postponed, product_deprecated, rebranded
 - vendor (string, optional): Filter to one vendor
 - vendors (string, optional): Comma-separated vendor names
 - include_expiring (boolean, optional): Include upcoming expirations (default: true)
