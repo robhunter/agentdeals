@@ -5708,4 +5708,79 @@ describe("shutdown tracker page", () => {
       assert.strictEqual(tool.category, "cli", `${tool.vendor} should be categorized as cli`);
     }
   });
+
+  it("GET /llm-api-pricing renders LLM API pricing comparison", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/llm-api-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("LLM API Pricing"), "Should have LLM pricing title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    // Key providers
+    assert.ok(html.includes("OpenAI"), "Should include OpenAI");
+    assert.ok(html.includes("Anthropic"), "Should include Anthropic");
+    assert.ok(html.includes("Google Gemini"), "Should include Google Gemini");
+    assert.ok(html.includes("Groq"), "Should include Groq");
+    assert.ok(html.includes("DeepSeek"), "Should include DeepSeek");
+    assert.ok(html.includes("OpenRouter"), "Should include OpenRouter");
+    assert.ok(html.includes("Cerebras"), "Should include Cerebras");
+    // Key sections
+    assert.ok(html.includes("Provider Breakdown"), "Should have provider breakdown");
+    assert.ok(html.includes("Frontier Labs"), "Should have frontier category");
+    assert.ok(html.includes("Inference Providers"), "Should have inference category");
+    assert.ok(html.includes("What You Actually Get for Free"), "Should have free tier section");
+    assert.ok(html.includes("Pricing Gotchas"), "Should have gotchas section");
+    assert.ok(html.includes("Best-for-Use-Case Recommendations"), "Should have recommendations");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/api/llm-pricing"), "Should link to API endpoint");
+  });
+
+  it("GET /api/llm-pricing returns LLM providers as JSON", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/llm-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.providers), "Should have providers array");
+    assert.ok(body.count > 10, "Should have 10+ LLM providers");
+    assert.ok(Array.isArray(body.changes), "Should have changes array");
+    assert.ok(Array.isArray(body.categories), "Should have categories list");
+    assert.deepStrictEqual(body.categories, ["frontier", "inference", "open-source-host", "specialized"]);
+    const provider = body.providers[0];
+    assert.ok(provider.vendor, "Provider should have vendor");
+    assert.ok(provider.category, "Provider should have category");
+    assert.ok(provider.vendor_page, "Provider should have vendor_page link");
+  });
+
+  it("GET /api/llm-pricing?type=frontier filters by category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/llm-pricing?type=frontier`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.count > 0, "Should have frontier providers");
+    for (const provider of body.providers) {
+      assert.strictEqual(provider.category, "frontier", `${provider.vendor} should be categorized as frontier`);
+    }
+  });
+
+  it("GET /api/llm-pricing?type=inference filters by category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/llm-pricing?type=inference`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.count > 0, "Should have inference providers");
+    for (const provider of body.providers) {
+      assert.strictEqual(provider.category, "inference", `${provider.vendor} should be categorized as inference`);
+    }
+  });
 });
