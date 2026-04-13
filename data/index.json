@@ -4781,7 +4781,7 @@
         "geocoding",
         "network"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ipapi",
@@ -4795,7 +4795,7 @@
         "ip-lookup",
         "location"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Hunter.io",
@@ -4810,7 +4810,7 @@
         "email-verification",
         "sales"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Geocodio",
@@ -4840,7 +4840,7 @@
         "finance",
         "forex"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "MailboxValidator",
@@ -4854,7 +4854,7 @@
         "verification",
         "deliverability"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Screenshotlayer",
@@ -4868,7 +4868,7 @@
         "web-capture",
         "images"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "URLscan.io",
@@ -6075,14 +6075,14 @@
     {
       "vendor": "APITemplate.io",
       "category": "Dev Utilities",
-      "description": "Auto-generate images and PDF documents with a simple API or automation tools like Zapier & Airtable. No CSS/HTML is required. The free plan comes with 50 images/month and three templates.",
+      "description": "Auto-generate images and PDF documents with a simple API or automation tools like Zapier & Airtable. No CSS/HTML is required. The free plan comes with 50 images/PDFs per month and three templates.",
       "tier": "Free",
       "url": "https://apitemplate.io",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "APIVerve",
@@ -6154,7 +6154,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Canopy",
@@ -6178,7 +6178,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Cloudmersive",
@@ -6190,7 +6190,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Colaboratory",
@@ -6198,18 +6198,6 @@
       "description": "Free web-based Python notebook environment with Nvidia Tesla K80 GPU.",
       "tier": "Free",
       "url": "https://colab.research.google.com",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Commerce Layer",
-      "category": "Dev Utilities",
-      "description": "Composable commerce API that can build, place, and manage orders from any front end. The developer plan allows 100 orders per month and up to 1,000 SKUs for free.",
-      "tier": "Free",
-      "url": "https://commercelayer.io",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -6231,14 +6219,14 @@
     {
       "vendor": "Conversion Tools",
       "category": "Dev Utilities",
-      "description": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). The free tier is limited by file size (20MB) and number of conversions (30/Day, 300/Month).",
+      "description": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). The free tier is limited by file size (10MB) and number of conversions (30/Day, 300/Month).",
       "tier": "Free",
       "url": "https://conversiontools.io/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Country-State-City Microservice API",
@@ -6250,7 +6238,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Coupler",
@@ -6267,14 +6255,14 @@
     {
       "vendor": "CraftMyPDF",
       "category": "Dev Utilities",
-      "description": "Auto-Generate PDF documents from reusable templates with a drop-and-drop editor and a simple API. The free plan comes with 100 PDFs/month and three templates.",
+      "description": "Auto-Generate PDF documents from reusable templates with a drop-and-drop editor and a simple API. The free plan comes with 50 PDFs/images per month and three templates.",
       "tier": "Free",
       "url": "https://craftmypdf.com",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Cube",
@@ -6305,24 +6293,24 @@
       "category": "Dev Utilities",
       "description": "Realtime currency data API for fintech apps. The free plan includes 5,000 calls per month.",
       "tier": "Free",
-      "url": "https://currencyscoop.com",
+      "url": "https://currencybeacon.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CustomJS",
       "category": "Dev Utilities",
       "description": "HTML to PDF or PDF to PNG/Text & PDF merging/extraction/merging APIs. Free tier has 600 calls a month.",
       "tier": "Free",
-      "url": "https://www.customjs.io",
+      "url": "https://customjs.space/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Data Fetcher",
@@ -6358,7 +6346,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Datalore",
@@ -6382,7 +6370,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "DB-IP",
@@ -6394,7 +6382,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "DeepAR",
@@ -6425,12 +6413,12 @@
       "category": "Dev Utilities",
       "description": "An online tool for comparing differences between two JSON data structures, helping you quickly locate the differences in JSON data.",
       "tier": "Free",
-      "url": "https://diffjson.com",
+      "url": "https://comparejson.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Disease.sh",
@@ -6442,7 +6430,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Doczilla",
@@ -6454,7 +6442,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Doppio",
@@ -6466,7 +6454,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "drawDB",
@@ -6490,7 +6478,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Export SDK",
@@ -6526,7 +6514,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "FormatJSONOnline.com",
@@ -6538,7 +6526,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "FraudLabs Pro",
@@ -6562,7 +6550,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Geolocated.io",
@@ -6574,7 +6562,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Hex",
@@ -6626,7 +6614,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "IP Geolocation API by ipwho.org",
@@ -6638,7 +6626,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "IP Geolocation",
@@ -6650,7 +6638,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "IP.City",
@@ -6662,7 +6650,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "IP2Location.io",
@@ -6674,7 +6662,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ipaddress.sh",
@@ -6686,7 +6674,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ipapi.is",
@@ -6698,7 +6686,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ipbase.com",
@@ -6710,7 +6698,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "IPLocate",
@@ -6722,7 +6710,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "IPTrace",
@@ -6734,7 +6722,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "JSON IP",
@@ -6746,7 +6734,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "JSON to Table",
@@ -6758,7 +6746,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "JSON2Video",
@@ -6782,7 +6770,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "JSONing",
@@ -6806,7 +6794,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "KillBait API",
@@ -6818,7 +6806,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Kreya",
@@ -6854,7 +6842,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Maxim AI",
@@ -6950,7 +6938,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "numlookupapi.com",
@@ -6962,7 +6950,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "OCR.Space",
@@ -7010,7 +6998,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "PDFBolt",
@@ -7034,7 +7022,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Pixela",
@@ -7046,7 +7034,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "PrefectCloud",
@@ -7106,7 +7094,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "RequestBin.com",
@@ -7130,7 +7118,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Scraper's Proxy",
@@ -7202,7 +7190,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Sofodata",
@@ -7226,7 +7214,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Supportivekoala",
@@ -7238,7 +7226,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Tavily AI",
@@ -7262,7 +7250,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "TinyMCE",
@@ -7286,7 +7274,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Treblle",
@@ -7303,14 +7291,14 @@
     {
       "vendor": "UniRateAPI",
       "category": "Dev Utilities",
-      "description": "Real-time exchange rates for 590+ currencies and crypto. Unlimited API calls on the free plan, perfect for developers and finance apps.",
+      "description": "Real-time exchange rates for 590+ currencies and crypto. 200 requests/day API calls on the free plan, perfect for developers and finance apps.",
       "tier": "Free",
       "url": "https://unirateapi.com",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "vatcheckapi.com",
@@ -7322,7 +7310,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "WeatherXu",
@@ -7334,7 +7322,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "WebScraping.AI",
@@ -7406,7 +7394,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Zipcodestack",
@@ -7418,7 +7406,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Gemfury",
@@ -7586,7 +7574,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Duckly",
@@ -8030,7 +8018,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "talky.io",
@@ -8186,7 +8174,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Webex",
@@ -8744,7 +8732,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CodeKeep",
@@ -8756,7 +8744,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "libraries.io",
@@ -8768,7 +8756,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Namae",
@@ -8780,7 +8768,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "tickgit.com",
@@ -13864,18 +13852,6 @@
       "verifiedDate": "2026-03-20"
     },
     {
-      "vendor": "Kiter.app",
-      "category": "Dev Utilities",
-      "description": "Let anyone organize their job search and track interviews, opportunities, and connections. Powerful web app and Chrome extension. Completely free.",
-      "tier": "Free",
-      "url": "https://www.kiter.app/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
       "vendor": "Kumu.io",
       "category": "Diagramming",
       "description": "Relationship maps with animation, decorations, filters, clustering, spreadsheet imports, etc. The free tier allows unlimited public projects. Graph size unlimited. Free private projects for students. Sandbox mode is available if you prefer not to leave your file publicly online (upload, edit, download, discard).",
@@ -17200,7 +17176,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "veriphone",
@@ -17212,7 +17188,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Adapty.io",
@@ -17605,7 +17581,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Base64 decoder/encoder",
@@ -17617,7 +17593,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "BinShare.net",
@@ -17629,7 +17605,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Blynk",
@@ -17641,7 +17617,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Bricks Note Calculator",
@@ -17653,7 +17629,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Carbon.now.sh",
@@ -17665,7 +17641,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Code Time",
@@ -17689,7 +17665,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "CodeToImage",
@@ -17701,7 +17677,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Cronhooks",
@@ -17713,7 +17689,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "datelist.io",
@@ -17725,7 +17701,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Domain Forward",
@@ -17737,7 +17713,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Exif Editor",
@@ -17749,7 +17725,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Format Express",
@@ -17761,7 +17737,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Hook Relay",
@@ -17773,7 +17749,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Hosting Checker",
@@ -17785,7 +17761,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "newreleases.io",
@@ -17797,7 +17773,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "OnlineExifViewer",
@@ -17809,19 +17785,19 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "PDFMonkey",
       "category": "Dev Utilities",
-      "description": "Manage PDF templates in a dashboard, call the API with dynamic data, and download your PDF. Offers 300 free documents per month.",
+      "description": "Manage PDF templates in a dashboard, call the API with dynamic data, and download your PDF. Offers 20 free documents per month.",
       "tier": "Free",
       "url": "https://www.pdfmonkey.io/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Pika Code Screenshots",
@@ -17833,7 +17809,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "QuickType.io",
@@ -17869,19 +17845,19 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "redirect.pizza",
       "category": "Dev Utilities",
-      "description": "Easily manage redirects with HTTPS support. The free plan includes 10 sources and 100,000 hits per month.",
+      "description": "Easily manage redirects with HTTPS support. The free plan includes 5 domains and 250,000 requests per month.",
       "tier": "Free",
       "url": "https://redirect.pizza/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "redirection.io",
@@ -17893,19 +17869,19 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Renamer.ai",
       "category": "Dev Utilities",
-      "description": "AI-powered file renaming tool with OCR, metadata extraction, and automation for 20+ languages. Free tier: 15 files/month, including desktop app, batch rename, auto-rename, and normal support.",
+      "description": "AI-powered file renaming tool with OCR, metadata extraction, and automation for 20+ languages. Free tier: 25 files/month, including desktop app, batch rename, auto-rename, and normal support.",
       "tier": "Free",
       "url": "https://renamer.ai",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "ReqBin",
@@ -17929,7 +17905,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "snappify",
@@ -17941,7 +17917,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Sunrise and Sunset",
@@ -17953,7 +17929,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "superfeedr.com",
@@ -17965,7 +17941,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "SurveyMonkey.com",
@@ -17977,7 +17953,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "UUID Generator",
@@ -17989,7 +17965,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Versionfeeds",
@@ -18001,7 +17977,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "videoinu",
@@ -18013,7 +17989,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Volume Shader BM",
@@ -18025,7 +18001,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Webacus",
@@ -18037,7 +18013,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "XKit",
@@ -18049,7 +18025,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Dadroit V Web",
@@ -18061,28 +18037,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-03-20"
-    },
-    {
-      "vendor": "Snap Accelerate",
-      "category": "Startup Perks",
-      "description": "Snap Accelerate provides companies with the resources and support they need to scale their marketing and customer acquisition strategies with Snap.",
-      "tier": "Startup Program",
-      "url": "https://developers.snapchat.com/accelerate/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "awesome-startup-credits"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "Snap Accelerate Startup Program"
-      },
-      "expires_date": "2026-06-15"
+      "verifiedDate": "2026-04-12"
     },
     {
       "vendor": "Instabug for Startups",
@@ -18110,13 +18065,13 @@
       "category": "Startup Perks",
       "description": "The Freshworks platform enables developers, partners, and customers to customize, integrate, and automate business workflows for support, CRM, and IT use cases. Claim up to $10000 credits on their intuitive, scalable, and affordable software suite.",
       "tier": "Startup Program",
-      "url": "https://www.freshworks.com/company/partners/startup-program/",
+      "url": "https://www.freshworks.com/company/partners/",
       "tags": [
         "developer-tools",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18488,7 +18443,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18530,7 +18485,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18550,7 +18505,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18562,7 +18517,7 @@
     {
       "vendor": "FeedBear",
       "category": "Startup Perks",
-      "description": "Affordable feedback management for early-stage startups. Eligible startups get all FeedBear features for just $29/mo for up to one year.",
+      "description": "Affordable feedback management for Startup plan startups. Eligible startups get all FeedBear features for just $49/mo for up to one year.",
       "tier": "Startup Program",
       "url": "https://www.feedbear.com/early-stage",
       "tags": [
@@ -18570,7 +18525,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18584,13 +18539,13 @@
       "category": "Startup Perks",
       "description": "The Remote for Startups Program is designed to help you legally and compliantly employ global talent with world-class payroll, tax, benefits, and compliance solutions. Get access to the same powerful platform, HR experts, and localized legal support, at a fraction of the cost.",
       "tier": "Startup Program",
-      "url": "https://remote.com/startups",
+      "url": "https://remote.com/global-hr/startups",
       "tags": [
         "developer-tools",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18630,53 +18585,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Achieved Startup Deal"
-      }
-    },
-    {
-      "vendor": "ActiveCampaign",
-      "category": "Startup Perks",
-      "description": "Get a free ActiveCampaign Professional Plan for 12-months. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "ActiveCampaign Startup Deal"
-      }
-    },
-    {
-      "vendor": "Adjust",
-      "category": "Startup Perks",
-      "description": "$2,000 off or 2-month free trial, with 1-year contract signed. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Adjust Startup Deal"
       }
     },
     {
@@ -18690,7 +18605,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18742,46 +18657,6 @@
       }
     },
     {
-      "vendor": "Apptimize",
-      "category": "Startup Perks",
-      "description": "$995/mo for Apptimize's Basic Plan with a 30 day free trial.. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Apptimize Startup Deal"
-      }
-    },
-    {
-      "vendor": "Attribution App",
-      "category": "Startup Perks",
-      "description": "90% off first year up to 500k MTU. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Attribution App Startup Deal"
-      }
-    },
-    {
       "vendor": "Axonaut",
       "category": "Startup Perks",
       "description": "3 months free up to 50 users. Access via: First deal free, then 99€/year or invite friends",
@@ -18792,7 +18667,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18812,7 +18687,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18832,7 +18707,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18852,7 +18727,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18872,33 +18747,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Botnation Startup Deal"
-      }
-    },
-    {
-      "vendor": "Branch",
-      "category": "Startup Perks",
-      "description": "Access to the Startup Plan, which is $59/mo. up to 50k MAUs.. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Branch Startup Deal"
       }
     },
     {
@@ -18912,7 +18767,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18932,7 +18787,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18952,33 +18807,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "Caviar Startup Deal"
-      }
-    },
-    {
-      "vendor": "Chartio",
-      "category": "Startup Perks",
-      "description": "75% off the Startup and Growth plans for 1 year. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Chartio Startup Deal"
       }
     },
     {
@@ -18992,33 +18827,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "Clear Channel Outdoor Startup Deal"
-      }
-    },
-    {
-      "vendor": "ClearBrain",
-      "category": "Startup Perks",
-      "description": "100,000 Monthly Tracked Users (MTUs) for Free, along with all the features included in the Growth plan, 10 custom goals, 10 audiences, and 12 month data history. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "ClearBrain Startup Deal"
       }
     },
     {
@@ -19105,46 +18920,6 @@
       }
     },
     {
-      "vendor": "Commando.io",
-      "category": "Startup Perks",
-      "description": "15% off any plan for life. Access via: Free",
-      "tier": "Startup Program",
-      "url": "https://www.userlike.com/en/blog/startup-deals",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free"
-        ],
-        "program": "Commando.io Startup Deal"
-      }
-    },
-    {
-      "vendor": "CrazyEgg",
-      "category": "Startup Perks",
-      "description": "Free account for life. Access via: Free",
-      "tier": "Startup Program",
-      "url": "https://www.userlike.com/en/blog/startup-deals",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free"
-        ],
-        "program": "CrazyEgg Startup Deal"
-      }
-    },
-    {
       "vendor": "Crowdfire",
       "category": "Startup Perks",
       "description": "50% off on Premium plan lifetime deal. Access via: First deal free, then 99€/year or invite friends",
@@ -19155,7 +18930,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19185,26 +18960,6 @@
       }
     },
     {
-      "vendor": "Cyfe",
-      "category": "Startup Perks",
-      "description": "50% off for one year. Access via: Free",
-      "tier": "Startup Program",
-      "url": "https://www.userlike.com/en/blog/startup-deals",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free"
-        ],
-        "program": "Cyfe Startup Deal"
-      }
-    },
-    {
       "vendor": "Dareboost",
       "category": "Startup Perks",
       "description": "6 months free on Business plan. Access via: First deal free, then 99€/year or invite friends",
@@ -19215,7 +18970,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19235,7 +18990,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19255,33 +19010,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "Docsend Startup Deal"
-      }
-    },
-    {
-      "vendor": "Drift",
-      "category": "Startup Perks",
-      "description": "Get the Drift Pro plan, bots and all, and 10 user seats for 93% off. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Drift Startup Deal"
       }
     },
     {
@@ -19295,7 +19030,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19336,7 +19071,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19356,7 +19091,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19376,7 +19111,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19396,7 +19131,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19416,7 +19151,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19436,7 +19171,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19456,7 +19191,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19476,53 +19211,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Front Startup Deal"
-      }
-    },
-    {
-      "vendor": "FullContact",
-      "category": "Startup Perks",
-      "description": "20% off for one year. Access via: Free",
-      "tier": "Startup Program",
-      "url": "https://www.userlike.com/en/blog/startup-deals",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free"
-        ],
-        "program": "FullContact Startup Deal"
-      }
-    },
-    {
-      "vendor": "Gem",
-      "category": "Startup Perks",
-      "description": "3 months free. Access via: Free for Stripe Corporate Credit card users",
-      "tier": "Startup Program",
-      "url": "https://stripe.com/en-de/corporate-card",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for Stripe Corporate Credit card users"
-        ],
-        "program": "Gem Startup Deal"
       }
     },
     {
@@ -19536,7 +19231,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19556,33 +19251,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "GOOGLE ADS Startup Deal"
-      }
-    },
-    {
-      "vendor": "Google BigQuery",
-      "category": "Startup Perks",
-      "description": "Once approved, you will receive an initial $20K in credits, good for 12 months. Once you consume 75% of those credits, another $80K will be deposited in your account (expiring within the same 12 months), for $100K total.. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Google BigQuery Startup Deal"
       }
     },
     {
@@ -19596,33 +19271,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "Gorgias Startup Deal"
-      }
-    },
-    {
-      "vendor": "Guideline",
-      "category": "Startup Perks",
-      "description": "Waived fees for 3 months. Access via: Free for Stripe Corporate Credit card users",
-      "tier": "Startup Program",
-      "url": "https://stripe.com/en-de/corporate-card",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for Stripe Corporate Credit card users"
-        ],
-        "program": "Guideline Startup Deal"
       }
     },
     {
@@ -19636,33 +19291,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "Guideline 401(k) Startup Deal"
-      }
-    },
-    {
-      "vendor": "Gusto",
-      "category": "Startup Perks",
-      "description": "3 months free. Access via: Free for Stripe Corporate Credit card users",
-      "tier": "Startup Program",
-      "url": "https://stripe.com/en-de/corporate-card",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for Stripe Corporate Credit card users"
-        ],
-        "program": "Gusto Startup Deal"
       }
     },
     {
@@ -19676,7 +19311,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19717,7 +19352,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19737,7 +19372,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19757,33 +19392,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "InVision Startup Deal"
-      }
-    },
-    {
-      "vendor": "Kasa",
-      "category": "Startup Perks",
-      "description": "5% cash back up to $500 per month. Access via: Free for Stripe Corporate Credit card users",
-      "tier": "Startup Program",
-      "url": "https://stripe.com/en-de/corporate-card",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for Stripe Corporate Credit card users"
-        ],
-        "program": "Kasa Startup Deal"
       }
     },
     {
@@ -19797,7 +19412,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19817,7 +19432,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19837,7 +19452,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19857,7 +19472,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19877,33 +19492,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Legalstart Startup Deal"
-      }
-    },
-    {
-      "vendor": "Lester Lee",
-      "category": "Startup Perks",
-      "description": "Free go-to-market consultation / advice on hiring early salespeople. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Lester Lee Startup Deal"
       }
     },
     {
@@ -19917,33 +19512,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Libeo Startup Deal"
-      }
-    },
-    {
-      "vendor": "Looker",
-      "category": "Startup Perks",
-      "description": "60% off list price. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Looker Startup Deal"
       }
     },
     {
@@ -19957,73 +19532,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Mention Startup Deal"
-      }
-    },
-    {
-      "vendor": "Mode",
-      "category": "Startup Perks",
-      "description": "$12,000 credits for 12 months, free White Label Embeds, then 50% graduation discount in year one.. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Mode Startup Deal"
-      }
-    },
-    {
-      "vendor": "MoEngage",
-      "category": "Startup Perks",
-      "description": "90% off the premium plan for one year. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "MoEngage Startup Deal"
-      }
-    },
-    {
-      "vendor": "Monday",
-      "category": "Startup Perks",
-      "description": "15% discount on any plan. Access via: Free",
-      "tier": "Startup Program",
-      "url": "https://www.userlike.com/en/blog/startup-deals",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free"
-        ],
-        "program": "Monday Startup Deal"
       }
     },
     {
@@ -20098,7 +19613,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20129,26 +19644,6 @@
       }
     },
     {
-      "vendor": "PersistIQ",
-      "category": "Startup Perks",
-      "description": "50% off a yearly pan (Pro or Starter) or 30% off a monthly plan (up to three months). Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "PersistIQ Startup Deal"
-      }
-    },
-    {
       "vendor": "Phantom Buster",
       "category": "Startup Perks",
       "description": "30% off on any plans for 12 months. Access via: First deal free, then 99€/year or invite friends",
@@ -20159,33 +19654,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Phantom Buster Startup Deal"
-      }
-    },
-    {
-      "vendor": "Pilot",
-      "category": "Startup Perks",
-      "description": "20% off Pilot Core for 6 months. Access via: Free for Stripe Corporate Credit card users",
-      "tier": "Startup Program",
-      "url": "https://stripe.com/en-de/corporate-card",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for Stripe Corporate Credit card users"
-        ],
-        "program": "Pilot Startup Deal"
       }
     },
     {
@@ -20199,7 +19674,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20219,33 +19694,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "PixelMe Startup Deal"
-      }
-    },
-    {
-      "vendor": "Polymail",
-      "category": "Startup Perks",
-      "description": "1 month for free. Access via: Free",
-      "tier": "Startup Program",
-      "url": "https://www.userlike.com/en/blog/startup-deals",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free"
-        ],
-        "program": "Polymail Startup Deal"
       }
     },
     {
@@ -20259,33 +19714,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "Postscript Startup Deal"
-      }
-    },
-    {
-      "vendor": "ProofHub",
-      "category": "Startup Perks",
-      "description": "41% off on Ultimate Control Plan for lifetime. Access via: Free",
-      "tier": "Startup Program",
-      "url": "https://www.userlike.com/en/blog/startup-deals",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free"
-        ],
-        "program": "ProofHub Startup Deal"
       }
     },
     {
@@ -20319,7 +19754,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20339,7 +19774,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20359,7 +19794,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20379,7 +19814,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20399,7 +19834,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20419,7 +19854,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20439,7 +19874,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20459,7 +19894,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20479,33 +19914,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Scrapingbee Startup Deal"
-      }
-    },
-    {
-      "vendor": "Seekwell",
-      "category": "Startup Perks",
-      "description": "3 months free, 90% off for next 9 months. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Seekwell Startup Deal"
       }
     },
     {
@@ -20519,7 +19934,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20539,7 +19954,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20579,7 +19994,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20599,7 +20014,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20619,33 +20034,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "Shippo Startup Deal"
-      }
-    },
-    {
-      "vendor": "Shopify",
-      "category": "Startup Perks",
-      "description": "3 months free Basic Shopify subscription. Access via: Free for Stripe Corporate Credit card users",
-      "tier": "Startup Program",
-      "url": "https://stripe.com/en-de/corporate-card",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for Stripe Corporate Credit card users"
-        ],
-        "program": "Shopify Startup Deal"
       }
     },
     {
@@ -20659,7 +20054,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20679,7 +20074,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20699,7 +20094,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20719,7 +20114,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20739,7 +20134,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20759,33 +20154,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "Free for Brex customers"
         ],
         "program": "Solium Startup Deal"
-      }
-    },
-    {
-      "vendor": "Split",
-      "category": "Startup Perks",
-      "description": "12 month trial of the platform edition. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Split Startup Deal"
       }
     },
     {
@@ -20799,7 +20174,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20819,7 +20194,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20880,73 +20255,13 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
           "First deal free, then 99€/year or invite friends"
         ],
         "program": "Userguiding Startup Deal"
-      }
-    },
-    {
-      "vendor": "Userlike",
-      "category": "Startup Perks",
-      "description": "95% discount for 12 months. Access via: Free",
-      "tier": "Startup Program",
-      "url": "https://www.userlike.com/en/blog/startup-deals",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free"
-        ],
-        "program": "Userlike Startup Deal"
-      }
-    },
-    {
-      "vendor": "Vero",
-      "category": "Startup Perks",
-      "description": "90% off for the first year up to 200,000 subscribers. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Vero Startup Deal"
-      }
-    },
-    {
-      "vendor": "Vervoe",
-      "category": "Startup Perks",
-      "description": "90% off the Growth plan for 12 months. Access via: Free for approved Segment users",
-      "tier": "Startup Program",
-      "url": "https://segment.com/industry/startups/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-03-20",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for approved Segment users"
-        ],
-        "program": "Vervoe Startup Deal"
       }
     },
     {
@@ -20960,7 +20275,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20980,7 +20295,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21000,7 +20315,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21020,7 +20335,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21040,7 +20355,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21060,7 +20375,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21080,7 +20395,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21100,7 +20415,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-03-20",
+      "verifiedDate": "2026-04-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
