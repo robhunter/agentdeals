@@ -5601,4 +5601,42 @@ describe("shutdown tracker page", () => {
       assert.ok(sizeKB < 50, `${endpoint} should be under 50KB (was ${sizeKB.toFixed(1)}KB)`);
     }
   });
+
+  it("GET /api/ai-coding-pricing returns AI coding tools as JSON", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/ai-coding-pricing`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.tools), "Should have tools array");
+    assert.ok(body.count > 10, "Should have 10+ AI coding tools");
+    assert.ok(Array.isArray(body.changes), "Should have changes array");
+    assert.ok(Array.isArray(body.categories), "Should have categories list");
+    assert.deepStrictEqual(body.categories, ["ide", "cli", "cloud-agent", "app-builder"]);
+    // Check tool structure
+    const tool = body.tools[0];
+    assert.ok(tool.vendor, "Tool should have vendor");
+    assert.ok(tool.category, "Tool should have category");
+    assert.ok(tool.description, "Tool should have description");
+    assert.ok(tool.vendor_page, "Tool should have vendor_page link");
+    // Check known tools present
+    const vendors = body.tools.map((t: any) => t.vendor);
+    assert.ok(vendors.includes("Cursor"), "Should include Cursor");
+    assert.ok(vendors.includes("Claude Code"), "Should include Claude Code");
+    assert.ok(vendors.includes("Bolt.new"), "Should include Bolt.new");
+  });
+
+  it("GET /api/ai-coding-pricing?type=cli filters by category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/ai-coding-pricing?type=cli`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.count > 0, "Should have CLI tools");
+    for (const tool of body.tools) {
+      assert.strictEqual(tool.category, "cli", `${tool.vendor} should be categorized as cli`);
+    }
+  });
 });

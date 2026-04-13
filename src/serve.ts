@@ -26529,7 +26529,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
     '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
-    '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for AI coding tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
+    '    <strong>Query this data programmatically</strong> via <a href="/api/ai-coding-pricing">/api/ai-coding-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for AI coding tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
     '  <script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
@@ -45659,6 +45659,7 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services" },
     { method: "GET", path: "/api/vendor-risk/:vendor", desc: "Check vendor pricing risk", params: "" },
     { method: "GET", path: "/api/deadlines", desc: "Future-dated changes with countdown", params: "type" },
+    { method: "GET", path: "/api/ai-coding-pricing", desc: "AI coding tools pricing comparison data", params: "type (ide, cli, cloud-agent, app-builder)" },
     { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days" },
     { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "" },
     { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "" },
@@ -50052,6 +50053,43 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/deadlines", params: { type: typeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: deadlines.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ deadlines, count: deadlines.length }));
+  } else if (url.pathname === "/api/ai-coding-pricing" && isGetOrHead) {
+    recordApiHit("/api/ai-coding-pricing");
+    const aiCodingOffers = offers.filter(o => o.category === "AI Coding");
+    const ideCodingOffers = offers.filter(o =>
+      o.category === "IDE & Code Editors" && o.tags?.some((t: string) => t === "ai" || t === "code completion" || t === "coding")
+    );
+    const allAiOffers = [...aiCodingOffers, ...ideCodingOffers];
+    const categoryFilter = url.searchParams.get("type") || undefined;
+    const validCategories = ["ide", "cli", "cloud-agent", "app-builder"];
+    const categoryMap: Record<string, string[]> = {
+      "ide": ["Cursor", "Windsurf", "Amazon Kiro", "GitHub Copilot", "Gemini Code Assist", "Google Antigravity", "Augment Code", "MarsCode"],
+      "cli": ["Claude Code", "Gemini CLI", "Cline", "Aider", "Amazon Q Developer"],
+      "cloud-agent": ["OpenAI Codex", "Devin"],
+      "app-builder": ["Bolt.new", "Lovable"],
+    };
+    const aiVendors = ["Cursor", "Windsurf", "GitHub Copilot", "Augment Code", "Google Gemini Code Assist", "Claude Code", "Devin", "Bolt.new", "Lovable", "OpenAI Codex", "Google Antigravity", "Gemini CLI", "Amazon Q Developer", "Cline", "Aider", "MarsCode", "Amazon Kiro"];
+    const aiChanges = dealChanges.filter(c =>
+      aiVendors.includes(c.vendor)
+    ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const tools = allAiOffers.map(o => {
+      const toolCategory = Object.entries(categoryMap).find(([, vendors]) =>
+        vendors.some(v => o.vendor.includes(v) || v.includes(o.vendor))
+      )?.[0] || "ide";
+      return {
+        vendor: o.vendor,
+        category: toolCategory,
+        description: o.description,
+        tier: o.tier,
+        url: o.url,
+        tags: o.tags,
+        verifiedDate: o.verifiedDate,
+        vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+      };
+    }).filter(t => !categoryFilter || !validCategories.includes(categoryFilter) || t.category === categoryFilter);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/ai-coding-pricing", params: { type: categoryFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: tools.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ tools, changes: aiChanges, count: tools.length, categories: Object.keys(categoryMap) }));
   } else if (url.pathname === "/api/audit-stack" && isGetOrHead) {
     recordApiHit("/api/audit-stack");
     const servicesParam = url.searchParams.get("services");
