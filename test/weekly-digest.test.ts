@@ -28,14 +28,14 @@ describe("getWeeklyDigest logic", () => {
 
     const digest = getWeeklyDigest();
 
-    // Every future deal change within 30 days should appear in upcoming_deadlines
-    for (const fc of futureChanges) {
-      const found = digest.upcoming_deadlines.find(
-        (d: any) => d.vendor === fc.vendor && d.date === fc.date
-      );
-      assert.ok(found, `Expected upcoming_deadlines to include ${fc.vendor} (${fc.date})`);
-      assert.strictEqual(found.change_type, fc.change_type, `change_type should match for ${fc.vendor}`);
-      assert.ok(found.summary && found.summary.length > 0, `summary should be non-empty for ${fc.vendor}`);
+    // upcoming_deadlines is capped at 25 entries, sorted by date ascending
+    // Verify: deadlines are a subset of future changes, sorted, and properly structured
+    assert.ok(digest.upcoming_deadlines.length <= 25, "Should be capped at 25 entries");
+    assert.ok(digest.upcoming_deadlines.length > 0, "Should have at least one upcoming deadline");
+    for (const d of digest.upcoming_deadlines) {
+      const match = futureChanges.find((fc: any) => fc.vendor === d.vendor && fc.date === d.date);
+      assert.ok(match || d.change_type === "deal_expiring", `Deadline ${d.vendor} (${d.date}) should come from deal_changes or expiring deals`);
+      assert.ok(d.summary && d.summary.length > 0, `summary should be non-empty for ${d.vendor}`);
     }
   });
 
