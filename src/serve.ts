@@ -1695,7 +1695,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
       <div class="desc-block">${escHtmlServer(a.description)}</div>
-      ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value)} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
+      ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
     <div class="vendor-col">
       <h2><a href="${escHtmlServer(b.url)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB.risk_level)}</h2>
@@ -1704,7 +1704,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
       <div class="desc-block">${escHtmlServer(b.description)}</div>
-      ${b.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(b.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(b.referral.referee_value)} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
+      ${b.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(b.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(b.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
   </div>
 
@@ -2896,7 +2896,7 @@ ${enrichedAlts.map(a => {
   // Referral callout
   const referralCalloutHtml = primary.referral ? `
   <div class="referral-callout" style="margin:1rem 0;padding:.75rem 1rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 8px 8px 0;background:#3fb95010">
-    <span style="font-size:.9rem">\ud83d\udd17 <strong>Sign up bonus:</strong> <a href="${escHtmlServer(primary.referral.url)}" rel="noopener sponsored" target="_blank">Use our referral link</a> to get ${escHtmlServer(primary.referral.referee_value)}</span>
+    <span style="font-size:.9rem">\ud83d\udd17 <strong>Sign up bonus:</strong> <a href="${escHtmlServer(primary.referral.url)}" rel="noopener sponsored" target="_blank">Use our referral link</a> to get ${escHtmlServer(primary.referral.referee_value ?? "a sign-up bonus")}</span>
     <span style="display:block;font-size:.75rem;margin-top:.25rem;color:var(--text-muted)"><a href="/disclosure" style="color:var(--text-muted)">Affiliate disclosure</a></span>
   </div>` : "";
 
@@ -3298,6 +3298,7 @@ function buildAlternativesPage(slug: string): string | null {
           <a href="/vendor/${aSlug}" class="action-link">Profile</a>
           ${hasComparison ? `<a href="/compare/${compSlug}" class="action-link">Compare</a>` : ""}
         </div>
+        ${a.referral ? `<div class="alt-referral"><span>\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")}</a></span> <a href="/disclosure" class="alt-referral-disc">(disclosure)</a></div>` : ""}
       </div>`;
   }
 
@@ -3450,6 +3451,10 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .alt-actions{display:flex;gap:.5rem}
 .action-link{display:inline-block;padding:.2rem .5rem;border:1px solid var(--border);border-radius:6px;font-size:.75rem;color:var(--text-muted);transition:all .2s}
 .action-link:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.alt-referral{margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem}
+.alt-referral a{color:#3fb950}
+.alt-referral a:hover{color:#6fdd8b}
+.alt-referral-disc{font-size:.7rem;color:var(--text-dim)!important}
 .action-pill{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
 .action-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 .no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
@@ -5652,6 +5657,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
           <a href="/alternative-to/${toSlug(o.vendor)}">More alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing page &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -5672,6 +5678,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing page &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n")}` : "";
 
@@ -6702,6 +6709,7 @@ function buildAiFreeTiersPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -6967,6 +6975,7 @@ function buildHostingAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -7311,6 +7320,7 @@ function buildDatabaseAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -7656,6 +7666,7 @@ function buildMonitoringAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -7988,6 +7999,7 @@ function buildCiCdAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -8316,6 +8328,7 @@ function buildSecurityAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -8657,6 +8670,7 @@ function buildTestingAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -8982,6 +8996,7 @@ function buildStorageAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -9298,6 +9313,7 @@ function buildAnalyticsAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -9618,6 +9634,7 @@ function buildAiMlAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -9944,6 +9961,7 @@ function buildEmailAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -10281,6 +10299,7 @@ function buildDesignAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -10622,6 +10641,7 @@ function buildProjectManagementAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -10954,6 +10974,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -11267,6 +11288,7 @@ function buildFreeLlmApisPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -11593,6 +11615,7 @@ function buildApiDevelopmentAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -11915,6 +11938,7 @@ function buildTeamCollaborationAlternativesPage(): string {
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
           <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
         </div>
+        ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
   }).join("\n");
 
@@ -47615,7 +47639,7 @@ ${globalNavCss()}
 
   <div class="section">
     <h2>Current Referral Partners</h2>
-    ${referralOffers.length > 0 ? `<ul>${referralOffers.map(o => `<li><a href="/vendor/${toSlug(o.vendor)}">${escHtmlServer(o.vendor)}</a>: ${escHtmlServer(o.referral!.referee_value)}${o.referral!.terms_url ? ` (<a href="${escHtmlServer(o.referral!.terms_url)}" rel="noopener" target="_blank">program terms</a>)` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
+    ${referralOffers.length > 0 ? `<ul>${referralOffers.map(o => `<li><a href="/vendor/${toSlug(o.vendor)}">${escHtmlServer(o.vendor)}</a>: ${escHtmlServer(o.referral!.referee_value ?? "Referral link available")}${o.referral!.terms_url ? ` (<a href="${escHtmlServer(o.referral!.terms_url)}" rel="noopener" target="_blank">program terms</a>)` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
   </div>
 
   <p class="updated">Last updated: ${new Date().toISOString().split("T")[0]}</p>
