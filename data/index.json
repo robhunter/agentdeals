@@ -1186,7 +1186,7 @@
     {
       "vendor": "Windsurf",
       "category": "IDE & Code Editors",
-      "description": "AI coding assistant (formerly Codeium). Free tier: daily/weekly quotas for completions and chat (replaced credits Mar 2026). Pro $20/mo, Ultimate $40/mo, Team $200/mo. Existing Pro subscribers grandfathered at $15/mo through April 2026",
+      "description": "AI coding assistant (formerly Codeium). Free tier: daily/weekly quotas for completions and chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Ultimate $40/mo, Team $200/mo. Grandfathered Pro subscribers keep $15/mo indefinitely",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -1202,7 +1202,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "IDE & Code Editors",
-      "description": "AI code assistant — 2,000 completions/month, 50 chat messages/month, works in VS Code/JetBrains/GitHub.com. Students and OSS maintainers get Pro free",
+      "description": "AI code assistant — 2,000 completions/month, 50 premium requests/month, works in VS Code/JetBrains/GitHub.com. Premium requests use advanced models (Claude Opus 4, o3); overage $0.04/request. Students and OSS maintainers get Pro free",
       "tier": "Free",
       "url": "https://github.com/features/copilot/plans",
       "tags": [
@@ -20605,7 +20605,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "AI Coding",
-      "description": "AI coding assistant by GitHub/Microsoft. Free tier: 2,000 code completions/month, 50 chat messages/month (Copilot Chat), access to Claude and Codex models. Works in VS Code, JetBrains, Neovim, Xcode. Pro plan $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo. Business $19/seat/mo.",
+      "description": "AI coding assistant by GitHub/Microsoft. Free tier: 2,000 code completions/month, 50 premium requests/month. Pro $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo (1,500 premium requests, all models incl. Claude Opus 4, o3). Business $19/seat/mo (300/user). Enterprise $39/seat/mo (1,000/user). Overage $0.04/premium request. Model multipliers: advanced reasoning 5x-20x per interaction.",
       "tier": "Free",
       "url": "https://github.com/features/copilot",
       "tags": [
@@ -20670,7 +20670,7 @@
     {
       "vendor": "Windsurf",
       "category": "AI Coding",
-      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: daily/weekly quotas for Cascade AI flows, code completions, AI chat (quotas replaced credits Mar 2026). Pro $20/mo (was $15, existing subscribers grandfathered through April 2026), Ultimate $40/mo, Team $200/mo/seat. All tiers include premium models",
+      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: daily/weekly quotas for Cascade AI flows, code completions, AI chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Ultimate $40/mo, Team $200/mo/seat. Grandfathered Pro subscribers keep $15/mo indefinitely. All tiers include premium models",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -20737,7 +20737,7 @@
     {
       "vendor": "OpenAI Codex",
       "category": "AI Coding",
-      "description": "Cloud-native coding agent by OpenAI. Included in ChatGPT Plus ($20/mo), Pro ($200/mo), and Business ($30/user/mo). Limited access on free ChatGPT plan. Runs in sandboxed cloud environments, can execute code, run tests, and create PRs. API via codex-mini model at $1.50/1M input tokens, $6/1M output tokens.",
+      "description": "Cloud-native coding agent by OpenAI. Included in ChatGPT Plus ($20/mo), Pro ($200/mo), and Business ($20/user/mo, was $30). Pay-as-you-go seats available — usage billed on token consumption, no rate limits. $100 credits for new Codex-only team members (up to $500/team, limited time). 2M+ weekly users. API via codex-mini at $1.50/1M input, $6/1M output tokens.",
       "tier": "Freemium",
       "url": "https://openai.com/index/introducing-codex/",
       "tags": [
