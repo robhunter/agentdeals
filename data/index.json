@@ -3325,6 +3325,32 @@
       "expires_date": "2026-08-31"
     },
     {
+      "vendor": "Amazon Kiro (AWS Startups)",
+      "category": "Startup Programs",
+      "description": "Up to 1 year of free Kiro Pro+ (worth $480/year) through AWS Startups program. Three tiers: Starter (up to 2 users), Growth (up to 50 users), Scale (up to 100 users). Eligible: early-stage to Series B companies. Application via AWS Startups portal.",
+      "tier": "Startup Program",
+      "url": "https://aws.amazon.com/startups/",
+      "tags": [
+        "ai",
+        "coding",
+        "ide",
+        "startup credits",
+        "aws",
+        "kiro"
+      ],
+      "verifiedDate": "2026-04-13",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Early-stage to Series B company",
+          "Starter tier: up to 2 users",
+          "Growth tier: up to 50 users",
+          "Scale tier: up to 100 users"
+        ],
+        "program": "AWS Startups — Kiro Pro+"
+      }
+    },
+    {
       "vendor": "Healthchecks.io",
       "category": "Monitoring",
       "description": "Cron job and scheduled task monitoring — 20 monitors, 100 log entries per job, email/webhook/Slack/Telegram alerts, API access. Also free for open-source projects (Business plan)",
@@ -20588,7 +20614,7 @@
     {
       "vendor": "Claude Code",
       "category": "AI Coding",
-      "description": "Agentic coding tool by Anthropic — terminal-based AI coding agent that reads/writes files, runs commands, and manages git workflows. Available to Claude Pro ($20/mo), Team ($25/seat/mo), and Max ($100-200/mo) subscribers. Uses Claude Sonnet/Opus models. Also available via Anthropic API with usage-based pricing. Free tier via Claude.ai (limited Sonnet usage, Projects, Artifacts).",
+      "description": "Agentic coding tool by Anthropic — terminal-based AI coding agent that reads/writes files, runs commands, and manages git workflows. Available to Claude Pro ($20/mo), Team ($25/seat/mo), and Max ($100-200/mo) subscribers. Uses Claude Sonnet/Opus models. Also available via Anthropic API with usage-based pricing. Free tier via Claude.ai (limited Sonnet usage, Projects, Artifacts). April 2026 changes: (1) Third-party tool restrictions — external tools like OpenClaw now billed separately on pay-as-you-go basis, can no longer apply standard usage limits. (2) Extra usage option — all paid plans (Pro, Max 5x, Max 20x) now have pay-as-you-go overage at standard API rates beyond included usage. (3) Peak-hour throttling — 5-hour session limits reduced during weekdays 5 AM–11 AM Pacific.",
       "tier": "Paid",
       "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
       "tags": [
@@ -20600,7 +20626,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-13"
     },
     {
       "vendor": "GitHub Copilot",
@@ -22391,7 +22417,7 @@
     {
       "vendor": "Amazon Kiro",
       "category": "AI Coding",
-      "description": "Claude-powered AI IDE by Amazon (GA launch). Free tier: 50 interactions/month. Pro $20/month (1,000 interactions). Pro+ $40/month (2,000 interactions). Power $200/month (10,000 interactions). Built on Claude, focuses on spec-driven development with automated requirements, design docs, and test generation.",
+      "description": "Claude-powered AI IDE by Amazon (GA launch). Free tier: 50 credits/month. Pro $20/month (1,000 credits). Pro+ $40/month (2,000 credits). Power $200/month (10,000 credits). Credits metered to 0.01 increments — different models consume at different rates (Sonnet 4 costs 1.3x more than Auto mode). $0.04 overage per additional credit (disabled by default, must enable in Settings). 500 bonus credits for new users (valid 30 days). Unused monthly credits do NOT roll over. Enterprise tier: custom pricing with SAML/SCIM SSO, usage analytics, organizational management. GovCloud pricing ~20% higher; Free tier unavailable in GovCloud. Built on Claude, focuses on spec-driven development with automated requirements, design docs, and test generation.",
       "tier": "Free",
       "url": "https://kiro.dev/pricing",
       "tags": [
@@ -22402,7 +22428,7 @@
         "cursor-alternative",
         "free tier"
       ],
-      "verifiedDate": "2026-04-09"
+      "verifiedDate": "2026-04-13"
     }
   ]
 }

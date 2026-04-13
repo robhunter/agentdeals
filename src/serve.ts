@@ -25498,8 +25498,8 @@ function buildAiCodingPricing2026Page(): string {
       pro: "API usage",
       power: "$100\u2013200/mo (Max)",
       teams: "$25/seat (Team)",
-      model: "Usage-based API",
-      freeDetails: "Terminal-based agentic coding tool. Available via Claude Pro ($20/mo), Team ($25/seat), and Max ($100\u2013200/mo) subscriptions with included usage. Also available via Anthropic API with pay-per-token pricing. Most powerful for autonomous multi-file tasks.",
+      model: "Usage-based + overage",
+      freeDetails: "Terminal-based agentic coding tool. Available via Claude Pro ($20/mo), Team ($25/seat), and Max ($100\u2013200/mo) subscriptions. All paid plans now have pay-as-you-go overage at API rates. April 2026: third-party tools billed separately, peak-hour throttling weekdays 5\u201311 AM PT.",
     },
     {
       name: "Augment Code",
@@ -25875,16 +25875,16 @@ function buildAiCodingToolsPricingPage(): string {
       name: "Amazon Kiro",
       slug: "amazon-kiro",
       category: "ide",
-      free: "50 interactions/mo",
+      free: "50 credits/mo",
       pro: "$20/mo",
       power: "$40/mo (Pro+) / $200/mo (Power)",
-      teams: "\u2014",
+      teams: "Enterprise (custom)",
       model: "Credit-based",
-      freeDetails: "Claude-powered IDE by Amazon focused on spec-driven development. Free tier: 50 interactions/month. Automated requirements, design docs, and test generation. Pro: 1,000 interactions, Pro+: 2,000, Power: 10,000. Newest entrant in the IDE space (GA April 2026).",
+      freeDetails: "Claude-powered IDE by Amazon focused on spec-driven development. Free tier: 50 credits/month. Pro: 1,000 credits, Pro+: 2,000, Power: 10,000. Credits metered to 0.01 increments — Sonnet 4 costs 1.3x more than Auto mode. $0.04/credit overage (disabled by default). 500 bonus credits for new users (30 days). Enterprise tier with SAML/SCIM SSO. GovCloud ~20% premium.",
       freeType: "limited",
       monthlyCostSolo: "$0\u201320",
-      monthlyCostTeam5: "\u2014",
-      hiddenCosts: "Interaction-based pricing means complex tasks (spec generation, multi-file edits) consume credits faster than simple completions. No team plan yet. Power tier at $200/mo needed for heavy use.",
+      monthlyCostTeam5: "Enterprise (custom)",
+      hiddenCosts: "Credit-based pricing means model choice affects cost — Sonnet 4 consumes 1.3x more credits than Auto mode. Complex tasks (spec generation, multi-file edits) burn credits faster. Unused credits don't roll over. $0.04/credit overage if enabled. GovCloud ~20% higher, no free tier. Power tier at $200/mo needed for heavy use.",
     },
     {
       name: "GitHub Copilot",
@@ -25940,12 +25940,12 @@ function buildAiCodingToolsPricingPage(): string {
       pro: "$20/mo (Pro)",
       power: "$100\u2013200/mo (Max)",
       teams: "$25/seat",
-      model: "Usage-based / subscription",
-      freeDetails: "Terminal-based agentic coding tool. Available via Claude Pro ($20/mo), Team ($25/seat), and Max ($100\u2013200/mo) subscriptions with included usage. Also available via Anthropic API with pay-per-token pricing. Most powerful for autonomous multi-file tasks.",
+      model: "Usage-based / subscription + overage",
+      freeDetails: "Terminal-based agentic coding tool. Available via Claude Pro ($20/mo), Team ($25/seat), and Max ($100\u2013200/mo) subscriptions. All paid plans now have pay-as-you-go overage at standard API rates. April 2026: third-party tools (e.g. OpenClaw) billed separately. Peak-hour throttling weekdays 5\u201311 AM PT.",
       freeType: "none",
-      monthlyCostSolo: "$20\u2013200",
-      monthlyCostTeam5: "$125",
-      hiddenCosts: "Pro subscription includes limited usage \u2014 heavy users need Max ($100\u2013200/mo). API usage billed per token: Opus ~$15/M input, $75/M output.",
+      monthlyCostSolo: "$20\u2013200+",
+      monthlyCostTeam5: "$125+",
+      hiddenCosts: "April 2026 policy changes: (1) Third-party tools now billed separately — can't use standard limits. (2) Pay-as-you-go overage on all plans at API rates (Opus ~$15/M input, $75/M output). (3) Peak-hour throttling reduces 5-hour session limits weekdays 5\u201311 AM Pacific. Heavy users may see unexpected overage charges.",
     },
     {
       name: "Gemini CLI",
@@ -26209,7 +26209,7 @@ function buildAiCodingToolsPricingPage(): string {
 
   // FAQ structured data
   const faqEntries = [
-    { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist offers the most generous free tier with 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free interactions/month — limited, but enough to try spec-driven development." },
+    { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist offers the most generous free tier with 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free credits/month — limited, but enough to try spec-driven development." },
     { q: "How much does Cursor cost vs Windsurf?", a: "Both now charge identical prices: $20/month Pro, $200/month Power (Ultra/Max), and $40/seat for teams. Windsurf raised its Pro price from $15 to $20 in March 2026. The main difference is feature set, not price." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes, GitHub Copilot Pro at $10/month is the cheapest paid AI coding subscription. It also offers a free tier with 2,000 completions/month and 50 premium requests/month. Pro includes 300 premium requests. Overage costs $0.04/request. Note: advanced reasoning models (Claude Opus 4, o3) consume 5x\u201320x premium requests per interaction." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
@@ -26217,7 +26217,7 @@ function buildAiCodingToolsPricingPage(): string {
     { q: "Are AI app builders like Bolt.new and Lovable worth it?", a: "For prototyping and MVPs, yes. Bolt.new offers 1M free tokens/month and Lovable gives 5 daily credits. Both generate full-stack apps from natural language. They are not designed for production-grade software development." },
     { q: "What is Google Antigravity?", a: "Google Antigravity is an agent-first IDE powered by Gemini 3, announced November 2025. It is 100% free during public preview with built-in browser automation and multi-agent orchestration. Pricing has not been announced yet." },
     { q: "How do cloud coding agents (Codex, Devin) differ from IDE tools?", a: "Cloud agents run code in sandboxed environments and work autonomously — they can execute tests, create branches, and open PRs. IDE tools assist while you code. Cloud agents are better for delegated tasks; IDE tools are better for interactive development." },
-    { q: "What is Amazon Kiro and how does it compare to Cursor?", a: "Amazon Kiro is a Claude-powered IDE that launched GA in April 2026. It focuses on spec-driven development — automated requirements, design docs, and test generation. Free tier: 50 interactions/month. Pro: $20/month (1,000 interactions), matching Cursor's price. The key difference is Kiro's spec-first workflow vs Cursor's chat-first approach. Kiro has no team plan yet." },
+    { q: "What is Amazon Kiro and how does it compare to Cursor?", a: "Amazon Kiro is a Claude-powered IDE that launched GA in April 2026. It focuses on spec-driven development — automated requirements, design docs, and test generation. Free tier: 50 credits/month. Pro: $20/month (1,000 credits), matching Cursor's price. Credits are metered to 0.01 increments with model-dependent rates (Sonnet 4 costs 1.3x more). $0.04/credit overage available. Enterprise tier with SAML/SCIM SSO for larger teams." },
   ];
 
   const faqJsonLd = {

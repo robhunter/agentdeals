@@ -1286,7 +1286,7 @@
       "vendor": "Amazon Kiro",
       "change_type": "new_free_tier",
       "date": "2026-04-07",
-      "summary": "Amazon Kiro AI coding assistant launched GA with tiered credit-based pricing: Free tier (50 credits/month), Pro ($20/month, 1,000 credits), Pro+ ($40/month, 2,000 credits). Credits consumed per AI interaction (specs, code generation, debugging)",
+      "summary": "Amazon Kiro AI coding assistant launched GA with tiered credit-based pricing: Free tier (50 credits/month), Pro ($20/month, 1,000 credits), Pro+ ($40/month, 2,000 credits). Credits metered to 0.01 increments, model-dependent rates.",
       "previous_state": "Preview-only access, no public pricing",
       "current_state": "Free tier: 50 credits/month. Pro: $20/month (1,000 credits). Pro+: $40/month (2,000 credits). GA availability",
       "impact": "medium",
@@ -1402,9 +1402,9 @@
       "vendor": "Amazon Kiro",
       "change_type": "new_free_tier",
       "date": "2026-04-09",
-      "summary": "Amazon Kiro launched GA with a free tier of 50 interactions/month. Claude-powered IDE focused on spec-driven development. Pro $20/mo (1,000 interactions), Pro+ $40/mo (2,000), Power $200/mo (10,000). Competes directly with Cursor, GitHub Copilot, and Windsurf.",
+      "summary": "Amazon Kiro launched GA with a free tier of 50 credits/month. Claude-powered IDE focused on spec-driven development. Pro $20/mo (1,000 credits), Pro+ $40/mo (2,000), Power $200/mo (10,000). Credits metered to 0.01 increments, model-dependent rates. $0.04 overage per credit. Enterprise tier available.",
       "previous_state": "Preview/beta with limited access",
-      "current_state": "GA with free tier (50 interactions/mo). Four paid tiers: Pro ($20), Pro+ ($40), Power ($200)",
+      "current_state": "GA with free tier (50 credits/mo). Four paid tiers: Pro ($20), Pro+ ($40), Power ($200). Enterprise: custom pricing",
       "impact": "high",
       "source_url": "https://kiro.dev/pricing",
       "category": "AI Coding",
@@ -3495,6 +3495,56 @@
       "source_url": "",
       "category": "Workflow Automation",
       "alternatives": []
+    },
+    {
+      "vendor": "Claude Code",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-04",
+      "summary": "Three material policy changes: (1) Third-party tool restrictions — external tools like OpenClaw now billed separately on pay-as-you-go, can no longer apply standard usage limits. (2) Extra usage option — all paid plans (Pro, Max 5x, Max 20x) have pay-as-you-go overage at standard API rates. (3) Peak-hour throttling (acknowledged March 31) — 5-hour session limits reduced during weekdays 5 AM–11 AM Pacific.",
+      "previous_state": "Flat subscription pricing with included usage limits. Third-party tools shared standard limits. No overage option.",
+      "current_state": "Subscription + pay-as-you-go overage. Third-party tools billed separately. Peak-hour throttling during weekday mornings.",
+      "impact": "high",
+      "source_url": "https://docs.anthropic.com/en/docs/claude-code/overview",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "GitHub Copilot",
+        "Amazon Kiro",
+        "Windsurf"
+      ]
+    },
+    {
+      "vendor": "Amazon Kiro",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-13",
+      "summary": "Kiro pricing model clarified: uses credits (not interactions). Credits metered to 0.01 increments, model-dependent rates (Sonnet 4 costs 1.3x more than Auto). $0.04/credit overage (disabled by default). 500 bonus credits for new users (30 days). Enterprise tier with SAML/SCIM SSO. GovCloud ~20% premium, no free tier in GovCloud.",
+      "previous_state": "GA pricing listed as interaction-based",
+      "current_state": "Credit-based pricing with 0.01 granularity. Enterprise tier. GovCloud availability at premium.",
+      "impact": "medium",
+      "source_url": "https://kiro.dev/pricing",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "GitHub Copilot",
+        "Windsurf",
+        "Claude Code"
+      ]
+    },
+    {
+      "vendor": "Amazon Kiro (AWS Startups)",
+      "change_type": "new_free_tier",
+      "date": "2026-04-13",
+      "summary": "AWS Startups offers up to 1 year of free Kiro Pro+ (worth $480/year). Three tiers: Starter (up to 2 users), Growth (up to 50 users), Scale (up to 100 users). Eligible: early-stage to Series B companies.",
+      "previous_state": "No startup program for Kiro",
+      "current_state": "Up to 1 year free Kiro Pro+ via AWS Startups, up to 100 users",
+      "impact": "medium",
+      "source_url": "https://aws.amazon.com/startups/",
+      "category": "Startup Programs",
+      "alternatives": [
+        "GitHub Copilot",
+        "Cursor",
+        "Windsurf"
+      ]
     }
   ]
 }
