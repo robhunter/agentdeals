@@ -201,12 +201,12 @@ describe("referral HTTP endpoints", () => {
     assert.ok(!vercel.referral, "Vercel should not have referral data");
   });
 
-  it("GET /vendor/railway shows referral callout", async () => {
+  it("GET /vendor/railway links to disclosure in footer", async () => {
     const res = await fetch(`http://localhost:${serverPort}/vendor/railway`);
     assert.strictEqual(res.status, 200);
     const html = await res.text();
-    assert.ok(html.includes("referral-callout") || html.includes("Sign up bonus"), "Vendor page should show referral callout");
-    assert.ok(html.includes("/disclosure"), "Should link to disclosure page");
+    assert.ok(!html.includes("referral-callout"), "Referral callout banner should be removed");
+    assert.ok(html.includes("/disclosure"), "Should link to disclosure page in footer");
   });
 
   it("GET /vendor/vercel does not show referral callout", async () => {
@@ -220,5 +220,26 @@ describe("referral HTTP endpoints", () => {
     const res = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await res.text();
     assert.ok(xml.includes("/disclosure"), "Sitemap should include disclosure page");
+  });
+
+  it("GET /deal-changes redirects 301 to /changes", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/deal-changes`, { redirect: "manual" });
+    assert.strictEqual(res.status, 301);
+    const location = res.headers.get("location");
+    assert.ok(location && location.endsWith("/changes"), "Should redirect to /changes");
+  });
+
+  it("GET /disclosure returns 200", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/disclosure`);
+    assert.strictEqual(res.status, 200);
+    const html = await res.text();
+    assert.ok(html.includes("Affiliate Disclosure"), "Disclosure page should have title");
+  });
+
+  it("all pages include disclosure link in footer", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/`);
+    assert.strictEqual(res.status, 200);
+    const html = await res.text();
+    assert.ok(html.includes('href="/disclosure"'), "Home page footer should link to disclosure");
   });
 });
