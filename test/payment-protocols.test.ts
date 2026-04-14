@@ -60,11 +60,17 @@ describe("payment protocol features", () => {
     }
   });
 
-  it("GET /api/offers?payment_protocol=mpp returns empty (no MPP vendors yet)", async () => {
+  it("GET /api/offers?payment_protocol=mpp returns MPP vendors", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=mpp&limit=100`);
     assert.strictEqual(res.status, 200);
-    const data = await res.json() as { offers: unknown[]; total: number };
-    assert.strictEqual(data.total, 0, "No MPP offers expected yet");
+    const data = await res.json() as { offers: { vendor: string; payment_protocols?: string[] }[]; total: number };
+    assert.ok(data.total > 0, "Should have MPP offers");
+    for (const offer of data.offers) {
+      assert.ok(
+        offer.payment_protocols?.includes("mpp"),
+        `${offer.vendor} should have mpp in payment_protocols`
+      );
+    }
   });
 
   it("GET /api/offers without payment_protocol returns all offers", async () => {
