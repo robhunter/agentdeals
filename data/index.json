@@ -1480,7 +1480,7 @@
     {
       "vendor": "Hetzner",
       "category": "Infrastructure",
-      "description": "Budget cloud VMs from €3.99/month (2 vCPU, 4 GB RAM, 40 GB SSD). No free tier but exceptionally competitive pricing with 20 TB traffic included",
+      "description": "Budget cloud VMs from €3.99/month (CX22: 2 vCPU, 4 GB RAM, 40 GB SSD, 20 TB traffic). Post-April 2026 pricing: CX22 up from €2.99 (+33%), CX32 up from €5.99 to ~€8/mo, CX42 up from €14.99 to ~€20/mo. All regions affected (Germany, Finland, US, Singapore). No free tier but exceptionally competitive pricing with 20 TB traffic included. Increase driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand",
       "tier": "Budget",
       "url": "https://www.hetzner.com/cloud/",
       "tags": [
@@ -1489,9 +1489,10 @@
         "vps",
         "compute",
         "budget",
-        "eu"
+        "eu",
+        "price-increase-2026"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-14",
       "referral_program": {
         "available": true,
         "referrer_benefit": "€10 credit",
@@ -12567,17 +12568,19 @@
       }
     },
     {
-      "vendor": "ovh.ie",
+      "vendor": "OVHcloud",
       "category": "CDN",
-      "description": "Free DDoS protection and SSL certificate",
+      "description": "Free DDoS protection and SSL certificate via SSL Gateway. Includes Always-on DDoS protection, free Let's Encrypt SSL, and HTTP/2 support",
       "tier": "Free",
-      "url": "https://www.ovh.ie/ssl-gateway/",
+      "url": "https://www.ovhcloud.com/en/web-hosting/options/ssl/",
       "tags": [
         "cdn",
         "protection",
-        "free-for-dev"
+        "free-for-dev",
+        "ddos",
+        "ssl"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-14"
     },
     {
       "vendor": "PromoProxy",
@@ -20904,7 +20907,7 @@
         "dns",
         "free"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-14"
     },
     {
       "vendor": "Vast.ai",
@@ -22878,6 +22881,49 @@
         "free tier"
       ],
       "verifiedDate": "2026-04-13"
+    },
+    {
+      "vendor": "OVHcloud",
+      "category": "Cloud IaaS",
+      "description": "Public Cloud free trial: €200 credit for 60 days. VPS from €7.60/mo (Starter: 1 vCPU, 2 GB RAM, 20 GB SSD NVMe, 250 Mbps unlimited). Discovery instances (d2-2) from ~€5/mo. Object Storage (S3-compatible). Managed Kubernetes (free control plane). 40+ regions across Europe, NA, APAC. April 2026 price increases: VPS +55-67% (VPS-1 €4.90→€7.60, VPS-4 €26→€43.50), Public Cloud/Bare Metal +9-11%. Driven by AI DRAM/NVMe cost surge",
+      "tier": "Credits",
+      "url": "https://www.ovhcloud.com/en/public-cloud/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "vps",
+        "compute",
+        "credits",
+        "free-trial",
+        "kubernetes",
+        "eu",
+        "budget",
+        "hetzner-alternative"
+      ],
+      "verifiedDate": "2026-04-14",
+      "expires_date": "2026-06-14",
+      "free_tier_limits": {
+        "credits": "€200 for 60 days",
+        "vps_from": "€7.60/mo (1 vCPU, 2 GB RAM, 20 GB SSD)",
+        "object_storage": "S3-compatible, included with plans",
+        "kubernetes_control_plane": "Free (pay for workers only)"
+      }
+    },
+    {
+      "vendor": "OVHcloud",
+      "category": "Infrastructure",
+      "description": "Dedicated servers starting from ~€55/mo (Rise line: Intel Xeon, 32 GB RAM, 2×480 GB SSD). Kimsufi budget line discontinued, replaced by Eco range from ~€30/mo. Game line with DDoS protection and high-frequency CPU. Storage line for NAS/backup from ~€40/mo. All include unmetered bandwidth (500 Mbps-1 Gbps depending on range). Post-April 2026: Bare Metal prices increased 9-11% for new deployments",
+      "tier": "Budget",
+      "url": "https://www.ovhcloud.com/en/bare-metal/",
+      "tags": [
+        "infrastructure",
+        "dedicated",
+        "bare-metal",
+        "eu",
+        "budget",
+        "hetzner-alternative"
+      ],
+      "verifiedDate": "2026-04-14"
     }
   ]
 }
