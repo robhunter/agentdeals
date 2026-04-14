@@ -47197,6 +47197,7 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/hosting-pricing", desc: "Cloud hosting & PaaS pricing comparison data", params: "type (traditional-paas, edge-serverless, full-featured, static-specialized)" },
     { method: "GET", path: "/api/llm-pricing", desc: "LLM API pricing comparison data", params: "type (frontier, inference, open-source-host, specialized)" },
     { method: "GET", path: "/api/startup-credits", desc: "Startup credits & programs comparison data", params: "type (cloud-infrastructure, fintech-banking, developer-tools, ai-tools)" },
+    { method: "GET", path: "/api/referral-programs", desc: "Developer tools with referral/affiliate programs", params: "category" },
     { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days" },
     { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "" },
     { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "" },
@@ -49046,7 +49047,7 @@ ${bundleHtml}
 function buildReferralProgramsPage(): string {
   // Collect unique vendors with referral_program metadata
   const seen = new Set<string>();
-  const programVendors: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; hasCode: boolean; referralUrl?: string; refereeValue?: string }[] = [];
+  const programVendors: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; hasCode: boolean; referralUrl?: string; refereeValue?: string }[] = [];
   for (const o of offers) {
     if (o.referral_program?.available && !seen.has(o.vendor)) {
       seen.add(o.vendor);
@@ -49057,6 +49058,7 @@ function buildReferralProgramsPage(): string {
         referee_benefit: o.referral_program.referee_benefit,
         program_url: o.referral_program.program_url,
         type: o.referral_program.type,
+        commission_type: o.referral_program.commission_type,
         hasCode: !!o.referral,
         referralUrl: o.referral?.url,
         refereeValue: o.referral?.referee_value,
@@ -49072,8 +49074,20 @@ function buildReferralProgramsPage(): string {
   const withCodes = programVendors.filter(v => v.hasCode).length;
   const withoutCodes = programVendors.length - withCodes;
 
+  // Group by category
+  const categoryGroups = new Map<string, typeof programVendors>();
+  for (const v of programVendors) {
+    const existing = categoryGroups.get(v.category) || [];
+    existing.push(v);
+    categoryGroups.set(v.category, existing);
+  }
+  const sortedCategories = [...categoryGroups.entries()].sort((a, b) => b[1].length - a[1].length);
+  const categoryFilterButtons = sortedCategories.map(([cat]) =>
+    `<button class="filter-btn" data-category="${escHtmlServer(cat)}">${escHtmlServer(cat)}</button>`
+  ).join("\n      ");
+
   const title = "Developer Tool Referral Programs — AgentDeals";
-  const metaDesc = `${programVendors.length} developer tools with self-service referral programs. Earn credits and commissions by referring other developers to cloud, email, database, and infrastructure tools.`;
+  const metaDesc = `${programVendors.length} developer tools with referral programs across ${categoryGroups.size} categories. Earn credits, cash, and commissions by referring other developers to cloud, email, database, and infrastructure tools.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -49101,29 +49115,38 @@ function buildReferralProgramsPage(): string {
       {
         "@type": "Question",
         name: "Which developer tools have referral programs?",
-        acceptedAnswer: { "@type": "Answer", text: `We track ${programVendors.length} developer tools with active referral programs, including ${programVendors.slice(0, 5).map(v => v.vendor).join(", ")}, and more. These programs let you earn credits, cash, or commissions by referring other developers.` },
+        acceptedAnswer: { "@type": "Answer", text: `We track ${programVendors.length} developer tools with active referral programs across ${categoryGroups.size} categories, including ${programVendors.slice(0, 5).map(v => v.vendor).join(", ")}, and more.` },
       },
       {
         "@type": "Question",
         name: "How do I earn money from developer tool referrals?",
         acceptedAnswer: { "@type": "Answer", text: "Sign up for a vendor's referral program, get your referral link, and share it. When someone signs up through your link, you earn the referrer benefit (credits, cash, or commission). You can also submit your referral codes to our marketplace for broader distribution." },
       },
+      {
+        "@type": "Question",
+        name: "Can AI agents participate in referral programs?",
+        acceptedAnswer: { "@type": "Answer", text: "Yes. Register your AI agent on our marketplace, submit referral codes for vendors with programs, and earn revenue share when your codes convert. Agents are ranked by trust tier and conversion performance." },
+      },
     ],
   };
+
+  const typeLabel = (t: string) => t === "self-service" ? "Self-service" : t === "affiliate-network" ? "Affiliate network" : t === "partner" ? "Partner" : "Application";
+  const commLabel = (c?: string) => c === "recurring" ? "Recurring" : c === "credits" ? "Credits" : c === "one-time" ? "One-time" : "";
 
   const tableRows = programVendors.map(v => {
     const vendorSlug = toSlug(v.vendor);
     const statusHtml = v.hasCode
       ? `<a href="${escHtmlServer(v.referralUrl!)}" rel="noopener sponsored" target="_blank" class="status-badge status-active">Use our code</a>`
       : `<a href="/marketplace" class="status-badge status-submit">Submit a code</a>`;
-    const typeLabel = v.type === "self-service" ? "Self-service" : v.type === "affiliate-network" ? "Affiliate network" : "Application";
-    return `      <tr>
+    const linkHtml = `<a href="${escHtmlServer(v.program_url)}" rel="noopener" target="_blank" class="program-link">View</a>`;
+    return `      <tr data-category="${escHtmlServer(v.category)}">
         <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(v.vendor)}</a></td>
         <td class="cat-cell">${escHtmlServer(v.category)}</td>
         <td class="benefit-cell">${escHtmlServer(v.referee_benefit)}</td>
         <td class="benefit-cell">${escHtmlServer(v.referrer_benefit)}</td>
-        <td class="type-cell">${typeLabel}</td>
+        <td class="type-cell">${typeLabel(v.type)}</td>
         <td class="status-cell">${statusHtml}</td>
+        <td class="link-cell">${linkHtml}</td>
       </tr>`;
   }).join("\n");
 
@@ -49157,6 +49180,10 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .stat-card{flex:1;min-width:120px;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-align:center}
 .stat-value{font-family:var(--serif);font-size:1.5rem;color:var(--text)}
 .stat-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter-btn{padding:.3rem .7rem;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);font-size:.75rem;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.filter-btn.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent);font-weight:600}
 .programs-table{width:100%;border-collapse:collapse;margin-bottom:2rem}
 .programs-table th{text-align:left;padding:.6rem .75rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);border-bottom:2px solid var(--border);font-family:var(--mono)}
 .programs-table td{padding:.6rem .75rem;border-bottom:1px solid var(--border);font-size:.85rem;vertical-align:middle}
@@ -49166,6 +49193,8 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .benefit-cell{font-size:.8rem;color:var(--text-muted)}
 .type-cell{font-size:.75rem;color:var(--text-dim);font-family:var(--mono)}
 .status-cell{text-align:center}
+.link-cell{text-align:center}
+.program-link{font-size:.75rem;color:var(--text-dim);text-decoration:underline}
 .status-badge{display:inline-block;padding:.2rem .6rem;border-radius:10px;font-size:.7rem;font-weight:600;text-decoration:none}
 .status-active{background:var(--green-glow);color:var(--green);border:1px solid rgba(63,185,80,0.3)}
 .status-active:hover{text-decoration:none;border-color:var(--green)}
@@ -49173,13 +49202,18 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .status-submit:hover{text-decoration:none;border-color:var(--accent)}
 .disclosure{font-size:.8rem;color:var(--text-dim);margin-bottom:2rem;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)}
 .disclosure a{color:var(--text-muted)}
+.agent-cta{margin:2rem 0;padding:1.5rem;border:1px solid var(--accent);border-radius:12px;background:var(--accent-glow);text-align:center}
+.agent-cta h2{font-family:var(--serif);font-size:1.3rem;margin-bottom:.5rem}
+.agent-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:1rem;max-width:600px;margin-left:auto;margin-right:auto}
+.agent-cta a.cta-button{display:inline-block;padding:.6rem 1.5rem;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none}
+.agent-cta a.cta-button:hover{background:var(--accent-hover);text-decoration:none}
 .faq-section{margin-top:2rem}
 .faq-section h2{font-family:var(--serif);font-size:1.2rem;margin-bottom:1rem}
 .faq-item{margin-bottom:1.25rem}
 .faq-item h3{font-size:.9rem;color:var(--text);margin-bottom:.25rem}
 .faq-item p{font-size:.85rem;color:var(--text-muted);line-height:1.6}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.programs-table{display:block;overflow-x:auto}.type-cell{display:none}}
+@media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}.programs-table{display:block;overflow-x:auto}.type-cell,.link-cell{display:none}}
 ${globalNavCss()}
 ${mcpCtaCss()}
 </style>
@@ -49189,12 +49223,16 @@ ${mcpCtaCss()}
   ${buildGlobalNav("marketplace")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Referral Programs</div>
   <h1>Developer Tool Referral Programs</h1>
-  <p class="page-intro">${programVendors.length} developer tools with active referral programs. Earn credits, cash, and commissions by referring other developers to infrastructure, email, database, and cloud tools.</p>
+  <p class="page-intro">${programVendors.length} developer tools with active referral programs across ${categoryGroups.size} categories. Earn credits, cash, and commissions by referring other developers to infrastructure, email, database, and cloud tools.</p>
 
   <div class="stats-bar">
     <div class="stat-card">
       <div class="stat-value">${programVendors.length}</div>
       <div class="stat-label">Programs Tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${categoryGroups.size}</div>
+      <div class="stat-label">Categories</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${withCodes}</div>
@@ -49208,15 +49246,21 @@ ${mcpCtaCss()}
 
   <div class="disclosure"><a href="/disclosure">Affiliate disclosure</a>: Links marked "Use our code" are referral links. We may earn a commission at no cost to you.</div>
 
+  <div class="filter-bar">
+    <button class="filter-btn active" data-category="all">All</button>
+    ${categoryFilterButtons}
+  </div>
+
   <table class="programs-table">
     <thead>
       <tr>
         <th>Vendor</th>
         <th>Category</th>
-        <th>What You Get</th>
-        <th>What They Get</th>
+        <th>Referee Benefit</th>
+        <th>Referrer Benefit</th>
         <th>Type</th>
         <th>Status</th>
+        <th>Link</th>
       </tr>
     </thead>
     <tbody>
@@ -49224,15 +49268,25 @@ ${tableRows}
     </tbody>
   </table>
 
+  <div class="agent-cta">
+    <h2>Earn Revenue with Your Referral Codes</h2>
+    <p>Register your AI agent or developer account on the AgentDeals marketplace. Submit referral codes for any vendor with a program, and earn revenue share when your codes convert.</p>
+    <a href="/marketplace" class="cta-button">Register on the Marketplace</a>
+  </div>
+
   <div class="faq-section">
     <h2>Frequently Asked Questions</h2>
     <div class="faq-item">
       <h3>Which developer tools have referral programs?</h3>
-      <p>We track ${programVendors.length} developer tools with active referral programs, including ${programVendors.slice(0, 5).map(v => escHtmlServer(v.vendor)).join(", ")}, and more. These programs let you earn credits, cash, or commissions by referring other developers.</p>
+      <p>We track ${programVendors.length} developer tools with active referral programs across ${categoryGroups.size} categories, including ${programVendors.slice(0, 5).map(v => escHtmlServer(v.vendor)).join(", ")}, and more. These programs let you earn credits, cash, or commissions by referring other developers.</p>
     </div>
     <div class="faq-item">
       <h3>How do I earn money from developer tool referrals?</h3>
       <p>Sign up for a vendor's referral program, get your referral link, and share it. When someone signs up through your link, you earn the referrer benefit (credits, cash, or commission). You can also <a href="/marketplace">submit your referral codes</a> to our marketplace for broader distribution.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can AI agents participate in referral programs?</h3>
+      <p>Yes. Register your AI agent on our <a href="/marketplace">marketplace</a>, submit referral codes for vendors with programs, and earn revenue share when your codes convert. Agents are ranked by trust tier and conversion performance.</p>
     </div>
     <div class="faq-item">
       <h3>What does "Submit a code" mean?</h3>
@@ -49240,9 +49294,23 @@ ${tableRows}
     </div>
   </div>
 
+  <p style="margin-top:1.5rem;font-size:.85rem;color:var(--text-dim);text-align:center">Query this data programmatically via <a href="/api/referral-programs">/api/referral-programs</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a>.</p>
+
   ${buildMcpCta("Search referral programs and compare vendor free tiers directly in your AI coding assistant.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
 </div>
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.category;
+    document.querySelectorAll('.programs-table tbody tr').forEach(row => {
+      row.style.display = (cat === 'all' || row.dataset.category === cat) ? '' : 'none';
+    });
+  });
+});
+</script>
 </body>
 </html>`;
 }
@@ -51793,6 +51861,35 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/startup-credits", params: { type: startupTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: startupPrograms.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ programs: startupPrograms, changes: startupApiChanges, count: startupPrograms.length, categories: Object.keys(startupCategoryMap) }));
+  } else if (url.pathname === "/api/referral-programs" && isGetOrHead) {
+    recordApiHit("/api/referral-programs");
+    const seen = new Set<string>();
+    const refCategoryFilter = url.searchParams.get("category") || undefined;
+    const refPrograms: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; notes?: string; vendor_page: string }[] = [];
+    for (const o of offers) {
+      if (o.referral_program?.available && !seen.has(o.vendor)) {
+        seen.add(o.vendor);
+        const catNormalized = o.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+        if (!refCategoryFilter || catNormalized === refCategoryFilter || o.category === refCategoryFilter) {
+          refPrograms.push({
+            vendor: o.vendor,
+            category: o.category,
+            referrer_benefit: o.referral_program.referrer_benefit,
+            referee_benefit: o.referral_program.referee_benefit,
+            program_url: o.referral_program.program_url,
+            type: o.referral_program.type,
+            commission_type: o.referral_program.commission_type,
+            notes: o.referral_program.notes,
+            vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+          });
+        }
+      }
+    }
+    refPrograms.sort((a, b) => a.vendor.localeCompare(b.vendor));
+    const refCategories = [...new Set(refPrograms.map(p => p.category))].sort();
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/referral-programs", params: { category: refCategoryFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: refPrograms.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ programs: refPrograms, count: refPrograms.length, categories: refCategories }));
   } else if (url.pathname === "/api/audit-stack" && isGetOrHead) {
     recordApiHit("/api/audit-stack");
     const servicesParam = url.searchParams.get("services");

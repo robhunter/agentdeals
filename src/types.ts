@@ -23,7 +23,9 @@ export interface ReferralProgram {
   referrer_benefit: string;
   referee_benefit: string;
   program_url: string;
-  type: "self-service" | "application" | "affiliate-network";
+  type: "self-service" | "application" | "affiliate-network" | "partner" | "closed";
+  commission_type?: "one-time" | "recurring" | "credits";
+  notes?: string;
 }
 
 export interface Offer {

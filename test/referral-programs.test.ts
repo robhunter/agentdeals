@@ -11,12 +11,12 @@ const { loadOffers } = await import("../dist/data.js");
 const offers = loadOffers();
 
 describe("referral_program metadata", () => {
-  it("at least 10 vendors have referral_program metadata", () => {
+  it("at least 40 vendors have referral_program metadata", () => {
     const seen = new Set<string>();
     for (const o of offers) {
-      if (o.referral_program?.available) seen.add(o.vendor);
+      if (o.referral_program) seen.add(o.vendor);
     }
-    assert.ok(seen.size >= 10, `Expected at least 10 unique vendors with referral_program, got ${seen.size}`);
+    assert.ok(seen.size >= 40, `Expected at least 40 unique vendors with referral_program, got ${seen.size}`);
   });
 
   it("referral_program entries have required fields", () => {
@@ -26,7 +26,7 @@ describe("referral_program metadata", () => {
       assert.ok(typeof o.referral_program.referrer_benefit === "string" && o.referral_program.referrer_benefit.length > 0, `${o.vendor}: referrer_benefit required`);
       assert.ok(typeof o.referral_program.referee_benefit === "string" && o.referral_program.referee_benefit.length > 0, `${o.vendor}: referee_benefit required`);
       assert.ok(typeof o.referral_program.program_url === "string" && o.referral_program.program_url.startsWith("http"), `${o.vendor}: program_url must be valid URL`);
-      assert.ok(["self-service", "application", "affiliate-network"].includes(o.referral_program.type), `${o.vendor}: type must be valid`);
+      assert.ok(["self-service", "application", "affiliate-network", "partner", "closed"].includes(o.referral_program.type), `${o.vendor}: type must be valid`);
     }
   });
 
@@ -44,11 +44,15 @@ describe("referral_program metadata", () => {
     assert.ok(digitalOcean.referral_program?.available, "DigitalOcean should have referral_program");
   });
 
-  it("Vercel has neither referral code nor referral_program", () => {
+  it("Vercel has referral_program (v0 affiliate)", () => {
     const vercel = offers.find((o: any) => o.vendor === "Vercel");
     assert.ok(vercel, "Vercel should exist");
-    assert.ok(!vercel.referral, "Vercel should not have referral code");
-    assert.ok(!vercel.referral_program, "Vercel should not have referral_program");
+    assert.ok(vercel.referral_program?.available, "Vercel should have referral_program");
+  });
+
+  it("vendors without programs have available: false", () => {
+    const unavailable = offers.filter((o: any) => o.referral_program && !o.referral_program.available);
+    assert.ok(unavailable.length >= 5, `Expected at least 5 vendors with available: false, got ${unavailable.length}`);
   });
 });
 
@@ -144,11 +148,60 @@ describe("referral-programs page", () => {
     assert.ok(html.includes("Submit your referral code"), "Should show submit CTA for vendor without our code");
   });
 
-  it("/vendor/vercel does not show referral program section", async () => {
+  it("/vendor/vercel shows referral program section", async () => {
     const res = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     assert.strictEqual(res.status, 200);
     const html = await res.text();
-    assert.ok(!html.includes("Referral Program</h2>"), "Vercel should not show referral program section");
+    assert.ok(html.includes("Referral Program"), "Vercel should show referral program section");
+  });
+
+  it("/referral-programs has category filter buttons", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/referral-programs`);
+    const html = await res.text();
+    assert.ok(html.includes("filter-btn"), "Should have filter buttons");
+    assert.ok(html.includes('data-category="all"'), "Should have 'All' filter");
+  });
+
+  it("/referral-programs has agent registration CTA", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/referral-programs`);
+    const html = await res.text();
+    assert.ok(html.includes("Register on the Marketplace"), "Should have marketplace CTA");
+    assert.ok(html.includes("Earn Revenue"), "Should have agent CTA heading");
+  });
+
+  it("/referral-programs links to /api/referral-programs", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/referral-programs`);
+    const html = await res.text();
+    assert.ok(html.includes("/api/referral-programs"), "Should link to API endpoint");
+  });
+
+  it("GET /api/referral-programs returns JSON with programs", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/api/referral-programs`);
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.headers.get("content-type"), "application/json");
+    assert.strictEqual(res.headers.get("access-control-allow-origin"), "*");
+    const body = await res.json();
+    assert.ok(Array.isArray(body.programs), "Should have programs array");
+    assert.ok(body.count >= 15, `Should have at least 15 programs, got ${body.count}`);
+    assert.ok(Array.isArray(body.categories), "Should have categories array");
+    assert.ok(body.categories.length >= 3, "Should have at least 3 categories");
+    const first = body.programs[0];
+    assert.ok(first.vendor, "Program should have vendor");
+    assert.ok(first.category, "Program should have category");
+    assert.ok(first.referrer_benefit, "Program should have referrer_benefit");
+    assert.ok(first.referee_benefit, "Program should have referee_benefit");
+    assert.ok(first.program_url, "Program should have program_url");
+    assert.ok(first.type, "Program should have type");
+    assert.ok(first.vendor_page, "Program should have vendor_page");
+  });
+
+  it("GET /api/referral-programs?category=Databases filters by category", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/api/referral-programs?category=Databases`);
+    const body = await res.json();
+    assert.ok(body.programs.length > 0, "Should have database programs");
+    for (const p of body.programs) {
+      assert.strictEqual(p.category, "Databases", `Expected Databases category, got ${p.category}`);
+    }
   });
 
   it("/sitemap.xml includes /referral-programs", async () => {
