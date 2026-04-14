@@ -14,7 +14,7 @@ import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 
 function toConciseOffer(offer: Offer | EnrichedOffer) {
-  return { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols } : {}) };
+  return { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
 }
 
 function toConciseDealChange(change: DealChange) {

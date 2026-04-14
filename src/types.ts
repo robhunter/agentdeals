@@ -28,6 +28,14 @@ export interface ReferralProgram {
   notes?: string;
 }
 
+export interface PaymentProtocol {
+  protocol: string;
+  chain?: string;
+  settlement?: string;
+  pricing_model?: string;
+  example_cost?: string;
+}
+
 export interface Offer {
   vendor: string;
   category: string;
@@ -38,7 +46,7 @@ export interface Offer {
   verifiedDate: string;
   eligibility?: Eligibility;
   expires_date?: string;
-  payment_protocols?: string[];
+  payment_protocols?: PaymentProtocol[];
   referral?: Referral;
   referral_program?: ReferralProgram;
 }

@@ -14,7 +14,13 @@
       ],
       "verifiedDate": "2026-04-10",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.01-0.10/request"
+        }
       ],
       "referral_program": {
         "available": true,
@@ -69,7 +75,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001-0.01/request"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -121,7 +133,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001-0.01/request"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -582,7 +600,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001/query"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -1089,7 +1113,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.0004/read"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -1184,7 +1214,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001/message"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -1210,7 +1246,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.0005/read"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -1238,7 +1280,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001/request"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -1328,9 +1376,15 @@
         "crawling",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001-0.01/scrape"
+        }
       ]
     },
     {
@@ -1520,7 +1574,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001/query"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -1688,7 +1748,12 @@
       ],
       "verifiedDate": "2026-04-12",
       "payment_protocols": [
-        "mpp"
+        {
+          "protocol": "mpp",
+          "settlement": "USD",
+          "pricing_model": "per-request",
+          "example_cost": "$0.01-0.10/transaction"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -1866,7 +1931,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001-0.05/inference"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -3087,10 +3158,21 @@
         "ai-agent",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402",
-        "mpp"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.01-0.05/session"
+        },
+        {
+          "protocol": "mpp",
+          "settlement": "USD",
+          "pricing_model": "per-request",
+          "example_cost": "$0.01-0.05/session"
+        }
       ]
     },
     {
@@ -4721,7 +4803,13 @@
       ],
       "verifiedDate": "2026-04-13",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001-0.06/1K tokens"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -14803,7 +14891,13 @@
       ],
       "verifiedDate": "2026-04-12",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001/pin"
+        }
       ]
     },
     {
@@ -21234,7 +21328,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001-0.075/1K tokens"
+        }
       ],
       "referral_program": {
         "available": true,
@@ -21458,7 +21558,13 @@
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
-        "x402"
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001-0.01/request"
+        }
       ],
       "referral_program": {
         "available": false,
@@ -22983,6 +23089,161 @@
         "hetzner-alternative"
       ],
       "verifiedDate": "2026-04-14"
+    },
+    {
+      "vendor": "Exa",
+      "category": "AI / ML",
+      "description": "AI-native search engine API — x402 pay-per-query search, semantic and keyword search, auto-generated summaries, contents retrieval. No API key required with x402. 1,000 free searches/month with API key.",
+      "tier": "Free",
+      "url": "https://exa.ai/pricing",
+      "tags": [
+        "ai",
+        "search",
+        "api",
+        "semantic-search",
+        "x402",
+        "agent-payments",
+        "free tier"
+      ],
+      "verifiedDate": "2026-04-14",
+      "payment_protocols": [
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-query",
+          "example_cost": "$0.001-0.005/query"
+        }
+      ]
+    },
+    {
+      "vendor": "Hyperbrowser",
+      "category": "Browser Automation",
+      "description": "Pay-per-use cloud browser sessions for AI agents — x402 micropayments, no API key needed. Headless Chrome instances with full browser automation, screenshot capture, and page interaction. Built for agent workflows.",
+      "tier": "Pay-per-use",
+      "url": "https://hyperbrowser.ai",
+      "tags": [
+        "browser",
+        "automation",
+        "headless",
+        "x402",
+        "agent-payments",
+        "ai-agents"
+      ],
+      "verifiedDate": "2026-04-14",
+      "payment_protocols": [
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-session",
+          "example_cost": "$0.01-0.05/session"
+        }
+      ]
+    },
+    {
+      "vendor": "OpenVPS",
+      "category": "Cloud Hosting",
+      "description": "AI agent VPS hosting — Firecracker microVMs from $0.005/hour via x402 micropayments. No signup required. Instant provisioning, SSH access, per-second billing. Built for ephemeral agent compute workloads.",
+      "tier": "Pay-per-use",
+      "url": "https://openvps.ai",
+      "tags": [
+        "vps",
+        "hosting",
+        "microvm",
+        "firecracker",
+        "x402",
+        "agent-payments",
+        "ai-agents"
+      ],
+      "verifiedDate": "2026-04-14",
+      "payment_protocols": [
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-hour",
+          "example_cost": "$0.005/hour"
+        }
+      ]
+    },
+    {
+      "vendor": "GPU-Bridge",
+      "category": "AI / ML",
+      "description": "Multi-provider GPU inference API — 30+ AI services (LLM, image generation, embeddings, speech) accessible via x402 micropayments. Unified API across providers, no accounts needed. Pay per inference call.",
+      "tier": "Pay-per-use",
+      "url": "https://gpu-bridge.com",
+      "tags": [
+        "gpu",
+        "inference",
+        "llm",
+        "ai",
+        "x402",
+        "agent-payments",
+        "machine-learning"
+      ],
+      "verifiedDate": "2026-04-14",
+      "payment_protocols": [
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-inference",
+          "example_cost": "$0.001-0.10/inference"
+        }
+      ]
+    },
+    {
+      "vendor": "Strale",
+      "category": "Dev Utilities",
+      "description": "250+ business compliance APIs — IBAN validation, VAT lookup, sanctions screening, company data, and more via x402 micropayments. No API key or signup required. Ideal for agent compliance checks.",
+      "tier": "Pay-per-use",
+      "url": "https://strale.io",
+      "tags": [
+        "compliance",
+        "api",
+        "iban",
+        "vat",
+        "sanctions",
+        "x402",
+        "agent-payments"
+      ],
+      "verifiedDate": "2026-04-14",
+      "payment_protocols": [
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-request",
+          "example_cost": "$0.001-0.01/call"
+        }
+      ]
+    },
+    {
+      "vendor": "tollbooth",
+      "category": "Dev Utilities",
+      "description": "Open-source x402 payment gateway — gate any API behind micropayments with YAML config. Self-hosted, supports USDC on Base. Enables any developer to monetize APIs for AI agents without building payment infrastructure.",
+      "tier": "Free",
+      "url": "https://github.com/ArcadeLabsInc/tollbooth",
+      "tags": [
+        "open-source",
+        "gateway",
+        "micropayments",
+        "x402",
+        "agent-payments",
+        "self-hosted",
+        "free tier"
+      ],
+      "verifiedDate": "2026-04-14",
+      "payment_protocols": [
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "configurable",
+          "example_cost": "configurable"
+        }
+      ]
     }
   ]
 }
