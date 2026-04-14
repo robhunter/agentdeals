@@ -60,7 +60,7 @@
     {
       "vendor": "Cloudflare Workers",
       "category": "Cloud Hosting",
-      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2: 10 GB-month storage, 1M Class A ops/month, 10M Class B ops/month. Durable Objects: 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored. Includes cron triggers, WebSockets, and service bindings. Students: upgrade to 10M requests/month free for 12 months via Workers for Students program (.edu email required)",
+      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2: 10 GB-month storage, 1M Class A ops/month, 10M Class B ops/month. Durable Objects: 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored. Includes cron triggers, WebSockets, and service bindings. Dynamic Workers (beta, paid plan): spawn new Workers at runtime with AI-generated code via V8 isolates. Students: upgrade to 10M requests/month free for 12 months via Workers for Students program (.edu email required)",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "tags": [
@@ -194,7 +194,7 @@
     {
       "vendor": "Fly.io",
       "category": "Cloud Hosting",
-      "description": "Global app hosting — free trial for new accounts (2 hours runtime OR 7 days, whichever comes first). Legacy free tier (3 shared VMs) for pre-2025 accounts",
+      "description": "Global app hosting — free trial for new accounts (2 hours runtime OR 7 days, whichever comes first). Legacy free tier (3 shared VMs) for pre-2025 accounts. Volume snapshot storage: $0.08/GB/month (first 10 GB free) since Jan 2026",
       "tier": "Trial",
       "url": "https://fly.io/pricing",
       "tags": [
@@ -205,9 +205,10 @@
         "global",
         "hetzner-alternative",
         "heroku-alternative",
-        "vercel-alternative"
+        "vercel-alternative",
+        "deal-change"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-14",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -7388,6 +7389,32 @@
         "free-for-dev"
       ],
       "verifiedDate": "2026-04-13"
+    },
+    {
+      "vendor": "Cloudflare Mesh",
+      "category": "Tunneling & Networking",
+      "description": "Private networking connecting users, servers, AI agents, and Cloudflare Workers across distributed infrastructure. Free tier: 50 nodes and 50 users per account. Routes traffic over private IPs through Cloudflare's global network. Use cases: access personal agents from mobile, let coding agents reach staging databases, connect Workers to internal services. Supports WireGuard clients on any device",
+      "tier": "Free",
+      "url": "https://developers.cloudflare.com/mesh/",
+      "tags": [
+        "networking",
+        "private-network",
+        "mesh",
+        "vpn",
+        "agents",
+        "zero-trust",
+        "cloudflare",
+        "wireguard"
+      ],
+      "verifiedDate": "2026-04-14",
+      "referral_program": {
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
+        "program_url": "https://www.cloudflare.com/partners/",
+        "type": "partner",
+        "notes": "Channel partner program only. No individual referral program."
+      }
     },
     {
       "vendor": "News API",
@@ -22747,6 +22774,31 @@
         "serverless",
         "cloudflare",
         "linux"
+      ],
+      "verifiedDate": "2026-04-14",
+      "referral_program": {
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
+        "program_url": "https://www.cloudflare.com/partners/",
+        "type": "partner",
+        "notes": "Channel partner program only. No individual referral program."
+      }
+    },
+    {
+      "vendor": "Cloudflare Dynamic Workers",
+      "category": "Cloud Hosting",
+      "description": "Runtime sandbox for executing AI-generated code using V8 isolates — starts in milliseconds (vs hundreds of ms for containers). Dynamic Worker Loader API enables Workers to instantiate new Workers at runtime with code specified on-the-fly. Beta pricing: $0.002/unique worker/day (currently waived during beta) + standard CPU/invocation costs. Requires Workers Paid plan ($5/mo). Use cases: AI agent code execution, user-submitted code sandboxing, dynamic API generation",
+      "tier": "Beta",
+      "url": "https://developers.cloudflare.com/workers/runtime-apis/dynamic-workers/",
+      "tags": [
+        "serverless",
+        "sandbox",
+        "ai-agents",
+        "code-execution",
+        "isolates",
+        "cloudflare",
+        "beta"
       ],
       "verifiedDate": "2026-04-14",
       "referral_program": {
