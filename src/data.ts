@@ -169,7 +169,7 @@ export function searchOffers(
   if (paymentProtocol) {
     const lowerProto = paymentProtocol.toLowerCase();
     results = results.filter(
-      (o) => o.payment_protocols?.some(p => p.toLowerCase() === lowerProto) ?? false
+      (o) => o.payment_protocols?.some(p => p.protocol.toLowerCase() === lowerProto) ?? false
     );
   }
 

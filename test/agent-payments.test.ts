@@ -67,7 +67,7 @@ describe("Agent Payments", () => {
       const body = await res.json() as any;
       assert.ok(body.total > 0);
       for (const s of body.services) {
-        assert.ok(s.payment_protocols.includes("x402"), `${s.vendor} should support x402`);
+        assert.ok(s.payment_protocols.some((p: any) => p.protocol === "x402"), `${s.vendor} should support x402`);
       }
     });
 
@@ -77,7 +77,7 @@ describe("Agent Payments", () => {
       const body = await res.json() as any;
       assert.ok(body.total > 0);
       for (const s of body.services) {
-        assert.ok(s.payment_protocols.includes("mpp"), `${s.vendor} should support mpp`);
+        assert.ok(s.payment_protocols.some((p: any) => p.protocol === "mpp"), `${s.vendor} should support mpp`);
       }
     });
 
@@ -150,7 +150,7 @@ describe("Agent Payments", () => {
       const body = await res.json() as any;
       assert.ok(body.total > 0, "should have x402 offers");
       for (const o of body.offers) {
-        assert.ok(o.payment_protocols?.includes("x402"), `${o.vendor} should support x402`);
+        assert.ok(o.payment_protocols?.some((p: any) => p.protocol === "x402"), `${o.vendor} should support x402`);
       }
     });
 
@@ -160,7 +160,7 @@ describe("Agent Payments", () => {
       const body = await res.json() as any;
       assert.ok(body.total > 0, "should have mpp offers");
       for (const o of body.offers) {
-        assert.ok(o.payment_protocols?.includes("mpp"), `${o.vendor} should support mpp`);
+        assert.ok(o.payment_protocols?.some((p: any) => p.protocol === "mpp"), `${o.vendor} should support mpp`);
       }
     });
   });
