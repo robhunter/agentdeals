@@ -1803,7 +1803,7 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free tier restricted to Flash models only (April 2026). Pro models (Gemini 2.5 Pro) require paid billing account. Free limits: Flash (10 RPM), Flash-Lite (15 RPM). 1M token context. Mandatory spend caps enforced since April 1, 2026 — API requests pause when cap is hit. Previously free Pro access removed entirely.",
+      "description": "Free tier restricted to Flash models only (April 2026). Per-model paid pricing: Gemini 3.1 Pro Preview $2/$12 per MTok (≤200K ctx, doubles above), Gemini 3.0 Flash Preview $0.50/$3, Gemini 3.1 Flash-Lite Preview $0.25/$1.50, Gemini 2.5 Pro $1.25/$10 (≤200K, doubles above), Gemini 2.5 Flash $0.30/$2.50. Pro models require paid billing — no free tier. Free limits: Flash 10 RPM, Flash-Lite 15 RPM. All models support Batch/Flex at 50% discount. 200K token context threshold on Pro models (prices apply to entire prompt, not just excess). Mandatory spend caps enforced since April 1, 2026.",
       "tier": "Free (Reduced)",
       "url": "https://ai.google.dev/gemini-api/docs/pricing",
       "tags": [
@@ -1813,9 +1813,10 @@
         "inference",
         "multimodal",
         "free tier",
-        "deal-change"
+        "deal-change",
+        "per-model-pricing"
       ],
-      "verifiedDate": "2026-04-09"
+      "verifiedDate": "2026-04-14"
     },
     {
       "vendor": "Mistral AI",
@@ -3434,7 +3435,7 @@
         "google",
         "gis"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-14"
     },
     {
       "vendor": "Instatus",
@@ -21505,7 +21506,7 @@
     {
       "vendor": "Google Gemini Code Assist",
       "category": "IDE & Code Editors",
-      "description": "AI coding assistant by Google — 6,000 code completions/day (180,000/month), 240 chat messages/day. Supports VS Code, JetBrains IDEs, Android Studio, Cloud Shell. Requires only a Gmail account, no credit card. 90x more completions than GitHub Copilot free tier",
+      "description": "AI coding assistant by Google — 6,000 code completions/day (180,000/month), 240 chat messages/day. Now supports Gemini 3.1 Pro and Gemini 3.0 Flash models (Preview) for agent mode, chat, and code generation. Available in VS Code, JetBrains IDEs, Android Studio, Cloud Shell. Requires only a Gmail account, no credit card. 90x more completions than GitHub Copilot free tier",
       "tier": "Individual (Free)",
       "url": "https://codeassist.google",
       "tags": [
@@ -21517,7 +21518,7 @@
         "gemini",
         "free tier"
       ],
-      "verifiedDate": "2026-03-26"
+      "verifiedDate": "2026-04-14"
     },
     {
       "vendor": "Kluster AI",
