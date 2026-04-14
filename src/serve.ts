@@ -5310,12 +5310,12 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   },
   {
     slug: "startup-credits",
-    title: "Startup Credits & Programs Directory — 2026 Guide",
-    metaDesc: "Over $1M in combined startup credits available in 2026. Google ($350K), Cloudflare ($250K), Microsoft ($150K), AWS ($100K), DigitalOcean ($100K) and 20+ more programs. Eligibility, stacking strategy, and application tips.",
+    title: "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints",
+    metaDesc: "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. Updated April 2026.",
     contextHtml: "",
-    tag: "startup-credits-directory",
-    primaryVendor: "Google Cloud",
-    hubDesc: "Directory of 25+ startup credit programs — $1M+ in combined credits, eligibility requirements, and stacking strategy",
+    tag: "startup-credits",
+    primaryVendor: "AWS Activate",
+    hubDesc: "The definitive startup credits comparison — 15+ programs across cloud infrastructure, fintech, and developer tools with eligibility requirements, vesting schedules, and stacking strategies",
   },
   {
     slug: "ai-coding-pricing-2026",
@@ -24990,215 +24990,145 @@ ${mcpCtaCss()}
 // --- Startup Credits & Programs Directory ---
 
 function buildStartupCreditsPage(): string {
-  const title = "Startup Credits & Programs Directory — 2026 Guide";
-  const metaDesc = "Over $1M in combined startup credits available in 2026. Google ($350K), Cloudflare ($250K), Microsoft ($150K), AWS ($100K), DigitalOcean ($100K) and 20+ more programs. Eligibility, stacking strategy, and application tips.";
+  const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
+  const metaDesc = "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. Updated April 2026.";
   const slug = "startup-credits";
+  const pubDate = "2026-04-13";
 
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
-
-  // Tier 1: Major cloud programs ($100K+)
-  interface CreditProgram {
-    vendor: string;
-    program: string;
-    maxCredits: string;
-    creditValue: number; // for sorting and total calc
+  interface StartupProgram {
+    name: string;
+    slug: string;
+    category: "cloud-infrastructure" | "fintech-banking" | "developer-tools" | "ai-tools";
+    creditValue: string;
     eligibility: string;
-    expiration: string;
-    highlights: string;
+    duration: string;
+    applicationDifficulty: "open" | "accelerator-only" | "invite-only" | "vc-backed";
+    whatsIncluded: string;
+    hiddenConstraints: string;
+    vestingSchedule: string;
   }
 
-  const tier1Programs: CreditProgram[] = [
-    {
-      vendor: "Google Cloud",
-      program: "Google for Startups Cloud Program",
-      maxCredits: "$350K",
-      creditValue: 350000,
-      eligibility: "AI startups (Scale AI tier): pre-seed to Series A, equity-funded. General (Scale tier): equity-funded startups.",
-      expiration: "2 years ($250K Y1 + $100K Y2 for AI; $200K over 2 years for general)",
-      highlights: "Includes Gemini API credits, Google Workspace, technical training, and Cloud Architecture consultation.",
-    },
-    {
-      vendor: "Cloudflare",
-      program: "Cloudflare Startup Program",
-      maxCredits: "$250K",
-      creditValue: 250000,
-      eligibility: "4 tiers: Bootstrapped ($5K), Up-and-Coming ($25K, early-stage), Seed-Funded ($100K), High Growth ($250K, VC-backed or AI-focused).",
-      expiration: "Varies by tier",
-      highlights: "Covers Workers, R2, D1, Pages, AI Gateway. Includes partner perks and technical support.",
-    },
-    {
-      vendor: "Microsoft Founders Hub",
-      program: "Microsoft for Startups Founders Hub",
-      maxCredits: "$150K",
-      creditValue: 150000,
-      eligibility: "Basic path: $5K credits, no investor required. Investor network path: up to $150K. No funding stage requirement for basic.",
-      expiration: "Varies by tier",
-      highlights: "Includes M365 Business Premium (50 seats), GitHub Enterprise, LinkedIn premium, Azure OpenAI credits, and 1:1 technical mentoring.",
-    },
-    {
-      vendor: "AWS Activate",
-      program: "AWS Activate",
-      maxCredits: "$100K",
-      creditValue: 100000,
-      eligibility: "Founders: $1K credits (self-funded). Portfolio: up to $100K (VC/accelerator-backed). Additional up to $300K Trainium/Inferentia credits.",
-      expiration: "1-2 years depending on tier",
-      highlights: "Technical support credits, training, and architecture guidance. Largest partner ecosystem.",
-    },
-    {
-      vendor: "DigitalOcean",
-      program: "DigitalOcean Hatch",
-      maxCredits: "$100K",
-      creditValue: 100000,
-      eligibility: "Startups with <$10M raised. Application required.",
-      expiration: "12 months + 3 months free GPU access",
-      highlights: "15 months Standard support. Partner perks from Cloudflare, HubSpot, and others.",
-    },
-  ];
-
-  // Tier 2: Infrastructure & database programs ($500–$25K)
-  const tier2Programs: CreditProgram[] = [
-    {
-      vendor: "Google BigQuery",
-      program: "Google Cloud for Startups (BigQuery)",
-      maxCredits: "$100K",
-      creditValue: 100000,
-      eligibility: "Cloud for Startups members. Initial $20K, then $80K after consuming 75%.",
-      expiration: "12 months per tranche",
-      highlights: "Covers BigQuery compute and storage. Part of the broader Google Cloud program.",
-    },
-    {
-      vendor: "Segment",
-      program: "Segment Startup Program",
-      maxCredits: "$50K",
-      creditValue: 50000,
-      eligibility: "Approved startups. Application via Segment or Twilio programs.",
-      expiration: "Up to 2 years",
-      highlights: "$50K toward Team plan. Includes access to $1M+ in partner deals (AWS, Google, Intercom) and Analytics Academy.",
-    },
-    {
-      vendor: "MongoDB",
-      program: "MongoDB for Startups",
-      maxCredits: "$5K",
-      creditValue: 5000,
-      eligibility: "Brex customers or direct application.",
-      expiration: "12 months",
-      highlights: "Atlas credits for managed MongoDB. Includes technical support and training resources.",
-    },
-    {
-      vendor: "Amplitude",
-      program: "Amplitude Startup Scholarship",
-      maxCredits: "1yr Growth Plan",
-      creditValue: 10000,
-      eligibility: "Early-stage startups. Application required.",
-      expiration: "1 year",
-      highlights: "200K MTUs or 100M events/month. All Growth features: Behavioral Cohorts, Pathfinder, experimentation.",
-    },
-    {
-      vendor: "Supabase",
-      program: "Supabase for Startups",
-      maxCredits: "$2.5K",
-      creditValue: 2500,
-      eligibility: "VC-backed startups or accelerator participants.",
-      expiration: "12 months",
-      highlights: "Pro plan credits covering Postgres, Auth, Storage, and Edge Functions.",
-    },
-    {
-      vendor: "Neon",
-      program: "Neon Startup Program",
-      maxCredits: "$1K",
-      creditValue: 1000,
-      eligibility: "Startups with <$5M raised.",
-      expiration: "12 months",
-      highlights: "Serverless Postgres with branching. Scale to Zero compute, instant provisioning.",
-    },
-    {
-      vendor: "Vercel",
-      program: "Vercel for Startups",
-      maxCredits: "$3K",
-      creditValue: 3000,
-      eligibility: "VC-backed startups. Application required.",
-      expiration: "12 months",
-      highlights: "Pro plan credits. Priority support channel and architecture review.",
-    },
-    {
-      vendor: "Netlify",
-      program: "Netlify Startup Program",
-      maxCredits: "$2K",
-      creditValue: 2000,
-      eligibility: "Early-stage startups.",
-      expiration: "12 months",
-      highlights: "Pro plan credits with advanced build features and priority support.",
-    },
-  ];
-
-  // Tier 3: Developer tool programs (free upgrades/credits)
-  const tier3Programs: CreditProgram[] = [
-    {
-      vendor: "Datadog",
-      program: "Datadog for Startups",
-      maxCredits: "2yr Pro Plan",
-      creditValue: 5000,
-      eligibility: "Startups backed by select VC partners.",
-      expiration: "2 years",
-      highlights: "Full APM, logs, infrastructure monitoring. Pro plan covers 5 hosts with full-stack observability.",
-    },
-    {
-      vendor: "LaunchDarkly",
-      program: "LaunchDarkly Startup Program",
-      maxCredits: "1yr Pro Plan",
-      creditValue: 3000,
-      eligibility: "Early-stage startups. Application required.",
-      expiration: "1 year",
-      highlights: "Feature flags and experimentation platform. Unlimited flags, 50K MAU.",
-    },
-    {
-      vendor: "Auth0",
-      program: "Auth0 for Startups",
-      maxCredits: "1yr Free Plan+",
-      creditValue: 2000,
-      eligibility: "Startups with <$10M raised.",
-      expiration: "1 year",
-      highlights: "Enhanced free tier with additional MAU capacity and premium features.",
-    },
-    {
-      vendor: "CircleCI",
-      program: "CircleCI Startup Program",
-      maxCredits: "$1.5K",
-      creditValue: 1500,
-      eligibility: "Startups under 50 employees.",
-      expiration: "6 months",
-      highlights: "Performance plan credits for faster builds, parallelism, and larger resource classes.",
-    },
-    {
-      vendor: "Intercom",
-      program: "Intercom Early Stage Program",
-      maxCredits: "$300 off/3mo",
-      creditValue: 900,
-      eligibility: "Brex customers or early-stage startups.",
-      expiration: "3 months",
-      highlights: "Up to $100/month off for 3 months. Customer messaging, bots, and support tools.",
-    },
-    {
-      vendor: "HubSpot",
-      program: "HubSpot for Startups",
-      maxCredits: "90% off Y1",
-      creditValue: 5000,
-      eligibility: "Startups in approved accelerators, VC portfolios, or Stripe/Brex programs.",
-      expiration: "First year (then 50% Y2, 25% Y3)",
-      highlights: "CRM, marketing hub, sales tools. Graduated discount over 3 years.",
-    },
-  ];
-
-  // Resolve vendor data from our index
-  const resolveVendor = (vendorName: string) => {
-    const offer = offers.find(o => o.vendor === vendorName);
-    if (!offer) return null;
-    return enrichOffers([offer])[0];
+  const difficultyColors: Record<string, string> = {
+    "open": "#3fb950",
+    "vc-backed": "#d29922",
+    "accelerator-only": "#bc8cff",
+    "invite-only": "#f85149",
+  };
+  const difficultyLabels: Record<string, string> = {
+    "open": "Open application",
+    "vc-backed": "VC/funding required",
+    "accelerator-only": "Accelerator required",
+    "invite-only": "Invite only",
   };
 
-  // Calculate total credits
-  const totalCredits = [...tier1Programs, ...tier2Programs, ...tier3Programs].reduce((sum, p) => sum + p.creditValue, 0);
-  const totalDisplay = totalCredits >= 1000000 ? `$${(totalCredits / 1000000).toFixed(1)}M+` : `$${(totalCredits / 1000).toFixed(0)}K+`;
+  const categoryLabels: Record<string, string> = {
+    "cloud-infrastructure": "Cloud Infrastructure Credits",
+    "fintech-banking": "Fintech & Banking Perks",
+    "developer-tools": "Developer Tool Credits",
+    "ai-tools": "AI Tool Credits",
+  };
+  const categoryDescs: Record<string, string> = {
+    "cloud-infrastructure": "Major cloud providers offering $5K\u2013$350K in compute, storage, and AI credits. These are the highest-value programs \u2014 anchor your startup\u2019s infrastructure budget here.",
+    "fintech-banking": "Startup-focused banks and financial platforms bundling cloud credits and SaaS perks with their banking products. Often the easiest way to unlock credits from multiple providers at once.",
+    "developer-tools": "SaaS companies offering generous startup plans for analytics, data, and developer infrastructure. Smaller individual values but stack well with cloud credits.",
+    "ai-tools": "AI coding tools and ML platforms offering startup-specific credit programs. A newer category driven by the AI tool boom.",
+  };
+
+  const programs: StartupProgram[] = [
+    // Cloud Infrastructure
+    { name: "AWS Activate", slug: "aws-activate", category: "cloud-infrastructure", creditValue: "$1K (self-funded), $100K (VC-backed)", eligibility: "Any startup (Founders) / VC/accelerator-backed (Portfolio)", duration: "1-2 years", applicationDifficulty: "open", whatsIncluded: "AWS credits, technical support, training. Business Support (1yr) for Portfolio tier. Separate program for each funding stage.", hiddenConstraints: "Founders tier is self-serve \u2014 easy to get but only $1K. Portfolio tier requires VC/accelerator letter. Credits expire in 12 months (Founders) or 24 months (Portfolio). Cannot combine with other AWS promotional credits.", vestingSchedule: "Founders: lump sum. Portfolio: annual tranches" },
+    { name: "Google Cloud for Startups", slug: "google-cloud-for-startups", category: "cloud-infrastructure", creditValue: "$200K (Scale) / $350K (Scale AI)", eligibility: "Equity-funded startups, Series A or earlier", duration: "2 years", applicationDifficulty: "vc-backed", whatsIncluded: "Google Cloud credits, Firebase, Google Workspace, technical training, partner perks. Scale AI includes $100K extra for AI/ML workloads.", hiddenConstraints: "Equity funding required \u2014 bootstrapped startups don\u2019t qualify for Scale tier. $200K is split $100K/year. Must use within Google Cloud (not transferable). 24-month expiry. Requires application review.", vestingSchedule: "$100K Y1 + $100K Y2 (Scale); $250K Y1 + $100K Y2 (Scale AI)" },
+    { name: "Microsoft Founders Hub", slug: "microsoft-founders-hub", category: "cloud-infrastructure", creditValue: "$5K-$150K Azure credits", eligibility: "Any startup (basic) / investor-backed (premium)", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Azure credits, M365 Business Premium, GitHub Enterprise, LinkedIn Premium, technical mentoring, Visual Studio Enterprise.", hiddenConstraints: "Basic path gives only $5K without investor connection. Premium path up to $150K requires investor network verification. Credits expire in 12 months. Azure-only (not applicable to M365 or other Microsoft products).", vestingSchedule: "Lump sum on approval" },
+    { name: "DigitalOcean Hatch", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Up to $100K compute credits", eligibility: "Startups affiliated with VC/accelerator partners", duration: "12 months", applicationDifficulty: "accelerator-only", whatsIncluded: "Compute credits, GPU Droplets at $1.90/GPU/hr (H100 equivalent), dedicated support, technical architecture review.", hiddenConstraints: "Must be affiliated with a partner VC or accelerator \u2014 not open application. GPU pricing is discounted but still significant at scale. Credits expire in 12 months. Cannot transfer between accounts.", vestingSchedule: "Lump sum per partner agreement" },
+    { name: "IBM Cloud Startup", slug: "ibm-cloud-startup", category: "cloud-infrastructure", creditValue: "$12K (Builder) / $120K (Premium)", eligibility: "Builder: any startup. Premium: VC/accelerator-backed", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "IBM Cloud credits ($1K/mo Builder, $10K/mo Premium), Watson AI services, Red Hat OpenShift, technical mentoring.", hiddenConstraints: "Builder is $1K/month for 12 months \u2014 use-it-or-lose-it monthly. Premium requires VC letter and formal application. IBM Cloud has smaller ecosystem than AWS/GCP/Azure. Some Watson services have separate quotas.", vestingSchedule: "$1K/mo (Builder) or $10K/mo (Premium)" },
+    { name: "Cloudflare Startup Program", slug: "cloudflare-startup-program", category: "cloud-infrastructure", creditValue: "$5K-$250K credits", eligibility: "4 tiers based on funding: Bootstrapped ($5K), Up-and-Coming ($25K), Seed-Funded ($100K), High Growth ($250K)", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Cloudflare credits covering Workers, R2, CDN, security, analytics. Access to startup community and events.", hiddenConstraints: "Tier is based on funding stage \u2014 bootstrapped startups get only $5K. Higher tiers require more funding documentation. Credits are Cloudflare-only. Limited time window to use credits.", vestingSchedule: "Lump sum per tier" },
+    // Fintech/Banking
+    { name: "Stripe Atlas", slug: "stripe-atlas", category: "fintech-banking", creditValue: "$50K+ in founder perks", eligibility: "Atlas customers (incorporation via Stripe)", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, legal perks, banking setup.", hiddenConstraints: "Requires Stripe Atlas incorporation ($500 one-time fee). Perks are from third parties \u2014 each has own eligibility requirements. Processing credits only apply to Stripe payments. Some perks expire 90 days after incorporation.", vestingSchedule: "Available on Atlas completion" },
+    { name: "Brex", slug: "brex", category: "fintech-banking", creditValue: "$350K+ in partner perks", eligibility: "Brex cardholders (startups)", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud credits, partner discounts on Notion, Slack, and 50+ tools.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
+    { name: "Mercury", slug: "mercury", category: "fintech-banking", creditValue: "Banking perks bundle", eligibility: "Mercury banking customers", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "1 year free Datadog (up to $100K value), $5K AWS credits, up to $200K Google Cloud credits, 30% off QuickBooks Online.", hiddenConstraints: "Must have Mercury business account. Datadog credit is usage-based cap \u2014 may not reach full $100K value. Google Cloud credits require separate application to Google for Startups. Perks are subject to partner availability.", vestingSchedule: "Per-partner activation" },
+    { name: "Ramp", slug: "ramp", category: "fintech-banking", creditValue: "$5K AWS + partner discounts", eligibility: "Ramp cardholders", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "Up to $5K AWS credits, partner discounts on Notion, and other tools. Part of $350K+ total partner rewards program.", hiddenConstraints: "Must be Ramp cardholder. AWS credits are a subset of what AWS Activate offers separately. Partner perks overlap with Brex offerings. Some discounts require annual commitments.", vestingSchedule: "Per-partner activation" },
+    { name: "SVB (Silicon Valley Bank)", slug: "svb-silicon-valley-bank", category: "fintech-banking", creditValue: "$5K AWS + $100K Google Cloud", eligibility: "SVB banking customers (startups)", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, up to $100K Google Cloud credits (annual cap), $5K MongoDB credits, $9K off Slack, $50K+ in total partner value.", hiddenConstraints: "SVB was acquired by First Citizens Bank (2023) \u2014 program continuity uncertain for new applicants. Google Cloud credits are usage-based annual cap (not guaranteed full amount). Partner perks change over time.", vestingSchedule: "Annual cap on cloud credits" },
+    // Developer Tools
+    { name: "PostHog YC Deal", slug: "posthog-yc-deal", category: "developer-tools", creditValue: "$50K/year credits", eligibility: "Y Combinator companies (raised less than $25M)", duration: "Renews annually", applicationDifficulty: "accelerator-only", whatsIncluded: "Full PostHog platform: product analytics, session replay, feature flags, experimentation. Auto-renews each year.", hiddenConstraints: "YC companies only \u2014 not open to general startups. $25M fundraising cap. Must maintain active YC alumni status. Covers PostHog only \u2014 not transferable.", vestingSchedule: "Annual renewal" },
+    { name: "Segment Startup Program", slug: "segment-startup-program", category: "developer-tools", creditValue: "$50K in Team plan credits", eligibility: "Early-stage startups (application required)", duration: "Up to 2 years", applicationDifficulty: "open", whatsIncluded: "$50K toward monthly Team plan. Access to $1M+ in partner deals (AWS, Google, Intercom). Analytics Academy training.", hiddenConstraints: "Credits apply to Team plan pricing only. Application requires company details and growth metrics. Partner deals are separate programs with their own eligibility. 2-year maximum regardless of credit usage.", vestingSchedule: "Monthly against Team plan" },
+    // AI Tools
+    { name: "Amazon Kiro (AWS Startups)", slug: "amazon-kiro-aws-startups", category: "ai-tools", creditValue: "1 year free Pro+ ($480/yr value)", eligibility: "AWS Startups program members", duration: "1 year", applicationDifficulty: "accelerator-only", whatsIncluded: "Kiro Pro+ with expanded credits. Three tiers: Starter (2 users), Growth (50 users), Scale (100 users). Includes SWE-1.5 model access.", hiddenConstraints: "Requires existing AWS Startups membership (not standalone). Pro+ credit allocation is model-dependent (Sonnet 4 costs 1.3x). Free tier duration is exactly 12 months. Not combinable with other Kiro promotions.", vestingSchedule: "Monthly credit allocation" },
+    { name: "Amplitude Startup Scholarship", slug: "amplitude-startup-scholarship", category: "ai-tools", creditValue: "1 year free Growth plan", eligibility: "Startups building digital products", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Growth plan with 200K MTUs or 100M events/month. Behavioral Cohorts, Pathfinder, and all Growth features.", hiddenConstraints: "Growth plan converts to paid ($49+/mo) after 1 year. Application review required. MTU/event limits are soft \u2014 overage may be billed. Plan features may change during the free year.", vestingSchedule: "Full plan for 12 months" },
+  ];
+
+  const startupVendorNames = programs.map(p => p.name);
+  const startupChanges = dealChanges.filter(c =>
+    startupVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
+  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const openCount = programs.filter(p => p.applicationDifficulty === "open").length;
+  const categories: Array<"cloud-infrastructure" | "fintech-banking" | "developer-tools" | "ai-tools"> = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
+
+  // Hero table rows
+  const heroTableRows = programs.map(p => {
+    const diffColor = difficultyColors[p.applicationDifficulty] || "var(--text-muted)";
+    return '<tr>' +
+      '<td style="font-weight:600">' + escHtmlServer(p.name) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">' + escHtmlServer(p.creditValue) + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(p.eligibility.split(".")[0]) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.duration) + '</td>' +
+      '<td><span style="color:' + diffColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(difficultyLabels[p.applicationDifficulty]) + '</span></td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  // Category breakdown sections
+  const categorySections = categories.map(cat => {
+    const catPrograms = programs.filter(p => p.category === cat);
+    const cards = catPrograms.map(p => {
+      const borderColor = difficultyColors[p.applicationDifficulty] || "var(--accent)";
+      return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
+        '<h3>' + escHtmlServer(p.name) + ' ' +
+        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(difficultyLabels[p.applicationDifficulty]) + '</span></h3>' +
+        '<p class="diff-desc"><strong>Credit value:</strong> ' + escHtmlServer(p.creditValue) + '</p>' +
+        '<p class="diff-desc"><strong>Eligibility:</strong> ' + escHtmlServer(p.eligibility) + '</p>' +
+        '<p class="diff-desc"><strong>Duration:</strong> ' + escHtmlServer(p.duration) + '</p>' +
+        '<p class="diff-desc"><strong>What\'s included:</strong> ' + escHtmlServer(p.whatsIncluded) + '</p>' +
+        '<p class="diff-desc"><strong>Vesting:</strong> ' + escHtmlServer(p.vestingSchedule) + '</p>' +
+        '</div>';
+    }).join("\n    ");
+    return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
+      '<p class="section-intro">' + escHtmlServer(categoryDescs[cat]) + '</p>' +
+      cards;
+  }).join("\n\n  ");
+
+  // Hidden constraints cards
+  const hiddenConstraintCards = [
+    { title: "Credit Expiry Timelines", desc: "Most credits expire 12\u201324 months from activation, not application. Unused credits are lost \u2014 no extensions. Google splits $200K into $100K/year; AWS Founders gives all $1K at once but expires in 12 months." },
+    { title: "Vesting Schedules", desc: "Google, IBM, and some others release credits in monthly or annual tranches. You can\u2019t front-load usage. IBM Builder gives $1K/month \u2014 if you need $12K in month 1, you only get $1K." },
+    { title: "Revenue & Funding Caps", desc: "Google Scale requires equity funding. PostHog YC Deal has a $25M fundraising cap. Programs may retroactively check if you still qualify when renewing." },
+    { title: "Platform Lock-in After Credits", desc: "Credits only work on the issuing platform. After credits expire, you\u2019re on production pricing with established data gravity. Migration costs can exceed the original credit value." },
+    { title: "Overlapping Perks Problem", desc: "Brex, Mercury, SVB, and Stripe Atlas all offer AWS credits \u2014 but you can\u2019t stack them. The $5K AWS credit from Brex and the $5K from Stripe Atlas may be the same underlying AWS Activate program." },
+  ];
+
+  // Changes timeline
+  const changeTimelineRows = startupChanges.map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    return '<tr>' +
+      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
+      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '</tr>';
+  }).join("\n        ");
+
+  // FAQ entries
+  const faqEntries = [
+    { q: "What are the highest-value startup credit programs?", a: "The top programs by credit value are: Google Cloud for Startups Scale AI ($350K), Cloudflare High Growth ($250K), Google Cloud Scale ($200K), Microsoft Founders Hub Premium ($150K), IBM Cloud Premium ($120K), AWS Activate Portfolio ($100K), and DigitalOcean Hatch ($100K). Most of these require VC backing or accelerator affiliation." },
+    { q: "Can I stack multiple startup programs?", a: "Yes, most programs are compatible since they apply to different platforms. For example: Google for Startups ($200K) + AWS Activate ($100K) + DigitalOcean Hatch ($100K) = $400K+ across three clouds. Banking programs (Brex, Mercury) layer additional perks on top. However, AWS credits from different sources (Brex, Stripe Atlas, SVB) typically don't stack \u2014 they're often the same underlying AWS Activate allocation." },
+    { q: "Do startup credits expire?", a: "Most credits expire 12\u201324 months after activation. AWS Activate Founders: 12 months. Google Scale: 24 months (split $100K/year). Microsoft Founders Hub: 12 months. IBM Builder: monthly use-it-or-lose-it ($1K/month). Always check the vesting schedule \u2014 some programs release credits in tranches rather than all at once." },
+    { q: "What do I need to qualify for startup credits?", a: "Requirements range from nothing (AWS Activate Founders $1K, Microsoft Founders Hub basic $5K, Cloudflare Bootstrapped $5K) to VC backing (Google Scale, DigitalOcean Hatch) to accelerator membership (PostHog YC Deal, Amazon Kiro). Banking programs (Brex, Mercury, Ramp) require opening an account. The highest-value programs generally require equity funding." },
+    { q: "Are startup credits worth the lock-in?", a: "Credits significantly lower early-stage cloud costs but create platform dependency. After credits expire, you're on full production pricing with established data gravity. Mitigate this by using credits for experimentation and development rather than production architecture. A multi-cloud strategy with credits from 2\u20133 providers reduces single-vendor risk." },
+  ];
+
+  // Related pages
+  const relatedSlugs = ["aws-free-tier-2026", "gcp-free-tier-2026", "hosting-alternatives", "free-startup-stack"];
+  const relatedPages = ALTERNATIVES_PAGES.filter(p => relatedSlugs.includes(p.slug));
 
   // JSON-LD
   const jsonLd = {
@@ -25206,210 +25136,275 @@ function buildStartupCreditsPage(): string {
     "@type": "Article",
     headline: title,
     description: metaDesc,
-    url: `${BASE_URL}/${slug}`,
-    datePublished: "2026-03-27",
-    dateModified: new Date().toISOString().slice(0, 10),
+    datePublished: pubDate,
+    dateModified: new Date().toISOString().split("T")[0],
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
+    about: programs.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
   };
 
-  // Build program card HTML
-  const buildProgramCard = (program: CreditProgram, showTier: boolean) => {
-    const vendorData = resolveVendor(program.vendor);
-    const riskBadge = vendorData?.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[vendorData.risk_level]}22;color:${riskColors[vendorData.risk_level]};font-weight:600">${vendorData.risk_level}</span>` : "";
-    const vendorLink = vendorData ? `/vendor/${toSlug(vendorData.vendor)}` : "#";
-    return `<div class="program-card">
-      <div class="program-header">
-        <a href="${vendorLink}" class="program-vendor">${escHtmlServer(program.vendor)}</a>
-        <span class="program-credits">${escHtmlServer(program.maxCredits)}</span>
-        ${riskBadge}
-      </div>
-      <div class="program-name">${escHtmlServer(program.program)}</div>
-      <div class="program-detail"><strong>Eligibility:</strong> ${escHtmlServer(program.eligibility)}</div>
-      <div class="program-detail"><strong>Duration:</strong> ${escHtmlServer(program.expiration)}</div>
-      <div class="program-detail"><strong>Highlights:</strong> ${escHtmlServer(program.highlights)}</div>
-      ${vendorData ? `<div class="program-links">
-        <a href="${vendorLink}">Full profile</a>
-        <a href="${escHtmlServer(vendorData.url)}" target="_blank" rel="noopener">Apply &nearr;</a>
-      </div>` : ""}
-    </div>`;
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqEntries.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
   };
 
-  // Stacking strategy
-  const stackingHtml = `
-  <h2>💡 Credit Stacking Strategy</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Most startup programs can be combined. Here's a realistic stacking example for an early-stage startup:</p>
-  <div class="stacking-example">
-    <div class="stack-row"><span class="stack-vendor">Google Cloud (Scale AI)</span><span class="stack-amount">$350,000</span></div>
-    <div class="stack-row"><span class="stack-vendor">Cloudflare (Seed-Funded)</span><span class="stack-amount">$100,000</span></div>
-    <div class="stack-row"><span class="stack-vendor">AWS Activate (Portfolio)</span><span class="stack-amount">$100,000</span></div>
-    <div class="stack-row"><span class="stack-vendor">MongoDB Atlas</span><span class="stack-amount">$5,000</span></div>
-    <div class="stack-row"><span class="stack-vendor">Datadog Pro</span><span class="stack-amount">~$5,000</span></div>
-    <div class="stack-row total"><span class="stack-vendor">Combined infrastructure credits</span><span class="stack-amount">$560,000+</span></div>
-  </div>
-  <div class="stacking-notes">
-    <p><strong>Which programs stack:</strong> Cloud credits (AWS, Google, Azure, Cloudflare) are independent — you can use all of them simultaneously across your infrastructure. Tool-specific credits (MongoDB, Datadog, Vercel) apply only to their service and stack with cloud credits.</p>
-    <p><strong>Which are mutually exclusive:</strong> Most programs within the same vendor don't stack (e.g., you can't combine Google for Startups with a separate Google BigQuery credit). Between vendors, there are no conflicts.</p>
-    <p><strong>Application order:</strong> Apply to the largest programs first (Google, AWS, Cloudflare). These take 2-4 weeks for approval. Fill in with tool-specific programs (MongoDB, Datadog) while waiting — these approve in days.</p>
-  </div>`;
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Startup Programs", item: BASE_URL + "/alternatives" },
+      { "@type": "ListItem", position: 3, name: "Credits Comparison", item: BASE_URL + "/" + slug },
+    ],
+  };
 
-  // Build tier 1 table for overview
-  const tier1TableRows = tier1Programs.map(p => {
-    const vendorData = resolveVendor(p.vendor);
-    const riskBadge = vendorData?.risk_level ? `<span style="color:${riskColors[vendorData.risk_level]}">${vendorData.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
-    return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${toSlug(p.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(p.vendor)}</a></td>
-      <td style="font-family:var(--mono);color:var(--accent);font-weight:600">${escHtmlServer(p.maxCredits)}</td>
-      <td style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(p.eligibility.split(".")[0])}</td>
-      <td>${riskBadge}</td>
-    </tr>`;
-  }).join("\n    ");
-
-  // Related pages
-  const relatedSlugs = ["free-startup-stack", "free-tier-risk", "free-ai-stack", "free-devops-stack", "q1-2026-developer-pricing-report", "hosting-alternatives"];
-  const relatedPages = ALTERNATIVES_PAGES.filter(p => relatedSlugs.includes(p.slug));
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escHtmlServer(title)} — AgentDeals</title>
-<meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="${BASE_URL}/${slug}">
-<meta property="og:title" content="${escHtmlServer(title)}">
-<meta property="og:description" content="${escHtmlServer(metaDesc)}">
-<meta property="og:type" content="article">
-<meta property="og:url" content="${BASE_URL}/${slug}">
-${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
-a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
-.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
-.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
-.breadcrumb a{color:var(--text-muted)}
-h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
-h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
-.context{color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;line-height:1.7}
-.context strong{color:var(--text)}
-.credits-banner{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0 2rem}
-.credits-banner .credits-amount{font-size:2.5rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
-.credits-banner .credits-label{color:var(--text-muted);font-size:.9rem;margin-top:.25rem}
-.credits-banner .credits-breakdown{color:var(--text-dim);font-size:.8rem;margin-top:.5rem}
-.program-card{border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:var(--bg-card);transition:border-color .15s}
-.program-card:hover{border-color:var(--border-hover)}
-.program-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.25rem}
-.program-vendor{font-size:1.1rem;font-weight:600;color:var(--text)}
-.program-vendor:hover{color:var(--accent)}
-.program-credits{font-family:var(--mono);font-size:1rem;font-weight:600;color:var(--accent);padding:.1rem .5rem;background:var(--accent-glow);border-radius:10px}
-.program-name{color:var(--text-muted);font-size:.85rem;margin-bottom:.75rem}
-.program-detail{font-size:.85rem;color:var(--text-muted);line-height:1.6;margin-bottom:.25rem}
-.program-detail strong{color:var(--text)}
-.program-links{display:flex;flex-wrap:wrap;gap:.75rem;font-size:.8rem;margin-top:.75rem}
-.compare-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
-.compare-table th,.compare-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
-.compare-table th{color:var(--text-muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
-.compare-table tr:hover{background:var(--accent-glow)}
-.stacking-example{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:1rem 0}
-.stack-row{display:flex;justify-content:space-between;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--text-muted)}
-.stack-row:last-child{border-bottom:none}
-.stack-row.total{background:var(--accent-glow);font-weight:600;color:var(--text)}
-.stack-amount{font-family:var(--mono);color:var(--accent);font-weight:600}
-.stack-row.total .stack-amount{font-size:1.1rem}
-.stacking-notes{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.85rem;color:var(--text-muted);line-height:1.7}
-.stacking-notes p{margin-bottom:.75rem}
-.stacking-notes p:last-child{margin-bottom:0}
-.stacking-notes strong{color:var(--text)}
-.tier-section{margin:2rem 0}
-.tier-badge{display:inline-block;font-size:.7rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;margin-left:.5rem}
-.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(168,85,247,0.08));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:2rem 0}
-.verdict-box h3{margin:0 0 1rem;font-size:1.1rem}
-.verdict-item{margin-bottom:.75rem;font-size:.9rem;color:var(--text-muted);line-height:1.6}
-.verdict-item strong{color:var(--text)}
-.search-cta{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;text-align:center;font-size:.9rem}
-footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.credits-banner .credits-amount{font-size:2rem}}
-${globalNavCss()}
-${mcpCtaCss()}
-</style>
-</head>
-<body>
-<div class="container">
-  ${buildGlobalNav("alternatives")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Alternatives</a> &rsaquo; Startup Credits</div>
-  <h1>Startup Credits &amp; Programs Directory</h1>
-
-  <div class="context">
-    <p>Over <strong>${totalDisplay} in combined startup credits</strong> available in 2026. This directory covers ${tier1Programs.length + tier2Programs.length + tier3Programs.length} verified programs across cloud infrastructure, databases, developer tools, and SaaS — from <strong>$350K cloud credits</strong> to free plan upgrades.</p>
-    <p>Each entry includes current credit amounts, eligibility requirements, and duration. Credit data is cross-referenced against our index of ${offers.length.toLocaleString()}+ developer tools, verified March 2026.</p>
-  </div>
-
-  <div class="credits-banner">
-    <div class="credits-amount">${totalDisplay}</div>
-    <div class="credits-label">Combined startup credits across all programs below</div>
-    <div class="credits-breakdown">${tier1Programs.length} major cloud programs &bull; ${tier2Programs.length} infrastructure programs &bull; ${tier3Programs.length} developer tool programs</div>
-  </div>
-
-  <h2>Major Cloud Programs <span class="tier-badge" style="background:rgba(59,130,246,0.15);color:var(--accent)">Tier 1 — $100K+</span></h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">The largest credit programs. These are the foundation of any startup's cloud infrastructure.</p>
-
-  <div style="overflow-x:auto">
-  <table class="compare-table">
-    <thead>
-      <tr>
-        <th>Provider</th>
-        <th>Max Credits</th>
-        <th>Key Requirement</th>
-        <th>Stability</th>
-      </tr>
-    </thead>
-    <tbody>
-    ${tier1TableRows}
-    </tbody>
-  </table>
-  </div>
-
-  ${tier1Programs.map(p => buildProgramCard(p, true)).join("\n  ")}
-
-  <h2>Infrastructure &amp; Database Programs <span class="tier-badge" style="background:rgba(168,85,247,0.15);color:#a855f7">Tier 2 — $500–$100K</span></h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Specialized infrastructure credits for databases, hosting, analytics, and more.</p>
-
-  ${tier2Programs.map(p => buildProgramCard(p, true)).join("\n  ")}
-
-  <h2>Developer Tool Programs <span class="tier-badge" style="background:rgba(34,197,94,0.15);color:#22c55e">Tier 3 — Credits &amp; Upgrades</span></h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Free plan upgrades, credits, and extended trials for essential developer tools.</p>
-
-  ${tier3Programs.map(p => buildProgramCard(p, false)).join("\n  ")}
-
-  ${stackingHtml}
-
-  <div class="verdict-box">
-    <h3>Bottom Line</h3>
-    <div class="verdict-item"><strong>Pre-seed / bootstrapped:</strong> Start with Microsoft Founders Hub ($5K, no investor needed) + Cloudflare Bootstrapped ($5K) + AWS Activate Founders ($1K). Combined: ~$11K with no funding requirement.</div>
-    <div class="verdict-item"><strong>Seed-funded:</strong> Apply to Google for Startups ($200-350K) + AWS Activate Portfolio ($100K) + Cloudflare Seed-Funded ($100K). Combined: $400-550K across the major clouds.</div>
-    <div class="verdict-item"><strong>Accelerator-backed:</strong> Most accelerators (YC, Techstars, etc.) provide direct access to AWS, Google, and Azure programs. Ask your program manager — you likely qualify for top-tier credits automatically.</div>
-  </div>
-
-  <div class="search-cta">
-    <p>Need free tiers instead of credits? See our <a href="/free-startup-stack">Free Startup Stack</a> for $0/month infrastructure. Or <a href="/search">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>
-  </div>
-
-  <h2>Related Guides</h2>
-  <div style="display:flex;flex-direction:column;gap:.5rem;margin:1rem 0">
-    ${relatedPages.map(p => `<a href="/${p.slug}" style="display:block;padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s"><span style="font-weight:600;color:var(--text)">${escHtmlServer(p.title.split(" — ")[0])}</span><br><span style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(p.hubDesc)}</span></a>`).join("\n    ")}
-  </div>
-
-  ${buildMcpCta("Find startup credits and free tiers from your AI assistant. Search programs, compare eligibility, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
-</div>
-<script>${mcpCtaScript()}</script>
-</body>
-</html>`;
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+    '<meta charset="utf-8">\n' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+    '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
+    '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="og:title" content="' + escHtmlServer(title) + '">\n' +
+    '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n' +
+    '<meta property="og:type" content="article">\n' +
+    '<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n' +
+    '<meta property="article:published_time" content="' + pubDate + '">\n' +
+    OG_IMAGE_META + GOOGLE_VERIFICATION_META +
+    '<link rel="icon" type="image/png" href="/favicon.png">\n' +
+    '<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n' +
+    '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n' +
+    '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n' +
+    '<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n' +
+    '<style>\n' +
+    '*{margin:0;padding:0;box-sizing:border-box}\n' +
+    ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n' +
+    'body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n' +
+    'a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n' +
+    '.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n' +
+    '.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n' +
+    '.breadcrumb a{color:var(--text-muted)}\n' +
+    'h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\n' +
+    'h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\n' +
+    'h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n' +
+    '.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n' +
+    '.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n' +
+    '.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n' +
+    '.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n' +
+    '.stat-number.green{color:#3fb950}\n' +
+    '.stat-number.yellow{color:#d29922}\n' +
+    '.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n' +
+    '.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n' +
+    '.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n' +
+    '.executive-summary p:last-child{margin-bottom:0}\n' +
+    '.executive-summary strong{color:var(--text)}\n' +
+    '.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n' +
+    '.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n' +
+    '.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n' +
+    '.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n' +
+    '.pricing-table tr:hover{background:var(--accent-glow)}\n' +
+    '.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n' +
+    '.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6;margin-bottom:.25rem}\n' +
+    '.diff-desc strong{color:var(--text)}\n' +
+    '.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.context-box strong{color:var(--text)}\n' +
+    '.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n' +
+    '.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n' +
+    '.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n' +
+    '.verdict-item strong{color:var(--text)}\n' +
+    '.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n' +
+    '.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n' +
+    '.methodology strong{color:var(--text)}\n' +
+    '.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n' +
+    '.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n' +
+    '.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n' +
+    '.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n' +
+    '.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n' +
+    '.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}\n' +
+    '.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n' +
+    '.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n' +
+    '.toc ol{padding-left:1.25rem;margin:0}\n' +
+    '.toc li{margin-bottom:.35rem;font-size:.9rem}\n' +
+    '.toc a{color:var(--accent)}\n' +
+    '.hidden-cost-card{padding:1rem 1.25rem;border:1px solid var(--border);border-left:3px solid #f85149;border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
+    '.hidden-cost-card h4{margin:0 0 .25rem;font-size:.95rem;color:var(--text)}\n' +
+    '.hidden-cost-card p{color:var(--text-muted);font-size:.85rem;line-height:1.5;margin:0}\n' +
+    '.faq-item{border-bottom:1px solid var(--border);padding:1rem 0}\n' +
+    '.faq-item:last-child{border-bottom:none}\n' +
+    '.faq-q{font-weight:600;color:var(--text);font-size:.95rem;margin-bottom:.5rem}\n' +
+    '.faq-a{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
+    'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n' +
+    'footer a{color:var(--accent)}\n' +
+    '@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}\n' +
+    globalNavCss() + '\n' +
+    mcpCtaCss() + '\n' +
+    '</style>\n</head>\n<body>\n' +
+    '<div class="container">\n' +
+    '  ' + buildGlobalNav("alternatives") + '\n' +
+    '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Startup Programs</a> &rsaquo; Credits Comparison</div>\n' +
+    '  <h1>Startup Credits Comparison \u2014 The 2026 Guide</h1>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + programs.length + ' programs compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools</p>\n' +
+    '\n' +
+    '  <div class="summary-stats">\n' +
+    '    <div class="stat-card"><div class="stat-number">' + programs.length + '</div><div class="stat-label">Programs Compared</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number green">$500K+</div><div class="stat-label">Total Credit Value</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number">' + categories.length + '</div><div class="stat-label">Categories</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number yellow">' + openCount + '</div><div class="stat-label">Open Application</div></div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="executive-summary">\n' +
+    '    <p><strong>Startup credits in April 2026:</strong> ' + programs.length + ' programs across cloud infrastructure, fintech perks, developer tools, and AI \u2014 from $1K self-serve credits to $350K VC-backed packages. The cloud providers (AWS, Google, Microsoft, Cloudflare) offer the highest individual values, while fintech platforms (Brex, Mercury, Stripe Atlas) bundle credits from multiple providers into single sign-ups.</p>\n' +
+    '    <p><strong>Key insight:</strong> A well-planned stacking strategy can unlock $500K+ in combined credits across platforms. The highest-value approach: apply to cloud providers directly (Google $200K, AWS $100K, Cloudflare $100K) then layer fintech banking perks for additional tool credits. Watch for overlapping perks \u2014 AWS credits from Brex and Stripe Atlas may be the same underlying allocation.</p>\n' +
+    '    <p><strong>This guide covers:</strong> credit values, eligibility requirements, vesting schedules, hidden constraints, application difficulty, and optimal stacking strategies \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="toc">\n' +
+    '    <h3>Jump to section</h3>\n' +
+    '    <ol>\n' +
+    '      <li><a href="#comparison-table">Comparison Table</a></li>\n' +
+    '      <li><a href="#categories">Category Breakdown</a> (Cloud, Fintech, Dev Tools, AI)</li>\n' +
+    '      <li><a href="#hidden-constraints">Hidden Constraints</a></li>\n' +
+    '      <li><a href="#stacking">Stacking Strategy</a></li>\n' +
+    '      <li><a href="#changes">Recent Changes</a></li>\n' +
+    '      <li><a href="#faq">Frequently Asked Questions</a></li>\n' +
+    '    </ol>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="comparison-table">Comparison Table</h2>\n' +
+    '  <p class="section-intro">All credit values verified as of April 2026. Hover rows to highlight. Programs sorted by category.</p>\n' +
+    '\n' +
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Program</th>\n' +
+    '        <th>Credit Value</th>\n' +
+    '        <th>Eligibility</th>\n' +
+    '        <th>Duration</th>\n' +
+    '        <th>Application</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + heroTableRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="categories">Category Breakdown</h2>\n' +
+    '  <p class="section-intro">Startup credit programs fall into four categories, each targeting different needs and stages of growth.</p>\n' +
+    '\n' +
+    '  ' + categorySections + '\n' +
+    '\n' +
+    '  <h2 id="hidden-constraints">Hidden Constraints</h2>\n' +
+    '  <p class="section-intro">The credit value is rarely the full story. These are the constraints that catch founders off guard after committing to a program.</p>\n' +
+    '\n' +
+    hiddenConstraintCards.map(c =>
+      '  <div class="hidden-cost-card">\n' +
+      '    <h4>' + escHtmlServer(c.title) + '</h4>\n' +
+      '    <p>' + escHtmlServer(c.desc) + '</p>\n' +
+      '  </div>'
+    ).join("\n") + '\n' +
+    '\n' +
+    '  <h2 id="stacking">Stacking Strategy</h2>\n' +
+    '  <p class="section-intro">Most startup programs can be combined across platforms. Here are optimal stacking strategies for different startup profiles.</p>\n' +
+    '\n' +
+    '  <div class="verdict-box">\n' +
+    '    <h3>Recommended Stacking Combinations</h3>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Maximum cloud credits ($500K+)</strong>\n' +
+    '      <p>Google for Startups ($200K) + AWS Activate Portfolio ($100K) + Cloudflare Seed-Funded ($100K) + DigitalOcean Hatch ($100K) = $500K+ across 4 platforms. Requires VC backing for most.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Bootstrapped founder ($15K+)</strong>\n' +
+    '      <p>AWS Activate Founders ($1K) + Microsoft Founders Hub Basic ($5K) + Cloudflare Bootstrapped ($5K) + Stripe Atlas perks = $15K+ with zero funding requirement.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>YC / Accelerator company ($400K+)</strong>\n' +
+    '      <p>Full AWS Portfolio ($100K) + Google Scale ($200K) + PostHog ($50K/yr) + banking perks via Brex/Mercury = $400K+ first year.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>AI-focused startup ($450K+)</strong>\n' +
+    '      <p>Google Scale AI ($350K with AI credits) + Amazon Kiro free year + AWS Activate = $450K+ with dedicated AI/ML credits.</p>\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="verdict-item">\n' +
+    '      <strong>Financial platform layering</strong>\n' +
+    '      <p>Sign up for Brex + Mercury + Stripe Atlas to unlock overlapping cloud perks. Careful: some AWS credits from different programs don\'t stack.</p>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <h2 id="changes">Recent Changes</h2>\n' +
+    '  <p class="section-intro">Startup credit programs change frequently. Here are the changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
+    '\n' +
+    (startupChanges.length > 0 ? (
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + changeTimelineRows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n'
+    ) : '  <p class="section-intro">No startup credit program changes tracked yet.</p>\n') +
+    '\n' +
+    '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
+    faqEntries.map(f =>
+      '  <div class="faq-item">\n' +
+      '    <div class="faq-q">' + escHtmlServer(f.q) + '</div>\n' +
+      '    <div class="faq-a">' + escHtmlServer(f.a) + '</div>\n' +
+      '  </div>'
+    ).join("\n") + '\n' +
+    '\n' +
+    '  <h2>Data Source &amp; Methodology</h2>\n' +
+    '  <div class="methodology">\n' +
+    '    <strong>Powered by AgentDeals.</strong> All credit values are sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor program pages. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as programs announce changes.<br><br>\n' +
+    '    <strong>Query this data programmatically</strong> via <a href="/api/startup-credits">/api/startup-credits</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for startup programs, compare eligibility, or track changes from your AI coding assistant.\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n' +
+    '\n' +
+    '  ' + buildMcpCta("Compare startup credit programs, check eligibility, and plan your stacking strategy \u2014 all from your AI coding assistant.") + '\n' +
+    '\n' +
+    '  <h2>Related Guides</h2>\n' +
+    '  <div class="related-pages">\n' +
+    relatedPages.map(p =>
+      '    <a href="/' + p.slug + '" class="related-page-link">\n' +
+      '      <div class="link-title">' + escHtmlServer(p.title) + '</div>\n' +
+      '      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n' +
+      '    </a>'
+    ).join("\n") + '\n' +
+    '  </div>\n' +
+    '\n' +
+    '  <div class="search-cta">\n' +
+    '    Explore all ' + offers.length.toLocaleString() + ' developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>\n' +
+    '  </div>\n' +
+    '</div>\n' +
+    '<footer>\n' +
+    '  <div class="container">\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '  </div>\n' +
+    '</footer>\n' +
+    '<script>' + mcpCtaScript() + '</script>\n' +
+    '</body>\n</html>';
 }
+
 
 // --- AI Coding Tools Pricing Guide page ---
 
@@ -47158,6 +47153,7 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/ai-coding-pricing", desc: "AI coding tools pricing comparison data", params: "type (ide, cli, cloud-agent, app-builder)" },
     { method: "GET", path: "/api/hosting-pricing", desc: "Cloud hosting & PaaS pricing comparison data", params: "type (traditional-paas, edge-serverless, full-featured, static-specialized)" },
     { method: "GET", path: "/api/llm-pricing", desc: "LLM API pricing comparison data", params: "type (frontier, inference, open-source-host, specialized)" },
+    { method: "GET", path: "/api/startup-credits", desc: "Startup credits & programs comparison data", params: "type (cloud-infrastructure, fintech-banking, developer-tools, ai-tools)" },
     { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days" },
     { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "" },
     { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "" },
@@ -51655,6 +51651,42 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/llm-pricing", params: { type: llmTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: llmProviders.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ providers: llmProviders, changes: llmApiChanges, count: llmProviders.length, categories: Object.keys(llmCategoryMap) }));
+  } else if (url.pathname === "/api/startup-credits" && isGetOrHead) {
+    recordApiHit("/api/startup-credits");
+    const startupOffers = offers.filter(o =>
+      o.category === "Startup Programs" ||
+      (o.tier && o.tier.toLowerCase().includes("startup"))
+    );
+    const startupCategoryMap: Record<string, string[]> = {
+      "cloud-infrastructure": ["AWS Activate", "Google Cloud", "Microsoft Founders Hub", "DigitalOcean", "IBM Cloud", "Cloudflare"],
+      "fintech-banking": ["Stripe Atlas", "Brex", "Mercury", "Ramp", "SVB (Silicon Valley Bank)"],
+      "developer-tools": ["PostHog", "Segment", "Amplitude"],
+      "ai-tools": ["Amazon Kiro (AWS Startups)"],
+    };
+    const startupVendorNames = Object.values(startupCategoryMap).flat();
+    const startupTypeFilter = url.searchParams.get("type") || undefined;
+    const validStartupTypes = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
+    const startupApiChanges = dealChanges.filter(c =>
+      startupVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
+    ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const startupPrograms = startupOffers.map(o => {
+      const progCat = Object.entries(startupCategoryMap).find(([, vendors]) =>
+        vendors.some(v => o.vendor.includes(v) || v.includes(o.vendor))
+      )?.[0] || "developer-tools";
+      return {
+        vendor: o.vendor,
+        category: progCat,
+        description: o.description,
+        tier: o.tier,
+        url: o.url,
+        tags: o.tags,
+        verifiedDate: o.verifiedDate,
+        vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+      };
+    }).filter(t => !startupTypeFilter || !validStartupTypes.includes(startupTypeFilter) || t.category === startupTypeFilter);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/startup-credits", params: { type: startupTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: startupPrograms.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ programs: startupPrograms, changes: startupApiChanges, count: startupPrograms.length, categories: Object.keys(startupCategoryMap) }));
   } else if (url.pathname === "/api/audit-stack" && isGetOrHead) {
     recordApiHit("/api/audit-stack");
     const servicesParam = url.searchParams.get("services");
