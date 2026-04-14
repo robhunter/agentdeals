@@ -54,7 +54,7 @@
     {
       "vendor": "Cloudflare Workers",
       "category": "Cloud Hosting",
-      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2: 10 GB-month storage, 1M Class A ops/month, 10M Class B ops/month. Durable Objects: 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored. Includes cron triggers, WebSockets, and service bindings",
+      "description": "Edge compute with 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2: 10 GB-month storage, 1M Class A ops/month, 10M Class B ops/month. Durable Objects: 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored. Includes cron triggers, WebSockets, and service bindings. Students: upgrade to 10M requests/month free for 12 months via Workers for Students program (.edu email required)",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "tags": [
@@ -64,7 +64,8 @@
         "workers",
         "hetzner-alternative",
         "heroku-alternative",
-        "vercel-alternative"
+        "vercel-alternative",
+        "student-upgrade"
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
@@ -118,7 +119,7 @@
         "deployment",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-14",
       "payment_protocols": [
         "x402"
       ],
@@ -579,7 +580,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-14",
       "payment_protocols": [
         "x402"
       ],
@@ -1086,7 +1087,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-14",
       "payment_protocols": [
         "x402"
       ],
@@ -1223,7 +1224,7 @@
     {
       "vendor": "Cloudflare Durable Objects",
       "category": "Cloud Hosting",
-      "description": "Stateful serverless compute — 100K requests/day on free plan. Strongly consistent storage with WebSocket hibernation. SQLite storage included (first 10 GB on paid plan)",
+      "description": "Stateful serverless compute — 100K requests/day on free plan. Strongly consistent storage with WebSocket hibernation. SQLite storage included (first 10 GB on paid plan). Facets: dynamic multi-class Durable Objects without separate namespace bindings (April 2026)",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
       "tags": [
@@ -1232,7 +1233,8 @@
         "edge",
         "cloudflare",
         "websocket",
-        "free tier"
+        "free tier",
+        "facets"
       ],
       "verifiedDate": "2026-04-14",
       "payment_protocols": [
@@ -1516,7 +1518,7 @@
         "ssl",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-14",
       "payment_protocols": [
         "x402"
       ],
@@ -1861,7 +1863,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-14",
       "payment_protocols": [
         "x402"
       ],
@@ -3598,7 +3600,7 @@
         "cloudflare",
         "infrastructure"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-14",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -22583,7 +22585,63 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-02",
+      "verifiedDate": "2026-04-14",
+      "referral_program": {
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
+        "program_url": "https://www.cloudflare.com/partners/",
+        "type": "partner",
+        "notes": "Channel partner program only. No individual referral program."
+      }
+    },
+    {
+      "vendor": "Cloudflare Workers",
+      "category": "Education",
+      "description": "Workers for Students — 12 months free paid-tier access for US students (18+, verified .edu email). Workers: 10M requests/month. KV: 10M reads/month, 1M write/delete/list ops/month. Hyperdrive: unlimited daily queries. Durable Objects: 1M requests/day. Workers Logs: 20M events/month, 7-day retention. Logpush: 10M events/month. Queues: 1M operations/month. Expanding to non-US students in future",
+      "tier": "Student Program",
+      "url": "https://blog.cloudflare.com/workers-for-students/",
+      "tags": [
+        "serverless",
+        "edge",
+        "student",
+        "cloudflare",
+        "workers",
+        "free-for-students"
+      ],
+      "verifiedDate": "2026-04-14",
+      "eligibility": {
+        "type": "student",
+        "conditions": [
+          "US-based student 18+",
+          "Verified .edu email address",
+          "12-month duration"
+        ]
+      },
+      "referral_program": {
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
+        "program_url": "https://www.cloudflare.com/partners/",
+        "type": "partner",
+        "notes": "Channel partner program only. No individual referral program."
+      }
+    },
+    {
+      "vendor": "Cloudflare Sandboxes",
+      "category": "Cloud Hosting",
+      "description": "Persistent isolated Linux environments for AI agents — shell, filesystem, background processes. GA April 2026. Built on Containers platform. Features: credential injection, PTY support, persistent code interpreters (Python/JS/TS), filesystem watching, snapshots, preview URLs. Pay-per-use on Workers Paid plan ($5/mo) — only charges for active CPU cycles. Containers included: 25 GiB-hours memory, 375 vCPU-minutes, 200 GB-hours disk per month",
+      "tier": "Pay-per-use",
+      "url": "https://developers.cloudflare.com/sandbox/",
+      "tags": [
+        "containers",
+        "sandbox",
+        "ai-agents",
+        "serverless",
+        "cloudflare",
+        "linux"
+      ],
+      "verifiedDate": "2026-04-14",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
