@@ -1016,7 +1016,7 @@ ${offersHtml}
   </div>
 
   ${buildMcpCta("Browse this category from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -1089,7 +1089,7 @@ ${globalNavCss()}
   <div class="cat-index-grid">${catCardsHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -1311,7 +1311,7 @@ ${tableRows}
   </div>
 
   ${buildMcpCta("Get personalized recommendations from your AI. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -1398,7 +1398,7 @@ ${globalNavCss()}
   <div class="best-index-grid">${cardsHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -1553,7 +1553,7 @@ ${globalNavCss()}
   <h1>Free Tier Comparisons</h1>
   <p class="page-meta">${totalComparisons} side-by-side vendor comparisons. Verified pricing, change history, and risk indicators. <a href="/compare-tool" style="font-weight:600">Compare any two vendors &rarr;</a></p>
 ${categorySections}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -1725,7 +1725,7 @@ ${globalNavCss()}
   </div>
 ${relatedHtml}
   ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -2245,7 +2245,7 @@ ${faqItems.map(f => `    <div class="faq-item">
   </div>
 
   ${buildMcpCta(`Compare ${escHtmlServer(a.vendor)}, ${escHtmlServer(b.vendor)}, and 1,600+ other developer tools from your AI coding assistant.`)}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -2472,7 +2472,7 @@ ${trendingHtml}
     <a href="/feed.xml">Subscribe via RSS &rarr;</a>
   </div>
 ${navHtml}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -2533,7 +2533,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
     <a href="/feed.xml">Subscribe via RSS &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -2642,7 +2642,7 @@ ${globalNavCss()}
   <h1>All Vendors</h1>
   <p class="page-meta">${totalVendors} developer tools with free tiers, organized by category.</p>
 ${categorySections}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -2895,12 +2895,7 @@ ${enrichedAlts.map(a => {
     </div>`;
   })() : "";
 
-  // Referral callout
-  const referralCalloutHtml = primary.referral ? `
-  <div class="referral-callout" style="margin:1rem 0;padding:.75rem 1rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 8px 8px 0;background:#3fb95010">
-    <span style="font-size:.9rem">\ud83d\udd17 <strong>Sign up bonus:</strong> <a href="${escHtmlServer(primary.referral.url)}" rel="noopener sponsored" target="_blank">Use our referral link</a> to get ${escHtmlServer(primary.referral.referee_value ?? "a sign-up bonus")}</span>
-    <span style="display:block;font-size:.75rem;margin-top:.25rem;color:var(--text-muted)"><a href="/disclosure" style="color:var(--text-muted)">Affiliate disclosure</a></span>
-  </div>` : "";
+  const referralCalloutHtml = "";
 
   // Referral program section (shown when vendor has a program, whether or not we have a code)
   const referralProgramHtml = primary.referral_program?.available ? `
@@ -3202,7 +3197,7 @@ ${internalLinksHtml}
   </div>
 ${faqHtml}
   ${buildMcpCta("Want to compare this vendor in your AI? Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -3516,7 +3511,7 @@ ${allAltsHtml}
   </div>
 ${altFaqHtml}
   ${buildMcpCta("Find alternatives from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -3629,7 +3624,7 @@ ${globalNavCss()}
 ${vendorListHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -5850,7 +5845,7 @@ ${tableRows}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized recommendations from your AI. Search " + offers.length.toLocaleString() + "+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -5953,7 +5948,7 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Get personalized migration advice from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -6550,7 +6545,7 @@ function buildIntegrationGuidePage(slug: string): string | null {
     '    <h2>Other Framework Guides</h2>\n' +
     '    <div class="guide-cards">\n      ' + otherGuidesHtml + '\n    </div>\n' +
     '  </div>\n' +
-    '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>\n' +
+    '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n' +
     '</div>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
     '</body>\n</html>';
@@ -6693,7 +6688,7 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Get personalized recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -6950,7 +6945,7 @@ ${buildCards(enrichedCoding)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -7299,7 +7294,7 @@ ${buildCards(startupCredits)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get hosting recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -7639,7 +7634,7 @@ ${buildCards(timeSeries)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get database recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -7986,7 +7981,7 @@ ${buildCards(startupPrograms)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get monitoring recommendations from your AI assistant. Compare free tiers, track pricing changes, and audit your observability stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -8304,7 +8299,7 @@ ${buildCards(specialized)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get CI/CD recommendations from your AI assistant. Compare build minutes, track pricing changes, and find the right pipeline tool for your stack \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -8647,7 +8642,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get security tool recommendations from your AI assistant. Compare SAST scanners, secret managers, auth providers, and container security tools \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -8983,7 +8978,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get testing tool recommendations from your AI assistant. Compare browser testing, visual regression, load testing, and E2E automation tools \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -9297,7 +9292,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get cloud storage recommendations from your AI assistant. Compare object storage, media CDNs, and file hosting services \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -9618,7 +9613,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get analytics tool recommendations from your AI assistant. Compare product analytics, web analytics, and session replay tools \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -9939,7 +9934,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare LLM APIs, coding tools, and ML platforms \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -10274,7 +10269,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get email tool recommendations from your AI assistant. Compare transactional APIs, marketing platforms, and email infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -10616,7 +10611,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get design tool recommendations from your AI assistant. Compare UI kits, icons, and prototyping tools \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -10958,7 +10953,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get project management tool recommendations from your AI assistant. Compare PM tools, team chat, and scheduling — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -11279,7 +11274,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get IDE and AI coding tool recommendations from your AI assistant. Compare editors, AI assistants, and cloud IDEs — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -11592,7 +11587,7 @@ ${buildCards(aiGateways)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get LLM API recommendations from your AI assistant. Compare rate limits, models, and pricing \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -11914,7 +11909,7 @@ ${buildCards(apiIntegration)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get API tool recommendations from your AI assistant. Compare free tiers, features, and alternatives \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -12243,7 +12238,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get team collaboration tool recommendations from your AI assistant. Compare chat, video, and scheduling tools — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -12566,7 +12561,7 @@ ${stabilityNotes}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized stack recommendations from your AI assistant. Compare free tiers, check stability, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -12919,7 +12914,7 @@ ${ossAlternatives.map(oss => `      <tr>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized AI stack recommendations from your AI assistant. Compare free tiers, check model limits, and plan your AI infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -13273,7 +13268,7 @@ ${ossAlternatives.map(oss => `      <tr>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized DevOps stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -13626,7 +13621,7 @@ ${ossAlternatives.map(oss => `      <tr>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized frontend stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your Jamstack infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -14034,7 +14029,7 @@ GitHub → GitHub Actions (CI: tests + lint) → Vercel (CD: auto-deploy)</div>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized Next.js stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -14496,7 +14491,7 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized Django stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -14972,7 +14967,7 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized FastAPI stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -15439,7 +15434,7 @@ GitHub → GitHub Actions (CI: go test + golangci-lint) → Railway (CD: auto-de
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized Go stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -15990,7 +15985,7 @@ ${upgradeTable}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized SaaS stack recommendations from your AI assistant. Compare free tiers, check stability, and plan your infrastructure \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -16317,7 +16312,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track Hetzner pricing changes and compare hosting alternatives from your AI assistant. Get alerts on price increases and find free-tier options — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -16772,7 +16767,7 @@ mcpCtaCss() + "\n" +
   buildMoreAlternativesGuides(slug) + "\n" +
 
   buildMcpCta("Track pricing changes from your AI assistant. Get alerts on free tier removals, limit reductions, and new deals — directly in your editor.") + "\n" +
-  "<footer>AgentDeals &mdash; open source, built for agents | <a href=\"/privacy\">Privacy</a></footer>\n" +
+  "<footer>AgentDeals &mdash; open source, built for agents | <a href=\"/privacy\">Privacy</a> | <a href=\"/disclosure\">Affiliate Disclosure</a></footer>\n" +
 "</div>\n" +
 "<script>" + mcpCtaScript() + "</script>\n" +
 "</body>\n</html>";
@@ -17004,7 +16999,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track pricing changes from your AI assistant. Get alerts on free tier removals, limit reductions, and new deals — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -17431,7 +17426,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track Google pricing changes and find free alternatives from your AI assistant. Get alerts on free tier removals and discover $0/month infrastructure options — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -17765,7 +17760,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Supabase, Firebase, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -18093,7 +18088,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Vercel, Netlify, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -18421,7 +18416,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Neon, Supabase, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -18753,7 +18748,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Railway, Render, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -19080,7 +19075,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Datadog, New Relic, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -19525,7 +19520,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track HCP Terraform pricing changes and find free IaC alternatives from your AI assistant. Get alerts on free tier changes and compare infrastructure tools — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -19940,7 +19935,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + buildMoreAlternativesGuides(slug) + '\n'
     + '\n'
     + buildMcpCta("Track Terraform Cloud pricing changes and find free IaC alternatives from your AI assistant. Get alerts on free tier changes and compare infrastructure tools — directly in your editor.") + '\n'
-    + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>\n'
+    + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
     + '</div>\n'
     + '<script>' + mcpCtaScript() + '</script>\n'
     + '</body>\n</html>';
@@ -20290,7 +20285,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track Gemini API pricing changes and compare free LLM APIs from your AI assistant. Get alerts on rate limit changes and find alternatives — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -20740,7 +20735,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + buildMoreAlternativesGuides(slug) + '\n'
     + '\n'
     + buildMcpCta("Track Gemini API pricing changes and compare free LLM APIs from your AI assistant. Get alerts on free tier changes, compare providers by use case, and plan your migration — directly in your editor.") + '\n'
-    + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>\n'
+    + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
     + '</div>\n'
     + '<script>' + mcpCtaScript() + '</script>\n'
     + '</body>\n</html>';
@@ -21279,7 +21274,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track free tier risk for 1,600+ developer tools from your AI assistant. Get pricing alerts, risk scores, and migration recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -21610,7 +21605,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track vendor stability for 1,600+ developer tools from your AI assistant. Get real-time stability ratings, pricing alerts, and migration recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -22015,7 +22010,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track OpenAI pricing changes and compare AI API free tiers from your AI assistant. Get stability ratings, migration alerts, and cost comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -22619,7 +22614,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track OpenAI pricing changes and compare AI API free tiers from your AI assistant. Get stability ratings, migration alerts, and cost comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -23063,7 +23058,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track GIF API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -23551,7 +23546,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track Firebase pricing changes, compare cloud IDE free tiers, and get shutdown deadline alerts from your AI assistant. Stability ratings, migration guidance, and cost comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -24034,7 +24029,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '\n' +
     buildMcpCta("Query our MCP server for real-time pricing data on OpenAI, Azure, Anthropic, Google Gemini, and 1,600+ other developer tools. Compare free tiers, track pricing changes, and find alternatives — all from your AI editor.") + '\n' +
     '\n' +
-    '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>\n' +
+    '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n' +
     '</div>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
     '</body>\n</html>';
@@ -24515,7 +24510,7 @@ ${buildGlobalNav("guides")}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Query shutdown data and migration deadlines from your AI assistant. Get stability ratings, track vendor changes, and find free alternatives \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -24981,7 +24976,7 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Track free tier changes across 1,600+ developer tools from your AI assistant. Get pricing alerts, change history, and migration recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -25399,7 +25394,7 @@ function buildStartupCreditsPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -25789,7 +25784,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -26566,7 +26561,7 @@ function buildAiCodingToolsPricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -27351,7 +27346,7 @@ function buildCiCdPricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -28247,7 +28242,7 @@ function buildDatabasePricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -28918,7 +28913,7 @@ function buildVectorDatabasePricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -29644,7 +29639,7 @@ function buildHostingPricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -30396,7 +30391,7 @@ function buildLlmApiPricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -30695,7 +30690,7 @@ ${faqHtml}
 
   <footer style="text-align:center;padding:2rem 0;color:var(--text-dim);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
     <p>Data verified ${pubDate}. ${offers.length.toLocaleString()} total offers indexed.</p>
-    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-stack">Agent Stacks</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a></p>
+    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-stack">Agent Stacks</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a> &middot; <a href="/disclosure">Disclosure</a></p>
   </footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -30923,7 +30918,7 @@ ${faqHtml}
 
   <footer style="text-align:center;padding:2rem 0;color:var(--text-dim);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
     <p>Data verified ${pubDate}. ${offers.length.toLocaleString()} total offers indexed.</p>
-    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-payments">Agent Payments</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a></p>
+    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-payments">Agent Payments</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a> &middot; <a href="/disclosure">Disclosure</a></p>
   </footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -31457,7 +31452,7 @@ response = client.images.generate(
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track image generation API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -31587,7 +31582,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data verified against official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data verified against official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
 }
 
 // --- AWS App Runner Migration Guide page ---
@@ -32160,7 +32155,7 @@ railway up
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track cloud service deprecations and compare container deployment free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -32606,7 +32601,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -33032,7 +33027,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -33501,7 +33496,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -33950,7 +33945,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -34720,7 +34715,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -35406,7 +35401,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -36077,7 +36072,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -36726,7 +36721,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -37672,7 +37667,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -38651,7 +38646,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -39653,7 +39648,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -40462,7 +40457,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -41134,7 +41129,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -41820,7 +41815,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -42420,7 +42415,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -43141,7 +43136,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -43769,7 +43764,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -44273,7 +44268,7 @@ ${globalNavCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -44669,7 +44664,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 
   <p style="margin-top:2rem;font-size:.85rem;color:var(--text-muted)">Prefer plain HTTP? Use the <a href="/developers">REST API</a> &mdash; no MCP client needed, same data.</p>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>
 (function(){
@@ -46018,7 +46013,7 @@ ${globalNavCss()}
     ${faqItems.map(f => `<div class="faq-item"><h3>${escHtmlServer(f.q)}</h3><p>${escHtmlServer(f.a)}</p></div>`).join("")}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 
 <script>
@@ -48134,7 +48129,7 @@ ${monthsHtml}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>\u00a9 ${currentYear} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers across ${categories.length} categories &middot; <a href="/pricing-changes/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a></footer>
+  <footer>\u00a9 ${currentYear} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers across ${categories.length} categories &middot; <a href="/pricing-changes/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a></footer>
 </div>
 ${filterScript}
 </body>
@@ -48364,7 +48359,7 @@ ${monthsHtml}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -48575,7 +48570,7 @@ ${recent.map(c => buildEntry(c, false)).join("\n")}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -48771,7 +48766,7 @@ ${freshestRows}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -49040,7 +49035,7 @@ ${cardsHtml}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>
 (function() {
@@ -49265,7 +49260,7 @@ ${bundleHtml}
     <p style="margin-top:.75rem"><a href="/setup">Set up MCP client \u2192</a></p>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -49526,7 +49521,7 @@ ${tableRows}
   <p style="margin-top:1.5rem;font-size:.85rem;color:var(--text-dim);text-align:center">Query this data programmatically via <a href="/api/referral-programs">/api/referral-programs</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a>.</p>
 
   ${buildMcpCta("Search referral programs and compare vendor free tiers directly in your AI coding assistant.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>
 document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -49728,7 +49723,7 @@ ${leaderboard.entries.map((e, i) => `      <div class="lb-row"><span class="lb-r
   <p style="text-align:center;margin:1.5rem 0;font-size:.85rem;color:var(--text-muted)"><a href="/disclosure">Affiliate Disclosure</a></p>
 
   <footer>
-    <p><a href="/">AgentDeals</a> &mdash; ${offers.length.toLocaleString()} vendor offers tracked</p>
+    <p><a href="/">AgentDeals</a> &mdash; ${offers.length.toLocaleString()} vendor offers tracked &middot; <a href="/disclosure">Disclosure</a></p>
   </footer>
 </div>
 </body>
@@ -49997,7 +49992,7 @@ ${globalNavCss()}
   </div>
 
   <p class="updated">Last updated: ${new Date().toISOString().split("T")[0]}</p>
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -50112,7 +50107,7 @@ ${globalNavCss()}
 
   <p class="updated">Last updated: March 20, 2026</p>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -50290,7 +50285,7 @@ ${catPillsHtml}
 
   ${totalResults > 0 ? `<div class="results">\n${resultsHtml}\n  </div>\n  ${paginationHtml}` : emptyStateHtml}
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -50425,7 +50420,7 @@ ${zeroCats.length > 0 ? `  <div class="section-label">Stable categories (no trac
   <div class="trend-list">
 ${zeroCatRows}
   </div>` : ""}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -50628,7 +50623,7 @@ ${stableHtml}
     </div>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -51244,7 +51239,7 @@ ${buildRecentChangesSection()}
     </div>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>
 /* Client tab switching */
@@ -52903,6 +52898,9 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/privacy", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildPrivacyPage());
+  } else if (url.pathname === "/deal-changes" && isGetOrHead) {
+    res.writeHead(301, { Location: `${BASE_URL}/changes` });
+    res.end();
   } else if (url.pathname === "/search" && isGetOrHead) {
     const query = url.searchParams.get("q") ?? "";
     const categoryFilter = url.searchParams.get("category") ?? "";
