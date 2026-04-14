@@ -3389,7 +3389,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Methodology"), "Should have methodology section");
   });
 
-  it("GET /startup-credits renders startup credits directory page", async () => {
+  it("GET /startup-credits renders startup credits comparison page", async () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${serverPort}/startup-credits`);
@@ -3408,12 +3408,11 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Microsoft Founders Hub"), "Should include Microsoft");
     assert.ok(html.includes("AWS Activate"), "Should include AWS");
     assert.ok(html.includes("DigitalOcean"), "Should include DigitalOcean");
-    assert.ok(html.includes("Tier 1"), "Should have Tier 1 section");
-    assert.ok(html.includes("Tier 2"), "Should have Tier 2 section");
-    assert.ok(html.includes("Tier 3"), "Should have Tier 3 section");
-    assert.ok(html.includes("Credit Stacking Strategy"), "Should have stacking strategy");
-    assert.ok(html.includes("Bottom Line"), "Should have verdict box");
-    assert.ok(html.includes("/free-startup-stack"), "Should cross-link to free startup stack");
+    assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
+    assert.ok(html.includes("Cloud Infrastructure"), "Should have cloud category");
+    assert.ok(html.includes("Hidden Constraints"), "Should have hidden constraints section");
+    assert.ok(html.includes("Stacking Strategy"), "Should have stacking section");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
   });
 
   it("GET /ai-coding-pricing-2026 renders AI coding pricing guide", async () => {
@@ -5781,6 +5780,83 @@ describe("shutdown tracker page", () => {
     assert.ok(body.count > 0, "Should have inference providers");
     for (const provider of body.providers) {
       assert.strictEqual(provider.category, "inference", `${provider.vendor} should be categorized as inference`);
+    }
+  });
+});
+
+describe("startup credits comparison page", () => {
+  let proc: ChildProcess | null = null;
+
+  afterEach(() => {
+    if (proc) {
+      proc.kill();
+      proc = null;
+    }
+  });
+
+  it("GET /startup-credits renders startup credits comparison", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/startup-credits`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Startup Credits"), "Should have startup credits title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    // Key programs
+    assert.ok(html.includes("AWS Activate"), "Should include AWS Activate");
+    assert.ok(html.includes("Google Cloud"), "Should include Google Cloud");
+    assert.ok(html.includes("Microsoft Founders Hub"), "Should include Microsoft Founders Hub");
+    assert.ok(html.includes("DigitalOcean"), "Should include DigitalOcean");
+    assert.ok(html.includes("Cloudflare"), "Should include Cloudflare");
+    assert.ok(html.includes("Stripe Atlas"), "Should include Stripe Atlas");
+    assert.ok(html.includes("Brex"), "Should include Brex");
+    assert.ok(html.includes("Mercury"), "Should include Mercury");
+    // Key sections
+    assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
+    assert.ok(html.includes("Cloud Infrastructure"), "Should have cloud category");
+    assert.ok(html.includes("Fintech"), "Should have fintech category");
+    assert.ok(html.includes("Hidden Constraints"), "Should have hidden constraints section");
+    assert.ok(html.includes("Stacking Strategy"), "Should have stacking section");
+    assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
+    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
+    assert.ok(html.includes("/api/startup-credits"), "Should link to API endpoint");
+  });
+
+  it("GET /api/startup-credits returns startup programs as JSON", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/startup-credits`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.programs), "Should have programs array");
+    assert.ok(body.count > 5, "Should have 5+ startup programs");
+    assert.ok(Array.isArray(body.changes), "Should have changes array");
+    assert.ok(Array.isArray(body.categories), "Should have categories list");
+    assert.deepStrictEqual(body.categories, ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"]);
+    const program = body.programs[0];
+    assert.ok(program.vendor, "Program should have vendor");
+    assert.ok(program.category, "Program should have category");
+    assert.ok(program.vendor_page, "Program should have vendor_page link");
+    const vendors = body.programs.map((p: any) => p.vendor);
+    assert.ok(vendors.some((v: string) => v.includes("AWS")), "Should include an AWS program");
+    assert.ok(vendors.some((v: string) => v.includes("Google")), "Should include a Google program");
+  });
+
+  it("GET /api/startup-credits?type=cloud-infrastructure filters by category", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/startup-credits?type=cloud-infrastructure`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.count > 0, "Should have cloud-infrastructure programs");
+    for (const program of body.programs) {
+      assert.strictEqual(program.category, "cloud-infrastructure", `${program.vendor} should be categorized as cloud-infrastructure`);
     }
   });
 });
