@@ -30436,8 +30436,8 @@ function buildAgentPaymentsPage(): string {
 
   const faqItems = [
     { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine payments. Launched by the x402 Foundation (Linux Foundation) in April 2026 with backing from Stripe, Cloudflare, Shopify, Visa, and Mastercard. It allows AI agents to autonomously pay for API calls without pre-provisioned accounts or API keys." },
-    { q: "Which developer services accept x402 payments?", a: `Currently ${x402Offers.length} developer services indexed on AgentDeals accept x402 payments, including Firecrawl (web scraping), Cloudflare Workers/Pages/D1/R2/KV (cloud infrastructure), Vercel (hosting), and Pinata IPFS (storage). The ecosystem is growing rapidly with 130+ services industry-wide.` },
-    { q: "What is Stripe MPP (Machine-to-Machine Payments)?", a: "MPP (Machine Payments Protocol) is Stripe's framework for agent-to-service payments launched March 2026. It builds on Stripe's existing payment infrastructure to add agent identity, budget controls, and audit trails. MPP uses familiar Stripe APIs, making adoption simpler for services already using Stripe." },
+    { q: "Which developer services accept x402 payments?", a: `Currently ${x402Offers.length} developer services indexed on AgentDeals accept x402 payments, including Firecrawl (web scraping), Cloudflare Workers/Pages/D1/R2/KV (cloud infrastructure), Vercel (hosting), Browserbase (browser automation), OpenAI and Anthropic (AI APIs), and Pinata IPFS (storage). The ecosystem is growing rapidly with 130+ services industry-wide.` },
+    { q: "What is Stripe MPP (Machine Payments Protocol)?", a: `MPP (Machine Payments Protocol) is Stripe's framework for agent-to-service payments launched March 2026. Currently ${mppOffers.length} services in our index support MPP. It builds on Stripe's existing payment infrastructure to add agent identity, budget controls, and audit trails. MPP uses familiar Stripe APIs, making adoption simpler for services already using Stripe.` },
     { q: "How do AI agents pay for services autonomously?", a: "Agents use payment protocols like x402 or MPP to negotiate and complete payments in real-time. With x402, the agent receives a 402 response with payment requirements, completes the crypto payment, and retries with proof of payment. With MPP, agents use Stripe-managed wallets with configurable spending limits." },
     { q: "Do x402 services still have free tiers?", a: `Yes. All ${x402Offers.length} x402-enabled services indexed here also offer traditional free tiers. x402 is an additional payment option — it doesn't replace free tier access. Agents can use free tiers first and fall back to x402 when limits are exceeded.` },
   ];
@@ -30452,29 +30452,55 @@ function buildAgentPaymentsPage(): string {
     })),
   };
 
-  // Build the service table rows
-  const serviceRows = x402Offers.map(o => {
+  // Group MPP offers by category
+  const mppByCategory = new Map<string, typeof mppOffers>();
+  for (const o of mppOffers) {
+    const cat = o.category;
+    if (!mppByCategory.has(cat)) mppByCategory.set(cat, []);
+    mppByCategory.get(cat)!.push(o);
+  }
+
+  // Services supporting both protocols
+  const bothOffers = allPaymentOffers.filter(o =>
+    o.payment_protocols!.includes("x402") && o.payment_protocols!.includes("mpp")
+  );
+
+  // Build the service table rows — all payment-enabled services
+  const serviceRows = allPaymentOffers.map(o => {
     const vendorSlug = toSlug(o.vendor);
     const shortDesc = o.description.split(". ")[0].substring(0, 120);
+    const badges = (o.payment_protocols ?? []).map(p =>
+      `<span class="proto-badge ${p === "mpp" ? "mpp" : "x402"}">${p === "mpp" ? "MPP" : "x402"}</span>`
+    ).join(" ");
     return `<tr>
       <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a></td>
       <td>${escHtmlServer(o.category)}</td>
-      <td class="proto-cell"><span class="proto-badge x402">x402</span></td>
+      <td class="proto-cell">${badges}</td>
       <td class="tier-cell">${escHtmlServer(o.tier)}</td>
       <td class="desc-cell">${escHtmlServer(shortDesc)}</td>
     </tr>`;
   }).join("\n");
 
-  // Build category breakdown sections
-  const categorySections = Array.from(x402ByCategory.entries()).sort((a, b) => b[1].length - a[1].length).map(([cat, catOffers]) => {
+  // Build category breakdown sections — all payment-enabled services grouped by category
+  const allByCategory = new Map<string, typeof allPaymentOffers>();
+  for (const o of allPaymentOffers) {
+    const cat = o.category;
+    if (!allByCategory.has(cat)) allByCategory.set(cat, []);
+    allByCategory.get(cat)!.push(o);
+  }
+
+  const categorySections = Array.from(allByCategory.entries()).sort((a, b) => b[1].length - a[1].length).map(([cat, catOffers]) => {
     const catSlug = toSlug(cat);
     const serviceList = catOffers.map(o => {
       const vendorSlug = toSlug(o.vendor);
       const shortDesc = o.description.split(". ")[0].substring(0, 100);
+      const badges = (o.payment_protocols ?? []).map(p =>
+        `<span class="proto-badge ${p === "mpp" ? "mpp" : "x402"}">${p === "mpp" ? "MPP" : "x402"}</span>`
+      ).join(" ");
       return `<div class="service-card">
         <div class="service-header">
           <a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a>
-          <span class="proto-badge x402">x402</span>
+          ${badges}
         </div>
         <p class="service-tier">${escHtmlServer(o.tier)}</p>
         <p class="service-desc">${escHtmlServer(shortDesc)}</p>
@@ -30612,12 +30638,29 @@ ${globalNavCss()}
     <p class="proto-desc">Stripe&rsquo;s Machine Payments Protocol (MPP) extends Stripe&rsquo;s payment infrastructure for agent-to-service transactions. MPP adds agent identity verification, configurable spending limits, budget controls, and full audit trails. Built on familiar Stripe APIs, making adoption straightforward for services already using Stripe for billing. Agents pay with Stripe-managed wallets rather than crypto.</p>
   </div>
 
-  <h2>x402-Enabled Services</h2>
-  <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1rem">${x402Offers.length} developer services accepting autonomous agent payments via x402.</p>
+  <h2>Protocol Comparison</h2>
+  <div style="overflow-x:auto">
+  <table>
+    <thead><tr><th>Feature</th><th><span class="proto-badge x402">x402</span></th><th><span class="proto-badge mpp">MPP</span></th></tr></thead>
+    <tbody>
+      <tr><td>Backed by</td><td>Linux Foundation (Coinbase)</td><td>Stripe</td></tr>
+      <tr><td>Launched</td><td>April 2026</td><td>March 2026</td></tr>
+      <tr><td>Payment method</td><td>USDC stablecoin on Base</td><td>Stablecoin + fiat (cards, BNPL)</td></tr>
+      <tr><td>Account required</td><td>No &mdash; wallet only</td><td>Stripe-managed wallet</td></tr>
+      <tr><td>Integration effort</td><td>HTTP 402 handler + wallet</td><td>Stripe SDK integration</td></tr>
+      <tr><td>Budget controls</td><td>Wallet balance limits</td><td>Configurable per-agent spending limits</td></tr>
+      <tr><td>Audit trail</td><td>On-chain (Base L2)</td><td>Stripe dashboard + API</td></tr>
+      <tr><td>Best for</td><td>Instant access, no accounts</td><td>Fiat support, Stripe ecosystem</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>All Payment-Enabled Services</h2>
+  <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1rem">${allPaymentOffers.length} developer services accepting autonomous agent payments. ${x402Offers.length} via x402, ${mppOffers.length} via Stripe MPP, ${bothOffers.length} supporting both.</p>
 
   <div style="overflow-x:auto">
   <table>
-    <thead><tr><th>Service</th><th>Category</th><th>Protocol</th><th>Free Tier</th><th>Details</th></tr></thead>
+    <thead><tr><th>Service</th><th>Category</th><th>Protocol(s)</th><th>Free Tier</th><th>Details</th></tr></thead>
     <tbody>
 ${serviceRows}
     </tbody>
@@ -30642,7 +30685,7 @@ ${categorySections}
 ${faqHtml}
 
   <div class="search-cta">
-    <p>Filter services by payment protocol: <a href="/api/offers?payment_protocol=x402">/api/offers?payment_protocol=x402</a> &middot; Or use the <code>search_deals</code> MCP tool with <code>payment_protocol: "x402"</code></p>
+    <p>API: <a href="/api/agent-payments">/api/agent-payments</a> &middot; Filter: <a href="/api/agent-payments?protocol=x402">?protocol=x402</a> &middot; <a href="/api/agent-payments?protocol=mpp">?protocol=mpp</a> &middot; MCP: <code>search_deals({payment_protocol: "x402"})</code></p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -51504,6 +51547,69 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/categories", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: cats.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ categories: cats }));
+  } else if (url.pathname === "/api/agent-payments" && isGetOrHead) {
+    recordApiHit("/api/agent-payments");
+    const protocolFilter = url.searchParams.get("protocol") || undefined;
+    const categoryFilter = url.searchParams.get("category") || undefined;
+    const allOffers = loadOffers();
+    const paymentOffers = allOffers.filter(o => o.payment_protocols && o.payment_protocols.length > 0);
+
+    let filtered = paymentOffers;
+    if (protocolFilter) {
+      const lp = protocolFilter.toLowerCase();
+      filtered = filtered.filter(o => o.payment_protocols!.some(p => p.toLowerCase() === lp));
+    }
+    if (categoryFilter) {
+      const lc = categoryFilter.toLowerCase();
+      filtered = filtered.filter(o => o.category.toLowerCase() === lc);
+    }
+
+    const x402 = filtered.filter(o => o.payment_protocols!.includes("x402"));
+    const mpp = filtered.filter(o => o.payment_protocols!.includes("mpp"));
+    const both = filtered.filter(o => o.payment_protocols!.includes("x402") && o.payment_protocols!.includes("mpp"));
+
+    const byCategory = new Map<string, typeof filtered>();
+    for (const o of filtered) {
+      if (!byCategory.has(o.category)) byCategory.set(o.category, []);
+      byCategory.get(o.category)!.push(o);
+    }
+
+    const enriched = enrichOffers(filtered);
+    const grouped = Object.fromEntries(
+      Array.from(byCategory.entries()).sort((a, b) => b[1].length - a[1].length).map(([cat, catOffers]) => [
+        cat,
+        enrichOffers(catOffers).map(o => ({
+          vendor: o.vendor,
+          category: o.category,
+          tier: o.tier,
+          description: o.description,
+          url: o.url,
+          payment_protocols: o.payment_protocols,
+          stability: o.stability,
+        })),
+      ])
+    );
+
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/agent-payments", params: { protocol: protocolFilter, category: categoryFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: filtered.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({
+      total: filtered.length,
+      protocols: {
+        x402: { count: x402.length, description: "HTTP 402-based agent payments via stablecoin (USDC). Linux Foundation standard." },
+        mpp: { count: mpp.length, description: "Stripe Machine Payments Protocol. Supports stablecoin and fiat payments." },
+        both: { count: both.length, description: "Services supporting both x402 and Stripe MPP." },
+      },
+      by_category: grouped,
+      services: enriched.map(o => ({
+        vendor: o.vendor,
+        category: o.category,
+        tier: o.tier,
+        description: o.description,
+        url: o.url,
+        payment_protocols: o.payment_protocols,
+        stability: o.stability,
+      })),
+    }));
   } else if (url.pathname === "/api/changes" && isGetOrHead) {
     recordApiHit("/api/changes");
     const since = url.searchParams.get("since") || undefined;
