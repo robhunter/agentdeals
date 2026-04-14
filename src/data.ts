@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass, Referral } from "./types.js";
+import { isUrlSuspended } from "./referral-health.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
@@ -1063,6 +1064,7 @@ export function getVendorReferral(vendorName: string): { vendor: string; referra
   const lowerName = vendorName.toLowerCase();
   const match = offers.find(o => o.vendor.toLowerCase() === lowerName);
   if (!match || !match.referral) return null;
+  if (isUrlSuspended(match.referral.url)) return null;
   const { referrer_value, ...publicReferral } = match.referral;
   return { vendor: match.vendor, referral: publicReferral };
 }

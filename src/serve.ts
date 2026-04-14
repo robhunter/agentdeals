@@ -15,6 +15,7 @@ import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
+import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import type { Agent } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -54068,6 +54069,17 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       offset,
     }));
 
+  } else if (url.pathname === "/api/referral-health" && isGetOrHead) {
+    const report = getLastReport();
+    if (!report) {
+      res.writeHead(503, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Health check has not run yet" }));
+    } else {
+      recordApiHit("/api/referral-health");
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=300" });
+      res.end(JSON.stringify(report));
+    }
+
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
@@ -54078,6 +54090,10 @@ httpServer.listen(PORT, () => {
   const actualPort = (httpServer.address() as import("net").AddressInfo).port;
   console.error(`agentdeals MCP server running on http://localhost:${actualPort}/mcp`);
 });
+
+// Referral health check on startup + every 24 hours
+runHealthCheck().catch((err) => console.error(`[referral-health] Startup check failed: ${err.message}`));
+startPeriodicChecks();
 
 // IndexNow + sitemap ping on startup (fire-and-forget, no impact on server readiness)
 async function pingSearchEngines(): Promise<void> {
