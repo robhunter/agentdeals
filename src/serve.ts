@@ -570,7 +570,7 @@ function generateShieldBadge(leftText: string, rightText: string, color: string,
     + '\n</svg>';
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "this-week" | "changes" | "deadlines" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "this-week" | "changes" | "deadlines" | "report" | "reports" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
 
 function buildBreadcrumbJsonLd(items: { name: string; url: string }[]): string {
   const jsonLd = {
@@ -636,6 +636,7 @@ function buildGlobalNav(active: NavSection): string {
       { href: "/deadlines", label: "Deadlines", section: "deadlines" },
       { href: "/expiring", label: "Expiring", section: "expiring" },
       { href: "/state-of-free-tiers", label: "Report", section: "report" },
+      { href: "/reports", label: "Monthly Reports", section: "reports" },
       { href: "/freshness", label: "Freshness", section: "freshness" },
     ]},
     { label: "Developers", items: [
@@ -7297,6 +7298,302 @@ function buildEventPage(slug: string): string | null {
     + comparisonsHtml + '\n'
     + watchlistHtml + '\n'
     + '<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '</div>\n</body>\n</html>';
+}
+
+function getMonthName(monthNum: number): string {
+  return ["January","February","March","April","May","June","July","August","September","October","November","December"][monthNum - 1] || "";
+}
+
+function getAvailableReportMonths(): string[] {
+  const allChanges = loadDealChanges();
+  const months = new Set<string>();
+  for (const c of allChanges) months.add(c.date.slice(0, 7));
+  return [...months].sort().reverse();
+}
+
+function buildReportsIndexPage(): string {
+  const months = getAvailableReportMonths();
+  const allChanges = loadDealChanges();
+  const title = "Monthly Pricing Intelligence Reports | AgentDeals";
+  const metaDesc = "Auto-generated monthly analysis of developer tool pricing trends — free tier eliminations, new additions, category breakdowns, and trend analysis.";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: title,
+    description: metaDesc,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: months.length,
+      itemListElement: months.map((m, i) => {
+        const [y, mo] = m.split("-");
+        return {
+          "@type": "ListItem",
+          position: i + 1,
+          item: { "@type": "Article", name: getMonthName(parseInt(mo)) + " " + y + " Pricing Report", url: BASE_URL + "/reports/" + m },
+        };
+      }),
+    },
+  };
+
+  const monthCards = months.map(m => {
+    const [y, mo] = m.split("-");
+    const monthChanges = allChanges.filter(c => c.date.startsWith(m));
+    const negative = monthChanges.filter(c => ["free_tier_removed","limits_reduced","restriction","product_deprecated","open_source_killed","pricing_model_change"].includes(c.change_type)).length;
+    const positive = monthChanges.filter(c => ["new_free_tier","limits_increased","startup_program_expanded","new_tier"].includes(c.change_type)).length;
+    const neutral = monthChanges.length - negative - positive;
+    const sentiment = negative > positive ? "bearish" : positive > negative ? "bullish" : "mixed";
+    const sentimentBadge = sentiment === "bearish"
+      ? '<span class="report-badge report-bearish">Bearish</span>'
+      : sentiment === "bullish"
+        ? '<span class="report-badge report-bullish">Bullish</span>'
+        : '<span class="report-badge report-mixed">Mixed</span>';
+    return '<a href="/reports/' + m + '" class="report-card">'
+      + '<div class="report-card-header">'
+      + '<h2>' + getMonthName(parseInt(mo)) + ' ' + y + '</h2>'
+      + sentimentBadge
+      + '</div>'
+      + '<div class="report-stats">'
+      + '<span class="stat-item">' + monthChanges.length + ' changes</span>'
+      + '<span class="stat-neg">' + negative + ' negative</span>'
+      + '<span class="stat-pos">' + positive + ' positive</span>'
+      + (neutral > 0 ? '<span class="stat-neutral">' + neutral + ' neutral</span>' : '')
+      + '</div>'
+      + '</a>';
+  }).join("\n");
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
+    + '<meta charset="utf-8">\n'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>' + escHtmlServer(title) + '</title>\n'
+    + '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<link rel="canonical" href="' + BASE_URL + '/reports">\n'
+    + '<meta property="og:title" content="' + escHtmlServer(title) + '">\n'
+    + '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<meta property="og:url" content="' + BASE_URL + '/reports">\n'
+    + '<meta property="og:type" content="website">\n'
+    + OG_IMAGE_META
+    + '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n'
+    + buildBreadcrumbJsonLd([{ name: "AgentDeals", url: BASE_URL + "/" }, { name: "Reports", url: BASE_URL + "/reports" }])
+    + '<style>\n'
+    + ':root{--bg:#0d1117;--bg-elevated:#161b22;--text:#e6edf3;--text-muted:#8b949e;--text-dim:#484f58;--accent:#58a6ff;--accent-glow:rgba(88,166,255,.1);--border:#30363d;--serif:"Georgia",serif;--sans:system-ui,-apple-system,sans-serif;--mono:"SF Mono","Fira Code",monospace;--red:#f85149;--green:#3fb950;--yellow:#d29922}\n'
+    + 'body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n'
+    + '.container{max-width:900px;margin:0 auto;padding:0 1.5rem}\n'
+    + 'a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}\n'
+    + 'h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem;letter-spacing:-.02em}\n'
+    + '.breadcrumb{font-size:.8rem;color:var(--text-muted);margin-top:1rem}\n'
+    + '.breadcrumb a{color:var(--text-muted)}.breadcrumb a:hover{color:var(--accent)}\n'
+    + '.subtitle{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem}\n'
+    + '.report-card{display:block;border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:.75rem;background:var(--bg-elevated);text-decoration:none;transition:border-color .15s}\n'
+    + '.report-card:hover{border-color:var(--accent);text-decoration:none}\n'
+    + '.report-card-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}\n'
+    + '.report-card h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin:0}\n'
+    + '.report-badge{font-size:.65rem;padding:.15rem .4rem;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}\n'
+    + '.report-bearish{background:#f8514920;color:var(--red);border:1px solid #f8514940}\n'
+    + '.report-bullish{background:#3fb95020;color:var(--green);border:1px solid #3fb95040}\n'
+    + '.report-mixed{background:#d2992220;color:var(--yellow);border:1px solid #d2992240}\n'
+    + '.report-stats{display:flex;gap:1rem;font-size:.8rem;color:var(--text-muted)}\n'
+    + '.stat-neg{color:var(--red)}.stat-pos{color:var(--green)}.stat-neutral{color:var(--yellow)}\n'
+    + 'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n'
+    + globalNavCss() + '\n'
+    + '</style>\n</head>\n<body>\n<div class="container">\n'
+    + buildGlobalNav("reports")
+    + '<div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Reports</div>\n'
+    + '<h1>Monthly Pricing Intelligence Reports</h1>\n'
+    + '<p class="subtitle">Auto-generated monthly analysis of developer tool pricing trends across ' + allChanges.length + ' tracked changes.</p>\n'
+    + monthCards
+    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '</div>\n</body>\n</html>';
+}
+
+function buildMonthlyReportPage(yearMonth: string): string | null {
+  const allChanges = loadDealChanges();
+  const monthChanges = allChanges.filter(c => c.date.startsWith(yearMonth));
+  if (monthChanges.length === 0) return null;
+
+  const [yearStr, moStr] = yearMonth.split("-");
+  const monthNum = parseInt(moStr);
+  const monthName = getMonthName(monthNum);
+  const title = "Developer Tool Pricing Report — " + monthName + " " + yearStr + " | AgentDeals";
+  const metaDesc = monthChanges.length + " pricing changes tracked in " + monthName + " " + yearStr + " — free tier removals, new additions, and trend analysis for developer tools.";
+
+  const negativeTypes = new Set(["free_tier_removed","limits_reduced","restriction","product_deprecated","open_source_killed","pricing_model_change"]);
+  const positiveTypes = new Set(["new_free_tier","limits_increased","startup_program_expanded","new_tier"]);
+
+  const negative = monthChanges.filter(c => negativeTypes.has(c.change_type));
+  const positive = monthChanges.filter(c => positiveTypes.has(c.change_type));
+  const neutral = monthChanges.filter(c => !negativeTypes.has(c.change_type) && !positiveTypes.has(c.change_type));
+
+  const typeCounts = new Map<string, number>();
+  for (const c of monthChanges) typeCounts.set(c.change_type, (typeCounts.get(c.change_type) || 0) + 1);
+
+  const catCounts = new Map<string, { total: number; negative: number; positive: number }>();
+  for (const c of monthChanges) {
+    const cat = c.category || "Uncategorized";
+    const entry = catCounts.get(cat) || { total: 0, negative: 0, positive: 0 };
+    entry.total++;
+    if (negativeTypes.has(c.change_type)) entry.negative++;
+    if (positiveTypes.has(c.change_type)) entry.positive++;
+    catCounts.set(cat, entry);
+  }
+  const sortedCats = [...catCounts.entries()].sort((a, b) => b[1].total - a[1].total);
+
+  // Previous month comparison
+  const prevMonth = monthNum === 1 ? (parseInt(yearStr) - 1) + "-12" : yearStr + "-" + String(monthNum - 1).padStart(2, "0");
+  const prevChanges = allChanges.filter(c => c.date.startsWith(prevMonth));
+  const prevNeg = prevChanges.filter(c => negativeTypes.has(c.change_type)).length;
+  const prevPos = prevChanges.filter(c => positiveTypes.has(c.change_type)).length;
+
+  function momIndicator(current: number, previous: number): string {
+    if (previous === 0) return '';
+    const diff = current - previous;
+    if (diff > 0) return ' <span class="mom-up">+' + diff + ' vs last month</span>';
+    if (diff < 0) return ' <span class="mom-down">' + diff + ' vs last month</span>';
+    return ' <span class="mom-flat">same as last month</span>';
+  }
+
+  // Editorial summary
+  let editorialSummary: string;
+  if (negative.length > positive.length * 2) {
+    editorialSummary = monthName + " " + yearStr + " was a tough month for developer free tiers. With " + negative.length + " negative changes versus " + positive.length + " positive, the trend continues toward tighter limits and eliminated offerings. Developers relying on free tiers should review their dependencies.";
+  } else if (negative.length > positive.length) {
+    editorialSummary = monthName + " " + yearStr + " saw more contractions than expansions, with " + negative.length + " negative changes versus " + positive.length + " positive. The overall trend leans bearish, though some vendors did expand their offerings.";
+  } else if (positive.length > negative.length * 2) {
+    editorialSummary = monthName + " " + yearStr + " was an unusually strong month for developers. " + positive.length + " positive changes outweighed " + negative.length + " negative ones, with several vendors adding or expanding free tiers.";
+  } else if (positive.length > negative.length) {
+    editorialSummary = monthName + " " + yearStr + " leaned positive with " + positive.length + " expansions versus " + negative.length + " contractions. A welcome shift for cost-conscious developers.";
+  } else {
+    editorialSummary = monthName + " " + yearStr + " was a mixed month with " + monthChanges.length + " total changes. " + negative.length + " negative and " + positive.length + " positive changes balanced out.";
+  }
+
+  // Biggest losers (vendors with most negative changes)
+  const vendorNegCounts = new Map<string, number>();
+  for (const c of negative) vendorNegCounts.set(c.vendor, (vendorNegCounts.get(c.vendor) || 0) + 1);
+  const biggestLosers = [...vendorNegCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+  // Biggest winners (vendors with most positive changes)
+  const vendorPosCounts = new Map<string, number>();
+  for (const c of positive) vendorPosCounts.set(c.vendor, (vendorPosCounts.get(c.vendor) || 0) + 1);
+  const biggestWinners = [...vendorPosCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+  function changeTypeLabel(ct: string): string {
+    return ct.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  const typeBreakdownRows = [...typeCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([type, count]) => {
+      const cls = negativeTypes.has(type) ? "type-neg" : positiveTypes.has(type) ? "type-pos" : "type-neutral";
+      return '<tr><td class="' + cls + '">' + escHtmlServer(changeTypeLabel(type)) + '</td><td>' + count + '</td></tr>';
+    }).join("");
+
+  const catBreakdownRows = sortedCats.slice(0, 15).map(([cat, data]) => {
+    return '<tr><td>' + escHtmlServer(cat) + '</td><td>' + data.total + '</td><td class="stat-neg">' + data.negative + '</td><td class="stat-pos">' + data.positive + '</td></tr>';
+  }).join("");
+
+  const losersHtml = biggestLosers.length > 0
+    ? '<h2>Biggest Losers</h2><p class="section-desc">Vendors that eliminated or reduced free tiers</p><ul class="vendor-list">'
+      + biggestLosers.map(([vendor, count]) => {
+        const details = negative.filter(c => c.vendor === vendor).map(c => escHtmlServer(c.summary)).join("</li><li>");
+        return '<li><strong>' + escHtmlServer(vendor) + '</strong> (' + count + ' negative change' + (count > 1 ? "s" : "") + ')<ul><li>' + details + '</li></ul></li>';
+      }).join("") + '</ul>'
+    : '';
+
+  const winnersHtml = biggestWinners.length > 0
+    ? '<h2>Biggest Winners</h2><p class="section-desc">Vendors that added or expanded free tiers</p><ul class="vendor-list">'
+      + biggestWinners.map(([vendor, count]) => {
+        const details = positive.filter(c => c.vendor === vendor).map(c => escHtmlServer(c.summary)).join("</li><li>");
+        return '<li><strong>' + escHtmlServer(vendor) + '</strong> (' + count + ' positive change' + (count > 1 ? "s" : "") + ')<ul><li>' + details + '</li></ul></li>';
+      }).join("") + '</ul>'
+    : '';
+
+  // Navigation to prev/next report
+  const months = getAvailableReportMonths();
+  const currentIdx = months.indexOf(yearMonth);
+  const newerMonth = currentIdx > 0 ? months[currentIdx - 1] : null;
+  const olderMonth = currentIdx < months.length - 1 ? months[currentIdx + 1] : null;
+
+  const reportNav = '<div class="report-nav">'
+    + (olderMonth ? '<a href="/reports/' + olderMonth + '">&larr; ' + getMonthName(parseInt(olderMonth.split("-")[1])) + ' ' + olderMonth.split("-")[0] + '</a>' : '<span></span>')
+    + '<a href="/reports">All Reports</a>'
+    + (newerMonth ? '<a href="/reports/' + newerMonth + '">' + getMonthName(parseInt(newerMonth.split("-")[1])) + ' ' + newerMonth.split("-")[0] + ' &rarr;</a>' : '<span></span>')
+    + '</div>';
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Developer Tool Pricing Report — " + monthName + " " + yearStr,
+    description: metaDesc,
+    datePublished: yearMonth + "-01",
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: BASE_URL + "/reports/" + yearMonth,
+  };
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
+    + '<meta charset="utf-8">\n'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>' + escHtmlServer(title) + '</title>\n'
+    + '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<link rel="canonical" href="' + BASE_URL + '/reports/' + yearMonth + '">\n'
+    + '<meta property="og:title" content="' + escHtmlServer(title) + '">\n'
+    + '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<meta property="og:url" content="' + BASE_URL + '/reports/' + yearMonth + '">\n'
+    + '<meta property="og:type" content="article">\n'
+    + OG_IMAGE_META
+    + '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n'
+    + buildBreadcrumbJsonLd([
+      { name: "AgentDeals", url: BASE_URL + "/" },
+      { name: "Reports", url: BASE_URL + "/reports" },
+      { name: monthName + " " + yearStr, url: BASE_URL + "/reports/" + yearMonth },
+    ])
+    + '<style>\n'
+    + ':root{--bg:#0d1117;--bg-elevated:#161b22;--text:#e6edf3;--text-muted:#8b949e;--text-dim:#484f58;--accent:#58a6ff;--accent-glow:rgba(88,166,255,.1);--border:#30363d;--serif:"Georgia",serif;--sans:system-ui,-apple-system,sans-serif;--mono:"SF Mono","Fira Code",monospace;--red:#f85149;--green:#3fb950;--yellow:#d29922}\n'
+    + 'body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n'
+    + '.container{max-width:900px;margin:0 auto;padding:0 1.5rem}\n'
+    + 'a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}\n'
+    + 'h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem;letter-spacing:-.02em}\n'
+    + 'h2{font-family:var(--serif);font-size:1.35rem;margin:2rem 0 .5rem;color:var(--text)}\n'
+    + '.breadcrumb{font-size:.8rem;color:var(--text-muted);margin-top:1rem}\n'
+    + '.breadcrumb a{color:var(--text-muted)}.breadcrumb a:hover{color:var(--accent)}\n'
+    + '.editorial{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;font-size:.95rem;line-height:1.7;color:var(--text-muted)}\n'
+    + '.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin:1.5rem 0}\n'
+    + '.stat-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n'
+    + '.stat-card .stat-value{font-size:1.75rem;font-weight:700;font-family:var(--mono)}\n'
+    + '.stat-card .stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.25rem}\n'
+    + '.stat-neg{color:var(--red)}.stat-pos{color:var(--green)}.stat-neutral{color:var(--yellow)}\n'
+    + '.mom-up{font-size:.7rem;color:var(--red);margin-left:.25rem}.mom-down{font-size:.7rem;color:var(--green);margin-left:.25rem}.mom-flat{font-size:.7rem;color:var(--text-dim);margin-left:.25rem}\n'
+    + 'table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{text-align:left;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.85rem}\n'
+    + 'th{color:var(--text-muted);font-weight:600;text-transform:uppercase;font-size:.7rem;letter-spacing:.05em}\n'
+    + '.type-neg{color:var(--red)}.type-pos{color:var(--green)}.type-neutral{color:var(--yellow)}\n'
+    + '.section-desc{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 1rem}\n'
+    + '.vendor-list{list-style:none;padding:0}.vendor-list>li{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-bottom:.5rem}\n'
+    + '.vendor-list ul{margin:.5rem 0 0;padding-left:1.25rem;list-style:disc;color:var(--text-muted);font-size:.85rem}\n'
+    + '.vendor-list ul li{margin-bottom:.25rem}\n'
+    + '.report-nav{display:flex;justify-content:space-between;align-items:center;margin:2rem 0;padding:1rem 0;border-top:1px solid var(--border);font-size:.85rem}\n'
+    + 'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n'
+    + globalNavCss() + '\n'
+    + '</style>\n</head>\n<body>\n<div class="container">\n'
+    + buildGlobalNav("reports")
+    + '<div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/reports">Reports</a> &rsaquo; ' + monthName + ' ' + yearStr + '</div>\n'
+    + '<h1>Developer Tool Pricing Report</h1>\n'
+    + '<h2 style="margin-top:.25rem;color:var(--text-muted);font-size:1.1rem">' + monthName + ' ' + yearStr + '</h2>\n'
+    + '<div class="editorial">' + escHtmlServer(editorialSummary) + '</div>\n'
+    + '<div class="stats-grid">'
+    + '<div class="stat-card"><div class="stat-value">' + monthChanges.length + '</div><div class="stat-label">Total Changes' + momIndicator(monthChanges.length, prevChanges.length) + '</div></div>'
+    + '<div class="stat-card"><div class="stat-value stat-neg">' + negative.length + '</div><div class="stat-label">Negative' + momIndicator(negative.length, prevNeg) + '</div></div>'
+    + '<div class="stat-card"><div class="stat-value stat-pos">' + positive.length + '</div><div class="stat-label">Positive' + momIndicator(positive.length, prevPos) + '</div></div>'
+    + '<div class="stat-card"><div class="stat-value stat-neutral">' + neutral.length + '</div><div class="stat-label">Neutral</div></div>'
+    + '</div>\n'
+    + '<h2>Changes by Type</h2>\n'
+    + '<table><thead><tr><th>Change Type</th><th>Count</th></tr></thead><tbody>' + typeBreakdownRows + '</tbody></table>\n'
+    + losersHtml
+    + winnersHtml
+    + '<h2>Category Breakdown</h2>\n'
+    + '<p class="section-desc">Which categories saw the most pricing changes</p>\n'
+    + '<table><thead><tr><th>Category</th><th>Total</th><th>Negative</th><th>Positive</th></tr></thead><tbody>' + catBreakdownRows + '</tbody></table>\n'
+    + reportNav
+    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
     + '</div>\n</body>\n</html>';
 }
 
@@ -53391,6 +53688,21 @@ ${catList}
     <priority>0.8</priority>
   </url>`).join("\n  ")}
   <url>
+    <loc>${BASE_URL}/reports</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  ${getAvailableReportMonths().map(m => {
+    const reportLastmod = m + "-28" <= now ? m + "-28" : now;
+    return `<url>
+    <loc>${BASE_URL}/reports/${m}</loc>
+    <lastmod>${reportLastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+  }).join("\n  ")}
+  <url>
     <loc>${BASE_URL}/stacks</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -55145,6 +55457,24 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
     if (html) {
       recordApiHit("/events/:slug");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/events/" + eventSlug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+    }
+
+  } else if (url.pathname === "/reports" && isGetOrHead) {
+    recordApiHit("/reports");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/reports", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: getAvailableReportMonths().length });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildReportsIndexPage());
+  } else if (url.pathname.startsWith("/reports/") && isGetOrHead) {
+    const yearMonth = url.pathname.slice("/reports/".length).replace(/\/$/, "");
+    const html = buildMonthlyReportPage(yearMonth);
+    if (html) {
+      recordApiHit("/reports/:month");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/reports/" + yearMonth, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
       res.end(html);
     } else {

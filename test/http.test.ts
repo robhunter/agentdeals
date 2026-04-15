@@ -6133,3 +6133,62 @@ describe("startup credits comparison page", () => {
     assert.ok(xml.includes("/events/google-cloud-next-2026"), "Sitemap should include event page");
   });
 });
+
+describe("Monthly pricing reports", () => {
+  let proc: ChildProcess;
+  afterEach(() => { if (proc) proc.kill(); });
+
+  it("GET /reports renders reports index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/reports`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("Monthly Pricing Intelligence Reports"));
+    assert.ok(html.includes("CollectionPage"), "Should have CollectionPage JSON-LD");
+    assert.ok(html.includes("BreadcrumbList"), "Should have BreadcrumbList JSON-LD");
+    assert.ok(html.includes("/reports/2026-04"), "Should link to a monthly report");
+  });
+
+  it("GET /reports/2026-04 renders monthly report page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/reports/2026-04`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("April 2026"));
+    assert.ok(html.includes("Developer Tool Pricing Report"));
+    assert.ok(html.includes("Article"), "Should have Article JSON-LD");
+    assert.ok(html.includes("BreadcrumbList"), "Should have BreadcrumbList JSON-LD");
+    assert.ok(html.includes("Changes by Type"));
+    assert.ok(html.includes("Category Breakdown"));
+    assert.ok(html.includes("All Reports"), "Should have nav to all reports");
+  });
+
+  it("GET /reports/9999-01 returns 404 for empty month", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/reports/9999-01`);
+    assert.strictEqual(response.status, 404);
+  });
+
+  it("reports pages are in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/reports"), "Sitemap should include /reports");
+    assert.ok(xml.includes("/reports/2026-04"), "Sitemap should include monthly report page");
+  });
+
+  it("reports index is in Insights nav", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/reports`);
+    const html = await response.text();
+    assert.ok(html.includes('href="/reports"'), "Should have /reports nav link");
+    assert.ok(html.includes("Monthly Reports"), "Should show Monthly Reports label in nav");
+  });
+});
