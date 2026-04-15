@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews } from "./stats.js";
@@ -47426,6 +47426,7 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days" },
     { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "" },
     { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "" },
+    { method: "GET", path: "/api/digest/weekly", desc: "Formatted weekly digest with multiple output formats", params: "format (json|markdown|html), limit, weeks_ago" },
     { method: "GET", path: "/api/stack", desc: "Free-tier stack recommendation", params: "use_case, requirements" },
     { method: "GET", path: "/api/costs", desc: "Estimate infrastructure costs", params: "services, scale" },
     { method: "GET", path: "/api/query-log", desc: "Recent request log", params: "limit" },
@@ -51015,6 +51016,7 @@ GET /api/vendor-risk/Heroku
 GET /api/audit-stack?services=Vercel,Supabase
 GET /api/expiring?within_days=30
 GET /api/digest
+GET /api/digest/weekly?format=markdown&amp;weeks_ago=1
 GET /api/feed
 GET /api/stats
 GET /api/openapi.json
@@ -52183,6 +52185,23 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/freshness", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total_offers });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=3600" });
     res.end(JSON.stringify(result));
+  } else if (url.pathname === "/api/digest/weekly" && isGetOrHead) {
+    recordApiHit("/api/digest/weekly");
+    const format = (url.searchParams.get("format") || "json").toLowerCase();
+    const limit = Math.max(1, Math.min(100, parseInt(url.searchParams.get("limit") || "20", 10) || 20));
+    const weeksAgo = Math.max(0, parseInt(url.searchParams.get("weeks_ago") || "0", 10) || 0);
+    const digest = getFormattedWeeklyDigest(weeksAgo, limit);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/digest/weekly", params: { format, limit: String(limit), weeks_ago: String(weeksAgo) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: digest.top_changes.length });
+    if (format === "markdown") {
+      res.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=3600" });
+      res.end(digest.digest_markdown);
+    } else if (format === "html") {
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=3600" });
+      res.end(digest.digest_html);
+    } else {
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=3600" });
+      res.end(JSON.stringify(digest));
+    }
   } else if (url.pathname === "/api/digest" && isGetOrHead) {
     recordApiHit("/api/digest");
     const digest = getWeeklyDigest();
@@ -52390,6 +52409,7 @@ Parameters:
 - GET /api/audit-stack — Stack audit (params: services)
 - GET /api/expiring — Expiring deals (params: days)
 - GET /api/digest — Weekly pricing digest
+- GET /api/digest/weekly — Formatted weekly digest (params: format=json|markdown|html, limit, weeks_ago)
 - GET /api/openapi.json — OpenAPI 3.0 specification
 - GET /api/docs — Swagger UI documentation
 - GET /api/feed — Atom feed of pricing changes
