@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, getVendorReferral } from "./data.js";
@@ -14,6 +17,9 @@ import { getGuideList, getGuideBySlug } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 
+const __dirname_server = dirname(fileURLToPath(import.meta.url));
+const PKG_VERSION = JSON.parse(readFileSync(join(__dirname_server, "..", "package.json"), "utf-8")).version;
+
 function toConciseOffer(offer: Offer | EnrichedOffer) {
   return { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
 }
@@ -25,7 +31,7 @@ function toConciseDealChange(change: DealChange) {
 export function createServer(getSessionId?: () => string | undefined): McpServer {
   const server = new McpServer({
     name: "agentdeals",
-    version: "0.1.0",
+    version: PKG_VERSION,
     description: "AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. 1,600+ verified offers across 67 categories with pricing change tracking.",
   });
 
@@ -1417,7 +1423,9 @@ export function getServerCard(baseUrl: string) {
     serverInfo: {
       name: "agentdeals",
       title: "AgentDeals",
-      version: "0.2.0",
+      version: PKG_VERSION,
+      description: "MCP server aggregating 1,589+ free tiers, startup credits, and developer infrastructure deals",
+      homepage: "https://agentdeals.dev",
     },
     description: "Search and compare free tiers, startup credits, and pricing changes across 1,600+ developer tools. 4 intent-based MCP tools for infrastructure decisions, cost estimation, and vendor comparison.",
     iconUrl: `${baseUrl}/og-image.png`,
