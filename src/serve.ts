@@ -48386,6 +48386,7 @@ function buildPricingChangesFeed(): string {
     <link href="${BASE_URL}/pricing-changes#${anchor}" rel="alternate"/>
     <id>urn:agentdeals:${escXml(id)}</id>
     <updated>${new Date(c.date + "T00:00:00Z").toISOString()}</updated>
+    <author><name>AgentDeals</name></author>
     <summary>${escXml(c.summary + stateInfo)}</summary>
     <category term="${escXml(c.change_type)}" label="${escXml(label)}"/>
   </entry>`;
@@ -52486,6 +52487,7 @@ const httpServer = createHttpServer(async (req, res) => {
     <link href="${escXml(weekUrl)}" rel="alternate"/>
     <id>urn:agentdeals:weekly-digest:${digest.week_of}</id>
     <updated>${pubDate}</updated>
+    <author><name>AgentDeals</name></author>
     <summary type="html">${escXml(digest.digest_html)}</summary>
   </entry>`);
     }
