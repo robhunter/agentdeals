@@ -94,7 +94,7 @@ describe("payment protocol features", () => {
   });
 
   it("GET /agent-payments is in sitemap", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const res = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await res.text();
     assert.ok(xml.includes("/agent-payments"), "Sitemap should include /agent-payments");
   });
@@ -147,7 +147,7 @@ describe("payment protocol features", () => {
   });
 
   it("GET /x402-services is in sitemap", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const res = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await res.text();
     assert.ok(xml.includes("/x402-services"), "Sitemap should include /x402-services");
   });

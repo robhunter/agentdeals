@@ -216,8 +216,8 @@ describe("referral HTTP endpoints", () => {
     assert.ok(!html.includes("referral-callout"), "Vendor page without referral should not show callout");
   });
 
-  it("GET /sitemap.xml includes /disclosure", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+  it("sitemap-pages.xml includes /disclosure", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await res.text();
     assert.ok(xml.includes("/disclosure"), "Sitemap should include disclosure page");
   });
