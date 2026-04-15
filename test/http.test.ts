@@ -1316,6 +1316,32 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('href="/vendor/'), "Category page should link vendors to profile pages");
   });
 
+  it("GET /vendor/:slug includes last updated timestamp", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/railway`);
+    const html = await response.text();
+    assert.ok(html.includes("Last updated"), "Should show last updated timestamp");
+  });
+
+  it("GET /vendor/:slug includes monthly report links for vendors with changes", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/railway`);
+    const html = await response.text();
+    assert.ok(html.includes("Featured in Monthly Reports"), "Should show monthly reports section");
+    assert.ok(html.includes("/reports/"), "Should link to a monthly report");
+  });
+
+  it("GET /vendor/:slug includes enriched JSON-LD with dateModified", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/railway`);
+    const html = await response.text();
+    assert.ok(html.includes("dateModified"), "JSON-LD should include dateModified");
+    assert.ok(html.includes("priceValidUntil"), "JSON-LD should include priceValidUntil");
+  });
+
   it("GET /vendor/:slug includes watchlist CTA", async () => {
     proc = await startHttpServer();
 
