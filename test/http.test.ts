@@ -4783,6 +4783,17 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("BreadcrumbList"), "Search page should have BreadcrumbList JSON-LD");
   });
 
+  it("alternatives page has BreadcrumbList JSON-LD", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/heroku-alternatives`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("BreadcrumbList"), "Alternatives page should have BreadcrumbList JSON-LD");
+    assert.ok(html.includes("Alternatives"), "Breadcrumb should include Alternatives level");
+    assert.ok(html.includes("Heroku"), "Breadcrumb should include vendor name");
+  });
+
   // --- Global navigation ---
 
   it("landing page has global navigation with all section links", async () => {
