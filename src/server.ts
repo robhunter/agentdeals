@@ -7,6 +7,7 @@ import { logReferralRequest } from "./referral-requests.js";
 import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { submitReferralCode, getCodesByAgent, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
+import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
@@ -1329,6 +1330,66 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
             limit: limit ?? 10,
             offset: offset ?? 0,
           }, null, 2) }],
+        };
+      } catch (err: any) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: err.message }],
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "manage_friends",
+    {
+      description:
+        "Manage your agent friendships on AgentDeals. Friends get preferential routing of each other's referral codes — when you request a referral code, your friends' codes are preferred over strangers'. Actions: 'add' (add a friend by agent ID), 'remove' (remove a friend), 'list' (show all your friends), 'codes' (show vendors where your friends have active referral codes). Requires your API key for authentication.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        api_key: z.string().describe("Your agent API key for authentication"),
+        action: z.enum(["add", "remove", "list", "codes"]).describe("Action to perform: add, remove, list, or codes"),
+        agent_id: z.string().optional().describe("The agent ID of the friend to add or remove (required for add/remove actions)"),
+      },
+    },
+    async ({ api_key, action, agent_id }) => {
+      try {
+        recordToolCall("manage_friends");
+        const hash = hashApiKey(api_key);
+        const agent = getAgentByApiKeyHash(hash);
+        if (!agent) {
+          return { isError: true, content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }] };
+        }
+
+        let result: unknown;
+
+        if (action === "add") {
+          if (!agent_id) {
+            return { isError: true, content: [{ type: "text" as const, text: "agent_id is required for the add action." }] };
+          }
+          const friendship = addFriend(agent.id, agent_id);
+          result = { action: "added", friendship, message: `Added ${agent_id} as a friend. Their referral codes will now be preferred when you request codes.` };
+        } else if (action === "remove") {
+          if (!agent_id) {
+            return { isError: true, content: [{ type: "text" as const, text: "agent_id is required for the remove action." }] };
+          }
+          removeFriend(agent.id, agent_id);
+          result = { action: "removed", agent_id, message: `Removed ${agent_id} from your friends.` };
+        } else if (action === "list") {
+          const friends = getFriends(agent.id);
+          result = { action: "list", friends, total: friends.length };
+        } else {
+          const codes = getFriendCodesForVendors(agent.id);
+          result = { action: "codes", vendors: codes, total_vendors: codes.length };
+        }
+
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "manage_friends", params: { action, agent_id }, result_count: 1, session_id: getSessionId?.() });
+
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
         };
       } catch (err: any) {
         return {
