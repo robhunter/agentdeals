@@ -1457,14 +1457,54 @@ function comparisonSlug(a: string, b: string): string {
   return `${toSlug(a)}-vs-${toSlug(b)}`;
 }
 
+// Auto-generate comparison pairs from categories with 3+ vendors
+function generateCategoryPairs(): [string, string][] {
+  const catVendors = new Map<string, string[]>();
+  for (const o of offers) {
+    if (!catVendors.has(o.category)) catVendors.set(o.category, []);
+    const arr = catVendors.get(o.category)!;
+    if (!arr.includes(o.vendor)) arr.push(o.vendor);
+  }
+
+  const changeCount = new Map<string, number>();
+  for (const c of dealChanges) {
+    changeCount.set(c.vendor, (changeCount.get(c.vendor) ?? 0) + 1);
+  }
+
+  const pairs: [string, string][] = [];
+  for (const [, vendors] of catVendors) {
+    if (vendors.length < 3) continue;
+    const scored = vendors.map(v => {
+      const offer = offers.find(o => o.vendor === v)!;
+      return { name: v, score: (changeCount.get(v) ?? 0) * 3 + offer.description.length / 50 };
+    }).sort((a, b) => b.score - a.score);
+
+    const topN = scored.slice(0, 4);
+    let catPairCount = 0;
+    for (let i = 0; i < topN.length && catPairCount < 5; i++) {
+      for (let j = i + 1; j < topN.length && catPairCount < 5; j++) {
+        const [a, b] = [topN[i].name, topN[j].name].sort() as [string, string];
+        pairs.push([a, b]);
+        catPairCount++;
+      }
+    }
+  }
+  return pairs;
+}
+
 // Build lookup maps for comparison pages
 const comparisonMap = new Map<string, [string, string]>();
 for (const [a, b] of COMPARISON_PAIRS) {
-  // Both vendors must exist
   const offerA = offers.find(o => o.vendor === a);
   const offerB = offers.find(o => o.vendor === b);
   if (offerA && offerB) {
     comparisonMap.set(comparisonSlug(a, b), [a, b]);
+  }
+}
+for (const [a, b] of generateCategoryPairs()) {
+  const slug = comparisonSlug(a, b);
+  if (!comparisonMap.has(slug)) {
+    comparisonMap.set(slug, [a, b]);
   }
 }
 
@@ -1574,7 +1614,6 @@ function buildComparisonPage(slug: string): string | null {
   const title = `${a.vendor} vs ${b.vendor} Free Tier Comparison — AgentDeals`;
   const metaDesc = `Compare ${a.vendor} and ${b.vendor} free tiers side by side. Pricing, limits, change history, and risk assessment for developers.`;
 
-  // Risk levels from enriched data
   const riskA = enrichOffers([offers.find(o => o.vendor === a.vendor)!])[0];
   const riskB = enrichOffers([offers.find(o => o.vendor === b.vendor)!])[0];
 
@@ -1599,6 +1638,70 @@ function buildComparisonPage(slug: string): string | null {
     }).join("\n");
   };
 
+  // Category context
+  const sameCategory = a.category === b.category;
+  const primaryCategory = sameCategory ? a.category : null;
+  const catOthersCount = primaryCategory ? offers.filter(o => o.category === primaryCategory).map(o => o.vendor).filter((v, i, arr) => arr.indexOf(v) === i).length - 2 : 0;
+  const catSlug = primaryCategory ? toSlug(primaryCategory) : null;
+  const categoryContextHtml = primaryCategory && catOthersCount > 0 ? `
+  <div class="category-context">
+    <a href="/category/${catSlug}">${catOthersCount} other ${escHtmlServer(primaryCategory.toLowerCase())} option${catOthersCount !== 1 ? "s" : ""} &rarr;</a>
+  </div>` : "";
+
+  // Auto-generated verdict
+  const tierA = a.tier.toLowerCase();
+  const tierB = b.tier.toLowerCase();
+  const hasFreeA = tierA !== "none" && !a.description.toLowerCase().includes("no free tier");
+  const hasFreeB = tierB !== "none" && !b.description.toLowerCase().includes("no free tier");
+  const stabilityA = riskA.risk_level ?? "unknown";
+  const stabilityB = riskB.risk_level ?? "unknown";
+  const changesCountA = a.deal_changes.length;
+  const changesCountB = b.deal_changes.length;
+
+  let verdictText = "";
+  if (hasFreeA && hasFreeB) {
+    verdictText = `Both ${a.vendor} and ${b.vendor} offer free tiers. ${a.vendor} provides "${a.tier}" while ${b.vendor} offers "${b.tier}".`;
+  } else if (hasFreeA && !hasFreeB) {
+    verdictText = `${a.vendor} offers a free tier ("${a.tier}") while ${b.vendor} does not currently have a free tier.`;
+  } else if (!hasFreeA && hasFreeB) {
+    verdictText = `${b.vendor} offers a free tier ("${b.tier}") while ${a.vendor} does not currently have a free tier.`;
+  } else {
+    verdictText = `Neither ${a.vendor} nor ${b.vendor} currently offers a free tier.`;
+  }
+  if (stabilityA !== stabilityB) {
+    const betterVendor = stabilityA === "stable" ? a.vendor : stabilityB === "stable" ? b.vendor : null;
+    if (betterVendor) verdictText += ` ${betterVendor} has a more stable pricing history.`;
+  }
+
+  const verdictHtml = `
+  <div class="verdict-section">
+    <h2>Verdict</h2>
+    <p>${escHtmlServer(verdictText)}</p>
+    <div class="verdict-details">
+      <a href="/vendor/${toSlug(a.vendor)}" class="vendor-link">${escHtmlServer(a.vendor)} profile &rarr;</a>
+      <a href="/vendor/${toSlug(b.vendor)}" class="vendor-link">${escHtmlServer(b.vendor)} profile &rarr;</a>
+    </div>
+  </div>`;
+
+  // Watchlist CTA
+  const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
+  -H "Content-Type: application/json" \\
+  -d '{"vendor": "${a.vendor.replace(/'/g, "\\'")}", "webhook_url": "https://your-server.com/webhook"}'`;
+  const watchlistCtaHtml = `
+  <div class="watchlist-cta">
+    <h2>Watch Both Vendors for Pricing Changes</h2>
+    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem">Get notified via webhook when ${escHtmlServer(a.vendor)} or ${escHtmlServer(b.vendor)}'s free tier changes.</p>
+    <code>${escHtmlServer(watchlistSnippet)}</code>
+    <p style="margin-top:.75rem;font-size:.8rem"><a href="/developer-hub">Watchlist API docs &rarr;</a></p>
+  </div>`;
+
+  // FAQ items for JSON-LD
+  const faqItems = [
+    { q: `Which is cheaper, ${a.vendor} or ${b.vendor}?`, a: hasFreeA && hasFreeB ? `Both offer free tiers. ${a.vendor} provides "${a.tier}" and ${b.vendor} offers "${b.tier}". Compare the specific limits above to determine which fits your usage.` : hasFreeA ? `${a.vendor} offers a free tier ("${a.tier}") while ${b.vendor} does not.` : hasFreeB ? `${b.vendor} offers a free tier ("${b.tier}") while ${a.vendor} does not.` : `Neither currently offers a free tier.` },
+    { q: `Is ${a.vendor} or ${b.vendor} more stable?`, a: `${a.vendor} is rated ${stabilityA} with ${changesCountA} pricing change${changesCountA !== 1 ? "s" : ""} recorded. ${b.vendor} is rated ${stabilityB} with ${changesCountB} change${changesCountB !== 1 ? "s" : ""} recorded.` },
+    { q: `Can I use ${a.vendor} and ${b.vendor} together?`, a: sameCategory ? `While both are in the ${primaryCategory} category, some teams use both for different workloads. Check each vendor's free tier limits to see if they complement your stack.` : `Yes — ${a.vendor} (${a.category}) and ${b.vendor} (${b.category}) serve different purposes and can work well together.` },
+  ];
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -1621,6 +1724,16 @@ function buildComparisonPage(slug: string): string | null {
         },
       })),
     },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(item => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
   };
 
   // Related comparisons (share a vendor with this pair)
@@ -1652,6 +1765,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -1661,7 +1775,13 @@ a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);tex
 .breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
 .breadcrumb a{color:var(--text-muted)}
 h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
-.page-meta{color:var(--text-muted);margin-bottom:2rem;font-size:.95rem}
+.page-meta{color:var(--text-muted);margin-bottom:1rem;font-size:.95rem}
+.category-context{margin-bottom:1.5rem;font-size:.9rem}
+.verdict-section{margin-bottom:2rem;padding:1.25rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);backdrop-filter:blur(10px)}
+.verdict-section h2{font-family:var(--serif);font-size:1.15rem;margin-bottom:.75rem}
+.verdict-section p{color:var(--text-muted);font-size:.9rem;line-height:1.6}
+.verdict-details{display:flex;gap:1rem;margin-top:.75rem}
+.vendor-link{font-size:.85rem;font-weight:600}
 .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
 .vendor-col{border:1px solid var(--border);border-radius:12px;padding:1.25rem;background:var(--bg-card);backdrop-filter:blur(10px)}
 .vendor-col h2{font-family:var(--serif);font-size:1.25rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
@@ -1674,13 +1794,16 @@ h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem
 .changes-section h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:1rem}
 .changes-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 .changes-col h3{font-size:.85rem;color:var(--accent);font-family:var(--mono);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.watchlist-cta{margin-top:2rem;padding:1.25rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-card)}
+.watchlist-cta h2{font-family:var(--serif);font-size:1.15rem;margin-bottom:.5rem}
+.watchlist-cta code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
 .related{margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)}
 .related h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem}
 .related-grid{display:flex;flex-wrap:wrap;gap:.5rem}
 .related-card{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
 .related-card:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.compare-grid,.changes-cols{grid-template-columns:1fr}}
+@media(max-width:768px){h1{font-size:1.5rem}.compare-grid,.changes-cols{grid-template-columns:1fr}.verdict-details{flex-direction:column;gap:.5rem}}
 ${mcpCtaCss()}
 ${globalNavCss()}
 </style>
@@ -1691,10 +1814,11 @@ ${globalNavCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/compare">Comparisons</a> &rsaquo; ${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</div>
   <h1>${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</h1>
   <p class="page-meta">Side-by-side free tier comparison. Last updated ${new Date().toISOString().split("T")[0]}.</p>
-
+${categoryContextHtml}
+${verdictHtml}
   <div class="compare-grid">
     <div class="vendor-col">
-      <h2><a href="${escHtmlServer(a.url)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA.risk_level)}</h2>
+      <h2><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA.risk_level)}</h2>
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
@@ -1703,7 +1827,7 @@ ${globalNavCss()}
       ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
     <div class="vendor-col">
-      <h2><a href="${escHtmlServer(b.url)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB.risk_level)}</h2>
+      <h2><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB.risk_level)}</h2>
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
@@ -1726,6 +1850,7 @@ ${globalNavCss()}
       </div>
     </div>
   </div>
+${watchlistCtaHtml}
 ${relatedHtml}
   ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>

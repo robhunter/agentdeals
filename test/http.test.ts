@@ -1096,7 +1096,7 @@ describe("HTTP transport", () => {
     // Should include comparison pages
     assert.ok(xml.includes("/compare/netlify-vs-vercel"), "Sitemap should include comparison pages");
     const compareCount = (xml.match(/\/compare\//g) || []).length;
-    assert.ok(compareCount >= 20, `Expected 20+ comparison URLs in sitemap, got ${compareCount}`);
+    assert.ok(compareCount >= 200, `Expected 200+ comparison URLs in sitemap, got ${compareCount}`);
   });
 
   it("GET /compare returns comparison index page", async () => {
@@ -1113,7 +1113,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
   });
 
-  it("GET /compare/:slug renders comparison page", async () => {
+  it("GET /compare/:slug renders comparison page with all sections", async () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${serverPort}/compare/netlify-vs-vercel`);
@@ -1129,6 +1129,42 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Pricing Change History"), "Should show change history section");
     assert.ok(html.includes("Category"), "Should show category detail");
     assert.ok(html.includes("Tier"), "Should show tier detail");
+    assert.ok(html.includes("Verdict"), "Should have verdict section");
+    assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
+    assert.ok(html.includes("Watch Both Vendors"), "Should have watchlist CTA");
+    assert.ok(html.includes("og:title"), "Should have OG meta tags");
+    assert.ok(html.includes("/vendor/netlify"), "Should link to vendor A profile");
+    assert.ok(html.includes("/vendor/vercel"), "Should link to vendor B profile");
+  });
+
+  it("GET /compare/:slug shows category context for same-category pairs", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/compare/netlify-vs-vercel`);
+    const html = await response.text();
+    assert.ok(html.includes("category-context"), "Should have category context section");
+    assert.ok(html.includes("other"), "Should mention other options in category");
+  });
+
+  it("GET /compare auto-generates category-based comparison pages", async () => {
+    proc = await startHttpServer();
+
+    const indexResp = await fetch(`http://localhost:${serverPort}/compare`);
+    const indexHtml = await indexResp.text();
+    const countMatch = indexHtml.match(/(\d+) side-by-side/);
+    assert.ok(countMatch, "Index should show comparison count");
+    const count = parseInt(countMatch![1], 10);
+    assert.ok(count >= 200, `Expected 200+ comparisons from auto-generation, got ${count}`);
+    assert.ok(count <= 500, `Expected at most 500 comparisons, got ${count}`);
+  });
+
+  it("sitemap includes auto-generated comparison pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    const compareCount = (xml.match(/\/compare\//g) || []).length;
+    assert.ok(compareCount >= 200, `Expected 200+ comparison URLs in sitemap, got ${compareCount}`);
   });
 
   it("GET /compare/:slug redirects reversed URLs", async () => {
