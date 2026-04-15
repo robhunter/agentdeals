@@ -52911,6 +52911,39 @@ const httpServer = createHttpServer(async (req, res) => {
       "X-Content-Type-Options": "nosniff",
     });
     res.end(body);
+  } else if (url.pathname === "/.well-known/mcp" && isGetOrHead) {
+    const card = getServerCard(BASE_URL);
+    const manifest = {
+      schema_version: "2025-01-01",
+      name: card.serverInfo.name,
+      description: card.description,
+      version: card.serverInfo.version,
+      transport: [
+        {
+          type: "streamable-http",
+          url: card.transport.endpoint,
+        },
+      ],
+      tools: card.tools.map((t: any) => ({
+        name: t.name,
+        description: t.description,
+        input_schema: t.inputSchema,
+      })),
+      prompts: card.prompts,
+      authentication: { type: "none" },
+      metadata: {
+        homepage: card.serverInfo.homepage,
+        documentation: card.documentationUrl,
+        icon: card.iconUrl,
+      },
+    };
+    res.writeHead(200, {
+      "Content-Type": "application/json",
+      "Cache-Control": "public, max-age=3600",
+      "Access-Control-Allow-Origin": "*",
+      "X-Content-Type-Options": "nosniff",
+    });
+    res.end(JSON.stringify(manifest, null, 2));
   } else if (url.pathname === "/api/stack" && isGetOrHead) {
     recordApiHit("/api/stack");
     const useCase = url.searchParams.get("use_case") || url.searchParams.get("q") || "";
