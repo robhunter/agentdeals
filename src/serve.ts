@@ -6975,6 +6975,331 @@ function buildIntegrationGuidePage(slug: string): string | null {
     '</body>\n</html>';
 }
 
+// --- Events pages ---
+
+interface EventDef {
+  slug: string;
+  title: string;
+  shortTitle: string;
+  dates: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  vendorFilter: (vendor: string) => boolean;
+  description: string;
+  expectedAnnouncements: string[];
+}
+
+const EVENTS: EventDef[] = [
+  {
+    slug: "google-cloud-next-2026",
+    title: "Google Cloud Next 2026 — Developer Pricing Updates & Free Tier Changes",
+    shortTitle: "Google Cloud Next 2026",
+    dates: "April 22\u201324, 2026",
+    location: "Las Vegas",
+    startDate: "2026-04-22",
+    endDate: "2026-04-24",
+    vendorFilter: (v: string) => {
+      const lower = v.toLowerCase();
+      return lower.includes("google") || lower.includes("firebase") || lower.includes("gcp");
+    },
+    description: "Track all Google Cloud pricing changes, new free tiers, and developer program updates announced at Google Cloud Next 2026.",
+    expectedAnnouncements: [
+      "Vertex AI pricing and new model tiers",
+      "Gemini API free tier changes",
+      "Cloud Run cold start improvements and pricing",
+      "BigQuery slot pricing updates",
+      "Firebase extensions and new free tier limits",
+      "GKE Autopilot pricing changes",
+    ],
+  },
+];
+
+function buildEventsIndexPage(): string {
+  const title = "Developer Events & Conference Coverage | AgentDeals";
+  const metaDesc = "Live coverage of developer conferences — track pricing changes, new free tiers, and developer program updates as they're announced.";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: title,
+    description: metaDesc,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: EVENTS.length,
+      itemListElement: EVENTS.map((e, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: { "@type": "Event", name: e.shortTitle, url: BASE_URL + "/events/" + e.slug },
+      })),
+    },
+  };
+
+  const eventCards = EVENTS.map(e => {
+    const isPast = e.endDate < new Date().toISOString().split("T")[0];
+    const isActive = e.startDate <= new Date().toISOString().split("T")[0] && !isPast;
+    const statusBadge = isActive
+      ? '<span class="event-status event-live">Live Now</span>'
+      : isPast
+        ? '<span class="event-status event-past">Completed</span>'
+        : '<span class="event-status event-upcoming">Upcoming</span>';
+    const vendorCount = offers.filter(o => e.vendorFilter(o.vendor)).length;
+    return '<a href="/events/' + e.slug + '" class="event-card">'
+      + '<div class="event-card-header">'
+      + '<h2>' + escHtmlServer(e.shortTitle) + '</h2>'
+      + statusBadge
+      + '</div>'
+      + '<div class="event-meta">' + escHtmlServer(e.dates) + ' &middot; ' + escHtmlServer(e.location) + '</div>'
+      + '<p class="event-desc">' + escHtmlServer(e.description) + '</p>'
+      + '<div class="event-stat">' + vendorCount + ' tracked offerings from event vendors</div>'
+      + '</a>';
+  }).join("\n");
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
+    + '<meta charset="utf-8">\n'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>' + escHtmlServer(title) + '</title>\n'
+    + '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<link rel="canonical" href="' + BASE_URL + '/events">\n'
+    + '<meta property="og:title" content="' + escHtmlServer(title) + '">\n'
+    + '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<meta property="og:url" content="' + BASE_URL + '/events">\n'
+    + '<meta property="og:type" content="website">\n'
+    + '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n'
+    + buildBreadcrumbJsonLd([{ name: "AgentDeals", url: BASE_URL + "/" }, { name: "Events", url: BASE_URL + "/events" }])
+    + '<style>\n'
+    + ':root{--bg:#0d1117;--bg-elevated:#161b22;--text:#e6edf3;--text-muted:#8b949e;--text-dim:#484f58;--accent:#58a6ff;--accent-glow:rgba(88,166,255,.1);--border:#30363d;--serif:"Georgia",serif;--sans:system-ui,-apple-system,sans-serif;--mono:"SF Mono","Fira Code",monospace}\n'
+    + 'body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n'
+    + '.container{max-width:900px;margin:0 auto;padding:0 1.5rem}\n'
+    + 'a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}\n'
+    + 'h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem;letter-spacing:-.02em}\n'
+    + '.breadcrumb{font-size:.8rem;color:var(--text-muted);margin-top:1rem}\n'
+    + '.breadcrumb a{color:var(--text-muted)}.breadcrumb a:hover{color:var(--accent)}\n'
+    + '.subtitle{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem}\n'
+    + '.event-card{display:block;border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem;background:var(--bg-elevated);text-decoration:none;transition:border-color .15s}\n'
+    + '.event-card:hover{border-color:var(--accent);text-decoration:none}\n'
+    + '.event-card-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}\n'
+    + '.event-card h2{font-family:var(--serif);font-size:1.25rem;color:var(--text);margin:0}\n'
+    + '.event-status{font-size:.7rem;padding:.2rem .5rem;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}\n'
+    + '.event-live{background:#3fb95020;color:#3fb950;border:1px solid #3fb95040}\n'
+    + '.event-upcoming{background:#58a6ff20;color:#58a6ff;border:1px solid #58a6ff40}\n'
+    + '.event-past{background:#8b949e20;color:#8b949e;border:1px solid #8b949e40}\n'
+    + '.event-meta{font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem}\n'
+    + '.event-desc{font-size:.9rem;color:var(--text-muted);margin:0 0 .5rem}\n'
+    + '.event-stat{font-size:.8rem;color:var(--accent)}\n'
+    + 'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n'
+    + globalNavCss() + '\n'
+    + '</style>\n</head>\n<body>\n<div class="container">\n'
+    + buildGlobalNav("home")
+    + '<div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Events</div>\n'
+    + '<h1>Developer Events &amp; Conference Coverage</h1>\n'
+    + '<p class="subtitle">Live tracking of pricing changes, new free tiers, and developer program updates from major tech conferences.</p>\n'
+    + eventCards
+    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '</div>\n</body>\n</html>';
+}
+
+function buildEventPage(slug: string): string | null {
+  const event = EVENTS.find(e => e.slug === slug);
+  if (!event) return null;
+
+  const eventOffers = offers.filter(o => event.vendorFilter(o.vendor));
+  const enrichedOffers = enrichOffers(eventOffers);
+  const vendorNames = [...new Set(eventOffers.map(o => o.vendor))];
+  const eventCategories = [...new Set(eventOffers.map(o => o.category))];
+  const allChanges = loadDealChanges();
+  const eventChanges = allChanges
+    .filter(c => event.vendorFilter(c.vendor))
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const recentChanges = eventChanges.filter(c => c.date >= "2026-04-01");
+
+  const isPast = event.endDate < new Date().toISOString().split("T")[0];
+  const isActive = event.startDate <= new Date().toISOString().split("T")[0] && !isPast;
+
+  const title = event.title;
+  const metaDesc = event.description + " " + vendorNames.length + " Google/GCP services tracked with " + eventOffers.length + " current offerings.";
+
+  const eventJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.shortTitle,
+    description: event.description,
+    startDate: event.startDate,
+    endDate: event.endDate,
+    location: {
+      "@type": "Place",
+      name: event.location,
+    },
+    url: BASE_URL + "/events/" + event.slug,
+    organizer: {
+      "@type": "Organization",
+      name: "Google",
+    },
+  };
+
+  const statusBadge = isActive
+    ? '<span class="event-status event-live">Live Now</span>'
+    : isPast
+      ? '<span class="event-status event-past">Completed</span>'
+      : '<span class="event-status event-upcoming">Upcoming</span>';
+
+  const updatesHtml = recentChanges.length > 0
+    ? '<section class="event-section">\n<h2>Recent Updates</h2>\n<p class="section-desc">Pricing changes and updates from event vendors since April 2026.</p>\n'
+      + '<div class="updates-list">'
+      + recentChanges.slice(0, 20).map(c => {
+        const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+        return '<div class="update-item">'
+          + '<div class="update-head">'
+          + '<span class="badge" style="background:' + badge.color + '">' + badge.label + '</span>'
+          + '<strong>' + escHtmlServer(c.vendor) + '</strong>'
+          + '<span class="update-date">' + c.date + '</span>'
+          + '<span class="impact impact-' + c.impact + '">' + c.impact + ' impact</span>'
+          + '</div>'
+          + '<div class="update-summary">' + escHtmlServer(c.summary) + '</div>'
+          + '</div>';
+      }).join("\n")
+      + '</div>\n</section>'
+    : '<section class="event-section">\n<h2>Updates</h2>\n<p class="section-desc">Updates will appear here as announcements are made during the event. Check back during ' + escHtmlServer(event.dates) + '.</p>\n</section>';
+
+  const categoryGroups = eventCategories.sort().map(cat => {
+    const catOffers = enrichedOffers.filter(o => o.category === cat);
+    const rows = catOffers.map(o => {
+      const vendorSlug = toSlug(o.vendor);
+      const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+      const riskLevel = o.risk_level ?? "stable";
+      const riskColor = riskColors[riskLevel] ?? "#8b949e";
+      return '<tr>'
+        + '<td><a href="/vendor/' + vendorSlug + '">' + escHtmlServer(o.vendor) + '</a></td>'
+        + '<td>' + escHtmlServer(o.tier) + '</td>'
+        + '<td>' + escHtmlServer(o.description.slice(0, 100)) + (o.description.length > 100 ? "..." : "") + '</td>'
+        + '<td><span class="risk-badge-sm" style="color:' + riskColor + '">' + riskLevel + '</span></td>'
+        + '<td>' + o.verifiedDate + '</td>'
+        + '</tr>';
+    }).join("\n");
+    return '<div class="cat-group">'
+      + '<h3><a href="/category/' + toSlug(cat) + '">' + escHtmlServer(cat) + '</a> <span class="cat-count">(' + catOffers.length + ')</span></h3>'
+      + '<table class="offers-table"><thead><tr><th>Vendor</th><th>Tier</th><th>Description</th><th>Status</th><th>Verified</th></tr></thead><tbody>'
+      + rows
+      + '</tbody></table></div>';
+  }).join("\n");
+
+  const comparisonsHtml = (() => {
+    const eventVendorSlugs = vendorNames.map(v => toSlug(v));
+    const relevantComparisons: string[] = [];
+    for (const [key] of vsPageMap.entries()) {
+      const parts = key.split("-vs-");
+      if (parts.some(p => eventVendorSlugs.includes(p))) {
+        const page = vsPageMap.get(key);
+        if (page) {
+          relevantComparisons.push('<a href="/compare/' + key + '" class="comparison-link">' + escHtmlServer(page.vendorA) + ' vs ' + escHtmlServer(page.vendorB) + '</a>');
+        }
+      }
+    }
+    if (relevantComparisons.length === 0) return "";
+    return '<section class="event-section">\n<h2>Related Comparisons</h2>\n<div class="comparison-grid">'
+      + relevantComparisons.slice(0, 12).join("\n")
+      + '</div>\n</section>';
+  })();
+
+  const announcementsHtml = event.expectedAnnouncements.length > 0
+    ? '<section class="event-section">\n<h2>What to Watch</h2>\n<ul class="watch-list">'
+      + event.expectedAnnouncements.map(a => '<li>' + escHtmlServer(a) + '</li>').join("\n")
+      + '</ul>\n</section>'
+    : "";
+
+  const watchlistHtml = '<section class="event-section">\n<h2>Watch These Vendors</h2>\n'
+    + '<p class="section-desc">Get notified when any of these vendors change their pricing. <a href="/developers#watchlist">Set up watchlist alerts via API</a>.</p>\n'
+    + '<div class="vendor-pills">'
+    + vendorNames.sort().map(v => '<a href="/vendor/' + toSlug(v) + '" class="vendor-pill">' + escHtmlServer(v) + '</a>').join("\n")
+    + '</div>\n</section>';
+
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
+    + '<meta charset="utf-8">\n'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>' + escHtmlServer(title) + '</title>\n'
+    + '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<link rel="canonical" href="' + BASE_URL + '/events/' + event.slug + '">\n'
+    + '<meta property="og:title" content="' + escHtmlServer(title) + '">\n'
+    + '<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n'
+    + '<meta property="og:url" content="' + BASE_URL + '/events/' + event.slug + '">\n'
+    + '<meta property="og:type" content="website">\n'
+    + '<script type="application/ld+json">' + JSON.stringify(eventJsonLd) + '</script>\n'
+    + buildBreadcrumbJsonLd([
+      { name: "AgentDeals", url: BASE_URL + "/" },
+      { name: "Events", url: BASE_URL + "/events" },
+      { name: event.shortTitle, url: BASE_URL + "/events/" + event.slug },
+    ])
+    + '<style>\n'
+    + ':root{--bg:#0d1117;--bg-elevated:#161b22;--text:#e6edf3;--text-muted:#8b949e;--text-dim:#484f58;--accent:#58a6ff;--accent-glow:rgba(88,166,255,.1);--border:#30363d;--serif:"Georgia",serif;--sans:system-ui,-apple-system,sans-serif;--mono:"SF Mono","Fira Code",monospace}\n'
+    + 'body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n'
+    + '.container{max-width:1000px;margin:0 auto;padding:0 1.5rem}\n'
+    + 'a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}\n'
+    + 'h1{font-family:var(--serif);font-size:2rem;margin:1.5rem 0 .5rem;letter-spacing:-.02em}\n'
+    + 'h2{font-family:var(--serif);font-size:1.4rem;margin:0 0 .75rem;color:var(--text)}\n'
+    + 'h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:.75rem 0 .5rem}\n'
+    + '.breadcrumb{font-size:.8rem;color:var(--text-muted);margin-top:1rem}\n'
+    + '.breadcrumb a{color:var(--text-muted)}.breadcrumb a:hover{color:var(--accent)}\n'
+    + '.event-header{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}\n'
+    + '.event-meta-info{color:var(--text-muted);font-size:.95rem;margin-bottom:1.5rem}\n'
+    + '.event-status{font-size:.7rem;padding:.2rem .5rem;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}\n'
+    + '.event-live{background:#3fb95020;color:#3fb950;border:1px solid #3fb95040}\n'
+    + '.event-upcoming{background:#58a6ff20;color:#58a6ff;border:1px solid #58a6ff40}\n'
+    + '.event-past{background:#8b949e20;color:#8b949e;border:1px solid #8b949e40}\n'
+    + '.event-section{margin:2rem 0;padding-top:1.5rem;border-top:1px solid var(--border)}\n'
+    + '.section-desc{color:var(--text-muted);font-size:.9rem;margin-bottom:1rem}\n'
+    + '.offers-table{width:100%;border-collapse:collapse;font-size:.85rem}\n'
+    + '.offers-table th,.offers-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)}\n'
+    + '.offers-table th{color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n'
+    + '.offers-table td a{color:var(--accent)}\n'
+    + '.risk-badge-sm{font-size:.75rem;font-weight:600}\n'
+    + '.cat-group{margin-bottom:2rem}\n'
+    + '.cat-group h3 a{color:var(--text);text-decoration:none}.cat-group h3 a:hover{color:var(--accent)}\n'
+    + '.cat-count{color:var(--text-muted);font-weight:400;font-size:.9rem}\n'
+    + '.update-item{border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;margin-bottom:.5rem;background:var(--bg-elevated)}\n'
+    + '.update-head{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.25rem}\n'
+    + '.update-date{color:var(--text-dim);font-size:.8rem}\n'
+    + '.update-summary{font-size:.85rem;color:var(--text-muted)}\n'
+    + '.badge{font-size:.65rem;padding:.15rem .4rem;border-radius:3px;color:#fff;font-weight:600;text-transform:uppercase}\n'
+    + '.impact{font-size:.7rem;padding:.1rem .3rem;border-radius:3px}\n'
+    + '.impact-high{background:#f8514920;color:#f85149}.impact-medium{background:#d2992220;color:#d29922}.impact-low{background:#3fb95020;color:#3fb950}\n'
+    + '.comparison-grid{display:flex;flex-wrap:wrap;gap:.5rem}\n'
+    + '.comparison-link{font-size:.85rem;padding:.4rem .75rem;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;transition:all .15s}\n'
+    + '.comparison-link:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}\n'
+    + '.watch-list{color:var(--text-muted);font-size:.9rem;padding-left:1.5rem}\n'
+    + '.watch-list li{margin-bottom:.25rem}\n'
+    + '.vendor-pills{display:flex;flex-wrap:wrap;gap:.4rem}\n'
+    + '.vendor-pill{font-size:.8rem;padding:.3rem .6rem;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;transition:all .15s}\n'
+    + '.vendor-pill:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}\n'
+    + '.stats-row{display:flex;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap}\n'
+    + '.stat-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;flex:1;min-width:120px}\n'
+    + '.stat-value{font-size:1.5rem;font-weight:700;color:var(--accent)}\n'
+    + '.stat-label{font-size:.8rem;color:var(--text-muted)}\n'
+    + 'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n'
+    + '@media(max-width:768px){h1{font-size:1.5rem}.offers-table{font-size:.75rem}.offers-table th,.offers-table td{padding:.4rem .5rem}.stats-row{gap:.75rem}}\n'
+    + globalNavCss() + '\n'
+    + '</style>\n</head>\n<body>\n<div class="container">\n'
+    + buildGlobalNav("home")
+    + '<div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/events">Events</a> &rsaquo; ' + escHtmlServer(event.shortTitle) + '</div>\n'
+    + '<div class="event-header"><h1>' + escHtmlServer(event.shortTitle) + '</h1>' + statusBadge + '</div>\n'
+    + '<p class="event-meta-info">' + escHtmlServer(event.dates) + ' &middot; ' + escHtmlServer(event.location) + '</p>\n'
+    + '<div class="stats-row">'
+    + '<div class="stat-box"><div class="stat-value">' + vendorNames.length + '</div><div class="stat-label">Tracked Vendors</div></div>'
+    + '<div class="stat-box"><div class="stat-value">' + eventOffers.length + '</div><div class="stat-label">Current Offerings</div></div>'
+    + '<div class="stat-box"><div class="stat-value">' + eventCategories.length + '</div><div class="stat-label">Categories</div></div>'
+    + '<div class="stat-box"><div class="stat-value">' + recentChanges.length + '</div><div class="stat-label">Recent Changes</div></div>'
+    + '</div>\n'
+    + updatesHtml + '\n'
+    + announcementsHtml + '\n'
+    + '<section class="event-section">\n<h2>Current GCP Free Tier Overview</h2>\n'
+    + '<p class="section-desc">' + eventOffers.length + ' offerings across ' + eventCategories.length + ' categories from ' + vendorNames.length + ' Google/GCP services.</p>\n'
+    + categoryGroups + '\n</section>\n'
+    + comparisonsHtml + '\n'
+    + watchlistHtml + '\n'
+    + '<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '</div>\n</body>\n</html>';
+}
+
 function buildGuidesPage(): string {
   const totalGuides = ALTERNATIVES_PAGES.length + INTEGRATION_GUIDES.length;
   const title = "Developer Tool Guides & Analysis";
@@ -53054,6 +53379,18 @@ ${catList}
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/events</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  ${EVENTS.map(e => `<url>
+    <loc>${BASE_URL}/events/${e.slug}</loc>
+    <lastmod>${editorialDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>`).join("\n  ")}
+  <url>
     <loc>${BASE_URL}/stacks</loc>
     <lastmod>${editorialDate}</lastmod>
     <changefreq>weekly</changefreq>
@@ -54795,6 +55132,24 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       recordApiHit("/api/watchlist/:id");
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ ok: true }));
+    }
+
+  } else if (url.pathname === "/events" && isGetOrHead) {
+    recordApiHit("/events");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/events", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: EVENTS.length });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildEventsIndexPage());
+  } else if (url.pathname.startsWith("/events/") && isGetOrHead) {
+    const eventSlug = url.pathname.slice("/events/".length).replace(/\/$/, "");
+    const html = buildEventPage(eventSlug);
+    if (html) {
+      recordApiHit("/events/:slug");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/events/" + eventSlug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(html);
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
     }
 
   } else {
