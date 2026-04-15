@@ -911,6 +911,9 @@ describe("HTTP transport", () => {
     assert.ok(body.includes("<updated>"));
     assert.ok(body.includes("/this-week"));
     assert.ok(body.includes("weekly-digest"));
+    const entryCount = (body.match(/<entry>/g) || []).length;
+    const entryAuthorCount = (body.match(/<entry>[\s\S]*?<author><name>AgentDeals<\/name><\/author>[\s\S]*?<\/entry>/g) || []).length;
+    assert.strictEqual(entryAuthorCount, entryCount, "Every entry should have its own <author> element");
   });
 
   it("GET /api/feed also serves Atom feed", async () => {
@@ -1503,6 +1506,9 @@ describe("HTTP transport", () => {
     assert.ok(xml.includes("<feed xmlns"), "Should be Atom feed");
     assert.ok(xml.includes("/pricing-changes#"), "Should link to pricing changes anchors");
     assert.ok(xml.includes("urn:agentdeals:pricing-changes-feed"), "Should have correct feed ID");
+    const entryCount = (xml.match(/<entry>/g) || []).length;
+    const entryAuthorCount = (xml.match(/<entry>[\s\S]*?<author><name>AgentDeals<\/name><\/author>[\s\S]*?<\/entry>/g) || []).length;
+    assert.strictEqual(entryAuthorCount, entryCount, "Every entry should have its own <author> element");
   });
 
   it("GET /badge/{vendor}.svg returns valid SVG badge", async () => {
