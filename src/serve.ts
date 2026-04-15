@@ -50461,15 +50461,33 @@ ${globalNavCss()}
 
 // --- Web search page ---
 
-function buildSearchPage(query: string, categoryFilter: string, page: number): string {
+function buildSearchPage(query: string, categoryFilter: string, typeFilter: string, sortParam: string, page: number): string {
   const PAGE_SIZE = 50;
   const hasQuery = query.length > 0;
+  const hasFilters = hasQuery || categoryFilter || typeFilter;
+
+  const eligibilityTypes: { value: string; label: string }[] = [
+    { value: "public", label: "Free Tier" },
+    { value: "oss", label: "Open Source" },
+    { value: "student", label: "Student" },
+    { value: "accelerator", label: "Startup Credits" },
+    { value: "enterprise", label: "Enterprise" },
+    { value: "fintech", label: "Fintech" },
+    { value: "geographic", label: "Geographic" },
+  ];
+
+  const sortOptions: { value: string; label: string }[] = [
+    { value: "", label: "Relevance" },
+    { value: "vendor", label: "Alphabetical" },
+    { value: "newest", label: "Recently Updated" },
+    { value: "category", label: "By Category" },
+  ];
 
   // Search results
   let results: ReturnType<typeof enrichOffers> = [];
   let totalResults = 0;
-  if (hasQuery || categoryFilter) {
-    const raw = searchOffers(query || undefined, categoryFilter || undefined);
+  if (hasFilters) {
+    const raw = searchOffers(query || undefined, categoryFilter || undefined, typeFilter || undefined, sortParam || undefined);
     totalResults = raw.length;
     const start = (page - 1) * PAGE_SIZE;
     results = enrichOffers(raw.slice(start, start + PAGE_SIZE));
@@ -50478,163 +50496,218 @@ function buildSearchPage(query: string, categoryFilter: string, page: number): s
   const totalPages = Math.ceil(totalResults / PAGE_SIZE);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
+  function buildFilterUrl(overrides: Record<string, string | undefined>): string {
+    const params = new URLSearchParams();
+    const q = overrides.q !== undefined ? overrides.q : query;
+    const cat = overrides.category !== undefined ? overrides.category : categoryFilter;
+    const typ = overrides.type !== undefined ? overrides.type : typeFilter;
+    const srt = overrides.sort !== undefined ? overrides.sort : sortParam;
+    if (q) params.set("q", q);
+    if (cat) params.set("category", cat);
+    if (typ) params.set("type", typ);
+    if (srt) params.set("sort", srt);
+    return "/search" + (params.toString() ? "?" + params.toString() : "");
+  }
+
   // Category pills
   const catPillsHtml = categories.map(c => {
     const isActive = categoryFilter.toLowerCase() === c.name.toLowerCase();
-    const params = new URLSearchParams();
-    if (query) params.set("q", query);
-    if (!isActive) params.set("category", c.name);
-    const href = `/search${params.toString() ? "?" + params.toString() : ""}`;
-    return `<a href="${escHtmlServer(href)}" class="cat-filter${isActive ? " active" : ""}">${escHtmlServer(c.name)} <span class="cat-count">${c.count}</span></a>`;
+    const href = buildFilterUrl({ category: isActive ? "" : c.name });
+    return '<a href="' + escHtmlServer(href) + '" class="cat-filter' + (isActive ? " active" : "") + '">' + escHtmlServer(c.name) + ' <span class="cat-count">' + c.count + '</span></a>';
   }).join("\n");
 
+  // Type filter pills
+  const typePillsHtml = eligibilityTypes.map(t => {
+    const isActive = typeFilter.toLowerCase() === t.value.toLowerCase();
+    const href = buildFilterUrl({ type: isActive ? "" : t.value });
+    return '<a href="' + escHtmlServer(href) + '" class="type-filter' + (isActive ? " active" : "") + '">' + escHtmlServer(t.label) + '</a>';
+  }).join("\n");
+
+  // Sort options
+  const sortOptionsHtml = sortOptions.map(s => {
+    const isActive = sortParam === s.value;
+    return '<option value="' + escHtmlServer(s.value) + '"' + (isActive ? ' selected' : '') + '>' + escHtmlServer(s.label) + '</option>';
+  }).join("");
+
+  // Group results by category for comparison CTAs
+  const catGroups = new Map<string, typeof results>();
+  for (const r of results) {
+    if (!catGroups.has(r.category)) catGroups.set(r.category, []);
+    catGroups.get(r.category)!.push(r);
+  }
+
   // Results HTML
-  const resultsHtml = results.map(r => {
+  const resultsHtml = results.map((r, idx) => {
     const risk = r.risk_level ?? "stable";
     const rc = riskColors[risk] ?? "#8b949e";
-    return `<a href="/vendor/${toSlug(r.vendor)}" class="result-card">
-        <div class="result-header">
-          <span class="result-vendor">${escHtmlServer(r.vendor)}</span>
-          <span class="risk-badge-sm" style="background:${rc}20;color:${rc};border:1px solid ${rc}40">${risk}</span>
-          <span class="result-cat">${escHtmlServer(r.category)}</span>
-        </div>
-        <div class="result-tier">${escHtmlServer(r.tier)}</div>
-        <div class="result-meta">Verified ${r.verifiedDate}${r.recent_change ? ` · <span style="color:#d29922">${escHtmlServer(r.recent_change)}</span>` : ""}${r.expires_soon ? ` · <span style="color:#f85149">${escHtmlServer(r.expires_soon)}</span>` : ""}</div>
-      </a>`;
+    let card = '<a href="/vendor/' + toSlug(r.vendor) + '" class="result-card">'
+      + '<div class="result-header">'
+      + '<span class="result-vendor">' + escHtmlServer(r.vendor) + '</span>'
+      + '<span class="risk-badge-sm" style="background:' + rc + '20;color:' + rc + ';border:1px solid ' + rc + '40">' + risk + '</span>'
+      + '<span class="result-cat">' + escHtmlServer(r.category) + '</span>'
+      + '</div>'
+      + '<div class="result-tier">' + escHtmlServer(r.tier) + '</div>'
+      + '<div class="result-desc">' + escHtmlServer((r.description ?? "").slice(0, 120)) + (r.description && r.description.length > 120 ? "..." : "") + '</div>'
+      + '<div class="result-meta">Verified ' + r.verifiedDate
+      + (r.recent_change ? ' &middot; <span style="color:#d29922">' + escHtmlServer(r.recent_change) + '</span>' : '')
+      + (r.expires_soon ? ' &middot; <span style="color:#f85149">' + escHtmlServer(r.expires_soon) + '</span>' : '')
+      + '</div></a>';
+
+    // Comparison CTA: show after last result in a category group with 2+ results
+    const group = catGroups.get(r.category)!;
+    if (group.length >= 2 && group[group.length - 1] === r) {
+      const slugA = toSlug(group[0].vendor);
+      const slugB = toSlug(group[1].vendor);
+      card += '<div class="compare-cta"><a href="/compare/' + slugA + '-vs-' + slugB + '">Compare ' + escHtmlServer(group[0].vendor) + ' vs ' + escHtmlServer(group[1].vendor) + ' &rarr;</a></div>';
+    }
+    return card;
   }).join("\n");
 
   // Empty state / suggested searches
   const suggestedSearches = ["database", "hosting", "auth", "monitoring", "CI/CD", "email", "search", "storage"];
-  const emptyStateHtml = hasQuery || categoryFilter ? `
-    <div class="empty-state">
-      <p>No results found${hasQuery ? ` for &ldquo;<strong>${escHtmlServer(query)}</strong>&rdquo;` : ""}${categoryFilter ? ` in ${escHtmlServer(categoryFilter)}` : ""}.</p>
-      <p>Try a different search or browse categories above.</p>
-      <div class="suggested">${suggestedSearches.map(s => `<a href="/search?q=${encodeURIComponent(s)}" class="suggest-pill">${escHtmlServer(s)}</a>`).join(" ")}</div>
-    </div>` : `
-    <div class="empty-state">
-      <p>Search ${offers.length.toLocaleString()} free developer tools and services.</p>
-      <p class="suggested-label">Popular searches:</p>
-      <div class="suggested">${suggestedSearches.map(s => `<a href="/search?q=${encodeURIComponent(s)}" class="suggest-pill">${escHtmlServer(s)}</a>`).join(" ")}</div>
-    </div>`;
+  let emptyStateHtml = "";
+  if (hasFilters) {
+    emptyStateHtml = '<div class="empty-state">'
+      + '<p>No results found' + (hasQuery ? ' for &ldquo;<strong>' + escHtmlServer(query) + '</strong>&rdquo;' : '') + (categoryFilter ? ' in ' + escHtmlServer(categoryFilter) : '') + (typeFilter ? ' (' + escHtmlServer(typeFilter) + ')' : '') + '.</p>'
+      + '<p>Try a different search or browse categories above.</p>'
+      + '<div class="suggested">' + suggestedSearches.map(function(s) { return '<a href="/search?q=' + encodeURIComponent(s) + '" class="suggest-pill">' + escHtmlServer(s) + '</a>'; }).join(" ") + '</div>'
+      + '</div>';
+  } else {
+    emptyStateHtml = '<div class="empty-state">'
+      + '<p>Search ' + offers.length.toLocaleString() + ' free developer tools and services.</p>'
+      + '<p class="suggested-label">Popular searches:</p>'
+      + '<div class="suggested">' + suggestedSearches.map(function(s) { return '<a href="/search?q=' + encodeURIComponent(s) + '" class="suggest-pill">' + escHtmlServer(s) + '</a>'; }).join(" ") + '</div>'
+      + '</div>';
+  }
 
   // Pagination
   const paginationHtml = totalPages > 1 ? (() => {
     const links: string[] = [];
-    const params = new URLSearchParams();
-    if (query) params.set("q", query);
-    if (categoryFilter) params.set("category", categoryFilter);
     if (page > 1) {
-      const p = new URLSearchParams(params);
-      p.set("page", String(page - 1));
-      links.push(`<a href="/search?${p.toString()}" class="page-link">&larr; Prev</a>`);
+      links.push('<a href="' + escHtmlServer(buildFilterUrl({})) + '&page=' + (page - 1) + '" class="page-link">&larr; Prev</a>');
     }
-    links.push(`<span class="page-info">Page ${page} of ${totalPages} (${totalResults} results)</span>`);
+    links.push('<span class="page-info">Page ' + page + ' of ' + totalPages + ' (' + totalResults + ' results)</span>');
     if (page < totalPages) {
-      const p = new URLSearchParams(params);
-      p.set("page", String(page + 1));
-      links.push(`<a href="/search?${p.toString()}" class="page-link">Next &rarr;</a>`);
+      links.push('<a href="' + escHtmlServer(buildFilterUrl({})) + '&page=' + (page + 1) + '" class="page-link">Next &rarr;</a>');
     }
-    return `<div class="pagination">${links.join("")}</div>`;
-  })() : totalResults > 0 ? `<div class="pagination"><span class="page-info">${totalResults} result${totalResults !== 1 ? "s" : ""}</span></div>` : "";
+    return '<div class="pagination">' + links.join("") + '</div>';
+  })() : totalResults > 0 ? '<div class="pagination"><span class="page-info">' + totalResults + ' result' + (totalResults !== 1 ? 's' : '') + '</span></div>' : "";
 
-  const titleText = hasQuery ? `&ldquo;${escHtmlServer(query)}&rdquo; — Search Free Developer Tools — AgentDeals` : "Search Free Developer Tools — AgentDeals";
+  const titleText = hasQuery ? '&ldquo;' + escHtmlServer(query) + '&rdquo; — Search Free Developer Tools — AgentDeals' : 'Search Free Developer Tools — AgentDeals';
   const metaDescText = hasQuery
-    ? `${totalResults} free developer tools matching "${query}". Compare free tiers, pricing stability, and alternatives.`
-    : `Search ${offers.length.toLocaleString()} free developer tools and services. Compare free tiers, pricing changes, and risk levels.`;
+    ? totalResults + ' free developer tools matching "' + query + '". Compare free tiers, pricing stability, and alternatives.'
+    : 'Search ' + offers.length.toLocaleString() + ' free developer tools and services. Compare free tiers, pricing changes, and risk levels.';
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SearchResultsPage",
-    name: hasQuery ? `"${query}" — Search Free Developer Tools — AgentDeals` : "Search Free Developer Tools — AgentDeals",
+    name: hasQuery ? '"' + query + '" — Search Free Developer Tools — AgentDeals' : 'Search Free Developer Tools — AgentDeals',
     description: metaDescText,
-    url: `${BASE_URL}/search${hasQuery ? "?q=" + encodeURIComponent(query) : ""}`,
+    url: BASE_URL + "/search" + (hasQuery ? "?q=" + encodeURIComponent(query) : ""),
   };
 
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${titleText}</title>
-<meta name="description" content="${escHtmlServer(metaDescText)}">
-<link rel="canonical" href="${BASE_URL}/search">
-<meta property="og:title" content="${titleText}">
-<meta property="og:description" content="${escHtmlServer(metaDescText)}">
-<meta property="og:type" content="website">
-<meta property="og:url" content="${BASE_URL}/search">
-${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
-a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
-.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
-.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
-.breadcrumb a{color:var(--text-muted)}
-h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 1.5rem;letter-spacing:-.02em}
-.search-box{margin-bottom:1.5rem}
-.search-form{display:flex;gap:.5rem}
-.search-input{flex:1;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:1rem;outline:none;transition:border-color .2s}
-.search-input:focus{border-color:var(--accent)}
-.search-input::placeholder{color:var(--text-dim)}
-.search-btn{padding:.75rem 1.5rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--sans);font-size:.95rem;transition:background .2s}
-.search-btn:hover{background:var(--accent-hover)}
-.cat-filters{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:1.5rem;max-height:120px;overflow-y:auto;padding:.25rem 0}
-.cat-filter{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .6rem;border:1px solid var(--border);border-radius:16px;font-size:.75rem;color:var(--text-muted);transition:all .2s;text-decoration:none}
-.cat-filter:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
-.cat-filter.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}
-.cat-count{font-family:var(--mono);font-size:.65rem;color:var(--text-dim)}
-.results{display:flex;flex-direction:column;gap:.5rem}
-.result-card{display:block;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s;text-decoration:none}
-.result-card:hover{border-color:var(--accent);text-decoration:none}
-.result-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
-.result-vendor{font-weight:600;color:var(--text);font-size:.95rem}
-.risk-badge-sm{display:inline-block;padding:.05rem .35rem;border-radius:8px;font-size:.6rem;font-weight:600}
-.result-cat{font-size:.7rem;color:var(--text-dim);margin-left:auto}
-.result-tier{font-family:var(--mono);font-size:.8rem;color:var(--text-muted);margin-bottom:.2rem}
-.result-meta{font-size:.75rem;color:var(--text-dim)}
-.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-muted)}
-.empty-state p{margin-bottom:.75rem}
-.suggested-label{font-size:.85rem;color:var(--text-dim);margin-bottom:.5rem}
-.suggested{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.5rem}
-.suggest-pill{display:inline-block;padding:.3rem .7rem;border:1px solid var(--border);border-radius:16px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
-.suggest-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
-.pagination{display:flex;align-items:center;justify-content:center;gap:1rem;padding:1.5rem 0;color:var(--text-dim);font-size:.85rem}
-.page-link{padding:.4rem .8rem;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);transition:all .2s}
-.page-link:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
-.page-info{font-family:var(--mono);font-size:.8rem}
-footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.search-form{flex-direction:column}.result-cat{margin-left:0}}
-${globalNavCss()}
-</style>
-</head>
-<body>
-<div class="container">
-  ${buildGlobalNav("search")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Search</div>
-  <h1>Search Free Developer Tools</h1>
-
-  <div class="search-box">
-    <form class="search-form" action="/search" method="get">
-      <input type="text" name="q" class="search-input" placeholder="Search ${offers.length.toLocaleString()} free tools..." value="${escHtmlServer(query)}" autofocus>
-      ${categoryFilter ? `<input type="hidden" name="category" value="${escHtmlServer(categoryFilter)}">` : ""}
-      <button type="submit" class="search-btn">Search</button>
-    </form>
-  </div>
-
-  <div class="cat-filters">
-${catPillsHtml}
-  </div>
-
-  ${totalResults > 0 ? `<div class="results">\n${resultsHtml}\n  </div>\n  ${paginationHtml}` : emptyStateHtml}
-
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
-</div>
-</body>
-</html>`;
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>' + titleText + '</title>\n'
+    + '<meta name="description" content="' + escHtmlServer(metaDescText) + '">\n'
+    + '<link rel="canonical" href="' + BASE_URL + '/search">\n'
+    + '<meta property="og:title" content="' + titleText + '">\n'
+    + '<meta property="og:description" content="' + escHtmlServer(metaDescText) + '">\n'
+    + '<meta property="og:type" content="website">\n'
+    + '<meta property="og:url" content="' + BASE_URL + '/search">\n'
+    + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n'
+    + '<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">\n'
+    + '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n'
+    + '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n'
+    + '<style>\n'
+    + '*{margin:0;padding:0;box-sizing:border-box}\n'
+    + ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n'
+    + 'body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\n'
+    + 'a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n'
+    + '.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n'
+    + '.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n'
+    + '.breadcrumb a{color:var(--text-muted)}\n'
+    + 'h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 1.5rem;letter-spacing:-.02em}\n'
+    + '.search-box{margin-bottom:1rem}\n'
+    + '.search-form{display:flex;gap:.5rem}\n'
+    + '.search-input{flex:1;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:1rem;outline:none;transition:border-color .2s}\n'
+    + '.search-input:focus{border-color:var(--accent)}\n'
+    + '.search-input::placeholder{color:var(--text-dim)}\n'
+    + '.search-btn{padding:.75rem 1.5rem;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--sans);font-size:.95rem;transition:background .2s}\n'
+    + '.search-btn:hover{background:var(--accent-hover)}\n'
+    + '.filters-bar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-start;margin-bottom:1.5rem}\n'
+    + '.filter-group{display:flex;flex-direction:column;gap:.3rem}\n'
+    + '.filter-label{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;font-weight:600}\n'
+    + '.type-filters{display:flex;flex-wrap:wrap;gap:.25rem}\n'
+    + '.type-filter{display:inline-block;padding:.2rem .55rem;border:1px solid var(--border);border-radius:16px;font-size:.72rem;color:var(--text-muted);transition:all .2s;text-decoration:none}\n'
+    + '.type-filter:hover{border-color:var(--accent);color:var(--text);text-decoration:none}\n'
+    + '.type-filter.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}\n'
+    + '.sort-select{padding:.35rem .5rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--sans);font-size:.8rem;outline:none;cursor:pointer}\n'
+    + '.sort-select:focus{border-color:var(--accent)}\n'
+    + '.cat-filters{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:1.5rem;max-height:120px;overflow-y:auto;padding:.25rem 0}\n'
+    + '.cat-filter{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .6rem;border:1px solid var(--border);border-radius:16px;font-size:.75rem;color:var(--text-muted);transition:all .2s;text-decoration:none}\n'
+    + '.cat-filter:hover{border-color:var(--accent);color:var(--text);text-decoration:none}\n'
+    + '.cat-filter.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}\n'
+    + '.cat-count{font-family:var(--mono);font-size:.65rem;color:var(--text-dim)}\n'
+    + '.results{display:flex;flex-direction:column;gap:.5rem}\n'
+    + '.result-card{display:block;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s;text-decoration:none}\n'
+    + '.result-card:hover{border-color:var(--accent);text-decoration:none}\n'
+    + '.result-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}\n'
+    + '.result-vendor{font-weight:600;color:var(--text);font-size:.95rem}\n'
+    + '.risk-badge-sm{display:inline-block;padding:.05rem .35rem;border-radius:8px;font-size:.6rem;font-weight:600}\n'
+    + '.result-cat{font-size:.7rem;color:var(--text-dim);margin-left:auto}\n'
+    + '.result-tier{font-family:var(--mono);font-size:.8rem;color:var(--text-muted);margin-bottom:.15rem}\n'
+    + '.result-desc{font-size:.8rem;color:var(--text-muted);margin-bottom:.2rem;line-height:1.4}\n'
+    + '.result-meta{font-size:.75rem;color:var(--text-dim)}\n'
+    + '.compare-cta{padding:.4rem 1rem;font-size:.8rem}\n'
+    + '.compare-cta a{color:var(--accent);text-decoration:none}\n'
+    + '.compare-cta a:hover{text-decoration:underline}\n'
+    + '.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-muted)}\n'
+    + '.empty-state p{margin-bottom:.75rem}\n'
+    + '.suggested-label{font-size:.85rem;color:var(--text-dim);margin-bottom:.5rem}\n'
+    + '.suggested{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.5rem}\n'
+    + '.suggest-pill{display:inline-block;padding:.3rem .7rem;border:1px solid var(--border);border-radius:16px;font-size:.8rem;color:var(--text-muted);transition:all .2s}\n'
+    + '.suggest-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}\n'
+    + '.pagination{display:flex;align-items:center;justify-content:center;gap:1rem;padding:1.5rem 0;color:var(--text-dim);font-size:.85rem}\n'
+    + '.page-link{padding:.4rem .8rem;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);transition:all .2s}\n'
+    + '.page-link:hover{border-color:var(--accent);color:var(--text);text-decoration:none}\n'
+    + '.page-info{font-family:var(--mono);font-size:.8rem}\n'
+    + '.kbd-hint{font-size:.7rem;color:var(--text-dim);margin-top:.4rem}\n'
+    + '.kbd-hint kbd{display:inline-block;padding:0 .3rem;border:1px solid var(--border);border-radius:3px;font-family:var(--mono);font-size:.65rem;background:var(--bg-elevated)}\n'
+    + 'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n'
+    + '@media(max-width:768px){h1{font-size:1.5rem}.search-form{flex-direction:column}.result-cat{margin-left:0}.filters-bar{flex-direction:column}}\n'
+    + globalNavCss() + '\n'
+    + '</style>\n</head>\n<body>\n<div class="container">\n'
+    + '  ' + buildGlobalNav("search") + '\n'
+    + '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Search</div>\n'
+    + '  <h1>Search Free Developer Tools</h1>\n'
+    + '\n'
+    + '  <div class="search-box">\n'
+    + '    <form class="search-form" action="/search" method="get" id="search-form">\n'
+    + '      <input type="text" name="q" class="search-input" id="search-input" placeholder="Search ' + offers.length.toLocaleString() + ' free tools..." value="' + escHtmlServer(query) + '" autofocus>\n'
+    + (categoryFilter ? '      <input type="hidden" name="category" value="' + escHtmlServer(categoryFilter) + '">\n' : '')
+    + (typeFilter ? '      <input type="hidden" name="type" value="' + escHtmlServer(typeFilter) + '">\n' : '')
+    + (sortParam ? '      <input type="hidden" name="sort" value="' + escHtmlServer(sortParam) + '">\n' : '')
+    + '      <button type="submit" class="search-btn">Search</button>\n'
+    + '    </form>\n'
+    + '    <p class="kbd-hint">Press <kbd>/</kbd> to focus search</p>\n'
+    + '  </div>\n'
+    + '\n'
+    + '  <div class="filters-bar">\n'
+    + '    <div class="filter-group"><span class="filter-label">Type</span><div class="type-filters">\n' + typePillsHtml + '\n    </div></div>\n'
+    + '    <div class="filter-group"><span class="filter-label">Sort</span><select class="sort-select" id="sort-select" onchange="handleSort(this.value)">\n' + sortOptionsHtml + '\n    </select></div>\n'
+    + '  </div>\n'
+    + '\n'
+    + '  <div class="cat-filters">\n' + catPillsHtml + '\n  </div>\n'
+    + '\n'
+    + '  ' + (totalResults > 0 ? '<div class="results">\n' + resultsHtml + '\n  </div>\n  ' + paginationHtml : emptyStateHtml) + '\n'
+    + '\n'
+    + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '</div>\n'
+    + '<script>\n'
+    + 'document.addEventListener("keydown",function(e){if(e.key==="/"&&document.activeElement.tagName!=="INPUT"&&document.activeElement.tagName!=="TEXTAREA"){e.preventDefault();document.getElementById("search-input").focus()}});\n'
+    + 'function handleSort(val){var url=new URL(window.location.href);if(val){url.searchParams.set("sort",val)}else{url.searchParams.delete("sort")}url.searchParams.delete("page");window.location.href=url.toString()}\n'
+    + '</script>\n'
+    + '</body>\n</html>';
 }
 
 // --- Pricing trends pages ---
@@ -53289,11 +53362,13 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
   } else if (url.pathname === "/search" && isGetOrHead) {
     const query = url.searchParams.get("q") ?? "";
     const categoryFilter = url.searchParams.get("category") ?? "";
+    const typeFilter = url.searchParams.get("type") ?? "";
+    const sortParam = url.searchParams.get("sort") ?? "";
     const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10) || 1);
     recordApiHit("/search");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/search", params: { q: query, category: categoryFilter, page: String(page) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/search", params: { q: query, category: categoryFilter, type: typeFilter, sort: sortParam, page: String(page) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" });
-    res.end(buildSearchPage(query, categoryFilter, page));
+    res.end(buildSearchPage(query, categoryFilter, typeFilter, sortParam, page));
   } else if (url.pathname === "/guides" && isGetOrHead) {
     recordApiHit("/guides");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/guides", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: ALTERNATIVES_PAGES.length + INTEGRATION_GUIDES.length });
