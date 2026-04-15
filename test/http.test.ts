@@ -4570,6 +4570,69 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Databases"), "Should include Databases category");
   });
 
+  it("GET /search has type filter pills", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/search`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("type-filter"), "Should have type filter pills");
+    assert.ok(html.includes("Free Tier"), "Should include Free Tier type");
+    assert.ok(html.includes("Open Source"), "Should include Open Source type");
+    assert.ok(html.includes("Startup Credits"), "Should include Startup Credits type");
+  });
+
+  it("GET /search has sort options", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/search`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("sort-select"), "Should have sort dropdown");
+    assert.ok(html.includes("Relevance"), "Should include Relevance sort option");
+    assert.ok(html.includes("Alphabetical"), "Should include Alphabetical sort option");
+    assert.ok(html.includes("Recently Updated"), "Should include Recently Updated sort option");
+  });
+
+  it("GET /search?q=database&sort=vendor sorts alphabetically", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/search?q=database&sort=vendor`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("result-card"), "Should have result cards");
+    assert.ok(html.includes('selected'), "Should have selected sort option");
+  });
+
+  it("GET /search has keyboard shortcut script", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/search`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes('key==="/"'), "Should have / keyboard shortcut listener");
+    assert.ok(html.includes("search-input"), "Should have search input with id");
+  });
+
+  it("GET /search?q=database shows result descriptions", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/search?q=database`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("result-desc"), "Should have result description in cards");
+  });
+
+  it("GET /search preserves type and sort in URL state", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/search?q=hosting&type=public&sort=newest`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes('value="public"'), "Should preserve type filter in hidden input");
+    assert.ok(html.includes('value="newest"'), "Should preserve sort in hidden input");
+  });
+
   // --- Global navigation ---
 
   it("landing page has global navigation with all section links", async () => {
