@@ -204,8 +204,8 @@ describe("referral-programs page", () => {
     }
   });
 
-  it("/sitemap.xml includes /referral-programs", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+  it("sitemap-pages.xml includes /referral-programs", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await res.text();
     assert.ok(xml.includes("/referral-programs"), "Sitemap should include referral-programs page");
   });

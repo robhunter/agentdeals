@@ -135,9 +135,9 @@ describe("/this-week page", () => {
     assert.ok(html.includes("/this-week"), "Canonical should reference /this-week");
   });
 
-  it("/this-week appears in sitemap.xml", async () => {
+  it("/this-week appears in sitemap-reports.xml", async () => {
     proc = await startHttpServer();
-    const res = await fetch(`http://localhost:${serverPort}/sitemap.xml`, {
+    const res = await fetch(`http://localhost:${serverPort}/sitemap-reports.xml`, {
 
 
     });

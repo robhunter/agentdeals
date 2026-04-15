@@ -1116,10 +1116,24 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("nonexistent-category"), "Should show the invalid slug");
   });
 
-  it("sitemap.xml includes category pages and comparison pages", async () => {
+  it("sitemap.xml returns sitemap index with child sitemaps", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    assert.strictEqual(response.status, 200);
+    const xml = await response.text();
+    assert.ok(xml.includes("<sitemapindex"), "Should be a sitemap index");
+    assert.ok(xml.includes("/sitemap-vendors.xml"), "Should reference vendors sitemap");
+    assert.ok(xml.includes("/sitemap-comparisons.xml"), "Should reference comparisons sitemap");
+    assert.ok(xml.includes("/sitemap-pages.xml"), "Should reference pages sitemap");
+    assert.ok(xml.includes("/sitemap-reports.xml"), "Should reference reports sitemap");
+    assert.ok(xml.includes("/sitemap-misc.xml"), "Should reference misc sitemap");
+    assert.ok(xml.includes("<lastmod>"), "Should have lastmod dates");
+  });
+
+  it("sitemap-pages.xml includes category pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     assert.strictEqual(response.status, 200);
     const xml = await response.text();
     assert.ok(xml.includes("/category/databases"), "Sitemap should include databases category");
@@ -1127,7 +1141,14 @@ describe("HTTP transport", () => {
     // Should have many category entries (54 categories)
     const categoryCount = (xml.match(/\/category\//g) || []).length;
     assert.ok(categoryCount >= 50, `Expected 50+ category URLs in sitemap, got ${categoryCount}`);
-    // Should include comparison pages
+  });
+
+  it("sitemap-comparisons.xml includes comparison pages", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-comparisons.xml`);
+    assert.strictEqual(response.status, 200);
+    const xml = await response.text();
     assert.ok(xml.includes("/compare/netlify-vs-vercel"), "Sitemap should include comparison pages");
     const compareCount = (xml.match(/\/compare\//g) || []).length;
     assert.ok(compareCount >= 200, `Expected 200+ comparison URLs in sitemap, got ${compareCount}`);
@@ -1192,10 +1213,10 @@ describe("HTTP transport", () => {
     assert.ok(count <= 500, `Expected at most 500 comparisons, got ${count}`);
   });
 
-  it("sitemap includes auto-generated comparison pages", async () => {
+  it("sitemap-comparisons.xml includes auto-generated comparison pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-comparisons.xml`);
     const xml = await response.text();
     const compareCount = (xml.match(/\/compare\//g) || []).length;
     assert.ok(compareCount >= 200, `Expected 200+ comparison URLs in sitemap, got ${compareCount}`);
@@ -1276,10 +1297,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("404"), "Should show 404");
   });
 
-  it("sitemap.xml includes digest pages", async () => {
+  it("sitemap-reports.xml includes digest pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-reports.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/digest/archive"), "Sitemap should include digest archive");
     const digestCount = (xml.match(/\/digest\//g) || []).length;
@@ -1328,10 +1349,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/vendor"), "Should link to vendor index");
   });
 
-  it("sitemap.xml includes vendor pages", async () => {
+  it("sitemap-vendors.xml includes vendor pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/vendor/vercel"), "Sitemap should include vendor pages");
     const vendorCount = (xml.match(/\/vendor\//g) || []).length;
@@ -1446,10 +1467,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/trends"), "Should link to trends index");
   });
 
-  it("sitemap.xml includes trends pages", async () => {
+  it("sitemap-misc.xml includes trends pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-misc.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/trends/cloud-hosting"), "Sitemap should include trends pages");
     const trendsCount = (xml.match(/\/trends\//g) || []).length;
@@ -1492,10 +1513,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/alternative-to"), "Should link to alternatives index");
   });
 
-  it("sitemap.xml includes alternative-to pages", async () => {
+  it("sitemap-pages.xml includes alternative-to pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/alternative-to"), "Sitemap should include alternatives index");
     assert.ok(xml.includes("/alternative-to/vercel"), "Sitemap should include vendor alternatives");
@@ -1503,10 +1524,10 @@ describe("HTTP transport", () => {
     assert.ok(altCount >= 100, `Expected 100+ alternative-to URLs in sitemap, got ${altCount}`);
   });
 
-  it("sitemap.xml has varying lastmod dates based on content", async () => {
+  it("sitemap-vendors.xml has varying lastmod dates based on content", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
     const xml = await response.text();
     // Extract all lastmod dates
     const lastmods = [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map(m => m[1]);
@@ -1713,7 +1734,7 @@ describe("HTTP transport", () => {
   it("GET /badges page is in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/badges"), "Sitemap should include /badges page");
   });
@@ -1803,7 +1824,7 @@ describe("HTTP transport", () => {
   it("GET /developers page is in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/developers"), "Sitemap should include /developers page");
   });
@@ -1837,7 +1858,7 @@ describe("HTTP transport", () => {
   it("GET /estimate page is in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/estimate"), "Sitemap should include /estimate page");
   });
@@ -1904,7 +1925,7 @@ describe("HTTP transport", () => {
   it("GET /stacks pages are in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/stacks</loc>") || xml.includes("/stacks<"), "Sitemap should include /stacks index");
     assert.ok(xml.includes("/stacks/saas-mvp"), "Sitemap should include saas-mvp template");
@@ -5001,10 +5022,10 @@ describe("best-of pages", () => {
     assert.ok(html.includes("404"), "Should show 404 message");
   });
 
-  it("sitemap.xml includes best-of pages", async () => {
+  it("sitemap-pages.xml includes best-of pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/best"), "Sitemap should include best-of index");
     assert.ok(xml.includes("/best/free-databases"), "Sitemap should include best-of detail pages");
@@ -5527,10 +5548,10 @@ describe("shutdown tracker page", () => {
     assert.ok(response.headers.get("location")?.includes("/cockroachdb-vs-mongodb"), "Should redirect to canonical URL");
   });
 
-  it("sitemap.xml includes programmatic VS pages", async () => {
+  it("sitemap-comparisons.xml includes programmatic VS pages", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-comparisons.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/cockroachdb-vs-mongodb"), "Sitemap should include VS pages");
     assert.ok(xml.includes("/auth0-vs-clerk"), "Sitemap should include VS pages");
@@ -5605,7 +5626,7 @@ describe("shutdown tracker page", () => {
   it("GET /stack-check is in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/stack-check"), "Sitemap should include /stack-check page");
   });
@@ -5663,7 +5684,7 @@ describe("shutdown tracker page", () => {
   it("GET /compare-tool is in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/compare-tool"), "Sitemap should include /compare-tool page");
   });
@@ -5766,7 +5787,7 @@ describe("shutdown tracker page", () => {
   it("GET /budget-builder is in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/budget-builder"), "Sitemap should include /budget-builder page");
   });
@@ -5804,7 +5825,7 @@ describe("shutdown tracker page", () => {
   it("GET /embed is in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/embed"), "Sitemap should include /embed page");
   });
@@ -6204,7 +6225,7 @@ describe("startup credits comparison page", () => {
   it("events pages are in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-misc.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/events"), "Sitemap should include /events");
     assert.ok(xml.includes("/events/google-cloud-next-2026"), "Sitemap should include event page");
@@ -6254,7 +6275,7 @@ describe("Monthly pricing reports", () => {
   it("reports pages are in sitemap", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-reports.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/reports"), "Sitemap should include /reports");
     assert.ok(xml.includes("/reports/2026-04"), "Sitemap should include monthly report page");
