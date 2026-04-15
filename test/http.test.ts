@@ -1615,6 +1615,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Python"), "Should have Python examples");
     assert.ok(html.includes("JavaScript"), "Should have JavaScript examples");
     assert.ok(html.includes("/api/docs"), "Should link to Swagger docs");
+    assert.ok(html.includes("/api/digest/weekly"), "Should show weekly digest endpoint in quickstart");
+    assert.ok(html.includes("Rate Limits"), "Should have rate limits section");
+    assert.ok(html.includes("no rate limits"), "Should state no rate limits");
+    assert.ok(html.includes("/feed.xml"), "Should link to RSS feed");
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
   });
 
