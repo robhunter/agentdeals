@@ -2786,6 +2786,11 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .vendor-card:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
 .vendor-name{display:block;color:var(--text);font-weight:600;font-size:.85rem}
 .vendor-tier{display:block;color:var(--text-dim);font-family:var(--mono);font-size:.7rem;margin-top:.1rem}
+.search-bar{margin-bottom:2rem;display:flex;align-items:center;gap:.75rem}
+.search-bar input{flex:1;padding:.6rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:.9rem;outline:none;transition:border-color .2s}
+.search-bar input:focus{border-color:var(--accent)}
+.search-bar input::placeholder{color:var(--text-dim)}
+.search-count{font-size:.8rem;color:var(--text-dim);white-space:nowrap}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.vendor-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}}
 ${globalNavCss()}
@@ -2797,9 +2802,38 @@ ${globalNavCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Vendors</div>
   <h1>All Vendors</h1>
   <p class="page-meta">${totalVendors} developer tools with free tiers, organized by category.</p>
+  <div class="search-bar">
+    <input type="text" id="vendor-search" placeholder="Search vendors..." autocomplete="off">
+    <span class="search-count" id="search-count"></span>
+  </div>
 ${categorySections}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
+<script>
+(function(){
+  var input = document.getElementById("vendor-search");
+  var countEl = document.getElementById("search-count");
+  var categories = document.querySelectorAll(".vendor-category");
+  input.addEventListener("input", function(){
+    var q = input.value.toLowerCase().trim();
+    var total = 0;
+    categories.forEach(function(cat){
+      var cards = cat.querySelectorAll(".vendor-card");
+      var visible = 0;
+      cards.forEach(function(card){
+        var name = card.querySelector(".vendor-name").textContent.toLowerCase();
+        var tier = card.querySelector(".vendor-tier").textContent.toLowerCase();
+        var match = !q || name.includes(q) || tier.includes(q);
+        card.style.display = match ? "" : "none";
+        if (match) visible++;
+      });
+      cat.style.display = visible > 0 ? "" : "none";
+      total += visible;
+    });
+    countEl.textContent = q ? total + " result" + (total !== 1 ? "s" : "") : "";
+  });
+})();
+</script>
 </body>
 </html>`;
 }
@@ -3121,6 +3155,21 @@ ${allCompareLinks.join("\n")}
     </div>
   </div>`;
 
+  // Watchlist CTA
+  const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "vendor": "${vendorName.replace(/'/g, "\\'")}",
+    "webhook_url": "https://your-server.com/webhook"
+  }'`;
+  const watchlistCtaHtml = `
+  <div class="section watchlist-cta-section">
+    <h2>Watch ${escHtmlServer(vendorName)} for Pricing Changes</h2>
+    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem">Get notified via webhook when ${escHtmlServer(vendorName)}'s free tier changes. We'll send a signed POST to your endpoint with the change details.</p>
+    <code>${escHtmlServer(watchlistSnippet)}</code>
+    <p style="margin-top:.75rem;font-size:.8rem"><a href="/developer-hub">Watchlist API docs &rarr;</a></p>
+  </div>`;
+
   // MCP snippet
   const mcpSnippet = `{
   "tool": "search_deals",
@@ -3284,6 +3333,7 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .guide-pill a{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:8px;font-size:.8rem;color:var(--text-muted);transition:all .2s;text-decoration:none}
 .guide-pill a:hover{border-color:var(--accent);color:var(--text);background:var(--accent-glow);text-decoration:none}
 .mcp-section code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
+.watchlist-cta-section code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
 .cat-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.25rem}
 .cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.2)}
 .faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;overflow:hidden}
@@ -3345,6 +3395,7 @@ ${growthPathHtml}
 ${alternativesHtml}
 ${comparisonsHtml}
 ${referralProgramHtml}
+${watchlistCtaHtml}
 ${internalLinksHtml}
   <div class="section mcp-section">
     <h2>Query via MCP</h2>
@@ -51714,6 +51765,18 @@ const httpServer = createHttpServer(async (req, res) => {
   // State of free tiers — redirect old year-suffixed slug to canonical
   if (url.pathname === "/state-of-free-tiers-2026" && isGetOrHead) {
     res.writeHead(301, { Location: "/state-of-free-tiers" });
+    res.end();
+    return;
+  }
+
+  // Plural /vendors → singular /vendor redirect
+  if (url.pathname === "/vendors" && isGetOrHead) {
+    res.writeHead(301, { Location: "/vendor" });
+    res.end();
+    return;
+  }
+  if (url.pathname.startsWith("/vendors/") && isGetOrHead) {
+    res.writeHead(301, { Location: "/vendor/" + url.pathname.slice("/vendors/".length) });
     res.end();
     return;
   }

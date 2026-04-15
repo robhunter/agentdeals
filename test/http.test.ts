@@ -1273,6 +1273,43 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('href="/vendor/'), "Category page should link vendors to profile pages");
   });
 
+  it("GET /vendor/:slug includes watchlist CTA", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
+    const html = await response.text();
+    assert.ok(html.includes("Watch Vercel for Pricing Changes"), "Should show watchlist CTA heading");
+    assert.ok(html.includes("/api/watchlist"), "Should show watchlist API example");
+    assert.ok(html.includes("webhook"), "Should mention webhook");
+    assert.ok(html.includes("developer-hub"), "Should link to developer hub docs");
+  });
+
+  it("GET /vendor index page has search input", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor`);
+    const html = await response.text();
+    assert.ok(html.includes('id="vendor-search"'), "Should have search input");
+    assert.ok(html.includes("Search vendors"), "Should have search placeholder");
+    assert.ok(html.includes('id="search-count"'), "Should have search result count element");
+  });
+
+  it("GET /vendors redirects to /vendor", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendors`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/vendor");
+  });
+
+  it("GET /vendors/:slug redirects to /vendor/:slug", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendors/vercel`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/vendor/vercel");
+  });
+
   it("GET /trends returns trends index page", async () => {
     proc = await startHttpServer();
 
