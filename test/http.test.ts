@@ -897,7 +897,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.headers.get("location"), "/api/docs");
   });
 
-  it("GET /feed.xml returns valid Atom XML", async () => {
+  it("GET /feed.xml returns valid Atom XML with weekly digest entries", async () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${serverPort}/feed.xml`);
@@ -909,8 +909,8 @@ describe("HTTP transport", () => {
     assert.ok(body.includes("<title>AgentDeals"));
     assert.ok(body.includes("<entry>"));
     assert.ok(body.includes("<updated>"));
-    assert.ok(body.includes("/vendor/"));
-    assert.ok(body.includes("<category"));
+    assert.ok(body.includes("/this-week"));
+    assert.ok(body.includes("weekly-digest"));
   });
 
   it("GET /api/feed also serves Atom feed", async () => {
