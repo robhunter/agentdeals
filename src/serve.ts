@@ -48335,6 +48335,7 @@ function buildPricingChangesFeed(): string {
   <link href="${BASE_URL}/pricing-changes/feed.xml" rel="self" type="application/atom+xml"/>
   <id>urn:agentdeals:pricing-changes-feed</id>
   <updated>${updatedTs}</updated>
+  <author><name>AgentDeals</name></author>
 ${entries}
 </feed>`;
 }
@@ -52397,7 +52398,9 @@ const httpServer = createHttpServer(async (req, res) => {
       const digest = getFormattedWeeklyDigest(w, 50);
       if (digest.top_changes.length === 0) continue;
       const weekUrl = w === 0 ? `${baseUrl}/this-week` : `${baseUrl}/this-week?week=${w}`;
-      const pubDate = new Date(digest.week_ending + "T12:00:00Z").toISOString();
+      const weekEndDate = new Date(digest.week_ending + "T12:00:00Z");
+      const now = new Date();
+      const pubDate = (weekEndDate > now ? new Date(digest.week_of + "T12:00:00Z") : weekEndDate).toISOString();
       const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       const ws = new Date(digest.week_of + "T00:00:00Z");
       const we = new Date(digest.week_ending + "T00:00:00Z");
@@ -52420,6 +52423,7 @@ const httpServer = createHttpServer(async (req, res) => {
   <link href="${baseUrl}/feed.xml" rel="self" type="application/atom+xml"/>
   <id>urn:agentdeals:weekly-digest</id>
   <updated>${updatedTs}</updated>
+  <author><name>AgentDeals</name></author>
 ${weekEntries.join("\n")}
 </feed>`;
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: feedPath, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: weekEntries.length });
