@@ -6074,4 +6074,58 @@ describe("startup credits comparison page", () => {
       assert.strictEqual(program.category, "cloud-infrastructure", `${program.vendor} should be categorized as cloud-infrastructure`);
     }
   });
+
+  // --- Events pages ---
+
+  it("GET /events renders events index page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/events`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Events"), "Should reference Events");
+    assert.ok(html.includes("Google Cloud Next 2026"), "Should list Google Cloud Next event");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes("CollectionPage"), "Should have CollectionPage schema");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+    assert.ok(html.includes("BreadcrumbList"), "Should have breadcrumb JSON-LD");
+  });
+
+  it("GET /events/google-cloud-next-2026 renders event page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/events/google-cloud-next-2026`);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.headers.get("content-type")?.includes("text/html"));
+    const html = await response.text();
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("Google Cloud Next 2026"), "Should have event title");
+    assert.ok(html.includes("April 22"), "Should show event dates");
+    assert.ok(html.includes("Las Vegas"), "Should show event location");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"Event"'), "Should have Event schema");
+    assert.ok(html.includes("BreadcrumbList"), "Should have breadcrumb JSON-LD");
+    assert.ok(html.includes("Firebase") || html.includes("Google"), "Should list Google/GCP vendors");
+    assert.ok(html.includes("offers-table"), "Should have offers table");
+    assert.ok(html.includes("Tracked Vendors"), "Should have stats row");
+    assert.ok(html.includes("canonical"), "Should have canonical link");
+  });
+
+  it("GET /events/nonexistent returns 404", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/events/nonexistent`);
+    assert.strictEqual(response.status, 404);
+  });
+
+  it("events pages are in sitemap", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    assert.ok(xml.includes("/events"), "Sitemap should include /events");
+    assert.ok(xml.includes("/events/google-cloud-next-2026"), "Sitemap should include event page");
+  });
 });
