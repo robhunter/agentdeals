@@ -569,7 +569,7 @@ function generateShieldBadge(leftText: string, rightText: string, color: string,
     + '\n</svg>';
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "changes" | "deadlines" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "this-week" | "changes" | "deadlines" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
 
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -594,6 +594,7 @@ function buildGlobalNav(active: NavSection): string {
     { href: "/compare", label: "Compare", section: "compare" },
     { href: "/compare-tool", label: "Compare Tool", section: "compare-tool" },
     { href: "/digest", label: "Digest", section: "digest" },
+    { href: "/this-week", label: "This Week", section: "this-week" },
     { href: "/pricing-changes", label: "Changes", section: "changes" },
     { href: "/deadlines", label: "Deadlines", section: "deadlines" },
     { href: "/state-of-free-tiers", label: "Report", section: "report" },
@@ -2534,6 +2535,159 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
     <a href="/feed.xml">Subscribe via RSS &rarr;</a>
   </div>
 
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+</div>
+</body>
+</html>`;
+}
+
+function buildThisWeekPage(weeksAgo: number): string {
+  const digest = getFormattedWeeklyDigest(weeksAgo, 50);
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const ws = new Date(digest.week_of + "T00:00:00Z");
+  const we = new Date(digest.week_ending + "T00:00:00Z");
+  const dateRange = `${months[ws.getUTCMonth()]} ${ws.getUTCDate()}\u2013${we.getUTCDate()}, ${ws.getUTCFullYear()}`;
+
+  const title = weeksAgo === 0
+    ? `This Week in Developer Pricing \u2014 ${dateRange} \u2014 AgentDeals`
+    : `Developer Pricing: ${dateRange} \u2014 AgentDeals`;
+  const metaDesc = digest.headline;
+  const canonicalPath = weeksAgo === 0 ? "/this-week" : `/this-week?week=${weeksAgo}`;
+
+  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
+  const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+
+  const losses = digest.top_changes.filter(c => negativeTypes.has(c.change_type));
+  const brightSpots = digest.top_changes.filter(c => positiveTypes.has(c.change_type));
+  const other = digest.top_changes.filter(c => !negativeTypes.has(c.change_type) && !positiveTypes.has(c.change_type));
+
+  function renderSection(heading: string, items: typeof digest.top_changes, sectionColor: string): string {
+    if (items.length === 0) return "";
+    const rows = items.map(c => {
+      const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+      return `<div class="tw-change" style="border-left-color:${sectionColor}">
+        <div class="change-header">
+          <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
+          <a href="/vendor/${toSlug(c.vendor)}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
+          <span class="change-cat">${escHtmlServer(c.category)}</span>
+        </div>
+        <div class="change-summary">${escHtmlServer(c.summary)}</div>
+      </div>`;
+    }).join("\n      ");
+    return `<section class="tw-section">
+      <h2><span class="tw-dot" style="background:${sectionColor}"></span> ${heading} (${items.length})</h2>
+      ${rows}
+    </section>`;
+  }
+
+  const contentHtml = digest.top_changes.length > 0
+    ? [
+        renderSection("Biggest Losses", losses, "#f85149"),
+        renderSection("Bright Spots", brightSpots, "#3fb950"),
+        renderSection("Other Notable Changes", other, "#d29922"),
+      ].filter(Boolean).join("\n")
+    : `<div class="empty-msg"><p>No pricing changes tracked this week.</p><p style="margin-top:.5rem"><a href="/this-week?week=${weeksAgo + 1}">View previous week</a> or <a href="/feed.xml">subscribe via RSS</a>.</p></div>`;
+
+  const { summary: s } = digest;
+  const summaryPills: string[] = [];
+  if (s.free_tiers_removed > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#f85149"><strong>${s.free_tiers_removed}</strong> free tier${s.free_tiers_removed !== 1 ? "s" : ""} removed</span>`);
+  if (s.new_free_tiers > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#3fb950"><strong>${s.new_free_tiers}</strong> new free tier${s.new_free_tiers !== 1 ? "s" : ""}</span>`);
+  if (s.limits_reduced > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#d29922"><strong>${s.limits_reduced}</strong> limit${s.limits_reduced !== 1 ? "s" : ""} reduced</span>`);
+  if (s.limits_increased > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#3fb950"><strong>${s.limits_increased}</strong> limit${s.limits_increased !== 1 ? "s" : ""} increased</span>`);
+  if (s.products_deprecated > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#f85149"><strong>${s.products_deprecated}</strong> deprecated</span>`);
+  if (s.pricing_restructured > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#bc8cff"><strong>${s.pricing_restructured}</strong> restructured</span>`);
+  const summaryBar = summaryPills.length > 0 ? `<div class="tw-summary-bar">${summaryPills.join("")}</div>` : "";
+
+  const navHtml = `<div class="tw-nav">
+    <a href="/this-week?week=${weeksAgo + 1}">&larr; Previous week</a>
+    <a href="/digest/archive">Full archive</a>
+    ${weeksAgo > 0 ? `<a href="/this-week${weeksAgo > 1 ? `?week=${weeksAgo - 1}` : ""}">${weeksAgo === 1 ? "Current week" : "Next week"} &rarr;</a>` : "<span></span>"}
+  </div>`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `This Week in Developer Pricing: ${dateRange}`,
+    description: digest.headline,
+    url: `${BASE_URL}${canonicalPath}`,
+    datePublished: digest.week_of,
+    dateModified: new Date().toISOString().split("T")[0],
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}${canonicalPath}` },
+  };
+
+  const thisWeekCss = `*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+h1{font-family:var(--serif);font-size:2.2rem;color:var(--text);margin:1.5rem 0 .5rem;letter-spacing:-.02em;line-height:1.2}
+.tw-date{color:var(--accent);font-size:1rem;font-weight:500;margin-bottom:.25rem;display:block}
+.tw-headline{font-size:1.05rem;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.5;border-left:3px solid var(--accent);padding-left:1rem}
+.tw-summary-bar{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}
+.tw-pill{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted)}
+.tw-pill strong{color:var(--text);font-family:var(--mono)}
+.tw-section{margin-bottom:2rem}
+.tw-section h2{font-family:var(--serif);font-size:1.15rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
+.tw-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.tw-change{margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid var(--border);background:var(--bg-card);border-radius:0 8px 8px 0}
+.change-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
+.change-badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
+.change-vendor{font-weight:600;font-size:.9rem;color:var(--text)}
+.change-vendor:hover{color:var(--accent)}
+.change-cat{font-size:.7rem;color:var(--text-dim);font-family:var(--mono)}
+.change-summary{font-size:.85rem;color:var(--text-muted)}
+.tw-nav{display:flex;justify-content:space-between;padding:1.5rem 0;border-top:1px solid var(--border);margin-top:1rem}
+.tw-share{margin:2rem 0;padding:1.25rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);text-align:center}
+.tw-share p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.tw-share-links{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.tw-share-links a{font-size:.85rem;padding:.35rem .75rem;border:1px solid var(--border);border-radius:8px;color:var(--text-muted)}
+.tw-share-links a:hover{color:var(--text);border-color:var(--accent);text-decoration:none}
+.empty-msg{text-align:center;padding:3rem;color:var(--text-dim)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}.tw-summary-bar{flex-direction:column}}
+${globalNavCss()}`;
+
+  const shareUrl = encodeURIComponent(`${BASE_URL}${canonicalPath}`);
+  const shareText = encodeURIComponent(`This Week in Developer Pricing: ${digest.headline}`);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}${canonicalPath}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}${canonicalPath}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>${thisWeekCss}</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("this-week")}
+  <span class="tw-date">${escHtmlServer(dateRange)}</span>
+  <h1>This Week in Developer Pricing</h1>
+  <p class="tw-headline">${escHtmlServer(digest.headline)}</p>
+${summaryBar}
+${contentHtml}
+
+  <div class="tw-share">
+    <p>Share this digest</p>
+    <div class="tw-share-links">
+      <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener">Twitter</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://news.ycombinator.com/submitlink?u=${shareUrl}&t=${shareText}" target="_blank" rel="noopener">Hacker News</a>
+      <a href="/feed.xml">RSS Feed</a>
+    </div>
+  </div>
+${navHtml}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
@@ -52645,6 +52799,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
   </url>`;
     }).join("\n")}
   <url>
+    <loc>${BASE_URL}/this-week</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/digest/archive</loc>
     <lastmod>${latestVerified}</lastmod>
     <changefreq>weekly</changefreq>
@@ -52792,6 +52952,12 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparison not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Comparison not found.</p><p style="margin-top:1rem"><a href="/compare">Browse all comparisons</a></p></div></body></html>`);
     }
+  } else if (url.pathname === "/this-week" && isGetOrHead) {
+    const weeksAgo = Math.max(0, parseInt(url.searchParams.get("week") ?? "0", 10) || 0);
+    recordApiHit("/this-week");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/this-week", params: { week: String(weeksAgo) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildThisWeekPage(weeksAgo));
   } else if (url.pathname === "/digest" && isGetOrHead) {
     // Redirect to current week's digest
     const currentWeek = getCurrentWeekKey();
