@@ -7047,6 +7047,7 @@ interface EventDef {
   vendorFilter: (vendor: string) => boolean;
   description: string;
   expectedAnnouncements: string[];
+  organizer: string;
   confirmedAnnouncements?: { title: string; detail: string }[];
   preEventNote?: string;
 }
@@ -7065,6 +7066,7 @@ const EVENTS: EventDef[] = [
       return lower.includes("google") || lower.includes("firebase") || lower.includes("gcp");
     },
     description: "Track all Google Cloud pricing changes, new free tiers, and developer program updates announced at Google Cloud Next 2026.",
+    organizer: "Google",
     expectedAnnouncements: [
       "Cloud Run cold start improvements and pricing",
       "BigQuery slot pricing updates",
@@ -7083,6 +7085,54 @@ const EVENTS: EventDef[] = [
       { title: "Enhanced tool governance", detail: "New guardrails and governance controls in Vertex AI Agent Builder." },
     ],
     preEventNote: "This page will be updated with final announcements after the event (April 22\u201324, 2026). Information below reflects confirmed and leaked pre-event announcements as of April 15, 2026.",
+  },
+  {
+    slug: "microsoft-build-2026",
+    title: "Microsoft Build 2026 — Developer Pricing Updates & Free Tier Changes",
+    shortTitle: "Microsoft Build 2026",
+    dates: "May 19\u201321, 2026",
+    location: "Seattle",
+    startDate: "2026-05-19",
+    endDate: "2026-05-21",
+    vendorFilter: (v: string) => {
+      const lower = v.toLowerCase();
+      return lower.includes("microsoft") || lower.includes("azure") || lower.includes("github") || lower.includes("copilot") || lower.includes("vs code");
+    },
+    description: "Track all Microsoft and Azure pricing changes, GitHub updates, and Copilot ecosystem announcements at Microsoft Build 2026.",
+    organizer: "Microsoft",
+    expectedAnnouncements: [
+      "Azure AI free tier and pricing changes",
+      "GitHub Copilot pricing and new features",
+      "Azure Functions and App Service pricing updates",
+      "GitHub Codespaces free tier changes",
+      "VS Code and dev tools ecosystem updates",
+      "Microsoft Founders Hub program updates",
+    ],
+    preEventNote: "Dates expected but not yet officially confirmed. This page will be updated as announcements are made. Check back closer to the event.",
+  },
+  {
+    slug: "google-io-2026",
+    title: "Google I/O 2026 — Developer Pricing Updates & Free Tier Changes",
+    shortTitle: "Google I/O 2026",
+    dates: "May 2026 (exact dates TBD)",
+    location: "Mountain View",
+    startDate: "2026-05-01",
+    endDate: "2026-05-31",
+    vendorFilter: (v: string) => {
+      const lower = v.toLowerCase();
+      return lower.includes("google") || lower.includes("firebase") || lower.includes("flutter") || lower.includes("android") || lower.includes("gemini");
+    },
+    description: "Track Firebase free tier changes, Google AI Studio pricing, Flutter/Dart tooling updates, and Android developer program announcements at Google I/O 2026.",
+    organizer: "Google",
+    expectedAnnouncements: [
+      "Firebase free tier and pricing restructuring",
+      "Google AI Studio pricing and model availability",
+      "Gemini consumer API free tier changes",
+      "Flutter and Dart tooling updates",
+      "Android development tool pricing",
+      "Google Play developer program changes",
+    ],
+    preEventNote: "Exact dates not yet announced. This page will be updated as details emerge. Check back for confirmed dates and announcements.",
   },
 ];
 
@@ -7190,7 +7240,7 @@ function buildEventPage(slug: string): string | null {
   const isActive = event.startDate <= today && !isPast;
 
   const title = event.title;
-  const metaDesc = event.description + " " + vendorNames.length + " Google/GCP services tracked with " + eventOffers.length + " current offerings.";
+  const metaDesc = event.description + " " + vendorNames.length + " services tracked with " + eventOffers.length + " current offerings.";
   const eventJsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -7205,7 +7255,7 @@ function buildEventPage(slug: string): string | null {
     url: BASE_URL + "/events/" + event.slug,
     organizer: {
       "@type": "Organization",
-      name: "Google",
+      name: event.organizer,
     },
     dateModified: today,
   };
@@ -7387,8 +7437,8 @@ function buildEventPage(slug: string): string | null {
     + updatesHtml + '\n'
     + confirmedHtml + '\n'
     + announcementsHtml + '\n'
-    + '<section class="event-section">\n<h2>Current GCP Free Tier Overview</h2>\n'
-    + '<p class="section-desc">' + eventOffers.length + ' offerings across ' + eventCategories.length + ' categories from ' + vendorNames.length + ' Google/GCP services.</p>\n'
+    + '<section class="event-section">\n<h2>Current Free Tier Overview</h2>\n'
+    + '<p class="section-desc">' + eventOffers.length + ' offerings across ' + eventCategories.length + ' categories from ' + vendorNames.length + ' tracked services.</p>\n'
     + categoryGroups + '\n</section>\n'
     + comparisonsHtml + '\n'
     + watchlistHtml + '\n'

@@ -6226,6 +6226,35 @@ describe("startup credits comparison page", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
   });
 
+  it("GET /events/microsoft-build-2026 renders event page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/events/microsoft-build-2026`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Microsoft Build 2026"), "Should have event title");
+    assert.ok(html.includes("May 19"), "Should show event dates");
+    assert.ok(html.includes("Seattle"), "Should show event location");
+    assert.ok(html.includes('"Event"'), "Should have Event schema");
+    assert.ok(html.includes("BreadcrumbList"), "Should have breadcrumb JSON-LD");
+    assert.ok(html.includes("Microsoft") || html.includes("GitHub"), "Should list Microsoft/GitHub vendors");
+    assert.ok(html.includes("offers-table"), "Should have offers table");
+  });
+
+  it("GET /events/google-io-2026 renders event page", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/events/google-io-2026`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Google I/O 2026"), "Should have event title");
+    assert.ok(html.includes("Mountain View"), "Should show event location");
+    assert.ok(html.includes('"Event"'), "Should have Event schema");
+    assert.ok(html.includes("BreadcrumbList"), "Should have breadcrumb JSON-LD");
+    assert.ok(html.includes("Firebase") || html.includes("Google"), "Should list Google/Firebase vendors");
+    assert.ok(html.includes("offers-table"), "Should have offers table");
+  });
+
   it("GET /events/nonexistent returns 404", async () => {
     proc = await startHttpServer();
 
@@ -6239,7 +6268,9 @@ describe("startup credits comparison page", () => {
     const response = await fetch(`http://localhost:${serverPort}/sitemap-misc.xml`);
     const xml = await response.text();
     assert.ok(xml.includes("/events"), "Sitemap should include /events");
-    assert.ok(xml.includes("/events/google-cloud-next-2026"), "Sitemap should include event page");
+    assert.ok(xml.includes("/events/google-cloud-next-2026"), "Sitemap should include GCP Next event page");
+    assert.ok(xml.includes("/events/microsoft-build-2026"), "Sitemap should include Build event page");
+    assert.ok(xml.includes("/events/google-io-2026"), "Sitemap should include I/O event page");
   });
 });
 
