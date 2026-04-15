@@ -7047,6 +7047,8 @@ interface EventDef {
   vendorFilter: (vendor: string) => boolean;
   description: string;
   expectedAnnouncements: string[];
+  confirmedAnnouncements?: { title: string; detail: string }[];
+  preEventNote?: string;
 }
 
 const EVENTS: EventDef[] = [
@@ -7064,13 +7066,23 @@ const EVENTS: EventDef[] = [
     },
     description: "Track all Google Cloud pricing changes, new free tiers, and developer program updates announced at Google Cloud Next 2026.",
     expectedAnnouncements: [
-      "Vertex AI pricing and new model tiers",
-      "Gemini API free tier changes",
       "Cloud Run cold start improvements and pricing",
       "BigQuery slot pricing updates",
       "Firebase extensions and new free tier limits",
       "GKE Autopilot pricing changes",
     ],
+    confirmedAnnouncements: [
+      { title: "Gemini 3.1 Pro (Preview)", detail: "1M token context, 2x reasoning improvement. $2/$12 per MTok (\u2264200K context, doubles above)." },
+      { title: "Gemini 3.1 Flash-Lite (Preview)", detail: "Cost-efficient, low-latency model tier for high-throughput workloads." },
+      { title: "Gemini 3.1 Flash Image", detail: "Dedicated image generation model with improved pricing and lower latency." },
+      { title: "GLM 5 (Experimental)", detail: "New model for complex systems engineering and agentic tasks." },
+      { title: "Gemini Embedding 2", detail: "First natively multimodal embedding model \u2014 text, images, video, audio, and docs in a single embedding space." },
+      { title: "Vector Search 2.0", detail: "Now GA on Vertex AI. Enhanced vector similarity search for AI/RAG applications." },
+      { title: "Vertex AI Agent Engine", detail: "Sessions and memory now GA in Vertex AI Agent Builder." },
+      { title: "NVIDIA Vera Rubin NVL72", detail: "GCP integration coming H2 2026 for next-gen GPU workloads." },
+      { title: "Enhanced tool governance", detail: "New guardrails and governance controls in Vertex AI Agent Builder." },
+    ],
+    preEventNote: "This page will be updated with final announcements after the event (April 22\u201324, 2026). Information below reflects confirmed and leaked pre-event announcements as of April 15, 2026.",
   },
 ];
 
@@ -7173,12 +7185,12 @@ function buildEventPage(slug: string): string | null {
 
   const recentChanges = eventChanges.filter(c => c.date >= "2026-04-01");
 
-  const isPast = event.endDate < new Date().toISOString().split("T")[0];
-  const isActive = event.startDate <= new Date().toISOString().split("T")[0] && !isPast;
+  const today = new Date().toISOString().split("T")[0];
+  const isPast = event.endDate < today;
+  const isActive = event.startDate <= today && !isPast;
 
   const title = event.title;
   const metaDesc = event.description + " " + vendorNames.length + " Google/GCP services tracked with " + eventOffers.length + " current offerings.";
-
   const eventJsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -7195,6 +7207,7 @@ function buildEventPage(slug: string): string | null {
       "@type": "Organization",
       name: "Google",
     },
+    dateModified: today,
   };
 
   const statusBadge = isActive
@@ -7261,8 +7274,25 @@ function buildEventPage(slug: string): string | null {
       + '</div>\n</section>';
   })();
 
+  const preEventNoteHtml = event.preEventNote
+    ? '<div class="pre-event-note">' + escHtmlServer(event.preEventNote) + '</div>'
+    : "";
+
+  const confirmedHtml = event.confirmedAnnouncements && event.confirmedAnnouncements.length > 0
+    ? '<section class="event-section">\n<h2>Confirmed &amp; Leaked Announcements</h2>\n'
+      + '<p class="section-desc">' + event.confirmedAnnouncements.length + ' announcements confirmed or leaked ahead of the event.</p>\n'
+      + '<div class="confirmed-list">'
+      + event.confirmedAnnouncements.map(a =>
+        '<div class="confirmed-item">'
+        + '<strong>' + escHtmlServer(a.title) + '</strong>'
+        + '<p>' + escHtmlServer(a.detail) + '</p>'
+        + '</div>'
+      ).join("\n")
+      + '</div>\n</section>'
+    : "";
+
   const announcementsHtml = event.expectedAnnouncements.length > 0
-    ? '<section class="event-section">\n<h2>What to Watch</h2>\n<ul class="watch-list">'
+    ? '<section class="event-section">\n<h2>Still to Watch</h2>\n<ul class="watch-list">'
       + event.expectedAnnouncements.map(a => '<li>' + escHtmlServer(a) + '</li>').join("\n")
       + '</ul>\n</section>'
     : "";
@@ -7334,6 +7364,11 @@ function buildEventPage(slug: string): string | null {
     + '.stat-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;flex:1;min-width:120px}\n'
     + '.stat-value{font-size:1.5rem;font-weight:700;color:var(--accent)}\n'
     + '.stat-label{font-size:.8rem;color:var(--text-muted)}\n'
+    + '.pre-event-note{background:#58a6ff10;border:1px solid #58a6ff30;border-radius:8px;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--text-muted)}\n'
+    + '.confirmed-list{display:grid;gap:.5rem}\n'
+    + '.confirmed-item{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:.75rem 1rem;background:var(--bg-elevated)}\n'
+    + '.confirmed-item strong{color:var(--text);font-size:.95rem}\n'
+    + '.confirmed-item p{color:var(--text-muted);font-size:.85rem;margin:.25rem 0 0}\n'
     + 'footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\n'
     + '@media(max-width:768px){h1{font-size:1.5rem}.offers-table{font-size:.75rem}.offers-table th,.offers-table td{padding:.4rem .5rem}.stats-row{gap:.75rem}}\n'
     + globalNavCss() + '\n'
@@ -7342,6 +7377,7 @@ function buildEventPage(slug: string): string | null {
     + '<div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/events">Events</a> &rsaquo; ' + escHtmlServer(event.shortTitle) + '</div>\n'
     + '<div class="event-header"><h1>' + escHtmlServer(event.shortTitle) + '</h1>' + statusBadge + '</div>\n'
     + '<p class="event-meta-info">' + escHtmlServer(event.dates) + ' &middot; ' + escHtmlServer(event.location) + '</p>\n'
+    + preEventNoteHtml + '\n'
     + '<div class="stats-row">'
     + '<div class="stat-box"><div class="stat-value">' + vendorNames.length + '</div><div class="stat-label">Tracked Vendors</div></div>'
     + '<div class="stat-box"><div class="stat-value">' + eventOffers.length + '</div><div class="stat-label">Current Offerings</div></div>'
@@ -7349,6 +7385,7 @@ function buildEventPage(slug: string): string | null {
     + '<div class="stat-box"><div class="stat-value">' + recentChanges.length + '</div><div class="stat-label">Recent Changes</div></div>'
     + '</div>\n'
     + updatesHtml + '\n'
+    + confirmedHtml + '\n'
     + announcementsHtml + '\n'
     + '<section class="event-section">\n<h2>Current GCP Free Tier Overview</h2>\n'
     + '<p class="section-desc">' + eventOffers.length + ' offerings across ' + eventCategories.length + ' categories from ' + vendorNames.length + ' Google/GCP services.</p>\n'
