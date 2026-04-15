@@ -313,9 +313,13 @@ describe("HTTP transport", () => {
     const body = await response.json() as any;
     assert.strictEqual(body.version, "1.0");
     assert.strictEqual(body.serverInfo.name, "agentdeals");
+    assert.ok(body.serverInfo.version, "serverInfo.version should be present");
+    assert.strictEqual(body.serverInfo.homepage, "https://agentdeals.dev");
+    assert.ok(body.serverInfo.description, "serverInfo.description should be present");
     assert.strictEqual(body.transport.type, "streamable-http");
     assert.ok(body.transport.endpoint.endsWith("/mcp"));
     assert.strictEqual(body.authentication.required, false);
+    assert.ok(body.description, "top-level description should be present");
     assert.ok(Array.isArray(body.tools));
     assert.strictEqual(body.tools.length, 4);
     assert.ok(Array.isArray(body.prompts));
