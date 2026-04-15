@@ -3373,6 +3373,37 @@ ${allCompareLinks.join("\n")}
     </div>
   </div>`;
 
+  // Related alternatives pages (editorial /X-alternatives pages featuring this vendor)
+  const vendorAltPages = altPagesByVendor.get(vendorName.toLowerCase()) ?? [];
+  const altPagesHtml = vendorAltPages.length > 0 ? `
+  <div class="section">
+    <h2>Alternatives Guides Featuring ${escHtmlServer(vendorName)}</h2>
+    <div class="guide-links">
+      ${vendorAltPages.map(p => `<span class="guide-pill"><a href="/${p.slug}">${escHtmlServer(p.title.replace(/ \|.*$/, "").replace(/ —.*$/, ""))}</a></span>`).join("\n      ")}
+    </div>
+  </div>` : "";
+
+  // Monthly report appearances
+  const reportMonths = getAvailableReportMonths();
+  const vendorReportMonths = reportMonths.filter(m => {
+    return dealChanges.some((c: any) => c.vendor.toLowerCase() === vendorName.toLowerCase() && c.date.startsWith(m));
+  });
+  const reportAppearancesHtml = vendorReportMonths.length > 0 ? `
+  <div class="section">
+    <h2>Featured in Monthly Reports</h2>
+    <div class="guide-links">
+      ${vendorReportMonths.map(m => {
+        const [y, mo] = m.split("-");
+        const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"][parseInt(mo, 10) - 1];
+        return `<span class="guide-pill"><a href="/reports/${m}">${monthName} ${y} Report</a></span>`;
+      }).join("\n      ")}
+    </div>
+  </div>` : "";
+
+  // Last updated timestamp
+  const lastPricingChange = vendorChanges.length > 0 ? vendorChanges[0].date : null;
+  const lastUpdated = lastPricingChange && lastPricingChange > primary.verifiedDate ? lastPricingChange : primary.verifiedDate;
+
   // Watchlist CTA
   const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
   -H "Content-Type: application/json" \\
@@ -3397,13 +3428,20 @@ ${allCompareLinks.join("\n")}
   }
 }`;
 
-  // JSON-LD structured data
-  const jsonLd = {
+  // JSON-LD structured data (enriched with pricing history)
+  const pricingEvents = vendorChanges.slice(0, 10).map(c => ({
+    "@type": "Event",
+    name: `${vendorName} pricing change: ${c.change_type.replace(/_/g, " ")}`,
+    startDate: c.date,
+    description: c.summary,
+  }));
+  const jsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: title,
     description: metaDesc,
     url: `${BASE_URL}/vendor/${slug}`,
+    dateModified: lastUpdated,
     mainEntity: {
       "@type": "SoftwareApplication",
       name: vendorName,
@@ -3415,9 +3453,13 @@ ${allCompareLinks.join("\n")}
         price: "0",
         priceCurrency: "USD",
         description: primary.tier,
+        priceValidUntil: lastPricingChange ?? primary.verifiedDate,
       },
     },
   };
+  if (pricingEvents.length > 0) {
+    jsonLd.about = pricingEvents;
+  }
 
   // FAQ data for vendor pages — expanded to 6-8 questions
   const faqFreeAnswer = `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${primary.description.slice(0, 200)}${primary.description.length > 200 ? "..." : ""}`;
@@ -3572,7 +3614,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear} <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></h1>
-  <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives. Verified ${verifiedMonth}.</p>
+  <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives. Verified ${verifiedMonth}. Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}
 ${categoryContextHtml}
 ${changeNoticeHtml}
@@ -3613,6 +3655,8 @@ ${growthPathHtml}
   </div>
 ${alternativesHtml}
 ${comparisonsHtml}
+${altPagesHtml}
+${reportAppearancesHtml}
 ${referralProgramHtml}
 ${watchlistCtaHtml}
 ${internalLinksHtml}
@@ -6059,9 +6103,20 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
 const editorialByVendor = new Map<string, AlternativesPageConfig>();
+const altPagesByVendor = new Map<string, AlternativesPageConfig[]>();
 for (const page of ALTERNATIVES_PAGES) {
   alternativesPageMap.set(page.slug, page);
   editorialByVendor.set(page.primaryVendor.toLowerCase(), page);
+  const key = page.primaryVendor.toLowerCase();
+  if (!altPagesByVendor.has(key)) altPagesByVendor.set(key, []);
+  altPagesByVendor.get(key)!.push(page);
+  for (const o of offers) {
+    if (o.tags?.includes(page.tag)) {
+      const vk = o.vendor.toLowerCase();
+      if (!altPagesByVendor.has(vk)) altPagesByVendor.set(vk, []);
+      if (!altPagesByVendor.get(vk)!.includes(page)) altPagesByVendor.get(vk)!.push(page);
+    }
+  }
 }
 
 // Populate VS page maps now that alternativesPageMap is available
