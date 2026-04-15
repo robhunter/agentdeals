@@ -572,6 +572,20 @@ function generateShieldBadge(leftText: string, rightText: string, color: string,
 
 type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "this-week" | "changes" | "deadlines" | "report" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
 
+function buildBreadcrumbJsonLd(items: { name: string; url: string }[]): string {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+  return '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>';
+}
+
 function globalNavCss(): string {
   return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .global-nav::-webkit-scrollbar{display:none}
@@ -1242,6 +1256,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Best Of", url: BASE_URL + "/best" }, { name: categoryName, url: BASE_URL + "/best/" + slug }])}
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -1766,6 +1781,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Compare", url: BASE_URL + "/compare" }, { name: a.vendor + " vs " + b.vendor, url: BASE_URL + "/compare/" + slug }])}
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -3402,6 +3418,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
+${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: primary.category, url: BASE_URL + "/category/" + toSlug(primary.category) }, { name: vendorName, url: BASE_URL + "/vendor/" + slug }])}
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -3755,6 +3772,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(altFaqJsonLd)}</script>
+${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Alternatives", url: BASE_URL + "/alternatives" }, { name: vendorName + " Alternatives", url: BASE_URL + "/alternative-to/" + slug }])}
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -50618,6 +50636,7 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     + '<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">\n'
     + '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n'
     + '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n'
+    + buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Search", url: BASE_URL + "/search" }]) + '\n'
     + '<style>\n'
     + '*{margin:0;padding:0;box-sizing:border-box}\n'
     + ':root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\n'

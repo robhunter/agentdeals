@@ -4633,6 +4633,36 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('value="newest"'), "Should preserve sort in hidden input");
   });
 
+  // --- BreadcrumbList structured data ---
+
+  it("vendor page has BreadcrumbList JSON-LD", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/supabase`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("BreadcrumbList"), "Vendor page should have BreadcrumbList JSON-LD");
+    assert.ok(html.includes('"position":1'), "Should have position 1 (Home)");
+  });
+
+  it("best-of page has BreadcrumbList JSON-LD", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/best/free-databases`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("BreadcrumbList"), "Best-of page should have BreadcrumbList JSON-LD");
+  });
+
+  it("search page has BreadcrumbList JSON-LD", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/search`);
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("BreadcrumbList"), "Search page should have BreadcrumbList JSON-LD");
+  });
+
   // --- Global navigation ---
 
   it("landing page has global navigation with all section links", async () => {
