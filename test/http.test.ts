@@ -1488,6 +1488,45 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Recently Changed"), "Should have recently changed section");
   });
 
+  // --- Global navigation structure ---
+
+  it("global nav uses grouped dropdowns instead of flat links", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/`);
+    const html = await response.text();
+    assert.ok(html.includes("global-nav"), "Should have global nav");
+    assert.ok(html.includes("nav-hamburger"), "Should have hamburger menu button");
+    assert.ok(html.includes("nav-items"), "Should have nav items container");
+    assert.ok(html.includes("nav-group"), "Should have nav groups");
+    assert.ok(html.includes("nav-group-toggle"), "Should have group toggle buttons");
+    assert.ok(html.includes("nav-dropdown"), "Should have dropdown menus");
+    assert.ok(html.includes("aria-expanded"), "Should have ARIA attributes");
+    assert.ok(html.includes("aria-haspopup"), "Should have haspopup attribute");
+    const groups = (html.match(/class="nav-group-toggle/g) || []).length;
+    assert.ok(groups >= 4 && groups <= 6, "Should have 4-6 nav groups, got " + groups);
+  });
+
+  it("global nav has correct groupings", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/`);
+    const html = await response.text();
+    assert.ok(html.includes(">Browse</button>"), "Should have Browse group");
+    assert.ok(html.includes(">Tools</button>"), "Should have Tools group");
+    assert.ok(html.includes(">Insights</button>"), "Should have Insights group");
+    assert.ok(html.includes(">Developers</button>"), "Should have Developers group");
+    assert.ok(html.includes('href="/search"'), "Should have Search as standalone link");
+  });
+
+  it("global nav active state highlights correct group", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/expiring`);
+    const html = await response.text();
+    assert.ok(html.includes("has-active"), "Insights group should have has-active class when on /expiring");
+  });
+
   // --- Changes page ---
 
   it("GET /changes renders deal change timeline page", async () => {
@@ -4696,7 +4735,7 @@ describe("HTTP transport", () => {
 
     const response = await fetch(`http://localhost:${serverPort}/search`);
     const html = await response.text();
-    assert.ok(html.includes('class="nav-link active">Search'), "Search should be active");
+    assert.ok(html.includes('active">Search'), "Search should be active");
   });
 
   it("global nav appears on all page types", async () => {

@@ -587,48 +587,122 @@ function buildBreadcrumbJsonLd(items: { name: string; url: string }[]): string {
 }
 
 function globalNavCss(): string {
-  return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.global-nav::-webkit-scrollbar{display:none}
+  return `.global-nav{display:flex;align-items:center;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:0}
 .global-nav-home{font-family:var(--serif);font-size:1rem;color:var(--text);font-weight:700;margin-right:.5rem;text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
 .global-nav-home:hover{color:var(--accent);text-decoration:none}
-.nav-link{font-size:.8rem;color:var(--text-muted);padding:.3rem .6rem;border-radius:6px;text-decoration:none;transition:all .15s;flex-shrink:0}
+.nav-link{font-size:.8rem;color:var(--text-muted);padding:.3rem .6rem;border-radius:6px;text-decoration:none;transition:all .15s;flex-shrink:0;display:inline-block}
 .nav-link:hover{color:var(--text);background:var(--accent-glow);text-decoration:none}
 .nav-link.active{color:var(--accent);background:var(--accent-glow);font-weight:600}
-@media(max-width:768px){.global-nav{gap:.15rem;padding:.6rem 0}.nav-link{font-size:.75rem;padding:.25rem .45rem}}`;
+.nav-group{position:relative;flex-shrink:0}
+.nav-group-toggle{font-size:.8rem;color:var(--text-muted);padding:.3rem .6rem;border-radius:6px;text-decoration:none;transition:all .15s;cursor:pointer;background:none;border:none;font-family:inherit;display:inline-flex;align-items:center;gap:.2rem}
+.nav-group-toggle:hover,.nav-group-toggle[aria-expanded="true"]{color:var(--text);background:var(--accent-glow)}
+.nav-group-toggle.has-active{color:var(--accent);font-weight:600}
+.nav-group-toggle::after{content:"";border:solid currentColor;border-width:0 1.5px 1.5px 0;display:inline-block;padding:2px;transform:rotate(45deg);margin-top:-2px;transition:transform .15s}
+.nav-group-toggle[aria-expanded="true"]::after{transform:rotate(-135deg);margin-top:2px}
+.nav-dropdown{display:none;position:absolute;top:100%;left:0;min-width:10rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:.35rem 0;box-shadow:0 4px 12px rgba(0,0,0,.1);z-index:100;white-space:nowrap}
+.nav-group:hover .nav-dropdown,.nav-group.open .nav-dropdown{display:block}
+.nav-dropdown .nav-link{display:block;padding:.35rem .75rem;border-radius:0;font-size:.8rem}
+.nav-dropdown .nav-link:hover{background:var(--accent-glow)}
+.nav-hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;padding:.3rem;margin-left:auto;line-height:1}
+.nav-items{display:flex;align-items:center;gap:.25rem}
+@media(max-width:768px){.nav-hamburger{display:block}.nav-items{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-elevated);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:.5rem;flex-direction:column;align-items:stretch;gap:0;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.1)}.nav-items.open{display:flex}.global-nav{flex-wrap:wrap;position:relative}.nav-group{width:100%}.nav-group-toggle{width:100%;justify-content:space-between;padding:.5rem .75rem}.nav-dropdown{position:static;box-shadow:none;border:none;padding:0 0 0 1rem;background:transparent;min-width:auto}.nav-group:hover .nav-dropdown{display:none}.nav-group.open .nav-dropdown{display:block}.nav-link{padding:.4rem .75rem}.nav-link.standalone{padding:.5rem .75rem}}`;
 }
 
 function buildGlobalNav(active: NavSection): string {
-  const links: { href: string; label: string; section: NavSection }[] = [
-    { href: "/search", label: "Search", section: "search" },
-    { href: "/category", label: "Categories", section: "categories" },
-    { href: "/best", label: "Best Of", section: "best" },
-    { href: "/agent-stack", label: "Agent Stacks", section: "agent-stack" },
-    { href: "/trends", label: "Trends", section: "trends" },
-    { href: "/alternatives", label: "Alternatives", section: "alternatives" },
-    { href: "/guides", label: "Guides", section: "guides" },
-    { href: "/compare", label: "Compare", section: "compare" },
-    { href: "/compare-tool", label: "Compare Tool", section: "compare-tool" },
-    { href: "/digest", label: "Digest", section: "digest" },
-    { href: "/this-week", label: "This Week", section: "this-week" },
-    { href: "/pricing-changes", label: "Changes", section: "changes" },
-    { href: "/deadlines", label: "Deadlines", section: "deadlines" },
-    { href: "/state-of-free-tiers", label: "Report", section: "report" },
-    { href: "/expiring", label: "Expiring", section: "expiring" },
-    { href: "/freshness", label: "Freshness", section: "freshness" },
-    { href: "/stacks", label: "Stacks", section: "stacks" },
-    { href: "/estimate", label: "Estimate", section: "estimate" },
-    { href: "/stack-check", label: "Health Check", section: "stack-check" },
-    { href: "/budget-builder", label: "Budget Builder", section: "budget-builder" },
-    { href: "/badges", label: "Badges", section: "badges" },
-    { href: "/embed", label: "Embed", section: "embed" },
-    { href: "/marketplace", label: "Marketplace", section: "marketplace" },
-    { href: "/developers", label: "API", section: "developers" },
-    { href: "/setup", label: "Setup", section: "setup" },
+  type NavLink = { href: string; label: string; section: NavSection };
+  type NavGroup = { label: string; items: NavLink[] };
+
+  const groups: NavGroup[] = [
+    { label: "Browse", items: [
+      { href: "/category", label: "Categories", section: "categories" },
+      { href: "/best", label: "Best Of", section: "best" },
+      { href: "/alternatives", label: "Alternatives", section: "alternatives" },
+      { href: "/compare", label: "Compare", section: "compare" },
+      { href: "/guides", label: "Guides", section: "guides" },
+      { href: "/agent-stack", label: "Agent Stacks", section: "agent-stack" },
+      { href: "/stacks", label: "Stacks", section: "stacks" },
+    ]},
+    { label: "Tools", items: [
+      { href: "/estimate", label: "Estimate", section: "estimate" },
+      { href: "/budget-builder", label: "Budget Builder", section: "budget-builder" },
+      { href: "/stack-check", label: "Health Check", section: "stack-check" },
+      { href: "/compare-tool", label: "Compare Tool", section: "compare-tool" },
+    ]},
+    { label: "Insights", items: [
+      { href: "/trends", label: "Trends", section: "trends" },
+      { href: "/pricing-changes", label: "Changes", section: "changes" },
+      { href: "/this-week", label: "This Week", section: "this-week" },
+      { href: "/digest", label: "Digest", section: "digest" },
+      { href: "/deadlines", label: "Deadlines", section: "deadlines" },
+      { href: "/expiring", label: "Expiring", section: "expiring" },
+      { href: "/state-of-free-tiers", label: "Report", section: "report" },
+      { href: "/freshness", label: "Freshness", section: "freshness" },
+    ]},
+    { label: "Developers", items: [
+      { href: "/developers", label: "API", section: "developers" },
+      { href: "/marketplace", label: "Marketplace", section: "marketplace" },
+      { href: "/badges", label: "Badges", section: "badges" },
+      { href: "/embed", label: "Embed", section: "embed" },
+      { href: "/setup", label: "Setup", section: "setup" },
+    ]},
   ];
-  const navLinks = links.map(l =>
-    `<a href="${l.href}" class="nav-link${l.section === active ? " active" : ""}">${l.label}</a>`
-  ).join("");
-  return `<nav class="global-nav"><a href="/" class="global-nav-home">AgentDeals</a>${navLinks}</nav>`;
+
+  const searchLink = '<a href="/search" class="nav-link standalone'
+    + (active === "search" ? " active" : "") + '">Search</a>';
+
+  const groupsHtml = groups.map(g => {
+    const hasActive = g.items.some(i => i.section === active);
+    const dropdownItems = g.items.map(i =>
+      '<a href="' + i.href + '" class="nav-link' + (i.section === active ? " active" : "") + '">' + i.label + '</a>'
+    ).join("");
+    return '<div class="nav-group">'
+      + '<button class="nav-group-toggle' + (hasActive ? " has-active" : "") + '" aria-expanded="false" aria-haspopup="true">' + g.label + '</button>'
+      + '<div class="nav-dropdown" role="menu">' + dropdownItems + '</div>'
+      + '</div>';
+  }).join("");
+
+  return '<nav class="global-nav">'
+    + '<a href="/" class="global-nav-home">AgentDeals</a>'
+    + '<button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>'
+    + '<div class="nav-items">' + searchLink + groupsHtml + '</div>'
+    + '</nav>'
+    + '<script>' + globalNavJs() + '</script>';
+}
+
+function globalNavJs(): string {
+  return `(function(){
+var hamburger=document.querySelector('.nav-hamburger');
+var items=document.querySelector('.nav-items');
+if(hamburger){hamburger.addEventListener('click',function(){
+var open=items.classList.toggle('open');
+hamburger.setAttribute('aria-expanded',open);
+hamburger.innerHTML=open?'\\u2715':'\\u2630';
+})}
+document.querySelectorAll('.nav-group-toggle').forEach(function(btn){
+btn.addEventListener('click',function(e){
+e.stopPropagation();
+var group=btn.closest('.nav-group');
+var wasOpen=group.classList.contains('open');
+document.querySelectorAll('.nav-group').forEach(function(g){g.classList.remove('open');g.querySelector('.nav-group-toggle').setAttribute('aria-expanded','false')});
+if(!wasOpen){group.classList.add('open');btn.setAttribute('aria-expanded','true')}
+});
+});
+document.addEventListener('click',function(){
+document.querySelectorAll('.nav-group').forEach(function(g){g.classList.remove('open');g.querySelector('.nav-group-toggle').setAttribute('aria-expanded','false')});
+});
+document.addEventListener('keydown',function(e){
+if(e.key==='Escape'){
+document.querySelectorAll('.nav-group').forEach(function(g){g.classList.remove('open');g.querySelector('.nav-group-toggle').setAttribute('aria-expanded','false')});
+if(items&&items.classList.contains('open')){items.classList.remove('open');hamburger.setAttribute('aria-expanded','false');hamburger.innerHTML='\\u2630'}
+}
+var openDd=document.querySelector('.nav-group.open .nav-dropdown');
+if(!openDd)return;
+var links=Array.from(openDd.querySelectorAll('.nav-link'));
+var idx=links.indexOf(document.activeElement);
+if(e.key==='ArrowDown'){e.preventDefault();links[Math.min(idx+1,links.length-1)].focus()}
+if(e.key==='ArrowUp'){e.preventDefault();links[Math.max(idx-1,0)].focus()}
+});
+})();`;
 }
 
 // --- Shared MCP install CTA banner ---
