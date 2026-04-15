@@ -347,6 +347,36 @@ describe("HTTP transport", () => {
     assert.strictEqual(body.tools.length, 4);
   });
 
+  it("serves /.well-known/mcp manifest per SEP-1960", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/.well-known/mcp`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "application/json");
+    assert.strictEqual(response.headers.get("cache-control"), "public, max-age=3600");
+    assert.strictEqual(response.headers.get("access-control-allow-origin"), "*");
+    const body = await response.json() as any;
+    assert.strictEqual(body.schema_version, "2025-01-01");
+    assert.strictEqual(body.name, "agentdeals");
+    assert.ok(body.version, "version should be present");
+    assert.ok(body.description, "description should be present");
+    assert.ok(Array.isArray(body.transport));
+    assert.strictEqual(body.transport[0].type, "streamable-http");
+    assert.ok(body.transport[0].url.endsWith("/mcp"));
+    assert.ok(Array.isArray(body.tools));
+    assert.strictEqual(body.tools.length, 4);
+    const toolNames = body.tools.map((t: any) => t.name);
+    assert.ok(toolNames.includes("search_deals"));
+    assert.ok(toolNames.includes("plan_stack"));
+    for (const tool of body.tools) {
+      assert.ok(tool.input_schema, `${tool.name} should have input_schema`);
+    }
+    assert.ok(Array.isArray(body.prompts));
+    assert.strictEqual(body.authentication.type, "none");
+    assert.ok(body.metadata.homepage, "metadata.homepage should be present");
+    assert.ok(body.metadata.documentation, "metadata.documentation should be present");
+  });
+
   it("serves /setup page with client configs and HowTo schema", async () => {
     proc = await startHttpServer();
 
