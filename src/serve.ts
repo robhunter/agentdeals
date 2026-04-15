@@ -17,6 +17,7 @@ import { validateX402Address, executeTransfer, generateCorrelationId } from "./x
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
+import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import type { Agent } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -47587,6 +47588,10 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/pageviews", desc: "Page view analytics", params: "path, period" },
     { method: "GET", path: "/api/stats", desc: "Service statistics", params: "" },
     { method: "GET", path: "/api/feed", desc: "Atom feed of pricing changes", params: "" },
+    { method: "POST", path: "/api/watchlist", desc: "Subscribe to vendor pricing changes via webhook", params: "vendor, webhook_url (body)" },
+    { method: "GET", path: "/api/watchlist", desc: "List active watchlist subscriptions", params: "webhook_url" },
+    { method: "GET", path: "/api/watchlist/:id", desc: "Get subscription status", params: "" },
+    { method: "DELETE", path: "/api/watchlist/:id", desc: "Unsubscribe from vendor watch", params: "" },
   ];
 
   const endpointRows = endpointTable.map(function(e) {
@@ -54370,6 +54375,68 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       recordApiHit("/api/referral-health");
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=300" });
       res.end(JSON.stringify(report));
+    }
+
+  } else if (url.pathname === "/api/watchlist" && req.method === "POST") {
+    let body = "";
+    for await (const chunk of req) { body += chunk; }
+    let parsed: any;
+    try { parsed = JSON.parse(body); } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+    if (!parsed.vendor || typeof parsed.vendor !== "string" || !parsed.webhook_url || typeof parsed.webhook_url !== "string") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "vendor and webhook_url are required strings" }));
+      return;
+    }
+    try {
+      new URL(parsed.webhook_url);
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "webhook_url must be a valid URL" }));
+      return;
+    }
+    try {
+      const sub = watchlistSubscribe(parsed.vendor, parsed.webhook_url);
+      recordApiHit("/api/watchlist");
+      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ id: sub.id, vendor: sub.vendor, webhook_url: sub.webhook_url, secret: sub.secret, created_at: sub.created_at }));
+    } catch (err: any) {
+      res.writeHead(409, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+
+  } else if (url.pathname === "/api/watchlist" && isGetOrHead) {
+    const webhookUrl = url.searchParams.get("webhook_url") ?? undefined;
+    const subs = listWatchlistSubscriptions(webhookUrl);
+    recordApiHit("/api/watchlist");
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ subscriptions: subs.map(s => ({ id: s.id, vendor: s.vendor, webhook_url: s.webhook_url, created_at: s.created_at })), total: subs.length }));
+
+  } else if (url.pathname.startsWith("/api/watchlist/") && isGetOrHead) {
+    const id = url.pathname.slice("/api/watchlist/".length);
+    const sub = getWatchlistSubscription(id);
+    if (!sub) {
+      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Subscription not found" }));
+    } else {
+      recordApiHit("/api/watchlist/:id");
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ id: sub.id, vendor: sub.vendor, webhook_url: sub.webhook_url, created_at: sub.created_at, last_notified_change: sub.last_notified_change ?? null }));
+    }
+
+  } else if (url.pathname.startsWith("/api/watchlist/") && req.method === "DELETE") {
+    const id = url.pathname.slice("/api/watchlist/".length);
+    const removed = watchlistUnsubscribe(id);
+    if (!removed) {
+      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Subscription not found" }));
+    } else {
+      recordApiHit("/api/watchlist/:id");
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ ok: true }));
     }
 
   } else {
