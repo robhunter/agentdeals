@@ -5223,6 +5223,27 @@ describe("IndexNow integration", () => {
     }
   });
 
+  it("GET /api/indexnow/status returns enabled status when key is set", async () => {
+    const response = await fetch(`http://localhost:${indexNowPort}/api/indexnow/status`);
+    assert.strictEqual(response.status, 200);
+    const data = await response.json() as any;
+    assert.strictEqual(data.enabled, true);
+    assert.ok("lastSubmission" in data, "Should include lastSubmission field");
+  });
+
+  it("GET /api/indexnow/status returns disabled when key is not set", async () => {
+    let proc: ChildProcess | null = null;
+    try {
+      proc = await startHttpServer();
+      const response = await fetch(`http://localhost:${serverPort}/api/indexnow/status`);
+      assert.strictEqual(response.status, 200);
+      const data = await response.json() as any;
+      assert.strictEqual(data.enabled, false);
+    } finally {
+      if (proc) proc.kill();
+    }
+  });
+
 });
 
 describe("shutdown tracker page", () => {

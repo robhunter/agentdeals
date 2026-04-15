@@ -30,6 +30,8 @@ const BASE_URL = (process.env.BASE_URL ?? "https://agentdeals.dev").replace(/\/+
 
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? "";
 
+let indexNowLastSubmission: { ts: string; urlCount: number; status: number } | null = null;
+
 const GOOGLE_VERIFICATION_META = process.env.GOOGLE_SITE_VERIFICATION
   ? `<meta name="google-site-verification" content="${process.env.GOOGLE_SITE_VERIFICATION}">\n` : "";
 
@@ -55373,6 +55375,15 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       offset,
     }));
 
+  } else if (url.pathname === "/api/indexnow/status" && isGetOrHead) {
+    recordApiHit("/api/indexnow/status");
+    const status = {
+      enabled: !!INDEXNOW_KEY,
+      lastSubmission: indexNowLastSubmission,
+    };
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=60" });
+    res.end(JSON.stringify(status));
+
   } else if (url.pathname === "/api/referral-health" && isGetOrHead) {
     const report = getLastReport();
     if (!report) {
@@ -55541,6 +55552,16 @@ async function pingSearchEngines(): Promise<void> {
   for (const s of comparisonMap.keys()) {
     urlList.push(`${BASE_URL}/compare/${s}`);
   }
+  // Add report pages
+  urlList.push(`${BASE_URL}/reports`);
+  for (const m of getAvailableReportMonths()) {
+    urlList.push(`${BASE_URL}/reports/${m}`);
+  }
+  // Add event pages
+  urlList.push(`${BASE_URL}/events`);
+  for (const e of EVENTS) {
+    urlList.push(`${BASE_URL}/events/${e.slug}`);
+  }
   // Add vendor pages (top by recent changes first, then alphabetical — cap at ~2000 to stay well under 10k limit)
   const changedVendorSlugs = new Set(dealChanges.map((dc: any) => toSlug(dc.vendor)));
   const vendorSlugs = Array.from(vendorSlugMap.keys());
@@ -55585,6 +55606,7 @@ async function pingSearchEngines(): Promise<void> {
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(15000),
     });
+    indexNowLastSubmission = { ts: new Date().toISOString(), urlCount: urlList.length, status: resp.status };
     console.error(`IndexNow: submitted ${urlList.length} URLs, status ${resp.status}`);
   } catch (err: any) {
     console.error(`IndexNow: failed — ${err.message}`);
