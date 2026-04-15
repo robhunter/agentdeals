@@ -16,6 +16,7 @@ import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalanc
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
+import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import type { Agent } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -54049,6 +54050,110 @@ ${Array.from(vendorSlugMap.keys()).map(s => {
       res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: err.message }));
     }
+
+  // --- POST /api/friends: Add a friend ---
+  } else if (url.pathname === "/api/friends" && req.method === "POST") {
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    let body = "";
+    for await (const chunk of req) {
+      body += chunk;
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(body);
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+
+    if (!parsed.agent_id || typeof parsed.agent_id !== "string") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "agent_id is required and must be a string" }));
+      return;
+    }
+
+    try {
+      const friendship = addFriend(agent.id, parsed.agent_id);
+      recordApiHit("/api/friends");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "POST /api/friends", params: { friend_id: parsed.agent_id }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(friendship));
+    } catch (err: any) {
+      const status = err.message.includes("not found") || err.message.includes("inactive") ? 404 : 400;
+      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+
+  // --- DELETE /api/friends/:agent_id: Remove a friend ---
+  } else if (url.pathname.match(/^\/api\/friends\/[^/]+$/) && req.method === "DELETE") {
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    const friendId = decodeURIComponent(url.pathname.split("/").pop()!);
+    try {
+      removeFriend(agent.id, friendId);
+      recordApiHit("/api/friends/:agent_id");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "DELETE /api/friends/" + friendId, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ removed: true }));
+    } catch (err: any) {
+      const status = err.message.includes("not found") ? 404 : 400;
+      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+
+  // --- GET /api/friends: List my friends ---
+  } else if (url.pathname === "/api/friends" && isGetOrHead) {
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    const friendships = getFriends(agent.id);
+    const friends = friendships.map(f => {
+      const friendAgent = getAgentById(f.friend_id);
+      return {
+        agent_id: f.friend_id,
+        name: friendAgent?.name ?? "Unknown",
+        trust_tier: friendAgent?.trust_tier ?? "new",
+        status: friendAgent?.status ?? "unknown",
+        added_at: f.created_at,
+      };
+    });
+
+    recordApiHit("/api/friends");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "GET /api/friends", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: friends.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ friends }));
+
+  // --- GET /api/friends/codes: List vendors where friends have codes ---
+  } else if (url.pathname === "/api/friends/codes" && isGetOrHead) {
+    const agent = await authenticateRequest(req as any);
+    if (!agent) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
+      return;
+    }
+
+    const vendorCodes = getFriendCodesForVendors(agent.id);
+
+    recordApiHit("/api/friends/codes");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "GET /api/friends/codes", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: vendorCodes.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ vendors: vendorCodes }));
 
   // --- GET /api/leaderboard: Agent leaderboard ---
   } else if (url.pathname === "/api/leaderboard" && isGetOrHead) {
