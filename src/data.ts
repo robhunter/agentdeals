@@ -1020,6 +1020,169 @@ export function getWeeklyDigest(): {
   };
 }
 
+const IMPACT_SCORE: Record<string, number> = {
+  free_tier_removed: 100,
+  open_source_killed: 90,
+  new_free_tier: 80,
+  product_deprecated: 70,
+  limits_reduced: 60,
+  pricing_restructured: 50,
+  limits_increased: 40,
+  restriction: 35,
+  pricing_model_change: 30,
+  startup_program_expanded: 25,
+  new_tier: 20,
+  pricing_postponed: 10,
+};
+
+function scoreChange(c: DealChange): number {
+  const typeScore = IMPACT_SCORE[c.change_type] ?? 10;
+  const impactMultiplier = c.impact === "high" ? 3 : c.impact === "medium" ? 2 : 1;
+  return typeScore * impactMultiplier;
+}
+
+export interface FormattedWeeklyDigest {
+  week_of: string;
+  week_ending: string;
+  total_changes: number;
+  summary: {
+    free_tiers_removed: number;
+    new_free_tiers: number;
+    limits_reduced: number;
+    limits_increased: number;
+    products_deprecated: number;
+    pricing_restructured: number;
+  };
+  headline: string;
+  top_changes: DealChange[];
+  digest_markdown: string;
+  digest_html: string;
+}
+
+export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 20): FormattedWeeklyDigest {
+  const allChanges = loadDealChanges();
+  const now = new Date();
+  const targetDate = new Date(now.getTime() - weeksAgo * 7 * 86400000);
+
+  const dayOfWeek = targetDate.getUTCDay();
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const weekStart = new Date(Date.UTC(targetDate.getUTCFullYear(), targetDate.getUTCMonth(), targetDate.getUTCDate() + mondayOffset));
+  const weekEnd = new Date(weekStart.getTime() + 6 * 86400000);
+
+  const fmt = (d: Date) => d.toISOString().slice(0, 10);
+  const weekStartStr = fmt(weekStart);
+  const weekEndStr = fmt(weekEnd);
+
+  const weekChanges = allChanges.filter(c => c.date >= weekStartStr && c.date <= weekEndStr);
+  const sorted = [...weekChanges].sort((a, b) => scoreChange(b) - scoreChange(a));
+  const topChanges = sorted.slice(0, limit);
+
+  const summary = {
+    free_tiers_removed: weekChanges.filter(c => c.change_type === "free_tier_removed").length,
+    new_free_tiers: weekChanges.filter(c => c.change_type === "new_free_tier").length,
+    limits_reduced: weekChanges.filter(c => c.change_type === "limits_reduced").length,
+    limits_increased: weekChanges.filter(c => c.change_type === "limits_increased").length,
+    products_deprecated: weekChanges.filter(c => c.change_type === "product_deprecated").length,
+    pricing_restructured: weekChanges.filter(c => c.change_type === "pricing_restructured").length,
+  };
+
+  const headlineParts: string[] = [];
+  if (summary.free_tiers_removed > 0) headlineParts.push(`${summary.free_tiers_removed} free tier${summary.free_tiers_removed !== 1 ? "s" : ""} removed`);
+  if (summary.new_free_tiers > 0) headlineParts.push(`${summary.new_free_tiers} new one${summary.new_free_tiers !== 1 ? "s" : ""} added`);
+  if (summary.products_deprecated > 0) headlineParts.push(`${summary.products_deprecated} product${summary.products_deprecated !== 1 ? "s" : ""} deprecated`);
+  if (summary.limits_reduced > 0) headlineParts.push(`${summary.limits_reduced} limit${summary.limits_reduced !== 1 ? "s" : ""} reduced`);
+  if (summary.limits_increased > 0) headlineParts.push(`${summary.limits_increased} limit${summary.limits_increased !== 1 ? "s" : ""} increased`);
+  if (summary.pricing_restructured > 0) headlineParts.push(`${summary.pricing_restructured} pricing restructure${summary.pricing_restructured !== 1 ? "s" : ""}`);
+  const headline = headlineParts.length > 0
+    ? `${headlineParts.join(", ")} across ${weekChanges.length} developer tool pricing changes`
+    : `${weekChanges.length} developer tool pricing change${weekChanges.length !== 1 ? "s" : ""} tracked this week`;
+
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const dateLabel = `${months[weekStart.getUTCMonth()]} ${weekStart.getUTCDate()}\u2013${weekEnd.getUTCDate()}, ${weekStart.getUTCFullYear()}`;
+
+  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
+  const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+
+  const losses = topChanges.filter(c => negativeTypes.has(c.change_type));
+  const brightSpots = topChanges.filter(c => positiveTypes.has(c.change_type));
+  const other = topChanges.filter(c => !negativeTypes.has(c.change_type) && !positiveTypes.has(c.change_type));
+
+  function changeToMd(c: DealChange): string {
+    return `- **${c.vendor}** (${c.category}): ${c.summary}`;
+  }
+
+  const mdSections: string[] = [];
+  mdSections.push(`# This Week in Developer Pricing`);
+  mdSections.push(`*${dateLabel}*`);
+  mdSections.push(`> ${headline}`);
+
+  if (losses.length > 0) {
+    mdSections.push(`## Biggest Losses`);
+    mdSections.push(losses.map(changeToMd).join("\n"));
+  }
+  if (brightSpots.length > 0) {
+    mdSections.push(`## Bright Spots`);
+    mdSections.push(brightSpots.map(changeToMd).join("\n"));
+  }
+  if (other.length > 0) {
+    mdSections.push(`## Other Notable Changes`);
+    mdSections.push(other.map(changeToMd).join("\n"));
+  }
+  if (topChanges.length === 0) {
+    mdSections.push(`No pricing changes tracked this week.`);
+  }
+
+  mdSections.push(`---`);
+  mdSections.push(`[View all ${allChanges.length} changes](https://agentdeals.dev/changes) | Powered by [AgentDeals](https://agentdeals.dev)`);
+
+  const digestMarkdown = mdSections.join("\n\n");
+
+  function escHtml(s: string): string {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function changeToHtml(c: DealChange): string {
+    return `<li><strong>${escHtml(c.vendor)}</strong> (${escHtml(c.category)}): ${escHtml(c.summary)}</li>`;
+  }
+
+  const htmlSections: string[] = [];
+  htmlSections.push(`<h1>This Week in Developer Pricing</h1>`);
+  htmlSections.push(`<p><em>${escHtml(dateLabel)}</em></p>`);
+  htmlSections.push(`<blockquote><p>${escHtml(headline)}</p></blockquote>`);
+
+  if (losses.length > 0) {
+    htmlSections.push(`<h2>Biggest Losses</h2>`);
+    htmlSections.push(`<ul>${losses.map(changeToHtml).join("")}</ul>`);
+  }
+  if (brightSpots.length > 0) {
+    htmlSections.push(`<h2>Bright Spots</h2>`);
+    htmlSections.push(`<ul>${brightSpots.map(changeToHtml).join("")}</ul>`);
+  }
+  if (other.length > 0) {
+    htmlSections.push(`<h2>Other Notable Changes</h2>`);
+    htmlSections.push(`<ul>${other.map(changeToHtml).join("")}</ul>`);
+  }
+  if (topChanges.length === 0) {
+    htmlSections.push(`<p>No pricing changes tracked this week.</p>`);
+  }
+
+  htmlSections.push(`<hr>`);
+  htmlSections.push(`<p><a href="https://agentdeals.dev/changes">View all ${allChanges.length} changes</a> | Powered by <a href="https://agentdeals.dev">AgentDeals</a></p>`);
+
+  const digestHtml = htmlSections.join("\n");
+
+  return {
+    week_of: weekStartStr,
+    week_ending: weekEndStr,
+    total_changes: allChanges.length,
+    summary,
+    headline,
+    top_changes: topChanges,
+    digest_markdown: digestMarkdown,
+    digest_html: digestHtml,
+  };
+}
+
 const VALID_REFERRAL_TYPES = new Set(["dual-sided", "referrer-only", "referee-only"]);
 const VALID_REFERRAL_SOURCES = new Set(["curated", "sovrn", "agent-submitted"]);
 
