@@ -52758,7 +52758,8 @@ const httpServer = createHttpServer(async (req, res) => {
     url.pathname !== "/mcp" && url.pathname !== "/health" &&
     url.pathname !== "/favicon.png" && url.pathname !== "/favicon.ico" &&
     url.pathname !== "/og-image.png" && url.pathname !== "/robots.txt" &&
-    url.pathname !== "/sitemap.xml" && !url.pathname.startsWith("/.well-known/") &&
+    url.pathname !== "/sitemap.xml" && !url.pathname.startsWith("/sitemap-") &&
+    !url.pathname.startsWith("/.well-known/") &&
     url.pathname !== "/feed.xml";
   if (isPagePath) {
     recordPageView(url.pathname, req.headers["user-agent"] ?? "", req.headers["referer"]);
@@ -53670,324 +53671,159 @@ ${catList}
     }
   } else if (url.pathname === "/sitemap.xml" && isGetOrHead) {
     const now = new Date().toISOString().split("T")[0];
-    // Most recent verifiedDate across all offers — used for index/hub pages
     const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
-    // Editorial pages use their deploy date (when content was created/last updated)
     const editorialDate = "2026-04-10";
-    // Comparison pages enrichment deploy date
     const comparisonDate = "2026-04-04";
-    const categoryUrls = categories.map((c) => {
-      const catLastmod = categoryLastmod.get(toSlug(c.name)) || now;
-      return `  <url>
-    <loc>${BASE_URL}/category/${toSlug(c.name)}</loc>
-    <lastmod>${catLastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`;
-    }).join("\n");
-    const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${BASE_URL}/</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/feed.xml</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/api/docs</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/setup</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/privacy</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/disclosure</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/marketplace</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/referral-programs</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/expiring</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/changes</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/deadlines</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/pricing-changes</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/freshness</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/events</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  ${EVENTS.map(e => `<url>
-    <loc>${BASE_URL}/events/${e.slug}</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>`).join("\n  ")}
-  <url>
-    <loc>${BASE_URL}/reports</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  ${getAvailableReportMonths().map(m => {
-    const reportLastmod = m + "-28" <= now ? m + "-28" : now;
-    return `<url>
-    <loc>${BASE_URL}/reports/${m}</loc>
-    <lastmod>${reportLastmod}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>`;
-  }).join("\n  ")}
-  <url>
-    <loc>${BASE_URL}/stacks</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  ${STACK_TEMPLATES.map(t => `<url>
-    <loc>${BASE_URL}/stacks/${t.slug}</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`).join("\n  ")}
-  <url>
-    <loc>${BASE_URL}/estimate</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/stack-check</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/compare-tool</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/budget-builder</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/developers</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/badges</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/embed</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/agent-stack</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/category</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/best</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-${Array.from(bestOfSlugMap.entries()).map(([s, { categoryName }]) => {
-      const bestLastmod = categoryLastmod.get(toSlug(categoryName)) || now;
-      return `  <url>
-    <loc>${BASE_URL}/best/${s}</loc>
-    <lastmod>${bestLastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`;
-    }).join("\n")}
-  <url>
-    <loc>${BASE_URL}/compare</loc>
-    <lastmod>${comparisonDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-${categoryUrls}
-${Array.from(comparisonMap.keys()).map(s => `  <url>
-    <loc>${BASE_URL}/compare/${s}</loc>
-    <lastmod>${comparisonDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>`).join("\n")}
-  <url>
-    <loc>${BASE_URL}/vendor</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-${Array.from(vendorSlugMap.keys()).map(s => {
-      const vLastmod = vendorLastmod.get(s) || now;
-      return `  <url>
-    <loc>${BASE_URL}/vendor/${s}</loc>
-    <lastmod>${vLastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>`;
-    }).join("\n")}
-  <url>
-    <loc>${BASE_URL}/this-week</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/digest/archive</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-${getRecentWeekKeys(4).map(wk => `  <url>
-    <loc>${BASE_URL}/digest/${wk}</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>`).join("\n")}
-  <url>
-    <loc>${BASE_URL}/trends</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-${categories.map(c => {
-      const trendLastmod = categoryLastmod.get(toSlug(c.name)) || now;
-      return `  <url>
-    <loc>${BASE_URL}/trends/${toSlug(c.name)}</loc>
-    <lastmod>${trendLastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>`;
-    }).join("\n")}
-${ALTERNATIVES_PAGES.map(p => `  <url>
-    <loc>${BASE_URL}/${p.slug}</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>`).join("\n")}
-${Array.from(vsPageMap.keys()).map(s => `  <url>
-    <loc>${BASE_URL}/${s}</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`).join("\n")}
-  <url>
-    <loc>${BASE_URL}/guides</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-${INTEGRATION_GUIDES.map(g => `  <url>
-    <loc>${BASE_URL}/guides/${g.slug}</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`).join("\n")}
-  <url>
-    <loc>${BASE_URL}/alternatives</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/x402-services</loc>
-    <lastmod>${editorialDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${BASE_URL}/alternative-to</loc>
-    <lastmod>${latestVerified}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-${Array.from(vendorSlugMap.keys()).map(s => {
-      const altLastmod = vendorLastmod.get(s) || now;
-      return `  <url>
-    <loc>${BASE_URL}/alternative-to/${s}</loc>
-    <lastmod>${altLastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>`;
-    }).join("\n")}
-</urlset>`;
+    const reportMonths = getAvailableReportMonths();
+    const latestReport = reportMonths.length > 0 ? (reportMonths[reportMonths.length - 1] + "-28" <= now ? reportMonths[reportMonths.length - 1] + "-28" : now) : now;
+    const sitemapIndex = '<?xml version="1.0" encoding="UTF-8"?>\n'
+      + '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+      + '  <sitemap>\n'
+      + '    <loc>' + BASE_URL + '/sitemap-vendors.xml</loc>\n'
+      + '    <lastmod>' + latestVerified + '</lastmod>\n'
+      + '  </sitemap>\n'
+      + '  <sitemap>\n'
+      + '    <loc>' + BASE_URL + '/sitemap-comparisons.xml</loc>\n'
+      + '    <lastmod>' + comparisonDate + '</lastmod>\n'
+      + '  </sitemap>\n'
+      + '  <sitemap>\n'
+      + '    <loc>' + BASE_URL + '/sitemap-pages.xml</loc>\n'
+      + '    <lastmod>' + latestVerified + '</lastmod>\n'
+      + '  </sitemap>\n'
+      + '  <sitemap>\n'
+      + '    <loc>' + BASE_URL + '/sitemap-reports.xml</loc>\n'
+      + '    <lastmod>' + latestReport + '</lastmod>\n'
+      + '  </sitemap>\n'
+      + '  <sitemap>\n'
+      + '    <loc>' + BASE_URL + '/sitemap-misc.xml</loc>\n'
+      + '    <lastmod>' + latestVerified + '</lastmod>\n'
+      + '  </sitemap>\n'
+      + '</sitemapindex>';
     res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(sitemapXml);
+    res.end(sitemapIndex);
+  } else if (url.pathname === "/sitemap-vendors.xml" && isGetOrHead) {
+    const now = new Date().toISOString().split("T")[0];
+    const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+      + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/vendor</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    for (const s of vendorSlugMap.keys()) {
+      const vLastmod = vendorLastmod.get(s) || now;
+      xml += '  <url>\n    <loc>' + BASE_URL + '/vendor/' + s + '</loc>\n    <lastmod>' + vLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n';
+    }
+    xml += '</urlset>';
+    res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(xml);
+  } else if (url.pathname === "/sitemap-comparisons.xml" && isGetOrHead) {
+    const comparisonDate = "2026-04-04";
+    const editorialDate = "2026-04-10";
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+      + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/compare</loc>\n    <lastmod>' + comparisonDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    for (const s of comparisonMap.keys()) {
+      xml += '  <url>\n    <loc>' + BASE_URL + '/compare/' + s + '</loc>\n    <lastmod>' + comparisonDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    }
+    for (const s of vsPageMap.keys()) {
+      xml += '  <url>\n    <loc>' + BASE_URL + '/' + s + '</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    }
+    xml += '</urlset>';
+    res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(xml);
+  } else if (url.pathname === "/sitemap-pages.xml" && isGetOrHead) {
+    const now = new Date().toISOString().split("T")[0];
+    const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
+    const editorialDate = "2026-04-10";
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+      + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/feed.xml</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.5</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/api/docs</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/setup</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/privacy</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/disclosure</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.4</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/marketplace</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/referral-programs</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/expiring</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/changes</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/deadlines</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/pricing-changes</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/freshness</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/search</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/stacks</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    for (const t of STACK_TEMPLATES) {
+      xml += '  <url>\n    <loc>' + BASE_URL + '/stacks/' + t.slug + '</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    }
+    xml += '  <url>\n    <loc>' + BASE_URL + '/estimate</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/stack-check</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/compare-tool</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/budget-builder</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/developers</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/badges</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/embed</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/agent-stack</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/category</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    for (const c of categories) {
+      const catLastmod = categoryLastmod.get(toSlug(c.name)) || now;
+      xml += '  <url>\n    <loc>' + BASE_URL + '/category/' + toSlug(c.name) + '</loc>\n    <lastmod>' + catLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    }
+    xml += '  <url>\n    <loc>' + BASE_URL + '/best</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    for (const [s, { categoryName }] of bestOfSlugMap.entries()) {
+      const bestLastmod = categoryLastmod.get(toSlug(categoryName)) || now;
+      xml += '  <url>\n    <loc>' + BASE_URL + '/best/' + s + '</loc>\n    <lastmod>' + bestLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    }
+    xml += '  <url>\n    <loc>' + BASE_URL + '/guides</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n';
+    for (const g of INTEGRATION_GUIDES) {
+      xml += '  <url>\n    <loc>' + BASE_URL + '/guides/' + g.slug + '</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    }
+    xml += '  <url>\n    <loc>' + BASE_URL + '/alternatives</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n';
+    for (const p of ALTERNATIVES_PAGES) {
+      xml += '  <url>\n    <loc>' + BASE_URL + '/' + p.slug + '</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n';
+    }
+    xml += '  <url>\n    <loc>' + BASE_URL + '/x402-services</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/alternative-to</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    for (const s of vendorSlugMap.keys()) {
+      const altLastmod = vendorLastmod.get(s) || now;
+      xml += '  <url>\n    <loc>' + BASE_URL + '/alternative-to/' + s + '</loc>\n    <lastmod>' + altLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.5</priority>\n  </url>\n';
+    }
+    xml += '</urlset>';
+    res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(xml);
+  } else if (url.pathname === "/sitemap-reports.xml" && isGetOrHead) {
+    const now = new Date().toISOString().split("T")[0];
+    const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+      + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/this-week</loc>\n    <lastmod>' + now + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/digest/archive</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    for (const wk of getRecentWeekKeys(4)) {
+      xml += '  <url>\n    <loc>' + BASE_URL + '/digest/' + wk + '</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n';
+    }
+    xml += '  <url>\n    <loc>' + BASE_URL + '/reports</loc>\n    <lastmod>' + now + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    for (const m of getAvailableReportMonths()) {
+      const reportLastmod = m + "-28" <= now ? m + "-28" : now;
+      xml += '  <url>\n    <loc>' + BASE_URL + '/reports/' + m + '</loc>\n    <lastmod>' + reportLastmod + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    }
+    xml += '</urlset>';
+    res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(xml);
+  } else if (url.pathname === "/sitemap-misc.xml" && isGetOrHead) {
+    const now = new Date().toISOString().split("T")[0];
+    const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
+    const editorialDate = "2026-04-10";
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+      + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/trends</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    for (const c of categories) {
+      const trendLastmod = categoryLastmod.get(toSlug(c.name)) || now;
+      xml += '  <url>\n    <loc>' + BASE_URL + '/trends/' + toSlug(c.name) + '</loc>\n    <lastmod>' + trendLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.5</priority>\n  </url>\n';
+    }
+    xml += '  <url>\n    <loc>' + BASE_URL + '/events</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    for (const e of EVENTS) {
+      xml += '  <url>\n    <loc>' + BASE_URL + '/events/' + e.slug + '</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
+    }
+    xml += '</urlset>';
+    res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(xml);
   } else if (url.pathname === "/") {
     recordLandingPageView();
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });

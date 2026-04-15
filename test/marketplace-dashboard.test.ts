@@ -312,7 +312,7 @@ describe("Marketplace in Sitemap", () => {
   });
 
   it("sitemap includes /marketplace", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const res = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await res.text();
     assert.ok(xml.includes("/marketplace"));
   });
