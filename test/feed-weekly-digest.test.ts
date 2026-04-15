@@ -85,6 +85,24 @@ describe("/feed.xml weekly digest feed", () => {
     assert.strictEqual(res.headers.get("access-control-allow-origin"), "*");
   });
 
+  it("feed has author element", async () => {
+    proc = await startHttpServer();
+    const res = await fetch(`http://localhost:${serverPort}/feed.xml`);
+    const xml = await res.text();
+    assert.ok(xml.includes("<author><name>AgentDeals</name></author>"), "Should have author element");
+  });
+
+  it("no entry has a future updated date", async () => {
+    proc = await startHttpServer();
+    const res = await fetch(`http://localhost:${serverPort}/feed.xml`);
+    const xml = await res.text();
+    const now = new Date();
+    const updatedDates = [...xml.matchAll(/<updated>([^<]+)<\/updated>/g)].map(m => new Date(m[1]));
+    for (const d of updatedDates) {
+      assert.ok(d <= now, `Date ${d.toISOString()} should not be in the future`);
+    }
+  });
+
   it("/api/feed returns same content as /feed.xml", async () => {
     proc = await startHttpServer();
     const res = await fetch(`http://localhost:${serverPort}/api/feed`);
