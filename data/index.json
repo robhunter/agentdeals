@@ -1869,7 +1869,7 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free tier restricted to Flash models only (April 2026). Per-model paid pricing: Gemini 3.1 Pro Preview $2/$12 per MTok (≤200K ctx, doubles above), Gemini 3.0 Flash Preview $0.50/$3, Gemini 3.1 Flash-Lite Preview $0.25/$1.50, Gemini 2.5 Pro $1.25/$10 (≤200K, doubles above), Gemini 2.5 Flash $0.30/$2.50. Pro models require paid billing — no free tier. Free limits: Flash 10 RPM, Flash-Lite 15 RPM. All models support Batch/Flex at 50% discount. 200K token context threshold on Pro models (prices apply to entire prompt, not just excess). Mandatory spend caps enforced since April 1, 2026.",
+      "description": "Free tier restricted to Flash and Flash-Lite models only (April 2026). Pro models require paid billing account. Per-model paid pricing: Gemini 3.1 Pro Preview $2/$12 per MTok (≤200K ctx, doubles above), Gemini 3.0 Flash Preview $0.50/$3, Gemini 3.1 Flash-Lite Preview $0.25/$1.50, Gemini 2.5 Pro $1.25/$10 (≤200K, doubles above), Gemini 2.5 Flash $0.30/$2.50. Free limits: Flash 10 RPM, Flash-Lite 15 RPM (reduced 50-80% from pre-April 2026). All models support Batch/Flex at 50% discount. Mandatory spend caps enforced since April 1, 2026.",
       "tier": "Free (Reduced)",
       "url": "https://ai.google.dev/gemini-api/docs/pricing",
       "tags": [
@@ -1882,7 +1882,7 @@
         "deal-change",
         "per-model-pricing"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-04-15"
     },
     {
       "vendor": "Mistral AI",
@@ -4775,7 +4775,7 @@
     {
       "vendor": "Brave Search API",
       "category": "Search",
-      "description": "$5/month credit (~1,000 queries/mo at $5/1,000 requests). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required to keep credit. Credit card required, overages billed with no spending cap. Free tier (5,000 queries/mo) removed Feb 2026",
+      "description": "$5 prepaid metered credits ($0.003-$0.005 per query depending on endpoint). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required. Credit card required, overages billed with no spending cap. Free tier (2,000 queries/mo) eliminated Feb 2026",
       "tier": "Credit",
       "url": "https://brave.com/search/api/",
       "tags": [
@@ -4783,9 +4783,10 @@
         "api",
         "web-search",
         "ai-grounding",
-        "llm"
+        "llm",
+        "deal-change"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-15"
     },
     {
       "vendor": "OpenAI",
@@ -21319,9 +21320,9 @@
     {
       "vendor": "Google AI Pro/Ultra",
       "category": "Cloud IaaS",
-      "description": "GCP credits bundled with Google AI subscriptions. AI Pro ($19.99/mo): $10/month GCP credits for Vertex AI, Cloud Run, Gemini API. AI Ultra ($249.99/mo): $100/month GCP credits. Replaced the standalone Google Developer Program Premium.",
+      "description": "GCP credits bundled with Google AI subscriptions. AI Pro ($10/mo): includes Vertex AI access and Cloud credits. AI Ultra ($100/mo): $100/month GCP credits for Vertex AI, Cloud Run, Gemini API. Replaced the standalone Google Developer Program Premium (March 2026).",
       "tier": "Conditional",
-      "url": "https://ai.google.dev/pricing",
+      "url": "https://one.google.com/ai-premium",
       "tags": [
         "cloud",
         "credits",
@@ -21330,11 +21331,11 @@
         "conditional",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-04-15",
       "eligibility": {
         "type": "subscription",
         "conditions": [
-          "Requires Google AI Pro ($19.99/mo) or AI Ultra ($249.99/mo) subscription"
+          "Requires Google AI Pro ($10/mo) or AI Ultra ($100/mo) subscription"
         ],
         "program": "Google AI Pro/Ultra"
       }
