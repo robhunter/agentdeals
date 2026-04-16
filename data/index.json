@@ -21280,9 +21280,9 @@
     {
       "vendor": "OpenAI Codex",
       "category": "AI Coding",
-      "description": "Cloud-native coding agent by OpenAI. Included in ChatGPT Plus ($20/mo), Pro ($200/mo), and Business ($20/user/mo, was $30). Pay-as-you-go seats available \u2014 usage billed on token consumption, no rate limits. $100 credits for new Codex-only team members (up to $500/team, limited time). 2M+ weekly users. API via codex-mini at $1.50/1M input, $6/1M output tokens.",
+      "description": "Cloud-native coding agent by OpenAI. Switched to pay-as-you-go token-based pricing (April 2026). Included in ChatGPT Plus ($20/mo), Pro ($200/mo), and Business ($20/user/mo, cut from $25). Teams can add Codex-only seats with no rate limits, billed on token consumption. $100 credit per new Codex team member (up to $500/team, limited time). 2M+ weekly users. API via codex-mini at $1.50/1M input, $6/1M output tokens.",
       "tier": "Freemium",
-      "url": "https://openai.com/index/introducing-codex/",
+      "url": "https://openai.com/index/codex-flexible-pricing-for-teams/",
       "tags": [
         "ai",
         "coding",
@@ -21291,7 +21291,7 @@
         "openai",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-15",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -23098,7 +23098,7 @@
         "cursor-alternative",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-15"
     },
     {
       "vendor": "OVHcloud",
@@ -23358,6 +23358,23 @@
         "google cloud",
         "vertex-ai",
         "rag"
+      ],
+      "verifiedDate": "2026-04-15"
+    },
+    {
+      "vendor": "Google Content API for Shopping",
+      "category": "API Development",
+      "description": "Product data management API for Google Merchant Center. Being sunset August 18, 2026 — replaced by Merchant API (rolling out April 22, 2026). Free to use with a Google Merchant Center account. Provided product listing, inventory management, and order management endpoints. Developers must migrate to Merchant API before the sunset date.",
+      "tier": "Free (Deprecated)",
+      "url": "https://developers.google.com/shopping-content/guides/quickstart",
+      "tags": [
+        "api",
+        "e-commerce",
+        "google",
+        "shopping",
+        "merchant",
+        "deprecated",
+        "product-data"
       ],
       "verifiedDate": "2026-04-15"
     }
