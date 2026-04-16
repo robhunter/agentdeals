@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { getRankedCodesForVendor } from "./referral-codes.js";
+import { getRankedCodesForVendor, getAllActiveCodes } from "./referral-codes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLATFORM_CODES_PATH = path.join(__dirname, "..", "data", "platform_codes.json");
@@ -99,4 +99,57 @@ export function getBestReferralCode(vendorName: string): BestReferralCode | null
   }
 
   return null;
+}
+
+/**
+ * List all active referral codes across all vendors, for the GET /api/referral-codes listing endpoint.
+ * Includes both platform codes (ours) and active agent-submitted codes.
+ * Callers can pass a `vendorToCategory` resolver to enrich each entry with its primary category.
+ */
+export interface ListedReferralCode {
+  vendor: string;
+  category: string | null;
+  code: string;
+  referral_url: string;
+  referee_benefit: string;
+  source: "platform" | "agent-submitted";
+}
+
+export function listAllReferralCodes(opts: {
+  source?: "platform" | "agent" | "agent-submitted";
+  vendorToCategory?: (vendorName: string) => string | null;
+} = {}): ListedReferralCode[] {
+  const resolveCategory = opts.vendorToCategory ?? (() => null);
+  const wantPlatform = opts.source === undefined || opts.source === "platform";
+  const wantAgent = opts.source === undefined || opts.source === "agent" || opts.source === "agent-submitted";
+
+  const out: ListedReferralCode[] = [];
+
+  if (wantPlatform) {
+    for (const c of getAllPlatformCodes()) {
+      out.push({
+        vendor: c.vendor,
+        category: resolveCategory(c.vendor),
+        code: c.code,
+        referral_url: c.referral_url,
+        referee_benefit: c.referee_benefit,
+        source: "platform",
+      });
+    }
+  }
+
+  if (wantAgent) {
+    for (const c of getAllActiveCodes()) {
+      out.push({
+        vendor: c.vendor,
+        category: resolveCategory(c.vendor),
+        code: c.code,
+        referral_url: c.referral_url,
+        referee_benefit: c.description,
+        source: "agent-submitted",
+      });
+    }
+  }
+
+  return out;
 }
