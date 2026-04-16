@@ -9,6 +9,7 @@ import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, u
 import { logReferralRequest } from "./referral-requests.js";
 import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { submitReferralCode, getCodesByAgent, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
+import { getBestReferralCode } from "./platform-codes.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { getStackRecommendation } from "./stacks.js";
@@ -88,8 +89,9 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             };
           }
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { vendor }, result_count: 1, session_id: getSessionId?.() });
+          const offerWithCode = { ...result.offer, referral_code: getBestReferralCode(result.offer.vendor) };
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result.offer, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(offerWithCode, null, 2) }],
           };
         }
 
@@ -97,8 +99,12 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         if (since && !query && !category) {
           const result = getNewestDeals({ since, limit, category: undefined });
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { since, limit }, result_count: result.total, session_id: getSessionId?.() });
+          const enrichedResult = {
+            ...result,
+            deals: result.deals.map(o => ({ ...o, referral_code: getBestReferralCode(o.vendor) })),
+          };
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }],
           };
         }
 
@@ -128,22 +134,28 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
           };
         }
 
-        // Append ranked agent-submitted referral codes for each vendor
-        const resultsWithAgentCodes = results.map(offer => {
+        // Enrich each result with: (1) best referral_code (platform > agent-submitted, explicit null when absent)
+        // and (2) full ranked agent-submitted codes list for verbose consumers.
+        const resultsWithCodes = results.map(offer => {
           const agentCodes = getRankedCodesForVendor(offer.vendor);
-          if (agentCodes.length === 0) return offer;
-          return {
+          const enriched: typeof offer & { referral_code: ReturnType<typeof getBestReferralCode>; agent_referral_codes?: unknown[] } = {
             ...offer,
-            agent_referral_codes: agentCodes.map(c => ({
+            referral_code: getBestReferralCode(offer.vendor),
+          };
+          if (agentCodes.length > 0) {
+            enriched.agent_referral_codes = agentCodes.map(c => ({
               code: c.code,
               referral_url: c.referral_url,
               description: c.description,
               source: c.source,
               score: Math.round(calculateCodeScore(c) * 1000) / 1000,
-            })),
-          };
+            }));
+          }
+          return enriched;
         });
-        const outputResults = response_format === "concise" ? resultsWithAgentCodes.map(toConciseOffer) : resultsWithAgentCodes;
+        const outputResults = response_format === "concise"
+          ? resultsWithCodes.map(r => ({ ...toConciseOffer(r), referral_code: r.referral_code }))
+          : resultsWithCodes;
         return {
           content: [{ type: "text" as const, text: JSON.stringify({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset }, null, 2) }],
         };
@@ -273,6 +285,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
           const enrichedResult = {
             ...result.result,
             stability: stabMap.get(result.result.vendor.toLowerCase()) ?? "stable",
+            referral_code: getBestReferralCode(result.result.vendor),
           };
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_vendors", params: { vendors }, result_count: 1, session_id: getSessionId?.() });
           return {
@@ -300,6 +313,10 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
             stability: {
               [vendors[0]]: stabMap.get(comparison.comparison.vendor_a.vendor.toLowerCase()) ?? "stable",
               [vendors[1]]: stabMap.get(comparison.comparison.vendor_b.vendor.toLowerCase()) ?? "stable",
+            },
+            referral_codes: {
+              [vendors[0]]: getBestReferralCode(comparison.comparison.vendor_a.vendor),
+              [vendors[1]]: getBestReferralCode(comparison.comparison.vendor_b.vendor),
             },
           };
 
