@@ -63,4 +63,14 @@ Endpoints:
 
 ## Current Status
 
-MCP server is functional with stdio and HTTP transports. 4 intent-based tools (search_deals, plan_stack, compare_vendors, track_changes) + 6 prompt templates. 1,525 offers across 54 categories with eligibility schema (accelerator, oss, fintech, student types). 57 tracked pricing changes. 17 REST API endpoints. HTML landing page with interactive deal browser and OG meta tags. 266 passing tests. Multi-session HTTP support with idle timeout cleanup and structured connection logging. Deployed on Railway. Listed on Official MCP Registry and Glama. Registry manifests in place (server.json, glama.json, smithery.yaml). Staleness detection, pricing change monitor, bulk ingestion scripts, and category recategorization script available.
+_As of 2026-04-16. Counts come from `data/index.json`, `data/deal_changes.json`, `src/openapi.ts`, and `npm test` — rerun to verify before quoting._
+
+MCP server is functional with stdio and HTTP transports. 4 intent-based tools (search_deals, plan_stack, compare_vendors, track_changes) + 6 prompt templates. **1,594 offers** across **67 categories** with eligibility schema (accelerator, oss, fintech, student types). **267 tracked pricing changes**. **20 documented REST endpoints** (see `src/openapi.ts` / `/api/openapi.json` / Swagger UI at `/api/docs`). **1,028 passing tests**. Multi-session HTTP support with idle timeout cleanup and structured connection logging. Deployed on Railway. Listed on Official MCP Registry and Glama. Registry manifests in place (server.json, glama.json, smithery.yaml). MCP server card (SEP-1649) at `/.well-known/mcp.json`; MCP manifest (SEP-1960) at `/.well-known/mcp`.
+
+**Major surfaces shipped beyond the core MCP tools:**
+- **Referral marketplace** — platform codes seeded, `GET /api/referral-codes` listing + per-vendor lookup, inline `referral_code` enrichment on MCP tool responses and REST payloads, passive solicitation CTA on ~1,439 dormant vendor pages.
+- **Vendor watchlist API** with HMAC-signed webhook notifications on pricing/deal changes.
+- **Auto-generated SEO pages** — ~349 head-to-head comparison pages across 67 categories, 23 monthly pricing-intelligence report pages, 5 content-type sitemaps.
+- **Event coverage** — GCP Next 2026, Microsoft Build 2026, Google I/O 2026 with confirmed announcements.
+- **Weekly pricing digest** — `/this-week` page, API, and RSS/Atom feeds.
+- **Operations** — staleness detection, pricing-change monitor, bulk ingestion scripts, IndexNow integration with status endpoint, referral health checks, `/api/metrics` for marketplace + session-classification telemetry (agent vs. crawler).
