@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { getRankedCodesForVendor } from "./referral-codes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLATFORM_CODES_PATH = path.join(__dirname, "..", "data", "platform_codes.json");
@@ -54,4 +55,48 @@ export function getPlatformCodeForVendor(vendorName: string): PlatformCode | nul
  */
 export function getAllPlatformCodes(): PlatformCode[] {
   return loadPlatformCodes().filter(c => c.active);
+}
+
+/**
+ * Unified referral code shape returned inline on MCP tool responses and REST enrichment.
+ * Matches the GET /api/referral-codes/:vendor response shape so clients can consume both the same way.
+ */
+export interface BestReferralCode {
+  vendor: string;
+  code: string;
+  referral_url: string;
+  referee_benefit: string;
+  source: "platform" | "agent-submitted";
+}
+
+/**
+ * Get the best available referral code for a vendor.
+ * Platform codes take priority over agent-submitted codes.
+ * Returns null (explicit) when no code is available, so callers can distinguish "no code" from "field missing".
+ */
+export function getBestReferralCode(vendorName: string): BestReferralCode | null {
+  const platformCode = getPlatformCodeForVendor(vendorName);
+  if (platformCode) {
+    return {
+      vendor: platformCode.vendor,
+      code: platformCode.code,
+      referral_url: platformCode.referral_url,
+      referee_benefit: platformCode.referee_benefit,
+      source: "platform",
+    };
+  }
+
+  const ranked = getRankedCodesForVendor(vendorName);
+  if (ranked.length > 0) {
+    const best = ranked[0];
+    return {
+      vendor: best.vendor,
+      code: best.code,
+      referral_url: best.referral_url,
+      referee_benefit: best.description,
+      source: "agent-submitted",
+    };
+  }
+
+  return null;
 }
