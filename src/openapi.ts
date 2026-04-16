@@ -743,6 +743,64 @@ export const openapiSpec = {
         }
       }
     },
+    "/api/referral-codes": {
+      get: {
+        summary: "List all active referral codes (marketplace)",
+        description: "Returns all active referral codes across vendors — both platform codes (ours) and agent-submitted marketplace codes. No authentication required. Filter by source or vendor category. Individual vendor lookup: GET /api/referral-codes/{vendor}.",
+        parameters: [
+          { name: "source", in: "query", description: "Filter by source: platform (our codes) or agent (agent-submitted marketplace codes). Omit to get both.", schema: { type: "string", enum: ["platform", "agent"] } },
+          { name: "category", in: "query", description: "Filter by vendor category slug (e.g. cloud-hosting). See /api/categories for valid slugs.", schema: { type: "string" }, example: "cloud-hosting" }
+        ],
+        responses: {
+          "200": {
+            description: "Active referral codes across all vendors",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    codes: { type: "array", items: { $ref: "#/components/schemas/ReferralCodeListing" } },
+                    total: { type: "integer" }
+                  },
+                  required: ["codes", "total"]
+                },
+                example: {
+                  codes: [
+                    { vendor: "Railway", category: "Cloud Hosting", code: "7RZL9q", referral_url: "https://railway.com?referralCode=7RZL9q", referee_benefit: "$20 in credits", source: "platform" }
+                  ],
+                  total: 1
+                }
+              }
+            }
+          },
+          "400": {
+            description: "Invalid source or unknown category slug",
+            content: { "application/json": { schema: { type: "object", properties: { error: { type: "string" } } } } }
+          }
+        }
+      }
+    },
+    "/api/referral-codes/{vendor}": {
+      get: {
+        summary: "Get best referral code for a vendor",
+        description: "Returns the best available referral code for a vendor. Platform codes (ours) take priority over agent-submitted marketplace codes. Same shape is inlined on /api/offers, /api/compare, /api/details/{vendor}, /api/newest, and MCP tool responses.",
+        parameters: [
+          { name: "vendor", in: "path", required: true, description: "Vendor name (case-insensitive)", schema: { type: "string" }, example: "Railway" }
+        ],
+        responses: {
+          "200": {
+            description: "Best available referral code",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ReferralCodeListing" },
+                example: { vendor: "Railway", code: "7RZL9q", referral_url: "https://railway.com?referralCode=7RZL9q", referee_benefit: "$20 in credits", source: "platform" }
+              }
+            }
+          },
+          "404": { description: "No active referral codes for the requested vendor", content: { "application/json": { schema: { type: "object", properties: { error: { type: "string" } } } } } }
+        }
+      }
+    },
     "/api/stats": {
       get: {
         summary: "Service statistics",
@@ -796,6 +854,18 @@ export const openapiSpec = {
           program: { type: "string" }
         },
         required: ["type", "conditions"]
+      },
+      ReferralCodeListing: {
+        type: "object",
+        properties: {
+          vendor: { type: "string", description: "Vendor/service name" },
+          category: { type: "string", nullable: true, description: "Primary category for the vendor (null if unknown)" },
+          code: { type: "string", description: "The referral code string" },
+          referral_url: { type: "string", format: "uri", description: "Full referral URL the referee should visit" },
+          referee_benefit: { type: "string", description: "What the person using the code gets (e.g. '$20 in credits')" },
+          source: { type: "string", enum: ["platform", "agent-submitted"], description: "platform = AgentDeals-owned code, agent-submitted = marketplace-submitted code" }
+        },
+        required: ["vendor", "code", "referral_url", "referee_benefit", "source"]
       },
       DealChange: {
         type: "object",

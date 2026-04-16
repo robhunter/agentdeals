@@ -15,7 +15,7 @@ import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
-import { getPlatformCodeForVendor, getBestReferralCode } from "./platform-codes.js";
+import { getPlatformCodeForVendor, getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
@@ -420,6 +420,19 @@ for (const o of offers) {
   if (!prev || o.verifiedDate > prev) {
     categoryLastmod.set(catSlug, o.verifiedDate);
   }
+}
+
+// Build vendor name → primary category (first offer's category wins)
+const vendorCategoryMap = new Map<string, string>();
+for (const o of offers) {
+  const key = o.vendor.toLowerCase();
+  if (!vendorCategoryMap.has(key)) {
+    vendorCategoryMap.set(key, o.category);
+  }
+}
+
+function getVendorCategory(vendorName: string): string | null {
+  return vendorCategoryMap.get(vendorName.toLowerCase()) ?? null;
 }
 
 function escHtmlServer(s: string): string {
@@ -48664,6 +48677,27 @@ function buildDeveloperHubPage(): string {
     { method: "DELETE", path: "/api/watchlist/:id", desc: "Unsubscribe from vendor watch", params: "" },
   ];
 
+  const referralEndpointTable = [
+    { method: "GET", path: "/api/referral-codes", desc: "List all active referral codes (platform + marketplace)", params: "source (platform|agent), category" },
+    { method: "GET", path: "/api/referral-codes/:vendor", desc: "Get best referral code for a specific vendor", params: "" },
+    { method: "POST", path: "/api/referral-codes", desc: "Submit a marketplace referral code (agents only, auth required)", params: "vendor, code, referral_url (body) — Authorization: Bearer <api-key>" },
+  ];
+
+  const referralEndpointRows = referralEndpointTable.map(function(e) {
+    const sampleHref = e.method === "GET"
+      ? BASE_URL + e.path.replace(/:vendor/, "railway")
+      : BASE_URL + e.path;
+    const cell = e.method === "GET"
+      ? "<a href=\"" + sampleHref + "\">" + escHtmlServer(e.path) + "</a>"
+      : "<code>" + escHtmlServer(e.path) + "</code>";
+    return "      <tr>"
+      + "<td><code>" + e.method + "</code></td>"
+      + "<td>" + cell + "</td>"
+      + "<td>" + escHtmlServer(e.desc) + "</td>"
+      + "<td>" + (e.params ? "<code>" + escHtmlServer(e.params) + "</code>" : "&mdash;") + "</td>"
+      + "</tr>";
+  }).join("\n");
+
   const endpointRows = endpointTable.map(function(e) {
     return "      <tr>"
       + "<td><code>" + e.method + "</code></td>"
@@ -48691,16 +48725,23 @@ function buildDeveloperHubPage(): string {
       "@context": "https://schema.org",
       "@type": "WebAPI",
       "name": "AgentDeals REST API",
-      "description": "Free REST API providing developer tool pricing data — " + offers.length + "+ deals across " + categories.length + " categories. No authentication required.",
+      "description": "Free REST API providing developer tool pricing data — " + offers.length + "+ deals across " + categories.length + " categories, plus a referral code marketplace. No authentication required for read endpoints.",
       "url": BASE_URL + "/developers",
       "documentation": BASE_URL + "/api/docs",
       "provider": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
       "termsOfService": BASE_URL + "/privacy",
-      "availableChannel": {
-        "@type": "ServiceChannel",
-        "serviceUrl": BASE_URL + "/api/offers",
-        "serviceType": "REST API"
-      }
+      "availableChannel": [
+        {
+          "@type": "ServiceChannel",
+          "serviceUrl": BASE_URL + "/api/offers",
+          "serviceType": "REST API — Offers & Pricing"
+        },
+        {
+          "@type": "ServiceChannel",
+          "serviceUrl": BASE_URL + "/api/referral-codes",
+          "serviceType": "REST API — Referral Code Marketplace"
+        }
+      ]
     }) + "</script>\n"
     + "  <style>\n"
     + "    :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-glow:rgba(59,130,246,.1);--border:rgba(148,163,184,.15);--serif:\"Georgia\",\"Times New Roman\",serif;--sans:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif;--mono:\"SFMono-Regular\",Consolas,\"Liberation Mono\",monospace}\n"
@@ -48767,7 +48808,7 @@ function buildDeveloperHubPage(): string {
     + "      <div class=\"highlight-card\"><div class=\"num\">" + offers.length.toLocaleString() + "+</div><div class=\"label\">Verified Deals</div></div>\n"
     + "      <div class=\"highlight-card\"><div class=\"num\">" + categories.length + "</div><div class=\"label\">Categories</div></div>\n"
     + "      <div class=\"highlight-card\"><div class=\"num\">" + dealChanges.length + "</div><div class=\"label\">Tracked Price Changes</div></div>\n"
-    + "      <div class=\"highlight-card\"><div class=\"num\">" + endpointTable.length + "</div><div class=\"label\">Endpoints</div></div>\n"
+    + "      <div class=\"highlight-card\"><div class=\"num\">" + (endpointTable.length + referralEndpointTable.length) + "</div><div class=\"label\">Endpoints</div></div>\n"
     + "    </div>\n"
     + "\n"
     + "    <h2>Quick Start</h2>\n"
@@ -48856,6 +48897,45 @@ function buildDeveloperHubPage(): string {
     + "    </div>\n"
     + "    <p style=\"margin-top:.75rem\">Full OpenAPI 3.0 spec: <a href=\"" + BASE_URL + "/api/openapi.json\">/api/openapi.json</a> &middot; Interactive docs: <a href=\"/api/docs\">Swagger UI</a></p>\n"
     + "\n"
+    + "    <h2 id=\"referral-marketplace\">Referral Marketplace</h2>\n"
+    + "    <p>AgentDeals operates a referral code marketplace so agents can discover and earn on vendor referrals. <strong>Platform codes</strong> (ours) take priority over <strong>agent-submitted codes</strong> (community) in every response. The <a href=\"/marketplace\">marketplace HTML page</a> has a human-readable overview; the endpoints below expose the same data to agents.</p>\n"
+    + "    <div style=\"overflow-x:auto\">\n"
+    + "    <table class=\"endpoint-table\">\n"
+    + "      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Parameters</th></tr></thead>\n"
+    + "      <tbody>\n"
+    + referralEndpointRows + "\n"
+    + "      </tbody>\n"
+    + "    </table>\n"
+    + "    </div>\n"
+    + "    <p>Referral codes are also inlined on every <code>/api/offers</code>, <code>/api/compare</code>, <code>/api/details/:vendor</code>, and <code>/api/newest</code> result as a <code>referral_code</code> field (null if no code available) — so agents get codes without a second call.</p>\n"
+    + "\n"
+    + "    <h3>List all active codes</h3>\n"
+    + "    <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/referral-codes\"</div>\n"
+    + "\n"
+    + "    <h3>Filter by source (platform-owned codes only)</h3>\n"
+    + "    <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/referral-codes?source=platform\"</div>\n"
+    + "\n"
+    + "    <h3>Filter by vendor category</h3>\n"
+    + "    <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/referral-codes?category=cloud-hosting\"</div>\n"
+    + "\n"
+    + "    <h3>Look up a single vendor</h3>\n"
+    + "    <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/referral-codes/railway\"</div>\n"
+    + "\n"
+    + "    <h3>Python</h3>\n"
+    + "    <div class=\"code-block\"><span class=\"lang-label\">python</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>"
+    + "import requests\n"
+    + "\n"
+    + "resp = requests.get(\"" + BASE_URL + "/api/referral-codes\", params={\"source\": \"platform\"})\n"
+    + "for c in resp.json()[\"codes\"]:\n"
+    + "    print(f\"{c['vendor']} ({c['category']}): {c['referee_benefit']} \u2192 {c['referral_url']}\")</div>\n"
+    + "\n"
+    + "    <h3>JavaScript</h3>\n"
+    + "    <div class=\"code-block\"><span class=\"lang-label\">javascript</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>"
+    + "const resp = await fetch(\"" + BASE_URL + "/api/referral-codes?source=platform\");\n"
+    + "const { codes } = await resp.json();\n"
+    + "\n"
+    + "codes.forEach(c =&gt; console.log(`${c.vendor} (${c.category}): ${c.referee_benefit}`));</div>\n"
+    + "\n"
     + "    <h2>Use Cases</h2>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>CI/CD Cost Optimization</h4>\n"
@@ -48876,6 +48956,10 @@ function buildDeveloperHubPage(): string {
     + "    <div class=\"use-case\">\n"
     + "      <h4>Migration Planning</h4>\n"
     + "      <p>When a vendor shuts down or changes pricing, use <code>/api/offers</code> + <code>/api/compare</code> to evaluate alternatives with real free tier data. See our <a href=\"/firebase-studio-shutdown\">Firebase Studio migration guide</a> for an example of how we use this data to compare cloud IDE alternatives.</p>\n"
+    + "    </div>\n"
+    + "    <div class=\"use-case\">\n"
+    + "      <h4>Referral-Aware Agents</h4>\n"
+    + "      <p>Agents that recommend developer tools can route users through active referral codes. Call <code>/api/referral-codes?source=platform</code> once at session start to prefetch all our codes, or rely on the inline <code>referral_code</code> field on every <code>/api/offers</code> result. See <a href=\"/marketplace\">the marketplace</a> for the revenue model.</p>\n"
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>AI Coding Tools Research</h4>\n"
@@ -55282,6 +55366,38 @@ ${catList}
       res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: err.message, correlation_id: correlationId }));
     }
+
+  // --- GET /api/referral-codes: List all active referral codes (platform + agent-submitted) ---
+  } else if (url.pathname === "/api/referral-codes" && isGetOrHead) {
+    const rawSource = url.searchParams.get("source");
+    let sourceFilter: "platform" | "agent" | undefined;
+    if (rawSource === "platform" || rawSource === "agent" || rawSource === "agent-submitted") {
+      sourceFilter = rawSource === "agent-submitted" ? "agent" : rawSource;
+    } else if (rawSource !== null && rawSource !== "") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: 'Invalid source filter. Use source=platform or source=agent.' }));
+      return;
+    }
+
+    const categorySlug = url.searchParams.get("category");
+    let categoryName: string | null = null;
+    if (categorySlug) {
+      const resolved = categorySlugMap.get(toSlug(categorySlug));
+      if (!resolved) {
+        res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ error: `Unknown category "${categorySlug}". See /api/categories for valid slugs.` }));
+        return;
+      }
+      categoryName = resolved;
+    }
+
+    const listed = listAllReferralCodes({ source: sourceFilter, vendorToCategory: getVendorCategory });
+    const filtered = categoryName ? listed.filter(c => c.category === categoryName) : listed;
+
+    recordApiHit("/api/referral-codes");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "GET /api/referral-codes", params: { source: sourceFilter ?? "all", category: categoryName ?? "all" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: filtered.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ codes: filtered, total: filtered.length }));
 
   // --- POST /api/referral-codes: Submit a referral code ---
   } else if (url.pathname === "/api/referral-codes" && req.method === "POST") {

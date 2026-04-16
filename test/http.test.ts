@@ -930,7 +930,9 @@ describe("HTTP transport", () => {
     assert.ok(body.paths["/feed.xml"]);
     assert.ok(body.paths["/api/pageviews"]);
     assert.ok(body.paths["/api/freshness"]);
-    assert.strictEqual(Object.keys(body.paths).length, 18);
+    assert.ok(body.paths["/api/referral-codes"]);
+    assert.ok(body.paths["/api/referral-codes/{vendor}"]);
+    assert.strictEqual(Object.keys(body.paths).length, 20);
     assert.ok(body.components.schemas.Offer);
     assert.ok(body.components.schemas.DealChange);
     assert.ok(body.components.schemas.Eligibility);
