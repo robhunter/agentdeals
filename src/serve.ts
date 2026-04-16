@@ -15,6 +15,7 @@ import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
+import { getPlatformCodeForVendor } from "./platform-codes.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
@@ -3303,7 +3304,19 @@ ${enrichedAlts.map(a => {
     </div>`;
   })() : "";
 
-  const referralCalloutHtml = "";
+  // Platform referral code CTA (shown when we have a platform code for this vendor)
+  const platformCode = getPlatformCodeForVendor(vendorName);
+  const referralCalloutHtml = platformCode ? `
+  <div class="section" style="margin-top:1.5rem">
+    <div style="border:2px solid #3fb950;border-radius:12px;padding:1.25rem;background:linear-gradient(135deg,rgba(63,185,80,0.08),rgba(63,185,80,0.02))">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+        <span style="font-size:1.25rem">&#127873;</span>
+        <strong style="font-size:1rem;color:var(--text)">Sign up via our referral link and get ${escHtmlServer(platformCode.referee_benefit)}</strong>
+      </div>
+      <a href="${escHtmlServer(platformCode.referral_url)}" rel="noopener sponsored" target="_blank" style="display:inline-block;padding:.6rem 1.25rem;background:#3fb950;color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none">Get ${escHtmlServer(platformCode.referee_benefit)} &rarr;</a>
+      <p style="margin-top:.75rem;font-size:.75rem;color:var(--text-dim)">We may earn a commission if you sign up through this link. See our <a href="/disclosure">affiliate disclosure</a>.</p>
+    </div>
+  </div>` : "";
 
   // Referral program section (shown when vendor has a program, whether or not we have a code)
   const referralProgramHtml = primary.referral_program?.available ? `
@@ -55198,6 +55211,47 @@ ${catList}
       daily_submissions: dailyCount,
       daily_limit: dailyLimit,
     }));
+
+  // --- GET /api/referral-codes/:vendor: Get best available code for a vendor ---
+  } else if (url.pathname.match(/^\/api\/referral-codes\/[^/]+$/) && isGetOrHead && url.pathname !== "/api/referral-codes/mine") {
+    const vendorParam = decodeURIComponent(url.pathname.split("/").pop()!);
+
+    // Platform codes have highest priority
+    const platformCode = getPlatformCodeForVendor(vendorParam);
+    if (platformCode) {
+      recordApiHit("/api/referral-codes/:vendor");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral-codes/${vendorParam}`, params: { source: "platform" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({
+        vendor: platformCode.vendor,
+        code: platformCode.code,
+        referral_url: platformCode.referral_url,
+        referee_benefit: platformCode.referee_benefit,
+        source: "platform",
+      }));
+      return;
+    }
+
+    // Fall back to agent-submitted codes (ranked by trust/performance)
+    const rankedCodes = getRankedCodesForVendor(vendorParam);
+    if (rankedCodes.length > 0) {
+      const best = rankedCodes[0];
+      recordApiHit("/api/referral-codes/:vendor");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral-codes/${vendorParam}`, params: { source: "agent-submitted" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({
+        vendor: best.vendor,
+        code: best.code,
+        referral_url: best.referral_url,
+        referee_benefit: best.description,
+        source: "agent-submitted",
+      }));
+      return;
+    }
+
+    // No codes available
+    res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ error: `No referral codes available for "${vendorParam}"` }));
 
   // --- PUT /api/referral-codes/:id: Update a code ---
   } else if (url.pathname.match(/^\/api\/referral-codes\/[^/]+$/) && req.method === "PUT") {
