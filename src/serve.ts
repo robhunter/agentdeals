@@ -15,7 +15,7 @@ import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
-import { getPlatformCodeForVendor } from "./platform-codes.js";
+import { getPlatformCodeForVendor, getBestReferralCode } from "./platform-codes.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
@@ -53113,25 +53113,29 @@ const httpServer = createHttpServer(async (req, res) => {
     const results = searchOffers(q, category, eligibilityType, sort, validStability, validPaymentProtocol);
     const total = results.length;
     const paged = enrichOffers(results.slice(offset, offset + limit));
-    // Append ranked agent-submitted referral codes for each vendor (curated codes shown first via offer.referral)
-    const offersWithAgentCodes = paged.map(offer => {
+    // Enrich each offer with: (1) best referral_code (platform > agent-submitted, explicit null if none)
+    // and (2) full ranked agent-submitted codes list for detailed consumers.
+    const offersWithCodes = paged.map(offer => {
       const agentCodes = getRankedCodesForVendor(offer.vendor);
-      if (agentCodes.length === 0) return offer;
-      return {
+      const enriched: typeof offer & { referral_code: ReturnType<typeof getBestReferralCode>; agent_referral_codes?: unknown[] } = {
         ...offer,
-        agent_referral_codes: agentCodes.map(c => ({
+        referral_code: getBestReferralCode(offer.vendor),
+      };
+      if (agentCodes.length > 0) {
+        enriched.agent_referral_codes = agentCodes.map(c => ({
           code: c.code,
           referral_url: c.referral_url,
           description: c.description,
           source: c.source,
           submitted_by: c.submitted_by,
           score: Math.round(calculateCodeScore(c) * 1000) / 1000,
-        })),
-      };
+        }));
+      }
+      return enriched;
     });
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ offers: offersWithAgentCodes, total }));
+    res.end(JSON.stringify({ offers: offersWithCodes, total }));
   } else if (url.pathname === "/api/compare" && isGetOrHead) {
     recordApiHit("/api/compare");
     const a = url.searchParams.get("a") || "";
@@ -53149,8 +53153,15 @@ const httpServer = createHttpServer(async (req, res) => {
       return;
     }
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/compare", params: { a, b }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 2 });
+    const comparisonWithCodes = {
+      ...result.comparison,
+      referral_codes: {
+        [result.comparison.vendor_a.vendor]: getBestReferralCode(result.comparison.vendor_a.vendor),
+        [result.comparison.vendor_b.vendor]: getBestReferralCode(result.comparison.vendor_b.vendor),
+      },
+    };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(result.comparison));
+    res.end(JSON.stringify(comparisonWithCodes));
   } else if (url.pathname === "/api/new" && isGetOrHead) {
     recordApiHit("/api/new");
     const days = parseInt(url.searchParams.get("days") ?? "7", 10);
@@ -53170,8 +53181,12 @@ const httpServer = createHttpServer(async (req, res) => {
     }
     const result = getNewestDeals({ since, limit, category });
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/newest", params: { since, limit, category }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
+    const dealsWithCodes = {
+      ...result,
+      deals: result.deals.map(o => ({ ...o, referral_code: getBestReferralCode(o.vendor) })),
+    };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(result));
+    res.end(JSON.stringify(dealsWithCodes));
   } else if (url.pathname === "/api/categories" && isGetOrHead) {
     recordApiHit("/api/categories");
     const cats = getCategories();
@@ -53487,8 +53502,9 @@ const httpServer = createHttpServer(async (req, res) => {
       return;
     }
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/vendor-risk", params: { vendor: vendorParam }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    const riskWithCode = { ...riskResult.result, referral_code: getBestReferralCode(riskResult.result.vendor) };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(riskResult.result));
+    res.end(JSON.stringify(riskWithCode));
   } else if (url.pathname.startsWith("/api/details/") && isGetOrHead) {
     recordApiHit("/api/details");
     const vendorParam = decodeURIComponent(url.pathname.slice("/api/details/".length));
@@ -53506,8 +53522,9 @@ const httpServer = createHttpServer(async (req, res) => {
       return;
     }
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    const offerWithCode = { ...detailResult.offer, referral_code: getBestReferralCode(detailResult.offer.vendor) };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ offer: detailResult.offer, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}) }));
+    res.end(JSON.stringify({ offer: offerWithCode, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}) }));
   } else if (url.pathname === "/api/expiring" && isGetOrHead) {
     recordApiHit("/api/expiring");
     const withinDays = Math.min(Math.max(parseInt(url.searchParams.get("within_days") ?? "30", 10) || 30, 1), 365);
@@ -55216,35 +55233,17 @@ ${catList}
   } else if (url.pathname.match(/^\/api\/referral-codes\/[^/]+$/) && isGetOrHead && url.pathname !== "/api/referral-codes/mine") {
     const vendorParam = decodeURIComponent(url.pathname.split("/").pop()!);
 
-    // Platform codes have highest priority
-    const platformCode = getPlatformCodeForVendor(vendorParam);
-    if (platformCode) {
+    const best = getBestReferralCode(vendorParam);
+    if (best) {
       recordApiHit("/api/referral-codes/:vendor");
-      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral-codes/${vendorParam}`, params: { source: "platform" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
-      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({
-        vendor: platformCode.vendor,
-        code: platformCode.code,
-        referral_url: platformCode.referral_url,
-        referee_benefit: platformCode.referee_benefit,
-        source: "platform",
-      }));
-      return;
-    }
-
-    // Fall back to agent-submitted codes (ranked by trust/performance)
-    const rankedCodes = getRankedCodesForVendor(vendorParam);
-    if (rankedCodes.length > 0) {
-      const best = rankedCodes[0];
-      recordApiHit("/api/referral-codes/:vendor");
-      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral-codes/${vendorParam}`, params: { source: "agent-submitted" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral-codes/${vendorParam}`, params: { source: best.source }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({
         vendor: best.vendor,
         code: best.code,
         referral_url: best.referral_url,
-        referee_benefit: best.description,
-        source: "agent-submitted",
+        referee_benefit: best.referee_benefit,
+        source: best.source,
       }));
       return;
     }
