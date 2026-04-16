@@ -49406,6 +49406,8 @@ ${entries}
 function buildChangesPage(): string {
   const allChanges = loadDealChanges();
   const today = new Date().toISOString().slice(0, 10);
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const last30DaysCount = allChanges.filter(c => c.date >= thirtyDaysAgo).length;
 
   // Sort all changes reverse chronological
   const sorted = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
@@ -49461,7 +49463,7 @@ ${entriesHtml}
   }).join("\n");
 
   const title = "Deal Change Timeline \u2014 AgentDeals";
-  const metaDesc = `${allChanges.length} developer infrastructure pricing changes tracked. Free tier removals, price increases, product shutdowns, and new deals.`;
+  const metaDesc = `${allChanges.length} developer infrastructure pricing changes tracked since launch \u2014 ${last30DaysCount} in the last 30 days. Free tier removals, price increases, product shutdowns, and new deals.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -49554,7 +49556,11 @@ ${globalNavCss()}
   <div class="stats-bar">
     <div class="stat-card">
       <div class="stat-value">${allChanges.length}</div>
-      <div class="stat-label">Total Changes</div>
+      <div class="stat-label">Total (All Time)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${last30DaysCount}</div>
+      <div class="stat-label">Last 30 Days</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${upcomingCount}</div>
@@ -53278,9 +53284,10 @@ const httpServer = createHttpServer(async (req, res) => {
       res.end(JSON.stringify(result));
     } else {
       const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
+      const allTimeTotal = loadDealChanges().length;
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify(result));
+      res.end(JSON.stringify({ ...result, all_time_total: allTimeTotal }));
     }
   } else if (url.pathname === "/api/deadlines" && isGetOrHead) {
     recordApiHit("/api/deadlines");
