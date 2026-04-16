@@ -242,4 +242,33 @@ describe("referral HTTP endpoints", () => {
     const html = await res.text();
     assert.ok(html.includes('href="/disclosure"'), "Home page footer should link to disclosure");
   });
+
+  it("GET /press returns 200 and renders external coverage", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/press`);
+    assert.strictEqual(res.status, 200);
+    assert.ok(res.headers.get("content-type")?.includes("text/html"));
+    const html = await res.text();
+    assert.ok(html.includes("<title>AgentDeals in the Press"), "Press page should have title");
+    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
+    assert.ok(html.includes('"@type":"ItemList"'), "JSON-LD should be ItemList");
+    assert.ok(html.includes("DEV.to"), "Seeded DEV.to entry should render");
+    assert.ok(html.includes("We Tracked 202 Developer Tool Pricing Changes"), "Seeded article title should render");
+    assert.ok(html.includes('rel="canonical"'), "Should have canonical link");
+    assert.ok(html.includes("canonical_backlink") === false, "Raw JSON keys should not leak");
+    assert.ok(html.includes('href="/changes"'), "Should surface canonical backlink to /changes");
+    assert.ok(html.includes("global-nav"), "Should render global nav");
+    assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+  });
+
+  it("sitemap-pages.xml includes /press", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
+    const xml = await res.text();
+    assert.ok(xml.includes("/press</loc>") || xml.includes("/press<"), "Sitemap should include press page");
+  });
+
+  it("all pages include press link in footer", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/`);
+    const html = await res.text();
+    assert.ok(html.includes('href="/press"'), "Home page footer should link to press");
+  });
 });
