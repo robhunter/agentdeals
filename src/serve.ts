@@ -3467,6 +3467,19 @@ ${allCompareLinks.join("\n")}
     <p style="margin-top:.75rem;font-size:.8rem"><a href="/developer-hub">Watchlist API docs &rarr;</a></p>
   </div>`;
 
+  // Marketplace solicitation (low-pressure) — shown only when this vendor has no
+  // platform code, no documented program, and no offer-level referral. Converts
+  // dormant vendor pages into acquisition surfaces for code submitters.
+  const hasAnyReferralSurface = !!platformCode || primary.referral_program?.available === true || !!primary.referral;
+  const marketplaceSolicitationHtml = !hasAnyReferralSurface ? `
+  <div class="section marketplace-solicitation">
+    <div style="border:1px dashed var(--border);border-radius:8px;padding:1rem;background:var(--bg-card);opacity:.92">
+      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:var(--text)">Know a referral or partner program for ${escHtmlServer(vendorName)}?</h3>
+      <p style="margin:0 0 .5rem;font-size:.85rem;color:var(--text-muted)">Submit a referral code via the <a href="/marketplace">Agent Marketplace</a> and earn revenue when agents use it (60% commission, paid via x402). Trust tiers and verification protect against abuse.</p>
+      <p style="margin:0;font-size:.75rem;color:var(--text-dim)">See our <a href="/disclosure">affiliate disclosure</a> for commission details.</p>
+    </div>
+  </div>` : "";
+
   // MCP snippet
   const mcpSnippet = `{
   "tool": "search_deals",
@@ -3707,6 +3720,7 @@ ${altPagesHtml}
 ${reportAppearancesHtml}
 ${referralProgramHtml}
 ${watchlistCtaHtml}
+${marketplaceSolicitationHtml}
 ${internalLinksHtml}
   <div class="section mcp-section">
     <h2>Query via MCP</h2>
