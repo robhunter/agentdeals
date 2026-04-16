@@ -370,6 +370,71 @@ export function recordReferralVendorLookup(vendor: string): void {
   referralVendorCounts[key] = (referralVendorCounts[key] ?? 0) + 1;
 }
 
+// Classify MCP client names as 'agent' (real user-facing agent) or 'crawler'
+// (registry/scanner/health-probe). Case-insensitive substring match on the patterns below.
+// Conservative: unknown or unmatched names default to 'agent' — we'd rather over-count
+// agents than under-count them. Keep the rule list here so we can tune it in one place.
+export const CRAWLER_CLIENT_PATTERNS = [
+  "crawler",
+  "probe",
+  "scanner",
+  "validator",
+  "inspector",
+  "scoring",
+  "enricher",
+  "registry",
+  "health",
+  "monitor",
+  "survey",
+  "corpus",
+  "tester",
+  "dataset",
+  "sentinel",
+  "pm-audit",
+  "pm-check",
+  "glama",
+  "mcpdd",
+  "yellowmcp",
+  "mcpscoringengine",
+  "fabrique-noauth-probe",
+] as const;
+
+export function classifyMcpClient(name: string): "agent" | "crawler" {
+  const lower = (name || "").toLowerCase();
+  for (const pattern of CRAWLER_CLIENT_PATTERNS) {
+    if (lower.includes(pattern)) return "crawler";
+  }
+  return "agent";
+}
+
+export function getSessionClassification(): {
+  sessions_by_type: { agent: number; crawler: number; total: number };
+  clients_top: { name: string; sessions: number; type: "agent" | "crawler" }[];
+} {
+  const mergedClients: Record<string, number> = { ...cumulative.clients };
+  for (const [name, count] of Object.entries(sessionClients)) {
+    mergedClients[name] = (mergedClients[name] ?? 0) + count;
+  }
+  let agentSessions = 0;
+  let crawlerSessions = 0;
+  for (const [name, count] of Object.entries(mergedClients)) {
+    if (classifyMcpClient(name) === "crawler") crawlerSessions += count;
+    else agentSessions += count;
+  }
+  const clientsTop = Object.entries(mergedClients)
+    .map(([name, sessions]) => ({ name, sessions, type: classifyMcpClient(name) }))
+    .sort((a, b) => b.sessions - a.sessions)
+    .slice(0, 10);
+  return {
+    sessions_by_type: {
+      agent: agentSessions,
+      crawler: crawlerSessions,
+      total: agentSessions + crawlerSessions,
+    },
+    clients_top: clientsTop,
+  };
+}
+
 export function getReferralMarketplaceStats(): {
   total_listing_calls: number;
   total_vendor_lookups: number;
