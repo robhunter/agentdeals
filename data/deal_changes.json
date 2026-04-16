@@ -3,12 +3,12 @@
     {
       "vendor": "OpenAI Codex",
       "change_type": "pricing_restructured",
-      "date": "2026-04-01",
-      "summary": "ChatGPT Business price dropped from $30/user/mo to $20/user/mo (annual). Pay-as-you-go seats now available with no fixed fee. $100 credits for new Codex-only team members (up to $500/team, limited time)",
-      "previous_state": "Business plan $30/user/mo, no pay-as-you-go option",
-      "current_state": "Business $20/user/mo (annual), pay-as-you-go seats with usage-based billing, $100 new member credits",
+      "date": "2026-04-03",
+      "summary": "Switched from per-seat subscription to pay-as-you-go token-based pricing. Teams can add Codex-only seats billed on token consumption with no rate limits. ChatGPT Business price cut from $25 to $20/month (annual). $100 credit per new Codex team member (up to $500/team, limited time)",
+      "previous_state": "Per-seat subscription model, Business plan $25/user/mo",
+      "current_state": "Pay-as-you-go token-based pricing, Business $20/user/mo (annual), Codex-only seats with usage-based billing, $100 new member credits",
       "impact": "medium",
-      "source_url": "https://openai.com/index/introducing-codex/",
+      "source_url": "https://openai.com/index/codex-flexible-pricing-for-teams/",
       "category": "AI Coding",
       "alternatives": [
         "GitHub Copilot",
@@ -3657,6 +3657,22 @@
         "DigitalOcean",
         "Vultr",
         "AWS"
+      ]
+    },
+    {
+      "vendor": "Google Content API for Shopping",
+      "change_type": "product_deprecated",
+      "date": "2026-04-15",
+      "summary": "Google Content API for Shopping being sunset August 18, 2026. Replaced by Merchant API, rolling out April 22, 2026. Developers must migrate before the sunset deadline.",
+      "previous_state": "Active API for Google Merchant Center product data management",
+      "current_state": "Deprecated — sunset August 18, 2026. Replacement: Merchant API (available April 22, 2026)",
+      "impact": "high",
+      "source_url": "https://ppc.land/merchant-api-comes-to-google-ads-scripts-april-22-as-content-api-nears-its-end/",
+      "category": "API Development",
+      "alternatives": [
+        "Google Merchant API",
+        "Shopify API",
+        "BigCommerce API"
       ]
     }
   ]
