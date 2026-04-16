@@ -20,6 +20,7 @@ const apiHits: Record<string, number> = {
   "/api/offers": 0,
   "/api/categories": 0,
   "/api/stack": 0,
+  "/api/metrics": 0,
 };
 
 let totalSessions = 0;
@@ -37,7 +38,21 @@ let cumulative = {
   first_session_at: "",
   last_deploy_at: "",
   clients: {} as Record<string, number>,
+  referral_listing_calls: 0,
+  referral_listing_by_source: { platform: 0, agent: 0, null: 0 } as Record<"platform" | "agent" | "null", number>,
+  referral_vendor_lookups: 0,
+  referral_vendor_counts: {} as Record<string, number>,
 };
+
+// Current-deployment referral marketplace counters
+let referralListingCalls = 0;
+const referralListingBySource: Record<"platform" | "agent" | "null", number> = {
+  platform: 0,
+  agent: 0,
+  null: 0,
+};
+let referralVendorLookups = 0;
+const referralVendorCounts: Record<string, number> = {};
 
 let telemetryPath = "";
 
@@ -56,6 +71,10 @@ interface TelemetryData {
   first_session_at: string;
   last_deploy_at: string;
   cumulative_clients?: Record<string, number>;
+  cumulative_referral_listing_calls?: number;
+  cumulative_referral_listing_by_source?: Record<"platform" | "agent" | "null", number>;
+  cumulative_referral_vendor_lookups?: number;
+  cumulative_referral_vendor_counts?: Record<string, number>;
 }
 
 async function redisGet(): Promise<TelemetryData | null> {
@@ -188,6 +207,15 @@ function parseTelemetryData(data: Record<string, unknown>): void {
   cumulative.first_session_at = (data.first_session_at as string) ?? "";
   cumulative.last_deploy_at = (data.last_deploy_at as string) ?? "";
   cumulative.clients = (data.cumulative_clients as Record<string, number>) ?? {};
+  cumulative.referral_listing_calls = (data.cumulative_referral_listing_calls as number) ?? 0;
+  const listingBySource = (data.cumulative_referral_listing_by_source as Record<string, number>) ?? {};
+  cumulative.referral_listing_by_source = {
+    platform: listingBySource.platform ?? 0,
+    agent: listingBySource.agent ?? 0,
+    null: listingBySource.null ?? 0,
+  };
+  cumulative.referral_vendor_lookups = (data.cumulative_referral_vendor_lookups as number) ?? 0;
+  cumulative.referral_vendor_counts = (data.cumulative_referral_vendor_counts as Record<string, number>) ?? {};
 }
 
 // In-memory client counts for this deployment
@@ -201,6 +229,11 @@ function buildTelemetryData(): TelemetryData {
   for (const [name, count] of Object.entries(sessionClients)) {
     mergedClients[name] = (mergedClients[name] ?? 0) + count;
   }
+  // Merge referral vendor counts (cumulative + current deployment)
+  const mergedVendorCounts: Record<string, number> = { ...cumulative.referral_vendor_counts };
+  for (const [vendor, count] of Object.entries(referralVendorCounts)) {
+    mergedVendorCounts[vendor] = (mergedVendorCounts[vendor] ?? 0) + count;
+  }
   return {
     cumulative_sessions: cumulative.sessions + totalSessions,
     cumulative_tool_calls: cumulative.tool_calls + totalToolCalls,
@@ -209,6 +242,14 @@ function buildTelemetryData(): TelemetryData {
     first_session_at: cumulative.first_session_at || (totalSessions > 0 ? serverStartedISO : ""),
     last_deploy_at: cumulative.last_deploy_at,
     cumulative_clients: mergedClients,
+    cumulative_referral_listing_calls: cumulative.referral_listing_calls + referralListingCalls,
+    cumulative_referral_listing_by_source: {
+      platform: cumulative.referral_listing_by_source.platform + referralListingBySource.platform,
+      agent: cumulative.referral_listing_by_source.agent + referralListingBySource.agent,
+      null: cumulative.referral_listing_by_source.null + referralListingBySource.null,
+    },
+    cumulative_referral_vendor_lookups: cumulative.referral_vendor_lookups + referralVendorLookups,
+    cumulative_referral_vendor_counts: mergedVendorCounts,
   };
 }
 
@@ -269,6 +310,16 @@ export function resetCounters(): void {
   cumulative.first_session_at = "";
   cumulative.last_deploy_at = "";
   cumulative.clients = {};
+  referralListingCalls = 0;
+  referralListingBySource.platform = 0;
+  referralListingBySource.agent = 0;
+  referralListingBySource.null = 0;
+  referralVendorLookups = 0;
+  for (const key of Object.keys(referralVendorCounts)) delete referralVendorCounts[key];
+  cumulative.referral_listing_calls = 0;
+  cumulative.referral_listing_by_source = { platform: 0, agent: 0, null: 0 };
+  cumulative.referral_vendor_lookups = 0;
+  cumulative.referral_vendor_counts = {};
 }
 
 export function recordToolCall(tool: string): void {
@@ -304,6 +355,45 @@ export function recordSessionDisconnect(): void {
 
 export function recordLandingPageView(): void {
   landingPageViews++;
+}
+
+export function recordReferralListingCall(source: "platform" | "agent" | null): void {
+  referralListingCalls++;
+  const key = source ?? "null";
+  referralListingBySource[key]++;
+}
+
+export function recordReferralVendorLookup(vendor: string): void {
+  if (!vendor) return;
+  referralVendorLookups++;
+  const key = vendor.trim().toLowerCase();
+  referralVendorCounts[key] = (referralVendorCounts[key] ?? 0) + 1;
+}
+
+export function getReferralMarketplaceStats(): {
+  total_listing_calls: number;
+  total_vendor_lookups: number;
+  listing_calls_by_source: { platform: number; agent: number; null: number };
+  vendor_lookups_top: { vendor: string; count: number }[];
+} {
+  const mergedVendorCounts: Record<string, number> = { ...cumulative.referral_vendor_counts };
+  for (const [vendor, count] of Object.entries(referralVendorCounts)) {
+    mergedVendorCounts[vendor] = (mergedVendorCounts[vendor] ?? 0) + count;
+  }
+  const vendorLookupsTop = Object.entries(mergedVendorCounts)
+    .map(([vendor, count]) => ({ vendor, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+  return {
+    total_listing_calls: cumulative.referral_listing_calls + referralListingCalls,
+    total_vendor_lookups: cumulative.referral_vendor_lookups + referralVendorLookups,
+    listing_calls_by_source: {
+      platform: cumulative.referral_listing_by_source.platform + referralListingBySource.platform,
+      agent: cumulative.referral_listing_by_source.agent + referralListingBySource.agent,
+      null: cumulative.referral_listing_by_source.null + referralListingBySource.null,
+    },
+    vendor_lookups_top: vendorLookupsTop,
+  };
 }
 
 export function getStats(): {

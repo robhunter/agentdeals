@@ -8,7 +8,7 @@ import { createServer, getServerCard } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -53220,6 +53220,13 @@ const httpServer = createHttpServer(async (req, res) => {
   } else if (url.pathname === "/health") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ status: "ok", sessions: sessions.size, stats: getStats() }));
+  } else if (url.pathname === "/api/metrics" && isGetOrHead) {
+    recordApiHit("/api/metrics");
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({
+      ...getStats(),
+      referral_marketplace: getReferralMarketplaceStats(),
+    }));
   } else if (url.pathname === "/.well-known/glama.json") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(readFileSync(join(__dirname, "..", "glama.json"), "utf-8"));
@@ -55395,6 +55402,7 @@ ${catList}
     const filtered = categoryName ? listed.filter(c => c.category === categoryName) : listed;
 
     recordApiHit("/api/referral-codes");
+    recordReferralListingCall(sourceFilter ?? null);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "GET /api/referral-codes", params: { source: sourceFilter ?? "all", category: categoryName ?? "all" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: filtered.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ codes: filtered, total: filtered.length }));
@@ -55493,6 +55501,7 @@ ${catList}
     const vendorParam = decodeURIComponent(url.pathname.split("/").pop()!);
 
     const best = getBestReferralCode(vendorParam);
+    recordReferralVendorLookup(vendorParam);
     if (best) {
       recordApiHit("/api/referral-codes/:vendor");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral-codes/${vendorParam}`, params: { source: best.source }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
