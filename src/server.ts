@@ -3,7 +3,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, getVendorReferral } from "./data.js";
+import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -109,7 +109,8 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         }
 
         // Mode: search/browse
-        const allResults = searchOffers(query, category, eligibility, sort, stability, payment_protocol);
+        const sanitizedQuery = query ? sanitizeQuery(query) : undefined;
+        const allResults = searchOffers(sanitizedQuery || undefined, category, eligibility, sort, stability, payment_protocol);
         const total = allResults.length;
         const effectiveOffset = offset ?? 0;
         const effectiveLimit = limit ?? 20;
