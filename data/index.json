@@ -5189,7 +5189,7 @@
     {
       "vendor": "StatusCake",
       "category": "Monitoring",
-      "description": "Uptime monitoring — 10 monitors, 5-min intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor, 75 free SMS credits/month, 15+ alert integrations",
+      "description": "Uptime monitoring — 10 monitors, 5-min intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor, email alerts, basic integrations",
       "tier": "Free",
       "url": "https://www.statuscake.com/pricing/",
       "tags": [
@@ -5199,7 +5199,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "PagerDuty",
@@ -5315,7 +5315,7 @@
     {
       "vendor": "Cronitor",
       "category": "Monitoring",
-      "description": "Cron job and uptime monitoring — free Hacker plan: 5 monitors, 5-minute check frequency, email and Slack alerts, 1 status page (50 subscribers), 12-month data retention, single user",
+      "description": "Cron job and uptime monitoring — free Hacker plan: 5 monitors, 5-minute check frequency, email, Slack, and webhook alerts, 1 status page (50 subscribers), 12-month data retention, single user",
       "tier": "Hacker",
       "url": "https://cronitor.io/pricing",
       "tags": [
@@ -5326,7 +5326,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "Semaphore CI",
