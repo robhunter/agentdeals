@@ -10142,18 +10142,6 @@
       "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "Project Gatekeeper",
-      "category": "Security",
-      "description": "An All-in-One SSL Toolkit Offering various features like Private Key & CSR Generator, SSL Certificate Decoder, Certificate Matcher and Order SSL Certificate. We offer the users to generate Free SSL Certificates from Let's Encrypt, Google Trust and BuyPass using CNAME Records rather than TXT Records.",
-      "tier": "Free",
-      "url": "https://gatekeeper.binarybiology.top/",
-      "tags": [
-        "security",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-05"
-    },
-    {
       "vendor": "Public Cloud Threat Intelligence",
       "category": "Security",
       "description": "High confidence Indicator of Compromise(IOC) targeting public cloud infrastructure, A portion is available on github (https://github.com/unknownhad/AWSAttacks). Full list is available via API",
@@ -10168,14 +10156,14 @@
     {
       "vendor": "Safety",
       "category": "Security",
-      "description": "AI-powered development security platform. Rebranded from PyUp to Safety (getsafety.com). Monitors dependencies for vulnerabilities.",
+      "description": "AI-powered development security platform (rebranded from PyUp). Free: 1 codebase, 100 scans/month, 1 user, non-commercial only. Uses public vulnerability databases (Safety's proprietary 4x database requires paid plan). Email support with 48-hour response.",
       "tier": "Free",
       "url": "https://getsafety.com/",
       "tags": [
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "qualys.com",
