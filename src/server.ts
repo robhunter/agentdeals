@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, getVendorReferral } from "./data.js";
-import { recordToolCall, logRequest } from "./stats.js";
+import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
 import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
@@ -124,6 +124,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
         const paged = filtered.slice(effectiveOffset, effectiveOffset + effectiveLimit);
         const results = enrichOffers(paged);
         const finalTotal = since ? filtered.length : total;
+        recordSearchQuery(query, finalTotal, category);
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { query, category, eligibility, sort, limit: effectiveLimit, offset: effectiveOffset, since }, result_count: results.length, session_id: getSessionId?.() });
 
         // Zero-result suggestion (only when no results match at all, not just paginated past end)
