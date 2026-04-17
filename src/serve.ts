@@ -9582,7 +9582,7 @@ function buildSecurityAlternativesPage(): string {
     ["Socket.dev", "Dependabot", "Renovate", "Grype", "pyup.io", "Snyk"].includes(o.vendor) && !appSecurity.includes(o)
   );
   const containerCloud = enrichedAll.filter(o =>
-    ["Trivy", "Falco", "Twingate", "Tailscale", "Project Gatekeeper", "Public Cloud Threat Intelligence"].includes(o.vendor)
+    ["Trivy", "Falco", "Twingate", "Tailscale", "Public Cloud Threat Intelligence"].includes(o.vendor)
   );
   const identityAuth = enrichedAll.filter(o =>
     o.category === "Auth"
