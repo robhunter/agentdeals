@@ -8084,18 +8084,6 @@
       "verifiedDate": "2026-04-13"
     },
     {
-      "vendor": "wolfram.com",
-      "category": "AI / ML",
-      "description": "Built-in knowledge-based algorithms in the cloud.",
-      "tier": "Free",
-      "url": "https://wolfram.com/language/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-05"
-    },
-    {
       "vendor": "wrapapi.com",
       "category": "Web Scraping",
       "description": "Turn any website into a parameterized API. 30k API calls per month.",
@@ -12652,16 +12640,16 @@
     {
       "vendor": "Braintrust",
       "category": "AI / ML",
-      "description": "Evals, prompt playground, and data management for Gen AI. Free plan gives upto 1,000 private eval rows/week.",
+      "description": "Evals, prompt playground, and data management for Gen AI. Starter plan (free): 1 GB processed data/month, 10k scores/month, 14 days data retention. Unlimited users, projects, datasets, playgrounds, and experiments. Overage: $4/GB data, $2.50 per 1k scores.",
       "tier": "Free",
-      "url": "https://www.braintrustdata.com/",
+      "url": "https://www.braintrust.dev/pricing",
       "tags": [
         "ai",
         "ml",
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "Clair",

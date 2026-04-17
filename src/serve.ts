@@ -11164,7 +11164,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/github-copilot">GitHub Copilot</a> for IDE-integrated autocomplete (2,000/mo free). <a href="/vendor/cursor">Cursor</a> for an AI-native editor. <a href="/vendor/gemini-cli">Gemini CLI</a> and <a href="/vendor/cline">Cline</a> for free open-source terminal agents (BYOK).</dd>
 
       <dt>Building an AI app and need observability?</dt>
-      <dd><a href="/vendor/langfuse">Langfuse</a> \u2014 open-source LLM tracing, 50K observations/month free. <a href="/vendor/langwatch">LangWatch</a> for monitoring and optimization. <a href="/vendor/braintrust">Braintrust</a> for evals with 1,000 rows/week free.</dd>
+      <dd><a href="/vendor/langfuse">Langfuse</a> \u2014 open-source LLM tracing, 50K observations/month free. <a href="/vendor/langwatch">LangWatch</a> for monitoring and optimization. <a href="/vendor/braintrust">Braintrust</a> for evals with 1 GB/month free.</dd>
 
       <dt>Need free GPU compute for ML training?</dt>
       <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU, completely free. <a href="/vendor/paperspace">Paperspace</a> for free notebooks with basic instances. <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
