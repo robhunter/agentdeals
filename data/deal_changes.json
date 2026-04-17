@@ -3722,6 +3722,23 @@
         "Cursor",
         "Codeium"
       ]
+    },
+    {
+      "vendor": "Google Gemini API",
+      "change_type": "product_deprecated",
+      "date": "2026-06-01",
+      "summary": "Gemini 2.0 Flash and 2.0 Flash-Lite will be deprecated June 1, 2026. Developers must migrate to Gemini 2.5 Flash or 3.x Flash models. Google is consolidating the model lineup — 2.0 generation reaching end of life as 2.5 and 3.x become production-ready.",
+      "previous_state": "Gemini 2.0 Flash and 2.0 Flash-Lite available on free and paid tiers",
+      "current_state": "Gemini 2.0 Flash and 2.0 Flash-Lite deprecated June 1, 2026. Migrate to 2.5 Flash or 3.x Flash",
+      "impact": "high",
+      "source_url": "https://ai.google.dev/gemini-api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [
+        "Gemini 2.5 Flash",
+        "Gemini 3.0 Flash",
+        "OpenRouter",
+        "Groq"
+      ]
     }
   ]
 }
