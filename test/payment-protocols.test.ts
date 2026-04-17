@@ -60,15 +60,15 @@ describe("payment protocol features", () => {
     }
   });
 
-  it("GET /api/offers?payment_protocol=mpp returns MPP vendors", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=mpp&limit=100`);
+  it("GET /api/offers?payment_protocol=stripe-mpp returns Stripe MPP vendors", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=stripe-mpp&limit=100`);
     assert.strictEqual(res.status, 200);
     const data = await res.json() as { offers: { vendor: string; payment_protocols?: string[] }[]; total: number };
-    assert.ok(data.total > 0, "Should have MPP offers");
+    assert.ok(data.total > 0, "Should have Stripe MPP offers");
     for (const offer of data.offers) {
       assert.ok(
-        offer.payment_protocols?.some((p: any) => p.protocol === "mpp"),
-        `${offer.vendor} should have mpp in payment_protocols`
+        offer.payment_protocols?.some((p: any) => p.protocol === "stripe-mpp"),
+        `${offer.vendor} should have stripe-mpp in payment_protocols`
       );
     }
   });
@@ -150,5 +150,41 @@ describe("payment protocol features", () => {
     const res = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await res.text();
     assert.ok(xml.includes("/x402-services"), "Sitemap should include /x402-services");
+  });
+
+  it("x402 offers include expanded AI/ML vendors", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=x402&limit=200`);
+    const data = await res.json() as { offers: { vendor: string }[]; total: number };
+    const vendors = data.offers.map(o => o.vendor);
+    assert.ok(data.total >= 40, `Should have 40+ x402 vendors, got ${data.total}`);
+    assert.ok(vendors.includes("Replicate"), "x402 should include Replicate");
+    assert.ok(vendors.includes("Groq"), "x402 should include Groq");
+    assert.ok(vendors.includes("Mistral AI"), "x402 should include Mistral AI");
+    assert.ok(vendors.includes("Together AI"), "x402 should include Together AI");
+    assert.ok(vendors.includes("Fireworks AI"), "x402 should include Fireworks AI");
+    assert.ok(vendors.includes("Modal"), "x402 should include Modal");
+    assert.ok(vendors.includes("E2B"), "x402 should include E2B");
+  });
+
+  it("stripe-mpp offers include expected vendors", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=stripe-mpp&limit=100`);
+    const data = await res.json() as { offers: { vendor: string }[]; total: number };
+    const vendors = data.offers.map(o => o.vendor);
+    assert.ok(data.total >= 8, `Should have 8+ stripe-mpp vendors, got ${data.total}`);
+    assert.ok(vendors.includes("Stripe"), "stripe-mpp should include Stripe");
+    assert.ok(vendors.includes("Browserbase"), "stripe-mpp should include Browserbase");
+    assert.ok(vendors.includes("Vercel"), "stripe-mpp should include Vercel");
+  });
+
+  it("some vendors support both x402 and stripe-mpp", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/api/agent-payments`);
+    const data = await res.json() as any;
+    assert.ok(data.protocols.both.count >= 5, `Should have 5+ dual-protocol vendors, got ${data.protocols.both.count}`);
+  });
+
+  it("total payment-enabled vendors meets 54+ threshold", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/api/agent-payments`);
+    const data = await res.json() as any;
+    assert.ok(data.total >= 54, `Should have 54+ payment-enabled vendors, got ${data.total}`);
   });
 });
