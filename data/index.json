@@ -1020,7 +1020,7 @@
     {
       "vendor": "Auth0",
       "category": "Auth",
-      "description": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login. No credit card required",
+      "description": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
       "tier": "Free",
       "url": "https://auth0.com/pricing",
       "tags": [
@@ -1031,7 +1031,7 @@
         "sso",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-17",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1044,7 +1044,7 @@
     {
       "vendor": "Kinde",
       "category": "Auth",
-      "description": "10,500 MAU, OAuth 2.0/OIDC/SAML, MFA (email/SMS/app), passwordless, multi-tenancy, feature flags. No credit card required",
+      "description": "10,500 MAU, OAuth 2.0/OIDC/SAML, MFA (email/SMS/app), passwordless, multi-tenancy (5 organizations), feature flags (10 max). No credit card required",
       "tier": "Free",
       "url": "https://www.kinde.com/pricing/",
       "tags": [
@@ -1056,7 +1056,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "WorkOS",
