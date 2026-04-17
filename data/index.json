@@ -6234,7 +6234,7 @@
     {
       "vendor": "Codemagic",
       "category": "CI/CD",
-      "description": "Mobile CI/CD platform — free tier (individual accounts): 500 macOS M2 build minutes/month, unlimited apps, 1 parallel build, 30-day build history, 3 GB cache/build. Supports Flutter, iOS, Android, React Native",
+      "description": "Mobile CI/CD platform — free tier (individual accounts): 500 macOS M2 build minutes/month, unlimited apps, 1 parallel build, 60-day build history, 3 GB cache/build. Supports Flutter, iOS, Android, React Native",
       "tier": "Free",
       "url": "https://codemagic.io/pricing/",
       "tags": [
@@ -6246,7 +6246,7 @@
         "flutter",
         "macos"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "Appcircle",
