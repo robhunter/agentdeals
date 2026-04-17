@@ -320,6 +320,7 @@ export function resetCounters(): void {
   cumulative.referral_listing_by_source = { platform: 0, agent: 0, null: 0 };
   cumulative.referral_vendor_lookups = 0;
   cumulative.referral_vendor_counts = {};
+  searchQueryLog.length = 0;
 }
 
 export function recordToolCall(tool: string): void {
@@ -720,4 +721,72 @@ export function getPageViewsToday(): number {
     pageViewsTodayDate = today;
   }
   return pageViewsToday;
+}
+
+// --- Search query analytics (in-memory, resets on deploy) ---
+
+interface SearchQueryEntry {
+  query: string;
+  ts: number;
+  resultCount: number;
+  category?: string;
+}
+
+const searchQueryLog: SearchQueryEntry[] = [];
+
+export function recordSearchQuery(query: string | undefined, resultCount: number, category?: string): void {
+  if (!query) return;
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return;
+  searchQueryLog.push({
+    query: normalized,
+    ts: Date.now(),
+    resultCount,
+    category,
+  });
+}
+
+export function getSearchAnalytics(): {
+  top_queries_7d: { query: string; count: number }[];
+  zero_result_queries_7d: { query: string; count: number }[];
+  queries_by_category_7d: Record<string, number>;
+} {
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const recent = searchQueryLog.filter(e => e.ts >= sevenDaysAgo);
+
+  // Top 20 queries by frequency
+  const queryCounts = new Map<string, number>();
+  for (const e of recent) {
+    queryCounts.set(e.query, (queryCounts.get(e.query) ?? 0) + 1);
+  }
+  const topQueries = [...queryCounts.entries()]
+    .map(([query, count]) => ({ query, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 20);
+
+  // Top 10 zero-result queries
+  const zeroResultCounts = new Map<string, number>();
+  for (const e of recent) {
+    if (e.resultCount === 0) {
+      zeroResultCounts.set(e.query, (zeroResultCounts.get(e.query) ?? 0) + 1);
+    }
+  }
+  const zeroResultQueries = [...zeroResultCounts.entries()]
+    .map(([query, count]) => ({ query, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+
+  // Search volume by category (from results that matched a category)
+  const categoryCounts: Record<string, number> = {};
+  for (const e of recent) {
+    if (e.category) {
+      categoryCounts[e.category] = (categoryCounts[e.category] ?? 0) + 1;
+    }
+  }
+
+  return {
+    top_queries_7d: topQueries,
+    zero_result_queries_7d: zeroResultQueries,
+    queries_by_category_7d: categoryCounts,
+  };
 }
