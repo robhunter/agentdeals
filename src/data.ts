@@ -136,6 +136,14 @@ function scoreOffer(offer: Offer, terms: string[]): number {
   return score;
 }
 
+/**
+ * Strip special characters from search queries that break matching.
+ * Keeps alphanumeric, hyphens, spaces, dots, and plus signs.
+ */
+export function sanitizeQuery(raw: string): string {
+  return raw.replace(/[^a-zA-Z0-9\s.\-+]/g, "").replace(/\s+/g, " ").trim();
+}
+
 export function searchOffers(
   query?: string,
   category?: string,

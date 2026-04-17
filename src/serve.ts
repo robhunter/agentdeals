@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral } from "./data.js";
+import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics } from "./stats.js";
@@ -51593,7 +51593,8 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
   let results: ReturnType<typeof enrichOffers> = [];
   let totalResults = 0;
   if (hasFilters) {
-    const raw = searchOffers(query || undefined, categoryFilter || undefined, typeFilter || undefined, sortParam || undefined);
+    const sanitizedSearchQuery = query ? sanitizeQuery(query) : undefined;
+    const raw = searchOffers(sanitizedSearchQuery || undefined, categoryFilter || undefined, typeFilter || undefined, sortParam || undefined);
     totalResults = raw.length;
     const start = (page - 1) * PAGE_SIZE;
     results = enrichOffers(raw.slice(start, start + PAGE_SIZE));
@@ -53353,7 +53354,8 @@ const httpServer = createHttpServer(async (req, res) => {
     const validPaymentProtocol = paymentProtocol && ["x402", "stripe-mpp"].includes(paymentProtocol) ? paymentProtocol : undefined;
     const limit = parseInt(url.searchParams.get("limit") ?? "20", 10);
     const offset = parseInt(url.searchParams.get("offset") ?? "0", 10);
-    const results = searchOffers(q, category, eligibilityType, sort, validStability, validPaymentProtocol);
+    const sanitizedQ = q ? sanitizeQuery(q) : undefined;
+    const results = searchOffers(sanitizedQ || undefined, category, eligibilityType, sort, validStability, validPaymentProtocol);
     const total = results.length;
     const paged = enrichOffers(results.slice(offset, offset + limit));
     // Enrich each offer with: (1) best referral_code (platform > agent-submitted, explicit null if none)
