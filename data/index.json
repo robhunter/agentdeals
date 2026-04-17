@@ -11966,14 +11966,14 @@
     {
       "vendor": "mailchannels.com",
       "category": "Email",
-      "description": "Email API with REST API and SMTP integrations, free for upto 3,000 emails/month.",
+      "description": "Email API with REST API and SMTP integrations. Free: 100 emails/day (~3,000/month), 3 domains, community support.",
       "tier": "Free",
       "url": "https://www.mailchannels.com",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "UserCheck",
@@ -12139,14 +12139,14 @@
     {
       "vendor": "SimpleLogin",
       "category": "Email",
-      "description": "Open source, self-hostable email alias/forwarding solution. Free 10 Aliases, unlimited bandwidth, unlimited reply/send. Free for educational staff (student, researcher, etc.).",
+      "description": "Open source, self-hostable email alias/forwarding solution. Free 10 aliases, unlimited bandwidth, free replies from aliases. New outbound messages from aliases require Premium. Free for educational staff (student, researcher, etc.).",
       "tier": "Free",
       "url": "https://simplelogin.io/",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "Substack",
@@ -18870,35 +18870,6 @@
       }
     },
     {
-      "vendor": "SendGrid Accelerate",
-      "category": "Email",
-      "description": "SendGrid Accelerate is a program to help startups succeed. Startups participating in the SendGrid Accelerate program receive 12 months of product credit, access to mentoring, and networking opportunities exclusive to program participants.",
-      "tier": "Startup Program",
-      "url": "https://sendgrid.com/accelerate/",
-      "tags": [
-        "email",
-        "startup-credits",
-        "awesome-startup-credits"
-      ],
-      "verifiedDate": "2026-04-12",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "SendGrid Accelerate Startup Program"
-      },
-      "expires_date": "2026-05-15",
-      "referral_program": {
-        "available": false,
-        "referrer_benefit": "N/A",
-        "referee_benefit": "N/A",
-        "program_url": "https://sendgrid.com/partners/affiliate/",
-        "type": "closed",
-        "notes": "No active affiliate program."
-      }
-    },
-    {
       "vendor": "Autodesk Fusion 360 for Startups",
       "category": "Startup Perks",
       "description": "Fusion 360 for startups is eligible for venture-backed, angel-backed or bootstrap startups that are less than three years old, have 10 or fewer employees and generate less than $100,000 USD in gross annual revenue.",
@@ -20154,26 +20125,6 @@
           "Free for Brex customers"
         ],
         "program": "Postscript Startup Deal"
-      }
-    },
-    {
-      "vendor": "Prospect.io",
-      "category": "Email",
-      "description": "50% on Starter plan for 6 months + 1000 emails credits. Access via: First deal free, then 99€/year or invite friends",
-      "tier": "Startup Program",
-      "url": "https://www.joinsecret.com/offers",
-      "tags": [
-        "email",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-04-12",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "First deal free, then 99€/year or invite friends"
-        ],
-        "program": "Prospect.io Startup Deal"
       }
     },
     {
