@@ -11224,7 +11224,7 @@ function buildEmailAlternativesPage(): string {
     ["Proton Mail", "Tuta"].includes(o.vendor)
   );
   const otherEmailTools = enrichedAll.filter(o =>
-    ["Parsio.io", "EmailJS", "Contact.do", "Waitlio", "Prospect.io", "SendGrid", "SendGrid Accelerate"].includes(o.vendor)
+    ["Parsio.io", "EmailJS", "Contact.do", "Waitlio", "SendGrid"].includes(o.vendor)
   );
   const other = enrichedAll.filter(o =>
     !transactionalApis.includes(o) && !marketingNewsletter.includes(o) && !verificationDeliverability.includes(o) && !forwardingAliases.includes(o) && !temporaryTesting.includes(o) && !securePrivacy.includes(o) && !otherEmailTools.includes(o)

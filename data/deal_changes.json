@@ -3739,6 +3739,38 @@
         "OpenRouter",
         "Groq"
       ]
+    },
+    {
+      "vendor": "SendGrid Accelerate",
+      "change_type": "free_tier_removed",
+      "date": "2026-04-17",
+      "summary": "SendGrid Accelerate startup program discontinued. sendgrid.com now redirects to twilio.com. Twilio explicitly states they do not offer additional credits to startups at this time.",
+      "previous_state": "12 months of product credit, mentoring, and networking for startups",
+      "current_state": "Program discontinued — no startup credits available",
+      "impact": "negative",
+      "source_url": "https://www.twilio.com/en-us/startups",
+      "category": "Email",
+      "alternatives": [
+        "SendGrid",
+        "Mailgun",
+        "Postmark"
+      ]
+    },
+    {
+      "vendor": "Prospect.io",
+      "change_type": "free_tier_removed",
+      "date": "2026-04-17",
+      "summary": "Prospect.io startup deal via JoinSecret removed. joinsecret.com returns 403 errors and Prospect.io's own pricing page 404s. Product may have been renamed or discontinued.",
+      "previous_state": "50% on Starter plan for 6 months + 1000 email credits via JoinSecret",
+      "current_state": "Product and deal page both inaccessible — removed from index",
+      "impact": "negative",
+      "source_url": "https://www.joinsecret.com/offers",
+      "category": "Email",
+      "alternatives": [
+        "Apollo.io",
+        "Hunter.io",
+        "Lemlist"
+      ]
     }
   ]
 }
