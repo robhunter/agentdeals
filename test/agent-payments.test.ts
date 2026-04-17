@@ -54,7 +54,7 @@ describe("Agent Payments", () => {
       const body = await res.json() as any;
       assert.ok(body.total > 0, "should have payment-enabled services");
       assert.ok(body.protocols.x402.count > 0, "should have x402 services");
-      assert.ok(body.protocols.mpp, "should have mpp protocol info");
+      assert.ok(body.protocols["stripe-mpp"], "should have stripe-mpp protocol info");
       assert.ok(body.protocols.both, "should have both protocol info");
       assert.ok(body.by_category, "should have services grouped by category");
       assert.ok(Array.isArray(body.services), "should have flat services array");
@@ -71,13 +71,13 @@ describe("Agent Payments", () => {
       }
     });
 
-    it("filters by protocol=mpp", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/agent-payments?protocol=mpp`);
+    it("filters by protocol=stripe-mpp", async () => {
+      const res = await fetch(`http://localhost:${serverPort}/api/agent-payments?protocol=stripe-mpp`);
       assert.strictEqual(res.status, 200);
       const body = await res.json() as any;
       assert.ok(body.total > 0);
       for (const s of body.services) {
-        assert.ok(s.payment_protocols.some((p: any) => p.protocol === "mpp"), `${s.vendor} should support mpp`);
+        assert.ok(s.payment_protocols.some((p: any) => p.protocol === "stripe-mpp"), `${s.vendor} should support stripe-mpp`);
       }
     });
 
@@ -131,7 +131,7 @@ describe("Agent Payments", () => {
       const html = await res.text();
       assert.ok(html.includes("Protocol Comparison"), "should have protocol comparison section");
       assert.ok(html.includes("proto-badge x402"), "should have x402 badges");
-      assert.ok(html.includes("proto-badge mpp"), "should have mpp badges");
+      assert.ok(html.includes("proto-badge stripe-mpp"), "should have mpp badges");
     });
 
     it("shows both x402 and MPP services", async () => {
@@ -154,13 +154,13 @@ describe("Agent Payments", () => {
       }
     });
 
-    it("filters offers by mpp via API", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=mpp`);
+    it("filters offers by stripe-mpp via API", async () => {
+      const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=stripe-mpp`);
       assert.strictEqual(res.status, 200);
       const body = await res.json() as any;
-      assert.ok(body.total > 0, "should have mpp offers");
+      assert.ok(body.total > 0, "should have stripe-mpp offers");
       for (const o of body.offers) {
-        assert.ok(o.payment_protocols?.some((p: any) => p.protocol === "mpp"), `${o.vendor} should support mpp`);
+        assert.ok(o.payment_protocols?.some((p: any) => p.protocol === "stripe-mpp"), `${o.vendor} should support stripe-mpp`);
       }
     });
   });

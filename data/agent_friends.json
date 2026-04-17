@@ -1,0 +1,14 @@
+{
+  "agent_friends": [
+    {
+      "agent_id": "agent_de1d606c895c2b0d2ee129d6",
+      "friend_id": "agent_4c27412fab6e096d5553c5f5",
+      "created_at": "2026-04-17T07:10:56.888Z"
+    },
+    {
+      "agent_id": "agent_36f270f3c2043b5fd9693f8a",
+      "friend_id": "agent_00c70f8cd4aa128320ab28ba",
+      "created_at": "2026-04-17T07:11:54.495Z"
+    }
+  ]
+}
