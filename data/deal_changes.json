@@ -3674,6 +3674,38 @@
         "Shopify API",
         "BigCommerce API"
       ]
+    },
+    {
+      "vendor": "DeepSeek",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-17",
+      "summary": "DeepSeek V3.2 replaces V4 branding. Pricing dropped: chat model $0.30→$0.28/M input, $0.50→$0.42/M output. Reasoner model pricing unified with chat at $0.28/$0.42 (was $0.55/$2.19). Free token welcome package appears removed.",
+      "previous_state": "DeepSeek V4: $0.30/M input, $0.50/M output. R1: $0.55/M input, $2.19/M output. 5M free tokens for new accounts.",
+      "current_state": "DeepSeek V3.2 (chat + reasoner): $0.28/M input, $0.42/M output. Cache hits 90% cheaper. No free token mention on pricing page.",
+      "impact": "medium",
+      "source_url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "category": "AI / ML",
+      "alternatives": [
+        "OpenAI API",
+        "Anthropic Claude API",
+        "Google Gemini API"
+      ]
+    },
+    {
+      "vendor": "Netlify",
+      "change_type": "pricing_model_change",
+      "date": "2026-04-17",
+      "summary": "Netlify credits-based pricing updated: bandwidth now 20 credits/GB (was 10), compute now 10 credits/GB-hour (was 5), web requests 2 credits/10K (new). Same 300 credits/month allocation but each credit buys less bandwidth and compute.",
+      "previous_state": "300 credits/month: deploys 15/each, bandwidth 10/GB, compute 5/GB-hr",
+      "current_state": "300 credits/month: deploys 15/each, bandwidth 20/GB, compute 10/GB-hr, web requests 2/10K",
+      "impact": "medium",
+      "source_url": "https://www.netlify.com/pricing/",
+      "category": "Cloud Hosting",
+      "alternatives": [
+        "Vercel",
+        "Cloudflare Pages",
+        "Railway"
+      ]
     }
   ]
 }
