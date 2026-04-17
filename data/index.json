@@ -230,9 +230,9 @@
     {
       "vendor": "Fly.io",
       "category": "Cloud Hosting",
-      "description": "Global app hosting — free trial for new accounts (2 hours runtime OR 7 days, whichever comes first). Legacy free tier (3 shared VMs) for pre-2025 accounts. Volume snapshot storage: $0.08/GB/month (first 10 GB free) since Jan 2026",
-      "tier": "Trial",
-      "url": "https://fly.io/pricing",
+      "description": "Pay-as-you-go only — no free tier for new accounts (since Oct 2024). Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
+      "tier": "Legacy Free",
+      "url": "https://fly.io/docs/about/pricing/",
       "tags": [
         "hosting",
         "edge",
@@ -244,7 +244,7 @@
         "vercel-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-04-17",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -309,19 +309,18 @@
     {
       "vendor": "Koyeb",
       "category": "Cloud Hosting",
-      "description": "1 free web service (1 vCPU, 512 MB RAM, 2 GB SSD), 1 free Postgres database (1 GB, 5 hr/month runtime), scale-to-zero",
-      "tier": "Starter",
+      "description": "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute tier — Pro plan starts at $29/month with $10 included compute.",
+      "tier": "Free (Database Only)",
       "url": "https://www.koyeb.com/pricing",
       "tags": [
         "hosting",
         "paas",
         "deployment",
-        "scale-to-zero",
         "free tier",
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-04-17"
     },
     {
       "vendor": "AWS",

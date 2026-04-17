@@ -4511,8 +4511,8 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
-        <td>1 free service (512 MB)</td><td>1 GB Postgres</td><td>\u2705</td><td>\u2705</td>
-        <td>Scale-to-zero</td><td>$5.40/mo</td>
+        <td>DB only (no free compute)</td><td>1 GB Postgres</td><td>\u2705</td><td>\u274c</td>
+        <td>Pro from $29/mo</td><td>$29/mo</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/digitalocean" style="color:var(--text)">DigitalOcean</a></td>
@@ -4984,10 +4984,10 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
-        <td>Starter (free)</td>
-        <td>100 GB/month</td>
+        <td>Free (DB only)</td>
         <td>—</td>
-        <td>Scale-to-zero + free Postgres</td>
+        <td>—</td>
+        <td>Free Postgres DB (5 hr/mo compute)</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/coolify" style="color:var(--text)">Coolify</a></td>
@@ -8427,16 +8427,16 @@ ${buildCards(startupCredits)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/fly-io" style="color:var(--text)">Fly.io</a></td>
         <td>PaaS / Containers</td>
-        <td>3 shared VMs, 256 MB each</td>
-        <td>100 GB/mo</td>
+        <td>No free tier (legacy: 3 VMs)</td>
+        <td>100 GB/mo (legacy)</td>
         <td>Edge deployment, multi-region apps</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
         <td>PaaS</td>
-        <td>1 nano instance</td>
-        <td>100 GB/mo</td>
-        <td>Containers, web services, global edge</td>
+        <td>DB only (no free compute)</td>
+        <td>—</td>
+        <td>Free Postgres, paid compute from $29/mo</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
@@ -8530,7 +8530,7 @@ ${buildCards(startupCredits)}
       <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — 4 Arm VMs, 24 GB RAM, 200 GB storage, permanently free. <a href="/vendor/aws">AWS</a> and <a href="/vendor/azure">Azure</a> offer 12-month free tiers with t2.micro/B1 instances.</dd>
 
       <dt>Running Docker containers?</dt>
-      <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (3 shared VMs). <a href="/vendor/railway">Railway</a> and <a href="/vendor/koyeb">Koyeb</a> also run containers natively.</dd>
+      <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (legacy accounts: 3 shared VMs). <a href="/vendor/railway">Railway</a> and <a href="/vendor/koyeb">Koyeb</a> (paid, from $29/mo) also run containers natively.</dd>
 
       <dt>Need hosting for a startup?</dt>
       <dd>Check the startup credit programs above. <a href="/vendor/aws-activate">AWS Activate</a> and <a href="/vendor/microsoft-founders-hub">Microsoft Founders Hub</a> offer the largest credit packages. <a href="/vendor/railway">Railway</a> and <a href="/vendor/render">Render</a> are popular for early-stage startups.</dd>
@@ -15766,7 +15766,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "🚀",
       recommended: { vendor: "Railway", why: "The best free FastAPI hosting in 2026. $5/month free credit covers a FastAPI app with uvicorn ASGI server, auto-deploy from GitHub, and managed add-ons. Nixpacks auto-detects Python projects — just add a Procfile with `web: uvicorn main:app --host 0.0.0.0 --port $PORT`. No sleep timer — your API stays warm for consistent response times." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
-      outgrow: "When you exceed the $5/month free credit (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds kill API latency. Fly.io gives 3 shared-CPU VMs free with 256 MB RAM, good for lightweight APIs. Koyeb offers 1 nano service free with global edge deployment.",
+      outgrow: "When you exceed the $5/month free credit (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds kill API latency. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs). Koyeb has no free compute — only a free Postgres database.",
       whyNot: "Why not Vercel: Vercel supports FastAPI via serverless functions (Mangum adapter), but loses WebSocket support, background tasks, and startup events — core FastAPI features. Why not Deta Space: Deta shut down Space in 2024. Many FastAPI tutorials still reference it — those guides are outdated.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -16242,7 +16242,7 @@ function buildFreeGoStackPage(): string {
       icon: "🚀",
       recommended: { vendor: "Railway", why: "The best free Go hosting in 2026. $5/month free credit covers a Go binary with auto-deploy from GitHub. Nixpacks auto-detects Go projects — compiles your binary and runs it. No sleep timer — your service stays warm. Go binaries start in milliseconds, so even serverless cold starts are negligible. Docker images from scratch base are typically 5-15 MB, maximizing the free credit." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
-      outgrow: "When you exceed the $5/month free credit (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity, but Go's instant cold starts (~50ms) make this less painful than Python/Node. Fly.io gives 3 shared-CPU VMs free with 256 MB RAM — Go's low memory footprint fits well. Koyeb offers 1 nano service free with edge deployment. Google Cloud Run's free tier (2M requests/month) is excellent for Go — instant scale-to-zero with near-instant cold starts.",
+      outgrow: "When you exceed the $5/month free credit (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity, but Go's instant cold starts (~50ms) make this less painful than Python/Node. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs with 256 MB RAM). Koyeb has no free compute tier. Google Cloud Run's free tier (2M requests/month) is excellent for Go — instant scale-to-zero with near-instant cold starts.",
       whyNot: "Why not Heroku: No free tier since November 2022. Why not AWS Lambda: Go compiles to a native binary that works great on Lambda (via provided.al2023 runtime), but the 3.2M free invocations expire after 12 months. Cloud Run is simpler and stays free forever. Why not Vercel: Vercel's Go support is limited to serverless functions — no persistent connections, WebSockets, or goroutines.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -19959,7 +19959,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Notable mentions:</strong> <a href="/vendor/fly-io">Fly.io</a> offers edge deployment with 3 free VMs and built-in Postgres — great for low-latency APIs. <a href="/vendor/coolify">Coolify</a> is an open-source, self-hosted PaaS (your own Railway/Render). <a href="/vendor/koyeb">Koyeb</a> offers 2 nano instances with 512 MB RAM and built-in edge network. See our <a href="/hosting-alternatives">full hosting comparison</a> for 30+ options.
+    <strong>Notable mentions:</strong> <a href="/vendor/fly-io">Fly.io</a> offers edge deployment (legacy accounts retain 3 free VMs; no free tier for new accounts). <a href="/vendor/coolify">Coolify</a> is an open-source, self-hosted PaaS (your own Railway/Render). <a href="/vendor/koyeb">Koyeb</a> offers a free Postgres database but no free compute tier. See our <a href="/hosting-alternatives">full hosting comparison</a> for 30+ options.
   </div>
 
   <h2 id="changes">6. Recent Deal Changes</h2>
@@ -30240,31 +30240,31 @@ function buildHostingPricingPage(): string {
       name: "Fly.io",
       slug: "fly-io",
       category: "traditional-paas",
-      freeTier: "Trial only",
+      freeTier: "None (pay-as-you-go)",
       paidFrom: "$0 (usage-based)",
-      freeBandwidth: "100 GB",
+      freeBandwidth: "100 GB (legacy)",
       freeBuildMinutes: "N/A (Docker)",
-      freeCompute: "3 shared VMs, 160 GB volumes",
-      freeDetails: "Trial plan: 3 shared-cpu-1x VMs (256 MB RAM each), 3 GB persistent volumes, 160 GB outbound bandwidth. Credit card required. No permanent free tier — trial credits only. Usage-based pricing after trial. Supports Docker containers, Postgres, Redis, S3-compatible storage.",
-      freeType: "trial",
-      monthlyCostSolo: "$0–5",
+      freeCompute: "None (legacy: 3 shared VMs)",
+      freeDetails: "No free tier for new accounts since October 2024. Pay-as-you-go only, credit card required. Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
+      freeType: "removed",
+      monthlyCostSolo: "Usage-based",
       monthlyCostTeam: "$29/mo (Scale) + usage",
-      hiddenCosts: "No permanent free tier — everything is trial-based. Volume snapshots now billed at $0.08/GB-month (previously free, changed Jan 2026). Credit card required to start. Egress beyond trial billed per GB.",
+      hiddenCosts: "No free tier for new accounts — pay-as-you-go from day one. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free). Credit card required.",
     },
     {
       name: "Koyeb",
       slug: "koyeb",
       category: "traditional-paas",
-      freeTier: "1 nano service",
-      paidFrom: "$0.000463/hr",
-      freeBandwidth: "100 GB",
-      freeBuildMinutes: "Included",
-      freeCompute: "1 nano instance (0.1 vCPU, 256 MB)",
-      freeDetails: "Starter plan: 1 free nano service (0.1 vCPU, 256 MB RAM). 100 GB outbound bandwidth/month. Supports Docker, buildpacks, GitHub auto-deploy. Edge deployment in 6+ regions. Built-in PostgreSQL. No credit card required.",
+      freeTier: "DB only",
+      paidFrom: "$29/mo (Pro)",
+      freeBandwidth: "—",
+      freeBuildMinutes: "—",
+      freeCompute: "None (free Postgres DB only)",
+      freeDetails: "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute/web service tier — Pro plan starts at $29/month with $10 included compute.",
       freeType: "limited",
-      monthlyCostSolo: "$0–5",
+      monthlyCostSolo: "$29+",
       monthlyCostTeam: "Usage-based",
-      hiddenCosts: "Nano instance is very limited (0.1 vCPU). Only 1 free service. Scaling requires paid usage-based pricing.",
+      hiddenCosts: "No free compute tier — the free plan only includes a Postgres database with 5 hr/month runtime. Pro plan required for web services ($29/mo).",
     },
     {
       name: "Northflank",
@@ -30709,7 +30709,7 @@ function buildHostingPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The $5/month floor:</strong> Railway, Heroku, and Cloudflare Workers Paid all land at $5/month as the entry price for always-on compute. Free tiers exist but come with spin-down (Render, Koyeb), time limits (Fly.io trial), or usage caps (Cloudflare 100K/day). Vercel and Cloudflare Pages are the standout exceptions \u2014 genuinely generous free tiers with no spin-down for static/JAMstack sites.\n' +
+    '    <strong>The $5/month floor:</strong> Railway, Heroku, and Cloudflare Workers Paid all land at $5/month as the entry price for always-on compute. Free tiers exist but come with spin-down (Render), no free compute (Koyeb, Fly.io for new accounts), or usage caps (Cloudflare 100K/day). Vercel and Cloudflare Pages are the standout exceptions \u2014 genuinely generous free tiers with no spin-down for static/JAMstack sites.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Category Breakdown</h2>\n' +
@@ -44686,20 +44686,20 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; Docker</td>
         <td>None (always on)</td>
-        <td class="cross">&#10007; Trial only (new accounts)</td>
+        <td class="cross">&#10007; Legacy only (no free tier for new accounts)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/koyeb">Koyeb</a></td>
-        <td>1 free web service</td>
-        <td>Included</td>
-        <td>1 vCPU, 512 MB RAM, 2 GB SSD</td>
+        <td>Free Postgres DB only</td>
+        <td>—</td>
+        <td>No free compute</td>
         <td>N/A</td>
-        <td>1 service + 1 DB</td>
-        <td class="check">&#10003;</td>
+        <td>1 DB (5 hr/mo)</td>
         <td class="cross">&#10007;</td>
-        <td class="check">&#10003; Docker</td>
-        <td>Scale-to-zero</td>
-        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007; Paid only</td>
+        <td>—</td>
+        <td class="cross">&#10007;</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/deno-deploy">Deno Deploy</a></td>
@@ -44802,13 +44802,13 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3><a href="/vendor/fly-io">Fly.io</a> <span class="caution-badge">LIMITED TRIAL</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> New accounts get a trial: 2 hours of runtime OR 7 days, whichever comes first. Legacy accounts (pre-2025) retain the old free allowance of 3 shared VMs. Supports Docker containers with global deployment across 30+ regions. <strong>Key limitation:</strong> The free trial is extremely limited for new users. Fly.io is best thought of as a paid platform with a demo mode. The legacy free tier was generous, but new signups get a very brief trial. Credit card required.</div>
+    <h3><a href="/vendor/fly-io">Fly.io</a> <span class="caution-badge">NO FREE TIER</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> No free tier for new accounts since October 2024. Pay-as-you-go only, credit card required. Legacy accounts on deprecated Hobby/Launch/Scale plans retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month. <strong>Key limitation:</strong> Fly.io is a paid platform with no trial or free tier for new signups. The legacy free allowance was generous, but is only available to existing accounts on deprecated plans.</div>
   </div>
 
   <div class="diff-card">
-    <h3><a href="/vendor/koyeb">Koyeb</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1 free web service (1 vCPU, 512 MB RAM, 2 GB SSD) + 1 free Postgres database (1 GB storage, 5 hr/month compute runtime). Scale-to-zero when idle. Docker, buildpack, and pre-built image support. Global edge proxying. <strong>The sleeper pick:</strong> Koyeb offers the most complete free PaaS package &mdash; a web service with real compute <em>plus</em> a managed database. The database has a 5 hr/month active compute limit, but that's sufficient for low-traffic side projects.</div>
+    <h3><a href="/vendor/koyeb">Koyeb</a> <span class="caution-badge">DB ONLY</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> Free Postgres database only (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute or web service tier &mdash; the free web service was removed. Pro plan starts at $29/month with $10 included compute. Docker, buildpack, and pre-built image support on paid plans. <strong>Key change:</strong> Koyeb no longer offers a free compute tier. The free Postgres database is useful for development, but you'll need the Pro plan ($29/mo) for hosting web services.</div>
   </div>
 
   <h2 id="edge-serverless">Edge &amp; Serverless</h2>
@@ -44906,7 +44906,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The cold start tax:</strong> Render's free web services spin down after 15 minutes of inactivity, causing 30&ndash;60 second cold starts for the next request. This makes Render's free tier unsuitable for production APIs where response time matters. Railway keeps services always-on during your trial, and Koyeb uses scale-to-zero with faster wake times. Vercel and Cloudflare use serverless/edge models that avoid traditional cold starts entirely.
+    <strong>The cold start tax:</strong> Render's free web services spin down after 15 minutes of inactivity, causing 30&ndash;60 second cold starts for the next request. This makes Render's free tier unsuitable for production APIs where response time matters. Railway keeps services always-on during your trial. Koyeb and Fly.io no longer offer free compute tiers for new accounts. Vercel and Cloudflare use serverless/edge models that avoid traditional cold starts entirely.
   </div>
 
   <h2 id="best-for">Best for Each Use Case</h2>
@@ -44935,8 +44935,8 @@ ${mcpCtaCss()}
     </div>
 
     <div class="verdict-item">
-      <strong>Best for Docker containers &rarr; Koyeb</strong>
-      <p>The only platform with a permanent free Docker container (1 vCPU, 512 MB) plus free Postgres. Scale-to-zero keeps costs at $0. Railway also supports Docker but is trial-only. Fly.io's new trial is too limited.</p>
+      <strong>Best for Docker containers &rarr; Google Cloud Run</strong>
+      <p>2M requests/month free with automatic scale-to-zero. Supports any Docker container. No cold start penalty for lightweight images. Koyeb removed its free compute tier and Fly.io has no free tier for new accounts. Railway supports Docker but is trial-only ($5 credit).</p>
     </div>
 
     <div class="verdict-item">
