@@ -31661,7 +31661,7 @@ function buildAgentPaymentsPage(): string {
 
   // Get all offers with payment_protocols
   const x402Offers = offers.filter(o => o.payment_protocols?.some(p => p.protocol === "x402"));
-  const mppOffers = offers.filter(o => o.payment_protocols?.some(p => p.protocol === "mpp"));
+  const mppOffers = offers.filter(o => o.payment_protocols?.some(p => p.protocol === "stripe-mpp"));
   const allPaymentOffers = offers.filter(o => o.payment_protocols && o.payment_protocols.length > 0);
 
   // Group x402 offers by category
@@ -31711,7 +31711,7 @@ function buildAgentPaymentsPage(): string {
 
   // Services supporting both protocols
   const bothOffers = allPaymentOffers.filter(o =>
-    o.payment_protocols!.some(p => p.protocol === "x402") && o.payment_protocols!.some(p => p.protocol === "mpp")
+    o.payment_protocols!.some(p => p.protocol === "x402") && o.payment_protocols!.some(p => p.protocol === "stripe-mpp")
   );
 
   // Build the service table rows — all payment-enabled services
@@ -31719,7 +31719,7 @@ function buildAgentPaymentsPage(): string {
     const vendorSlug = toSlug(o.vendor);
     const shortDesc = o.description.split(". ")[0].substring(0, 120);
     const badges = (o.payment_protocols ?? []).map(p =>
-      `<span class="proto-badge ${p.protocol === "mpp" ? "mpp" : "x402"}">${p.protocol === "mpp" ? "MPP" : "x402"}</span>`
+      `<span class="proto-badge ${p.protocol === "stripe-mpp" ? "stripe-mpp" : "x402"}">${p.protocol === "stripe-mpp" ? "Stripe MPP" : "x402"}</span>`
     ).join(" ");
     return `<tr>
       <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a></td>
@@ -31744,7 +31744,7 @@ function buildAgentPaymentsPage(): string {
       const vendorSlug = toSlug(o.vendor);
       const shortDesc = o.description.split(". ")[0].substring(0, 100);
       const badges = (o.payment_protocols ?? []).map(p =>
-        `<span class="proto-badge ${p.protocol === "mpp" ? "mpp" : "x402"}">${p.protocol === "mpp" ? "MPP" : "x402"}</span>`
+        `<span class="proto-badge ${p.protocol === "stripe-mpp" ? "stripe-mpp" : "x402"}">${p.protocol === "stripe-mpp" ? "Stripe MPP" : "x402"}</span>`
       ).join(" ");
       return `<div class="service-card">
         <div class="service-header">
@@ -31803,7 +31803,7 @@ h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:0}
 .proto-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
 .proto-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;font-family:var(--mono)}
 .proto-icon.x402{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.3)}
-.proto-icon.mpp{background:var(--purple-glow);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
+.proto-icon.stripe-mpp{background:var(--purple-glow);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
 .proto-desc{color:var(--text-muted);font-size:.9rem;line-height:1.5}
 .proto-meta{display:flex;gap:1.5rem;margin-top:.75rem;font-size:.8rem;color:var(--text-dim)}
 table{width:100%;border-collapse:collapse;margin:1.5rem 0}
@@ -31812,7 +31812,7 @@ td{padding:.5rem .75rem;font-size:.85rem;color:var(--text-muted);border-bottom:1
 .vendor-link{color:var(--accent);font-weight:500}
 .proto-badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-family:var(--mono);font-size:.7rem;font-weight:600}
 .proto-badge.x402{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.3)}
-.proto-badge.mpp{background:var(--purple-glow);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
+.proto-badge.stripe-mpp{background:var(--purple-glow);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
 .proto-cell{white-space:nowrap}
 .tier-cell{max-width:150px}
 .desc-cell{max-width:200px;color:var(--text-dim);font-size:.8rem}
@@ -31878,7 +31878,7 @@ ${globalNavCss()}
 
   <div class="proto-section">
     <div class="proto-header">
-      <div class="proto-icon mpp">MPP</div>
+      <div class="proto-icon stripe-mpp">MPP</div>
       <div>
         <h3>MPP &mdash; Stripe Machine Payments Protocol</h3>
         <div class="proto-meta"><span>Stripe</span><span>Launched March 2026</span><span>100+ integrations</span></div>
@@ -31890,7 +31890,7 @@ ${globalNavCss()}
   <h2>Protocol Comparison</h2>
   <div style="overflow-x:auto">
   <table>
-    <thead><tr><th>Feature</th><th><span class="proto-badge x402">x402</span></th><th><span class="proto-badge mpp">MPP</span></th></tr></thead>
+    <thead><tr><th>Feature</th><th><span class="proto-badge x402">x402</span></th><th><span class="proto-badge stripe-mpp">Stripe MPP</span></th></tr></thead>
     <tbody>
       <tr><td>Backed by</td><td>Linux Foundation (Coinbase)</td><td>Stripe</td></tr>
       <tr><td>Launched</td><td>April 2026</td><td>March 2026</td></tr>
@@ -31934,7 +31934,7 @@ ${categorySections}
 ${faqHtml}
 
   <div class="search-cta">
-    <p>API: <a href="/api/agent-payments">/api/agent-payments</a> &middot; Filter: <a href="/api/agent-payments?protocol=x402">?protocol=x402</a> &middot; <a href="/api/agent-payments?protocol=mpp">?protocol=mpp</a> &middot; MCP: <code>search_deals({payment_protocol: "x402"})</code></p>
+    <p>API: <a href="/api/agent-payments">/api/agent-payments</a> &middot; Filter: <a href="/api/agent-payments?protocol=x402">?protocol=x402</a> &middot; <a href="/api/agent-payments?protocol=stripe-mpp">?protocol=stripe-mpp</a> &middot; MCP: <code>search_deals({payment_protocol: "x402"})</code></p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -53350,7 +53350,7 @@ const httpServer = createHttpServer(async (req, res) => {
       ? stabilityParam as import("./types.js").StabilityClass
       : undefined;
     const paymentProtocol = url.searchParams.get("payment_protocol") || undefined;
-    const validPaymentProtocol = paymentProtocol && ["x402", "mpp"].includes(paymentProtocol) ? paymentProtocol : undefined;
+    const validPaymentProtocol = paymentProtocol && ["x402", "stripe-mpp"].includes(paymentProtocol) ? paymentProtocol : undefined;
     const limit = parseInt(url.searchParams.get("limit") ?? "20", 10);
     const offset = parseInt(url.searchParams.get("offset") ?? "0", 10);
     const results = searchOffers(q, category, eligibilityType, sort, validStability, validPaymentProtocol);
@@ -53455,8 +53455,8 @@ const httpServer = createHttpServer(async (req, res) => {
     }
 
     const x402 = filtered.filter(o => o.payment_protocols!.some(p => p.protocol === "x402"));
-    const mpp = filtered.filter(o => o.payment_protocols!.some(p => p.protocol === "mpp"));
-    const both = filtered.filter(o => o.payment_protocols!.some(p => p.protocol === "x402") && o.payment_protocols!.some(p => p.protocol === "mpp"));
+    const mpp = filtered.filter(o => o.payment_protocols!.some(p => p.protocol === "stripe-mpp"));
+    const both = filtered.filter(o => o.payment_protocols!.some(p => p.protocol === "x402") && o.payment_protocols!.some(p => p.protocol === "stripe-mpp"));
 
     const byCategory = new Map<string, typeof filtered>();
     for (const o of filtered) {
@@ -53486,7 +53486,7 @@ const httpServer = createHttpServer(async (req, res) => {
       total: filtered.length,
       protocols: {
         x402: { count: x402.length, description: "HTTP 402-based agent payments via stablecoin (USDC). Linux Foundation standard." },
-        mpp: { count: mpp.length, description: "Stripe Machine Payments Protocol. Supports stablecoin and fiat payments." },
+        "stripe-mpp": { count: mpp.length, description: "Stripe Machine Payments Protocol. Supports stablecoin and fiat payments." },
         both: { count: both.length, description: "Services supporting both x402 and Stripe MPP." },
       },
       by_category: grouped,
