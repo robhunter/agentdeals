@@ -2194,9 +2194,9 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Amplitude", vendorB: "PostHog",
     category: "Analytics",
-    verdict: "PostHog gives 1M events/month with session replays, feature flags, and A/B testing included. Amplitude gives 50K MTU with 10M events but charges separately for session replays. PostHog is the better all-in-one value; Amplitude has deeper behavioral analytics.",
+    verdict: "PostHog gives 1M events/month with session replays, feature flags, and A/B testing included. Amplitude gives 10K MTU with 10M events but charges separately for session replays. PostHog is the better all-in-one value; Amplitude has deeper behavioral analytics.",
     keyDifferences: `<ul>
-      <li><strong>Free tier:</strong> PostHog offers 1M events + 5K session replays + 1M feature flag requests — all included. Amplitude offers 50K MTU (10M events) + 1K session replays but feature flags are limited.</li>
+      <li><strong>Free tier:</strong> PostHog offers 1M events + 5K session replays + 1M feature flag requests — all included. Amplitude offers 10K MTU (10M events) + 1K session replays but feature flags are limited.</li>
       <li><strong>Product scope:</strong> PostHog bundles analytics, session replays, feature flags, A/B testing, and error tracking in one platform. Amplitude is analytics-focused with replays as an add-on.</li>
       <li><strong>Pricing model:</strong> PostHog charges per event. Amplitude charges per Monthly Tracked User (MTU). The MTU model can be cheaper for high-event/low-user products, or more expensive for low-event/high-user ones.</li>
       <li><strong>Self-hosting:</strong> PostHog is open source (MIT core) and can be self-hosted. Amplitude is cloud-only.</li>
@@ -2207,9 +2207,9 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Amplitude", vendorB: "Mixpanel",
     category: "Analytics",
-    verdict: "Mixpanel offers 1M events/month with 10K session replays and unlimited seats. Amplitude offers 50K MTU with 10M events and 1K replays. Mixpanel's per-event pricing is simpler; Amplitude's MTU model can be cheaper or more expensive depending on your product's usage patterns.",
+    verdict: "Mixpanel offers 1M events/month with 10K session replays and unlimited seats. Amplitude offers 10K MTU with 10M events and 1K replays. Mixpanel's per-event pricing is simpler; Amplitude's MTU model can be cheaper or more expensive depending on your product's usage patterns.",
     keyDifferences: `<ul>
-      <li><strong>Pricing model:</strong> Mixpanel charges per event (1M/month free). Amplitude charges per MTU — 50K users with up to 10M events. If your users generate many events, Amplitude could be cheaper.</li>
+      <li><strong>Pricing model:</strong> Mixpanel charges per event (1M/month free). Amplitude charges per MTU — 10K users with up to 10M events. If your users generate many events, Amplitude could be cheaper.</li>
       <li><strong>Session replays:</strong> Mixpanel includes 10K session replays free. Amplitude includes only 1K — a 10x difference.</li>
       <li><strong>Seats:</strong> Mixpanel has unlimited seats on the free plan. Amplitude allows unlimited users too but with governance features reserved for paid plans.</li>
       <li><strong>Data retention:</strong> Both offer 1-year retention on free plans, which is generous compared to most analytics tools.</li>
@@ -46603,7 +46603,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       vendors: [
         { slug: "posthog", name: "PostHog", free: "1M events/mo", starter: 0, growth: 0, scale: 450, notes: "Free up to 1M, then $0.000045/event" },
         { slug: "mixpanel", name: "Mixpanel", free: "1M events/mo", starter: 0, growth: 0, scale: 150, notes: "Growth from $0.00028/event" },
-        { slug: "amplitude", name: "Amplitude", free: "50K MTU", starter: 0, growth: 0, scale: 995, notes: "Growth pricing varies" },
+        { slug: "amplitude", name: "Amplitude", free: "10K MTU", starter: 0, growth: 0, scale: 995, notes: "Growth pricing varies" },
         { slug: "plausible", name: "Plausible", free: "Self-hosted only", starter: 9, growth: 19, scale: 69, notes: "Cloud $9/mo (10K pageviews)" },
       ],
     },
