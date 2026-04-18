@@ -3771,6 +3771,22 @@
         "Hunter.io",
         "Lemlist"
       ]
+    },
+    {
+      "vendor": "Kluster AI",
+      "change_type": "free_tier_removed",
+      "date": "2026-04-18",
+      "summary": "Kluster AI removed from index. Public pricing page shows a code review product ($30/month), not batch LLM inference. The $5 free credits for open-source model inference cannot be verified from any public page. Product may have pivoted.",
+      "previous_state": "$5 free credits for open-source model inference (DeepSeek-R1, Llama 3.3/3.1, Gemma 3)",
+      "current_state": "Free credits offer unverifiable — removed from index",
+      "impact": "negative",
+      "source_url": "https://kluster.ai/pricing",
+      "category": "AI / ML",
+      "alternatives": [
+        "Groq",
+        "SiliconFlow",
+        "OpenRouter"
+      ]
     }
   ]
 }
