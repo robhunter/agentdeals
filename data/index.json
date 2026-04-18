@@ -6780,14 +6780,14 @@
     {
       "vendor": "Arize AI",
       "category": "AI / ML",
-      "description": "Machine learning observability for model monitoring and root-causing issues such as data quality and performance drift. Free up to two models.",
+      "description": "ML observability platform (now Arize AX). AX Free plan: 25K trace spans/month, 1 GB ingestion/month, 15 days data retention. Includes online evals, product observability, and community support.",
       "tier": "Free",
-      "url": "https://arize.com/",
+      "url": "https://arize.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-18"
     },
     {
       "vendor": "Beeceptor",
@@ -8157,14 +8157,14 @@
     {
       "vendor": "paperspace",
       "category": "AI / ML",
-      "description": "Build & scale AI models, Develop, train, and deploy AI applications, free plan: public projects, 5Gb storage, basic instances.",
+      "description": "ML platform (now part of DigitalOcean). Free Gradient plan: public projects and 5 GB storage only. No free compute — all GPU and CPU instances are billed hourly. Paid plans from $8/month.",
       "tier": "Free",
-      "url": "https://www.paperspace.com/",
+      "url": "https://www.paperspace.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-18"
     },
     {
       "vendor": "RepoFlow",
@@ -12599,16 +12599,16 @@
     {
       "vendor": "Arize AX",
       "category": "AI / ML",
-      "description": "AI engineering platform that helps AI eng/PMs, evaluate, and observe AI applications and agents with built-in Alyx agent. Free product inlcudes 25k spans and ingestion volume of 1gb per month.",
+      "description": "AI engineering platform for evaluating and observing AI applications and agents. AX Free plan: 25K trace spans/month, 1 GB ingestion/month, 15 days data retention. Includes online evals, product observability, built-in Alyx agent, and community support.",
       "tier": "Free",
-      "url": "https://arize.com",
+      "url": "https://arize.com/pricing",
       "tags": [
         "ai",
         "ml",
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-18"
     },
     {
       "vendor": "Audio Enhancer",
@@ -21861,31 +21861,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-04-14"
-    },
-    {
-      "vendor": "Kluster AI",
-      "category": "AI / ML",
-      "description": "Free $5 credits for open-source model inference. Supports DeepSeek-R1, Llama 3.3/3.1, Gemma 3, and other open-source models. OpenAI-compatible API endpoint for easy integration.",
-      "tier": "Free Credits",
-      "url": "https://kluster.ai",
-      "tags": [
-        "ai",
-        "ml",
-        "llm",
-        "inference",
-        "open-source",
-        "free credits"
-      ],
-      "verifiedDate": "2026-04-17",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.01-0.10/request"
-        }
-      ]
     },
     {
       "vendor": "LLM7.io",

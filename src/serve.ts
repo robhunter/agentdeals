@@ -11167,7 +11167,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/langfuse">Langfuse</a> \u2014 open-source LLM tracing, 50K observations/month free. <a href="/vendor/langwatch">LangWatch</a> for monitoring and optimization. <a href="/vendor/braintrust">Braintrust</a> for evals with 1 GB/month free.</dd>
 
       <dt>Need free GPU compute for ML training?</dt>
-      <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU, completely free. <a href="/vendor/paperspace">Paperspace</a> for free notebooks with basic instances. <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
+      <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU, completely free. <a href="/vendor/paperspace">Paperspace</a> for free project storage (no free compute). <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
 
       <dt>Want to host or deploy ML models?</dt>
       <dd><a href="/vendor/hugging-face">Hugging Face</a> \u2014 free model hosting, inference API with 200+ providers. <a href="/vendor/replicate">Replicate</a> for free runs on curated models. <a href="/vendor/baseten">Baseten</a> for $30 in deployment credits.</dd>
@@ -30909,7 +30909,7 @@ function buildLlmApiPricingPage(): string {
 
   const aiMlOffers = offers.filter(o => o.category === "AI / ML");
 
-  const llmVendorNames = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "Cohere", "xAI", "Cerebras", "OpenRouter", "DeepSeek", "Cloudflare Workers AI", "GitHub Models", "NVIDIA NIM", "Ollama", "Kluster AI", "SiliconFlow", "LLM7", "Hugging Face", "Replicate", "Baseten"];
+  const llmVendorNames = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "Cohere", "xAI", "Cerebras", "OpenRouter", "DeepSeek", "Cloudflare Workers AI", "GitHub Models", "NVIDIA NIM", "Ollama", "SiliconFlow", "LLM7", "Hugging Face", "Replicate", "Baseten"];
   const llmChanges = dealChanges.filter(c =>
     llmVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -31071,20 +31071,6 @@ function buildLlmApiPricingPage(): string {
       freeDetails: "~40 RPM, 1,000 free API credits. No credit card required for development. Models: Llama 3.1, Mistral, and NVIDIA models. Optimized with TensorRT-LLM for NVIDIA GPUs.",
       freeType: "credits",
       differentiator: "NVIDIA-optimized inference; deploy on your own NVIDIA GPUs; enterprise support",
-    },
-    {
-      name: "Kluster AI",
-      slug: "kluster-ai",
-      category: "inference",
-      freeTier: "$5 free credits",
-      flagshipModel: "DeepSeek-R1",
-      inputPrice: "$0.14/M",
-      outputPrice: "$0.14/M",
-      contextWindow: "64K",
-      rateLimit: "Standard",
-      freeDetails: "Free $5 credits for open-source model inference. Models: DeepSeek-R1, Llama 3.3/3.1, Gemma 3. OpenAI-compatible API endpoint. Batch inference support.",
-      freeType: "credits",
-      differentiator: "Cheapest batch inference; OpenAI-compatible; focus on open-source models",
     },
     {
       name: "SiliconFlow",
@@ -31483,7 +31469,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The price floor:</strong> xAI Grok 4.1 Fast at $0.20/M input is the cheapest frontier model. For open-source, Groq and Kluster AI serve Llama and DeepSeek models at $0.10–0.15/M. DeepSeek V4 offers 1M context at $0.30/M input — 4x cheaper than Gemini 2.5 Pro for long-context work. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
+    '    <strong>The price floor:</strong> xAI Grok 4.1 Fast at $0.20/M input is the cheapest frontier model. For open-source, Groq and SiliconFlow serve Llama and DeepSeek models at $0.10–0.15/M. DeepSeek V4 offers 1M context at $0.30/M input — 4x cheaper than Gemini 2.5 Pro for long-context work. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Provider Breakdown</h2>\n' +
@@ -53622,7 +53608,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const llmOffers = offers.filter(o => o.category === "AI / ML");
     const llmCategoryMap: Record<string, string[]> = {
       "frontier": ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Cohere", "xAI"],
-      "inference": ["Groq", "Cerebras", "OpenRouter", "NVIDIA NIM", "Kluster AI", "SiliconFlow"],
+      "inference": ["Groq", "Cerebras", "OpenRouter", "NVIDIA NIM", "SiliconFlow"],
       "open-source-host": ["Hugging Face", "Replicate", "Baseten", "Cloudflare Workers AI"],
       "specialized": ["DeepSeek", "GitHub Models", "LLM7", "Ollama"],
     };
