@@ -3497,7 +3497,7 @@
     {
       "vendor": "ReadMe",
       "category": "Documentation",
-      "description": "API documentation platform — 1 project, 1 API reference, 3 published versions, 5 admins, basic AI features, ReadMe branding. No custom domain",
+      "description": "API documentation platform Starter plan — 1 project, 1 API reference, 1 published version, 1 admin seat, 24-hour request log retention, AI Dropdown / LLMs.txt / MCP Server included (Ask AI is a $150/mo add-on), ReadMe branding (cannot remove). No custom domain, no custom CSS/HTML/JS",
       "tier": "Free",
       "url": "https://readme.com/pricing",
       "tags": [
@@ -3506,7 +3506,7 @@
         "developer-portal",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "GitBook",
@@ -11077,14 +11077,14 @@
     {
       "vendor": "SimpleLocalize",
       "category": "Localization",
-      "description": "Free up to 100 translation keys, unlimited strings, unlimited languages, startup deals",
+      "description": "Free Community plan — 250 translation keys, unlimited strings, 10 languages, 10 projects, 1 team member. Discount plans available for educational institutions, indie developers, and open-source projects (contact sales)",
       "tier": "Free",
-      "url": "https://simplelocalize.io/",
+      "url": "https://simplelocalize.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Texterify",
