@@ -9083,16 +9083,16 @@
     {
       "vendor": "Storyblok",
       "category": "Headless CMS",
-      "description": "A Headless CMS for developers and marketers that works with all modern frameworks. The Community (free) tier offers Management API, Visual Editor, ten sources, Custom Field Types, Internationalization (unlimited languages/locales), Asset Manager (up to 2500 assets), Image Optimizing Service, Search Query, Webhook + 250GB Traffic/month included.",
+      "description": "Headless CMS with visual editor for developers and marketers. Free Starter plan: 1 space, 1 user seat (max 2 with +$15/mo add-on), 100K API requests/month, 2 locales, 200 components, 20K stories max, 2,000 assets, 100 GB traffic/month, 25K AI credits/month, 10 datasources, 3 webhooks, 2 preview URLs. No credit card required.",
       "tier": "Free",
-      "url": "https://www.storyblok.com",
+      "url": "https://www.storyblok.com/pricing",
       "tags": [
         "cms",
         "headless",
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "TinaCMS",
@@ -9245,14 +9245,14 @@
     {
       "vendor": "coderabbit.ai",
       "category": "Code Quality",
-      "description": "AI-powered code review tool that integrates with GitHub/GitLab. Free tier includes 200 files/hour, 3 reviews per hour, and 50 conversations/hour. Free forever for open source projects.",
+      "description": "AI-powered code review tool for GitHub/GitLab/Bitbucket. Free tier: basic PR summarization and reviews in IDE on unlimited public and private repositories, with a 14-day Pro trial included (no credit card). Paid Pro is $24/user/month billed annually and adds detailed reviews with 5 reviews/hour; Pro Plus adds 10 reviews/hour. Free-for-open-source may still apply but is no longer prominently featured on the pricing page.",
       "tier": "Free",
-      "url": "https://coderabbit.ai",
+      "url": "https://www.coderabbit.ai/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "CodSpeed",
@@ -9308,18 +9308,6 @@
       "description": "Instantly find the differences between two blocks of code. Completely free to use.",
       "tier": "Free",
       "url": "https://difftext.com",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-13"
-    },
-    {
-      "vendor": "eversql.com",
-      "category": "Code Quality",
-      "description": "EverSQL - The #1 platform for database optimization. Gain critical insights into your database and SQL queries automatically.",
-      "tier": "Free",
-      "url": "https://www.eversql.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
