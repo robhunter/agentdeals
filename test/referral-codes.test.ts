@@ -60,11 +60,32 @@ describe("Referral Code Submission", () => {
     assert.strictEqual(code.code, "MYAGENT-RAILWAY");
     assert.strictEqual(code.referral_url, "https://railway.app?ref=myagent");
     assert.strictEqual(code.source, "agent-submitted");
-    assert.strictEqual(code.status, "pending"); // new tier = pending
+    // Issue #906: all agent-submitted codes are active immediately, regardless of tier.
+    assert.strictEqual(code.status, "active");
     assert.strictEqual(code.trust_tier_at_submission, "new");
     assert.strictEqual(code.impressions, 0);
     assert.strictEqual(code.clicks, 0);
     assert.strictEqual(code.conversions, 0);
+  });
+
+  it("new-tier agents get active codes (issue #906 — no chicken-and-egg)", () => {
+    const { agent } = createTestAgent();
+    const code = submitReferralCode({
+      vendor: "Railway",
+      code: "NEW-AGENT-CODE",
+      referral_url: "https://railway.app?ref=new",
+      description: "New-tier agent code",
+      agent_id: agent.id,
+      trust_tier: "new",
+    });
+
+    assert.strictEqual(code.status, "active");
+    assert.strictEqual(code.trust_tier_at_submission, "new");
+
+    // Code must be visible via the active-codes surface that search uses.
+    const activeCodes = getActiveCodesForVendor("Railway");
+    assert.strictEqual(activeCodes.length, 1);
+    assert.strictEqual(activeCodes[0].code, "NEW-AGENT-CODE");
   });
 
   it("verified agents get auto-approved codes", () => {
@@ -446,7 +467,7 @@ describe("Active Codes for Vendor", () => {
     resetFiles();
   });
 
-  it("returns only active codes for a vendor", () => {
+  it("returns only active codes for a vendor (excludes pending/revoked)", () => {
     const { agent: agent1 } = createTestAgent("Bot1");
     const { agent: agent2 } = createTestAgent("Bot2");
 
@@ -460,15 +481,29 @@ describe("Active Codes for Vendor", () => {
       trust_tier: "verified",
     });
 
-    // Pending code (not returned)
-    submitReferralCode({
+    // Seed a legacy pending code directly (pre-#906 data may still exist in
+    // production files). getActiveCodesForVendor must continue to exclude it.
+    const data = JSON.parse(fs.readFileSync(CODES_PATH, "utf-8"));
+    data.referral_codes.push({
+      id: "code_legacy_pending",
       vendor: "Railway",
-      code: "PENDING-CODE",
+      code: "LEGACY-PENDING",
       referral_url: "https://railway.app?ref=pending",
       description: "",
-      agent_id: agent2.id,
-      trust_tier: "new",
+      commission_rate: null,
+      expiry: null,
+      submitted_by: agent2.id,
+      source: "agent-submitted",
+      status: "pending",
+      trust_tier_at_submission: "new",
+      impressions: 0,
+      clicks: 0,
+      conversions: 0,
+      submitted_at: "2026-04-18T00:00:00.000Z",
+      updated_at: "2026-04-18T00:00:00.000Z",
     });
+    fs.writeFileSync(CODES_PATH, JSON.stringify(data, null, 2), "utf-8");
+    resetReferralCodesCache();
 
     const active = getActiveCodesForVendor("Railway");
     assert.strictEqual(active.length, 1);

@@ -193,8 +193,11 @@ export function submitReferralCode(opts: SubmitCodeOpts): SubmittedReferralCode 
     }
   }
 
-  // Determine initial status based on trust tier
-  const status: CodeStatus = opts.trust_tier === "new" ? "pending" : "active";
+  // All agent-submitted codes are active on submission, regardless of trust tier.
+  // Trust tier influences ranking weight (see TRUST_WEIGHTS below), not visibility —
+  // otherwise new-tier agents could never accumulate the conversions needed to
+  // advance past "new" (issue #906).
+  const status: CodeStatus = "active";
 
   const now = new Date().toISOString();
   const entry: SubmittedReferralCode = {
