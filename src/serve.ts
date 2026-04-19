@@ -10157,7 +10157,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/applitools-eyes" style="color:var(--text)">Applitools Eyes</a></td>
         <td>Visual</td>
-        <td>100 checkpoints/mo</td>
+        <td>50 Test Units/mo</td>
         <td>No</td>
         <td>AI-powered visual testing</td>
       </tr>
@@ -10211,7 +10211,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/cypress-cloud">Cypress Cloud</a> \u2014 500 test results/month free with parallelization, screenshots, and video recordings. The Cypress framework itself is open-source. <a href="/vendor/checkly">Checkly</a> adds synthetic monitoring on top of Playwright tests.</dd>
 
       <dt>Want to catch visual regressions in CI?</dt>
-      <dd><a href="/vendor/chromatic">Chromatic</a> for Storybook projects (5K snapshots/month). <a href="/vendor/browserstack-percy">BrowserStack Percy</a> for cross-browser visual diffs (5K screenshots/month). <a href="/vendor/applitools-eyes">Applitools Eyes</a> for AI-powered visual comparison (100 checkpoints/month).</dd>
+      <dd><a href="/vendor/chromatic">Chromatic</a> for Storybook projects (5K snapshots/month). <a href="/vendor/browserstack-percy">BrowserStack Percy</a> for cross-browser visual diffs (5K screenshots/month). <a href="/vendor/applitools-eyes">Applitools Eyes</a> for AI-powered visual comparison (50 Test Units/month, unlimited users).</dd>
 
       <dt>Need load testing for your API?</dt>
       <dd><a href="/vendor/grafana-k6-cloud">Grafana k6 Cloud</a> \u2014 500 VUh/month free with the scriptable k6 framework. <a href="/vendor/artillery">Artillery</a>, <a href="/vendor/gatling">Gatling</a>, and <a href="/vendor/locust">Locust</a> are fully open-source alternatives you can self-host.</dd>
@@ -42137,7 +42137,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Applitools Eyes</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 100 visual checkpoints/month, 1 user. AI-powered visual testing that uses Visual AI to detect meaningful visual differences while ignoring acceptable rendering variations. Supports Playwright, Cypress, Selenium, Storybook, and more. The AI approach reduces false positives compared to pixel-based tools. The 100-checkpoint limit is restrictive for production use.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 50 Test Units/month, unlimited users. AI-powered visual testing that uses Visual AI to detect meaningful visual differences while ignoring acceptable rendering variations. Supports Playwright, Cypress, Selenium, Storybook, and more. The AI approach reduces false positives compared to pixel-based tools. The 50 Test Unit limit is restrictive for production use but the unlimited-users policy is team-friendly.</div>
   </div>
 
   <h2 id="load-performance">Load &amp; Performance Testing</h2>
