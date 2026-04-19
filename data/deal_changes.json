@@ -3891,6 +3891,22 @@
         "Uploadcare",
         "imgix"
       ]
+    },
+    {
+      "vendor": "DBOS",
+      "change_type": "free_tier_removed",
+      "date": "2026-04-19",
+      "summary": "DBOS Cloud free tier (1 Firecracker microVM per app, 1M service calls/mo) no longer appears on dbos.dev/pricing. Only the open-source DBOS Transact library remains free; managed cloud is paid-only starting at Pro $99/mo. Description updated accordingly; vendor remains in index under the open-source tier.",
+      "previous_state": "Hosted free tier with 1 Firecracker microVM per app (512 MB RAM, 1 vCPU), scale to zero, 1M service calls/mo",
+      "current_state": "Open-source DBOS Transact library free; managed DBOS Cloud paid-only from Pro at $99/mo",
+      "impact": "medium",
+      "source_url": "https://www.dbos.dev/pricing",
+      "category": "Workflow Automation",
+      "alternatives": [
+        "Temporal",
+        "Inngest",
+        "Trigger.dev"
+      ]
     }
   ]
 }

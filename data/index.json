@@ -3421,7 +3421,7 @@
     {
       "vendor": "Make",
       "category": "Workflow Automation",
-      "description": "Visual workflow automation (formerly Integromat) — 1,000 operations/month, 100 MB data transfer/mo, 2 active scenarios, 15-minute minimum interval",
+      "description": "Visual workflow automation (formerly Integromat) — 1,000 credits/month (renamed from operations; each module action counts as one credit), 512 MB data transfer/mo, 2 active scenarios, 15-minute minimum interval between scheduled runs, 5 MB max file size, 5-minute max scenario runtime, 7-day execution log retention",
       "tier": "Free Forever",
       "url": "https://www.make.com/en/pricing",
       "tags": [
@@ -3431,7 +3431,7 @@
         "no-code",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Zapier",
@@ -6564,17 +6564,17 @@
     {
       "vendor": "DBOS",
       "category": "Workflow Automation",
-      "description": "Durable workflow orchestration platform — free tier includes 1 Firecracker microVM per app (512 MB RAM, 1 vCPU), scale to zero, 1M service calls/month, 3-day system data retention, Amazon RDS Postgres backend. Open-source DBOS Transact library free forever for TypeScript, Python, Go, Java, Kotlin",
-      "tier": "Free",
+      "description": "Open-source durable workflow orchestration library (DBOS Transact) — free forever for TypeScript, Python, Go, Java, Kotlin. Self-host with PostgreSQL backend; community support via Discord. Managed DBOS Cloud is paid-only (Pro from $99/mo: 3 seats, 5 apps, 1M checkpoints/mo).",
+      "tier": "Free (open-source library; managed cloud is paid-only)",
       "url": "https://www.dbos.dev/pricing",
       "tags": [
         "workflows",
         "orchestration",
-        "serverless",
         "durable-execution",
-        "postgres"
+        "postgres",
+        "open-source"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Brainboard",
@@ -12317,14 +12317,14 @@
     {
       "vendor": "Feathery",
       "category": "Forms",
-      "description": "Powerful, developer-friendly form builder. Build signup & login, user onboarding, payment flows, complex financial applications, and more. The free plan allows up to 250 submissions/month and five active forms.",
+      "description": "Developer-friendly form builder for signup/login, user onboarding, payment flows, and complex financial applications. Free plan: 500 submissions/mo, 5 active (published) forms, 10 MB file upload limit, standard integrations, forum support. Unlimited fields, pages, conditions, and seats.",
       "tier": "Free",
-      "url": "https://feathery.io",
+      "url": "https://feathery.io/pricing",
       "tags": [
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "feedback.fish",
