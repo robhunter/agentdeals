@@ -2962,6 +2962,12 @@ function getRecentWeekKeys(n: number): string[] {
   return Array.from(byWeek.keys()).sort().reverse().slice(0, n);
 }
 
+// Get ALL week keys that have at least 1 deal change (past or future)
+function getAllWeekKeys(): string[] {
+  const byWeek = getChangesByWeek();
+  return Array.from(byWeek.keys()).sort().reverse();
+}
+
 // --- Vendor profile pages ---
 
 function buildVendorIndexPage(): string {
@@ -54028,8 +54034,9 @@ ${catList}
     const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
     const editorialDate = "2026-04-10";
     const comparisonDate = "2026-04-04";
-    const reportMonths = getAvailableReportMonths();
-    const latestReport = reportMonths.length > 0 ? (reportMonths[reportMonths.length - 1] + "-28" <= now ? reportMonths[reportMonths.length - 1] + "-28" : now) : now;
+    // /this-week in sitemap-reports uses `now` as lastmod, so the sitemap index
+    // lastmod for reports must be `now` too (Google uses this to decide re-crawl).
+    const latestReport = now;
     const sitemapIndex = '<?xml version="1.0" encoding="UTF-8"?>\n'
       + '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + '  <sitemap>\n'
@@ -54150,7 +54157,7 @@ ${catList}
       + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + '  <url>\n    <loc>' + BASE_URL + '/this-week</loc>\n    <lastmod>' + now + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/digest/archive</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
-    for (const wk of getRecentWeekKeys(4)) {
+    for (const wk of getAllWeekKeys()) {
       xml += '  <url>\n    <loc>' + BASE_URL + '/digest/' + wk + '</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n';
     }
     xml += '  <url>\n    <loc>' + BASE_URL + '/reports</loc>\n    <lastmod>' + now + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
