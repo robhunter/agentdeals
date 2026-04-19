@@ -1976,9 +1976,9 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free tier includes Flash, Flash-Lite, and 2.5 Pro (5 RPM) models. Per-model paid pricing: Gemini 3.1 Pro Preview $2/$12 per MTok (≤200K ctx, doubles above), Gemini 3.0 Flash Preview $0.50/$3, Gemini 3.1 Flash-Lite Preview $0.25/$1.50, Gemini 2.5 Pro $1.25/$10 (≤200K, doubles above), Gemini 2.5 Flash $0.30/$2.50. Free limits: Flash 10 RPM, Flash-Lite 15 RPM, 2.5 Pro 5 RPM. Gemini 2.0 Flash and 2.0 Flash-Lite deprecated June 1, 2026 — migrate to 2.5 Flash or 3.x Flash. All models support Batch/Flex at 50% discount. Mandatory spend caps enforced since April 1, 2026.",
+      "description": "Free tier is Flash-tier only: Gemini 2.5 Flash (10 RPM), Gemini 2.5 Flash-Lite (15 RPM), Gemini 3.0 Flash Preview, Gemini 3.1 Flash-Lite Preview, Gemini Embedding, and Gemma 4. 2.5 Pro and 3.1 Pro Preview are paid-only. Per-model paid pricing: Gemini 3.1 Pro Preview $2/$12 per MTok (≤200K ctx, doubles above), Gemini 3.0 Flash Preview $0.50/$3, Gemini 3.1 Flash-Lite Preview $0.25/$1.50, Gemini 2.5 Pro $1.25/$10 (≤200K, doubles above), Gemini 2.5 Flash $0.30/$2.50. Gemini 2.0 Flash and 2.0 Flash-Lite deprecated June 1, 2026 — migrate to 2.5 Flash or 3.x Flash. All models support Batch/Flex at 50% discount. Mandatory spend caps enforced since April 1, 2026.",
       "tier": "Free (Reduced)",
-      "url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "url": "https://ai.google.dev/pricing",
       "tags": [
         "ai",
         "ml",
@@ -1989,7 +1989,7 @@
         "deal-change",
         "per-model-pricing"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-04-18"
     },
     {
       "vendor": "Mistral AI",
