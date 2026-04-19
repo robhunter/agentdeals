@@ -3874,6 +3874,23 @@
         "Algolia",
         "Elastic Cloud"
       ]
+    },
+    {
+      "vendor": "ImageEngine",
+      "change_type": "free_tier_removed",
+      "date": "2026-04-19",
+      "summary": "ImageEngine's free developer program is no longer on offer. Only access path is a 30-day free trial (no credit card), followed by flat-rate enterprise licensing. Reclassified to Trial tier.",
+      "previous_state": "Free developer account available via imageengine.io/developer-program",
+      "current_state": "30-day free trial only; flat-rate enterprise licensing after trial",
+      "impact": "medium",
+      "source_url": "https://imageengine.io/",
+      "category": "Storage",
+      "alternatives": [
+        "Cloudinary",
+        "ImageKit",
+        "Uploadcare",
+        "imgix"
+      ]
     }
   ]
 }
