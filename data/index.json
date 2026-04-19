@@ -3212,7 +3212,7 @@
     {
       "vendor": "HCP Terraform",
       "category": "Infrastructure",
-      "description": "HashiCorp managed Terraform — enhanced free tier (replacing legacy plan EOL March 31, 2026): 500 managed resources, unlimited users, SSO, policy as code (Sentinel + OPA), 1 concurrent run. Legacy free plan users auto-migrated to enhanced tier",
+      "description": "HashiCorp managed Terraform — enhanced free tier (replacing legacy plan EOL March 31, 2026): 500 managed resources, unlimited users, SSO, policy as code (Sentinel + OPA), unlimited apply cycles. Legacy free plan users auto-migrated to enhanced tier",
       "tier": "Free (Enhanced)",
       "url": "https://www.hashicorp.com/products/terraform/pricing",
       "tags": [
@@ -3224,7 +3224,7 @@
         "deal-change",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Orama",
