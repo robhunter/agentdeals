@@ -290,6 +290,16 @@ describe("HTTP transport", () => {
     assert.ok(Array.isArray(body.transport));
   });
 
+  it("serves /impact-verification with Impact site ownership string", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/impact-verification`);
+    assert.strictEqual(response.status, 200);
+    assert.strictEqual(response.headers.get("content-type"), "text/plain; charset=utf-8");
+    const body = await response.text();
+    assert.strictEqual(body, "Impact-Site-Verification: d7d21c9f-c586-4ea0-bf68-0bd9e995c222");
+  });
+
   it("serves /AGENTS.md with text/markdown content type", async () => {
     proc = await startHttpServer();
 
