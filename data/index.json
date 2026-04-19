@@ -11652,38 +11652,14 @@
     {
       "vendor": "bonsai.io",
       "category": "Search",
-      "description": "Free 1 GB memory and 1 GB storage",
+      "description": "Free Sandbox plan: 125 MB memory, 125 MB storage, 35K documents. Free forever. Managed Elasticsearch.",
       "tier": "Free",
-      "url": "https://bonsai.io/",
+      "url": "https://bonsai.io/pricing",
       "tags": [
         "search",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
-    },
-    {
-      "vendor": "CommandBar",
-      "category": "Search",
-      "description": "Unified Search Bar as-a-service, web-based UI widget/plugin that allows your users to search contents, navigations, features, etc. within your product, which helps discoverability. Free for up to 1,000 Monthly Active Users, unlimited commands.",
-      "tier": "Free",
-      "url": "https://www.commandbar.com/",
-      "tags": [
-        "search",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-13"
-    },
-    {
-      "vendor": "searchly.com",
-      "category": "Search",
-      "description": "Free 2 indices and 20 MB storage",
-      "tier": "Free",
-      "url": "http://www.searchly.com/",
-      "tags": [
-        "search",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "10minutemail",

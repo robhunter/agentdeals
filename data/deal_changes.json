@@ -3818,6 +3818,22 @@
         "SiliconFlow",
         "OpenRouter"
       ]
+    },
+    {
+      "vendor": "searchly.com",
+      "change_type": "product_deprecated",
+      "date": "2026-04-19",
+      "summary": "searchly.com appears to be offline — homepage returns HTTP 502. Service previously offered 2 free indices and 20 MB storage. Removed from index.",
+      "previous_state": "Free 2 indices and 20 MB storage (hosted Elasticsearch)",
+      "current_state": "Site unreachable (HTTP 502), service appears discontinued — removed from index",
+      "impact": "negative",
+      "source_url": "https://searchly.com/",
+      "category": "Search",
+      "alternatives": [
+        "bonsai.io",
+        "Algolia",
+        "Elastic Cloud"
+      ]
     }
   ]
 }
