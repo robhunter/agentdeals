@@ -1147,7 +1147,7 @@
     {
       "vendor": "Brevo",
       "category": "Email",
-      "description": "300 emails/day, up to 100K contacts, marketing automation, segmentation, landing pages. Formerly Sendinblue",
+      "description": "300 emails/day, unlimited contacts (fair use policy), marketing automation, segmentation, landing pages. Formerly Sendinblue",
       "tier": "Free",
       "url": "https://www.brevo.com/pricing/",
       "tags": [
@@ -1158,7 +1158,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-19",
       "referral_program": {
         "available": true,
         "referrer_benefit": "~$5 per free signup, ~$100 per paid signup",
