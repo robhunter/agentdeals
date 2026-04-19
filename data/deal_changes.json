@@ -1,6 +1,37 @@
 {
   "changes": [
     {
+      "vendor": "Applitools Eyes",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-18",
+      "summary": "Free tier metric changed from 'checkpoints' to 'Test Units' (50/month) and user cap relaxed from 1 user to unlimited users. AI-powered visual regression detection unchanged.",
+      "previous_state": "Free tier: 1 user, 100 visual checkpoints/month",
+      "current_state": "Free tier: unlimited users, 50 Test Units/month",
+      "impact": "medium",
+      "source_url": "https://applitools.com/platform-pricing/",
+      "category": "Testing",
+      "alternatives": [
+        "BrowserStack Percy",
+        "Chromatic",
+        "Argos"
+      ]
+    },
+    {
+      "vendor": "everystep-automation.com",
+      "change_type": "free_tier_removed",
+      "date": "2026-04-18",
+      "summary": "Reclassified from Free to Trial tier. No permanent free plan exists — product offers a 30-day free trial only, after which paid licenses are required.",
+      "previous_state": "Free tier: records and replays browser steps, free with fewer options",
+      "current_state": "30-day free trial only — no permanent free tier",
+      "impact": "low",
+      "source_url": "https://www.everystep-automation.com/",
+      "category": "Testing",
+      "alternatives": [
+        "Selenium IDE",
+        "Playwright"
+      ]
+    },
+    {
       "vendor": "OpenAI Codex",
       "change_type": "pricing_restructured",
       "date": "2026-04-03",

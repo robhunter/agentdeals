@@ -9741,15 +9741,15 @@
     {
       "vendor": "everystep-automation.com",
       "category": "Testing",
-      "description": "Records and replays all steps made in a web browser and creates scripts, free with fewer options",
-      "tier": "Free",
+      "description": "Desktop tool that records and replays all steps made in a web browser and creates scripts. 30-day free trial only — no permanent free tier. Paid licenses required after trial.",
+      "tier": "Trial",
       "url": "https://www.everystep-automation.com/",
       "tags": [
         "testing",
         "qa",
-        "free-for-dev"
+        "trial"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-18"
     },
     {
       "vendor": "gridlastic.com",
@@ -20893,7 +20893,7 @@
     {
       "vendor": "Applitools Eyes",
       "category": "Testing",
-      "description": "Free visual testing account for 1 user with 100 visual checkpoints per month. AI-powered visual regression detection. No credit card required.",
+      "description": "Free tier: 50 Test Units per month, unlimited users. AI-powered Visual AI testing to detect meaningful visual differences while ignoring acceptable rendering variations. Supports Playwright, Cypress, Selenium, Storybook. No credit card required.",
       "tier": "Free",
       "url": "https://applitools.com/platform-pricing/",
       "tags": [
@@ -20902,7 +20902,7 @@
         "ai",
         "regression"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-18"
     },
     {
       "vendor": "Artillery",
