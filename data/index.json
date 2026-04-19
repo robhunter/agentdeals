@@ -654,18 +654,19 @@
     {
       "vendor": "Xata",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — 15 GB storage, 75 req/s, 10 branches, daily backups. No cold starts or inactivity pausing",
+      "description": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
       "tier": "Free",
       "url": "https://xata.io/pricing",
       "tags": [
         "database",
         "postgres",
-        "serverless",
+        "open-source",
+        "self-hosted",
         "branching",
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Cloudflare D1",
@@ -740,7 +741,7 @@
     {
       "vendor": "Hasura Cloud",
       "category": "Databases",
-      "description": "Instant GraphQL and REST APIs on your data — 1 GB data passthrough/month, 60 req/min free",
+      "description": "Hasura DDN Free plan — unlimited API requests, unlimited concurrent users, unlimited models at any scale. Includes full GraphQL API (filtering, pagination, sorting, aggregations), database/code/API connectors, and CI/CD tools. Limits: 1 supergraph developer, 15-minute observability retention.",
       "tier": "Free",
       "url": "https://hasura.io/pricing",
       "tags": [
@@ -751,7 +752,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "GitHub Actions",
@@ -6053,7 +6054,7 @@
     {
       "vendor": "Hasura",
       "category": "API Development",
-      "description": "Instant GraphQL API engine over any database — Hasura Cloud free tier: 1 GB data pass-through, 60 requests/min rate limit. Auto-generates GraphQL APIs from Postgres, SQL Server, BigQuery",
+      "description": "Instant GraphQL API engine over any database — Hasura DDN Free plan: unlimited API requests and unlimited concurrent users, unlimited models at any scale. 1 supergraph developer, 15-minute observability retention. Auto-generates GraphQL APIs from Postgres, SQL Server, BigQuery via database/code/API connectors",
       "tier": "Cloud Free",
       "url": "https://hasura.io/pricing",
       "tags": [
@@ -6063,7 +6064,7 @@
         "backend",
         "developer-tools"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Uptimia",

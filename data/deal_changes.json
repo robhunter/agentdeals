@@ -1,6 +1,34 @@
 {
   "changes": [
     {
+      "vendor": "Xata",
+      "change_type": "pricing_model_change",
+      "date": "2026-04-19",
+      "summary": "Xata pivoted to open source (Apache 2.0) in April 2026. SaaS free tier (15 GB storage, 75 req/s, 10 branches, daily backups) retired. Free-forever usage now requires self-hosting on Kubernetes; the managed platform is paid with a 14-day free trial and $100 credit.",
+      "previous_state": "SaaS free tier: 15 GB storage, 75 req/s, 10 branches, daily backups, no cold starts or pausing",
+      "current_state": "Open-source Apache 2.0 platform (free forever) with copy-on-write branching and scale-to-zero, self-hosted on Kubernetes. Managed platform is paid (compute + storage billed hourly).",
+      "impact": "high",
+      "source_url": "https://xata.io/pricing",
+      "category": "Databases",
+      "alternatives": [
+        "Neon",
+        "Supabase",
+        "CockroachDB"
+      ]
+    },
+    {
+      "vendor": "Hasura Cloud",
+      "change_type": "limits_increased",
+      "date": "2026-04-19",
+      "summary": "Hasura DDN Free plan replaced the legacy Hasura Cloud free tier (60 req/min, 1 GB passthrough). Free tier now offers unlimited API requests, unlimited concurrent users, and unlimited models at any scale. Restrictions: 1 supergraph developer and 15-minute observability retention.",
+      "previous_state": "60 requests/min rate limit, 1 GB data passthrough/month",
+      "current_state": "Unlimited API requests, unlimited concurrent users, unlimited models. 1 supergraph developer, 15-minute trace retention.",
+      "impact": "high",
+      "source_url": "https://hasura.io/pricing",
+      "category": "Databases",
+      "alternatives": []
+    },
+    {
       "vendor": "Applitools Eyes",
       "change_type": "pricing_restructured",
       "date": "2026-04-18",
