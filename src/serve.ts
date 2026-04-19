@@ -11687,7 +11687,7 @@ ${mcpCtaCss()}
   <h1>Best Free Design Tools for Developers</h1>
 
   <div class="context">
-    <p>Design tooling has become remarkably accessible. <strong>Figma</strong> offers a generous free Starter plan with unlimited files. <strong>Penpot</strong> is a fully open-source alternative with no limits on projects or components. And the Tailwind CSS ecosystem has spawned dozens of free UI component libraries \u2014 <strong>ShadcnUI</strong>, <strong>DaisyUI</strong>, and <strong>HyperUI</strong> give you production-ready components without a design tool at all.</p>
+    <p>Design tooling has become remarkably accessible. <strong>Figma</strong> offers a generous free Starter plan with unlimited drafts and 150 AI credits/day. <strong>Penpot</strong> is a fully open-source alternative with no limits on projects or components. And the Tailwind CSS ecosystem has spawned dozens of free UI component libraries \u2014 <strong>ShadcnUI</strong>, <strong>DaisyUI</strong>, and <strong>HyperUI</strong> give you production-ready components without a design tool at all.</p>
     <p>This page compares every free design tool in our index \u2014 <strong>${designOffers.length} tools</strong> across UI editors, prototyping platforms, component libraries, icon sets, stock assets, color tools, and more. Whether you need a Figma alternative or free icons for your next project, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -11838,7 +11838,7 @@ ${buildCards(other)}
   <div class="decision-guide">
     <dl>
       <dt>Need a full design tool for UI/UX?</dt>
-      <dd><a href="/vendor/figma">Figma</a> \u2014 industry standard, generous free Starter plan with unlimited files. <a href="/vendor/penpot">Penpot</a> \u2014 open-source alternative, self-hostable, no vendor lock-in. <a href="/vendor/lunacy">Lunacy</a> for offline-first design with built-in assets.</dd>
+      <dd><a href="/vendor/figma">Figma</a> \u2014 industry standard, generous free Starter plan with unlimited drafts (team projects limited to 3 files). <a href="/vendor/penpot">Penpot</a> \u2014 open-source alternative, self-hostable, no vendor lock-in. <a href="/vendor/lunacy">Lunacy</a> for offline-first design with built-in assets.</dd>
 
       <dt>Building a website without code?</dt>
       <dd><a href="/vendor/webflow">Webflow</a> \u2014 most powerful visual builder with CMS (2 projects free). <a href="/vendor/framer-com">Framer</a> for polished portfolio sites. <a href="/vendor/plasmic">Plasmic</a> for visual React development with code export.</dd>

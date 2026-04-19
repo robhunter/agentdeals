@@ -1555,7 +1555,7 @@
     {
       "vendor": "Linear",
       "category": "Project Management",
-      "description": "Project management for dev teams — 250 active issues (unlimited archived), unlimited members, 2 teams, AI agents, API",
+      "description": "Project management for dev teams — 250 issues, unlimited members, 2 teams, AI agents, API, 10MB file upload limit.",
       "tier": "Free",
       "url": "https://linear.app/pricing",
       "tags": [
@@ -1565,7 +1565,7 @@
         "agile",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Snyk",
@@ -3540,7 +3540,7 @@
     {
       "vendor": "Figma",
       "category": "Design",
-      "description": "Collaborative design tool — 3 Figma design files, 3 FigJam files, unlimited drafts, unlimited viewers, 30-day version history, unlimited cloud storage",
+      "description": "Collaborative design tool — free Starter plan with unlimited drafts, unlimited viewers, unlimited cloud storage, 30-day version history, 150 AI credits/day (500/mo). Team projects limited to 3 files.",
       "tier": "Starter",
       "url": "https://www.figma.com/pricing/",
       "tags": [
@@ -3550,7 +3550,7 @@
         "collaboration",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Canva",
@@ -8759,14 +8759,14 @@
     {
       "vendor": "Teamcamp",
       "category": "Project Management",
-      "description": "All-in-one project management application for software development companies.",
+      "description": "All-in-one project management — free for up to 10 users, unlimited projects, 250 tasks, 1 GB storage, time tracking, docs, invoicing.",
       "tier": "Free",
-      "url": "https://www.teamcamp.app",
+      "url": "https://www.teamcamp.app/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Teamplify",
@@ -15473,7 +15473,7 @@
     {
       "vendor": "CodedThemes",
       "category": "Design",
-      "description": "Offers a well-crafted admin dashboard & and UI kits designed to simplify and speed up modern web development.",
+      "description": "Free admin dashboard templates & UI kits for React, Angular, Vue, Bootstrap, Next.js, Django, and more. Premium templates from $49.",
       "tier": "Free",
       "url": "https://codedthemes.com/",
       "tags": [
@@ -15481,7 +15481,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "CodeMyUI",
