@@ -53868,6 +53868,9 @@ ${weekEntries.join("\n")}
     const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
     res.end(robotsTxt);
+  } else if (url.pathname === "/impact-verification" && isGetOrHead) {
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end("Impact-Site-Verification: d7d21c9f-c586-4ea0-bf68-0bd9e995c222");
   } else if (url.pathname === "/llms.txt" && isGetOrHead) {
     const llmsTxt = `# AgentDeals
 
