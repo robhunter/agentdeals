@@ -8651,14 +8651,14 @@
     {
       "vendor": "ruttl.com",
       "category": "Communication",
-      "description": "The best all-in-one feedback tool to collect digital feedback and review websites, PDFs, and images.",
+      "description": "All-in-one visual feedback tool to collect digital feedback and review websites, PDFs, and images. Free plan: 1 project, 5 pages, 5 users, unlimited guests; integrations with Trello, Slack, Asana, and Jira. Pro begins at $15/user/month.",
       "tier": "Free",
-      "url": "https://ruttl.com/",
+      "url": "https://ruttl.com/pricing/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Screen Sharing via Browser",
@@ -8687,14 +8687,14 @@
     {
       "vendor": "SiteDots",
       "category": "Communication",
-      "description": "Share feedback for website projects directly on your website, no emulation, canvas or workarounds. Completely functional free tier.",
+      "description": "Share feedback for website projects directly on your website — no emulation, canvas, or workarounds. Free plan: 1 project/domain, 3 users per project, 6 dots per project, unlimited projects you can join. Many integrations listed as \"coming soon\".",
       "tier": "Free",
-      "url": "https://sitedots.com/",
+      "url": "https://sitedots.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Slab",
@@ -14446,14 +14446,14 @@
     {
       "vendor": "Helploom",
       "category": "Communication",
-      "description": "Customer support software that offers a live chat on the free forever plan. Simple, lightweight and beautiful. Setup is a simple copy-paste script. Built by a developer.",
+      "description": "Customer support software with live chat widget, simple copy-paste setup, and Slack integration. Free plan: 30 threads/month, 3 users, live chat widget, limited Help Center. Built by a developer.",
       "tier": "Free",
-      "url": "https://helploom.com",
+      "url": "https://helploom.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Hygger",
@@ -17202,15 +17202,15 @@
     {
       "vendor": "AppFit",
       "category": "Analytics",
-      "description": "AppFit is a comprehensive analytics and product management tool designed to facilitate seamless, cross-platform management of analytics and product updates. Free plan includes 10,000 events per month, product journal and weekly insights.",
+      "description": "Cross-platform product analytics and release management tool. Free plan is manual-entry only — no automated event tracking — with product journal, weekly email insights, and unlimited team members. Automated event tracking (200K events, 12-week history) begins at Starter $9/month.",
       "tier": "Free",
-      "url": "https://appfit.io",
+      "url": "https://appfit.io/product/pricing",
       "tags": [
         "analytics",
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Aptabase",
@@ -17254,20 +17254,20 @@
     {
       "vendor": "Fivetran Activations",
       "category": "Analytics",
-      "description": "Reverse ETL platform. Acquired by Fivetran. Now part of Fivetran Activations.",
+      "description": "Reverse ETL platform (formerly Census, acquired by Fivetran). Free plan: 3,500 Monthly Active Rows (MAR) per month for Activations with access to standard-plan features; paid plans (Standard / Enterprise / Business Critical) above the MAR threshold.",
       "tier": "Free",
-      "url": "https://fivetran.com/",
+      "url": "https://www.fivetran.com/pricing",
       "tags": [
         "analytics",
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Clicky",
       "category": "Analytics",
-      "description": "Website Analytics Platform. Free Plan for one website with 3000 views analytics.",
+      "description": "Privacy-focused real-time web analytics (GDPR-compliant, no cookies). Free plan: 1 website, 3,000 daily pageviews, 30-day history retention.",
       "tier": "Free",
       "url": "https://clicky.com",
       "tags": [
@@ -17275,7 +17275,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "counter.dev",
