@@ -1155,6 +1155,19 @@ describe("HTTP transport", () => {
     assert.ok(xml.includes("<lastmod>"), "Should have lastmod dates");
   });
 
+  it("sitemap.xml reports sitemap lastmod is current (not stale)", async () => {
+    proc = await startHttpServer();
+    const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
+    const xml = await response.text();
+    // Extract the reports sitemap block and its lastmod
+    const reportsBlock = xml.match(/<sitemap>\s*<loc>[^<]*sitemap-reports\.xml<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/);
+    assert.ok(reportsBlock, "Should have a sitemap-reports entry with lastmod");
+    const lastmod = reportsBlock![1];
+    const year = parseInt(lastmod.slice(0, 4), 10);
+    const currentYear = new Date().getFullYear();
+    assert.ok(year >= currentYear - 1, `sitemap-reports lastmod year ${year} should be recent (not 2022); got ${lastmod}`);
+  });
+
   it("sitemap-pages.xml includes category pages", async () => {
     proc = await startHttpServer();
 
@@ -1330,6 +1343,25 @@ describe("HTTP transport", () => {
     assert.ok(xml.includes("/digest/archive"), "Sitemap should include digest archive");
     const digestCount = (xml.match(/\/digest\//g) || []).length;
     assert.ok(digestCount >= 3, `Expected at least 3 digest URLs in sitemap, got ${digestCount}`);
+  });
+
+  it("sitemap-reports.xml includes ALL weeks with deal changes (past + future)", async () => {
+    proc = await startHttpServer();
+
+    // /digest/archive is the canonical list of weeks with deal changes.
+    // The sitemap must include every week the archive shows.
+    const archiveRes = await fetch(`http://localhost:${serverPort}/digest/archive`);
+    const archiveHtml = await archiveRes.text();
+    const archiveWeeks = new Set<string>();
+    for (const m of archiveHtml.matchAll(/\/digest\/(\d{4}-w\d{2})/g)) archiveWeeks.add(m[1]);
+
+    const response = await fetch(`http://localhost:${serverPort}/sitemap-reports.xml`);
+    const xml = await response.text();
+    for (const wk of archiveWeeks) {
+      assert.ok(xml.includes(`/digest/${wk}`), `Sitemap should include digest week ${wk}`);
+    }
+    // Sanity: the sitemap should list substantially more than the old 4-week window
+    assert.ok(archiveWeeks.size >= 10, `Expected >=10 archive weeks to meaningfully test; got ${archiveWeeks.size}`);
   });
 
   it("GET /vendor returns vendor index page", async () => {
