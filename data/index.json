@@ -8951,14 +8951,14 @@
     {
       "vendor": "Wormhole",
       "category": "Storage",
-      "description": "Share files up to 5GB with end-to-end encryption for up to 24hours. For files larger than 5 GB, it uses peer-to-peer transfer to send your files directly.",
+      "description": "Share files up to 10 GB with end-to-end encryption. Files ≤5 GB are server-stored for 24 hours; files >5 GB use peer-to-peer transfer sent directly between endpoints.",
       "tier": "Free",
       "url": "https://wormhole.app/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "zoom.us",
@@ -10030,14 +10030,14 @@
     {
       "vendor": "Corgea",
       "category": "Security",
-      "description": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan includes 1 user and 2 repos.",
+      "description": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan includes 10 repos, 10 PR scans/month, and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
       "tier": "Free",
-      "url": "https://corgea.com/",
+      "url": "https://corgea.com/pricing/",
       "tags": [
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "crypteron.com",
@@ -14986,15 +14986,15 @@
     {
       "vendor": "ImageEngine",
       "category": "Storage",
-      "description": "ImageEngine is an easy to use global image CDN. Sub 60 sec setup. AVIF and JPEGXL support, WordPress-, Magento-, React-, Vue- plugins and more. Claim your free developer account [here](https://imageengine.io/developer-program/).",
-      "tier": "Free",
+      "description": "Global image CDN with sub-60-second setup, AVIF and JPEGXL support, and WordPress/Magento/React/Vue plugins. 30-day free trial only — no credit card required. Flat-rate enterprise licensing after trial; no permanent free developer tier.",
+      "tier": "Trial",
       "url": "https://imageengine.io/",
       "tags": [
         "storage",
         "media",
-        "free-for-dev"
+        "trial"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "ImgBB",
@@ -15177,15 +15177,15 @@
     {
       "vendor": "podio.com",
       "category": "Storage",
-      "description": "Work management platform — up to 5 users on free plan, task management, apps, workspaces, basic workflow automations. 1 GB storage. Citrix-backed",
+      "description": "Work management platform owned by Progress Software — free plan: 5 users, 100 items max across organization, 1,000 API calls daily. Task management, apps, workspaces, basic workflow automations.",
       "tier": "Free",
-      "url": "https://podio.com/",
+      "url": "https://www.progress.com/podio/pricing",
       "tags": [
         "storage",
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Proton Drive",
