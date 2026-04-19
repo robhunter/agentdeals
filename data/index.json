@@ -6067,6 +6067,23 @@
       "verifiedDate": "2026-04-19"
     },
     {
+      "vendor": "Amazon SP-API",
+      "category": "API Development",
+      "description": "Amazon Selling Partner API for building seller and vendor tools on Amazon. Sellers/vendors using SP-API for their own business remain fully exempt (free). Third-party developers: $1,400/year annual fee active since Jan 31 2026; Basic tier includes 2.5M GET calls/month. Per-call overage fees ($0.40 per 1K GET calls) were scheduled for 2026-04-30 but postponed indefinitely after developer backlash — no new date announced.",
+      "tier": "Exempt / Paid",
+      "url": "https://developer.amazonservices.com/",
+      "tags": [
+        "api",
+        "amazon",
+        "ecommerce",
+        "marketplace",
+        "sp-api",
+        "selling-partner",
+        "developer-tools"
+      ],
+      "verifiedDate": "2026-04-19"
+    },
+    {
       "vendor": "Uptimia",
       "category": "Monitoring",
       "description": "Website uptime monitoring — free plan: 1 website, 5-minute check interval, basic uptime monitoring, email alerts. No credit card required",

@@ -1,6 +1,18 @@
 {
   "changes": [
     {
+      "vendor": "Amazon SP-API",
+      "change_type": "pricing_restructured",
+      "date": "2025-11-03",
+      "summary": "Amazon announced SP-API would move from free to paid. $1,400/year annual fee for third-party developers (activated 2026-01-31), with per-call fees of $0.40 per 1K GET calls above tier allowance scheduled to begin 2026-04-30. Tiered allowances: Basic (2.5M GET calls/month), Pro ($1K/mo, 25M calls), Plus ($10K/mo, 250M calls), Enterprise (custom). Sellers/vendors using SP-API for their own business remain exempt.",
+      "previous_state": "Free for all developers, 10+ years of free API access",
+      "current_state": "Paid structure announced — $1,400/year + tiered per-call fees for third-party developers, starting 2026-01-31 (annual) and 2026-04-30 (per-call)",
+      "impact": "high",
+      "source_url": "https://developer.amazonservices.com/",
+      "category": "API Development",
+      "alternatives": []
+    },
+    {
       "vendor": "Xata",
       "change_type": "pricing_model_change",
       "date": "2026-04-19",
