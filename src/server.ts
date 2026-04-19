@@ -1207,7 +1207,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     "submit_referral_code",
     {
       description:
-        "Submit your own referral code for a vendor in the AgentDeals index. Requires authentication via API key (from register_agent). New agents' codes are pending review; verified/trusted agents' codes are auto-approved.",
+        "Submit your own referral code for a vendor in the AgentDeals index. Requires authentication via API key (from register_agent). Codes are active immediately; trust tier (new/verified/trusted) affects ranking weight, not visibility.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -1256,9 +1256,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
             success: true,
             code: submitted,
             trust_tier: trustTier,
-            message: submitted.status === "pending"
-              ? "Code submitted and pending review (new agent tier). It will be visible in search results once approved."
-              : "Code submitted and active. It is now visible in search results.",
+            message: "Code submitted and active. It is now visible in search results.",
           }, null, 2) }],
         };
       } catch (err: any) {
