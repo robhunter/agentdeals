@@ -4600,7 +4600,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/hasura-cloud" style="color:var(--text)">Hasura Cloud</a></td>
-        <td>BYO Postgres</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>1 GB passthrough</td><td>\u2705 (subscriptions)</td>
+        <td>BYO Postgres</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>Unlimited requests (DDN Free)</td><td>\u2705 (subscriptions)</td>
         <td>Apache-2.0</td>
       </tr>
     </tbody>
@@ -5208,11 +5208,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/xata" style="color:var(--text)">Xata</a></td>
-        <td>15 GB</td>
-        <td>Serverless Postgres</td>
-        <td>Daily</td>
-        <td>No</td>
-        <td>Postgres + built-in search + branching</td>
+        <td>Unlimited*</td>
+        <td>Open-source Postgres</td>
+        <td>Self-managed</td>
+        <td>Yes (Apache 2.0)</td>
+        <td>Copy-on-write branching + scale-to-zero</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/cloudflare-d1" style="color:var(--text)">Cloudflare D1</a></td>
@@ -5257,7 +5257,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*PocketBase is fully free self-hosted with no storage limits. CockroachDB leads managed offerings at 10 GiB free. Xata offers the most generous managed storage at 15 GB with daily backups included. Turso and D1 provide 5 GB of edge SQLite.</p>`,
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*PocketBase and Xata (post-April-2026 open-source pivot) are fully free when self-hosted \u2014 actual limits depend on your hardware. CockroachDB leads managed free offerings at 10 GiB. Turso and D1 provide 5 GB of edge SQLite.</p>`,
   },
   {
     slug: "redis-alternatives",
@@ -8788,9 +8788,9 @@ ${buildCards(timeSeries)}
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/xata" style="color:var(--text)">Xata</a></td>
-        <td>Postgres</td>
-        <td>15 GB</td>
-        <td>Serverless Postgres with branching</td>
+        <td>Open-source Postgres</td>
+        <td>Unlimited (self-hosted)</td>
+        <td>Apache 2.0 Postgres with copy-on-write branching</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/cloudflare-d1" style="color:var(--text)">Cloudflare D1</a></td>
@@ -8855,7 +8855,7 @@ ${buildCards(timeSeries)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Storage limits are for the free tier only. CockroachDB (10 GiB) and Xata (15 GB) offer the most generous managed storage. PocketBase and Weaviate are unlimited when self-hosted. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Storage limits are for the free tier only. CockroachDB (10 GiB) offers the most generous managed storage. PocketBase, Weaviate, and Xata (post-April-2026 open-source pivot) are unlimited when self-hosted. All limits verified against live pricing pages, April 2026.</p>
 
   <h2>Which Free Database Should I Use?</h2>
   <div class="decision-guide">
@@ -8864,7 +8864,7 @@ ${buildCards(timeSeries)}
       <dd><a href="/vendor/supabase">Supabase</a> or <a href="/vendor/nhost">Nhost</a> — Postgres + auth + storage + real-time in one platform. Supabase has the larger ecosystem.</dd>
 
       <dt>Need pure serverless Postgres?</dt>
-      <dd><a href="/vendor/neon">Neon</a> (branching, scale-to-zero) or <a href="/vendor/xata">Xata</a> (15 GB free, branching). For max free storage, <a href="/vendor/cockroachdb">CockroachDB</a> gives 10 GiB.</dd>
+      <dd><a href="/vendor/neon">Neon</a> (managed, branching, scale-to-zero). <a href="/vendor/xata">Xata</a> went open-source (Apache 2.0) in April 2026 \u2014 self-host on Kubernetes for unlimited free usage with copy-on-write branching and scale-to-zero. For max managed free storage, <a href="/vendor/cockroachdb">CockroachDB</a> gives 10 GiB.</dd>
 
       <dt>Building at the edge?</dt>
       <dd><a href="/vendor/turso">Turso</a> (5 GB, 500M reads) or <a href="/vendor/cloudflare-d1">Cloudflare D1</a> (5 GB, tight Workers integration). Both use SQLite under the hood.</dd>
@@ -13148,7 +13148,7 @@ ${buildCards(apiIntegration)}
       <dd><a href="/vendor/mintlify">Mintlify</a> \u2014 free tier includes custom domain, web editor, and API playground. <a href="/vendor/stoplight">Stoplight</a> for OpenAPI visual design. <a href="/vendor/swaggerhub">SwaggerHub</a> for Swagger/OpenAPI hosting.</dd>
 
       <dt>Need instant GraphQL APIs?</dt>
-      <dd><a href="/vendor/hasura">Hasura</a> \u2014 generates a GraphQL API over any database instantly, 1 GB data + 3M requests free. <a href="/vendor/apollo-graphos">Apollo GraphOS</a> for GraphQL federation and supergraph management.</dd>
+      <dd><a href="/vendor/hasura">Hasura</a> \u2014 generates a GraphQL API over any database instantly. Hasura DDN Free plan: unlimited API requests and unlimited concurrent users (1 supergraph developer, 15-min observability retention). <a href="/vendor/apollo-graphos">Apollo GraphOS</a> for GraphQL federation and supergraph management.</dd>
 
       <dt>Need mock APIs for frontend development?</dt>
       <dd><a href="/vendor/beeceptor">Beeceptor</a> \u2014 no-code mock APIs for REST, SOAP, and GraphQL. <a href="/vendor/mockapi">MockAPI</a> for quick REST mocking with custom data. <a href="/vendor/mockaroo">mockaroo</a> for realistic test data generation.</dd>
@@ -29035,15 +29035,15 @@ function buildDatabasePricingPage(): string {
       category: "specialized",
       dbType: "GraphQL Engine (over Postgres)",
       freeStorage: "N/A (connects to your DB)",
-      freeConnections: "60 req/min",
+      freeConnections: "Unlimited requests",
       freeCompute: "Shared",
-      paidFrom: "$99/mo (Professional)",
-      pricingModel: "Per-project",
-      freeDetails: "Free tier with 60 requests/minute, 1 GB data passthrough/month. Not a database itself — auto-generates a GraphQL API over your existing PostgreSQL database. Includes subscriptions, event triggers, scheduled triggers, and remote schemas. Supports multiple database sources.",
+      paidFrom: "$5/active model/mo (DDN Base)",
+      pricingModel: "Per-model",
+      freeDetails: "Hasura DDN Free plan: unlimited API requests, unlimited concurrent users, unlimited models at any scale. Restrictions: 1 supergraph developer, 15-minute observability retention. Full GraphQL API (filtering, pagination, sorting, aggregations) with database/code/API connectors, CI/CD tools, and breaking change detection. Not a database itself — auto-generates a GraphQL API over your existing PostgreSQL database.",
       freeType: "limited",
       monthlyCostSmall: "$0",
-      monthlyCostTeam: "$99+",
-      hiddenCosts: "60 req/min is very restrictive for production. Professional plan jumps to $99/mo. You still need to host and pay for the underlying database. GraphQL API adds latency vs direct database queries. Complex joins can generate inefficient SQL.",
+      monthlyCostTeam: "$5+",
+      hiddenCosts: "Single supergraph developer on free means team collaboration requires DDN Base ($5/active model/mo). You still need to host and pay for the underlying database. 15-min observability retention limits production debugging (paid tiers extend to 30 days). GraphQL API adds latency vs direct database queries.",
     },
   ];
 
