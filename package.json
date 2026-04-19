@@ -42,6 +42,7 @@
     "reverify": "node scripts/reverify.js",
     "verify-freshness": "node scripts/verify-freshness.js",
     "validate": "node scripts/validate-data.ts",
+    "test:referral-pipeline": "npm run build && node scripts/test-referral-pipeline.ts",
     "build:mcpb": "npm run build && npx @anthropic-ai/mcpb pack ."
   },
   "dependencies": {
