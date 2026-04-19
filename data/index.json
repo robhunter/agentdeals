@@ -5455,16 +5455,16 @@
     {
       "vendor": "ipapi",
       "category": "Dev Utilities",
-      "description": "IP address geolocation API — free tier: 100 API requests/month. Includes location, timezone, currency data. No HTTPS on free tier. Paid plans from $12.99/mo for 50K requests",
+      "description": "IP address geolocation API — free tier: 1,000 IP lookups/day (~30,000/month). Includes location, timezone, currency data. Designed for testing & development only; not intended for production. Additional heuristic throttling may apply. Paid plans unlock production use.",
       "tier": "Free",
-      "url": "https://ipapi.com/pricing",
+      "url": "https://ipapi.co/#pricing",
       "tags": [
         "api",
         "geolocation",
         "ip-lookup",
         "location"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Hunter.io",
@@ -5499,7 +5499,7 @@
     {
       "vendor": "CurrencyFreaks",
       "category": "Dev Utilities",
-      "description": "Currency exchange rate API — free tier: 1,000 API requests/month, 170+ currencies, daily updated rates. Includes latest rates and historical data endpoints",
+      "description": "Currency exchange rate API — free tier: 1,000 API requests/month, 170+ response currencies, daily updated rates, USD base currency only (paid plans unlock all base currencies). Includes latest rates and historical data endpoints.",
       "tier": "Free",
       "url": "https://currencyfreaks.com/pricing.html",
       "tags": [
@@ -5509,7 +5509,7 @@
         "finance",
         "forex"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "MailboxValidator",
