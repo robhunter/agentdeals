@@ -5246,17 +5246,16 @@
     {
       "vendor": "Airtable",
       "category": "Low-Code Platforms",
-      "description": "Low-code database and app platform — free tier: unlimited bases, 1,000 records per base, 1 GB attachment space per base, 100 automation runs/month, 5 editor+ collaborators, 500 AI credits/user/month, 14-day revision history",
+      "description": "Low-code database and app platform — free tier: unlimited bases, 1,000 records per base, 1 GB attachment space per base, up to 5 Editor/Creator collaborators (unlimited read-only, 50 Commenter), 500 AI credits/editor+/month, 1,000 API calls/workspace/month, 2-week revision/snapshot history. No automations, extensions, or record coloring on Free.",
       "tier": "Free",
       "url": "https://airtable.com/pricing",
       "tags": [
         "database",
         "low-code",
         "spreadsheet",
-        "automation",
         "collaboration"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Deepgram",
@@ -13404,14 +13403,14 @@
     {
       "vendor": "Mendix",
       "category": "Low-Code Platforms",
-      "description": "Rapid Application Development for Enterprises, unlimited accessible sandbox environments supporting total users, 0.5 GB storage and 1 GB RAM per app. Also, Studio and Studio Pro IDEs are allowed in the free tier.",
+      "description": "Low-code development platform — Free plan: 1 sandbox environment per app on Mendix Cloud, 0.5 GB storage and 1 GB RAM per app, shared database tenancy, unlimited local development. Studio and Studio Pro IDEs included. Community support (no SLA or uptime guarantee). Suited for demos, prototypes, and small apps.",
       "tier": "Free",
-      "url": "https://www.mendix.com/",
+      "url": "https://www.mendix.com/pricing/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "outsystems.com",
@@ -14314,14 +14313,14 @@
     {
       "vendor": "cacoo.com",
       "category": "Diagramming",
-      "description": "Online real-time diagrams: flowchart, UML, network. Free max. 15 users/diagram, 25 sheets",
+      "description": "Online real-time diagrams (flowchart, UML, network). Free plan: unlimited users, 6 sheets max, real-time editing, PNG export, templates & shapes, comment & chat, code-to-graph, kanban tool, media library. In-app video chat limited to 3 users; 50 activity entries per diagram; no revision history or premium templates.",
       "tier": "Free",
-      "url": "https://cacoo.com/",
+      "url": "https://nulab.com/pricing/cacoo/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "clickup.com",
@@ -14350,14 +14349,14 @@
     {
       "vendor": "Cloudcraft",
       "category": "Diagramming",
-      "description": "Design a professional architecture diagram in minutes with the Cloudcraft visual designer, optimized for AWS with intelligent components that show live data too. Free plan has unlimited private diagrams for single user.",
+      "description": "AWS/Azure architecture diagramming — Free plan: single user only, manual diagrams limited to a 12x15 component grid, unlimited private diagrams, PNG/PDF/SVG export, private shared links, basic cost calculations. No live-scan/auto-discovery, team management, infinite canvas, version history, API access, or SSO.",
       "tier": "Free",
-      "url": "https://cloudcraft.co/",
+      "url": "https://www.cloudcraft.co/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Crosswork",
@@ -22310,7 +22309,7 @@
     {
       "vendor": "Airtable",
       "category": "Productivity & Notes",
-      "description": "Unlimited bases. Up to 1,000 records per base. 1 GB attachment space per base. 100 automation runs per month. 1 extension per base. Up to 5 editors. No sync or Gantt/timeline views on free.",
+      "description": "Unlimited bases. Up to 1,000 records per base. 1 GB attachment space per base. Up to 5 Editor/Creator collaborators (unlimited read-only, 50 Commenter). 500 AI credits/editor+/month. 2-week revision history. No automations, extensions, sync, or Gantt/timeline views on Free.",
       "tier": "Free",
       "url": "https://airtable.com/pricing",
       "tags": [
@@ -22320,7 +22319,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Google Drive",
