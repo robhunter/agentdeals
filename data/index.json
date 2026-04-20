@@ -1078,7 +1078,7 @@
     {
       "vendor": "Resend",
       "category": "Email",
-      "description": "Developer-first email API — 3K emails/mo free",
+      "description": "Developer-first email API — 3K emails/month free (100/day cap), 1 domain, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
       "tier": "Free",
       "url": "https://resend.com/pricing",
       "tags": [
@@ -1087,7 +1087,7 @@
         "transactional",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Postmark",
@@ -1115,7 +1115,7 @@
     {
       "vendor": "Mailchimp",
       "category": "Email",
-      "description": "Email marketing — 250 contacts, 500 sends/month, marketing CRM, forms and landing pages included",
+      "description": "Email marketing — 250 contacts, 500 sends/month (250/day cap), 1 audience, 1 seat, marketing CRM, forms and landing pages, email support first 30 days",
       "tier": "Free",
       "url": "https://mailchimp.com/pricing/",
       "tags": [
@@ -1126,7 +1126,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Mailjet",
