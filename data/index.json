@@ -3903,7 +3903,7 @@
     {
       "vendor": "Crowdin",
       "category": "Localization",
-      "description": "Localization management — free forever for open-source (unlimited projects/translators). Private: 1 project, 60K hosted words, 1 integration, Crowdin AI access. CLI, GitHub integration, REST API",
+      "description": "Localization management — free forever for open-source via Open Source License (unlimited projects, strings, and members; non-profit/FOSS use only, requires application). Private projects are 14-day trial only (Team plan), no permanent free tier. CLI, GitHub integration, REST API",
       "tier": "Free",
       "url": "https://crowdin.com/pricing",
       "tags": [
@@ -3913,7 +3913,7 @@
         "open source",
         "internationalization"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Permit.io",
@@ -10557,18 +10557,6 @@
       "verifiedDate": "2026-04-13"
     },
     {
-      "vendor": "Esper",
-      "category": "Mobile Development",
-      "description": "MDM and MAM for Android Devices with DevOps. One hundred devices free with one user license and 25 MB Application Storage.",
-      "tier": "Free",
-      "url": "https://esper.io",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-13"
-    },
-    {
       "vendor": "jamf.com",
       "category": "Mobile Development",
       "description": "Device management for iPads, iPhones, and Macs, three devices free",
@@ -10956,18 +10944,6 @@
       "description": "Web-based gettext PO file editor and translator, completely free for everyone",
       "tier": "Free",
       "url": "https://pofile.net/free-po-editor",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-13"
-    },
-    {
-      "vendor": "Lingo.dev",
-      "category": "Localization",
-      "description": "Open-source AI-powered CLI for web & mobile localization. Bring your own LLM, or use 10,000 free words every month via Lingo.dev-managed localization engine.",
-      "tier": "Free",
-      "url": "https://lingo.dev",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -14598,14 +14574,14 @@
     {
       "vendor": "Shake",
       "category": "Mobile Development",
-      "description": "In-app bug reporting and feedback tool for mobile apps. Free plan, ten bug reports per app/month.",
+      "description": "In-app bug reporting and feedback tool for mobile apps. Free plan: 20 bug reports/month, 1 app, 3 team seats, unlimited crash reports, unlimited app users, 1-month data retention, 1,000 logs in activity history, AI debugging, MCP server access, and limited integrations.",
       "tier": "Free",
-      "url": "https://www.shakebugs.com/",
+      "url": "https://www.shakebugs.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Shortcut",
