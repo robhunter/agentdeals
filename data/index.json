@@ -12252,7 +12252,7 @@
     {
       "vendor": "Abby",
       "category": "Feature Flags",
-      "description": "Open-Source feature flags & A/B testing. Configuration as Code & Fully Typed Typescript SDKs. Strong integration with Frameworks such as Next.js & React. Generous free tier and cheap scaling options.",
+      "description": "Open-Source feature flags & A/B testing. Configuration as Code & Fully Typed Typescript SDKs. Strong integration with Frameworks such as Next.js & React. Free plan: 1,000 events/month, 3 feature flags/remote configs, 1 A/B test, 5 environments.",
       "tier": "Free",
       "url": "https://www.tryabby.com",
       "tags": [
@@ -12260,12 +12260,12 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "ConfigCat",
       "category": "Feature Flags",
-      "description": "ConfigCat is a developer-centric feature flag service with unlimited team size, excellent support, and a reasonable price tag. Free plan up to 10 flags, two environments, 1 product, and 5 Million requests per month.",
+      "description": "ConfigCat is a developer-centric feature flag service with unlimited team members (within 1 permission group). Forever Free plan: 10 feature flags, 2 environments, 2 products, 5M config JSON requests/mo, 20 GB network traffic/mo, 2 segments, 4 targeting rules/flag, 1 webhook, 7-day audit log retention.",
       "tier": "Free",
       "url": "https://configcat.com",
       "tags": [
@@ -12273,33 +12273,33 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Hypertune",
       "category": "Feature Flags",
-      "description": "Type-safe feature flags, A/B testing, analytics and app configuration, with Git-style version control and synchronous, in-memory, local flag evaluation. Free for up to 5 team members with unlimited feature flags and A/B tests.",
+      "description": "Type-safe feature flags, A/B testing, analytics and app configuration, with Git-style version control and synchronous, in-memory, local flag evaluation. Free plan: up to 3 team members, 1M CDN requests/mo, 1M analytics events/mo, unlimited feature flags, A/B tests, projects, environments, and MAUs/MTUs.",
       "tier": "Free",
-      "url": "https://www.hypertune.com",
+      "url": "https://www.hypertune.com/pricing",
       "tags": [
         "feature-flags",
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Toggled.dev",
       "category": "Feature Flags",
-      "description": "Enterprise-ready, scalable multi-regional feature toggles management platform. Free plan up to 10 flags, two environments, unlimited requests. SDK, analytics dashboard, release calendar, Slack notifications, and all other features are included in the endless free plan.",
+      "description": "Enterprise-ready, scalable multi-regional feature toggles management platform. Free plan: 1 project, up to 10 toggles/project, 2 environments/project, 2 seats, unlimited MAU/clients. SDK, analytics dashboard, release calendar, and Slack notifications included.",
       "tier": "Free",
-      "url": "https://www.toggled.dev",
+      "url": "https://www.toggled.dev/pricing",
       "tags": [
         "feature-flags",
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "FabForm",
