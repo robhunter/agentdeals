@@ -5218,8 +5218,8 @@
     {
       "vendor": "imgix",
       "category": "CDN",
-      "description": "Image CDN and optimization — 1,000 origin images, unlimited transformations, full rendering API, Asset Manager included",
-      "tier": "Free",
+      "description": "Image CDN and optimization — no permanent free tier. 30-day free trial with 100 credits, no credit card required. Paid plans start at Starter $25/mo (100 credits, 50 GB storage, 100 GB bandwidth); credit system charges 2 credits/GB/month for storage and 1 credit/GB for delivery.",
+      "tier": "Trial",
       "url": "https://www.imgix.com/pricing",
       "tags": [
         "cdn",
@@ -5227,7 +5227,7 @@
         "media",
         "optimization"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Lemon Squeezy",
@@ -12938,7 +12938,7 @@
     {
       "vendor": "Skypack",
       "category": "CDN",
-      "description": "The 100% Native ES Module JavaScript CDN. Free for 1 million requests per domain per month.",
+      "description": "ESM-native JavaScript CDN serving optimized npm packages directly to the browser with no install or build step (minification, polyfills, compression, caching handled automatically). Free to use for personal and commercial purposes with no stated request limits; custom domains and advanced needs via contact.",
       "tier": "Free",
       "url": "https://www.skypack.dev/",
       "tags": [
@@ -12946,20 +12946,20 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Stellate",
       "category": "CDN",
-      "description": "Stellate is a blazing-fast, reliable CDN for your GraphQL API and free for two services.",
+      "description": "GraphQL edge CDN. Free plan: up to 100,000 requests/month, unlimited services, unlimited seats, 1-day data retention, fair-use policy. Business plan starts at $249/mo (25M metrics requests, 30-day retention, optional Edge Caching and Rate Limiting add-ons).",
       "tier": "Free",
-      "url": "https://stellate.co/",
+      "url": "https://stellate.co/pricing",
       "tags": [
         "cdn",
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "toranproxy.com",
@@ -17656,15 +17656,15 @@
     {
       "vendor": "Adapty.io",
       "category": "Payments",
-      "description": "One-stop solution with open-source SDK for mobile in-app subscription integration to iOS, Android, React Native, Flutter, Unity, or web app. Free up to $10k monthly revenue.",
+      "description": "One-stop solution with open-source SDK for mobile in-app subscription integration to iOS, Android, React Native, Flutter, Unity, or web app. Free for apps earning under $5,000/month (rolling 30-day revenue); Pro tier charges 1% of monthly revenue above the $5K threshold.",
       "tier": "Free",
-      "url": "https://adapty.io/",
+      "url": "https://adapty.io/pricing/",
       "tags": [
         "payments",
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "CoinMarketCap",
