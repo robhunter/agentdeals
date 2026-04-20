@@ -1287,7 +1287,7 @@
     {
       "vendor": "Cloudflare Queues",
       "category": "Messaging",
-      "description": "Message queues on Workers — 1M operations/month free, 24-hour message retention. Added to free plan late 2025",
+      "description": "Message queues on Workers — 10K operations/day free (~300K/month) on the Workers Free plan, 24-hour message retention (non-configurable). The 1M operations/month allowance applies to the Workers Paid plan ($5/mo), which also unlocks configurable retention up to 14 days",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/queues/platform/pricing/",
       "tags": [
@@ -1297,7 +1297,7 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-04-20",
       "payment_protocols": [
         {
           "protocol": "x402",
