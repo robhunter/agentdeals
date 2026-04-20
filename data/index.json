@@ -7106,14 +7106,14 @@
     {
       "vendor": "Deepnote",
       "category": "Notebooks & Data Science",
-      "description": "A new data science notebook. Jupyter is compatible with real-time collaboration and running in the cloud. The free tier includes unlimited personal projects, unlimited basic machines with 5GB RAM and 2vCPU, and teams with up to 3 editors.",
+      "description": "Data science notebook platform, Jupyter-compatible with real-time collaboration in the cloud. Free plan: up to 3 editors, unlimited viewers, up to 5 projects, unlimited Basic machines (5 GB RAM, 2 vCPU), 7-day revision history, 10 AI completions/month. Basic machines only (no Plus/Performance/GPU), 15-minute inactivity timeout, no premium data warehouse connections (BigQuery, Snowflake, Redshift).",
       "tier": "Free",
-      "url": "https://deepnote.com",
+      "url": "https://deepnote.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "DiffJSON",
@@ -7274,14 +7274,14 @@
     {
       "vendor": "Hex",
       "category": "Notebooks & Data Science",
-      "description": "a collaborative data platform for notebooks, data apps, and knowledge libraries. Free community tier with up to five projects.",
+      "description": "Collaborative data platform for notebooks, data apps, and knowledge libraries. Community plan: up to 5 notebooks, up to 5 published apps, Small compute (2 GB RAM, 0.25 CPU), unlimited users, connect any data source, notebook agent trial (limited AI agent access).",
       "tier": "Free",
-      "url": "https://hex.tech/",
+      "url": "https://hex.tech/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Hook0",
@@ -11592,15 +11592,15 @@
     {
       "vendor": "honeybadger.io",
       "category": "Error Tracking",
-      "description": "Exception, uptime, and cron monitoring. Free for small teams and open-source projects (12,000 errors/month).",
+      "description": "Exception, uptime, and cron monitoring. Developer plan (free): 5,000 errors/month, 1 user, 50 MB/day logging, 1 uptime monitor, 1 status page, 1 dashboard, unlimited projects, 15-day error data retention, 7-day log retention. Intended for low-traffic projects.",
       "tier": "Free",
-      "url": "https://www.honeybadger.io",
+      "url": "https://www.honeybadger.io/plans/",
       "tags": [
         "error-tracking",
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Jam",
