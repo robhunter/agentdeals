@@ -3230,7 +3230,7 @@
     {
       "vendor": "Orama",
       "category": "Search",
-      "description": "Full-text, vector, and hybrid search engine — 3 indexes, 100K documents/index, unlimited searches, 150 index updates/mo, 60-day analytics retention",
+      "description": "Full-text, vector, hybrid, and NLP search engine — Free Base plan: 2 included projects, 500 included docs per project (max 5,000 docs/project), 2 indexes per project, unlimited searches, 500 AI sessions/mo, 60-day analytics retention. No credit card required. Extra projects $5/mo, extra indexes $5/mo per 10",
       "tier": "Free",
       "url": "https://orama.com/pricing",
       "tags": [
@@ -3240,7 +3240,7 @@
         "hybrid",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Quay.io",
@@ -4228,7 +4228,7 @@
     {
       "vendor": "ipinfo.io",
       "category": "Maps/Geolocation",
-      "description": "IP geolocation and data API. Free plan: 50,000 requests/month, IP-to-geolocation, ASN, company, carrier, and privacy detection data",
+      "description": "IP geolocation and data API. IPinfo Lite (free plan): unlimited requests, country and continent-level geolocation only (no city/region/postal code), ASN name and domain. Does NOT include company, carrier, or privacy/anonymity detection (paid plans only). Community support.",
       "tier": "Free",
       "url": "https://ipinfo.io/pricing",
       "tags": [
@@ -4237,7 +4237,7 @@
         "api",
         "data"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Meilisearch",
@@ -16551,15 +16551,15 @@
     {
       "vendor": "Foursquare",
       "category": "Maps/Geolocation",
-      "description": "Location discovery, venue search, and context-aware content from Places API and Pilgrim SDK.",
+      "description": "Location discovery, venue search, and context-aware content. Places API: 10,000 free calls/mo on Pro endpoints ($0.00 CPM), then pay-per-call. New users get $200 in free credits. Spatial Studio Community (always free: 1 GB cloud storage, limited data catalog, public-only map publishing). Spatial Desktop Basic ($0/mo through 2026, includes $1 of agent tokens to preview FSQ Spatial Agent, 5 shared projects, 3 GB cloud storage). Spatial Workbench 30-day free trial (pay only for compute/storage used).",
       "tier": "Free",
-      "url": "https://developer.foursquare.com/",
+      "url": "https://foursquare.com/pricing/",
       "tags": [
         "maps",
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "geoapify.com",
