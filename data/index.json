@@ -14133,14 +14133,14 @@
     {
       "vendor": "Hamachi",
       "category": "Tunneling & Networking",
-      "description": "LogMeIn Hamachi is a hosted VPN service that lets you securely extend LAN-like networks to distributed teams with a free plan that allows unlimited networks with up to 5 people",
+      "description": "LogMeIn Hamachi hosted VPN service that securely extends LAN-like networks to distributed teams. Free for up to 5 computers on a single network; paid tiers required for more computers, multiple networks, or unattended/service mode",
       "tier": "Free",
       "url": "https://www.vpn.net/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "localhost.run",
@@ -14169,14 +14169,14 @@
     {
       "vendor": "LocalXpose",
       "category": "Tunneling & Networking",
-      "description": "Reverse proxy that enables you to expose your localhost servers to the internet. The free plan has 15 minutes tunnel lifetime.",
+      "description": "Reverse proxy that exposes your localhost servers to the internet. Free Starter plan: 2 active HTTP/HTTPS tunnels, unique subdomains, SSL/TLS, interstitial warning page on public pageviews. No credit card required; TCP/TLS/UDP tunneling requires Pro.",
       "tier": "Free",
-      "url": "https://localxpose.io",
+      "url": "https://localxpose.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Pinggy",
@@ -14241,14 +14241,14 @@
     {
       "vendor": "ZeroTier",
       "category": "Tunneling & Networking",
-      "description": "FOSS managed virtual Ethernet as a service. Unlimited end-to-end encrypted networks of 25 clients on the free plan. Clients for desktop/mobile/NA; web interface for configuration of custom routing rules and approval of new client nodes on private networks",
+      "description": "FOSS managed virtual Ethernet as a service. Personal (Free Forever) plan: 10 devices, 1 network, 1 admin — intended for personal/hobbyist use, not commercial. Clients for desktop/mobile; web interface for custom routing rules and approval of new client nodes on private networks",
       "tier": "Free",
-      "url": "https://www.zerotier.com",
+      "url": "https://www.zerotier.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "acunote.com",
