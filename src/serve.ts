@@ -53837,7 +53837,9 @@ const httpServer = createHttpServer(async (req, res) => {
       const weekUrl = w === 0 ? `${baseUrl}/this-week` : `${baseUrl}/this-week?week=${w}`;
       const weekEndDate = new Date(digest.week_ending + "T12:00:00Z");
       const now = new Date();
-      const pubDate = (weekEndDate > now ? new Date(digest.week_of + "T12:00:00Z") : weekEndDate).toISOString();
+      let pubDateObj = weekEndDate > now ? new Date(digest.week_of + "T12:00:00Z") : weekEndDate;
+      if (pubDateObj > now) pubDateObj = now;
+      const pubDate = pubDateObj.toISOString();
       const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       const ws = new Date(digest.week_of + "T00:00:00Z");
       const we = new Date(digest.week_ending + "T00:00:00Z");
