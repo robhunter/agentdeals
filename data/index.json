@@ -6606,7 +6606,7 @@
     {
       "vendor": "Scalr",
       "category": "Infrastructure",
-      "description": "Terraform Automation and Collaboration (TACO) platform — unlimited users, workspaces, and managed resources on free tier. Full Terraform CLI support, OPA policy integration, hierarchical configuration, SAML SSO, 5 concurrent runs. Up to 50 runs/month free",
+      "description": "Terraform Automation and Collaboration (TACO) platform — unlimited users, workspaces, and managed resources on free tier. Full Terraform CLI support, OPA policy integration, hierarchical configuration, SAML SSO, 2 concurrent runs. Up to 50 runs/month free",
       "tier": "Free",
       "url": "https://www.scalr.com/pricing",
       "tags": [
@@ -6617,7 +6617,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Terragrunt Scale",
