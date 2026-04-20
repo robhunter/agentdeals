@@ -6653,14 +6653,14 @@
     {
       "vendor": "Codeberg",
       "category": "Source Control",
-      "description": "Unlimited public and private Git repos for free and open-source projects (with unlimited collaborators). Powered by [Forgejo](https://forgejo.org/). Static website hosting with [Codeberg Pages](https://codeberg.page/). CI/CD hosting with [Codeberg's CI](https://docs.codeberg.org/ci/). Translating hosting with [Codeberg Translate](https://translate.codeberg.org/). Includes Package and Container hosting, Project management, and Issue Tracking",
+      "description": "Non-profit Git hosting for free and open-source projects. Public and private Git repos, powered by [Forgejo](https://forgejo.org/). Default soft limits per account/org: 100 repositories, 750 MiB Git storage, and 1.5 GiB combined for packages, LFS, and attachments; contributors may store up to 100 MB of private content. Increases are granted on request for valid use-cases via their public requests repository. Includes [Codeberg Pages](https://codeberg.page/) static site hosting, [Codeberg CI](https://docs.codeberg.org/ci/), [Codeberg Translate](https://translate.codeberg.org/), package/container hosting, project management, and issue tracking.",
       "tier": "Free",
       "url": "https://codeberg.org/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "framagit.org",
@@ -6716,18 +6716,6 @@
       "description": "Unlimited free and open source distributed version control system. Its distinctive feature is based on a sound theory of patches, which makes it easy to learn, use, and distribute. Solves many problems of git/hg/svn/darcs.",
       "tier": "Free",
       "url": "https://pijul.com/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-13"
-    },
-    {
-      "vendor": "projectlocker.com",
-      "category": "Source Control",
-      "description": "One free private project (Git and Subversion) with 50 MB of space",
-      "tier": "Free",
-      "url": "https://projectlocker.com",
       "tags": [
         "developer-tools",
         "free-for-dev"
