@@ -12,7 +12,7 @@
         "frontend",
         "jamstack"
       ],
-      "verifiedDate": "2026-04-10",
+      "verifiedDate": "2026-04-21",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -279,7 +279,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-21",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -304,7 +304,7 @@
         "free tier",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Koyeb",
@@ -336,7 +336,7 @@
         "credits",
         "startup"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Azure",
@@ -503,7 +503,7 @@
         "free tier",
         "vector-database"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-21",
       "referral_program": {
         "available": true,
         "referrer_benefit": "$100 Amazon gift card per referral",
@@ -561,7 +561,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Firebase",
@@ -580,7 +580,7 @@
         "auth0-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Databricks (Lakeflow Connect)",
@@ -613,7 +613,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Appwrite Cloud",
@@ -632,7 +632,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Aiven",
@@ -649,7 +649,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Xata",
@@ -717,7 +717,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "PocketBase",
@@ -791,7 +791,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-20",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -814,7 +814,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Buildkite",
@@ -830,7 +830,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Bitbucket Pipelines",
@@ -846,7 +846,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Sentry",
@@ -958,7 +958,7 @@
         "free tier",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "New Relic",
@@ -1000,7 +1000,7 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Clerk",
@@ -1015,7 +1015,7 @@
         "users",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Auth0",
@@ -1073,7 +1073,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Resend",
@@ -1102,7 +1102,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-21",
       "referral_program": {
         "available": true,
         "referrer_benefit": "20% recurring commission (12 months)",
@@ -1181,7 +1181,7 @@
         "ai",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Cloudflare R2",
@@ -1228,7 +1228,7 @@
         "backup",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-21",
       "referral_program": {
         "available": true,
         "referrer_benefit": "1 free month per referral",
@@ -1251,7 +1251,7 @@
         "zero-egress",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Cloudinary",
@@ -1267,7 +1267,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "CloudAMQP",
@@ -1719,7 +1719,7 @@
         "compute",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-20",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1742,7 +1742,7 @@
         "github",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "LaunchDarkly",
@@ -1816,7 +1816,7 @@
         "subscriptions",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-20",
       "payment_protocols": [
         {
           "protocol": "stripe-mpp",
@@ -1991,7 +1991,7 @@
         "code",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-19",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2016,7 +2016,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-20",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2080,7 +2080,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-21",
       "expires_date": "2027-01-31"
     },
     {
@@ -2111,7 +2111,7 @@
         "retention",
         "free tier"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Inngest",
@@ -2157,7 +2157,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Doppler",
@@ -2259,7 +2259,7 @@
         "accelerator",
         "aws"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-20",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2317,7 +2317,7 @@
         "open source",
         "oss"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-19",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -2447,7 +2447,7 @@
         "digitalocean",
         "github"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-21",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2503,7 +2503,7 @@
         "education",
         "copilot"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-21",
       "eligibility": {
         "type": "student",
         "conditions": [
@@ -2536,7 +2536,7 @@
         "accelerator",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-20",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2573,7 +2573,7 @@
         "static",
         "github"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Highlight.io",
@@ -2645,7 +2645,7 @@
         "dependencies",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Infisical",
@@ -2789,7 +2789,7 @@
         "packages",
         "github"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-21",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2811,7 +2811,7 @@
         "images",
         "packages"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Cypress Cloud",
@@ -2825,7 +2825,7 @@
         "browser-testing",
         "ci-cd"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Postman",
@@ -2870,7 +2870,7 @@
         "automation",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "ClouDNS",
@@ -2899,7 +2899,7 @@
         "sql",
         "api"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Novu",
@@ -2955,7 +2955,7 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "GitHub Pages",
@@ -2969,7 +2969,7 @@
         "github",
         "jekyll"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-20",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2992,7 +2992,7 @@
         "alerting",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Nile",
@@ -3006,7 +3006,7 @@
         "multi-tenant",
         "serverless"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Cron-job.org",
@@ -3078,7 +3078,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Backblaze",
@@ -3117,7 +3117,7 @@
         "compute",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-21",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3152,7 +3152,7 @@
         "jira",
         "confluence"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-21",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3566,7 +3566,7 @@
         "collaboration",
         "figma alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "GitGuardian",
@@ -3581,7 +3581,7 @@
         "devsecops",
         "pre-commit"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Sendbird",
@@ -3768,7 +3768,7 @@
         "storage",
         "image optimization"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "IBM Cloud",
@@ -3865,7 +3865,7 @@
         "dead man switch",
         "alerts"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "ImageKit",
@@ -3881,7 +3881,7 @@
         "video",
         "storage"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Expo",
@@ -3929,7 +3929,7 @@
         "access control",
         "policy"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Codecov",
@@ -3977,7 +3977,7 @@
         "fraud prevention",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Liveblocks",
@@ -4323,7 +4323,7 @@
         "collaboration",
         "open source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Lunacy",
@@ -4337,7 +4337,7 @@
         "prototyping",
         "figma alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Pixlr",
@@ -4351,7 +4351,7 @@
         "online",
         "graphics"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Harbor",
@@ -4424,7 +4424,7 @@
         "mfa",
         "identity"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Hanko",
@@ -4438,7 +4438,7 @@
         "webauthn",
         "open source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Keycloak",
@@ -4455,7 +4455,7 @@
         "open source",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "FusionAuth",
@@ -4643,7 +4643,7 @@
         "open source",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Jaeger",
@@ -4660,7 +4660,7 @@
         "open source",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Grafana Loki",
@@ -4688,7 +4688,7 @@
         "gdpr",
         "open source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Umami",
@@ -4702,7 +4702,7 @@
         "self-hosted",
         "open source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Woodpecker CI",
@@ -4718,7 +4718,7 @@
         "open source",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Hoppscotch",
@@ -4779,7 +4779,7 @@
         "serverless",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Testcontainers",
@@ -4794,7 +4794,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Moto",
@@ -4810,7 +4810,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "AWS SAM CLI",
@@ -5011,7 +5011,7 @@
         "sbom",
         "licensing"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Twingate",
@@ -5040,7 +5040,7 @@
         "web-app",
         "paas"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "GitHub Codespaces",
@@ -5055,7 +5055,7 @@
         "github",
         "containers"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-19",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -5092,7 +5092,7 @@
         "zero-trust",
         "wireguard"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Redis Cloud",
@@ -5107,7 +5107,7 @@
         "key-value",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Pinecone",
@@ -5673,7 +5673,7 @@
         "open-source",
         "search"
       ],
-      "verifiedDate": "2026-04-10"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Turbopuffer",
@@ -5688,7 +5688,7 @@
         "serverless",
         "search"
       ],
-      "verifiedDate": "2026-04-10"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "AssemblyAI",
@@ -13487,7 +13487,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Neocities",
@@ -16001,7 +16001,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Proto.io",
@@ -18784,7 +18784,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-04-20",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21205,7 +21205,7 @@
         "full-stack",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-19"
     },
     {
       "vendor": "Lovable",
