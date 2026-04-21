@@ -22,7 +22,12 @@ const __dirname_server = dirname(fileURLToPath(import.meta.url));
 const PKG_VERSION = JSON.parse(readFileSync(join(__dirname_server, "..", "package.json"), "utf-8")).version;
 
 function toConciseOffer(offer: Offer | EnrichedOffer) {
-  return { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
+  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
+  const enriched = offer as Partial<EnrichedOffer>;
+  if (enriched.risk_level !== undefined) {
+    return { ...base, risk_level: enriched.risk_level, stability: enriched.stability };
+  }
+  return base;
 }
 
 function toConciseDealChange(change: DealChange) {
@@ -308,13 +313,19 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
 
           let result: any = comparison.comparison;
 
-          // Add stability indicators
+          // Add stability + risk_level indicators (always included, regardless of include_risk detail toggle)
           const stabMap = getStabilityMap();
+          const riskA = checkVendorRisk(vendors[0]);
+          const riskB = checkVendorRisk(vendors[1]);
           result = {
             ...result,
             stability: {
               [vendors[0]]: stabMap.get(comparison.comparison.vendor_a.vendor.toLowerCase()) ?? "stable",
               [vendors[1]]: stabMap.get(comparison.comparison.vendor_b.vendor.toLowerCase()) ?? "stable",
+            },
+            risk_level: {
+              [vendors[0]]: "result" in riskA ? riskA.result.risk_level : "stable",
+              [vendors[1]]: "result" in riskB ? riskB.result.risk_level : "stable",
             },
             referral_codes: {
               [vendors[0]]: getBestReferralCode(comparison.comparison.vendor_a.vendor),
@@ -323,8 +334,6 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
           };
 
           if (doRisk) {
-            const riskA = checkVendorRisk(vendors[0]);
-            const riskB = checkVendorRisk(vendors[1]);
             result = {
               ...result,
               risk: {
