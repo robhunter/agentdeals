@@ -1,14 +1,34 @@
-import { describe, it, afterEach } from "node:test";
+import { describe, it, before, after, afterEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.join(__dirname, "..", "data");
+const BACKED_UP_FILES = ["agent_friends.json", "agents.json", "referral_codes.json"];
 
 describe("manage_friends MCP tool via HTTP", () => {
   let serverPort = 0;
   let proc: ChildProcess | null = null;
+  const savedContent: Record<string, string | null> = {};
+
+  before(() => {
+    for (const f of BACKED_UP_FILES) {
+      const p = path.join(DATA_DIR, f);
+      savedContent[f] = fs.existsSync(p) ? fs.readFileSync(p, "utf-8") : null;
+    }
+  });
+
+  after(() => {
+    for (const f of BACKED_UP_FILES) {
+      const p = path.join(DATA_DIR, f);
+      const original = savedContent[f];
+      if (original !== null) fs.writeFileSync(p, original, "utf-8");
+      else if (fs.existsSync(p)) fs.unlinkSync(p);
+    }
+  });
 
   function startHttpServer(): Promise<ChildProcess> {
     return new Promise((resolve, reject) => {
