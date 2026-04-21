@@ -16,12 +16,9 @@ const toolCalls: Record<string, number> = {
   track_changes: 0,
 };
 
-const apiHits: Record<string, number> = {
-  "/api/offers": 0,
-  "/api/categories": 0,
-  "/api/stack": 0,
-  "/api/metrics": 0,
-};
+// Per-endpoint hit counts for the current deployment. Accumulates dynamically — any endpoint passed
+// to recordApiHit is counted. Cardinality is bounded by route definitions (~150 endpoints).
+const apiHits: Record<string, number> = {};
 
 let totalSessions = 0;
 let totalDisconnects = 0;
@@ -42,6 +39,7 @@ let cumulative = {
   referral_listing_by_source: { platform: 0, agent: 0, null: 0 } as Record<"platform" | "agent" | "null", number>,
   referral_vendor_lookups: 0,
   referral_vendor_counts: {} as Record<string, number>,
+  api_hits_by_endpoint: {} as Record<string, number>,
 };
 
 // Current-deployment referral marketplace counters
@@ -63,6 +61,16 @@ export function useRedis(): boolean {
   return !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
 }
 
+export interface SearchQueryEntry {
+  query: string;
+  category?: string;
+  results_count: number;
+  timestamp: string;
+}
+
+const SEARCH_QUERY_RING_MAX = 1000;
+const searchQueryLog: SearchQueryEntry[] = [];
+
 interface TelemetryData {
   cumulative_sessions: number;
   cumulative_tool_calls: number;
@@ -75,6 +83,8 @@ interface TelemetryData {
   cumulative_referral_listing_by_source?: Record<"platform" | "agent" | "null", number>;
   cumulative_referral_vendor_lookups?: number;
   cumulative_referral_vendor_counts?: Record<string, number>;
+  cumulative_api_hits_by_endpoint?: Record<string, number>;
+  cumulative_search_queries?: SearchQueryEntry[];
 }
 
 async function redisGet(): Promise<TelemetryData | null> {
@@ -216,6 +226,28 @@ function parseTelemetryData(data: Record<string, unknown>): void {
   };
   cumulative.referral_vendor_lookups = (data.cumulative_referral_vendor_lookups as number) ?? 0;
   cumulative.referral_vendor_counts = (data.cumulative_referral_vendor_counts as Record<string, number>) ?? {};
+  cumulative.api_hits_by_endpoint = (data.cumulative_api_hits_by_endpoint as Record<string, number>) ?? {};
+
+  // Hydrate the search-query ring buffer from persisted entries. Skip malformed records
+  // rather than rejecting the whole load — telemetry.json may have been hand-edited.
+  searchQueryLog.length = 0;
+  const persistedQueries = (data.cumulative_search_queries as unknown[]) ?? [];
+  if (Array.isArray(persistedQueries)) {
+    for (const entry of persistedQueries) {
+      if (
+        entry &&
+        typeof entry === "object" &&
+        typeof (entry as SearchQueryEntry).query === "string" &&
+        typeof (entry as SearchQueryEntry).results_count === "number" &&
+        typeof (entry as SearchQueryEntry).timestamp === "string"
+      ) {
+        searchQueryLog.push(entry as SearchQueryEntry);
+      }
+    }
+    if (searchQueryLog.length > SEARCH_QUERY_RING_MAX) {
+      searchQueryLog.splice(0, searchQueryLog.length - SEARCH_QUERY_RING_MAX);
+    }
+  }
 }
 
 // In-memory client counts for this deployment
@@ -234,6 +266,11 @@ function buildTelemetryData(): TelemetryData {
   for (const [vendor, count] of Object.entries(referralVendorCounts)) {
     mergedVendorCounts[vendor] = (mergedVendorCounts[vendor] ?? 0) + count;
   }
+  // Merge per-endpoint api hits (cumulative + current deployment)
+  const mergedApiHitsByEndpoint: Record<string, number> = { ...cumulative.api_hits_by_endpoint };
+  for (const [endpoint, count] of Object.entries(apiHits)) {
+    mergedApiHitsByEndpoint[endpoint] = (mergedApiHitsByEndpoint[endpoint] ?? 0) + count;
+  }
   return {
     cumulative_sessions: cumulative.sessions + totalSessions,
     cumulative_tool_calls: cumulative.tool_calls + totalToolCalls,
@@ -250,6 +287,8 @@ function buildTelemetryData(): TelemetryData {
     },
     cumulative_referral_vendor_lookups: cumulative.referral_vendor_lookups + referralVendorLookups,
     cumulative_referral_vendor_counts: mergedVendorCounts,
+    cumulative_api_hits_by_endpoint: mergedApiHitsByEndpoint,
+    cumulative_search_queries: searchQueryLog.slice(-SEARCH_QUERY_RING_MAX),
   };
 }
 
@@ -301,7 +340,7 @@ export function resetCounters(): void {
   landingPageViews = 0;
   sessionsToday = 0;
   for (const key of Object.keys(toolCalls)) toolCalls[key] = 0;
-  for (const key of Object.keys(apiHits)) apiHits[key] = 0;
+  for (const key of Object.keys(apiHits)) delete apiHits[key];
   for (const key of Object.keys(sessionClients)) delete sessionClients[key];
   cumulative.sessions = 0;
   cumulative.tool_calls = 0;
@@ -320,6 +359,7 @@ export function resetCounters(): void {
   cumulative.referral_listing_by_source = { platform: 0, agent: 0, null: 0 };
   cumulative.referral_vendor_lookups = 0;
   cumulative.referral_vendor_counts = {};
+  cumulative.api_hits_by_endpoint = {};
   searchQueryLog.length = 0;
 }
 
@@ -330,9 +370,8 @@ export function recordToolCall(tool: string): void {
 }
 
 export function recordApiHit(endpoint: string): void {
-  if (endpoint in apiHits) {
-    apiHits[endpoint]++;
-  }
+  if (!endpoint) return;
+  apiHits[endpoint] = (apiHits[endpoint] ?? 0) + 1;
 }
 
 export function recordSessionConnect(clientName?: string): void {
@@ -723,27 +762,24 @@ export function getPageViewsToday(): number {
   return pageViewsToday;
 }
 
-// --- Search query analytics (in-memory, resets on deploy) ---
-
-interface SearchQueryEntry {
-  query: string;
-  ts: number;
-  resultCount: number;
-  category?: string;
-}
-
-const searchQueryLog: SearchQueryEntry[] = [];
+// --- Search query analytics ---
+// Persisted as a ring buffer (last SEARCH_QUERY_RING_MAX entries) on telemetry.json,
+// so /api/metrics analytics survive deploys.
 
 export function recordSearchQuery(query: string | undefined, resultCount: number, category?: string): void {
   if (!query) return;
   const normalized = query.trim().toLowerCase();
   if (!normalized) return;
-  searchQueryLog.push({
+  const entry: SearchQueryEntry = {
     query: normalized,
-    ts: Date.now(),
-    resultCount,
-    category,
-  });
+    timestamp: new Date().toISOString(),
+    results_count: resultCount,
+  };
+  if (category) entry.category = category;
+  searchQueryLog.push(entry);
+  if (searchQueryLog.length > SEARCH_QUERY_RING_MAX) {
+    searchQueryLog.splice(0, searchQueryLog.length - SEARCH_QUERY_RING_MAX);
+  }
 }
 
 export function getSearchAnalytics(): {
@@ -752,7 +788,10 @@ export function getSearchAnalytics(): {
   queries_by_category_7d: Record<string, number>;
 } {
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const recent = searchQueryLog.filter(e => e.ts >= sevenDaysAgo);
+  const recent = searchQueryLog.filter(e => {
+    const t = new Date(e.timestamp).getTime();
+    return Number.isFinite(t) && t >= sevenDaysAgo;
+  });
 
   // Top 20 queries by frequency
   const queryCounts = new Map<string, number>();
@@ -767,7 +806,7 @@ export function getSearchAnalytics(): {
   // Top 10 zero-result queries
   const zeroResultCounts = new Map<string, number>();
   for (const e of recent) {
-    if (e.resultCount === 0) {
+    if (e.results_count === 0) {
       zeroResultCounts.set(e.query, (zeroResultCounts.get(e.query) ?? 0) + 1);
     }
   }
@@ -789,4 +828,14 @@ export function getSearchAnalytics(): {
     zero_result_queries_7d: zeroResultQueries,
     queries_by_category_7d: categoryCounts,
   };
+}
+
+// Cumulative per-endpoint API hits (deploy-surviving). Merges persisted counts with
+// the current deployment's in-memory counters.
+export function getApiHitsByEndpoint(): Record<string, number> {
+  const merged: Record<string, number> = { ...cumulative.api_hits_by_endpoint };
+  for (const [endpoint, count] of Object.entries(apiHits)) {
+    merged[endpoint] = (merged[endpoint] ?? 0) + count;
+  }
+  return merged;
 }
