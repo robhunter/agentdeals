@@ -15328,19 +15328,6 @@
       "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "BoxySVG",
-      "category": "Design",
-      "description": "A free installable Web app for drawing SVGs and exporting in SVG, PNG, jpeg, and other formats.",
-      "tier": "Free",
-      "url": "https://boxy-svg.com/app",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12"
-    },
-    {
       "vendor": "Calendar Icons Generator",
       "category": "Design",
       "description": "Generate an entire year's worth of unique icons in a single click, absolutely FREE",
@@ -15395,7 +15382,7 @@
     {
       "vendor": "cloudconvert.com",
       "category": "Design",
-      "description": "Convert anything to anything. Two hundred eight supported formats including videos and gifs. Free for up to 10 conversions per day.",
+      "description": "Convert anything to anything. +200 supported formats including videos and gifs. Free for up to 10 conversions per day.",
       "tier": "Free",
       "url": "https://cloudconvert.com/",
       "tags": [
@@ -15403,7 +15390,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "CMYK Pantone",
@@ -15450,19 +15437,6 @@
       "description": "Create color palettes online or get inspiration from top palettes.",
       "tier": "Free",
       "url": "https://colorkit.co/",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12"
-    },
-    {
-      "vendor": "colorr.me",
-      "category": "Design",
-      "description": "Free color palette, gradient, and CSS color-code generator tool",
-      "tier": "Free",
-      "url": "https://colorr.me/",
       "tags": [
         "design",
         "ui",

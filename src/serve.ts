@@ -11547,7 +11547,7 @@ function buildDesignAlternativesPage(): string {
 
   // Group by design domain
   const designEditors = enrichedAll.filter(o =>
-    ["Figma", "Canva", "Penpot", "Lunacy", "Pixlr", "photopea.com", "Excalidraw", "vectr.com", "BoxySVG", "Pixelixe"].includes(o.vendor)
+    ["Figma", "Canva", "Penpot", "Lunacy", "Pixlr", "photopea.com", "Excalidraw", "vectr.com", "Pixelixe"].includes(o.vendor)
   );
   const prototyping = enrichedAll.filter(o =>
     ["Webflow", "framer.com", "Proto.io", "Plasmic", "Webstudio", "Quant Ux", "TeleportHQ", "Unicorn Platform", "landen.co", "Grapedrop", "marvelapp.com", "Octopus.do", "Updrafts.app", "walkme.com"].includes(o.vendor)
@@ -11562,7 +11562,7 @@ function buildDesignAlternativesPage(): string {
     ["unsplash.com", "pexels.com", "Nappy", "AllTheFreeStock", "freeforcommercialuse.net", "Lorem Picsum", "lensdump.com", "Mastershot", "Pravatar", "UI Avatars", "Image BG Blurer", "clevebrush.com", "Carousel Hero", "Volume", "Superdesigner", "MagicPattern", "haikei.app"].includes(o.vendor)
   );
   const colorCssTools = enrichedAll.filter(o =>
-    ["coolors", "ColorKit", "OKLCH", "css-gradient.com", "css.glass", "hypercolor.dev", "Gradientos", "colorr.me", "CMYK Pantone", "Branition", "Flows", "Scrollbar.app"].includes(o.vendor)
+    ["coolors", "ColorKit", "OKLCH", "css-gradient.com", "css.glass", "hypercolor.dev", "Gradientos", "CMYK Pantone", "Branition", "Flows", "Scrollbar.app"].includes(o.vendor)
   );
   const mockupsWireframing = enrichedAll.filter(o =>
     ["Zeplin", "Mockplus iDoc", "smartmockups.com", "mockupmark.com", "whimsical.com", "okso.app", "Mindmup.com", "userforge.com", "Responsively App"].includes(o.vendor)
