@@ -1,4 +1,4 @@
-import { describe, it, after, beforeEach } from "node:test";
+import { describe, it, after, before, beforeEach } from "node:test";
 import assert from "node:assert";
 import path from "node:path";
 import fs from "node:fs";
@@ -49,8 +49,11 @@ function createTestAgent(name: string) {
 }
 
 describe("Agent Friendship Network", () => {
-  beforeEach(() => {
+  before(() => {
     backupFiles();
+  });
+
+  beforeEach(() => {
     resetAll();
   });
 
