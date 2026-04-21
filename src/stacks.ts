@@ -1,5 +1,5 @@
-import { searchOffers } from "./data.js";
-import type { Offer } from "./types.js";
+import { searchOffers, loadDealChanges, vendorRiskLevel, classifyStability } from "./data.js";
+import type { Offer, StabilityClass, DealChange } from "./types.js";
 
 export interface StackComponent {
   role: string;
@@ -7,6 +7,8 @@ export interface StackComponent {
   tier: string;
   description: string;
   url: string;
+  risk_level: "stable" | "caution" | "risky";
+  stability: StabilityClass;
 }
 
 export interface StackRecommendation {
@@ -15,6 +17,7 @@ export interface StackRecommendation {
   total_monthly_cost: string;
   limitations: string[];
   upgrade_path: string;
+  risk_warnings: string[];
 }
 
 interface StackTemplate {
@@ -218,21 +221,34 @@ export function getStackRecommendation(
     }
   }
 
+  const allChanges = loadDealChanges();
+  const changesByVendor = new Map<string, DealChange[]>();
+  for (const c of allChanges) {
+    const key = c.vendor.toLowerCase();
+    const list = changesByVendor.get(key) ?? [];
+    list.push(c);
+    changesByVendor.set(key, list);
+  }
+
   const stack: StackComponent[] = [];
   for (const { role, category, preferredVendors } of roles) {
     const offer = findBestOffer(category, preferredVendors);
     if (offer) {
+      const vendorChanges = changesByVendor.get(offer.vendor.toLowerCase()) ?? [];
       stack.push({
         role,
         vendor: offer.vendor,
         tier: offer.tier,
         description: offer.description.length > 200 ? offer.description.slice(0, 197) + "..." : offer.description,
         url: offer.url,
+        risk_level: vendorRiskLevel(vendorChanges),
+        stability: classifyStability(vendorChanges),
       });
     }
   }
 
   const limitations = buildLimitations(stack);
+  const risk_warnings = buildRiskWarnings(stack);
 
   return {
     use_case: useCase,
@@ -240,5 +256,20 @@ export function getStackRecommendation(
     total_monthly_cost: "$0",
     limitations,
     upgrade_path: upgradePath,
+    risk_warnings,
   };
+}
+
+function buildRiskWarnings(stack: StackComponent[]): string[] {
+  const warnings: string[] = [];
+  for (const c of stack) {
+    if (c.risk_level === "risky") {
+      warnings.push(`${c.vendor} (${c.role}): high risk — free tier removal or open-source license change in the last 12 months. Consider alternatives.`);
+    } else if (c.stability === "volatile") {
+      warnings.push(`${c.vendor} (${c.role}): volatile — free tier removed or multiple negative pricing changes recorded.`);
+    } else if (c.risk_level === "caution" || c.stability === "watch") {
+      warnings.push(`${c.vendor} (${c.role}): monitor — has had limit reductions or pricing restructuring.`);
+    }
+  }
+  return warnings;
 }

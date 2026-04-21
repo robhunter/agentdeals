@@ -85,6 +85,49 @@ describe("stack recommendation logic", () => {
       assert.ok(component.description.length <= 200, `Description for ${component.vendor} exceeds 200 chars`);
     }
   });
+
+  it("stack components include risk_level and stability fields", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const result = getStackRecommendation("Next.js SaaS app");
+    assert.ok(result.stack.length > 0);
+    for (const component of result.stack) {
+      assert.ok(
+        ["stable", "caution", "risky"].includes(component.risk_level),
+        `${component.vendor} risk_level should be stable|caution|risky, got ${component.risk_level}`
+      );
+      assert.ok(
+        ["stable", "watch", "volatile", "improving"].includes(component.stability),
+        `${component.vendor} stability should be stable|watch|volatile|improving, got ${component.stability}`
+      );
+    }
+  });
+
+  it("stack includes risk_warnings array", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const result = getStackRecommendation("Next.js SaaS app");
+    assert.ok(Array.isArray(result.risk_warnings));
+    // Each warning should name the vendor and role
+    for (const w of result.risk_warnings) {
+      assert.ok(typeof w === "string");
+      assert.ok(w.length > 0);
+    }
+  });
+
+  it("risk_warnings surfaced when stack contains non-stable components", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const result = getStackRecommendation("Next.js SaaS app");
+    const hasRisky = result.stack.some(
+      (c: any) => c.risk_level !== "stable" || c.stability !== "stable"
+    );
+    if (hasRisky) {
+      assert.ok(
+        result.risk_warnings.length > 0,
+        "risk_warnings should not be empty when stack has non-stable components"
+      );
+    } else {
+      assert.strictEqual(result.risk_warnings.length, 0);
+    }
+  });
 });
 
 describe("stack REST endpoint", () => {
