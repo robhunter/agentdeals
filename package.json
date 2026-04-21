@@ -40,6 +40,7 @@
     "ingest:startup-deals": "node scripts/ingest-startup-deals.ts",
     "recategorize": "node scripts/recategorize.ts",
     "reverify": "node scripts/reverify.js",
+    "reverify:rolling": "node scripts/reverify-rolling.js",
     "verify-freshness": "node scripts/verify-freshness.js",
     "validate": "node scripts/validate-data.ts",
     "test:referral-pipeline": "npm run build && node scripts/test-referral-pipeline.ts",
