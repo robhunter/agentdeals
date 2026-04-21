@@ -41,13 +41,18 @@ export function resetPlatformCodesCache(): void {
   cachedPlatformCodes = null;
 }
 
+function slugifyVendor(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 /**
  * Get the active platform code for a vendor, if one exists.
+ * Accepts both canonical vendor names ("Proton Mail") and URL slugs ("proton-mail").
  */
 export function getPlatformCodeForVendor(vendorName: string): PlatformCode | null {
   const codes = loadPlatformCodes();
-  const lowerName = vendorName.toLowerCase();
-  return codes.find(c => c.vendor.toLowerCase() === lowerName && c.active) ?? null;
+  const querySlug = slugifyVendor(vendorName);
+  return codes.find(c => slugifyVendor(c.vendor) === querySlug && c.active) ?? null;
 }
 
 /**
