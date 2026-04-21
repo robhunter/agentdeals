@@ -9,6 +9,46 @@
       "source": "platform",
       "active": true,
       "added_at": "2026-04-12"
+    },
+    {
+      "vendor": "Proton Mail",
+      "code": "60QXGJSB",
+      "referral_url": "https://pr.tn/ref/60QXGJSB",
+      "referrer_benefit": "$20 credit",
+      "referee_benefit": "$20 credit",
+      "source": "platform",
+      "active": true,
+      "added_at": "2026-04-21"
+    },
+    {
+      "vendor": "Proton VPN",
+      "code": "60QXGJSB",
+      "referral_url": "https://pr.tn/ref/60QXGJSB",
+      "referrer_benefit": "$20 credit",
+      "referee_benefit": "$20 credit",
+      "source": "platform",
+      "active": true,
+      "added_at": "2026-04-21"
+    },
+    {
+      "vendor": "Proton Pass",
+      "code": "60QXGJSB",
+      "referral_url": "https://pr.tn/ref/60QXGJSB",
+      "referrer_benefit": "$20 credit",
+      "referee_benefit": "$20 credit",
+      "source": "platform",
+      "active": true,
+      "added_at": "2026-04-21"
+    },
+    {
+      "vendor": "Proton Drive",
+      "code": "60QXGJSB",
+      "referral_url": "https://pr.tn/ref/60QXGJSB",
+      "referrer_benefit": "$20 credit",
+      "referee_benefit": "$20 credit",
+      "source": "platform",
+      "active": true,
+      "added_at": "2026-04-21"
     }
   ]
 }

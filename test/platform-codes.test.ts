@@ -60,6 +60,27 @@ describe("Platform Codes", () => {
     assert.strictEqual(code.vendor, "Railway");
   });
 
+  it("matches by URL slug (e.g. 'proton-mail' → 'Proton Mail')", () => {
+    for (const slug of ["proton-mail", "proton-vpn", "proton-pass", "proton-drive"]) {
+      const code = getPlatformCodeForVendor(slug);
+      assert.ok(code, `slug ${slug} should resolve to a platform code`);
+      assert.strictEqual(code.code, "60QXGJSB");
+      assert.strictEqual(code.referral_url, "https://pr.tn/ref/60QXGJSB");
+      assert.strictEqual(code.referee_benefit, "$20 credit");
+      assert.strictEqual(code.source, "platform");
+    }
+  });
+
+  it("returns Proton platform code for all 4 product variants by canonical name", () => {
+    for (const vendor of ["Proton Mail", "Proton VPN", "Proton Pass", "Proton Drive"]) {
+      const code = getPlatformCodeForVendor(vendor);
+      assert.ok(code, `${vendor} should have a platform code`);
+      assert.strictEqual(code.vendor, vendor);
+      assert.strictEqual(code.code, "60QXGJSB");
+      assert.strictEqual(code.referral_url, "https://pr.tn/ref/60QXGJSB");
+    }
+  });
+
   it("only returns active codes", () => {
     const testData = {
       platform_codes: [
