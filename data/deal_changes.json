@@ -1,6 +1,18 @@
 {
   "changes": [
     {
+      "vendor": "Hyperping",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-21",
+      "summary": "Hyperping free plan limits restructured: monitor cap raised from 5 to 20 (HTTP, port, ping, keyword), but the check interval slowed from 3 minutes to 5 minutes. Free plan now also includes 1 seat and 1 server monitoring agent. Trade-off: 4x more endpoints can be monitored, at the cost of slower check granularity.",
+      "previous_state": "Free plan: 5 monitors, 3-minute check interval, 1 status page",
+      "current_state": "Free plan: 20 monitors, 5-minute check interval, 1 basic status page, 1 seat, 1 server monitoring agent",
+      "impact": "medium",
+      "source_url": "https://hyperping.com/pricing",
+      "category": "Monitoring",
+      "alternatives": []
+    },
+    {
       "vendor": "Amazon SP-API",
       "change_type": "pricing_restructured",
       "date": "2025-11-03",
