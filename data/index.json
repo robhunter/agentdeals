@@ -9157,14 +9157,14 @@
     {
       "vendor": "v0.dev",
       "category": "IDE & Code Editors",
-      "description": "Created by Vercel, v0 generates copy-and-paste friendly React code using shadcn/ui and Tailwind CSS. It uses a credit system, providing 1,200 starting credits and 200 free credits monthly.",
+      "description": "Created by Vercel, v0 generates copy-and-paste friendly React code using shadcn/ui and Tailwind CSS. Free plan: $5 of included monthly credits, 7 messages/day limit. Visual editing with Design Mode, GitHub sync, and deploy to Vercel included. (v0.dev now redirects to v0.app.)",
       "tier": "Free",
-      "url": "https://v0.dev/",
+      "url": "https://v0.app/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "beanstalkapp.com",
@@ -16835,14 +16835,14 @@
     {
       "vendor": "codesandbox.io",
       "category": "IDE & Code Editors",
-      "description": "Cloud IDE — unlimited public sandboxes, 5 private repositories, 40 hrs/month VM credits (4 vCPU, 8 GB RAM). Real-time collaboration, GitHub integration, instant previews",
+      "description": "Cloud IDE — unlimited Browser & VM Sandboxes, 5 members, 40 hrs/month VM credits (up to 4 vCPU, 8 GiB RAM, 20 GB storage per VM). SDK lite capped at 10 concurrent VM Sandboxes, 20 new Sandboxes/hour, 1,000 hourly API requests. Real-time collaboration, GitHub integration, instant previews",
       "tier": "Free",
-      "url": "https://codesandbox.io/",
+      "url": "https://codesandbox.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Components.studio",
@@ -21752,7 +21752,7 @@
     {
       "vendor": "Google Gemini Code Assist",
       "category": "IDE & Code Editors",
-      "description": "AI coding assistant by Google — 6,000 code completions/day (180,000/month), 240 chat messages/day. Now supports Gemini 3.1 Pro and Gemini 3.0 Flash models (Preview) for agent mode, chat, and code generation. Available in VS Code, JetBrains IDEs, Android Studio, Cloud Shell. Requires only a Gmail account, no credit card. 90x more completions than GitHub Copilot free tier",
+      "description": "AI coding assistant by Google — 6,000 code completions/day, 240 chat requests/day, 1,000 Gemini CLI + Agent Mode requests/day (shared pool), powered by Gemini 2.5 on the free Individual tier. Gemini 3 is available to Google AI Ultra subscribers; others can join the waitlist. Available in VS Code, JetBrains IDEs, Android Studio, Cloud Workstations. Requires only a Gmail account, no credit card. 90x more completions than GitHub Copilot free tier",
       "tier": "Individual (Free)",
       "url": "https://codeassist.google",
       "tags": [
@@ -21764,7 +21764,7 @@
         "gemini",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "LLM7.io",
