@@ -116,7 +116,7 @@
     {
       "vendor": "Netlify",
       "category": "Cloud Hosting",
-      "description": "300 credits/month (deploys at 15 credits each, bandwidth at 20 credits/GB, compute at 10 credits/GB-hour, web requests at 2 credits/10K). Legacy accounts (pre-Sep 2025) keep 100GB bandwidth + 300 build minutes. Gotcha: every repo committer is charged as a full Pro seat ($19/mo) when using Netlify CMS or Identity with a private repo",
+      "description": "300 credits/month (deploys at 15 credits each, bandwidth at 20 credits/GB, compute at 10 credits/GB-hour, web requests at 2 credits/10K). Legacy accounts (pre-Sep 2025) keep 100GB bandwidth + 300 build minutes. Form submissions are free across all Credit plans as of April 14, 2026 (previously 1 credit each). The prior CMS/Identity committer-seat gotcha no longer applies: upgrading to Credit Pro now includes unlimited team seats (previously $20/seat per Git contributor)",
       "tier": "Free",
       "url": "https://www.netlify.com/pricing/",
       "tags": [
@@ -128,7 +128,7 @@
         "vercel-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-04-21",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Up to 20% revenue share",
@@ -4969,7 +4969,7 @@
     {
       "vendor": "X (Twitter)",
       "category": "API Gateway",
-      "description": "Social media API — free tier eliminated February 2026, replaced with pay-per-use credit model. Active free-tier users receive $0 voucher. 'For-good' utility apps remain free. Basic fixed tier starts at $200/month. Pay-per-use credits available as alternative to fixed tiers",
+      "description": "Social media API — free tier eliminated February 2026, replaced with pay-per-use credit model. April 20, 2026 overhaul: Owned Reads (fetching your own posts, followers, likes) now $0.001/request; write cost raised to $0.015/post; URL-containing posts now $0.20/post. Following, likes, and quote-posts via API have been removed from all self-serve tiers. 'For-good' utility apps remain free. Basic fixed tier starts at $200/month",
       "tier": "Pay-per-use (no free tier)",
       "url": "https://developer.x.com/en/portal/products",
       "tags": [
@@ -4980,7 +4980,7 @@
         "social",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Grafana k6 Cloud",

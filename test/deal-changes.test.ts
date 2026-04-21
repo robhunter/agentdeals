@@ -76,7 +76,7 @@ describe("track_changes tool", () => {
 
     assert.ok(Array.isArray(body.changes));
     assert.strictEqual(body.total, body.changes.length);
-    assert.strictEqual(body.total, 280);
+    assert.strictEqual(body.total, 282);
   });
 
   it("filters by date (since)", async () => {
@@ -288,7 +288,7 @@ describe("track_changes tool", () => {
 
     // Single vendor
     const single = getDealChanges("2024-01-01", undefined, undefined, "Netlify");
-    assert.strictEqual(single.total, 3);
+    assert.strictEqual(single.total, 4);
     assert.strictEqual(single.changes[0].vendor, "Netlify");
 
     // Multiple vendors
@@ -318,7 +318,7 @@ describe("track_changes tool", () => {
     const { getDealChanges } = await import("../dist/data.js");
     // When vendors is set, vendor should be ignored
     const result = getDealChanges("2024-01-01", undefined, "OpenAI", "Netlify");
-    assert.strictEqual(result.total, 3);
+    assert.strictEqual(result.total, 4);
     assert.strictEqual(result.changes[0].vendor, "Netlify");
   });
 
