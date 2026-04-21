@@ -1623,7 +1623,7 @@
     {
       "vendor": "Cloudflare DNS",
       "category": "DNS & Domain Management",
-      "description": "Free authoritative DNS hosting — unlimited zones and queries, 1,000 records/zone, DDoS protection, free SSL/TLS",
+      "description": "Free authoritative DNS hosting — unlimited zones and queries, DDoS protection, free SSL/TLS. Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
       "tier": "Free",
       "url": "https://www.cloudflare.com/plans/free/",
       "tags": [
@@ -1633,7 +1633,7 @@
         "ssl",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-04-21",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -6077,20 +6077,17 @@
     {
       "vendor": "Hyperping",
       "category": "Monitoring",
-      "description": "Uptime and status page monitoring — free plan: 5 monitors (HTTP/HTTPS, API, ping, SSL, cron), 3-minute check interval, 1 status page with real-time updates and subscriber notifications, email and webhook alerts",
+      "description": "Uptime and status page monitoring — free plan: 20 monitors (HTTP, port, ping, keyword), 5-minute check interval, 1 basic status page with real-time updates and subscriber notifications, 1 seat, 1 server monitoring agent, email and webhook alerts",
       "tier": "Free",
       "url": "https://hyperping.com/pricing",
       "tags": [
         "monitoring",
         "uptime",
         "status-page",
-        "api",
-        "cron",
-        "ssl",
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "incident.io",
@@ -12433,14 +12430,14 @@
     {
       "vendor": "Survicate",
       "category": "Forms",
-      "description": "Pull feedback from all sources and send follow-up surveys with one tool. Automatically analyze feedback and extract insights with AI. Free email, website, in-product or mobile surveys, AI survey creator, and 25 monthly responses.",
+      "description": "Email, website, in-product, and mobile surveys with AI survey creator. Free plan: 25 responses/month, up to 1,000 stored responses across all active surveys (300/survey cap), up to 3 collaborators. After the initial 10-day trial, surveys created during trial are disabled. No data export and no premium integrations on Free.",
       "tier": "Free",
-      "url": "https://survicate.com/",
+      "url": "https://survicate.com/pricing/",
       "tags": [
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Typeform.com",
@@ -13828,7 +13825,7 @@
     {
       "vendor": "DigitalPlat",
       "category": "DNS & Domain Management",
-      "description": "Free subdomains under dpdns.org, us.kg, qzz.io, and xx.kg via nonprofit foundation",
+      "description": "Free subdomains via nonprofit foundation. dpdns.org is the primary service. The us.kg subdomain offering has been suspended due to abuse and is no longer accepting registrations. qzz.io and xx.kg may also be available.",
       "tier": "Free",
       "url": "https://domain.digitalplat.org",
       "tags": [
@@ -13836,7 +13833,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "isroot.in",
@@ -21024,12 +21021,12 @@
       "category": "DNS & Domain Management",
       "description": "Free secondary DNS: up to 10 zones and 300,000 queries/month with DNSCurve encryption. Commercial use allowed.",
       "tier": "Free",
-      "url": "https://www.buddyns.com/",
+      "url": "https://www.buddyns.com/services/",
       "tags": [
         "dns",
         "secondary-dns"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Gcore DNS",
