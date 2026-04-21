@@ -555,7 +555,7 @@ const NEGATIVE_CHANGE_TYPES = new Set([
 
 const RISKY_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed"]);
 
-function vendorRiskLevel(vendorChanges: DealChange[]): "stable" | "caution" | "risky" {
+export function vendorRiskLevel(vendorChanges: DealChange[]): "stable" | "caution" | "risky" {
   const twelveMonthsAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
     .toISOString()
     .slice(0, 10);
