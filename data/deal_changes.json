@@ -3907,6 +3907,38 @@
         "Inngest",
         "Trigger.dev"
       ]
+    },
+    {
+      "vendor": "X (Twitter)",
+      "change_type": "pricing_model_change",
+      "date": "2026-04-20",
+      "summary": "X API per-request pricing overhaul: Owned Reads now $0.001/request; writes raised to $0.015/post (from ~$0.01); URL-containing posts now $0.20/post (massive increase). Following, likes, and quote-posts via API removed from all self-serve tiers. Announced on X Developer Community.",
+      "previous_state": "Pay-per-use credits with undifferentiated read pricing, writes ~$0.01/post, URL-containing posts priced the same as text posts. Following/likes/quote-posts accessible via self-serve API.",
+      "current_state": "Owned Reads $0.001/request, writes $0.015/post, URL-containing posts $0.20/post. Following, likes, and quote-post endpoints removed from self-serve tiers.",
+      "impact": "high",
+      "source_url": "https://devcommunity.x.com",
+      "category": "API Gateway",
+      "alternatives": [
+        "Bluesky AT Protocol",
+        "Mastodon API",
+        "Reddit API"
+      ]
+    },
+    {
+      "vendor": "Netlify",
+      "change_type": "limits_increased",
+      "date": "2026-04-14",
+      "summary": "Form submissions are now free across all Credit plans (including the Credit Free tier) — previously each form submission cost 1 credit. Credit Pro also gained unlimited team seats (was $20/seat per Git contributor), which effectively removes the prior CMS/Identity 'every committer becomes a $19 Pro seat' gotcha for free-tier users who ever upgrade.",
+      "previous_state": "Form submissions consumed 1 credit each on Credit Free; upgrading to Pro because of CMS/Identity on a private repo billed every Git committer as a $19-$20/month seat.",
+      "current_state": "Form submissions free on all Credit plans. Credit Pro includes unlimited team seats at no extra per-seat cost.",
+      "impact": "medium",
+      "source_url": "https://www.netlify.com/changelog/",
+      "category": "Cloud Hosting",
+      "alternatives": [
+        "Vercel",
+        "Cloudflare Pages",
+        "Railway"
+      ]
     }
   ]
 }
