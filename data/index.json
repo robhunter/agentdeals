@@ -1505,30 +1505,6 @@
       "verifiedDate": "2026-04-13"
     },
     {
-      "vendor": "GitHub Copilot",
-      "category": "IDE & Code Editors",
-      "description": "AI code assistant — 2,000 completions/month, 50 premium requests/month, works in VS Code/JetBrains/GitHub.com. Premium requests use advanced models (Claude Opus 4, o3); overage $0.04/request. Students get dedicated Copilot Student plan (Mar 2026) — premium models available via Auto mode only, no manual model selection for GPT-5.4/Claude Opus/Sonnet. OSS maintainers get Pro free",
-      "tier": "Free",
-      "url": "https://github.com/features/copilot/plans",
-      "tags": [
-        "developer tools",
-        "ai",
-        "code completion",
-        "ide",
-        "free tier",
-        "deal-change"
-      ],
-      "verifiedDate": "2026-04-13",
-      "referral_program": {
-        "available": false,
-        "referrer_benefit": "N/A",
-        "referee_benefit": "N/A",
-        "program_url": "https://github.com/partners",
-        "type": "closed",
-        "notes": "No individual referral program. Education partner program for student developer pack."
-      }
-    },
-    {
       "vendor": "Cursor",
       "category": "AI Coding",
       "description": "AI-powered code editor built on VS Code. 6-plan structure: Free (2,000 completions/month, 50 slow premium requests), Hobby $10/month (lighter paid tier), Pro $20/month (unlimited completions, 500 fast premium requests), Pro+ $60/month (10x premium requests vs Pro, priority access, more context), Business $40/seat/month, Ultra $200/month (highest credit limits for power users). Credit-based pricing model since June 2025.",
@@ -2492,7 +2468,7 @@
     {
       "vendor": "GitHub",
       "category": "Source Control",
-      "description": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot, Codespaces, and Actions minutes",
+      "description": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot (new Copilot Student signups paused 2026-04-20 due to infrastructure strain — existing students unaffected), Codespaces, and Actions minutes",
       "tier": "Student Pack",
       "url": "https://education.github.com/pack",
       "tags": [
@@ -21242,7 +21218,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "AI Coding",
-      "description": "AI coding assistant by GitHub/Microsoft. Free tier: 2,000 code completions/month, 50 premium requests/month. Pro $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo (1,500 premium requests, all models incl. Claude Opus 4, o3). Business $19/seat/mo (300/user). Enterprise $39/seat/mo (1,000/user). Overage $0.04/premium request. Model multipliers: advanced reasoning 5x-20x per interaction. Student plan (Mar 2026): premium models only via Auto mode, no manual selection.",
+      "description": "AI coding assistant by GitHub/Microsoft. Works in VS Code/JetBrains/GitHub.com. Free tier: 2,000 completions/month, 50 premium requests/month. Pro $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo (1,500 premium requests, all advanced models incl. Claude Opus). Business $19/seat/mo (300/user). Enterprise $39/seat/mo (1,000/user). Overage $0.04/premium request. Model multipliers: advanced reasoning 5x-20x per interaction. **April 20, 2026: GitHub paused new signups for Pro, Pro+, and Copilot Student plans citing infrastructure strain from agentic AI workflows (long-running, parallelized sessions overwhelming capacity); Free tier signups remain open.** Pro trials paused April 10, 2026 (abuse). Claude Opus removed from Pro (now Pro+ only); individual-plan usage limits tightened. Copilot Student: existing students unaffected; premium models via Auto mode only (no manual selection). OSS maintainers get Pro free (when signups reopen).",
       "tier": "Free",
       "url": "https://github.com/features/copilot",
       "tags": [
@@ -21252,9 +21228,10 @@
         "ide",
         "developer tools",
         "cursor-alternative",
-        "deal-change"
+        "deal-change",
+        "signup-paused"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-04-21",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
