@@ -545,8 +545,8 @@ describe("HTTP transport", () => {
     // Record initial stats
     const h0 = await fetch(`http://localhost:${serverPort}/health`);
     const s0 = (await h0.json() as any).stats;
-    const initialApiOffers = s0.api_hits["/api/offers"];
-    const initialApiCats = s0.api_hits["/api/categories"];
+    const initialApiOffers = s0.api_hits["/api/offers"] ?? 0;
+    const initialApiCats = s0.api_hits["/api/categories"] ?? 0;
     const initialPageViews = s0.landing_page_views;
 
     // Hit /api/offers twice
