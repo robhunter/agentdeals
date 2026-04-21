@@ -12469,14 +12469,14 @@
     {
       "vendor": "Typeform.com",
       "category": "Forms",
-      "description": "Include beautifully designed forms on websites. The free plan allows only ten fields per form and 100 monthly responses.",
+      "description": "Include beautifully designed forms on websites. The free plan allows unlimited questions per form and 100 monthly responses.",
       "tier": "Free",
       "url": "https://www.typeform.com/",
       "tags": [
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Vidhook",
