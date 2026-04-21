@@ -1,0 +1,58 @@
+name: Daily rolling re-verification
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Number of oldest entries to re-verify"
+        required: false
+        default: "75"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reverify-rolling
+  cancel-in-progress: false
+
+jobs:
+  reverify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run rolling re-verification
+        id: reverify
+        run: |
+          set -o pipefail
+          LIMIT="${{ github.event.inputs.limit || '75' }}"
+          node scripts/reverify-rolling.js --limit "$LIMIT" | tee /tmp/reverify.log
+          VERIFIED=$(grep -oE '^Verified \(date bumped\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
+          FLAGGED=$(grep -oE '^Flagged \(URL/AI failure\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
+          echo "verified=$VERIFIED" >> "$GITHUB_OUTPUT"
+          echo "flagged=$FLAGGED" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push if changed
+        env:
+          VERIFIED: ${{ steps.reverify.outputs.verified }}
+          FLAGGED: ${{ steps.reverify.outputs.flagged }}
+        run: |
+          if git diff --quiet -- data/index.json; then
+            echo "No changes to data/index.json — skipping commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/index.json
+          git commit -m "data(auto): rolling re-verification — ${VERIFIED} verified, ${FLAGGED} flagged"
+          git push origin HEAD:main
