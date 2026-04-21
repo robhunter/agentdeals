@@ -39,18 +39,20 @@ describe("stats", () => {
   });
 
   describe("recordApiHit", () => {
-    it("increments known API endpoint counters", () => {
+    it("increments per-endpoint counters dynamically", () => {
       recordApiHit("/api/offers");
       recordApiHit("/api/offers");
       recordApiHit("/api/categories");
+      recordApiHit("/api/changes");
       const stats = getStats();
       assert.strictEqual(stats.api_hits["/api/offers"], 2);
       assert.strictEqual(stats.api_hits["/api/categories"], 1);
-      assert.strictEqual(stats.total_api_hits, 3);
+      assert.strictEqual(stats.api_hits["/api/changes"], 1);
+      assert.strictEqual(stats.total_api_hits, 4);
     });
 
-    it("ignores unknown endpoints", () => {
-      recordApiHit("/api/unknown");
+    it("ignores empty endpoint strings", () => {
+      recordApiHit("");
       const stats = getStats();
       assert.strictEqual(stats.total_api_hits, 0);
     });
