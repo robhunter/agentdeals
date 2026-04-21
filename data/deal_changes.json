@@ -3939,6 +3939,41 @@
         "Cloudflare Pages",
         "Railway"
       ]
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "restriction",
+      "date": "2026-04-10",
+      "summary": "GitHub paused new Copilot Pro trials due to abuse. Existing trials continue through their term. New users could still sign up for Pro directly (paid) until the broader April 20 signup pause closed that path too.",
+      "previous_state": "Copilot Pro offered a 30-day free trial to any new user",
+      "current_state": "Copilot Pro trials paused indefinitely; direct Pro signup also paused as of 2026-04-20",
+      "impact": "medium",
+      "source_url": "https://github.blog/changelog/2026-04-10-pausing-new-github-copilot-pro-trials/",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "Windsurf",
+        "Gemini Code Assist",
+        "Claude Code"
+      ]
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "restriction",
+      "date": "2026-04-20",
+      "summary": "GitHub paused new signups for Copilot Pro, Pro+, and Copilot Student plans citing infrastructure strain from agentic AI workflows (long-running, parallelized sessions overwhelming capacity). Existing users are unaffected. Free tier signups remain open. Same announcement also removed Claude Opus from Pro (now Pro+ only) and tightened usage limits on individual plans.",
+      "previous_state": "Pro ($10/mo), Pro+ ($39/mo), and Copilot Student plans accepting new signups. Claude Opus available on Pro. Standard individual-plan usage limits.",
+      "current_state": "Pro/Pro+/Student new signups paused. Claude Opus Pro+ only. Individual-plan usage limits tightened. Free tier unaffected.",
+      "impact": "high",
+      "source_url": "https://github.blog/changelog/2026-04-20-changes-to-github-copilot-plans-for-individuals/",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "Windsurf",
+        "Gemini Code Assist",
+        "Claude Code",
+        "Cline"
+      ]
     }
   ]
 }
