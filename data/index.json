@@ -3485,7 +3485,7 @@
     {
       "vendor": "Figma",
       "category": "Design",
-      "description": "Collaborative design tool — free Starter plan with unlimited drafts, unlimited viewers, unlimited cloud storage, 30-day version history, 150 AI credits/day (500/mo). Team projects limited to 3 files.",
+      "description": "Collaborative design tool — free Starter plan with unlimited personal drafts, unlimited viewers/commenters, unlimited cloud storage, 30-day version history, 150 AI credits/day (500/mo). Team projects limited to 3 Figma design files + 3 FigJam files. No team libraries or branching on free.",
       "tier": "Starter",
       "url": "https://www.figma.com/pricing/",
       "tags": [
@@ -22550,21 +22550,6 @@
         "design",
         "graphics",
         "templates",
-        "consumer",
-        "free-tier"
-      ],
-      "verifiedDate": "2026-04-17"
-    },
-    {
-      "vendor": "Figma",
-      "category": "Design & Creative",
-      "description": "Up to 3 Figma design files and 3 FigJam files. Unlimited personal drafts. Unlimited viewers/commenters. Basic prototyping. No team libraries or branching on free.",
-      "tier": "Free (Starter)",
-      "url": "https://www.figma.com/pricing/",
-      "tags": [
-        "design",
-        "ui-ux",
-        "prototyping",
         "consumer",
         "free-tier"
       ],
