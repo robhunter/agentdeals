@@ -1592,7 +1592,7 @@
         "static analysis",
         "free tier"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Hetzner",
@@ -3068,7 +3068,7 @@
         "startup-credits",
         "cloud-storage"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-22",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -5145,7 +5145,7 @@
         "open-source",
         "identity"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "StatusCake",
@@ -5174,7 +5174,7 @@
         "on-call",
         "alerts"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "imgix",
@@ -5270,7 +5270,7 @@
         "static-analysis",
         "code-scanning"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Cronitor",
@@ -5302,7 +5302,7 @@
         "self-hosted",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Prisma Accelerate",
@@ -5317,7 +5317,7 @@
         "orm",
         "serverless"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Unity DevOps",
@@ -5349,7 +5349,7 @@
         "real-time",
         "cloud"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Sematext",
@@ -5365,7 +5365,7 @@
         "infrastructure",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "AbstractAPI",
@@ -5410,7 +5410,7 @@
         "geocoding",
         "network"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "ipapi",
@@ -5439,7 +5439,7 @@
         "email-verification",
         "sales"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Geocodio",
@@ -5483,7 +5483,7 @@
         "verification",
         "deliverability"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Screenshotlayer",
@@ -5497,7 +5497,7 @@
         "web-capture",
         "images"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "URLscan.io",
@@ -5512,7 +5512,7 @@
         "api",
         "malware"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "VirusTotal",
@@ -5527,7 +5527,7 @@
         "threat-intelligence",
         "api"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Kaggle",
@@ -5588,7 +5588,7 @@
         "embeddings",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Zilliz Cloud",
@@ -5603,7 +5603,7 @@
         "embeddings",
         "milvus"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "LanceDB",
@@ -5619,7 +5619,7 @@
         "open-source",
         "embedded"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Upstash Vector",
@@ -5918,7 +5918,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Thunder Client",
@@ -5933,7 +5933,7 @@
         "testing",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Gel",
@@ -5948,7 +5948,7 @@
         "edgedb",
         "cloud"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "CrateDB",
@@ -5964,7 +5964,7 @@
         "distributed",
         "cloud"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Neo4j AuraDB",
@@ -5994,7 +5994,7 @@
         "monitoring",
         "observability"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Apollo GraphOS",
@@ -6056,7 +6056,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "OnlineOrNot",
@@ -6072,7 +6072,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Hyperping",
@@ -6102,7 +6102,7 @@
         "status-page",
         "slack"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "AppSignal",
@@ -6118,7 +6118,7 @@
         "performance",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Middleware.io",
@@ -6136,7 +6136,7 @@
         "synthetics",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "360 Monitoring",
@@ -6152,7 +6152,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Drone CI",
@@ -6169,7 +6169,7 @@
         "open-source",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Codefresh",
@@ -6186,7 +6186,7 @@
         "kubernetes",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Bitrise",
@@ -6203,7 +6203,7 @@
         "flutter",
         "react-native"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Codemagic",
@@ -6237,7 +6237,7 @@
         "distribution",
         "codepush"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Buddy",
@@ -6252,7 +6252,7 @@
         "pipelines",
         "automation"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Harness CI",
@@ -6269,7 +6269,7 @@
         "devops",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Google Colab",
@@ -6464,7 +6464,7 @@
         "marketing",
         "zoho"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Zoho Forms",
@@ -6726,7 +6726,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "APIVerve",
@@ -6798,7 +6798,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Canopy",
@@ -6822,7 +6822,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Cloudmersive",
@@ -6834,7 +6834,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Colaboratory",
@@ -6879,7 +6879,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Country-State-City Microservice API",
@@ -6891,7 +6891,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Coupler",
@@ -6915,7 +6915,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Cube",
@@ -6951,7 +6951,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "CustomJS",
@@ -6963,7 +6963,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Data Fetcher",
@@ -6999,7 +6999,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Datalore",
@@ -7023,7 +7023,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "DB-IP",
@@ -7035,7 +7035,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "DeepAR",
@@ -7071,7 +7071,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "Disease.sh",
@@ -7083,7 +7083,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Doczilla",
@@ -7095,7 +7095,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Doppio",
@@ -7107,7 +7107,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "drawDB",
@@ -7131,7 +7131,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Export SDK",
@@ -7167,7 +7167,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "FormatJSONOnline.com",
@@ -7179,7 +7179,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "FraudLabs Pro",
@@ -7191,7 +7191,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-21"
     },
     {
       "vendor": "FreeIPAPI",
@@ -7203,7 +7203,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Geolocated.io",
@@ -7215,7 +7215,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Hex",
@@ -7255,7 +7255,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-20"
     },
     {
       "vendor": "Invantive Cloud",
@@ -7279,7 +7279,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "IP Geolocation",
@@ -7291,7 +7291,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "IP.City",
@@ -15714,7 +15714,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Lucide",
