@@ -766,8 +766,9 @@ export function getPageViewsToday(): number {
 // Persisted as a ring buffer (last SEARCH_QUERY_RING_MAX entries) on telemetry.json,
 // so /api/metrics analytics survive deploys.
 
-export function recordSearchQuery(query: string | undefined, resultCount: number, category?: string): void {
+export function recordSearchQuery(query: string | undefined, resultCount: number, category?: string, userAgent?: string): void {
   if (!query) return;
+  if (userAgent && isBot(userAgent)) return;
   const normalized = query.trim().toLowerCase();
   if (!normalized) return;
   const entry: SearchQueryEntry = {
