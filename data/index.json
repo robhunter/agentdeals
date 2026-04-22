@@ -21824,6 +21824,28 @@
       ]
     },
     {
+      "vendor": "MiniMax",
+      "category": "AI / ML",
+      "description": "Chinese AI lab (稀宇科技, Shanghai) offering multimodal APIs via platform.minimax.io. Pay-as-you-go: MiniMax-M2.7 text $0.3/$1.2 per Mtok (highspeed $0.6/$2.4), prompt-cache read $0.06/Mtok; speech/TTS $60/M chars (standard) or $100/M chars (HD), rapid voice clone $1.50/voice; MiniMax-Hailuo-02/2.3 video $0.10-$0.56/video depending on resolution and duration; image-01 $0.0035/image; Music-2.6 $0.15 per ~5 min with a 2-week free trial. Alternative Token Plan subscriptions from $10/mo (Starter: 1,500 M2.7 requests/5hr) to $150/mo (Ultra-Highspeed: 30K requests/5hr, 5 Hailuo videos/day). No documented permanent API free tier. Also maker of Hailuo AI (consumer video) and Talkie.",
+      "tier": "Pay-as-you-go",
+      "url": "https://platform.minimax.io/docs/guides/pricing-paygo",
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "api",
+        "inference",
+        "video",
+        "speech",
+        "tts",
+        "image-generation",
+        "music",
+        "multimodal",
+        "china"
+      ],
+      "verifiedDate": "2026-04-21"
+    },
+    {
       "vendor": "Amazon Aurora PostgreSQL",
       "category": "Databases",
       "description": "Aurora PostgreSQL Serverless on AWS Free Tier — managed PostgreSQL-compatible database with automatic scaling. Free plan: up to 4 ACUs per cluster, 1 GB storage. New accounts also get $100–200 in AWS credits for 12 months",
