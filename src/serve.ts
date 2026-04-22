@@ -9600,7 +9600,7 @@ function buildSecurityAlternativesPage(): string {
     ["letsencrypt.org", "ssllabs.com", "TestTLS.com", "Internet.nl", "Mozilla Observatory", "CertKit", "DJ Checkup", "Sucuri SiteCheck"].includes(o.vendor)
   );
   const other = enrichedAll.filter(o =>
-    ["1Password", "Proton Pass", "FraudLabs Pro", "LoginLlama", "Have I been pwned?", "CyberChef", "Protectumus", "URLscan.io", "VirusTotal", "RandomKeygen", "Virgil Security", "Cookiefirst", "Iubenda", "Ketch", "Pareto Security"].includes(o.vendor)
+    ["1Password", "FraudLabs Pro", "LoginLlama", "Have I been pwned?", "CyberChef", "Protectumus", "URLscan.io", "VirusTotal", "RandomKeygen", "Virgil Security", "Cookiefirst", "Iubenda", "Ketch", "Pareto Security"].includes(o.vendor)
   );
 
   // Build cards helper
