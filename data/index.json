@@ -8498,26 +8498,6 @@
       "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "Proton Pass",
-      "category": "Security",
-      "description": "Password manager with built-in email aliases, 2FA authenticator, sharing and passkeys. Available on web, browser extension, and mobile app and desktop.",
-      "tier": "Free",
-      "url": "https://proton.me/pass",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12",
-      "referral_program": {
-        "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
-        "program_url": "https://proton.me/support/referral-program",
-        "type": "self-service",
-        "commission_type": "credits"
-      }
-    },
-    {
       "vendor": "Pullflow",
       "category": "Code Quality",
       "description": "Pullflow offers an AI-enhanced platform for code review collaboration across GitHub, Slack, and VS Code.",
@@ -22333,7 +22313,7 @@
     {
       "vendor": "Proton Pass",
       "category": "Password Managers",
-      "description": "Unlimited logins and notes. Unlimited devices. 10 hide-my-email aliases. Integrated 2FA/TOTP. Passkey support. End-to-end encrypted. No credit card storage or unlimited aliases on free.",
+      "description": "Unlimited logins, notes, and devices. 10 hide-my-email aliases. Integrated 2FA/TOTP. Passkey support. Vault sharing. End-to-end encrypted. Web, browser extension, mobile, and desktop apps. No credit card storage or unlimited aliases on free.",
       "tier": "Free",
       "url": "https://proton.me/pass/pricing",
       "tags": [
