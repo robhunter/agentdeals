@@ -1489,22 +1489,6 @@
       "verifiedDate": "2026-04-14"
     },
     {
-      "vendor": "Windsurf",
-      "category": "IDE & Code Editors",
-      "description": "AI coding assistant (formerly Codeium). Free tier: limited daily quotas for completions and chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Teams $40/mo, Max $200/mo. SWE-1.5 Fast Agent model. Grandfathered Pro subscribers keep $15/mo indefinitely",
-      "tier": "Free",
-      "url": "https://windsurf.com/pricing",
-      "tags": [
-        "developer tools",
-        "ai",
-        "code completion",
-        "ide",
-        "free tier",
-        "deal-change"
-      ],
-      "verifiedDate": "2026-04-13"
-    },
-    {
       "vendor": "Cursor",
       "category": "AI Coding",
       "description": "AI-powered code editor built on VS Code. 6-plan structure: Free (2,000 completions/month, 50 slow premium requests), Hobby $10/month (lighter paid tier), Pro $20/month (unlimited completions, 500 fast premium requests), Pro+ $60/month (10x premium requests vs Pro, priority access, more context), Business $40/seat/month, Ultra $200/month (highest credit limits for power users). Credit-based pricing model since June 2025.",
@@ -21300,6 +21284,7 @@
         "code completion",
         "developer tools",
         "cursor-alternative",
+        "free tier",
         "deal-change"
       ],
       "verifiedDate": "2026-04-13"
