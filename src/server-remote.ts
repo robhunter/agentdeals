@@ -16,6 +16,7 @@ import {
 } from "./api-client.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
+import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 
 function mcpError(msg: string) {
   return {
@@ -55,11 +56,16 @@ function parse404Error(err: unknown): string | null {
 }
 
 export function createServer(): McpServer {
-  const server = new McpServer({
-    name: "agentdeals",
-    version: "0.1.0",
-    description: "Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. 1,600+ verified offers across 67 categories with pricing change tracking.",
-  });
+  const server = new McpServer(
+    {
+      name: "agentdeals",
+      version: "0.1.0",
+      description: "Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. 1,600+ verified offers across 67 categories with pricing change tracking.",
+    },
+    {
+      instructions: MCP_INSTRUCTIONS,
+    }
+  );
 
   // --- Tool 1: search_deals ---
 

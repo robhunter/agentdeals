@@ -17,6 +17,7 @@ import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
+import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 
 const __dirname_server = dirname(fileURLToPath(import.meta.url));
 const PKG_VERSION = JSON.parse(readFileSync(join(__dirname_server, "..", "package.json"), "utf-8")).version;
@@ -35,11 +36,16 @@ function toConciseDealChange(change: DealChange) {
 }
 
 export function createServer(getSessionId?: () => string | undefined): McpServer {
-  const server = new McpServer({
-    name: "agentdeals",
-    version: PKG_VERSION,
-    description: "AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. 1,600+ verified offers across 67 categories with pricing change tracking.",
-  });
+  const server = new McpServer(
+    {
+      name: "agentdeals",
+      version: PKG_VERSION,
+      description: "AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. 1,600+ verified offers across 67 categories with pricing change tracking.",
+    },
+    {
+      instructions: MCP_INSTRUCTIONS,
+    }
+  );
 
   // --- Tool 1: search_deals ---
 
