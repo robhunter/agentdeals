@@ -112,4 +112,20 @@ describe("search analytics", () => {
     assert.strictEqual(typeof analytics.queries_by_category_7d, "object");
     assert.ok(!Array.isArray(analytics.queries_by_category_7d));
   });
+
+  it("skips queries with bot user-agent", () => {
+    recordSearchQuery("redis", 5, undefined, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)");
+    recordSearchQuery("postgres", 3, undefined, "SemrushBot/7.0");
+    recordSearchQuery("mongodb", 2, undefined, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+    const analytics = getSearchAnalytics();
+    assert.strictEqual(analytics.top_queries_7d.length, 1);
+    assert.strictEqual(analytics.top_queries_7d[0].query, "mongodb");
+  });
+
+  it("records queries when user-agent is undefined (e.g. internal tests, direct API callers)", () => {
+    recordSearchQuery("redis", 5);
+    recordSearchQuery("postgres", 3, undefined, undefined);
+    const analytics = getSearchAnalytics();
+    assert.strictEqual(analytics.top_queries_7d.length, 2);
+  });
 });
