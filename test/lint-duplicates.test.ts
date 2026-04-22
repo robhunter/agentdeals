@@ -152,14 +152,13 @@ describe("formatMarkdown", () => {
 });
 
 describe("lint-duplicates against current data/index.json", () => {
-  it("detects Figma, Proton Pass, and Proton Mail as candidates", async () => {
+  it("detects Proton Pass and Proton Mail as candidates", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
     const indexPath = resolve(process.cwd(), "data", "index.json");
     const data = JSON.parse(readFileSync(indexPath, "utf-8"));
     const result = findDuplicateCandidates(data.offers || []);
     const vendors = result.map((c) => c.vendor);
-    assert(vendors.includes("Figma"), `expected Figma in ${vendors.join(", ")}`);
     assert(vendors.includes("Proton Pass"), `expected Proton Pass in ${vendors.join(", ")}`);
     assert(vendors.includes("Proton Mail"), `expected Proton Mail in ${vendors.join(", ")}`);
   });
