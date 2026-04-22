@@ -1,0 +1,34 @@
+name: Data lint — duplicates
+
+on:
+  pull_request:
+    paths:
+      - "data/index.json"
+      - "scripts/lint-duplicates.js"
+      - ".github/workflows/lint-duplicates.yml"
+  push:
+    branches: [main]
+    paths:
+      - "data/index.json"
+      - "scripts/lint-duplicates.js"
+      - ".github/workflows/lint-duplicates.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  lint-duplicates:
+    runs-on: ubuntu-latest
+    # Advisory only — the script always exits 0. `continue-on-error` adds an
+    # extra belt so an accidental non-zero exit still does not block merges.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run duplicate detection
+        run: |
+          node scripts/lint-duplicates.js | tee -a "$GITHUB_STEP_SUMMARY"
