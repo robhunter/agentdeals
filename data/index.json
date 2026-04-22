@@ -21607,31 +21607,6 @@
       "verifiedDate": "2026-04-14"
     },
     {
-      "vendor": "Notion",
-      "category": "Team Collaboration",
-      "description": "Free for individuals — unlimited pages and blocks, 10 guest collaborators, 5MB file uploads, 7-day page history, basic forms, 1 notion.site, Notion Calendar, Notion Mail (Gmail sync), offline access. Team block limits apply on multi-member workspaces.",
-      "tier": "Free",
-      "url": "https://www.notion.com/pricing",
-      "tags": [
-        "developer tools",
-        "team collaboration",
-        "docs",
-        "notes",
-        "wiki",
-        "free tier"
-      ],
-      "verifiedDate": "2026-04-14",
-      "referral_program": {
-        "available": true,
-        "referrer_benefit": "50% commission on first 12 months",
-        "referee_benefit": "Standard plan pricing",
-        "program_url": "https://www.notion.com/affiliates",
-        "type": "application",
-        "commission_type": "recurring",
-        "notes": "Commission on Plus, Business, or AI Plan upgrades. Paid monthly via PayPal/Stripe."
-      }
-    },
-    {
       "vendor": "GitHub Models",
       "category": "AI / ML",
       "description": "Free access to 100+ AI models via GitHub Marketplace — GPT-4o, Llama, Mistral, Phi, and more. Free tier: 10-15 RPM, 50-150 requests/day depending on model tier. OpenAI-compatible API endpoint",
@@ -22028,17 +22003,19 @@
     {
       "vendor": "Notion",
       "category": "Productivity & Notes",
-      "description": "Unlimited pages and blocks for individual use. 1 member workspace with up to 10 guests. 5 MB file upload limit per file. 7-day page history. Basic integrations. API access.",
+      "description": "Free for individuals — unlimited pages and blocks, 1 member workspace with up to 10 guest collaborators, 5MB file uploads, 7-day page history, basic forms, 1 notion.site, Notion Calendar, Notion Mail (Gmail sync), offline access, basic integrations, API access. Team block limits apply on multi-member workspaces.",
       "tier": "Free",
-      "url": "https://www.notion.so/pricing",
+      "url": "https://www.notion.com/pricing",
       "tags": [
         "notes",
         "productivity",
+        "docs",
         "wiki",
-        "consumer",
-        "free-tier"
+        "team collaboration",
+        "developer tools",
+        "free tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-04-22",
       "referral_program": {
         "available": true,
         "referrer_benefit": "50% commission on first 12 months",
