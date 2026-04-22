@@ -8710,18 +8710,6 @@
       "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "Telegram",
-      "category": "Communication",
-      "description": "Telegram is for everyone who wants fast, reliable messaging and calls. Business users and small teams may like the large groups, usernames, desktop apps, and powerful file-sharing options.",
-      "tier": "Free",
-      "url": "https://telegram.org/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-13"
-    },
-    {
       "vendor": "Tencent RTC",
       "category": "Team Collaboration",
       "description": "Tencent Real-Time Communication (TRTC) offers solutions for group audio/video calls.10,000 free minutes/month for the first year.",
@@ -22515,7 +22503,7 @@
     {
       "vendor": "Telegram",
       "category": "Communication & Messaging",
-      "description": "Fully free core features. Unlimited messages. Groups up to 200,000 members. Channels with unlimited subscribers. 2 GB file upload limit. Cloud-based message sync. Voice/video calls. Bot platform.",
+      "description": "Fully free core features. Unlimited messages. Groups up to 200,000 members. Channels with unlimited subscribers. 2 GB file upload limit. Cloud-based message sync. Voice/video calls. Bot platform. Public @usernames. Desktop, web, and mobile clients.",
       "tier": "Free",
       "url": "https://telegram.org",
       "tags": [
