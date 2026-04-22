@@ -13192,7 +13192,7 @@ function buildTeamCollaborationAlternativesPage(): string {
 
   // Group by domain
   const chatMessaging = enrichedAll.filter(o =>
-    ["Slack API", "Discord API", "Rocket.Chat", "Pumble", "Chanty.com", "element.io", "Revolt.chat", "Zulip", "flock.com", "gitter.im", "Keybase", "Braid", "twist.com", "Telegram", "Tawk.to", "Crisp", "Helploom"].includes(o.vendor)
+    ["Slack API", "Discord API", "Rocket.Chat", "Pumble", "Chanty.com", "element.io", "Revolt.chat", "Zulip", "flock.com", "gitter.im", "Keybase", "Braid", "twist.com", "Tawk.to", "Crisp", "Helploom"].includes(o.vendor)
   );
   const videoMeetings = enrichedAll.filter(o =>
     ["meet.jit.si", "zoom.us", "Webex", "Daily.co", "Whereby", "Tencent RTC", "talky.io", "LiveKit", "Mux", "wistia.com", "flat.social", "Duckly", "Screen Sharing via Browser"].includes(o.vendor)
