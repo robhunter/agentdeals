@@ -35,7 +35,7 @@ function toConciseDealChange(change: DealChange) {
   return { vendor: change.vendor, change_type: change.change_type, date: change.date, summary: change.summary };
 }
 
-export function createServer(getSessionId?: () => string | undefined): McpServer {
+export function createServer(getSessionId?: () => string | undefined, getClientName?: () => string | undefined): McpServer {
   const server = new McpServer(
     {
       name: "agentdeals",
@@ -75,7 +75,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     },
     async ({ query, category, vendor, eligibility, sort, stability, payment_protocol, since, limit, offset, response_format }) => {
       try {
-        recordToolCall("search_deals");
+        recordToolCall("search_deals", getClientName?.());
 
         // Mode: list categories
         if (category === "list") {
@@ -204,7 +204,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     },
     async ({ mode, use_case, services, scale, requirements }) => {
       try {
-        recordToolCall("plan_stack");
+        recordToolCall("plan_stack", getClientName?.());
 
         if (mode === "recommend") {
           if (!use_case) {
@@ -281,7 +281,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     },
     async ({ vendors, include_risk }) => {
       try {
-        recordToolCall("compare_vendors");
+        recordToolCall("compare_vendors", getClientName?.());
         const doRisk = include_risk !== false;
 
         // Single vendor = risk check
@@ -394,7 +394,7 @@ export function createServer(getSessionId?: () => string | undefined): McpServer
     },
     async ({ since, change_type, vendor, vendors, categories, include_expiring, lookahead_days, response_format }) => {
       try {
-        recordToolCall("track_changes");
+        recordToolCall("track_changes", getClientName?.());
 
         // No params = weekly digest
         if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined) {
@@ -959,7 +959,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async ({ name, vestauth_public_key_url }) => {
       try {
-        recordToolCall("register_agent");
+        recordToolCall("register_agent", getClientName?.());
 
         if (vestauth_public_key_url) {
           const validation = await validateVestauthUrl(vestauth_public_key_url);
@@ -1023,7 +1023,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async ({ vendor, api_key }) => {
       try {
-        recordToolCall("get_referral_code");
+        recordToolCall("get_referral_code", getClientName?.());
 
         const referralData = getVendorReferral(vendor);
         if (!referralData) {
@@ -1088,7 +1088,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async ({ api_key }) => {
       try {
-        recordToolCall("check_balance");
+        recordToolCall("check_balance", getClientName?.());
 
         const hash = hashApiKey(api_key);
         const agent = getAgentByApiKeyHash(hash);
@@ -1139,7 +1139,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async ({ api_key }) => {
       try {
-        recordToolCall("request_payout");
+        recordToolCall("request_payout", getClientName?.());
 
         const hash = hashApiKey(api_key);
         const agent = getAgentByApiKeyHash(hash);
@@ -1239,7 +1239,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async ({ vendor, code, referral_url, description, commission_rate, expiry, api_key }) => {
       try {
-        recordToolCall("submit_referral_code");
+        recordToolCall("submit_referral_code", getClientName?.());
 
         const hash = hashApiKey(api_key);
         const agent = getAgentByApiKeyHash(hash);
@@ -1299,7 +1299,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async ({ api_key }) => {
       try {
-        recordToolCall("my_referral_codes");
+        recordToolCall("my_referral_codes", getClientName?.());
 
         const hash = hashApiKey(api_key);
         const agent = getAgentByApiKeyHash(hash);
@@ -1356,7 +1356,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async ({ limit, offset }) => {
       try {
-        recordToolCall("leaderboard");
+        recordToolCall("leaderboard", getClientName?.());
         const result = getLeaderboard({ limit, offset });
 
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "leaderboard", params: { limit, offset }, result_count: result.entries.length, session_id: getSessionId?.() });
@@ -1395,7 +1395,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async ({ api_key, action, agent_id }) => {
       try {
-        recordToolCall("manage_friends");
+        recordToolCall("manage_friends", getClientName?.());
         const hash = hashApiKey(api_key);
         const agent = getAgentByApiKeyHash(hash);
         if (!agent) {

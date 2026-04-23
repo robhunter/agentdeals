@@ -53217,7 +53217,13 @@ const httpServer = createHttpServer(async (req, res) => {
           }
         };
 
-        const mcpServer = createServer(() => transport.sessionId);
+        const mcpServer = createServer(
+          () => transport.sessionId,
+          () => {
+            const sid = transport.sessionId;
+            return sid ? sessions.get(sid)?.clientInfo?.name : undefined;
+          },
+        );
         await mcpServer.connect(transport);
         await transport.handleRequest(req, res, parsedBody);
       } else {
