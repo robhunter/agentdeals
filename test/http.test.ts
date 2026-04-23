@@ -1620,6 +1620,56 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/alternative-to"), "Should link to alternatives index");
   });
 
+  // Slug alias resolution on /alternative-to/:slug (issue #991) mirrors /vendor/:slug
+  // behavior from #989/PR #990 — same resolveVendorSlug helper, different route prefix.
+  it("GET /alternative-to/kiro 301-redirects to /alternative-to/amazon-kiro", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/kiro`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/alternative-to/amazon-kiro");
+  });
+
+  it("GET /alternative-to/qwen 301-redirects to /alternative-to/alibaba-cloud-qwen-code", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/qwen`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/alternative-to/alibaba-cloud-qwen-code");
+  });
+
+  it("GET /alternative-to/proton renders a disambiguation page listing all Proton products", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/proton`, { redirect: "manual" });
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Did you mean?"), "Should show disambiguation heading");
+    assert.ok(html.includes('href="/alternative-to/proton-mail"'), "Should link to Proton Mail");
+    assert.ok(html.includes('href="/alternative-to/proton-drive"'), "Should link to Proton Drive");
+    assert.ok(html.includes('href="/alternative-to/proton-pass"'), "Should link to Proton Pass");
+    assert.ok(html.includes('href="/alternative-to/proton-vpn"'), "Should link to Proton VPN");
+  });
+
+  it("GET /alternative-to/totally-bogus-slug-xyz returns 404 with no redirect", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/totally-bogus-slug-xyz`, { redirect: "manual" });
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("404"), "Should show 404");
+    assert.ok(html.includes("totally-bogus-slug-xyz"), "Should echo the invalid slug");
+  });
+
+  it("GET /alternative-to/amazon-kiro still renders canonical slug (no regression)", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/alternative-to/amazon-kiro`, { redirect: "manual" });
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Amazon Kiro"), "Should render Amazon Kiro alternatives page");
+  });
+
   it("sitemap-pages.xml includes alternative-to pages", async () => {
     proc = await startHttpServer();
 
