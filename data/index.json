@@ -11939,35 +11939,6 @@
       "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "Proton Mail",
-      "category": "Email",
-      "description": "Free secure email account service provider with built-in end-to-end encryption. Free 1GB storage.",
-      "tier": "Free",
-      "url": "https://proton.me/mail",
-      "tags": [
-        "email",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12",
-      "referral": {
-        "url": "https://pr.tn/ref/60QXGJSB",
-        "type": "referral_link",
-        "source": "curated",
-        "submitted_by": null,
-        "verified_date": "2026-04-12",
-        "restrictions": [],
-        "phase1_eligible": true
-      },
-      "referral_program": {
-        "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
-        "program_url": "https://proton.me/support/referral-program",
-        "type": "self-service",
-        "commission_type": "credits"
-      }
-    },
-    {
       "vendor": "Sendpulse",
       "category": "Email",
       "description": "500 subscribers/month, 15,000 emails/month free",
