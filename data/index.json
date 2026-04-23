@@ -21332,22 +21332,6 @@
       }
     },
     {
-      "vendor": "Google Tenor API",
-      "category": "Media",
-      "description": "Free GIF search API. Public API shutting down June 30, 2026 — no new API keys since Jan 13, 2026. Existing keys work until shutdown. Provided GIF search, trending GIFs, autocomplete, and categories endpoints. No replacement from Google",
-      "tier": "Free (Deprecated)",
-      "url": "https://developers.google.com/tenor/guides/api-shutdown",
-      "tags": [
-        "api",
-        "gif",
-        "media",
-        "search",
-        "deprecated"
-      ],
-      "verifiedDate": "2026-04-12",
-      "expires_date": "2026-06-30"
-    },
-    {
       "vendor": "Google AI Pro/Ultra",
       "category": "Cloud IaaS",
       "description": "GCP credits bundled with Google AI subscriptions. AI Pro ($10/mo): includes Vertex AI access and Cloud credits. AI Ultra ($100/mo): $100/month GCP credits for Vertex AI, Cloud Run, Gemini API. Replaced the standalone Google Developer Program Premium (March 2026).",

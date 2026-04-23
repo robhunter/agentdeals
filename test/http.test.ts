@@ -1141,6 +1141,21 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("nonexistent-category"), "Should show the invalid slug");
   });
 
+  it("GET /category/media returns 404 (orphan category removed in #995)", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/category/media`);
+    assert.strictEqual(response.status, 404);
+
+    const catsRes = await fetch(`http://localhost:${serverPort}/api/categories`);
+    const catsBody = await catsRes.json() as { categories: { name: string }[] };
+    assert.ok(!catsBody.categories.some(c => c.name === "Media"), "Media category should not be present");
+
+    const offersRes = await fetch(`http://localhost:${serverPort}/api/offers?limit=5000`);
+    const offersBody = await offersRes.json() as { offers: { vendor: string }[] };
+    assert.ok(!offersBody.offers.some(o => o.vendor === "Google Tenor API"), "Google Tenor API offer should be removed");
+  });
+
   it("sitemap.xml returns sitemap index with child sitemaps", async () => {
     proc = await startHttpServer();
     const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
