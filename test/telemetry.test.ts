@@ -91,6 +91,73 @@ describe("telemetry persistence", () => {
     assert.ok(typeof stats.cumulative_sessions === "number");
     assert.ok(typeof stats.last_deploy_at === "string");
   });
+
+  it("persists toolCallsByClient and preserves sum invariant across restart", async () => {
+    const tmpDirTC = join(tmpdir(), `telemetry-tc-${randomUUID()}`);
+    const filePath = join(tmpDirTC, "telemetry.json");
+    mkdirSync(tmpDirTC, { recursive: true });
+
+    resetCounters();
+    await loadTelemetry(filePath);
+
+    // First deploy: two clients rack up calls
+    const { recordToolCall: rec, getConnectionStats: conn } = await import("../src/stats.ts");
+    rec("search_deals", "opencode");
+    rec("search_deals", "opencode");
+    rec("plan_stack", "cursor");
+    rec("compare_vendors");
+    await flushTelemetry();
+
+    // Verify persisted shape
+    const persisted1 = JSON.parse(readFileSync(filePath, "utf-8"));
+    assert.strictEqual(persisted1.cumulative_tool_calls, 4);
+    assert.deepStrictEqual(persisted1.cumulative_tool_calls_by_client, {
+      opencode: 2, cursor: 1, unknown: 1,
+    });
+
+    // Simulate restart: reset in-memory, reload
+    resetCounters();
+    await loadTelemetry(filePath);
+
+    // Sum invariant should hold after reload
+    const c = conn(0);
+    const sum = Object.values(c.toolCallsByClient).reduce((a: number, b: number) => a + b, 0);
+    assert.strictEqual(sum, c.totalToolCallsAllTime);
+    assert.strictEqual(c.toolCallsByClient.opencode, 2);
+    assert.strictEqual(c.toolCallsByClient.cursor, 1);
+    assert.strictEqual(c.toolCallsByClient.unknown, 1);
+
+    rmSync(tmpDirTC, { recursive: true, force: true });
+  });
+
+  it("backfills 'unknown' bucket when cumulative_tool_calls exceeds per-client sum", async () => {
+    const tmpDirBF = join(tmpdir(), `telemetry-backfill-${randomUUID()}`);
+    const filePath = join(tmpDirBF, "telemetry.json");
+    mkdirSync(tmpDirBF, { recursive: true });
+
+    // Simulate pre-#992 telemetry: has tool_calls but no per-client breakdown yet
+    const legacy = {
+      cumulative_sessions: 100,
+      cumulative_tool_calls: 61,
+      cumulative_api_hits: 500,
+      cumulative_landing_views: 50,
+      first_session_at: "2026-03-01T00:00:00.000Z",
+      last_deploy_at: "2026-04-01T00:00:00.000Z",
+    };
+    writeFileSync(filePath, JSON.stringify(legacy));
+
+    resetCounters();
+    await loadTelemetry(filePath);
+
+    // The 61 legacy calls should appear under "unknown"
+    const { getConnectionStats: conn } = await import("../src/stats.ts");
+    const c = conn(0);
+    assert.strictEqual(c.toolCallsByClient.unknown, 61);
+    const sum = Object.values(c.toolCallsByClient).reduce((a: number, b: number) => a + b, 0);
+    assert.strictEqual(sum, c.totalToolCallsAllTime);
+
+    rmSync(tmpDirBF, { recursive: true, force: true });
+  });
 });
 
 describe("redis telemetry", () => {

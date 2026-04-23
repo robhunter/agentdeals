@@ -819,7 +819,8 @@ export const openapiSpec = {
                     totalToolCallsAllTime: { type: "integer", description: "Cumulative MCP tool calls across all deploys (persisted in Redis)" },
                     sessionsToday: { type: "integer", description: "Sessions since midnight UTC (resets daily)" },
                     serverStarted: { type: "string", format: "date-time", description: "ISO timestamp of current server start" },
-                    clients: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative session counts per MCP client name (e.g. claude-desktop, cursor)" }
+                    clients: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative session counts per MCP client name (e.g. claude-desktop, cursor)" },
+                    toolCallsByClient: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative MCP tool-call counts per MCP client name. Missing/empty client IDs bucket to 'unknown'. Values sum to totalToolCallsAllTime (invariant)." }
                   }
                 }
               }

@@ -36,6 +36,41 @@ describe("stats", () => {
       const stats = getStats();
       assert.strictEqual(stats.total_tool_calls, 0);
     });
+
+    it("tracks per-client tool-call counts when clientName provided", () => {
+      recordToolCall("search_deals", "opencode");
+      recordToolCall("search_deals", "opencode");
+      recordToolCall("plan_stack", "MintMCP Client");
+      const conn = getConnectionStats(0);
+      assert.strictEqual(conn.toolCallsByClient.opencode, 2);
+      assert.strictEqual(conn.toolCallsByClient["MintMCP Client"], 1);
+    });
+
+    it("buckets missing client names under 'unknown'", () => {
+      recordToolCall("search_deals");
+      recordToolCall("compare_vendors", "");
+      recordToolCall("track_changes", "   ");
+      const conn = getConnectionStats(0);
+      assert.strictEqual(conn.toolCallsByClient.unknown, 3);
+    });
+
+    it("does not increment toolCallsByClient for unknown tool names", () => {
+      recordToolCall("nonexistent_tool", "opencode");
+      const conn = getConnectionStats(0);
+      assert.strictEqual(conn.toolCallsByClient.opencode, undefined);
+    });
+
+    it("sum of toolCallsByClient equals totalToolCallsAllTime (invariant)", () => {
+      recordToolCall("search_deals", "opencode");
+      recordToolCall("search_deals", "cursor");
+      recordToolCall("plan_stack", "opencode");
+      recordToolCall("compare_vendors");
+      recordToolCall("track_changes", "MintMCP Client");
+      const conn = getConnectionStats(0);
+      const sum = Object.values(conn.toolCallsByClient).reduce((a: number, b: number) => a + b, 0);
+      assert.strictEqual(sum, conn.totalToolCallsAllTime);
+      assert.strictEqual(sum, 5);
+    });
   });
 
   describe("recordApiHit", () => {
