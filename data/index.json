@@ -5189,20 +5189,6 @@
       "verifiedDate": "2026-04-13"
     },
     {
-      "vendor": "Airtable",
-      "category": "Low-Code Platforms",
-      "description": "Low-code database and app platform — free tier: unlimited bases, 1,000 records per base, 1 GB attachment space per base, up to 5 Editor/Creator collaborators (unlimited read-only, 50 Commenter), 500 AI credits/editor+/month, 1,000 API calls/workspace/month, 2-week revision/snapshot history. No automations, extensions, or record coloring on Free.",
-      "tier": "Free",
-      "url": "https://airtable.com/pricing",
-      "tags": [
-        "database",
-        "low-code",
-        "spreadsheet",
-        "collaboration"
-      ],
-      "verifiedDate": "2026-04-19"
-    },
-    {
       "vendor": "Deepgram",
       "category": "AI / ML",
       "description": "Speech-to-text and text-to-speech API — $200 free credits on signup (no credit card required), ~43K minutes transcription with Nova model, credits never expire. Access to all model endpoints",
@@ -22113,17 +22099,19 @@
     {
       "vendor": "Airtable",
       "category": "Productivity & Notes",
-      "description": "Unlimited bases. Up to 1,000 records per base. 1 GB attachment space per base. Up to 5 Editor/Creator collaborators (unlimited read-only, 50 Commenter). 500 AI credits/editor+/month. 2-week revision history. No automations, extensions, sync, or Gantt/timeline views on Free.",
+      "description": "Database and collaboration platform. Unlimited bases. Up to 1,000 records per base. 1 GB attachment space per base. Up to 5 Editor/Creator collaborators (unlimited read-only, 50 Commenter). 500 AI credits/editor+/month. 1,000 API calls/workspace/month. 2-week revision/snapshot history. No automations, extensions, sync, Gantt/timeline views, or record coloring on Free.",
       "tier": "Free",
       "url": "https://airtable.com/pricing",
       "tags": [
         "database",
         "spreadsheet",
+        "low-code",
         "no-code",
+        "collaboration",
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Google Drive",
