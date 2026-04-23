@@ -11598,7 +11598,7 @@ function buildDesignAlternativesPage(): string {
 
   // Group by design domain
   const designEditors = enrichedAll.filter(o =>
-    ["Figma", "Canva", "Penpot", "Lunacy", "Pixlr", "photopea.com", "Excalidraw", "vectr.com", "Pixelixe"].includes(o.vendor)
+    ["Figma", "Canva", "Penpot", "Lunacy", "Pixlr", "Excalidraw", "vectr.com", "Pixelixe"].includes(o.vendor)
   );
   const prototyping = enrichedAll.filter(o =>
     ["Webflow", "framer.com", "Proto.io", "Plasmic", "Webstudio", "Quant Ux", "TeleportHQ", "Unicorn Platform", "landen.co", "Grapedrop", "marvelapp.com", "Octopus.do", "Updrafts.app", "walkme.com"].includes(o.vendor)
@@ -11745,7 +11745,7 @@ ${mcpCtaCss()}
   ${changesHtml}
 
   <h2>Design Tools &amp; Editors</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Collaborative design tools, photo editors, and vector editors. From full-featured design platforms like Figma and Penpot to lightweight editors like Photopea and Excalidraw for quick mockups and diagrams.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Collaborative design tools, photo editors, and vector editors. From full-featured design platforms like Figma and Penpot to lightweight editors like Pixlr and Excalidraw for quick mockups and diagrams. <a href="/vendor/photopea">Photopea</a> is a browser-based Photoshop alternative in our <a href="/category/design-creative">Design &amp; Creative</a> category.</p>
 ${buildCards(designEditors)}
 
   <h2>Prototyping &amp; No-Code Builders</h2>
