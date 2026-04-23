@@ -14564,18 +14564,6 @@
       "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "todoist.com",
-      "category": "Project Management",
-      "description": "Collaborative and individual task management. The free plan has: 5 active projects, five users in the project, file uploading up to 5MB, three filters, and one week of activity history.",
-      "tier": "Free",
-      "url": "https://todoist.com/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12"
-    },
-    {
       "vendor": "Toggl",
       "category": "Project Management",
       "description": "Provides two free productivity tools. [Toggl Track](https://toggl.com/track/) for time management and tracking app with a free plan provides seamless time tracking and reporting designed with freelancers in mind. It has unlimited tracking records, projects, clients, tags, reporting, and more. And [Toggl Plan](https://toggl.com/plan/) for task planning with a free plan for solo developers with unlimited tasks, milestones, and timelines.",
@@ -21927,7 +21915,7 @@
     {
       "vendor": "Todoist",
       "category": "Productivity & Notes",
-      "description": "Up to 5 active projects. Up to 5 collaborators per project. 5 MB file upload limit. Basic priority levels. No reminders, no labels, no filters, no calendar view on free tier.",
+      "description": "Up to 5 active projects. Up to 5 collaborators per project. 5 MB file upload limit. Basic priority levels. No reminders, no labels, no filters, no calendar view on free tier. One week of activity history.",
       "tier": "Free",
       "url": "https://todoist.com/pricing",
       "tags": [
@@ -21937,7 +21925,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Trello",
