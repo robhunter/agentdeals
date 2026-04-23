@@ -158,6 +158,77 @@ describe("telemetry persistence", () => {
 
     rmSync(tmpDirBF, { recursive: true, force: true });
   });
+
+  it("persists toolCallsByName and preserves sum invariant across restart", async () => {
+    const tmpDirTN = join(tmpdir(), `telemetry-tn-${randomUUID()}`);
+    const filePath = join(tmpDirTN, "telemetry.json");
+    mkdirSync(tmpDirTN, { recursive: true });
+
+    resetCounters();
+    await loadTelemetry(filePath);
+
+    // First deploy: rack up calls across several tools
+    const { recordToolCall: rec, getConnectionStats: conn } = await import("../src/stats.ts");
+    rec("search_deals", "opencode");
+    rec("search_deals", "cursor");
+    rec("plan_stack", "opencode");
+    rec("register_agent", "claude-code");
+    rec("get_referral_code", "claude-code");
+    await flushTelemetry();
+
+    // Verify persisted shape
+    const persisted1 = JSON.parse(readFileSync(filePath, "utf-8"));
+    assert.strictEqual(persisted1.cumulative_tool_calls, 5);
+    assert.deepStrictEqual(persisted1.cumulative_tool_calls_by_name, {
+      search_deals: 2, plan_stack: 1, register_agent: 1, get_referral_code: 1,
+    });
+
+    // Simulate restart: reset in-memory, reload
+    resetCounters();
+    await loadTelemetry(filePath);
+
+    // Sum invariant should hold after reload
+    const c = conn(0);
+    const sum = Object.values(c.toolCallsByName).reduce((a: number, b: number) => a + b, 0);
+    assert.strictEqual(sum, c.totalToolCallsAllTime);
+    assert.strictEqual(c.toolCallsByName.search_deals, 2);
+    assert.strictEqual(c.toolCallsByName.plan_stack, 1);
+    assert.strictEqual(c.toolCallsByName.register_agent, 1);
+    assert.strictEqual(c.toolCallsByName.get_referral_code, 1);
+
+    rmSync(tmpDirTN, { recursive: true, force: true });
+  });
+
+  it("backfills 'unknown' bucket when cumulative_tool_calls exceeds per-name sum (legacy data)", async () => {
+    const tmpDirBF2 = join(tmpdir(), `telemetry-backfill-name-${randomUUID()}`);
+    const filePath = join(tmpDirBF2, "telemetry.json");
+    mkdirSync(tmpDirBF2, { recursive: true });
+
+    // Simulate pre-#998 telemetry: has tool_calls but no per-name breakdown yet.
+    // Represents the real production state at PR #998 deploy: ~62 lifetime calls
+    // across 4 original tools, no per-tool-name map persisted.
+    const legacy = {
+      cumulative_sessions: 100,
+      cumulative_tool_calls: 62,
+      cumulative_api_hits: 500,
+      cumulative_landing_views: 50,
+      first_session_at: "2026-03-01T00:00:00.000Z",
+      last_deploy_at: "2026-04-01T00:00:00.000Z",
+    };
+    writeFileSync(filePath, JSON.stringify(legacy));
+
+    resetCounters();
+    await loadTelemetry(filePath);
+
+    // The 62 legacy calls should appear under "unknown"
+    const { getConnectionStats: conn } = await import("../src/stats.ts");
+    const c = conn(0);
+    assert.strictEqual(c.toolCallsByName.unknown, 62);
+    const sum = Object.values(c.toolCallsByName).reduce((a: number, b: number) => a + b, 0);
+    assert.strictEqual(sum, c.totalToolCallsAllTime);
+
+    rmSync(tmpDirBF2, { recursive: true, force: true });
+  });
 });
 
 describe("redis telemetry", () => {

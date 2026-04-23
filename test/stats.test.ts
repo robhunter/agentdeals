@@ -71,6 +71,50 @@ describe("stats", () => {
       assert.strictEqual(sum, conn.totalToolCallsAllTime);
       assert.strictEqual(sum, 5);
     });
+
+    it("tracks per-tool-name tool-call counts", () => {
+      recordToolCall("search_deals", "opencode");
+      recordToolCall("search_deals", "cursor");
+      recordToolCall("plan_stack", "opencode");
+      recordToolCall("compare_vendors");
+      const conn = getConnectionStats(0);
+      assert.strictEqual(conn.toolCallsByName.search_deals, 2);
+      assert.strictEqual(conn.toolCallsByName.plan_stack, 1);
+      assert.strictEqual(conn.toolCallsByName.compare_vendors, 1);
+    });
+
+    it("does not increment toolCallsByName for unknown tool names", () => {
+      recordToolCall("nonexistent_tool", "opencode");
+      const conn = getConnectionStats(0);
+      assert.strictEqual(conn.toolCallsByName.nonexistent_tool, undefined);
+    });
+
+    it("counts the four PM-expanded tools (register_agent, get_referral_code, check_balance, request_payout)", () => {
+      recordToolCall("register_agent", "claude-code");
+      recordToolCall("get_referral_code", "claude-code");
+      recordToolCall("check_balance", "cursor");
+      recordToolCall("request_payout", "cursor");
+      const conn = getConnectionStats(0);
+      assert.strictEqual(conn.toolCallsByName.register_agent, 1);
+      assert.strictEqual(conn.toolCallsByName.get_referral_code, 1);
+      assert.strictEqual(conn.toolCallsByName.check_balance, 1);
+      assert.strictEqual(conn.toolCallsByName.request_payout, 1);
+      assert.strictEqual(conn.totalToolCallsAllTime, 4);
+    });
+
+    it("sum of toolCallsByName equals totalToolCallsAllTime (invariant)", () => {
+      recordToolCall("search_deals", "opencode");
+      recordToolCall("search_deals", "cursor");
+      recordToolCall("plan_stack");
+      recordToolCall("compare_vendors", "MintMCP Client");
+      recordToolCall("track_changes");
+      recordToolCall("register_agent", "claude-code");
+      recordToolCall("get_referral_code", "claude-code");
+      const conn = getConnectionStats(0);
+      const sum = Object.values(conn.toolCallsByName).reduce((a: number, b: number) => a + b, 0);
+      assert.strictEqual(sum, conn.totalToolCallsAllTime);
+      assert.strictEqual(sum, 7);
+    });
   });
 
   describe("recordApiHit", () => {

@@ -14,12 +14,20 @@ const toolCalls: Record<string, number> = {
   plan_stack: 0,
   compare_vendors: 0,
   track_changes: 0,
+  register_agent: 0,
+  get_referral_code: 0,
+  check_balance: 0,
+  request_payout: 0,
 };
 
 // Per-client tool-call counts for the current deployment. Client IDs come from MCP initialize
 // clientInfo.name; missing/empty names bucket to "unknown". Cardinality bounded by distinct MCP
 // client populations seen in practice (<200 in production).
 const toolCallsByClient: Record<string, number> = {};
+
+// Per-tool tool-call counts for the current deployment. Keys are MCP tool names that appear in
+// the `toolCalls` gate above. Cardinality bounded by the tool list itself.
+const toolCallsByName: Record<string, number> = {};
 
 // Per-endpoint hit counts for the current deployment. Accumulates dynamically — any endpoint passed
 // to recordApiHit is counted. Cardinality is bounded by route definitions (~150 endpoints).
@@ -41,6 +49,7 @@ let cumulative = {
   last_deploy_at: "",
   clients: {} as Record<string, number>,
   tool_calls_by_client: {} as Record<string, number>,
+  tool_calls_by_name: {} as Record<string, number>,
   referral_listing_calls: 0,
   referral_listing_by_source: { platform: 0, agent: 0, null: 0 } as Record<"platform" | "agent" | "null", number>,
   referral_vendor_lookups: 0,
@@ -86,6 +95,7 @@ interface TelemetryData {
   last_deploy_at: string;
   cumulative_clients?: Record<string, number>;
   cumulative_tool_calls_by_client?: Record<string, number>;
+  cumulative_tool_calls_by_name?: Record<string, number>;
   cumulative_referral_listing_calls?: number;
   cumulative_referral_listing_by_source?: Record<"platform" | "agent" | "null", number>;
   cumulative_referral_vendor_lookups?: number;
@@ -234,6 +244,14 @@ function parseTelemetryData(data: Record<string, unknown>): void {
     const delta = cumulative.tool_calls - byClientSum;
     cumulative.tool_calls_by_client.unknown = (cumulative.tool_calls_by_client.unknown ?? 0) + delta;
   }
+  cumulative.tool_calls_by_name = (data.cumulative_tool_calls_by_name as Record<string, number>) ?? {};
+  // Same backfill-to-unknown pattern for per-name — preserves the sum invariant
+  // sum(toolCallsByName) == totalToolCallsAllTime from Day 1 of this feature.
+  const byNameSum = Object.values(cumulative.tool_calls_by_name).reduce((a, b) => a + b, 0);
+  if (cumulative.tool_calls > byNameSum) {
+    const delta = cumulative.tool_calls - byNameSum;
+    cumulative.tool_calls_by_name.unknown = (cumulative.tool_calls_by_name.unknown ?? 0) + delta;
+  }
   cumulative.referral_listing_calls = (data.cumulative_referral_listing_calls as number) ?? 0;
   const listingBySource = (data.cumulative_referral_listing_by_source as Record<string, number>) ?? {};
   cumulative.referral_listing_by_source = {
@@ -283,6 +301,11 @@ function buildTelemetryData(): TelemetryData {
   for (const [name, count] of Object.entries(toolCallsByClient)) {
     mergedToolCallsByClient[name] = (mergedToolCallsByClient[name] ?? 0) + count;
   }
+  // Merge cumulative + current deployment per-tool-name tool-call counts
+  const mergedToolCallsByName: Record<string, number> = { ...cumulative.tool_calls_by_name };
+  for (const [tool, count] of Object.entries(toolCallsByName)) {
+    mergedToolCallsByName[tool] = (mergedToolCallsByName[tool] ?? 0) + count;
+  }
   // Merge referral vendor counts (cumulative + current deployment)
   const mergedVendorCounts: Record<string, number> = { ...cumulative.referral_vendor_counts };
   for (const [vendor, count] of Object.entries(referralVendorCounts)) {
@@ -302,6 +325,7 @@ function buildTelemetryData(): TelemetryData {
     last_deploy_at: cumulative.last_deploy_at,
     cumulative_clients: mergedClients,
     cumulative_tool_calls_by_client: mergedToolCallsByClient,
+    cumulative_tool_calls_by_name: mergedToolCallsByName,
     cumulative_referral_listing_calls: cumulative.referral_listing_calls + referralListingCalls,
     cumulative_referral_listing_by_source: {
       platform: cumulative.referral_listing_by_source.platform + referralListingBySource.platform,
@@ -366,6 +390,7 @@ export function resetCounters(): void {
   for (const key of Object.keys(apiHits)) delete apiHits[key];
   for (const key of Object.keys(sessionClients)) delete sessionClients[key];
   for (const key of Object.keys(toolCallsByClient)) delete toolCallsByClient[key];
+  for (const key of Object.keys(toolCallsByName)) delete toolCallsByName[key];
   cumulative.sessions = 0;
   cumulative.tool_calls = 0;
   cumulative.api_hits = 0;
@@ -374,6 +399,7 @@ export function resetCounters(): void {
   cumulative.last_deploy_at = "";
   cumulative.clients = {};
   cumulative.tool_calls_by_client = {};
+  cumulative.tool_calls_by_name = {};
   referralListingCalls = 0;
   referralListingBySource.platform = 0;
   referralListingBySource.agent = 0;
@@ -393,6 +419,7 @@ export function recordToolCall(tool: string, clientName?: string): void {
     toolCalls[tool]++;
     const bucket = (clientName && clientName.trim()) || "unknown";
     toolCallsByClient[bucket] = (toolCallsByClient[bucket] ?? 0) + 1;
+    toolCallsByName[tool] = (toolCallsByName[tool] ?? 0) + 1;
   }
 }
 
@@ -575,6 +602,7 @@ export function getConnectionStats(activeSessions: number): {
   serverStarted: string;
   clients: Record<string, number>;
   toolCallsByClient: Record<string, number>;
+  toolCallsByName: Record<string, number>;
 } {
   const today = new Date().toISOString().slice(0, 10);
   if (today !== sessionsTodayDate) {
@@ -592,6 +620,10 @@ export function getConnectionStats(activeSessions: number): {
   for (const [name, count] of Object.entries(toolCallsByClient)) {
     mergedToolCallsByClient[name] = (mergedToolCallsByClient[name] ?? 0) + count;
   }
+  const mergedToolCallsByName: Record<string, number> = { ...cumulative.tool_calls_by_name };
+  for (const [tool, count] of Object.entries(toolCallsByName)) {
+    mergedToolCallsByName[tool] = (mergedToolCallsByName[tool] ?? 0) + count;
+  }
   return {
     activeSessions,
     totalSessionsAllTime: cumulative.sessions + totalSessions,
@@ -601,6 +633,7 @@ export function getConnectionStats(activeSessions: number): {
     serverStarted: serverStartedISO,
     clients: mergedClients,
     toolCallsByClient: mergedToolCallsByClient,
+    toolCallsByName: mergedToolCallsByName,
   };
 }
 

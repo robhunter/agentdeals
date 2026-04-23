@@ -820,7 +820,8 @@ export const openapiSpec = {
                     sessionsToday: { type: "integer", description: "Sessions since midnight UTC (resets daily)" },
                     serverStarted: { type: "string", format: "date-time", description: "ISO timestamp of current server start" },
                     clients: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative session counts per MCP client name (e.g. claude-desktop, cursor)" },
-                    toolCallsByClient: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative MCP tool-call counts per MCP client name. Missing/empty client IDs bucket to 'unknown'. Values sum to totalToolCallsAllTime (invariant)." }
+                    toolCallsByClient: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative MCP tool-call counts per MCP client name. Missing/empty client IDs bucket to 'unknown'. Values sum to totalToolCallsAllTime (invariant)." },
+                    toolCallsByName: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative MCP tool-call counts per tool name (search_deals, plan_stack, compare_vendors, track_changes, register_agent, get_referral_code, check_balance, request_payout). Pre-feature historical calls bucket to 'unknown'. Values sum to totalToolCallsAllTime (invariant)." }
                   }
                 }
               }
