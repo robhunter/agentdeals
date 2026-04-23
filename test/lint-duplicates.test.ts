@@ -152,14 +152,14 @@ describe("formatMarkdown", () => {
 });
 
 describe("lint-duplicates against current data/index.json", () => {
-  it("detects Canva as a candidate", async () => {
+  it("finds no duplicate candidates against the current index", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
     const indexPath = resolve(process.cwd(), "data", "index.json");
     const data = JSON.parse(readFileSync(indexPath, "utf-8"));
     const result = findDuplicateCandidates(data.offers || []);
     const vendors = result.map((c) => c.vendor);
-    assert(vendors.includes("Canva"), `expected Canva in ${vendors.join(", ")}`);
+    assert.strictEqual(result.length, 0, `unexpected candidate(s): ${vendors.join(", ")}`);
   });
 
   it("does not flag Amazon Kiro (different vendor names)", async () => {
