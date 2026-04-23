@@ -15836,19 +15836,6 @@
       "verifiedDate": "2026-04-05"
     },
     {
-      "vendor": "photopea.com",
-      "category": "Design",
-      "description": "A Free, Advanced online design editor with Adobe Photoshop UI supporting PSD, XCF & Sketch formats (Adobe Photoshop, Gimp and Sketch App).",
-      "tier": "Free",
-      "url": "https://www.photopea.com",
-      "tags": [
-        "design",
-        "ui",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12"
-    },
-    {
       "vendor": "Plasmic",
       "category": "Design",
       "description": "A fast, easy-to-use, robust web design tool and page builder that integrates into your codebase. Build responsive pages or complex components; optionally extend with code; and publish to production sites and apps.",
