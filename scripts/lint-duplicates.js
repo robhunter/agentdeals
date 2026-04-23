@@ -4,11 +4,14 @@
 // Advisory output — does not modify data, exits 0. Each flagged candidate requires
 // a human category-judgment call (see PR #983 rationale).
 //
-// Heuristic: same vendor name (exact match, case-insensitive), appearing in ≥2
-// distinct categories, whose tier strings share at least one meaningful token
-// after normalization. Catches e.g. Figma "Starter" vs "Free (Starter)"
-// (shared: "starter") and Proton Pass "Free" vs "Free" (shared: "free"),
-// while leaving Sentry "Developer" vs "OSS Sponsored" (no shared token) alone.
+// Heuristic: same vendor name (normalized — case-insensitive, TLD-suffix-stripped,
+// corp-suffix-stripped), appearing in ≥2 distinct categories, whose tier strings
+// share at least one meaningful token after normalization. Catches e.g. Figma
+// "Starter" vs "Free (Starter)" (shared: "starter"), Proton Pass "Free" vs
+// "Free" (shared: "free"), and Photopea "photopea.com" vs "Photopea" (TLD-suffix
+// variant, same product), while leaving Sentry "Developer" vs "OSS Sponsored"
+// (no shared token) alone and Amazon Kiro "Amazon Kiro" vs "Amazon Kiro (AWS
+// Startups)" (parenthetical suffix preserved, different keys) alone.
 
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -32,8 +35,27 @@ const TIER_STOPWORDS = new Set([
 // Vendor name pairs to always exclude even if heuristic would match.
 // Empty by default — the current known-legitimate multi-entry cases all use
 // distinct vendor names (e.g. "Amazon Kiro" vs "Amazon Kiro (AWS Startups)")
-// and are therefore naturally excluded by exact-name matching.
+// whose parenthetical suffixes are preserved by normalizeVendor, so they
+// are naturally excluded by the (normalized) key-mismatch.
 const ALLOWLIST = new Set([]);
+
+// Normalize a vendor name for grouping: lowercase, strip common TLD suffixes,
+// strip Inc./LLC/Ltd corporate suffixes, trim. Keeps parenthetical disambiguators
+// intact (e.g. "Amazon Kiro (AWS Startups)" stays distinct from "Amazon Kiro").
+// See op-learning #58: exact matching is sometimes a feature — normalization
+// widens the equivalence class only where the variants are empirically the same
+// product (e.g. "photopea.com" vs "Photopea").
+const TLD_SUFFIX_RE = /\.(com|io|net|org|dev|app|co|ai)$/;
+const CORP_SUFFIX_RE = /\s+(inc\.?|llc|ltd\.?)$/;
+
+export function normalizeVendor(name) {
+  return String(name || "")
+    .toLowerCase()
+    .trim()
+    .replace(TLD_SUFFIX_RE, "")
+    .replace(CORP_SUFFIX_RE, "")
+    .trim();
+}
 
 export function tierTokens(tier) {
   if (!tier) return new Set();
@@ -59,7 +81,7 @@ export function findDuplicateCandidates(offers) {
   const byVendor = new Map();
   for (const o of offers) {
     if (!o.vendor) continue;
-    const key = o.vendor.toLowerCase().trim();
+    const key = normalizeVendor(o.vendor);
     if (!byVendor.has(key)) byVendor.set(key, []);
     byVendor.get(key).push(o);
   }
@@ -90,14 +112,23 @@ export function findDuplicateCandidates(offers) {
     }
     if (!flagged) continue;
 
-    candidates.push({
+    const rawNames = [...new Set(entries.map((e) => e.vendor))].sort();
+    const candidate = {
       vendor: entries[0].vendor,
-      entries: entries.map((e) => ({ category: e.category, tier: e.tier })),
+      entries: entries.map((e) => ({
+        vendor: e.vendor,
+        category: e.category,
+        tier: e.tier,
+      })),
       sharedTierTokens: [...sharedTokensUnion].sort(),
-    });
+    };
+    if (rawNames.length > 1) candidate.vendorNameVariants = rawNames;
+    candidates.push(candidate);
   }
 
-  return candidates.sort((a, b) => a.vendor.localeCompare(b.vendor));
+  return candidates.sort((a, b) =>
+    normalizeVendor(a.vendor).localeCompare(normalizeVendor(b.vendor)),
+  );
 }
 
 export function formatMarkdown(candidates) {
@@ -114,8 +145,13 @@ export function formatMarkdown(candidates) {
   for (const c of candidates) {
     lines.push(`### ${c.vendor}`);
     lines.push(`_Shared tier token(s): ${c.sharedTierTokens.join(", ")}_`);
+    if (c.vendorNameVariants) {
+      const variants = c.vendorNameVariants.map((v) => `"${v}"`).join(", ");
+      lines.push(`_Vendor name variants: ${variants}_`);
+    }
     for (const e of c.entries) {
-      lines.push(`- ${e.category} — ${e.tier}`);
+      const label = c.vendorNameVariants ? `${e.vendor} — ${e.category}` : e.category;
+      lines.push(`- ${label} — ${e.tier}`);
     }
     lines.push("");
   }

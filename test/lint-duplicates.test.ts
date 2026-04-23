@@ -1,9 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-const { findDuplicateCandidates, tierTokens, sharedTierTokens, formatMarkdown } = await import(
-  "../scripts/lint-duplicates.js"
-);
+const { findDuplicateCandidates, tierTokens, sharedTierTokens, formatMarkdown, normalizeVendor } =
+  await import("../scripts/lint-duplicates.js");
 
 describe("tierTokens", () => {
   it("lowercases and splits on whitespace", () => {
@@ -24,6 +23,58 @@ describe("tierTokens", () => {
     assert.deepStrictEqual([...tierTokens("")], []);
     assert.deepStrictEqual([...tierTokens(undefined)], []);
     assert.deepStrictEqual([...tierTokens(null)], []);
+  });
+});
+
+describe("normalizeVendor", () => {
+  it("lowercases and trims", () => {
+    assert.strictEqual(normalizeVendor("  Foo  "), "foo");
+    assert.strictEqual(normalizeVendor("FOO"), "foo");
+  });
+
+  it("strips TLD suffixes", () => {
+    assert.strictEqual(normalizeVendor("photopea.com"), "photopea");
+    assert.strictEqual(normalizeVendor("Cal.com"), "cal");
+    assert.strictEqual(normalizeVendor("trigger.dev"), "trigger");
+    assert.strictEqual(normalizeVendor("Adapty.io"), "adapty");
+    assert.strictEqual(normalizeVendor("Daily.co"), "daily");
+    assert.strictEqual(normalizeVendor("Neptune.ai"), "neptune");
+    assert.strictEqual(normalizeVendor("BinShare.net"), "binshare");
+    assert.strictEqual(normalizeVendor("Cron-job.org"), "cron-job");
+    assert.strictEqual(normalizeVendor("Updrafts.app"), "updrafts");
+  });
+
+  it("does not strip TLD-shaped fragments mid-name", () => {
+    // .com at start or middle is not a TLD suffix
+    assert.strictEqual(normalizeVendor("com Foo"), "com foo");
+    assert.strictEqual(normalizeVendor("Foo.com Bar"), "foo.com bar");
+  });
+
+  it("strips Inc./LLC/Ltd. corporate suffixes", () => {
+    assert.strictEqual(normalizeVendor("Acme Inc."), "acme");
+    assert.strictEqual(normalizeVendor("Acme Inc"), "acme");
+    assert.strictEqual(normalizeVendor("Acme LLC"), "acme");
+    assert.strictEqual(normalizeVendor("Acme Ltd"), "acme");
+    assert.strictEqual(normalizeVendor("Acme Ltd."), "acme");
+  });
+
+  it("preserves parenthetical disambiguators (Amazon Kiro pattern)", () => {
+    assert.notStrictEqual(
+      normalizeVendor("Amazon Kiro"),
+      normalizeVendor("Amazon Kiro (AWS Startups)"),
+    );
+  });
+
+  it("handles empty/null/undefined", () => {
+    assert.strictEqual(normalizeVendor(""), "");
+    assert.strictEqual(normalizeVendor(null), "");
+    assert.strictEqual(normalizeVendor(undefined), "");
+  });
+
+  it("groups TLD variants of the same vendor together", () => {
+    assert.strictEqual(normalizeVendor("Photopea"), normalizeVendor("photopea.com"));
+    assert.strictEqual(normalizeVendor("Evernote"), normalizeVendor("evernote.com"));
+    assert.strictEqual(normalizeVendor("ClickUp"), normalizeVendor("clickup.com"));
   });
 });
 
@@ -72,6 +123,66 @@ describe("findDuplicateCandidates", () => {
     ];
     const result = findDuplicateCandidates(offers);
     assert.strictEqual(result.length, 0);
+  });
+
+  it("flags TLD-suffix variants of the same vendor (Photopea pattern)", () => {
+    const offers = [
+      { vendor: "photopea.com", category: "Design", tier: "Free" },
+      { vendor: "Photopea", category: "Design & Creative", tier: "Free" },
+    ];
+    const result = findDuplicateCandidates(offers);
+    assert.strictEqual(result.length, 1);
+    assert.deepStrictEqual(result[0].vendorNameVariants, ["Photopea", "photopea.com"]);
+    assert.deepStrictEqual(result[0].sharedTierTokens, ["free"]);
+  });
+
+  it("flags case-only variants of the same vendor", () => {
+    const offers = [
+      { vendor: "Trello", category: "Productivity & Notes", tier: "Free" },
+      { vendor: "trello.com", category: "Project Management", tier: "Free" },
+    ];
+    const result = findDuplicateCandidates(offers);
+    assert.strictEqual(result.length, 1);
+    assert(result[0].vendorNameVariants);
+    assert.strictEqual(result[0].vendorNameVariants.length, 2);
+  });
+
+  it("flags Inc./LLC corporate-suffix variants", () => {
+    const offers = [
+      { vendor: "Acme Inc.", category: "Monitoring", tier: "Free" },
+      { vendor: "Acme", category: "Analytics", tier: "Free" },
+    ];
+    const result = findDuplicateCandidates(offers);
+    assert.strictEqual(result.length, 1);
+    assert.deepStrictEqual(result[0].vendorNameVariants, ["Acme", "Acme Inc."]);
+  });
+
+  it("does NOT flag TLD-variants when same category (case-variant in one category)", () => {
+    const offers = [
+      { vendor: "clickup.com", category: "Project Management", tier: "Free" },
+      { vendor: "ClickUp", category: "Project Management", tier: "Free" },
+    ];
+    const result = findDuplicateCandidates(offers);
+    assert.strictEqual(result.length, 0);
+  });
+
+  it("does NOT flag different vendors that share a root word (AWS S3 vs AWS EC2)", () => {
+    const offers = [
+      { vendor: "AWS S3", category: "Storage", tier: "Free" },
+      { vendor: "AWS EC2", category: "Compute", tier: "Free" },
+    ];
+    const result = findDuplicateCandidates(offers);
+    assert.strictEqual(result.length, 0);
+  });
+
+  it("omits vendorNameVariants field when all raw names match", () => {
+    const offers = [
+      { vendor: "Figma", category: "Design", tier: "Starter" },
+      { vendor: "Figma", category: "Design & Creative", tier: "Free (Starter)" },
+    ];
+    const result = findDuplicateCandidates(offers);
+    assert.strictEqual(result.length, 1);
+    assert.strictEqual(result[0].vendorNameVariants, undefined);
   });
 
   it("does NOT flag distinct products under same brand (Proton Mail vs Proton VPN)", () => {
@@ -149,20 +260,63 @@ describe("formatMarkdown", () => {
     assert.match(out, /Design & Creative — Free \(Starter\)/);
     assert.match(out, /starter/);
   });
+
+  it("surfaces vendor name variants when entries use different raw names", () => {
+    const out = formatMarkdown([
+      {
+        vendor: "Photopea",
+        entries: [
+          { vendor: "photopea.com", category: "Design", tier: "Free" },
+          { vendor: "Photopea", category: "Design & Creative", tier: "Free" },
+        ],
+        sharedTierTokens: ["free"],
+        vendorNameVariants: ["Photopea", "photopea.com"],
+      },
+    ]);
+    assert.match(out, /Vendor name variants: "Photopea", "photopea\.com"/);
+    assert.match(out, /photopea\.com — Design — Free/);
+    assert.match(out, /Photopea — Design & Creative — Free/);
+  });
 });
 
 describe("lint-duplicates against current data/index.json", () => {
-  it("finds no duplicate candidates against the current index", async () => {
+  // After PR #1003 added vendor-name normalization (TLD/corp suffix stripping),
+  // 5 latent dups surfaced that the exact-match key missed. Each will be
+  // resolved in a follow-up dedup PR. When the count reaches 0, flip this
+  // assertion to `result.length === 0` (the original form).
+  const EXPECTED_PENDING_VARIANTS = ["evernote", "internxt", "pcloud", "todoist", "trello"];
+
+  it("surfaces only known-pending normalized duplicate candidates", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
     const indexPath = resolve(process.cwd(), "data", "index.json");
     const data = JSON.parse(readFileSync(indexPath, "utf-8"));
     const result = findDuplicateCandidates(data.offers || []);
-    const vendors = result.map((c) => c.vendor);
-    assert.strictEqual(result.length, 0, `unexpected candidate(s): ${vendors.join(", ")}`);
+    const normalized = result.map((c) => normalizeVendor(c.vendor)).sort();
+    assert.deepStrictEqual(
+      normalized,
+      EXPECTED_PENDING_VARIANTS,
+      `candidate list drifted from expected — update EXPECTED_PENDING_VARIANTS after resolving in a dedup PR, or investigate if new ones appeared. got: ${normalized.join(", ")}`,
+    );
   });
 
-  it("does not flag Amazon Kiro (different vendor names)", async () => {
+  it("all surfaced candidates are vendor-name variants (not straight dedup gaps)", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const indexPath = resolve(process.cwd(), "data", "index.json");
+    const data = JSON.parse(readFileSync(indexPath, "utf-8"));
+    const result = findDuplicateCandidates(data.offers || []);
+    // Every pending candidate should have vendorNameVariants set, confirming
+    // the normalization (not the exact-match path) is what surfaced it.
+    for (const c of result) {
+      assert(
+        c.vendorNameVariants && c.vendorNameVariants.length > 1,
+        `${c.vendor} lacks vendorNameVariants — if this is a pure same-name dup, it should have been caught pre-normalization`,
+      );
+    }
+  });
+
+  it("does not flag Amazon Kiro (parenthetical suffix preserved)", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
     const indexPath = resolve(process.cwd(), "data", "index.json");
