@@ -54509,12 +54509,23 @@ ${catList}
     res.end(buildAlternativesIndexPage());
   } else if (url.pathname.startsWith("/alternative-to/") && isGetOrHead) {
     const slug = url.pathname.slice("/alternative-to/".length).replace(/\/$/, "");
-    const html = buildAlternativesPage(slug);
-    if (html) {
+    const resolution = resolveVendorSlug(slug);
+    if (resolution.type === "exact") {
+      const html = buildAlternativesPage(resolution.slug)!;
       recordApiHit("/alternative-to/:slug");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternative-to/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
       res.end(html);
+    } else if (resolution.type === "redirect") {
+      res.writeHead(301, { "Location": "/alternative-to/" + resolution.slug });
+      res.end();
+    } else if (resolution.type === "disambiguate") {
+      const links = resolution.slugs.map(s => {
+        const name = vendorSlugMap.get(s) ?? s;
+        return `<li><a href="/alternative-to/${encodeURIComponent(s)}">${escHtmlServer(name)}</a></li>`;
+      }).join("");
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Did you mean? — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}ul{list-style:none;padding:0;margin:1rem 0;text-align:left}li{padding:.4rem 0}</style></head><body><div class="box"><h1 style="font-size:2rem;margin-bottom:.5rem">Did you mean?</h1><p>Multiple vendors match "<strong>${escHtmlServer(slug)}</strong>".</p><ul>${links}</ul><p style="margin-top:1rem"><a href="/alternative-to">Browse all alternatives</a></p></div></body></html>`);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/alternative-to">Browse all alternatives</a></p></div></body></html>`);
