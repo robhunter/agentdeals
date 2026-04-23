@@ -435,6 +435,59 @@ function getVendorCategory(vendorName: string): string | null {
   return vendorCategoryMap.get(vendorName.toLowerCase()) ?? null;
 }
 
+// Resolve a user-typed vendor slug to its canonical form via substring matching
+// against the known vendor slug map. Returns:
+//   - exact: the slug matches a known vendor — caller should render normally
+//   - redirect: one root match — caller should 301 to the canonical slug
+//   - disambiguate: multiple distinct root matches — caller should render a "did you mean?" page
+//   - none: no match — caller should render 404
+// The "root" filter collapses parent/child slug pairs (e.g. amazon-kiro vs
+// amazon-kiro-aws-startups): a child slug that extends a sibling root is dropped.
+type VendorSlugResolution =
+  | { type: "exact"; slug: string }
+  | { type: "redirect"; slug: string }
+  | { type: "disambiguate"; slugs: string[] }
+  | { type: "none" };
+
+// `needle` is a sub-slug of `haystack` when it appears at slug-segment boundaries
+// (i.e., bounded by "-" or start/end of string). Avoids false matches where the
+// input is embedded mid-segment (e.g., "tally" inside "totally" should NOT match).
+function isSubSlug(needle: string, haystack: string): boolean {
+  if (needle === haystack) return true;
+  if (haystack.startsWith(needle + "-")) return true;
+  if (haystack.endsWith("-" + needle)) return true;
+  return haystack.includes("-" + needle + "-");
+}
+
+function resolveVendorSlug(input: string): VendorSlugResolution {
+  if (!input) return { type: "none" };
+  if (vendorSlugMap.has(input)) return { type: "exact", slug: input };
+  if (input.length < 3) return { type: "none" };
+
+  const allSlugs = [...vendorSlugMap.keys()];
+
+  // Completions: known slugs that contain the input as a sub-slug (short-form lookups like "kiro")
+  const completions = allSlugs.filter(s => s !== input && isSubSlug(input, s));
+  if (completions.length > 0) {
+    // Drop any completion that is a "-"-delimited extension of another completion
+    // (e.g., prefer amazon-kiro over amazon-kiro-aws-startups).
+    const roots = completions.filter(
+      s => !completions.some(other => other !== s && s.startsWith(other + "-"))
+    );
+    if (roots.length === 1) return { type: "redirect", slug: roots[0] };
+    return { type: "disambiguate", slugs: roots.slice(0, 10).sort() };
+  }
+
+  // Generalizations: known slugs that are sub-slugs of the input (extra-specific lookups)
+  const generalizations = allSlugs.filter(s => s !== input && isSubSlug(s, input));
+  if (generalizations.length > 0) {
+    const longest = generalizations.reduce((a, b) => (b.length > a.length ? b : a));
+    return { type: "redirect", slug: longest };
+  }
+
+  return { type: "none" };
+}
+
 function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
@@ -54293,12 +54346,23 @@ ${catList}
     res.end(buildVendorIndexPage());
   } else if (url.pathname.startsWith("/vendor/") && isGetOrHead) {
     const slug = url.pathname.slice("/vendor/".length).replace(/\/$/, "");
-    const html = buildVendorPage(slug);
-    if (html) {
+    const resolution = resolveVendorSlug(slug);
+    if (resolution.type === "exact") {
+      const html = buildVendorPage(resolution.slug)!;
       recordApiHit("/vendor/:slug");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vendor/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
       res.end(html);
+    } else if (resolution.type === "redirect") {
+      res.writeHead(301, { "Location": "/vendor/" + resolution.slug });
+      res.end();
+    } else if (resolution.type === "disambiguate") {
+      const links = resolution.slugs.map(s => {
+        const name = vendorSlugMap.get(s) ?? s;
+        return `<li><a href="/vendor/${encodeURIComponent(s)}">${escHtmlServer(name)}</a></li>`;
+      }).join("");
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Did you mean? — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}ul{list-style:none;padding:0;margin:1rem 0;text-align:left}li{padding:.4rem 0}</style></head><body><div class="box"><h1 style="font-size:2rem;margin-bottom:.5rem">Did you mean?</h1><p>Multiple vendors match "<strong>${escHtmlServer(slug)}</strong>".</p><ul>${links}</ul><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
     } else {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
       res.end(`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>Vendor "<strong>${escHtmlServer(slug)}</strong>" not found.</p><p style="margin-top:1rem"><a href="/vendor">Browse all ${vendorSlugMap.size} vendors</a></p></div></body></html>`);
