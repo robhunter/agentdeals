@@ -11278,7 +11278,7 @@ function buildEmailAlternativesPage(): string {
     ["mailsac.com", "10minutemail", "inboxkitten.com", "mailinator.com", "temp-mail.io", "EtherealMail", "debugmail.io", "mailcatcher.me", "Imitate Email", "Inboxes App"].includes(o.vendor)
   );
   const securePrivacy = enrichedAll.filter(o =>
-    ["Proton Mail", "Tuta"].includes(o.vendor)
+    ["Tuta"].includes(o.vendor)
   );
   const otherEmailTools = enrichedAll.filter(o =>
     ["Parsio.io", "EmailJS", "Contact.do", "Waitlio", "SendGrid"].includes(o.vendor)
@@ -11427,7 +11427,7 @@ ${buildCards(forwardingAliases)}
 ${buildCards(temporaryTesting)}
 
   <h2>Secure &amp; Privacy Email</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">End-to-end encrypted email providers focused on privacy. Proton Mail and Tuta offer free tiers with full encryption — no ads, no tracking.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">End-to-end encrypted email providers focused on privacy. Tuta offers a free tier with full encryption — no ads, no tracking. See also <a href="/vendor/proton-mail">Proton Mail</a> in our <a href="/category/consumer-email">Consumer Email</a> category.</p>
 ${buildCards(securePrivacy)}
 
   <h2>Other Email Tools</h2>
