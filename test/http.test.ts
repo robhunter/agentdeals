@@ -1487,6 +1487,56 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.headers.get("location"), "/vendor/vercel");
   });
 
+  // Vendor slug alias resolution (issue #989): substring match against vendorSlugMap
+  // so short-form lookups like /vendor/kiro resolve to the canonical slug instead of 404.
+  it("GET /vendor/kiro 301-redirects to /vendor/amazon-kiro", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/kiro`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/vendor/amazon-kiro");
+  });
+
+  it("GET /vendor/qwen 301-redirects to /vendor/alibaba-cloud-qwen-code", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/qwen`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/vendor/alibaba-cloud-qwen-code");
+  });
+
+  it("GET /vendor/proton renders a disambiguation page listing all Proton products", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/proton`, { redirect: "manual" });
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Did you mean?"), "Should show disambiguation heading");
+    assert.ok(html.includes('href="/vendor/proton-mail"'), "Should link to Proton Mail");
+    assert.ok(html.includes('href="/vendor/proton-drive"'), "Should link to Proton Drive");
+    assert.ok(html.includes('href="/vendor/proton-pass"'), "Should link to Proton Pass");
+    assert.ok(html.includes('href="/vendor/proton-vpn"'), "Should link to Proton VPN");
+  });
+
+  it("GET /vendor/totally-bogus-slug-xyz returns 404 with no redirect", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/totally-bogus-slug-xyz`, { redirect: "manual" });
+    assert.strictEqual(response.status, 404);
+    const html = await response.text();
+    assert.ok(html.includes("404"), "Should show 404");
+    assert.ok(html.includes("totally-bogus-slug-xyz"), "Should echo the invalid slug");
+  });
+
+  it("GET /vendor/vercel still renders the vendor profile page (no regression)", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`, { redirect: "manual" });
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes("Vercel"), "Should render Vercel profile page");
+  });
+
   it("GET /trends returns trends index page", async () => {
     proc = await startHttpServer();
 
