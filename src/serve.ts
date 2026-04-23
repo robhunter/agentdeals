@@ -11949,7 +11949,7 @@ function buildProjectManagementAlternativesPage(): string {
     ["acunote.com", "Yodiz", "ScrumFast", "MeuScrum", "Teaminal", "Fibo", "easyretro.io", "teleretro.com", "planitpoker.com", "point.poker", "Zube"].includes(o.vendor)
   );
   const timeTracking = enrichedAll.filter(o =>
-    ["Clockify", "TimeCamp", "Toggl", "Pendulums", "Pulse.red", "Quidlo Timesheets", "Teamplify", "taskade.com", "todoist.com", "Tweek"].includes(o.vendor)
+    ["Clockify", "TimeCamp", "Toggl", "Pendulums", "Pulse.red", "Quidlo Timesheets", "Teamplify", "taskade.com", "Tweek"].includes(o.vendor)
   );
   const teamChat = enrichedAll.filter(o =>
     ["Chanty.com", "element.io", "flock.com", "Pumble", "Revolt.chat", "Rocket.Chat", "twist.com", "Zulip", "gitter.im", "Keybase", "Braid"].includes(o.vendor)
@@ -12099,7 +12099,7 @@ ${buildCards(kanbanBoards)}
 ${buildCards(agileScrumRetro)}
 
   <h2>Time Tracking &amp; Task Productivity</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Time trackers and personal productivity tools. Clockify offers unlimited free tracking. Toggl provides a polished interface with reporting. Todoist is a popular task manager with a generous free tier.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Time trackers and personal productivity tools. Clockify offers unlimited free tracking. Toggl provides a polished interface with reporting. Taskade combines task lists with team workspaces. For a dedicated personal task manager, see <a href="/vendor/todoist">Todoist</a> in our Productivity &amp; Notes category.</p>
 ${buildCards(timeTracking)}
 
   <h2>Team Chat &amp; Messaging</h2>
