@@ -9423,7 +9423,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "LocalOps",
@@ -9437,7 +9437,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Mergify",
@@ -9451,7 +9451,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Nx Cloud",
@@ -9465,7 +9465,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "RunMyJob",
@@ -9479,7 +9479,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Shipfox",
@@ -9493,7 +9493,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Squash Labs",
@@ -9507,7 +9507,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Terramate",
@@ -9522,7 +9522,7 @@
         "free-for-dev",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Terrateam",
@@ -9537,7 +9537,7 @@
         "free-for-dev",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Appetize",
@@ -9758,7 +9758,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "testingbot.com",
@@ -9874,7 +9874,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "CertKit",
@@ -9886,7 +9886,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Corgea",
@@ -9910,7 +9910,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "CyberChef",
@@ -9922,7 +9922,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Datree",
@@ -9934,7 +9934,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "DJ Checkup",
@@ -9946,7 +9946,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Dotenv",
@@ -9958,7 +9958,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Have I been pwned?",
@@ -9970,7 +9970,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Internet.nl",
@@ -9982,7 +9982,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "letsencrypt.org",
@@ -9994,7 +9994,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "meterian.io",
@@ -10006,7 +10006,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Mozilla Observatory",
@@ -10018,7 +10018,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Public Cloud Threat Intelligence",
@@ -10030,7 +10030,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Safety",
@@ -10054,7 +10054,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Smart Grow Vault",
@@ -10066,7 +10066,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "SOOS",
@@ -10078,7 +10078,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "ssllabs.com",
@@ -10090,7 +10090,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Sucuri SiteCheck",
@@ -10102,7 +10102,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "TestTLS.com",
@@ -10114,7 +10114,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Virgil Security",
@@ -10126,7 +10126,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "360username",
@@ -10140,7 +10140,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Aserto",
@@ -10154,7 +10154,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "asgardeo.io",
@@ -10168,7 +10168,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Authgear",
@@ -10182,7 +10182,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Authress",
@@ -10196,7 +10196,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Authy",
@@ -10210,7 +10210,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Cerbos Hub",
@@ -10224,7 +10224,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Cloud-IAM",
@@ -10238,7 +10238,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "duo.com",
@@ -10252,7 +10252,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "logintc.com",
@@ -10266,7 +10266,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Logto",
@@ -10296,7 +10296,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Okta",
@@ -10310,7 +10310,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Ory",
@@ -10341,7 +10341,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "PropelAuth",
@@ -10355,7 +10355,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Stack Auth",
@@ -10369,7 +10369,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "ZITADEL Cloud",
@@ -10383,7 +10383,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "Appho.st",
@@ -10982,7 +10982,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "bleemeo.com",
@@ -10995,7 +10995,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "Core Web Vitals History",
@@ -11008,7 +11008,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "deadmanssnitch.com",
@@ -11021,7 +11021,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "downtimemonkey.com",
@@ -11034,7 +11034,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "economize.cloud",
@@ -11047,7 +11047,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "fivenines.io",
@@ -11060,7 +11060,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "incidenthub.cloud",
@@ -11073,7 +11073,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "inspector.dev",
@@ -11086,7 +11086,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "linkok.com",
@@ -11099,7 +11099,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "loader.io",
@@ -11112,7 +11112,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "MonitorMonk",
@@ -11125,7 +11125,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "netdata.cloud",
@@ -11138,7 +11138,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-22"
     },
     {
       "vendor": "OntarioNet.ca CN Test",
@@ -11151,7 +11151,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "pagecrawl.io",
@@ -11164,7 +11164,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-24"
     },
     {
       "vendor": "pagertree.com",
