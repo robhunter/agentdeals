@@ -280,40 +280,22 @@ describe("formatMarkdown", () => {
 });
 
 describe("lint-duplicates against current data/index.json", () => {
-  // After PR #1003 added vendor-name normalization (TLD/corp suffix stripping),
-  // 5 latent dups surfaced that the exact-match key missed. Each resolved in a
-  // follow-up dedup PR. When the count reaches 0, flip this assertion to
-  // `result.length === 0` (the original form).
-  const EXPECTED_PENDING_VARIANTS = ["internxt", "pcloud"];
-
-  it("surfaces only known-pending normalized duplicate candidates", async () => {
+  // PR #1003 added vendor-name normalization (TLD/corp suffix stripping),
+  // surfacing 5 latent dups. All resolved in follow-up dedup PRs:
+  // todoist (#1005), trello (#1006), evernote (#1007), internxt + pcloud (#1010).
+  // If this ever drifts back >0, either a new miscategorization appeared and
+  // needs a dedup PR, or the list needs to flip back to the inventory form.
+  it("surfaces zero normalized duplicate candidates", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
     const indexPath = resolve(process.cwd(), "data", "index.json");
     const data = JSON.parse(readFileSync(indexPath, "utf-8"));
     const result = findDuplicateCandidates(data.offers || []);
-    const normalized = result.map((c) => normalizeVendor(c.vendor)).sort();
-    assert.deepStrictEqual(
-      normalized,
-      EXPECTED_PENDING_VARIANTS,
-      `candidate list drifted from expected — update EXPECTED_PENDING_VARIANTS after resolving in a dedup PR, or investigate if new ones appeared. got: ${normalized.join(", ")}`,
+    assert.strictEqual(
+      result.length,
+      0,
+      `expected zero candidates, got ${result.length}: ${result.map((c) => c.vendor).join(", ")}`,
     );
-  });
-
-  it("all surfaced candidates are vendor-name variants (not straight dedup gaps)", async () => {
-    const { readFileSync } = await import("node:fs");
-    const { resolve } = await import("node:path");
-    const indexPath = resolve(process.cwd(), "data", "index.json");
-    const data = JSON.parse(readFileSync(indexPath, "utf-8"));
-    const result = findDuplicateCandidates(data.offers || []);
-    // Every pending candidate should have vendorNameVariants set, confirming
-    // the normalization (not the exact-match path) is what surfaced it.
-    for (const c of result) {
-      assert(
-        c.vendorNameVariants && c.vendorNameVariants.length > 1,
-        `${c.vendor} lacks vendorNameVariants — if this is a pure same-name dup, it should have been caught pre-normalization`,
-      );
-    }
   });
 
   it("does not flag Amazon Kiro (parenthetical suffix preserved)", async () => {
