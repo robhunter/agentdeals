@@ -10256,7 +10256,7 @@ function buildStorageAlternativesPage(): string {
     o.category === "CDN" && !mediaCdn.includes(o)
   );
   const fileStorageSync = enrichedAll.filter(o =>
-    ["seafile.com", "odrive", "transfernow", "transloadit.com", "wormhol.org", "Wormhole", "GoFile.io", "file.io", "internxt.com", "icedrive.net", "pcloud.com", "sync.com", "Proton Drive", "degoo.com", "Ente", "borgbase.com", "Dropshare"].includes(o.vendor)
+    ["seafile.com", "odrive", "transfernow", "transloadit.com", "wormhol.org", "Wormhole", "GoFile.io", "file.io", "icedrive.net", "sync.com", "Proton Drive", "degoo.com", "Ente", "borgbase.com", "Dropshare"].includes(o.vendor)
   );
   const other = enrichedAll.filter(o =>
     !objectStorage.includes(o) && !mediaCdn.includes(o) && !cdnDelivery.includes(o) && !fileStorageSync.includes(o)
@@ -10525,7 +10525,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/minio">MinIO</a> \u2014 high-performance, S3-compatible, open-source. Run it on your own infrastructure with no storage or bandwidth limits. Widely used in on-prem and Kubernetes environments.</dd>
 
       <dt>Need encrypted file sync?</dt>
-      <dd><a href="/vendor/proton-drive">Proton Drive</a> for end-to-end encrypted cloud storage (1 GB free). <a href="/vendor/internxt-com">Internxt</a> and <a href="/vendor/sync-com">Sync.com</a> are privacy-focused alternatives. <a href="/vendor/seafile-com">Seafile</a> is self-hostable.</dd>
+      <dd><a href="/vendor/proton-drive">Proton Drive</a> for end-to-end encrypted cloud storage (1 GB free). <a href="/vendor/internxt">Internxt</a> and <a href="/vendor/sync-com">Sync.com</a> are privacy-focused alternatives. <a href="/vendor/seafile-com">Seafile</a> is self-hostable.</dd>
 
       <dt>Hosting decentralized content?</dt>
       <dd><a href="/vendor/pinata-ipfs">Pinata</a> for IPFS pinning (1 GB free). Ideal for NFT metadata, decentralized apps, and content-addressed storage.</dd>

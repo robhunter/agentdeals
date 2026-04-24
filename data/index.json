@@ -14807,19 +14807,6 @@
       "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "internxt.com",
-      "category": "Storage",
-      "description": "Internxt Drive is a zero-knowledge file storage service based on absolute privacy and uncompromising security. Sign up and get 10 GB for free, forever!",
-      "tier": "Free",
-      "url": "https://internxt.com",
-      "tags": [
-        "storage",
-        "media",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12"
-    },
-    {
       "vendor": "kraken.io",
       "category": "Storage",
       "description": "Image optimization for website performance as a service, free 100 MB testing quota. Paid plans start at $5/mo.",
@@ -14903,19 +14890,6 @@
       "description": "Hosted Package Repositories for YUM, APT, RubyGem and PyPI. Limited free plans and open-source plans are available via request",
       "tier": "Free",
       "url": "https://packagecloud.io/",
-      "tags": [
-        "storage",
-        "media",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12"
-    },
-    {
-      "vendor": "pcloud.com",
-      "category": "Storage",
-      "description": "Cloud storage service. Up to 10 GB of free storage",
-      "tier": "Free",
-      "url": "https://www.pcloud.com/",
       "tags": [
         "storage",
         "media",
