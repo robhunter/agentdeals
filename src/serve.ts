@@ -11940,7 +11940,7 @@ function buildProjectManagementAlternativesPage(): string {
 
   // Group by domain
   const issueTracking = enrichedAll.filter(o =>
-    ["Linear", "Atlassian", "Plane", "Huly", "Shortcut", "clickup.com", "asana.com", "trello.com", "Basecamp", "taiga.io", "nTask", "freedcamp.com", "bitrix24.com", "teamwork.com", "Backlog", "GForge", "Tenzu", "Crosswork", "Sflow", "Kitemaker.co", "leiga.com", "Teamcamp", "titanapps.io", "Wikifactory", "RightFeature", "zenhub.com", "zenkit.com"].includes(o.vendor)
+    ["Linear", "Atlassian", "Plane", "Huly", "Shortcut", "clickup.com", "asana.com", "Basecamp", "taiga.io", "nTask", "freedcamp.com", "bitrix24.com", "teamwork.com", "Backlog", "GForge", "Tenzu", "Crosswork", "Sflow", "Kitemaker.co", "leiga.com", "Teamcamp", "titanapps.io", "Wikifactory", "RightFeature", "zenhub.com", "zenkit.com"].includes(o.vendor)
   );
   const kanbanBoards = enrichedAll.filter(o =>
     ["gokanban.io", "kan.bn", "kanbanflow.com", "kanbantool.com", "MeisterTask", "Teamhood", "HeySpace", "Fizzy", "Fibery", "Hygger"].includes(o.vendor)
@@ -12160,7 +12160,7 @@ ${buildCards(other)}
         <td>All-in-one PM with chat, docs, and HR built in</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/trello-com" style="color:var(--text)">Trello</a></td>
+        <td style="font-weight:600"><a href="/vendor/trello" style="color:var(--text)">Trello</a></td>
         <td>Kanban</td>
         <td>Unlimited cards, 10 boards/workspace</td>
         <td>No</td>
@@ -12237,7 +12237,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/plane">Plane</a> — open-source Jira alternative with cycles and modules. <a href="/vendor/huly">Huly</a> — all-in-one with chat, docs, and HR. <a href="/vendor/taiga-io">Taiga</a> — agile PM with Scrum and Kanban.</dd>
 
       <dt>Need simple visual kanban boards?</dt>
-      <dd><a href="/vendor/trello-com">Trello</a> — 10 boards free with Power-Ups. <a href="/vendor/kanbanflow-com">KanbanFlow</a> — Pomodoro timer built in. <a href="/vendor/meistertask">MeisterTask</a> — visual boards with automations.</dd>
+      <dd><a href="/vendor/trello">Trello</a> — 10 boards free with Power-Ups. <a href="/vendor/kanbanflow-com">KanbanFlow</a> — Pomodoro timer built in. <a href="/vendor/meistertask">MeisterTask</a> — visual boards with automations.</dd>
 
       <dt>Need time tracking for your team?</dt>
       <dd><a href="/vendor/clockify">Clockify</a> — unlimited tracking and users, free forever. <a href="/vendor/toggl">Toggl</a> — polished UI with reports, 5 users free. <a href="/vendor/timecamp">TimeCamp</a> — automatic time tracking.</dd>

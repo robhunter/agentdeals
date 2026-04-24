@@ -14576,18 +14576,6 @@
       "verifiedDate": "2026-04-12"
     },
     {
-      "vendor": "trello.com",
-      "category": "Project Management",
-      "description": "Board-based project management. Unlimited Personal Boards, 10 Team Boards.",
-      "tier": "Free",
-      "url": "https://trello.com/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-12"
-    },
-    {
       "vendor": "Tweek",
       "category": "Project Management",
       "description": "Simple Weekly To-Do Calendar & Task Management.",
@@ -21939,7 +21927,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Google Keep",
