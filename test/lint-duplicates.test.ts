@@ -284,7 +284,7 @@ describe("lint-duplicates against current data/index.json", () => {
   // 5 latent dups surfaced that the exact-match key missed. Each resolved in a
   // follow-up dedup PR. When the count reaches 0, flip this assertion to
   // `result.length === 0` (the original form).
-  const EXPECTED_PENDING_VARIANTS = ["evernote", "internxt", "pcloud"];
+  const EXPECTED_PENDING_VARIANTS = ["internxt", "pcloud"];
 
   it("surfaces only known-pending normalized duplicate candidates", async () => {
     const { readFileSync } = await import("node:fs");

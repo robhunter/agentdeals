@@ -11958,7 +11958,7 @@ function buildProjectManagementAlternativesPage(): string {
     ["meet.jit.si", "talky.io", "Webex", "zoom.us", "Duckly", "Tencent RTC", "Screen Sharing via Browser", "flat.social"].includes(o.vendor)
   );
   const docsKnowledge = enrichedAll.filter(o =>
-    ["Notion", "Hackmd.io", "Nuclino", "Slab", "cDox", "evernote.com", "BookmarkOS.com", "Raindrop.io", "Linkinize", "Stickies", "Liveblocks", "GitDailies", "Lockitbot"].includes(o.vendor)
+    ["Notion", "Hackmd.io", "Nuclino", "Slab", "cDox", "BookmarkOS.com", "Raindrop.io", "Linkinize", "Stickies", "Liveblocks", "GitDailies", "Lockitbot"].includes(o.vendor)
   );
   const scheduling = enrichedAll.filter(o =>
     ["Cal.com", "Calendly", "cally.com"].includes(o.vendor)
@@ -13249,7 +13249,7 @@ function buildTeamCollaborationAlternativesPage(): string {
     ["meet.jit.si", "zoom.us", "Webex", "Daily.co", "Whereby", "Tencent RTC", "talky.io", "LiveKit", "Mux", "wistia.com", "flat.social", "Duckly", "Screen Sharing via Browser"].includes(o.vendor)
   );
   const docsKnowledge = enrichedAll.filter(o =>
-    ["Notion", "Hackmd.io", "Nuclino", "Slab", "cDox", "evernote.com", "BookmarkOS.com", "Raindrop.io", "Linkinize", "Liveblocks", "GitDailies"].includes(o.vendor)
+    ["Notion", "Hackmd.io", "Nuclino", "Slab", "cDox", "BookmarkOS.com", "Raindrop.io", "Linkinize", "Liveblocks", "GitDailies"].includes(o.vendor)
   );
   const scheduling = enrichedAll.filter(o =>
     ["Cal.com", "Calendly", "cally.com"].includes(o.vendor)

@@ -8258,18 +8258,6 @@
       "verifiedDate": "2026-04-13"
     },
     {
-      "vendor": "evernote.com",
-      "category": "Team Collaboration",
-      "description": "Note-taking — 50 notes, 1 notebook, 20 MB monthly uploads, 1 device sync, 50 attachments, 20 tags, 5 spaces. Web clipper and search included",
-      "tier": "Free",
-      "url": "https://evernote.com/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-04-14"
-    },
-    {
       "vendor": "Fibery",
       "category": "Project Management",
       "description": "Connected workspace platform. Free for up to 10 users, 10 databases, unlimited entities.",
@@ -22036,7 +22024,7 @@
     {
       "vendor": "Evernote",
       "category": "Productivity & Notes",
-      "description": "Up to 50 notes total. 1 notebook. 60 MB monthly upload limit. 25 MB max note size. Single device sync plus web. Basic search. No offline notebooks, PDF annotation, or email forwarding on free.",
+      "description": "Up to 50 notes total. 1 notebook. 60 MB monthly upload limit. 25 MB max note size. Single device sync plus web. Basic search and Web Clipper included. No offline notebooks, PDF annotation, or email forwarding on free.",
       "tier": "Free",
       "url": "https://evernote.com/free",
       "tags": [
@@ -22045,7 +22033,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-04-23"
     },
     {
       "vendor": "Coda",
