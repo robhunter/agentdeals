@@ -207,22 +207,37 @@ export const openapiSpec = {
     "/api/details/{vendor}": {
       get: {
         summary: "Vendor detail with alternatives",
-        description: "Get detailed information about a specific vendor's offer. Optionally includes alternatives in the same category.",
+        description: "Get detailed information about a specific vendor's offer. Optionally includes alternatives in the same category. Accepts canonical vendor names (e.g. \"Supabase\") or short-form slugs (e.g. \"kiro\" → Amazon Kiro, \"proton\" → multi-product disambiguation). Fuzzy matches resolve in-place and return `resolved_from`. Ambiguous inputs return 200 with a `disambiguation` array instead of an `offer`.",
         parameters: [
-          { name: "vendor", in: "path", required: true, description: "Vendor name (URL-encoded)", schema: { type: "string" }, example: "Supabase" },
+          { name: "vendor", in: "path", required: true, description: "Vendor name or short-form slug (URL-encoded)", schema: { type: "string" }, example: "Supabase" },
           { name: "alternatives", in: "query", description: "Include alternative vendors in the same category", schema: { type: "string", enum: ["true", "false"], default: "false" } }
         ],
         responses: {
           "200": {
-            description: "Vendor offer details",
+            description: "Vendor offer details, OR a disambiguation list when the input matches multiple vendors (e.g. \"proton\"). When the input was fuzzy-matched to a canonical vendor, the response includes `resolved_from`.",
             content: {
               "application/json": {
                 schema: {
-                  type: "object",
-                  properties: {
-                    offer: { $ref: "#/components/schemas/Offer" },
-                    alternatives: { type: "array", items: { $ref: "#/components/schemas/Offer" }, description: "Only present when alternatives=true" }
-                  }
+                  oneOf: [
+                    {
+                      type: "object",
+                      description: "Resolved vendor offer",
+                      properties: {
+                        offer: { $ref: "#/components/schemas/Offer" },
+                        alternatives: { type: "array", items: { $ref: "#/components/schemas/Offer" }, description: "Only present when alternatives=true" },
+                        resolved_from: { type: "string", description: "Original input when fuzzy-matched to a canonical vendor (e.g. input \"kiro\" resolves to Amazon Kiro)" }
+                      }
+                    },
+                    {
+                      type: "object",
+                      description: "Disambiguation list when input matches multiple vendors",
+                      required: ["disambiguation", "resolved_from"],
+                      properties: {
+                        disambiguation: { type: "array", items: { type: "object", properties: { slug: { type: "string" }, name: { type: "string" } } } },
+                        resolved_from: { type: "string" }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -236,7 +251,7 @@ export const openapiSpec = {
             }
           },
           "404": {
-            description: "Vendor not found",
+            description: "Vendor not found (no exact match AND no fuzzy resolution)",
             content: {
               "application/json": {
                 schema: {
