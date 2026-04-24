@@ -19,6 +19,7 @@ import { getPlatformCodeForVendor, getBestReferralCode, listAllReferralCodes } f
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
+import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import type { Agent } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -386,26 +387,18 @@ ${entries}
   </div>`;
 }
 
-function toSlug(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
-
 // Build category slug → name lookup
 const categorySlugMap = new Map<string, string>();
 for (const cat of categories) {
   categorySlugMap.set(toSlug(cat.name), cat.name);
 }
 
-// Build vendor slug → name lookup (deduped by slug, first occurrence wins)
-// Also build vendor slug → most recent verifiedDate for sitemap lastmod
-const vendorSlugMap = new Map<string, string>();
+// Build vendor slug → most recent verifiedDate for sitemap lastmod
+// (vendorSlugMap itself now lives in vendor-slug.ts and is imported above.)
 const vendorLastmod = new Map<string, string>();
 for (const o of offers) {
   const slug = toSlug(o.vendor);
   if (!slug) continue;
-  if (!vendorSlugMap.has(slug)) {
-    vendorSlugMap.set(slug, o.vendor);
-  }
   const prev = vendorLastmod.get(slug);
   if (!prev || o.verifiedDate > prev) {
     vendorLastmod.set(slug, o.verifiedDate);
@@ -433,59 +426,6 @@ for (const o of offers) {
 
 function getVendorCategory(vendorName: string): string | null {
   return vendorCategoryMap.get(vendorName.toLowerCase()) ?? null;
-}
-
-// Resolve a user-typed vendor slug to its canonical form via substring matching
-// against the known vendor slug map. Returns:
-//   - exact: the slug matches a known vendor — caller should render normally
-//   - redirect: one root match — caller should 301 to the canonical slug
-//   - disambiguate: multiple distinct root matches — caller should render a "did you mean?" page
-//   - none: no match — caller should render 404
-// The "root" filter collapses parent/child slug pairs (e.g. amazon-kiro vs
-// amazon-kiro-aws-startups): a child slug that extends a sibling root is dropped.
-type VendorSlugResolution =
-  | { type: "exact"; slug: string }
-  | { type: "redirect"; slug: string }
-  | { type: "disambiguate"; slugs: string[] }
-  | { type: "none" };
-
-// `needle` is a sub-slug of `haystack` when it appears at slug-segment boundaries
-// (i.e., bounded by "-" or start/end of string). Avoids false matches where the
-// input is embedded mid-segment (e.g., "tally" inside "totally" should NOT match).
-function isSubSlug(needle: string, haystack: string): boolean {
-  if (needle === haystack) return true;
-  if (haystack.startsWith(needle + "-")) return true;
-  if (haystack.endsWith("-" + needle)) return true;
-  return haystack.includes("-" + needle + "-");
-}
-
-function resolveVendorSlug(input: string): VendorSlugResolution {
-  if (!input) return { type: "none" };
-  if (vendorSlugMap.has(input)) return { type: "exact", slug: input };
-  if (input.length < 3) return { type: "none" };
-
-  const allSlugs = [...vendorSlugMap.keys()];
-
-  // Completions: known slugs that contain the input as a sub-slug (short-form lookups like "kiro")
-  const completions = allSlugs.filter(s => s !== input && isSubSlug(input, s));
-  if (completions.length > 0) {
-    // Drop any completion that is a "-"-delimited extension of another completion
-    // (e.g., prefer amazon-kiro over amazon-kiro-aws-startups).
-    const roots = completions.filter(
-      s => !completions.some(other => other !== s && s.startsWith(other + "-"))
-    );
-    if (roots.length === 1) return { type: "redirect", slug: roots[0] };
-    return { type: "disambiguate", slugs: roots.slice(0, 10).sort() };
-  }
-
-  // Generalizations: known slugs that are sub-slugs of the input (extra-specific lookups)
-  const generalizations = allSlugs.filter(s => s !== input && isSubSlug(s, input));
-  if (generalizations.length > 0) {
-    const longest = generalizations.reduce((a, b) => (b.length > a.length ? b : a));
-    return { type: "redirect", slug: longest };
-  }
-
-  return { type: "none" };
 }
 
 function escHtmlServer(s: string): string {
@@ -53813,17 +53753,39 @@ const httpServer = createHttpServer(async (req, res) => {
       return;
     }
     const includeAlternatives = url.searchParams.get("alternatives") === "true";
-    const detailResult = getOfferDetails(vendorParam, includeAlternatives);
+    let detailResult = getOfferDetails(vendorParam, includeAlternatives);
+    let resolvedFrom: string | null = null;
+    if ("error" in detailResult) {
+      // Fuzzy-resolve: treat vendorParam as a slug and see if it maps to a
+      // known vendor (e.g. "kiro" → "Amazon Kiro", "amazon-kiro" → exact).
+      const resolution = resolveVendorSlug(toSlug(vendorParam));
+      if (resolution.type === "exact" || resolution.type === "redirect") {
+        const canonicalName = vendorSlugMap.get(resolution.slug);
+        if (canonicalName) {
+          const retry = getOfferDetails(canonicalName, includeAlternatives);
+          if (!("error" in retry)) {
+            detailResult = retry;
+            resolvedFrom = vendorParam;
+          }
+        }
+      } else if (resolution.type === "disambiguate") {
+        const disambiguation = resolution.slugs.map(s => ({ slug: s, name: vendorSlugMap.get(s) ?? s }));
+        logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives, disambiguated: true }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: disambiguation.length });
+        res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ disambiguation, resolved_from: vendorParam }));
+        return;
+      }
+    }
     if ("error" in detailResult) {
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
       res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: detailResult.error, suggestions: detailResult.suggestions }));
       return;
     }
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives, ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     const offerWithCode = { ...detailResult.offer, referral_code: getBestReferralCode(detailResult.offer.vendor) };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ offer: offerWithCode, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}) }));
+    res.end(JSON.stringify({ offer: offerWithCode, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}), ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }));
   } else if (url.pathname === "/api/expiring" && isGetOrHead) {
     recordApiHit("/api/expiring");
     const withinDays = Math.min(Math.max(parseInt(url.searchParams.get("within_days") ?? "30", 10) || 30, 1), 365);

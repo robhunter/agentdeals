@@ -853,7 +853,7 @@ describe("search_deals vendor details", () => {
     }
   });
 
-  it("returns error with suggestions for unknown vendor", async () => {
+  it("returns disambiguation error for ambiguous short-form (e.g. 'Cloud' matches many vendors)", async () => {
     const proc = startServer();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -869,8 +869,61 @@ describe("search_deals vendor details", () => {
       const result = responses.find((r: any) => r.id === 2) as any;
       assert.ok(result.result.isError);
       const text = result.result.content[0].text;
-      assert.ok(text.includes("not found"));
-      assert.ok(text.includes("Did you mean"));
+      const parsed = JSON.parse(text);
+      assert.ok(Array.isArray(parsed.vendors), "Expected structured vendors array");
+      assert.ok(parsed.vendors.length >= 2, "Expected multiple matches for 'Cloud'");
+      for (const v of parsed.vendors) {
+        assert.ok(typeof v.slug === "string" && typeof v.name === "string");
+      }
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("fuzzy-resolves short-form vendor slugs (e.g. 'kiro' → 'Amazon Kiro')", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "search_deals", arguments: { vendor: "kiro" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(!result.result.isError, "Expected success after fuzzy resolve");
+      const offer = JSON.parse(result.result.content[0].text);
+      assert.ok(/kiro/i.test(offer.vendor), `Expected vendor containing 'kiro', got ${offer.vendor}`);
+      assert.strictEqual(offer.resolved_from, "kiro", "Expected resolved_from: 'kiro' on fuzzy match");
+    } finally {
+      proc.kill();
+    }
+  });
+
+  it("returns structured disambiguation for multi-product short-forms (e.g. 'proton')", async () => {
+    const proc = startServer();
+    try {
+      const responses = (await sendMcpMessages(proc, [
+        ...INIT_MESSAGES,
+        {
+          jsonrpc: "2.0",
+          id: 2,
+          method: "tools/call",
+          params: { name: "search_deals", arguments: { vendor: "proton" } },
+        },
+      ])) as any[];
+
+      const result = responses.find((r: any) => r.id === 2) as any;
+      assert.ok(result.result.isError, "Disambiguation is surfaced as isError so agents know to pick");
+      const parsed = JSON.parse(result.result.content[0].text);
+      assert.ok(Array.isArray(parsed.vendors));
+      assert.ok(parsed.vendors.length >= 2);
+      for (const v of parsed.vendors) {
+        assert.ok(v.name.toLowerCase().includes("proton"), `Expected proton-related name, got ${v.name}`);
+      }
     } finally {
       proc.kill();
     }
