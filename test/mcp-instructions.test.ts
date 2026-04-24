@@ -15,8 +15,8 @@ describe("MCP_INSTRUCTIONS constant (issue #977)", () => {
 
   it("covers identity, trigger conditions, tool selection, and unique value", () => {
     assert.match(MCP_INSTRUCTIONS, /AgentDeals/);
-    assert.match(MCP_INSTRUCTIONS, /1,600\+/);
-    assert.match(MCP_INSTRUCTIONS, /67 .*categor/i);
+    assert.match(MCP_INSTRUCTIONS, /1,500\+/);
+    assert.match(MCP_INSTRUCTIONS, /66 .*categor/i);
     assert.match(MCP_INSTRUCTIONS, /search_deals/);
     assert.match(MCP_INSTRUCTIONS, /plan_stack/);
     assert.match(MCP_INSTRUCTIONS, /compare_vendors/);
