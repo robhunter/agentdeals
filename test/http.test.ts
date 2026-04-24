@@ -848,6 +848,41 @@ describe("HTTP transport", () => {
     assert.strictEqual(body.offer.vendor, vendorName);
   });
 
+  it("GET /api/details/:vendor fuzzy-resolves short-form slugs (kiro → Amazon Kiro)", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/details/kiro`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(body.offer, "Expected offer object");
+    assert.ok(/kiro/i.test(body.offer.vendor), `Expected vendor name containing 'kiro', got ${body.offer.vendor}`);
+    assert.strictEqual(body.resolved_from, "kiro", "Expected resolved_from field on fuzzy match");
+  });
+
+  it("GET /api/details/:vendor returns disambiguation for multi-product short forms (proton → 4 products)", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/details/proton`);
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.ok(Array.isArray(body.disambiguation), "Expected disambiguation array");
+    assert.ok(body.disambiguation.length >= 2, `Expected at least 2 Proton products, got ${body.disambiguation.length}`);
+    assert.strictEqual(body.resolved_from, "proton");
+    for (const d of body.disambiguation) {
+      assert.ok(typeof d.slug === "string" && typeof d.name === "string", "Each disambiguation entry should have slug + name");
+      assert.ok(d.name.toLowerCase().includes("proton"), `Expected 'proton' in name ${d.name}`);
+    }
+  });
+
+  it("GET /api/details/:vendor still returns 404 for genuine misses", async () => {
+    proc = await startHttpServer();
+
+    const response = await fetch(`http://localhost:${serverPort}/api/details/zzz-not-a-real-vendor-slug-xyz`);
+    assert.strictEqual(response.status, 404);
+    const body = await response.json() as any;
+    assert.ok(body.error.includes("not found"));
+  });
+
   it("logs session_close on explicit DELETE", async () => {
     proc = await startHttpServer();
 

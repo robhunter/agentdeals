@@ -104,9 +104,25 @@ export function createServer(): McpServer {
         // Mode: vendor details
         if (vendor) {
           try {
-            const data = await fetchOfferDetails(vendor, true) as { offer: Record<string, unknown>; alternatives?: unknown[] };
+            const data = await fetchOfferDetails(vendor, true) as {
+              offer?: Record<string, unknown>;
+              alternatives?: unknown[];
+              disambiguation?: { slug: string; name: string }[];
+              resolved_from?: string;
+            };
+            // Fuzzy-match disambiguation: input matched multiple vendors.
+            // Return isError with a structured vendors list so agents can parse.
+            if (data.disambiguation && data.disambiguation.length > 0) {
+              return mcpError(JSON.stringify({ error: `Vendor "${vendor}" matched multiple vendors. Pick one from 'vendors' and retry.`, vendors: data.disambiguation }, null, 2));
+            }
+            if (!data.offer) {
+              return mcpError(`No vendor details returned for "${vendor}".`);
+            }
             if (data.alternatives && !data.offer.alternatives) {
               data.offer.alternatives = data.alternatives;
+            }
+            if (data.resolved_from) {
+              data.offer.resolved_from = data.resolved_from;
             }
             return mcpText(data.offer);
           } catch (err) {

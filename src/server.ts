@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
+import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -88,7 +89,30 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
         // Mode: vendor details
         if (vendor) {
-          const result = getOfferDetails(vendor, true);
+          let result = getOfferDetails(vendor, true);
+          let resolvedFrom: string | null = null;
+          if ("error" in result) {
+            // Fuzzy-resolve: treat vendor as a slug and see if it maps to a
+            // known vendor (e.g. "kiro" → "Amazon Kiro").
+            const resolution = resolveVendorSlug(toSlug(vendor));
+            if (resolution.type === "exact" || resolution.type === "redirect") {
+              const canonicalName = vendorSlugMap.get(resolution.slug);
+              if (canonicalName) {
+                const retry = getOfferDetails(canonicalName, true);
+                if (!("error" in retry)) {
+                  result = retry;
+                  resolvedFrom = vendor;
+                }
+              }
+            } else if (resolution.type === "disambiguate") {
+              const vendors = resolution.slugs.map(s => ({ slug: s, name: vendorSlugMap.get(s) ?? s }));
+              logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { vendor, disambiguated: true }, result_count: vendors.length, session_id: getSessionId?.() });
+              return {
+                isError: true,
+                content: [{ type: "text" as const, text: JSON.stringify({ error: `Vendor "${vendor}" matched multiple vendors. Pick one from 'vendors' and retry.`, vendors }, null, 2) }],
+              };
+            }
+          }
           if ("error" in result) {
             const msg = result.suggestions.length > 0
               ? `${result.error} Did you mean: ${result.suggestions.join(", ")}?`
@@ -99,8 +123,9 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
               content: [{ type: "text" as const, text: msg }],
             };
           }
-          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { vendor }, result_count: 1, session_id: getSessionId?.() });
-          const offerWithCode = { ...result.offer, referral_code: getBestReferralCode(result.offer.vendor) };
+          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { vendor, ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }, result_count: 1, session_id: getSessionId?.() });
+          const offerWithCode: Record<string, unknown> = { ...result.offer, referral_code: getBestReferralCode(result.offer.vendor) };
+          if (resolvedFrom) offerWithCode.resolved_from = resolvedFrom;
           return {
             content: [{ type: "text" as const, text: JSON.stringify(offerWithCode, null, 2) }],
           };
