@@ -1282,7 +1282,7 @@
         "amqp",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Cloudflare Queues",
@@ -1395,7 +1395,7 @@
         "scheduling",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Pusher",
@@ -1410,7 +1410,7 @@
         "pubsub",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Ably",
@@ -1426,7 +1426,7 @@
         "chat",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Bright Data MCP Server",
@@ -1502,7 +1502,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-04-30",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1649,7 +1649,7 @@
         "ipv6",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "deSEC",
@@ -1664,7 +1664,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Fastly",
@@ -1717,7 +1717,7 @@
         "rollout",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Flagsmith",
@@ -1731,7 +1731,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Harness Feature Flags",
@@ -1746,7 +1746,7 @@
         "rollout",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Logz.io",
@@ -1761,7 +1761,7 @@
         "analytics",
         "trial"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Stripe",
@@ -1807,7 +1807,7 @@
         "tax",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Contentful",
@@ -1822,7 +1822,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Sanity",
@@ -1838,7 +1838,7 @@
         "groq",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Hygraph",
@@ -1853,7 +1853,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Hugging Face",
@@ -2086,7 +2086,7 @@
         "scheduling",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Trigger.dev",
@@ -2148,7 +2148,7 @@
         "yc",
         "startup credits"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-04-30",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2196,7 +2196,7 @@
         "experimentation",
         "cohorts"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-02",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2245,7 +2245,7 @@
         "oss",
         "jetbrains"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-01",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -2334,7 +2334,7 @@
         "google cloud",
         "partner discounts"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-02",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2359,7 +2359,7 @@
         "aws credits",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-01",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2383,7 +2383,7 @@
         "aws",
         "partner discounts"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-02",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2439,7 +2439,7 @@
         "google cloud",
         "credits"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-01",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2519,7 +2519,7 @@
         "typo-tolerant",
         "free credit"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Statically",
@@ -2548,7 +2548,7 @@
         "error-tracking",
         "tracing"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Baselime",
@@ -2563,7 +2563,7 @@
         "tracing",
         "serverless"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Polar",
@@ -2577,7 +2577,7 @@
         "subscriptions",
         "open-source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Paddle",
@@ -2591,7 +2591,7 @@
         "tax-compliance",
         "subscriptions"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Socket.dev",
@@ -2619,7 +2619,7 @@
         "environment-variables",
         "encryption"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "HashiCorp Vault",
@@ -2656,7 +2656,7 @@
         "ab-testing",
         "open-source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Statsig",
@@ -2670,7 +2670,7 @@
         "ab-testing",
         "analytics"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Zuplo",
@@ -20420,7 +20420,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-30",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20440,7 +20440,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-30",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20460,7 +20460,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-30",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20480,7 +20480,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-04-30",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20500,7 +20500,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-05-01",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20520,7 +20520,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-05-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20687,7 +20687,7 @@
         "git",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "TruffleHog",
@@ -20701,7 +20701,7 @@
         "scanning",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Checkov",
@@ -20718,7 +20718,7 @@
         "open-source",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Trivy",
@@ -20733,7 +20733,7 @@
         "vulnerabilities",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Grype",
@@ -20748,7 +20748,7 @@
         "vulnerabilities",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "OWASP ZAP",
@@ -20763,7 +20763,7 @@
         "scanning",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Nuclei",
@@ -20778,7 +20778,7 @@
         "templates",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "CodeQL",
@@ -20792,7 +20792,7 @@
         "code-analysis",
         "github"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Dependabot",
@@ -20806,7 +20806,7 @@
         "automation",
         "github"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Renovate",
@@ -20820,7 +20820,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Probely",
@@ -20835,7 +20835,7 @@
         "api",
         "scanning"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Falco",
@@ -20850,7 +20850,7 @@
         "containers",
         "open-source"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "BuddyNS",
@@ -20999,7 +20999,7 @@
         "code generation",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Bolt.new",
@@ -21088,7 +21088,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Cline",
@@ -21104,7 +21104,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Aider",
@@ -21121,7 +21121,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Windsurf",
@@ -21155,7 +21155,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Google Antigravity",
@@ -21171,7 +21171,7 @@
         "google",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-04-30"
     },
     {
       "vendor": "Gemini CLI",
@@ -21189,7 +21189,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "OpenAI Codex",
