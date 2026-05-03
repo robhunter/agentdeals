@@ -2684,7 +2684,7 @@
         "rate-limiting",
         "developer-portal"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-01",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2707,7 +2707,7 @@
         "self-hosted",
         "microservices"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Hookdeck",
@@ -2721,7 +2721,7 @@
         "event-gateway",
         "reliability"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Unkey",
@@ -2735,7 +2735,7 @@
         "rate-limiting",
         "authentication"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "GitHub Container Registry",
@@ -2815,7 +2815,7 @@
         "self-hosted",
         "api"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Loops",
@@ -2844,7 +2844,7 @@
         "nameserver",
         "dynamic-dns"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Tinybird",
@@ -2873,7 +2873,7 @@
         "multi-channel",
         "workflow"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Svix",
@@ -2887,7 +2887,7 @@
         "delivery",
         "reliability"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Crisp",
@@ -2901,7 +2901,7 @@
         "customer-support",
         "live-chat"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Mintlify",
@@ -2980,7 +2980,7 @@
         "background-jobs",
         "automation"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "OneSignal",
@@ -2994,7 +2994,7 @@
         "mobile",
         "web-push"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "n8n",
@@ -3022,7 +3022,7 @@
         "admin-panel",
         "dashboard"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "MinIO",
@@ -3137,7 +3137,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Spacelift",
@@ -3200,7 +3200,7 @@
         "red hat",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "BrowserStack Percy",
@@ -3215,7 +3215,7 @@
         "screenshots",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Browserless",
@@ -3230,7 +3230,7 @@
         "scraping",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Browserbase",
@@ -3275,7 +3275,7 @@
         "bots",
         "free"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Slack API",
@@ -3320,7 +3320,7 @@
         "session-replay",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Microsoft Founders Hub",
@@ -3336,7 +3336,7 @@
         "azure",
         "accelerator"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-03",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3361,7 +3361,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Make",
@@ -3391,7 +3391,7 @@
         "no-code",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "GlitchTip",
@@ -3406,7 +3406,7 @@
         "sentry-compatible",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "LogRocket",
@@ -3421,7 +3421,7 @@
         "frontend",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "LiveKit",
@@ -3437,7 +3437,7 @@
         "ai-agents",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "ReadMe",
@@ -3465,7 +3465,7 @@
         "knowledge-base",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Chromatic",
@@ -3480,7 +3480,7 @@
         "regression",
         "free tier"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Figma",
@@ -3558,7 +3558,7 @@
         "real-time",
         "communication"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Knock",
@@ -3574,7 +3574,7 @@
         "in-app",
         "workflows"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Mapbox",
@@ -3590,7 +3590,7 @@
         "mapping",
         "gis"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Google Maps Platform",
@@ -3622,7 +3622,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Tally",
@@ -3637,7 +3637,7 @@
         "no-code",
         "data collection"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Formbricks",
@@ -3653,7 +3653,7 @@
         "feedback",
         "product research"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Mux",
@@ -3669,7 +3669,7 @@
         "encoding",
         "player"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Lokalise",
@@ -3684,7 +3684,7 @@
         "internationalization",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Cal.com",
@@ -3699,7 +3699,7 @@
         "open source",
         "appointments"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Tawk.to",
@@ -3715,7 +3715,7 @@
         "ticketing",
         "free"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Uploadcare",
@@ -3801,7 +3801,7 @@
         "aws",
         "kiro"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -3860,7 +3860,7 @@
         "deployment",
         "ota updates"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Crowdin",
@@ -3971,7 +3971,7 @@
         "webhooks",
         "unified api"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Atlassian Statuspage",
@@ -3985,7 +3985,7 @@
         "uptime",
         "notifications"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "OpenStatus",
@@ -4000,7 +4000,7 @@
         "open source",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Upptime",
@@ -4015,7 +4015,7 @@
         "open source",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Cachet",
@@ -4029,7 +4029,7 @@
         "open source",
         "incident management"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "cState",
@@ -4043,7 +4043,7 @@
         "hugo",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Daily.co",
@@ -4057,7 +4057,7 @@
         "api",
         "conferencing"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Whereby",
@@ -4071,7 +4071,7 @@
         "embedded",
         "conferencing"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Docusaurus",
@@ -4085,7 +4085,7 @@
         "static site",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Nextra",
@@ -4099,7 +4099,7 @@
         "mdx",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "VitePress",
@@ -4114,7 +4114,7 @@
         "static site",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Sphinx",
@@ -4128,7 +4128,7 @@
         "open source",
         "restructuredtext"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "Formspree",
@@ -4142,7 +4142,7 @@
         "email",
         "no-code"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "JotForm",
@@ -4156,7 +4156,7 @@
         "templates",
         "drag-and-drop"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "LocationIQ",
@@ -4170,7 +4170,7 @@
         "routing",
         "api"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-01"
     },
     {
       "vendor": "ipinfo.io",
@@ -4198,7 +4198,7 @@
         "api",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "ScraperAPI",
@@ -4212,7 +4212,7 @@
         "api",
         "data extraction"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Playwright",
