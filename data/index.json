@@ -4227,7 +4227,7 @@
         "e2e",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Puppeteer",
@@ -4242,7 +4242,7 @@
         "headless",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "UNPKG",
@@ -4256,7 +4256,7 @@
         "javascript",
         "static files"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "esm.sh",
@@ -4271,7 +4271,7 @@
         "javascript",
         "modules"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Excalidraw",
@@ -4328,7 +4328,7 @@
         "security",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Amazon ECR Public",
@@ -4342,7 +4342,7 @@
         "aws",
         "docker"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Exceptionless",
@@ -4356,7 +4356,7 @@
         "monitoring",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Stream",
@@ -4371,7 +4371,7 @@
         "activity feeds",
         "api"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Descope",
@@ -4497,7 +4497,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Traefik",
@@ -4512,7 +4512,7 @@
         "docker",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Argo CD",
@@ -4528,7 +4528,7 @@
         "cncf",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "BullMQ",
@@ -4543,7 +4543,7 @@
         "nodejs",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Automatisch",
@@ -4558,7 +4558,7 @@
         "self-hosted",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Strapi",
@@ -4573,7 +4573,7 @@
         "content",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Payload CMS",
@@ -4636,7 +4636,7 @@
         "grafana",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Plausible Analytics",
@@ -4696,7 +4696,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Gitea",
@@ -4711,7 +4711,7 @@
         "ci",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Appsmith",
@@ -4725,7 +4725,7 @@
         "admin panel",
         "open source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "LocalStack",
@@ -4909,7 +4909,7 @@
         "nlp",
         "generative-ai"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-03",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -4957,7 +4957,7 @@
         "grafana",
         "k6"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "FOSSA",
@@ -5039,7 +5039,7 @@
         "ingress",
         "developer-tools"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Tailscale",
@@ -5084,7 +5084,7 @@
         "embeddings",
         "search"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-03",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5108,7 +5108,7 @@
         "embeddings",
         "search"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-03",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5188,7 +5188,7 @@
         "ecommerce",
         "subscriptions"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Deepgram",
@@ -5203,7 +5203,7 @@
         "ai",
         "nlp"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-04",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5227,7 +5227,7 @@
         "maps",
         "forecast"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Semgrep",
@@ -5352,7 +5352,7 @@
         "screenshots",
         "exchange-rates"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "APILayer",
@@ -5367,7 +5367,7 @@
         "exchange-rates",
         "ip-geolocation"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "BigDataCloud",
@@ -5426,7 +5426,7 @@
         "location",
         "api"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "CurrencyFreaks",
@@ -5530,7 +5530,7 @@
         "object-detection",
         "model-training"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Scale AI",
@@ -5545,7 +5545,7 @@
         "ai-data",
         "training-data"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Weaviate",
@@ -5652,7 +5652,7 @@
         "nlp",
         "api"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-02",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5715,7 +5715,7 @@
         "gpu",
         "serverless"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-04",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5754,7 +5754,7 @@
         "mlops",
         "llm-evaluation"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Clarifai",
@@ -5769,7 +5769,7 @@
         "image-recognition",
         "api"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Neptune.ai",
@@ -5799,7 +5799,7 @@
         "training-data",
         "computer-vision"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Tyk",
@@ -5814,7 +5814,7 @@
         "authentication",
         "api-management"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Stoplight",
@@ -5829,7 +5829,7 @@
         "api-docs",
         "developer-tools"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "SwaggerHub",
@@ -5844,7 +5844,7 @@
         "documentation",
         "api-docs"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "RapidAPI",
@@ -5858,7 +5858,7 @@
         "developer-tools",
         "api-discovery"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Apidog",
@@ -5874,7 +5874,7 @@
         "developer-tools",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Bruno",
@@ -5981,7 +5981,7 @@
         "supergraph",
         "developer-tools"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Hasura",
@@ -6280,7 +6280,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Docs",
@@ -6293,7 +6293,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Projects",
@@ -6306,7 +6306,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Connect",
@@ -6319,7 +6319,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Meeting",
@@ -6332,7 +6332,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Vault",
@@ -6358,7 +6358,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Notebook",
@@ -6371,7 +6371,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Wiki",
@@ -6384,7 +6384,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Checkout",
@@ -6397,7 +6397,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Desk",
@@ -6410,7 +6410,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Cliq",
@@ -6423,7 +6423,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Zoho Campaigns",
@@ -6449,7 +6449,7 @@
         "no-code",
         "zoho"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Zoho Sign",
@@ -6462,7 +6462,7 @@
         "workflow",
         "zoho"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-02"
     },
     {
       "vendor": "Zoho Survey",
