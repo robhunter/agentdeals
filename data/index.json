@@ -6475,7 +6475,7 @@
         "forms",
         "zoho"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Zoho Bookings",
@@ -6488,7 +6488,7 @@
         "workflow",
         "zoho"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "DBOS",
@@ -6518,7 +6518,7 @@
         "free-for-dev",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Cloud 66",
@@ -6532,7 +6532,7 @@
         "management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "deployment.io",
@@ -6546,7 +6546,7 @@
         "management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Scalr",
@@ -6602,7 +6602,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "GitGud",
@@ -6614,7 +6614,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "heptapod.net",
@@ -6626,7 +6626,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Pagure.io",
@@ -6638,7 +6638,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "pijul.com",
@@ -6650,7 +6650,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "RocketGit",
@@ -6662,7 +6662,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "savannah.gnu.org",
@@ -6674,7 +6674,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "savannah.nongnu.org",
@@ -6686,7 +6686,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "APITemplate.io",
@@ -6710,7 +6710,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Arize AI",
@@ -6734,7 +6734,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Browse AI",
@@ -6746,7 +6746,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "BrowserCat",
@@ -6758,7 +6758,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Calendarific",
@@ -6782,7 +6782,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "CarAPI.dev",
@@ -6818,7 +6818,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Composio",
@@ -6830,7 +6830,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-03",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -6875,7 +6875,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "CraftMyPDF",
@@ -6899,7 +6899,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "CurlHub",
@@ -6911,7 +6911,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "CurrencyScoop",
@@ -6947,7 +6947,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Data Miner",
@@ -6959,7 +6959,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Dataimporter.io",
@@ -6983,7 +6983,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "DB Designer",
@@ -7019,7 +7019,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Deepnote",
@@ -7091,7 +7091,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "DynamicDocs",
@@ -7115,7 +7115,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "ExtendsClass",
@@ -7127,7 +7127,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Financial Data",
@@ -7211,7 +7211,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Insomnia",
@@ -7383,7 +7383,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "JSONGrid",
@@ -7407,7 +7407,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "JSONSwiss",
@@ -7443,7 +7443,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "LoginLlama",
@@ -7479,7 +7479,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "microlink.io",
@@ -7491,7 +7491,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "MockAPI",
@@ -7503,7 +7503,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Mockerito",
@@ -7515,7 +7515,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "Mockfly",
@@ -7527,7 +7527,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Mocko.dev",
@@ -7539,7 +7539,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Multi-Exit IP Address Checker",
@@ -7551,7 +7551,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Cloudflare Mesh",
@@ -7613,7 +7613,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "OpenAPI3 Designer",
@@ -7625,7 +7625,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Parseur",
@@ -7637,7 +7637,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "PDF-API.io",
@@ -7661,7 +7661,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "pdfEndpoint.com",
@@ -7697,7 +7697,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Preset Cloud",
@@ -7709,7 +7709,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "ProxySentry",
@@ -7733,7 +7733,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-03",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -7766,7 +7766,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "ROBOHASH",
@@ -7790,7 +7790,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-03"
     },
     {
       "vendor": "ScrapingAnt",
@@ -7826,7 +7826,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Geekflare API",
@@ -7838,7 +7838,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "SmartParse",
@@ -7862,7 +7862,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Sqlable",
@@ -7898,7 +7898,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-03",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -7931,7 +7931,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-04"
     },
     {
       "vendor": "Tomorrow.io Weather API",
