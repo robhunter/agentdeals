@@ -9113,7 +9113,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "coderabbit.ai",
@@ -9137,7 +9137,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "coveralls.io",
@@ -9161,7 +9161,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "DeepSource",
@@ -9173,7 +9173,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "DiffText",
@@ -9185,7 +9185,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "gerrithub.io",
@@ -9197,7 +9197,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "goreportcard.com",
@@ -9209,7 +9209,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "gtmetrix.com",
@@ -9233,7 +9233,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "houndci.com",
@@ -9245,7 +9245,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "reviewable.io",
@@ -9257,7 +9257,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "scan.coverity.com",
@@ -9269,7 +9269,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "scrutinizer-ci.com",
@@ -9281,7 +9281,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "semanticdiff.com",
@@ -9293,7 +9293,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "shields.io",
@@ -9353,7 +9353,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "appveyor.com",
@@ -9550,7 +9550,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "Argos",
@@ -9563,7 +9563,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "Bencher",
@@ -9589,7 +9589,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "checkbot.io",
@@ -9602,7 +9602,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "CORS-Tester",
@@ -9615,7 +9615,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "everystep-automation.com",
@@ -9641,7 +9641,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "katalon.com",
@@ -9654,7 +9654,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Keploy",
@@ -9667,7 +9667,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "loadmill.com",
@@ -9680,7 +9680,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "lost-pixel.com",
@@ -9693,7 +9693,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "pagegym.com",
@@ -9706,7 +9706,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "qase.io",
@@ -9719,7 +9719,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "seotest.me",
@@ -9732,7 +9732,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "snippets.uilicious.com",
@@ -9745,7 +9745,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "SSR (Server-side Rendering) Checker",
@@ -9771,7 +9771,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "Testspace.com",
@@ -9784,7 +9784,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "tesults.com",
@@ -9797,7 +9797,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "UseWebhook.com",
@@ -9810,7 +9810,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "Vaadin",
@@ -9823,7 +9823,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "webhook.site",
@@ -9836,7 +9836,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "websitepulse.com",
@@ -9849,7 +9849,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "kogiQA",
@@ -9862,7 +9862,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "aikido.dev",
@@ -10395,7 +10395,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "Diawi",
@@ -10407,7 +10407,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "GetUpdraft",
@@ -10419,7 +10419,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "InstallOnAir",
@@ -10431,7 +10431,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "Loadly",
@@ -10443,7 +10443,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "bitnami.com",
@@ -10455,7 +10455,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-05"
     },
     {
       "vendor": "jamf.com",
@@ -10467,7 +10467,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "Miradore",
@@ -10479,7 +10479,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "moss.sh",
@@ -10503,7 +10503,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "runcloud.io",
@@ -10515,7 +10515,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "serveravatar.com",
@@ -10527,7 +10527,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "xcloud.host",
@@ -10539,7 +10539,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "courier.com",
@@ -10552,7 +10552,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "EMQX Serverless",
@@ -10565,7 +10565,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-06"
     },
     {
       "vendor": "Engage",
@@ -10578,7 +10578,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "engagespot.co",
@@ -10591,7 +10591,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "HiveMQ",
@@ -10604,7 +10604,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "httpSMS",
