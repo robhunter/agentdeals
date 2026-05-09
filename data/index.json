@@ -12384,7 +12384,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "Wufoo",
@@ -12396,7 +12396,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Arize AX",
@@ -12424,7 +12424,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Braintrust",
@@ -12452,7 +12452,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Keywords AI",
@@ -12466,7 +12466,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Langfuse",
@@ -12480,7 +12480,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-08",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -12503,7 +12503,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Langtrace",
@@ -12517,7 +12517,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "LangWatch",
@@ -12531,7 +12531,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Lumenfall.ai",
@@ -12545,7 +12545,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Mediaworkbench.ai",
@@ -12559,7 +12559,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Othor AI",
@@ -12573,7 +12573,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Pollinations.AI",
@@ -12587,7 +12587,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Portkey",
@@ -12601,7 +12601,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-09",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -12624,7 +12624,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "Zenable",
@@ -12638,7 +12638,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "bootstrapcdn.com",
@@ -12651,7 +12651,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "CacheFly",
@@ -12664,7 +12664,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "cdnjs.com",
@@ -12677,7 +12677,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "developers.google.com",
@@ -12690,7 +12690,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Microsoft Ajax",
@@ -12703,7 +12703,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Namecheap Supersonic",
@@ -12753,7 +12753,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "raw.githack.com",
@@ -12766,7 +12766,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "Skypack",
@@ -12805,7 +12805,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "weserv",
@@ -12818,7 +12818,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "ampt.dev",
@@ -13183,7 +13183,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "Clappia",
@@ -13195,7 +13195,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "lil'bots",
@@ -13207,7 +13207,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "manubes",
@@ -13219,7 +13219,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "Mendix",
@@ -13243,7 +13243,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "ToolJet",
@@ -13255,7 +13255,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "UI Bakery",
@@ -13267,7 +13267,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "Alwaysdata",
@@ -13515,7 +13515,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "dnspod.com",
@@ -13528,7 +13528,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "duckdns.org",
@@ -13541,7 +13541,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Dynv6.com",
@@ -13554,7 +13554,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "freedns.afraid.org",
@@ -13567,7 +13567,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Glauca",
@@ -13580,7 +13580,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "LocalCert",
@@ -13593,7 +13593,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "luadns.com",
@@ -13606,7 +13606,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "namecheap.com",
@@ -13641,7 +13641,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "noip",
@@ -13654,7 +13654,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "sslip.io",
@@ -13667,7 +13667,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "VolaryDDNS",
@@ -13680,7 +13680,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "zilore.com",
@@ -13693,7 +13693,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "zoneedit.com",
@@ -13706,7 +13706,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Zonomi",
@@ -13719,7 +13719,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "DigitalPlat",
@@ -13745,7 +13745,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "pp.ua",
@@ -13758,7 +13758,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "4EVERLAND",
@@ -13771,7 +13771,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "C2 Object Storage",
@@ -13784,7 +13784,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "filebase.com",
@@ -13797,7 +13797,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "8base.com",
@@ -13913,7 +13913,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "cname.dev",
@@ -13925,7 +13925,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-07"
     },
     {
       "vendor": "conveyor.cloud",
