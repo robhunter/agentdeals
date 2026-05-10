@@ -13937,7 +13937,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Expose",
@@ -13949,7 +13949,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Hamachi",
@@ -13973,7 +13973,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "localtunnel",
@@ -13985,7 +13985,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "LocalXpose",
@@ -14009,7 +14009,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Radmin VPN",
@@ -14021,7 +14021,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "serveo",
@@ -14033,7 +14033,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "webhookrelay.com",
@@ -14045,7 +14045,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Xirsys",
@@ -14057,7 +14057,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "ZeroTier",
@@ -14201,7 +14201,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "easyretro.io",
@@ -14249,7 +14249,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Helploom",
@@ -14285,7 +14285,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "kan.bn",
@@ -14333,7 +14333,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "leiga.com",
@@ -14357,7 +14357,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "MeisterTask",
@@ -16278,7 +16278,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Foursquare",
@@ -16304,7 +16304,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "geocodify.com",
@@ -16317,7 +16317,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "geojs.io",
@@ -16343,7 +16343,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "ipstack",
@@ -16356,7 +16356,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "maps.stamen.com",
@@ -16369,7 +16369,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "maptiler.com",
@@ -16382,7 +16382,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "nominatim.org",
@@ -16395,7 +16395,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "opencagedata.com",
@@ -16408,7 +16408,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "osmnames",
@@ -16421,7 +16421,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "positionstack",
@@ -16434,7 +16434,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "stadiamaps.com",
@@ -16447,7 +16447,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "build.opensuse.org",
@@ -16483,7 +16483,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "AndroidIDE",
@@ -16495,7 +16495,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Apache Netbeans",
@@ -16507,7 +16507,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "apiary.io",
@@ -16519,7 +16519,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "BBEdit",
@@ -16531,7 +16531,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Binder",
@@ -16543,7 +16543,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "BlueJ",
@@ -16555,7 +16555,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Bootify.io",
@@ -16567,7 +16567,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Brackets",
@@ -16579,7 +16579,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "cacher.io",
@@ -16591,7 +16591,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "cocalc.com",
@@ -16615,7 +16615,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Code::Blocks",
@@ -16627,7 +16627,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "codepen.io",
@@ -16663,7 +16663,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Eclipse Che",
@@ -16675,7 +16675,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "ForgeCode",
@@ -16687,7 +16687,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "GetVM",
@@ -16699,7 +16699,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "JDoodle",
@@ -16711,7 +16711,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "MarsCode",
@@ -16735,7 +16735,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Mocklets",
@@ -16747,7 +16747,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "OneCompiler",
@@ -16759,7 +16759,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Paiza",
@@ -16771,7 +16771,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "PHPSandbox",
@@ -16783,7 +16783,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Replit",
@@ -16796,7 +16796,7 @@
         "free-for-dev",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "SoloLearn",
@@ -16808,7 +16808,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "stackblitz.com",
@@ -16832,7 +16832,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-09"
     },
     {
       "vendor": "Visual Studio Code",
@@ -16844,7 +16844,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "Visual Studio Community",
@@ -16856,7 +16856,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-08"
     },
     {
       "vendor": "VSCodium",
