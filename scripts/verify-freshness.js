@@ -155,10 +155,10 @@ function sleep(ms) {
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
-export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath }) {
+export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath, now = new Date() }) {
   const data = JSON.parse(readFileSync(indexPath || INDEX_PATH, "utf-8"));
   const offers = data.offers || [];
-  const { stale, freshCount } = findStaleOffers(offers, thresholdDays);
+  const { stale, freshCount } = findStaleOffers(offers, thresholdDays, now);
 
   if (stale.length === 0) {
     return {
@@ -186,7 +186,7 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath 
     }
     return client;
   }
-  const today = new Date().toISOString().split("T")[0];
+  const today = now.toISOString().split("T")[0];
 
   let verified = 0;
   let changed = 0;
