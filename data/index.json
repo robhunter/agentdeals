@@ -53,7 +53,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -94,7 +94,7 @@
         "vercel-alternative",
         "student-upgrade"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -152,7 +152,7 @@
         "deployment",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -404,7 +404,7 @@
         "free tier",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Supabase",
@@ -463,7 +463,7 @@
         "mongodb-alternative",
         "vector-database"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "referral_program": {
         "available": true,
         "referrer_benefit": "$20 cash per referral",
@@ -528,7 +528,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Turso",
@@ -544,7 +544,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Upstash",
@@ -595,7 +595,7 @@
         "azure",
         "databricks"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Convex",
@@ -683,7 +683,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -736,7 +736,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Hasura Cloud",
@@ -861,7 +861,7 @@
         "observability",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-11",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -883,7 +883,7 @@
         "observability",
         "apm"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -908,7 +908,7 @@
         "grafana",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "BetterStack",
@@ -925,7 +925,7 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Axiom",
@@ -941,7 +941,7 @@
         "free tier",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Checkly",
@@ -975,7 +975,7 @@
         "free tier",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-11",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1142,7 +1142,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Brevo",
@@ -1196,7 +1196,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1329,7 +1329,7 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-11",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1363,7 +1363,7 @@
         "free tier",
         "facets"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-11",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1461,7 +1461,7 @@
         "crawling",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1486,7 +1486,7 @@
         "actors",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Cursor",
@@ -1544,7 +1544,7 @@
         "container-security",
         "iac"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Fingerprint",
@@ -1593,7 +1593,7 @@
         "eu",
         "price-increase-2026"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "referral_program": {
         "available": true,
         "referrer_benefit": "€10 credit",
@@ -1869,7 +1869,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1902,7 +1902,7 @@
         "fast",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2007,7 +2007,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2101,7 +2101,7 @@
         "queues",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Momento",
@@ -2132,7 +2132,7 @@
         "security",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "PostHog",
@@ -2303,7 +2303,7 @@
         "apm",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -3008,7 +3008,7 @@
         "integrations",
         "self-hosted"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Retool",
@@ -3153,7 +3153,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "HCP Terraform",
@@ -3245,7 +3245,7 @@
         "ai-agent",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-10",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -3606,7 +3606,7 @@
         "google",
         "gis"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Instatus",
@@ -3772,7 +3772,7 @@
         "cloudflare",
         "infrastructure"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-11",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3906,7 +3906,7 @@
         "code quality",
         "analytics"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Dub.co",
@@ -3921,7 +3921,7 @@
         "open source",
         "attribution"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Stytch",
@@ -3955,7 +3955,7 @@
         "comments",
         "sdk"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Nango",
@@ -20542,7 +20542,7 @@
         "selenium",
         "open-source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "BrowserStack",
@@ -20557,7 +20557,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-11",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -20579,7 +20579,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-12",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -20601,7 +20601,7 @@
         "cross-browser",
         "automation"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Applitools Eyes",
@@ -20629,7 +20629,7 @@
         "performance",
         "open-source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Gatling",
@@ -20643,7 +20643,7 @@
         "performance",
         "open-source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Locust",
@@ -20658,7 +20658,7 @@
         "python",
         "open-source"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "BlazeMeter",
@@ -20672,7 +20672,7 @@
         "performance",
         "api-testing"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "Gitleaks",
@@ -20875,7 +20875,7 @@
         "anycast",
         "ddos-protection"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "NS1 Connect",
@@ -20888,7 +20888,7 @@
         "traffic-management",
         "api"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-10"
     },
     {
       "vendor": "DigitalOcean DNS",
@@ -20951,7 +20951,7 @@
         "startup credits",
         "infrastructure"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-10",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -20975,7 +20975,7 @@
         "free credits",
         "api"
       ],
-      "verifiedDate": "2026-04-13",
+      "verifiedDate": "2026-05-10",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21046,7 +21046,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "GitHub Copilot",
@@ -21139,7 +21139,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Augment Code",
