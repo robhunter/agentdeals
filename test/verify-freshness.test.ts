@@ -179,12 +179,12 @@ describe("verify-freshness", () => {
     it("reports all fresh when no stale entries", async () => {
       const data = {
         offers: [
-          { vendor: "Fresh", category: "Hosting", url: "https://example.com", verifiedDate: "2026-04-01", tier: "Free", description: "Free plan" },
+          { vendor: "Fresh", category: "Hosting", url: "https://example.com", verifiedDate: "2026-03-10", tier: "Free", description: "Free plan" },
         ],
       };
       writeFileSync(indexPath, JSON.stringify(data));
 
-      const result = await verifyFreshness({ thresholdDays: 25, dryRun: true, indexPath });
+      const result = await verifyFreshness({ thresholdDays: 25, dryRun: true, indexPath, now });
       assert.strictEqual(result.verified, 0);
       assert.strictEqual(result.alreadyFresh, 1);
     });
@@ -198,7 +198,7 @@ describe("verify-freshness", () => {
       writeFileSync(indexPath, JSON.stringify(data));
       const before = readFileSync(indexPath, "utf-8");
 
-      await verifyFreshness({ thresholdDays: 25, dryRun: true, indexPath });
+      await verifyFreshness({ thresholdDays: 25, dryRun: true, indexPath, now });
       const after = readFileSync(indexPath, "utf-8");
       assert.strictEqual(before, after);
     });
@@ -214,7 +214,7 @@ describe("verify-freshness", () => {
       }));
       writeFileSync(indexPath, JSON.stringify({ offers }));
 
-      const result = await verifyFreshness({ thresholdDays: 25, dryRun: true, limit: 3, indexPath });
+      const result = await verifyFreshness({ thresholdDays: 25, dryRun: true, limit: 3, indexPath, now });
       // Should attempt at most 3, skip the rest
       assert.strictEqual(result.skipped, 7);
       assert.ok(result.failed <= 3);
