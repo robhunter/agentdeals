@@ -4434,7 +4434,7 @@
         "self-hosted",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Cerebras",
@@ -4448,7 +4448,7 @@
         "inference",
         "api"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -4472,7 +4472,7 @@
         "reranking",
         "api"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-13",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -4788,7 +4788,7 @@
         "testing",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "DynamoDB Local",
@@ -4804,7 +4804,7 @@
         "nosql",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "ElasticMQ",
@@ -4820,7 +4820,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "CloudDev",
@@ -4840,7 +4840,7 @@
         "api-gateway",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Vera AWS",
@@ -4859,7 +4859,7 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Floci",
@@ -4876,7 +4876,7 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Brave Search API",
@@ -5606,7 +5606,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Chroma",
@@ -5676,7 +5676,7 @@
         "inference",
         "gpu"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-13",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -5739,7 +5739,7 @@
         "mlops",
         "datasets"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Comet ML",
@@ -5951,7 +5951,7 @@
         "knowledge-graph",
         "cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "InfluxDB Cloud",
@@ -6254,7 +6254,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Zoho",
@@ -6267,7 +6267,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Zoho Assist",
@@ -6345,7 +6345,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Showtime",
@@ -6578,7 +6578,7 @@
         "devops",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Codeberg",
@@ -8219,7 +8219,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "DevToolLab",
@@ -8435,7 +8435,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Nuclino",
@@ -8881,7 +8881,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Crystallize",
@@ -8895,7 +8895,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "DatoCMS",
@@ -9089,7 +9089,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Codeac.io",
@@ -9149,7 +9149,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "deepscan.io",
@@ -9221,7 +9221,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "holistic.dev",
@@ -10282,7 +10282,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "MojoAuth",
@@ -10327,7 +10327,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Phase Two",
@@ -11539,7 +11539,7 @@
         "free-for-dev",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "addy.io",
@@ -12740,7 +12740,7 @@
         "ddos",
         "ssl"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "PromoProxy",
@@ -12935,7 +12935,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "flightcontrol.dev",
@@ -13041,7 +13041,7 @@
         "backend",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "bismuth.cloud",
@@ -13306,7 +13306,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "dAppling Network",
@@ -13346,7 +13346,7 @@
         "free-for-dev",
         "kinsta-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "MDB GO",
@@ -14093,7 +14093,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Backlog",
@@ -14153,7 +14153,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Clockify",
@@ -14165,7 +14165,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Cloudcraft",
@@ -14513,7 +14513,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "teleretro.com",
@@ -16226,7 +16226,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Webstudio",
@@ -16265,7 +16265,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Clockwork Micro",
@@ -16603,7 +16603,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "code.cs50.io",
@@ -16639,7 +16639,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "codesandbox.io",
@@ -16723,7 +16723,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "mockaroo",
@@ -16820,7 +16820,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Sublime Text",
@@ -16880,7 +16880,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-11"
     },
     {
       "vendor": "Wave Terminal",
@@ -17046,7 +17046,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "getinsights.io",
@@ -20935,7 +20935,7 @@
         "dns",
         "free"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Vast.ai",
@@ -21029,7 +21029,7 @@
         "no-code",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Claude Code",
@@ -21252,7 +21252,7 @@
         "claude",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21285,7 +21285,7 @@
         "bigquery",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Google Cloud Run",
@@ -21300,7 +21300,7 @@
         "google cloud",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Google Compute Engine",
