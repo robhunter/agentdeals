@@ -188,7 +188,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-13",
       "referral": {
         "code": "7RZL9q",
         "url": "https://railway.com?referralCode=7RZL9q",
@@ -244,7 +244,7 @@
         "vercel-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-13",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -320,7 +320,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "AWS",
@@ -353,7 +353,7 @@
         "azure",
         "microsoft"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "DigitalOcean",
@@ -371,7 +371,7 @@
         "heroku-alternative",
         "digitalocean-free-tier-2026"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-13",
       "expires_date": "2026-06-30",
       "free_tier_limits": {
         "credits": "$200 for 60 days",
@@ -424,7 +424,7 @@
         "mongodb-alternative",
         "vector-database"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-14",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -767,7 +767,7 @@
         "github",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-13",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1031,7 +1031,7 @@
         "sso",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-13",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1056,7 +1056,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "WorkOS",
@@ -1445,7 +1445,7 @@
         "free tier",
         "mcp-server"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Firecrawl",
@@ -1561,7 +1561,7 @@
         "bot-detection",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "SonarQube Cloud",
@@ -2056,7 +2056,7 @@
         "session replay",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Mixpanel",
@@ -2801,7 +2801,7 @@
         "deal-change",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Directus",
@@ -4892,7 +4892,7 @@
         "llm",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-15"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "OpenAI",
@@ -5146,7 +5146,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "PagerDuty",
@@ -5784,7 +5784,7 @@
         "foundation-models",
         "research"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Labelbox",
@@ -13619,7 +13619,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-05",
+      "verifiedDate": "2026-05-14",
       "referral_program": {
         "available": true,
         "referrer_benefit": "20-35% commission depending on product",
@@ -21205,7 +21205,7 @@
         "openai",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-15",
+      "verifiedDate": "2026-05-12",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -21315,7 +21315,7 @@
         "google cloud",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Google Cloud Storage",
@@ -21328,7 +21328,7 @@
         "object-storage",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Google Cloud Pub/Sub",
@@ -21342,7 +21342,7 @@
         "event-driven",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Google Cloud Build",
@@ -21357,7 +21357,7 @@
         "google cloud",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Google Artifact Registry",
@@ -21371,7 +21371,7 @@
         "packages",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Google Cloud Logging",
@@ -21384,7 +21384,7 @@
         "observability",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Google Secret Manager",
@@ -21397,7 +21397,7 @@
         "security",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Google Cloud Shell",
@@ -21411,7 +21411,7 @@
         "developer-tools",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Google Cloud Monitoring",
@@ -21425,7 +21425,7 @@
         "alerting",
         "google cloud"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "ClickUp",
@@ -21440,7 +21440,7 @@
         "collaboration",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "GitHub Models",
@@ -21457,7 +21457,7 @@
         "free tier",
         "openai-compatible"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-14",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21491,7 +21491,7 @@
         "gpu",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21517,7 +21517,7 @@
         "self-hosted",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Google Gemini Code Assist",
@@ -22600,7 +22600,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-12",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -22624,7 +22624,7 @@
         "workers",
         "free-for-students"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-13",
       "eligibility": {
         "type": "student",
         "conditions": [
@@ -22656,7 +22656,7 @@
         "cloudflare",
         "linux"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-14",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -22978,7 +22978,7 @@
         "cursor-alternative",
         "free tier"
       ],
-      "verifiedDate": "2026-04-15"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "OVHcloud",
@@ -22998,7 +22998,7 @@
         "budget",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-13",
       "expires_date": "2026-06-14",
       "free_tier_limits": {
         "credits": "€200 for 60 days",
@@ -23021,7 +23021,7 @@
         "budget",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-04-14"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Exa",
@@ -23038,7 +23038,7 @@
         "agent-payments",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-13",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23063,7 +23063,7 @@
         "agent-payments",
         "ai-agents"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-13",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23207,7 +23207,7 @@
         "vertex-ai",
         "rag"
       ],
-      "verifiedDate": "2026-04-15"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Google GLM 5",
@@ -23223,7 +23223,7 @@
         "agentic",
         "experimental"
       ],
-      "verifiedDate": "2026-04-15"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Google Gemini Embedding 2",
@@ -23239,7 +23239,7 @@
         "vertex-ai",
         "rag"
       ],
-      "verifiedDate": "2026-04-15"
+      "verifiedDate": "2026-05-12"
     },
     {
       "vendor": "Google Content API for Shopping",
@@ -23256,7 +23256,7 @@
         "deprecated",
         "product-data"
       ],
-      "verifiedDate": "2026-04-15"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Alibaba Cloud Qwen Code",
@@ -23272,7 +23272,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-16"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "E2B",
