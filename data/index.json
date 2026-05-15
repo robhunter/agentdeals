@@ -5258,7 +5258,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Semaphore CI",
@@ -5305,7 +5305,7 @@
         "game-dev",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "SurrealDB Cloud",
@@ -6192,7 +6192,7 @@
         "flutter",
         "macos"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Appcircle",
@@ -10042,7 +10042,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "qualys.com",
@@ -11804,7 +11804,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "UserCheck",
@@ -11948,7 +11948,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Substack",
@@ -12438,7 +12438,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Clair",
@@ -20901,7 +20901,7 @@
         "cloud",
         "digitalocean-free-tier-2026"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Vultr DNS",
@@ -21550,7 +21550,7 @@
         "gateway",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "SiliconFlow",
@@ -21566,7 +21566,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-15",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21591,7 +21591,7 @@
         "glm",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "DeepSeek API",
@@ -21608,7 +21608,7 @@
         "deepseek",
         "reasoning"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-14",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21656,7 +21656,7 @@
         "aurora",
         "rds"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Spotify",
@@ -21671,7 +21671,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "YouTube",
@@ -21686,7 +21686,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Tubi",
@@ -21701,7 +21701,7 @@
         "ad-supported",
         "consumer"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Pluto TV",
@@ -21716,7 +21716,7 @@
         "ad-supported",
         "consumer"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Peacock",
@@ -21731,7 +21731,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Crunchyroll",
@@ -21746,7 +21746,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Pandora",
@@ -21762,7 +21762,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "iHeartRadio",
@@ -21777,7 +21777,7 @@
         "ad-supported",
         "consumer"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "SoundCloud",
@@ -21793,7 +21793,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Plex",
@@ -21808,7 +21808,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Apple Podcasts",
@@ -21821,7 +21821,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Pocket Casts",
@@ -21834,7 +21834,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Notion",
@@ -21904,7 +21904,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Obsidian",
@@ -21920,7 +21920,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Apple Notes",
@@ -21933,7 +21933,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Microsoft To Do",
@@ -21963,7 +21963,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Standard Notes",
@@ -21978,7 +21978,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Simplenote",
@@ -21993,7 +21993,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "Evernote",
@@ -22021,7 +22021,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Airtable",
@@ -22051,7 +22051,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Google Photos",
@@ -22065,7 +22065,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "iCloud",
@@ -22079,7 +22079,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "OneDrive",
@@ -22092,7 +22092,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Flickr",
@@ -22106,7 +22106,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Dropbox",
@@ -22119,7 +22119,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-13"
     },
     {
       "vendor": "MEGA",
@@ -22134,7 +22134,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "pCloud",
@@ -22147,7 +22147,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Internxt",
@@ -22163,7 +22163,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Bitwarden",
@@ -22178,7 +22178,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Proton Pass",
@@ -22194,7 +22194,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-14",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
