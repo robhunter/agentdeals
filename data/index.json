@@ -7569,7 +7569,7 @@
         "cloudflare",
         "wireguard"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-05-14",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -22216,7 +22216,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "KeePassXC",
@@ -22232,7 +22232,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "LastPass",
@@ -22246,7 +22246,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "NordPass",
@@ -22260,7 +22260,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Slack",
@@ -22274,7 +22274,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Discord",
@@ -22290,7 +22290,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Zoom",
@@ -22304,7 +22304,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Google Meet",
@@ -22318,7 +22318,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Microsoft Teams",
@@ -22332,7 +22332,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Signal",
@@ -22348,7 +22348,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Telegram",
@@ -22362,7 +22362,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "WhatsApp",
@@ -22376,7 +22376,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Photopea",
@@ -22392,7 +22392,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "GIMP",
@@ -22407,7 +22407,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Inkscape",
@@ -22438,7 +22438,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Krita",
@@ -22454,7 +22454,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Blender",
@@ -22471,7 +22471,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Nike Training Club",
@@ -22486,7 +22486,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Samsung Health",
@@ -22501,7 +22501,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "MyFitnessPal",
@@ -22516,7 +22516,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Strava",
@@ -22532,7 +22532,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Apple Health",
@@ -22547,7 +22547,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Proton VPN",
@@ -22562,7 +22562,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-14",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -22585,7 +22585,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Cloudflare WARP",
@@ -22705,7 +22705,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Duolingo",
@@ -22720,7 +22720,7 @@
         "free-tier",
         "ad-supported"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "MIT OpenCourseWare",
@@ -22735,7 +22735,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Coursera",
@@ -22750,7 +22750,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "edX",
@@ -22765,7 +22765,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Gmail",
@@ -22778,7 +22778,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Outlook.com",
@@ -22791,7 +22791,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Proton Mail",
@@ -22806,7 +22806,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-15",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -22830,7 +22830,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Pocket",
@@ -22844,7 +22844,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Instapaper",
@@ -22858,7 +22858,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Feedly",
@@ -22873,7 +22873,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Apple News",
@@ -22887,7 +22887,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Robinhood",
@@ -22902,7 +22902,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Mint (Credit Karma)",
@@ -22917,7 +22917,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Wise",
@@ -22932,7 +22932,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Insight Timer",
@@ -22947,7 +22947,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Waking Up",
@@ -22962,7 +22962,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-14"
     },
     {
       "vendor": "Amazon Kiro",
