@@ -304,7 +304,7 @@
         "free tier",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Koyeb",
@@ -561,7 +561,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Firebase",
@@ -613,7 +613,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Appwrite Cloud",
@@ -666,7 +666,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Cloudflare D1",
@@ -752,7 +752,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "GitHub Actions",
@@ -814,7 +814,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Buildkite",
@@ -958,7 +958,7 @@
         "free tier",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "New Relic",
@@ -1000,7 +1000,7 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Clerk",
@@ -1158,7 +1158,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-19",
+      "verifiedDate": "2026-05-16",
       "referral_program": {
         "available": true,
         "referrer_benefit": "~$5 per free signup, ~$100 per paid signup",
@@ -1525,7 +1525,7 @@
         "agile",
         "free tier"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Snyk",
@@ -1702,7 +1702,7 @@
         "github",
         "free tier"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "LaunchDarkly",
@@ -1935,7 +1935,7 @@
         "deal-change",
         "per-model-pricing"
       ],
-      "verifiedDate": "2026-04-18"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Mistral AI",
@@ -1951,7 +1951,7 @@
         "code",
         "free tier"
       ],
-      "verifiedDate": "2026-04-19",
+      "verifiedDate": "2026-05-16",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2277,7 +2277,7 @@
         "open source",
         "oss"
       ],
-      "verifiedDate": "2026-04-19",
+      "verifiedDate": "2026-05-17",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -2785,7 +2785,7 @@
         "browser-testing",
         "ci-cd"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Postman",
@@ -2830,7 +2830,7 @@
         "automation",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "ClouDNS",
@@ -3185,7 +3185,7 @@
         "hybrid",
         "free tier"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Quay.io",
@@ -3451,7 +3451,7 @@
         "developer-portal",
         "free tier"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "GitBook",
@@ -3495,7 +3495,7 @@
         "collaboration",
         "free tier"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Canva",
@@ -3730,7 +3730,7 @@
         "storage",
         "image optimization"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "IBM Cloud",
@@ -3843,7 +3843,7 @@
         "video",
         "storage"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Expo",
@@ -4184,7 +4184,7 @@
         "api",
         "data"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Meilisearch",
@@ -4313,7 +4313,7 @@
         "online",
         "graphics"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Harbor",
@@ -4400,7 +4400,7 @@
         "webauthn",
         "open source"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Keycloak",
@@ -4605,7 +4605,7 @@
         "open source",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Jaeger",
@@ -4680,7 +4680,7 @@
         "open source",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Hoppscotch",
@@ -5017,7 +5017,7 @@
         "github",
         "containers"
       ],
-      "verifiedDate": "2026-04-19",
+      "verifiedDate": "2026-05-17",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -5054,7 +5054,7 @@
         "zero-trust",
         "wireguard"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Redis Cloud",
@@ -5396,7 +5396,7 @@
         "ip-lookup",
         "location"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Hunter.io",
@@ -5441,7 +5441,7 @@
         "finance",
         "forex"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "MailboxValidator",
@@ -5636,7 +5636,7 @@
         "serverless",
         "search"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "AssemblyAI",
@@ -5996,7 +5996,7 @@
         "backend",
         "developer-tools"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Amazon SP-API",
@@ -6722,7 +6722,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-18"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Beeceptor",
@@ -8099,7 +8099,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-18"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "RepoFlow",
@@ -9628,7 +9628,7 @@
         "qa",
         "trial"
       ],
-      "verifiedDate": "2026-04-18"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "gridlastic.com",
@@ -12410,7 +12410,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-18"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Audio Enhancer",
@@ -20615,7 +20615,7 @@
         "ai",
         "regression"
       ],
-      "verifiedDate": "2026-04-18"
+      "verifiedDate": "2026-05-15"
     },
     {
       "vendor": "Artillery",
@@ -22423,7 +22423,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-04-17"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "DaVinci Resolve",
@@ -23287,7 +23287,7 @@
         "agents",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-16",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23311,7 +23311,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-16",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23335,7 +23335,7 @@
         "image-generation",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-17",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23359,7 +23359,7 @@
         "inference",
         "free tier"
       ],
-      "verifiedDate": "2026-04-17",
+      "verifiedDate": "2026-05-15",
       "payment_protocols": [
         {
           "protocol": "x402",
