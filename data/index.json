@@ -336,7 +336,7 @@
         "credits",
         "startup"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Azure",
@@ -632,7 +632,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Aiven",
@@ -791,7 +791,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-17",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1015,7 +1015,7 @@
         "users",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Auth0",
@@ -1073,7 +1073,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Resend",
@@ -1087,7 +1087,7 @@
         "transactional",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Postmark",
@@ -1126,7 +1126,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Mailjet",
@@ -1251,7 +1251,7 @@
         "zero-egress",
         "free tier"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Cloudinary",
@@ -1267,7 +1267,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "CloudAMQP",
@@ -1297,7 +1297,7 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-16",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1576,7 +1576,7 @@
         "static analysis",
         "free tier"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Hetzner",
@@ -1679,7 +1679,7 @@
         "compute",
         "free tier"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-17",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1776,7 +1776,7 @@
         "subscriptions",
         "free tier"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-16",
       "payment_protocols": [
         {
           "protocol": "stripe-mpp",
@@ -6013,7 +6013,7 @@
         "selling-partner",
         "developer-tools"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Uptimia",
@@ -6503,7 +6503,7 @@
         "postgres",
         "open-source"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Brainboard",
@@ -7031,7 +7031,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "DiffJSON",
@@ -7199,7 +7199,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Hook0",
@@ -8543,7 +8543,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Screen Sharing via Browser",
@@ -8579,7 +8579,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Slab",
@@ -8651,7 +8651,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Teamplify",
@@ -8831,7 +8831,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "zoom.us",
@@ -8965,7 +8965,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "TinaCMS",
@@ -9125,7 +9125,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "CodSpeed",
@@ -9898,7 +9898,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "crypteron.com",
@@ -10933,7 +10933,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Texterify",
@@ -11450,7 +11450,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Jam",
@@ -11514,7 +11514,7 @@
         "search",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "10minutemail",
@@ -12144,7 +12144,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "feedback.fish",
@@ -13359,7 +13359,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Neocities",
@@ -14141,7 +14141,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "clickup.com",
@@ -14177,7 +14177,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Crosswork",
@@ -14261,7 +14261,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "Hygger",
@@ -14778,7 +14778,7 @@
         "media",
         "trial"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "ImgBB",
@@ -14943,7 +14943,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Proton Drive",
@@ -15810,7 +15810,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Proto.io",
@@ -16291,7 +16291,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "geoapify.com",
@@ -16929,7 +16929,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Aptabase",
@@ -16981,7 +16981,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Clicky",
@@ -16994,7 +16994,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-16"
     },
     {
       "vendor": "counter.dev",
@@ -21014,7 +21014,7 @@
         "full-stack",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Lovable",
