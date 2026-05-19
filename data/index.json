@@ -1976,7 +1976,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-18",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2219,7 +2219,7 @@
         "accelerator",
         "aws"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-18",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2496,7 +2496,7 @@
         "accelerator",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-19",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2533,7 +2533,7 @@
         "static",
         "github"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Highlight.io",
@@ -2605,7 +2605,7 @@
         "dependencies",
         "open-source"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Infisical",
@@ -2859,7 +2859,7 @@
         "sql",
         "api"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Novu",
@@ -2915,7 +2915,7 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "GitHub Pages",
@@ -2929,7 +2929,7 @@
         "github",
         "jekyll"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-18",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2952,7 +2952,7 @@
         "alerting",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Nile",
@@ -3038,7 +3038,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Backblaze",
@@ -3543,7 +3543,7 @@
         "devsecops",
         "pre-commit"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Sendbird",
@@ -3875,7 +3875,7 @@
         "open source",
         "internationalization"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Permit.io",
@@ -4285,7 +4285,7 @@
         "collaboration",
         "open source"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Lunacy",
@@ -4386,7 +4386,7 @@
         "mfa",
         "identity"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Hanko",
@@ -4417,7 +4417,7 @@
         "open source",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "FusionAuth",
@@ -4664,7 +4664,7 @@
         "self-hosted",
         "open source"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Woodpecker CI",
@@ -4741,7 +4741,7 @@
         "serverless",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Testcontainers",
@@ -4756,7 +4756,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Moto",
@@ -4772,7 +4772,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "AWS SAM CLI",
@@ -5131,7 +5131,7 @@
         "open-source",
         "identity"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "StatusCake",
@@ -5160,7 +5160,7 @@
         "on-call",
         "alerts"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "imgix",
@@ -5174,7 +5174,7 @@
         "media",
         "optimization"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Lemon Squeezy",
@@ -5289,7 +5289,7 @@
         "orm",
         "serverless"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Unity DevOps",
@@ -5321,7 +5321,7 @@
         "real-time",
         "cloud"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Sematext",
@@ -5411,7 +5411,7 @@
         "email-verification",
         "sales"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Geocodio",
@@ -5484,7 +5484,7 @@
         "api",
         "malware"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "VirusTotal",
@@ -5621,7 +5621,7 @@
         "open-source",
         "search"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Turbopuffer",
@@ -5920,7 +5920,7 @@
         "edgedb",
         "cloud"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "CrateDB",
@@ -6028,7 +6028,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "OnlineOrNot",
@@ -6224,7 +6224,7 @@
         "pipelines",
         "automation"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Harness CI",
@@ -6436,7 +6436,7 @@
         "marketing",
         "zoho"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Zoho Forms",
@@ -6562,7 +6562,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Terragrunt Scale",
@@ -6590,7 +6590,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "framagit.org",
@@ -6770,7 +6770,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Canopy",
@@ -6806,7 +6806,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "Colaboratory",
@@ -6851,7 +6851,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Country-State-City Microservice API",
@@ -6863,7 +6863,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Coupler",
@@ -6923,7 +6923,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "CustomJS",
@@ -6971,7 +6971,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Datalore",
@@ -9576,7 +9576,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-13"
+      "verifiedDate": "2026-05-17"
     },
     {
       "vendor": "BugBug",
@@ -13231,7 +13231,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "outsystems.com",
@@ -15238,7 +15238,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-19"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "CodeMyUI",
