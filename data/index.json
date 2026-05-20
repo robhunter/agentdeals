@@ -12,7 +12,7 @@
         "frontend",
         "jamstack"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-19",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -128,7 +128,7 @@
         "vercel-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-20",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Up to 20% revenue share",
@@ -279,7 +279,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-20",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -503,7 +503,7 @@
         "free tier",
         "vector-database"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-20",
       "referral_program": {
         "available": true,
         "referrer_benefit": "$100 Amazon gift card per referral",
@@ -580,7 +580,7 @@
         "auth0-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Databricks (Lakeflow Connect)",
@@ -717,7 +717,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "PocketBase",
@@ -830,7 +830,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Bitbucket Pipelines",
@@ -846,7 +846,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Sentry",
@@ -1102,7 +1102,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-19",
       "referral_program": {
         "available": true,
         "referrer_benefit": "20% recurring commission (12 months)",
@@ -1181,7 +1181,7 @@
         "ai",
         "free tier"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Cloudflare R2",
@@ -1228,7 +1228,7 @@
         "backup",
         "free tier"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-20",
       "referral_program": {
         "available": true,
         "referrer_benefit": "1 free month per referral",
@@ -1617,7 +1617,7 @@
         "ssl",
         "free tier"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-20",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2040,7 +2040,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-20",
       "expires_date": "2027-01-31"
     },
     {
@@ -2071,7 +2071,7 @@
         "retention",
         "free tier"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Inngest",
@@ -2117,7 +2117,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Doppler",
@@ -2407,7 +2407,7 @@
         "digitalocean",
         "github"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-20",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -4588,7 +4588,7 @@
         "api",
         "open source"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Prometheus",
@@ -5002,7 +5002,7 @@
         "web-app",
         "paas"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "GitHub Codespaces",
@@ -7055,7 +7055,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Doczilla",
@@ -7175,7 +7175,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Geolocated.io",
@@ -7187,7 +7187,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Hex",
@@ -7227,7 +7227,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Invantive Cloud",
@@ -7802,7 +7802,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "SerpApi",
@@ -7814,7 +7814,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Simplescraper",
@@ -9065,7 +9065,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "beanstalkapp.com",
@@ -10773,7 +10773,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "logzab.com",
@@ -12081,7 +12081,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "ConfigCat",
@@ -12094,7 +12094,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Hypertune",
@@ -12107,7 +12107,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Toggled.dev",
@@ -12120,7 +12120,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "FabForm",
@@ -12348,7 +12348,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Vidhook",
@@ -12779,7 +12779,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "Stellate",
@@ -12792,7 +12792,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "toranproxy.com",
@@ -13961,7 +13961,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "localhost.run",
@@ -13997,7 +13997,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Pinggy",
@@ -14069,7 +14069,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "acunote.com",
@@ -14453,7 +14453,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-18"
     },
     {
       "vendor": "Shortcut",
@@ -15212,7 +15212,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "CMYK Pantone",
@@ -17408,7 +17408,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "CoinMarketCap",
@@ -18593,7 +18593,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-04-20",
+      "verifiedDate": "2026-05-19",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -21534,7 +21534,7 @@
         "gemini",
         "free tier"
       ],
-      "verifiedDate": "2026-04-20"
+      "verifiedDate": "2026-05-19"
     },
     {
       "vendor": "LLM7.io",
