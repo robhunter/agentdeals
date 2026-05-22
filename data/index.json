@@ -3052,7 +3052,7 @@
         "startup-credits",
         "cloud-storage"
       ],
-      "verifiedDate": "2026-04-22",
+      "verifiedDate": "2026-05-22",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -5242,7 +5242,7 @@
         "static-analysis",
         "code-scanning"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Cronitor",
@@ -5337,7 +5337,7 @@
         "infrastructure",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "AbstractAPI",
@@ -5382,7 +5382,7 @@
         "geocoding",
         "network"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "ipapi",
@@ -5560,7 +5560,7 @@
         "embeddings",
         "open-source"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Zilliz Cloud",
@@ -5591,7 +5591,7 @@
         "open-source",
         "embedded"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Upstash Vector",
@@ -5936,7 +5936,7 @@
         "distributed",
         "cloud"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "Neo4j AuraDB",
@@ -5966,7 +5966,7 @@
         "monitoring",
         "observability"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Apollo GraphOS",
@@ -6044,7 +6044,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Hyperping",
@@ -6074,7 +6074,7 @@
         "status-page",
         "slack"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "AppSignal",
@@ -6108,7 +6108,7 @@
         "synthetics",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "360 Monitoring",
@@ -6141,7 +6141,7 @@
         "open-source",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Codefresh",
@@ -6158,7 +6158,7 @@
         "kubernetes",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Bitrise",
@@ -6175,7 +6175,7 @@
         "flutter",
         "react-native"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "Codemagic",
@@ -6209,7 +6209,7 @@
         "distribution",
         "codepush"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Buddy",
@@ -6794,7 +6794,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Cloudmersive",
@@ -6887,7 +6887,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Cube",
@@ -7067,7 +7067,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Doppio",
@@ -7103,7 +7103,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Export SDK",
@@ -7251,7 +7251,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "IP Geolocation",
@@ -7263,7 +7263,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "IP.City",
@@ -7275,7 +7275,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "IP2Location.io",
@@ -7311,7 +7311,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "ipbase.com",
@@ -7347,7 +7347,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "JSON IP",
@@ -7359,7 +7359,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "JSON to Table",
@@ -7371,7 +7371,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "JSON2Video",
@@ -7874,7 +7874,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Supportivekoala",
@@ -7919,7 +7919,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "TinyMCE",
@@ -7943,7 +7943,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Treblle",
@@ -7967,7 +7967,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "vatcheckapi.com",
@@ -8291,7 +8291,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "flat.social",
@@ -8351,7 +8351,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Hackmd.io",
@@ -8603,7 +8603,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Stickies",
@@ -8663,7 +8663,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Tencent RTC",
@@ -8687,7 +8687,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "tldraw.com",
@@ -8759,7 +8759,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "Webex",
@@ -9409,7 +9409,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "deployhq.com",
@@ -12336,7 +12336,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-22"
     },
     {
       "vendor": "Typeform.com",
@@ -20862,7 +20862,7 @@
         "dns",
         "secondary-dns"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-20"
     },
     {
       "vendor": "Gcore DNS",
@@ -21064,7 +21064,7 @@
         "deal-change",
         "signup-paused"
       ],
-      "verifiedDate": "2026-04-21",
+      "verifiedDate": "2026-05-22",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -21639,7 +21639,7 @@
         "multimodal",
         "china"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-05-21"
     },
     {
       "vendor": "Amazon Aurora PostgreSQL",
