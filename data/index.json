@@ -14393,7 +14393,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-29"
     },
     {
       "vendor": "planitpoker.com",
@@ -14429,7 +14429,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "ScrumFast",
@@ -14441,7 +14441,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "Shake",
@@ -14465,7 +14465,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "taiga.io",
@@ -14525,7 +14525,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "Tenzu",
@@ -14537,7 +14537,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-29"
     },
     {
       "vendor": "titanapps.io",
@@ -14561,7 +14561,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "Tweek",
@@ -14597,7 +14597,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-29"
     },
     {
       "vendor": "Zube",
@@ -14622,7 +14622,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "degoo.com",
@@ -14661,7 +14661,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "Ente",
@@ -14674,7 +14674,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "file.io",
@@ -14713,7 +14713,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "GoFile.io",
@@ -14726,7 +14726,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-29"
     },
     {
       "vendor": "gumlet.com",
@@ -14843,7 +14843,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "npoint.io",
@@ -14856,7 +14856,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "MantleDB",
@@ -14869,7 +14869,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "We.Team",
@@ -14882,7 +14882,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "packagecloud.io",
@@ -14895,7 +14895,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "Pinata IPFS",
@@ -14908,7 +14908,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27",
+      "verifiedDate": "2026-05-30",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -14930,7 +14930,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "podio.com",
@@ -14956,7 +14956,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-27",
+      "verifiedDate": "2026-05-28",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -14990,7 +14990,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "QuickChart",
@@ -15186,7 +15186,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "clevebrush.com",
@@ -15199,7 +15199,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "cloudconvert.com",
@@ -15342,7 +15342,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "Flyon UI",
@@ -15381,7 +15381,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "Gradientos",
@@ -15394,7 +15394,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "Grapedrop",
@@ -15498,7 +15498,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-29"
     },
     {
       "vendor": "Umso",
@@ -15589,7 +15589,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "marvelapp.com",
@@ -15693,7 +15693,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-29"
     },
     {
       "vendor": "HeroUI",
@@ -15706,7 +15706,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-29"
     },
     {
       "vendor": "NSPolygon",
@@ -15823,7 +15823,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-28"
     },
     {
       "vendor": "Quant Ux",
@@ -15875,7 +15875,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-30"
     },
     {
       "vendor": "Scrollbar.app",
@@ -15979,7 +15979,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-26"
+      "verifiedDate": "2026-05-29"
     },
     {
       "vendor": "SVG Converter",
