@@ -1282,7 +1282,7 @@
         "amqp",
         "free tier"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "Cloudflare Queues",
@@ -1410,7 +1410,7 @@
         "pubsub",
         "free tier"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-02"
     },
     {
       "vendor": "Ably",
@@ -1426,7 +1426,7 @@
         "chat",
         "free tier"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-03"
     },
     {
       "vendor": "Bright Data MCP Server",
@@ -1502,7 +1502,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-02",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1649,7 +1649,7 @@
         "ipv6",
         "free tier"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-03"
     },
     {
       "vendor": "deSEC",
@@ -1664,7 +1664,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-03"
     },
     {
       "vendor": "Fastly",
@@ -1717,7 +1717,7 @@
         "rollout",
         "free tier"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "Flagsmith",
@@ -2148,7 +2148,7 @@
         "yc",
         "startup credits"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2563,7 +2563,7 @@
         "tracing",
         "serverless"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-03"
     },
     {
       "vendor": "Polar",
@@ -2591,7 +2591,7 @@
         "tax-compliance",
         "subscriptions"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-03"
     },
     {
       "vendor": "Socket.dev",
@@ -17293,7 +17293,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-29"
+      "verifiedDate": "2026-06-02"
     },
     {
       "vendor": "inspectlet.com",
@@ -18208,7 +18208,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-29"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "XKit",
@@ -18696,7 +18696,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18796,7 +18796,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18817,7 +18817,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18857,7 +18857,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-03",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18957,7 +18957,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-03",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18977,7 +18977,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18997,7 +18997,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19120,7 +19120,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-03",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19180,7 +19180,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19201,7 +19201,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19401,7 +19401,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19421,7 +19421,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19541,7 +19541,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-03",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19561,7 +19561,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19601,7 +19601,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19641,7 +19641,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19661,7 +19661,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19791,7 +19791,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-03",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19891,7 +19891,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20099,7 +20099,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20139,7 +20139,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-03",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20159,7 +20159,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-03",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20199,7 +20199,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20340,7 +20340,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-29",
+      "verifiedDate": "2026-06-03",
       "eligibility": {
         "type": "startup",
         "conditions": [
