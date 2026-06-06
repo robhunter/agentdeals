@@ -1746,7 +1746,7 @@
         "rollout",
         "free tier"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Logz.io",
@@ -1761,7 +1761,7 @@
         "analytics",
         "trial"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Stripe",
@@ -1822,7 +1822,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Sanity",
@@ -1838,7 +1838,7 @@
         "groq",
         "free tier"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "Hygraph",
@@ -2086,7 +2086,7 @@
         "scheduling",
         "free tier"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "Trigger.dev",
@@ -2245,7 +2245,7 @@
         "oss",
         "jetbrains"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -2359,7 +2359,7 @@
         "aws credits",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2439,7 +2439,7 @@
         "google cloud",
         "credits"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2548,7 +2548,7 @@
         "error-tracking",
         "tracing"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "Baselime",
@@ -2670,7 +2670,7 @@
         "ab-testing",
         "analytics"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Zuplo",
@@ -2684,7 +2684,7 @@
         "rate-limiting",
         "developer-portal"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-04",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2707,7 +2707,7 @@
         "self-hosted",
         "microservices"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Hookdeck",
@@ -3215,7 +3215,7 @@
         "screenshots",
         "free tier"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "Browserless",
@@ -3421,7 +3421,7 @@
         "frontend",
         "free tier"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "LiveKit",
@@ -3465,7 +3465,7 @@
         "knowledge-base",
         "free tier"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Chromatic",
@@ -3669,7 +3669,7 @@
         "encoding",
         "player"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "Lokalise",
@@ -3699,7 +3699,7 @@
         "open source",
         "appointments"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Tawk.to",
@@ -3715,7 +3715,7 @@
         "ticketing",
         "free"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Uploadcare",
@@ -7239,7 +7239,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "IP Geolocation API by ipwho.org",
@@ -20071,7 +20071,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20119,7 +20119,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20179,7 +20179,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20219,7 +20219,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20279,7 +20279,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20299,7 +20299,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20360,7 +20360,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20420,7 +20420,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20440,7 +20440,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20460,7 +20460,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-04",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20480,7 +20480,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-04-30",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20748,7 +20748,7 @@
         "vulnerabilities",
         "open-source"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "OWASP ZAP",
@@ -20792,7 +20792,7 @@
         "code-analysis",
         "github"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Dependabot",
@@ -20806,7 +20806,7 @@
         "automation",
         "github"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "Renovate",
@@ -20835,7 +20835,7 @@
         "api",
         "scanning"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Falco",
@@ -20850,7 +20850,7 @@
         "containers",
         "open-source"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-04"
     },
     {
       "vendor": "BuddyNS",
@@ -20999,7 +20999,7 @@
         "code generation",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Bolt.new",
@@ -21121,7 +21121,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Windsurf",
@@ -21171,7 +21171,7 @@
         "google",
         "developer tools"
       ],
-      "verifiedDate": "2026-04-30"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Gemini CLI",
