@@ -1395,7 +1395,7 @@
         "scheduling",
         "free tier"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Pusher",
@@ -1731,7 +1731,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Harness Feature Flags",
@@ -1807,7 +1807,7 @@
         "tax",
         "free tier"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Contentful",
@@ -1853,7 +1853,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Hugging Face",
@@ -2196,7 +2196,7 @@
         "experimentation",
         "cohorts"
       ],
-      "verifiedDate": "2026-05-02",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2334,7 +2334,7 @@
         "google cloud",
         "partner discounts"
       ],
-      "verifiedDate": "2026-05-02",
+      "verifiedDate": "2026-06-07",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2383,7 +2383,7 @@
         "aws",
         "partner discounts"
       ],
-      "verifiedDate": "2026-05-02",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2519,7 +2519,7 @@
         "typo-tolerant",
         "free credit"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Statically",
@@ -2577,7 +2577,7 @@
         "subscriptions",
         "open-source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Paddle",
@@ -2619,7 +2619,7 @@
         "environment-variables",
         "encryption"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "HashiCorp Vault",
@@ -2656,7 +2656,7 @@
         "ab-testing",
         "open-source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Statsig",
@@ -3971,7 +3971,7 @@
         "webhooks",
         "unified api"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Atlassian Statuspage",
@@ -3985,7 +3985,7 @@
         "uptime",
         "notifications"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "OpenStatus",
@@ -4071,7 +4071,7 @@
         "embedded",
         "conferencing"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Docusaurus",
@@ -4085,7 +4085,7 @@
         "static site",
         "open source"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Nextra",
@@ -4128,7 +4128,7 @@
         "open source",
         "restructuredtext"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Formspree",
@@ -4156,7 +4156,7 @@
         "templates",
         "drag-and-drop"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "LocationIQ",
@@ -4170,7 +4170,7 @@
         "routing",
         "api"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "ipinfo.io",
@@ -19261,7 +19261,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-07",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19361,7 +19361,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-07",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19461,7 +19461,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19521,7 +19521,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19682,7 +19682,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19751,7 +19751,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19831,7 +19831,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19851,7 +19851,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19871,7 +19871,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19951,7 +19951,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-07",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19971,7 +19971,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20239,7 +20239,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-07",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20259,7 +20259,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-07",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20380,7 +20380,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20400,7 +20400,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-06",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20500,7 +20500,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-01",
+      "verifiedDate": "2026-06-05",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20763,7 +20763,7 @@
         "scanning",
         "open-source"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-05"
     },
     {
       "vendor": "Nuclei",
@@ -20820,7 +20820,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Probely",
@@ -21104,7 +21104,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Aider",
@@ -21155,7 +21155,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-05-01"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Google Antigravity",
