@@ -2815,7 +2815,7 @@
         "self-hosted",
         "api"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Loops",
@@ -2844,7 +2844,7 @@
         "nameserver",
         "dynamic-dns"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Tinybird",
@@ -2873,7 +2873,7 @@
         "multi-channel",
         "workflow"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Svix",
@@ -2887,7 +2887,7 @@
         "delivery",
         "reliability"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Crisp",
@@ -3022,7 +3022,7 @@
         "admin-panel",
         "dashboard"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "MinIO",
@@ -3200,7 +3200,7 @@
         "red hat",
         "free tier"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "BrowserStack Percy",
@@ -3391,7 +3391,7 @@
         "no-code",
         "free tier"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "GlitchTip",
@@ -3480,7 +3480,7 @@
         "regression",
         "free tier"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Figma",
@@ -3558,7 +3558,7 @@
         "real-time",
         "communication"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Knock",
@@ -3574,7 +3574,7 @@
         "in-app",
         "workflows"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Mapbox",
@@ -3622,7 +3622,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Tally",
@@ -3637,7 +3637,7 @@
         "no-code",
         "data collection"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Formbricks",
@@ -3653,7 +3653,7 @@
         "feedback",
         "product research"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Mux",
@@ -3801,7 +3801,7 @@
         "aws",
         "kiro"
       ],
-      "verifiedDate": "2026-05-02",
+      "verifiedDate": "2026-06-07",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -4000,7 +4000,7 @@
         "open source",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Upptime",
@@ -4029,7 +4029,7 @@
         "open source",
         "incident management"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "cState",
@@ -4057,7 +4057,7 @@
         "api",
         "conferencing"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Whereby",
@@ -4099,7 +4099,7 @@
         "mdx",
         "open source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "VitePress",
@@ -4142,7 +4142,7 @@
         "email",
         "no-code"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "JotForm",
@@ -4198,7 +4198,7 @@
         "api",
         "open source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "ScraperAPI",
@@ -4271,7 +4271,7 @@
         "javascript",
         "modules"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Excalidraw",
@@ -4711,7 +4711,7 @@
         "ci",
         "open source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Appsmith",
@@ -4725,7 +4725,7 @@
         "admin panel",
         "open source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "LocalStack",
@@ -5352,7 +5352,7 @@
         "screenshots",
         "exchange-rates"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "APILayer",
@@ -5367,7 +5367,7 @@
         "exchange-rates",
         "ip-geolocation"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "BigDataCloud",
@@ -5426,7 +5426,7 @@
         "location",
         "api"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "CurrencyFreaks",
@@ -5530,7 +5530,7 @@
         "object-detection",
         "model-training"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Scale AI",
@@ -5652,7 +5652,7 @@
         "nlp",
         "api"
       ],
-      "verifiedDate": "2026-05-02",
+      "verifiedDate": "2026-06-07",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -6280,7 +6280,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Docs",
@@ -6332,7 +6332,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Vault",
@@ -6384,7 +6384,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-06"
     },
     {
       "vendor": "Checkout",
@@ -6410,7 +6410,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Cliq",
@@ -6462,7 +6462,7 @@
         "workflow",
         "zoho"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Zoho Survey",
@@ -20520,7 +20520,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-02",
+      "verifiedDate": "2026-06-08",
       "eligibility": {
         "type": "startup",
         "conditions": [
