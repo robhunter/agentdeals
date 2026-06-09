@@ -2721,7 +2721,7 @@
         "event-gateway",
         "reliability"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Unkey",
@@ -2735,7 +2735,7 @@
         "rate-limiting",
         "authentication"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "GitHub Container Registry",
@@ -2901,7 +2901,7 @@
         "customer-support",
         "live-chat"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Mintlify",
@@ -2980,7 +2980,7 @@
         "background-jobs",
         "automation"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "OneSignal",
@@ -2994,7 +2994,7 @@
         "mobile",
         "web-push"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "n8n",
@@ -3137,7 +3137,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Spacelift",
@@ -3230,7 +3230,7 @@
         "scraping",
         "free tier"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Browserbase",
@@ -3275,7 +3275,7 @@
         "bots",
         "free"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Slack API",
@@ -3320,7 +3320,7 @@
         "session-replay",
         "free tier"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Microsoft Founders Hub",
@@ -3336,7 +3336,7 @@
         "azure",
         "accelerator"
       ],
-      "verifiedDate": "2026-05-03",
+      "verifiedDate": "2026-06-09",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3361,7 +3361,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Make",
@@ -3406,7 +3406,7 @@
         "sentry-compatible",
         "free tier"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "LogRocket",
@@ -3437,7 +3437,7 @@
         "ai-agents",
         "free tier"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "ReadMe",
@@ -3590,7 +3590,7 @@
         "mapping",
         "gis"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Google Maps Platform",
@@ -3684,7 +3684,7 @@
         "internationalization",
         "developer tools"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Cal.com",
@@ -3860,7 +3860,7 @@
         "deployment",
         "ota updates"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Crowdin",
@@ -4015,7 +4015,7 @@
         "open source",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Cachet",
@@ -4114,7 +4114,7 @@
         "static site",
         "open source"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Sphinx",
@@ -4212,7 +4212,7 @@
         "api",
         "data extraction"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Playwright",
@@ -4242,7 +4242,7 @@
         "headless",
         "open source"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "UNPKG",
@@ -4328,7 +4328,7 @@
         "security",
         "open source"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Amazon ECR Public",
@@ -4356,7 +4356,7 @@
         "monitoring",
         "open source"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Stream",
@@ -4512,7 +4512,7 @@
         "docker",
         "open source"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Argo CD",
@@ -4543,7 +4543,7 @@
         "nodejs",
         "open source"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Automatisch",
@@ -4636,7 +4636,7 @@
         "grafana",
         "open source"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Plausible Analytics",
@@ -4957,7 +4957,7 @@
         "grafana",
         "k6"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "FOSSA",
@@ -5084,7 +5084,7 @@
         "embeddings",
         "search"
       ],
-      "verifiedDate": "2026-05-03",
+      "verifiedDate": "2026-06-08",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5108,7 +5108,7 @@
         "embeddings",
         "search"
       ],
-      "verifiedDate": "2026-05-03",
+      "verifiedDate": "2026-06-07",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5814,7 +5814,7 @@
         "authentication",
         "api-management"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Stoplight",
@@ -20687,7 +20687,7 @@
         "git",
         "open-source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "TruffleHog",
@@ -20701,7 +20701,7 @@
         "scanning",
         "open-source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Checkov",
@@ -20718,7 +20718,7 @@
         "open-source",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Trivy",
@@ -20733,7 +20733,7 @@
         "vulnerabilities",
         "open-source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Grype",
@@ -20778,7 +20778,7 @@
         "templates",
         "open-source"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "CodeQL",
@@ -21088,7 +21088,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-07"
     },
     {
       "vendor": "Cline",
@@ -21189,7 +21189,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-05-02"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "OpenAI Codex",
