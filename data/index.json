@@ -4227,7 +4227,7 @@
         "e2e",
         "open source"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Puppeteer",
@@ -4256,7 +4256,7 @@
         "javascript",
         "static files"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "esm.sh",
@@ -4342,7 +4342,7 @@
         "aws",
         "docker"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Exceptionless",
@@ -4371,7 +4371,7 @@
         "activity feeds",
         "api"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Descope",
@@ -4497,7 +4497,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Traefik",
@@ -4528,7 +4528,7 @@
         "cncf",
         "open source"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "BullMQ",
@@ -4558,7 +4558,7 @@
         "self-hosted",
         "open source"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "Strapi",
@@ -4573,7 +4573,7 @@
         "content",
         "open source"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Payload CMS",
@@ -4696,7 +4696,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Gitea",
@@ -5039,7 +5039,7 @@
         "ingress",
         "developer-tools"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Tailscale",
@@ -5188,7 +5188,7 @@
         "ecommerce",
         "subscriptions"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Deepgram",
@@ -5203,7 +5203,7 @@
         "ai",
         "nlp"
       ],
-      "verifiedDate": "2026-05-04",
+      "verifiedDate": "2026-06-08",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5227,7 +5227,7 @@
         "maps",
         "forecast"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "Semgrep",
@@ -5545,7 +5545,7 @@
         "ai-data",
         "training-data"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "Weaviate",
@@ -5715,7 +5715,7 @@
         "gpu",
         "serverless"
       ],
-      "verifiedDate": "2026-05-04",
+      "verifiedDate": "2026-06-09",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5754,7 +5754,7 @@
         "mlops",
         "llm-evaluation"
       ],
-      "verifiedDate": "2026-05-04"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Clarifai",
@@ -5829,7 +5829,7 @@
         "api-docs",
         "developer-tools"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "SwaggerHub",
@@ -5858,7 +5858,7 @@
         "developer-tools",
         "api-discovery"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Apidog",
@@ -6306,7 +6306,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Connect",
@@ -6358,7 +6358,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "Notebook",
@@ -6449,7 +6449,7 @@
         "no-code",
         "zoho"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "Zoho Sign",
@@ -6488,7 +6488,7 @@
         "workflow",
         "zoho"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "DBOS",
@@ -6746,7 +6746,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "BrowserCat",
@@ -6830,7 +6830,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03",
+      "verifiedDate": "2026-06-09",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -6911,7 +6911,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "CurrencyScoop",
@@ -7019,7 +7019,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "Deepnote",
@@ -7091,7 +7091,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "DynamicDocs",
@@ -7383,7 +7383,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-10"
     },
     {
       "vendor": "JSONGrid",
@@ -7503,7 +7503,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Mockerito",
@@ -7515,7 +7515,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "Mockfly",
@@ -7613,7 +7613,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "OpenAPI3 Designer",
@@ -7733,7 +7733,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03",
+      "verifiedDate": "2026-06-09",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -7766,7 +7766,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-09"
     },
     {
       "vendor": "ROBOHASH",
@@ -7790,7 +7790,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03"
+      "verifiedDate": "2026-06-08"
     },
     {
       "vendor": "ScrapingAnt",
@@ -7898,7 +7898,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-03",
+      "verifiedDate": "2026-06-10",
       "payment_protocols": [
         {
           "protocol": "x402",
