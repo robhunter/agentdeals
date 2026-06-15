@@ -9137,7 +9137,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "coveralls.io",
@@ -9185,7 +9185,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "gerrithub.io",
@@ -9257,7 +9257,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "scan.coverity.com",
@@ -9269,7 +9269,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "scrutinizer-ci.com",
@@ -9293,7 +9293,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "shields.io",
@@ -9550,7 +9550,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "Argos",
@@ -9602,7 +9602,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "CORS-Tester",
@@ -9641,7 +9641,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "katalon.com",
@@ -9680,7 +9680,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "lost-pixel.com",
@@ -9693,7 +9693,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "pagegym.com",
@@ -9745,7 +9745,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "SSR (Server-side Rendering) Checker",
@@ -9784,7 +9784,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "tesults.com",
@@ -9823,7 +9823,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "webhook.site",
@@ -9862,7 +9862,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "aikido.dev",
@@ -10407,7 +10407,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "GetUpdraft",
@@ -10419,7 +10419,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "InstallOnAir",
@@ -10479,7 +10479,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "moss.sh",
@@ -10656,7 +10656,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "scaledrone.com",
@@ -10669,7 +10669,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "SMSGate",
@@ -10812,7 +10812,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "Smart Grow Logs",
@@ -10825,7 +10825,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "AutoLocalise.com",
@@ -10837,7 +10837,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Free PO editor",
@@ -10885,7 +10885,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "localizely.com",
@@ -10897,7 +10897,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Loco",
@@ -10921,7 +10921,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "SimpleLocalize",
@@ -11424,7 +11424,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-13"
     },
     {
       "vendor": "Embrace",
@@ -11502,7 +11502,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "bonsai.io",
@@ -12132,7 +12132,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Feathery",
@@ -12168,7 +12168,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "Formcarry.com",
@@ -12180,7 +12180,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Formester.com",
@@ -12192,7 +12192,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "FormKeep.com",
@@ -12204,7 +12204,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "formlets.com",
@@ -12264,7 +12264,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Kwes.io",
@@ -12324,7 +12324,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-14"
     },
     {
       "vendor": "Survicate",
