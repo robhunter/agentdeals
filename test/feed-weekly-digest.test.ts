@@ -71,12 +71,25 @@ describe("/feed.xml weekly digest feed", () => {
     assert.ok(xml.includes("Week of"), "Entry titles should start with 'Week of'");
   });
 
-  it("entries link to correct /this-week URLs", async () => {
+  it("entries link to correctly-formatted /this-week URLs", async () => {
     proc = await startHttpServer();
     const res = await fetch(`http://localhost:${serverPort}/feed.xml`);
     const xml = await res.text();
-    assert.ok(xml.includes('/this-week"'), "Current week should link to /this-week");
-    assert.ok(xml.includes("/this-week?week=1"), "Previous week should link to /this-week?week=1");
+    // Each weekly-digest entry links to its /this-week page: the current week
+    // (w=0) to the bare /this-week, prior weeks (w>=1) to /this-week?week=N.
+    // Weeks with no tracked pricing changes are omitted from the feed, so which
+    // specific weeks appear is data-dependent (the current week is often empty
+    // early on). Assert the URL format of whatever entries exist rather than
+    // assuming a particular week is always present.
+    const hrefs = [...xml.matchAll(/<link href="([^"]*\/this-week[^"]*)" rel="alternate"\/>/g)].map((m) => m[1]);
+    assert.ok(hrefs.length > 0, "Should have at least one /this-week entry link");
+    for (const href of hrefs) {
+      assert.match(
+        href,
+        /^https?:\/\/[^/"]+\/this-week(\?week=[1-9][0-9]*)?$/,
+        `this-week link should be bare /this-week or /this-week?week=N, got: ${href}`,
+      );
+    }
   });
 
   it("CORS header is set", async () => {
