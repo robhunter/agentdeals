@@ -10617,7 +10617,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "Pingram.io",
@@ -10643,7 +10643,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "pubnub.com",
@@ -10682,7 +10682,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "SuprSend",
@@ -10708,7 +10708,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "webpushr",
@@ -10721,7 +10721,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "bugfender.com",
@@ -10734,7 +10734,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "log.dog",
@@ -10909,7 +10909,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "POEditor",
@@ -10945,7 +10945,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "Tolgee",
@@ -10957,7 +10957,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "transifex.com",
@@ -11398,7 +11398,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "CatchJS.com",
@@ -11411,7 +11411,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "elmah.io",
@@ -11463,7 +11463,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "memfault.com",
@@ -11476,7 +11476,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "Semaphr",
@@ -11489,7 +11489,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "Whitespace",
@@ -12216,7 +12216,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "formspark.io",
@@ -12240,7 +12240,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Formware.io",
@@ -12276,7 +12276,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Pageclip",
@@ -12360,7 +12360,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "WaiverStevie.com",
@@ -12372,7 +12372,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Web3Forms",
@@ -12466,7 +12466,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "Langfuse",
@@ -12480,7 +12480,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08",
+      "verifiedDate": "2026-06-15",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -12503,7 +12503,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "Langtrace",
@@ -12545,7 +12545,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "Mediaworkbench.ai",
@@ -12573,7 +12573,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "Pollinations.AI",
@@ -12587,7 +12587,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "Portkey",
@@ -12664,7 +12664,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "cdnjs.com",
@@ -12690,7 +12690,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "Microsoft Ajax",
@@ -12753,7 +12753,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "raw.githack.com",
@@ -12818,7 +12818,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-08"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "ampt.dev",
@@ -13784,7 +13784,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-16"
     },
     {
       "vendor": "filebase.com",
@@ -13913,7 +13913,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-15"
     },
     {
       "vendor": "cname.dev",
@@ -13925,7 +13925,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-07"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "conveyor.cloud",
