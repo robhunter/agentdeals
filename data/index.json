@@ -12452,7 +12452,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Keywords AI",
@@ -12531,7 +12531,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Lumenfall.ai",
@@ -12559,7 +12559,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Othor AI",
@@ -12601,7 +12601,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-19",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -12677,7 +12677,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "developers.google.com",
@@ -12703,7 +12703,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "Namecheap Supersonic",
@@ -12805,7 +12805,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "weserv",
@@ -13207,7 +13207,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "manubes",
@@ -13243,7 +13243,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "ToolJet",
@@ -13255,7 +13255,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "UI Bakery",
@@ -13515,7 +13515,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "dnspod.com",
@@ -13541,7 +13541,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "Dynv6.com",
@@ -13567,7 +13567,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Glauca",
@@ -13580,7 +13580,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "LocalCert",
@@ -13593,7 +13593,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "luadns.com",
@@ -13641,7 +13641,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "noip",
@@ -13706,7 +13706,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "Zonomi",
@@ -13937,7 +13937,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "Expose",
@@ -14201,7 +14201,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "easyretro.io",
@@ -14285,7 +14285,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "kan.bn",
@@ -14357,7 +14357,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "MeisterTask",
@@ -16382,7 +16382,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "nominatim.org",
@@ -16408,7 +16408,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "osmnames",
@@ -16447,7 +16447,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "build.opensuse.org",
@@ -16495,7 +16495,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Apache Netbeans",
@@ -16531,7 +16531,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "Binder",
@@ -16579,7 +16579,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "cacher.io",
@@ -16627,7 +16627,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "codepen.io",
@@ -16663,7 +16663,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Eclipse Che",
@@ -16675,7 +16675,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "ForgeCode",
@@ -16711,7 +16711,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "MarsCode",
@@ -16735,7 +16735,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-17"
     },
     {
       "vendor": "Mocklets",
