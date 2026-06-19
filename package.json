@@ -60,6 +60,9 @@
     "ts-node": "^10.9.0",
     "typescript": "^5.7.0"
   },
+  "overrides": {
+    "tmp": "^0.2.7"
+  },
   "engines": {
     "node": ">=20.0.0"
   }
