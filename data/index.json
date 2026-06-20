@@ -94,7 +94,7 @@
         "vercel-alternative",
         "student-upgrade"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-18",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -152,7 +152,7 @@
         "deployment",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-19",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -463,7 +463,7 @@
         "mongodb-alternative",
         "vector-database"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-18",
       "referral_program": {
         "available": true,
         "referrer_benefit": "$20 cash per referral",
@@ -544,7 +544,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "Upstash",
@@ -683,7 +683,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-19",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -736,7 +736,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "Hasura Cloud",
@@ -883,7 +883,7 @@
         "observability",
         "apm"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-19",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1461,7 +1461,7 @@
         "crawling",
         "free tier"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-19",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1486,7 +1486,7 @@
         "actors",
         "free tier"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Cursor",
@@ -1869,7 +1869,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-18",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2007,7 +2007,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-18",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -3245,7 +3245,7 @@
         "ai-agent",
         "free tier"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-20",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -3955,7 +3955,7 @@
         "comments",
         "sdk"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Nango",
@@ -13973,7 +13973,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "localtunnel",
@@ -13985,7 +13985,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "LocalXpose",
@@ -16747,7 +16747,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "OneCompiler",
@@ -16808,7 +16808,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "stackblitz.com",
@@ -16832,7 +16832,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "Visual Studio Code",
@@ -16904,7 +16904,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "Zed",
@@ -17460,7 +17460,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "FxRatesAPI",
@@ -17577,7 +17577,7 @@
         "containers",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "GraphComment",
@@ -17601,7 +17601,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-19"
     },
     {
       "vendor": "Remarkbox",
@@ -17625,7 +17625,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-09"
+      "verifiedDate": "2026-06-18"
     },
     {
       "vendor": "ApiFlash",
@@ -18246,7 +18246,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-19",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18310,7 +18310,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-19",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18352,7 +18352,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-18",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18373,7 +18373,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-20",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18573,7 +18573,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-19",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18655,7 +18655,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-20",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19731,7 +19731,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-19",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20320,7 +20320,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-09",
+      "verifiedDate": "2026-06-18",
       "eligibility": {
         "type": "startup",
         "conditions": [
