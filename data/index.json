@@ -528,7 +528,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "Turso",
@@ -595,7 +595,7 @@
         "azure",
         "databricks"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-21"
     },
     {
       "vendor": "Convex",
@@ -861,7 +861,7 @@
         "observability",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-11",
+      "verifiedDate": "2026-06-20",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -908,7 +908,7 @@
         "grafana",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "BetterStack",
@@ -925,7 +925,7 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Axiom",
@@ -941,7 +941,7 @@
         "free tier",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "Checkly",
@@ -975,7 +975,7 @@
         "free tier",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-11",
+      "verifiedDate": "2026-06-21",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1142,7 +1142,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-21"
     },
     {
       "vendor": "Brevo",
@@ -1329,7 +1329,7 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-05-11",
+      "verifiedDate": "2026-06-22",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1363,7 +1363,7 @@
         "free tier",
         "facets"
       ],
-      "verifiedDate": "2026-05-11",
+      "verifiedDate": "2026-06-21",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2101,7 +2101,7 @@
         "queues",
         "free tier"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-21"
     },
     {
       "vendor": "Momento",
@@ -3772,7 +3772,7 @@
         "cloudflare",
         "infrastructure"
       ],
-      "verifiedDate": "2026-05-11",
+      "verifiedDate": "2026-06-22",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3921,7 +3921,7 @@
         "open source",
         "attribution"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Stytch",
@@ -4434,7 +4434,7 @@
         "self-hosted",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "Cerebras",
@@ -4788,7 +4788,7 @@
         "testing",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-21"
     },
     {
       "vendor": "DynamoDB Local",
@@ -4876,7 +4876,7 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "Brave Search API",
@@ -5606,7 +5606,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "Chroma",
@@ -5951,7 +5951,7 @@
         "knowledge-graph",
         "cloud"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "InfluxDB Cloud",
@@ -6578,7 +6578,7 @@
         "devops",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-21"
     },
     {
       "vendor": "Codeberg",
@@ -8435,7 +8435,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "Nuclino",
@@ -8895,7 +8895,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-21"
     },
     {
       "vendor": "DatoCMS",
@@ -9089,7 +9089,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Codeac.io",
@@ -9149,7 +9149,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-21"
     },
     {
       "vendor": "deepscan.io",
@@ -19080,7 +19080,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-22",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20601,7 +20601,7 @@
         "cross-browser",
         "automation"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Applitools Eyes",
@@ -20629,7 +20629,7 @@
         "performance",
         "open-source"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "Gatling",
@@ -20672,7 +20672,7 @@
         "performance",
         "api-testing"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-20"
     },
     {
       "vendor": "Gitleaks",
@@ -20888,7 +20888,7 @@
         "traffic-management",
         "api"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-21"
     },
     {
       "vendor": "DigitalOcean DNS",
@@ -20951,7 +20951,7 @@
         "startup credits",
         "infrastructure"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-21",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -20975,7 +20975,7 @@
         "free credits",
         "api"
       ],
-      "verifiedDate": "2026-05-10",
+      "verifiedDate": "2026-06-22",
       "payment_protocols": [
         {
           "protocol": "x402",
