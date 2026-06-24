@@ -53,7 +53,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-22",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -320,7 +320,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "AWS",
@@ -404,7 +404,7 @@
         "free tier",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Supabase",
@@ -1196,7 +1196,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-23",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1445,7 +1445,7 @@
         "free tier",
         "mcp-server"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "Firecrawl",
@@ -1544,7 +1544,7 @@
         "container-security",
         "iac"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Fingerprint",
@@ -1561,7 +1561,7 @@
         "bot-detection",
         "free tier"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "SonarQube Cloud",
@@ -1593,7 +1593,7 @@
         "eu",
         "price-increase-2026"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-24",
       "referral_program": {
         "available": true,
         "referrer_benefit": "€10 credit",
@@ -1902,7 +1902,7 @@
         "fast",
         "free tier"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-24",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2056,7 +2056,7 @@
         "session replay",
         "free tier"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "Mixpanel",
@@ -2132,7 +2132,7 @@
         "security",
         "free tier"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "PostHog",
@@ -2303,7 +2303,7 @@
         "apm",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-22",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -3008,7 +3008,7 @@
         "integrations",
         "self-hosted"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Retool",
@@ -3153,7 +3153,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "HCP Terraform",
@@ -3606,7 +3606,7 @@
         "google",
         "gis"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "Instatus",
@@ -3906,7 +3906,7 @@
         "code quality",
         "analytics"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Dub.co",
@@ -4448,7 +4448,7 @@
         "inference",
         "api"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-23",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -4804,7 +4804,7 @@
         "nosql",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "ElasticMQ",
@@ -4820,7 +4820,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "CloudDev",
@@ -4840,7 +4840,7 @@
         "api-gateway",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Vera AWS",
@@ -4859,7 +4859,7 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Floci",
@@ -5146,7 +5146,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "PagerDuty",
@@ -6254,7 +6254,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Zoho",
@@ -6267,7 +6267,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Zoho Assist",
@@ -6345,7 +6345,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "Showtime",
@@ -8881,7 +8881,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "Crystallize",
@@ -12935,7 +12935,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "flightcontrol.dev",
@@ -13346,7 +13346,7 @@
         "free-for-dev",
         "kinsta-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-22"
     },
     {
       "vendor": "MDB GO",
@@ -21046,7 +21046,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "GitHub Copilot",
