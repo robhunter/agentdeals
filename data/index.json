@@ -188,7 +188,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-25",
       "referral": {
         "code": "7RZL9q",
         "url": "https://railway.com?referralCode=7RZL9q",
@@ -244,7 +244,7 @@
         "vercel-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-25",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -371,7 +371,7 @@
         "heroku-alternative",
         "digitalocean-free-tier-2026"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-25",
       "expires_date": "2026-06-30",
       "free_tier_limits": {
         "credits": "$200 for 60 days",
@@ -767,7 +767,7 @@
         "github",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-23",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1031,7 +1031,7 @@
         "sso",
         "free tier"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-24",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2801,7 +2801,7 @@
         "deal-change",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Directus",
@@ -4472,7 +4472,7 @@
         "reranking",
         "api"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-24",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5676,7 +5676,7 @@
         "inference",
         "gpu"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-23",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -10552,7 +10552,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-06"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "EMQX Serverless",
@@ -14153,7 +14153,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Clockify",
@@ -16265,7 +16265,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Clockwork Micro",
@@ -16603,7 +16603,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "code.cs50.io",
@@ -17046,7 +17046,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "getinsights.io",
@@ -20579,7 +20579,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-25",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -20643,7 +20643,7 @@
         "performance",
         "open-source"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Locust",
@@ -20875,7 +20875,7 @@
         "anycast",
         "ddos-protection"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "NS1 Connect",
@@ -20935,7 +20935,7 @@
         "dns",
         "free"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Vast.ai",
@@ -21029,7 +21029,7 @@
         "no-code",
         "developer tools"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Claude Code",
@@ -21139,7 +21139,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Augment Code",
@@ -21252,7 +21252,7 @@
         "claude",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-23",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21285,7 +21285,7 @@
         "bigquery",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Google Cloud Run",
@@ -21300,7 +21300,7 @@
         "google cloud",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Google Compute Engine",
@@ -21371,7 +21371,7 @@
         "packages",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "Google Cloud Logging",
@@ -21440,7 +21440,7 @@
         "collaboration",
         "free tier"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "GitHub Models",
@@ -21491,7 +21491,7 @@
         "gpu",
         "free tier"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-23",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -22600,7 +22600,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-12",
+      "verifiedDate": "2026-06-24",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -23207,7 +23207,7 @@
         "vertex-ai",
         "rag"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-23"
     },
     {
       "vendor": "Google GLM 5",
@@ -23223,7 +23223,7 @@
         "agentic",
         "experimental"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Google Gemini Embedding 2",
@@ -23239,7 +23239,7 @@
         "vertex-ai",
         "rag"
       ],
-      "verifiedDate": "2026-05-12"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Google Content API for Shopping",
