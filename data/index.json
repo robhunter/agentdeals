@@ -5739,7 +5739,7 @@
         "mlops",
         "datasets"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Comet ML",
@@ -8219,7 +8219,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "DevToolLab",
@@ -9221,7 +9221,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "holistic.dev",
@@ -10282,7 +10282,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "MojoAuth",
@@ -11948,7 +11948,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Substack",
@@ -12740,7 +12740,7 @@
         "ddos",
         "ssl"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "PromoProxy",
@@ -13041,7 +13041,7 @@
         "backend",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "bismuth.cloud",
@@ -14057,7 +14057,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-10"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "ZeroTier",
@@ -14165,7 +14165,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Cloudcraft",
@@ -16723,7 +16723,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "mockaroo",
@@ -20901,7 +20901,7 @@
         "cloud",
         "digitalocean-free-tier-2026"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Vultr DNS",
@@ -21315,7 +21315,7 @@
         "google cloud",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Google Cloud Storage",
@@ -21328,7 +21328,7 @@
         "object-storage",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Google Cloud Pub/Sub",
@@ -21342,7 +21342,7 @@
         "event-driven",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Google Cloud Build",
@@ -21357,7 +21357,7 @@
         "google cloud",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Google Artifact Registry",
@@ -21550,7 +21550,7 @@
         "gateway",
         "free tier"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "SiliconFlow",
@@ -21656,7 +21656,7 @@
         "aurora",
         "rds"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Spotify",
@@ -21671,7 +21671,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "YouTube",
@@ -21746,7 +21746,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Pandora",
@@ -21933,7 +21933,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Microsoft To Do",
@@ -21993,7 +21993,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Evernote",
@@ -22119,7 +22119,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "MEGA",
@@ -22624,7 +22624,7 @@
         "workers",
         "free-for-students"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-26",
       "eligibility": {
         "type": "student",
         "conditions": [
@@ -22978,7 +22978,7 @@
         "cursor-alternative",
         "free tier"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "OVHcloud",
@@ -22998,7 +22998,7 @@
         "budget",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-26",
       "expires_date": "2026-06-14",
       "free_tier_limits": {
         "credits": "€200 for 60 days",
@@ -23021,7 +23021,7 @@
         "budget",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Exa",
@@ -23038,7 +23038,7 @@
         "agent-payments",
         "free tier"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-24",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23063,7 +23063,7 @@
         "agent-payments",
         "ai-agents"
       ],
-      "verifiedDate": "2026-05-13",
+      "verifiedDate": "2026-06-25",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23256,7 +23256,7 @@
         "deprecated",
         "product-data"
       ],
-      "verifiedDate": "2026-05-13"
+      "verifiedDate": "2026-06-24"
     },
     {
       "vendor": "Alibaba Cloud Qwen Code",
