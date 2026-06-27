@@ -353,7 +353,7 @@
         "azure",
         "microsoft"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "DigitalOcean",
@@ -424,7 +424,7 @@
         "mongodb-alternative",
         "vector-database"
       ],
-      "verifiedDate": "2026-05-14",
+      "verifiedDate": "2026-06-26",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1056,7 +1056,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "WorkOS",
@@ -4892,7 +4892,7 @@
         "llm",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "OpenAI",
@@ -5305,7 +5305,7 @@
         "game-dev",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "SurrealDB Cloud",
@@ -6192,7 +6192,7 @@
         "flutter",
         "macos"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Appcircle",
@@ -7569,7 +7569,7 @@
         "cloudflare",
         "wireguard"
       ],
-      "verifiedDate": "2026-05-14",
+      "verifiedDate": "2026-06-25",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -10042,7 +10042,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "qualys.com",
@@ -21384,7 +21384,7 @@
         "observability",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Google Secret Manager",
@@ -21397,7 +21397,7 @@
         "security",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Google Cloud Shell",
@@ -21411,7 +21411,7 @@
         "developer-tools",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Google Cloud Monitoring",
@@ -21425,7 +21425,7 @@
         "alerting",
         "google cloud"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "ClickUp",
@@ -21457,7 +21457,7 @@
         "free tier",
         "openai-compatible"
       ],
-      "verifiedDate": "2026-05-14",
+      "verifiedDate": "2026-06-27",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21517,7 +21517,7 @@
         "self-hosted",
         "free tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Google Gemini Code Assist",
@@ -21608,7 +21608,7 @@
         "deepseek",
         "reasoning"
       ],
-      "verifiedDate": "2026-05-14",
+      "verifiedDate": "2026-06-26",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21731,7 +21731,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Crunchyroll",
@@ -21777,7 +21777,7 @@
         "ad-supported",
         "consumer"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "SoundCloud",
@@ -21808,7 +21808,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Apple Podcasts",
@@ -21834,7 +21834,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Notion",
@@ -21904,7 +21904,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Obsidian",
@@ -21978,7 +21978,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Simplenote",
@@ -22106,7 +22106,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Dropbox",
@@ -22134,7 +22134,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "pCloud",
@@ -22147,7 +22147,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-25"
     },
     {
       "vendor": "Internxt",
@@ -22163,7 +22163,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Bitwarden",
@@ -22178,7 +22178,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Proton Pass",
@@ -22194,7 +22194,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14",
+      "verifiedDate": "2026-06-27",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -22246,7 +22246,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "NordPass",
