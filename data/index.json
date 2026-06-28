@@ -814,7 +814,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Buildkite",
@@ -958,7 +958,7 @@
         "free tier",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "New Relic",
@@ -1000,7 +1000,7 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Clerk",
@@ -1702,7 +1702,7 @@
         "github",
         "free tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "LaunchDarkly",
@@ -1935,7 +1935,7 @@
         "deal-change",
         "per-model-pricing"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Mistral AI",
@@ -2830,7 +2830,7 @@
         "automation",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "ClouDNS",
@@ -3185,7 +3185,7 @@
         "hybrid",
         "free tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Quay.io",
@@ -3495,7 +3495,7 @@
         "collaboration",
         "free tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Canva",
@@ -4313,7 +4313,7 @@
         "online",
         "graphics"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Harbor",
@@ -22274,7 +22274,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Discord",
@@ -22290,7 +22290,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Zoom",
@@ -22332,7 +22332,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Signal",
@@ -22392,7 +22392,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "GIMP",
@@ -22454,7 +22454,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Blender",
@@ -22501,7 +22501,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "MyFitnessPal",
@@ -22532,7 +22532,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Apple Health",
@@ -22562,7 +22562,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14",
+      "verifiedDate": "2026-06-27",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -22656,7 +22656,7 @@
         "cloudflare",
         "linux"
       ],
-      "verifiedDate": "2026-05-14",
+      "verifiedDate": "2026-06-27",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -22705,7 +22705,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Duolingo",
@@ -22720,7 +22720,7 @@
         "free-tier",
         "ad-supported"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "MIT OpenCourseWare",
@@ -22735,7 +22735,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Coursera",
@@ -22750,7 +22750,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "edX",
@@ -22778,7 +22778,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Outlook.com",
@@ -22791,7 +22791,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Proton Mail",
@@ -22858,7 +22858,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "Feedly",
@@ -22873,7 +22873,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Apple News",
@@ -22962,7 +22962,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Amazon Kiro",
@@ -23272,7 +23272,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-14"
+      "verifiedDate": "2026-06-26"
     },
     {
       "vendor": "E2B",
