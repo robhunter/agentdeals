@@ -5258,7 +5258,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Semaphore CI",
@@ -5636,7 +5636,7 @@
         "serverless",
         "search"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "AssemblyAI",
@@ -5996,7 +5996,7 @@
         "backend",
         "developer-tools"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Amazon SP-API",
@@ -11804,7 +11804,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "UserCheck",
@@ -12438,7 +12438,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Clair",
@@ -20615,7 +20615,7 @@
         "ai",
         "regression"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Artillery",
@@ -21566,7 +21566,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-05-15",
+      "verifiedDate": "2026-06-27",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21591,7 +21591,7 @@
         "glm",
         "free tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "DeepSeek API",
@@ -21686,7 +21686,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Tubi",
@@ -21701,7 +21701,7 @@
         "ad-supported",
         "consumer"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Pluto TV",
@@ -21716,7 +21716,7 @@
         "ad-supported",
         "consumer"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Peacock",
@@ -21762,7 +21762,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "iHeartRadio",
@@ -21793,7 +21793,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Plex",
@@ -21821,7 +21821,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Pocket Casts",
@@ -21920,7 +21920,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Apple Notes",
@@ -21963,7 +21963,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Standard Notes",
@@ -22021,7 +22021,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Airtable",
@@ -22051,7 +22051,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Google Photos",
@@ -22065,7 +22065,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "iCloud",
@@ -22079,7 +22079,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "OneDrive",
@@ -22092,7 +22092,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Flickr",
@@ -22232,7 +22232,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "LastPass",
@@ -22260,7 +22260,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Slack",
@@ -22304,7 +22304,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Google Meet",
@@ -22348,7 +22348,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Telegram",
@@ -22362,7 +22362,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "WhatsApp",
@@ -22438,7 +22438,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-27"
     },
     {
       "vendor": "Krita",
@@ -22516,7 +22516,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Strava",
