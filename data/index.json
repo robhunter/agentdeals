@@ -666,7 +666,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Cloudflare D1",
@@ -752,7 +752,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "GitHub Actions",
@@ -1015,7 +1015,7 @@
         "users",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Auth0",
@@ -1073,7 +1073,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Resend",
@@ -1126,7 +1126,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Mailjet",
@@ -1158,7 +1158,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-05-16",
+      "verifiedDate": "2026-06-30",
       "referral_program": {
         "available": true,
         "referrer_benefit": "~$5 per free signup, ~$100 per paid signup",
@@ -1267,7 +1267,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "CloudAMQP",
@@ -1297,7 +1297,7 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16",
+      "verifiedDate": "2026-06-29",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1525,7 +1525,7 @@
         "agile",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Snyk",
@@ -1576,7 +1576,7 @@
         "static analysis",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Hetzner",
@@ -1776,7 +1776,7 @@
         "subscriptions",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16",
+      "verifiedDate": "2026-06-29",
       "payment_protocols": [
         {
           "protocol": "stripe-mpp",
@@ -1951,7 +1951,7 @@
         "code",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16",
+      "verifiedDate": "2026-06-29",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2785,7 +2785,7 @@
         "browser-testing",
         "ci-cd"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Postman",
@@ -3451,7 +3451,7 @@
         "developer-portal",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "GitBook",
@@ -3730,7 +3730,7 @@
         "storage",
         "image optimization"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "IBM Cloud",
@@ -4605,7 +4605,7 @@
         "open source",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Jaeger",
@@ -4680,7 +4680,7 @@
         "open source",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Hoppscotch",
@@ -6503,7 +6503,7 @@
         "postgres",
         "open-source"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Brainboard",
@@ -7199,7 +7199,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Hook0",
@@ -8651,7 +8651,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Teamplify",
@@ -22547,7 +22547,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Proton VPN",
@@ -22585,7 +22585,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Cloudflare WARP",
@@ -22765,7 +22765,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Gmail",
@@ -22806,7 +22806,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15",
+      "verifiedDate": "2026-06-28",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -22902,7 +22902,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-28"
     },
     {
       "vendor": "Mint (Credit Karma)",
@@ -22917,7 +22917,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Wise",
@@ -22932,7 +22932,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-15"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Insight Timer",
@@ -23359,7 +23359,7 @@
         "inference",
         "free tier"
       ],
-      "verifiedDate": "2026-05-15",
+      "verifiedDate": "2026-06-29",
       "payment_protocols": [
         {
           "protocol": "x402",
