@@ -304,7 +304,7 @@
         "free tier",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Koyeb",
@@ -336,7 +336,7 @@
         "credits",
         "startup"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Azure",
@@ -561,7 +561,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Firebase",
@@ -613,7 +613,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Appwrite Cloud",
@@ -632,7 +632,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Aiven",
@@ -791,7 +791,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-17",
+      "verifiedDate": "2026-07-01",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1087,7 +1087,7 @@
         "transactional",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Postmark",
@@ -1679,7 +1679,7 @@
         "compute",
         "free tier"
       ],
-      "verifiedDate": "2026-05-17",
+      "verifiedDate": "2026-06-29",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2277,7 +2277,7 @@
         "open source",
         "oss"
       ],
-      "verifiedDate": "2026-05-17",
+      "verifiedDate": "2026-06-30",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -4909,7 +4909,7 @@
         "nlp",
         "generative-ai"
       ],
-      "verifiedDate": "2026-05-03",
+      "verifiedDate": "2026-06-30",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -8831,7 +8831,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "zoom.us",
@@ -11450,7 +11450,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Jam",
@@ -12410,7 +12410,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Audio Enhancer",
@@ -14141,7 +14141,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "clickup.com",
@@ -14261,7 +14261,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Hygger",
@@ -14778,7 +14778,7 @@
         "media",
         "trial"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "ImgBB",
@@ -16994,7 +16994,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "counter.dev",
@@ -22216,7 +22216,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "KeePassXC",
@@ -22318,7 +22318,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Microsoft Teams",
@@ -22376,7 +22376,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Photopea",
@@ -22407,7 +22407,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Inkscape",
@@ -22471,7 +22471,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Nike Training Club",
@@ -22486,7 +22486,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Samsung Health",
@@ -22830,7 +22830,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Pocket",
@@ -22844,7 +22844,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Instapaper",
@@ -22887,7 +22887,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Robinhood",
@@ -22947,7 +22947,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-16"
+      "verifiedDate": "2026-06-29"
     },
     {
       "vendor": "Waking Up",
@@ -23287,7 +23287,7 @@
         "agents",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16",
+      "verifiedDate": "2026-06-30",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23311,7 +23311,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-05-16",
+      "verifiedDate": "2026-07-01",
       "payment_protocols": [
         {
           "protocol": "x402",
