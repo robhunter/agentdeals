@@ -2952,7 +2952,7 @@
         "alerting",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Nile",
@@ -3038,7 +3038,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Backblaze",
@@ -3543,7 +3543,7 @@
         "devsecops",
         "pre-commit"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Sendbird",
@@ -3843,7 +3843,7 @@
         "video",
         "storage"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Expo",
@@ -4184,7 +4184,7 @@
         "api",
         "data"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Meilisearch",
@@ -4285,7 +4285,7 @@
         "collaboration",
         "open source"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Lunacy",
@@ -4386,7 +4386,7 @@
         "mfa",
         "identity"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Hanko",
@@ -4400,7 +4400,7 @@
         "webauthn",
         "open source"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Keycloak",
@@ -4664,7 +4664,7 @@
         "self-hosted",
         "open source"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Woodpecker CI",
@@ -4741,7 +4741,7 @@
         "serverless",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Testcontainers",
@@ -4756,7 +4756,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Moto",
@@ -5017,7 +5017,7 @@
         "github",
         "containers"
       ],
-      "verifiedDate": "2026-05-17",
+      "verifiedDate": "2026-07-01",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -5054,7 +5054,7 @@
         "zero-trust",
         "wireguard"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Redis Cloud",
@@ -5131,7 +5131,7 @@
         "open-source",
         "identity"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "StatusCake",
@@ -5160,7 +5160,7 @@
         "on-call",
         "alerts"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "imgix",
@@ -5289,7 +5289,7 @@
         "orm",
         "serverless"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Unity DevOps",
@@ -5396,7 +5396,7 @@
         "ip-lookup",
         "location"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Hunter.io",
@@ -5441,7 +5441,7 @@
         "finance",
         "forex"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "MailboxValidator",
@@ -5484,7 +5484,7 @@
         "api",
         "malware"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "VirusTotal",
@@ -5621,7 +5621,7 @@
         "open-source",
         "search"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Turbopuffer",
@@ -6013,7 +6013,7 @@
         "selling-partner",
         "developer-tools"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Uptimia",
@@ -6224,7 +6224,7 @@
         "pipelines",
         "automation"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Harness CI",
@@ -6562,7 +6562,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-06-30"
     },
     {
       "vendor": "Terragrunt Scale",
@@ -6722,7 +6722,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Beeceptor",
@@ -6806,7 +6806,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Colaboratory",
@@ -8099,7 +8099,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "RepoFlow",
@@ -8543,7 +8543,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Screen Sharing via Browser",
@@ -8579,7 +8579,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Slab",
@@ -9125,7 +9125,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "CodSpeed",
