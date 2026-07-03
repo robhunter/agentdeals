@@ -830,7 +830,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Bitbucket Pipelines",
@@ -1251,7 +1251,7 @@
         "zero-egress",
         "free tier"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Cloudinary",
@@ -1976,7 +1976,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-05-18",
+      "verifiedDate": "2026-07-03",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2071,7 +2071,7 @@
         "retention",
         "free tier"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Inngest",
@@ -2219,7 +2219,7 @@
         "accelerator",
         "aws"
       ],
-      "verifiedDate": "2026-05-18",
+      "verifiedDate": "2026-07-03",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2533,7 +2533,7 @@
         "static",
         "github"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Highlight.io",
@@ -2929,7 +2929,7 @@
         "github",
         "jekyll"
       ],
-      "verifiedDate": "2026-05-18",
+      "verifiedDate": "2026-07-03",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3875,7 +3875,7 @@
         "open source",
         "internationalization"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Permit.io",
@@ -4417,7 +4417,7 @@
         "open source",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "FusionAuth",
@@ -4588,7 +4588,7 @@
         "api",
         "open source"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Prometheus",
@@ -4772,7 +4772,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "AWS SAM CLI",
@@ -5174,7 +5174,7 @@
         "media",
         "optimization"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Lemon Squeezy",
@@ -5411,7 +5411,7 @@
         "email-verification",
         "sales"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Geocodio",
@@ -5920,7 +5920,7 @@
         "edgedb",
         "cloud"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "CrateDB",
@@ -6028,7 +6028,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "OnlineOrNot",
@@ -6590,7 +6590,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "framagit.org",
@@ -6851,7 +6851,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Country-State-City Microservice API",
@@ -6971,7 +6971,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "Datalore",
@@ -9576,7 +9576,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "BugBug",
@@ -9628,7 +9628,7 @@
         "qa",
         "trial"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "gridlastic.com",
@@ -10933,7 +10933,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Texterify",
@@ -11514,7 +11514,7 @@
         "search",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-01"
     },
     {
       "vendor": "10minutemail",
@@ -12144,7 +12144,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "feedback.fish",
@@ -14177,7 +14177,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Crosswork",
@@ -14943,7 +14943,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Proton Drive",
@@ -16291,7 +16291,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "geoapify.com",
@@ -22423,7 +22423,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-05-17"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "DaVinci Resolve",
@@ -23335,7 +23335,7 @@
         "image-generation",
         "free tier"
       ],
-      "verifiedDate": "2026-05-17",
+      "verifiedDate": "2026-07-01",
       "payment_protocols": [
         {
           "protocol": "x402",
