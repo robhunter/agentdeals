@@ -12,7 +12,7 @@
         "frontend",
         "jamstack"
       ],
-      "verifiedDate": "2026-05-19",
+      "verifiedDate": "2026-07-04",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -580,7 +580,7 @@
         "auth0-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Databricks (Lakeflow Connect)",
@@ -846,7 +846,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Sentry",
@@ -1102,7 +1102,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-05-19",
+      "verifiedDate": "2026-07-02",
       "referral_program": {
         "available": true,
         "referrer_benefit": "20% recurring commission (12 months)",
@@ -2117,7 +2117,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Doppler",
@@ -2496,7 +2496,7 @@
         "accelerator",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-05-19",
+      "verifiedDate": "2026-07-02",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2605,7 +2605,7 @@
         "dependencies",
         "open-source"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "Infisical",
@@ -2859,7 +2859,7 @@
         "sql",
         "api"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Novu",
@@ -2915,7 +2915,7 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "GitHub Pages",
@@ -2966,7 +2966,7 @@
         "multi-tenant",
         "serverless"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Cron-job.org",
@@ -3112,7 +3112,7 @@
         "jira",
         "confluence"
       ],
-      "verifiedDate": "2026-05-19",
+      "verifiedDate": "2026-07-04",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3827,7 +3827,7 @@
         "dead man switch",
         "alerts"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "ImageKit",
@@ -3939,7 +3939,7 @@
         "fraud prevention",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "Liveblocks",
@@ -4299,7 +4299,7 @@
         "prototyping",
         "figma alternative"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Pixlr",
@@ -7031,7 +7031,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "DiffJSON",
@@ -7055,7 +7055,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "Doczilla",
@@ -7187,7 +7187,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Hex",
@@ -8965,7 +8965,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "TinaCMS",
@@ -9898,7 +9898,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "crypteron.com",
@@ -10773,7 +10773,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "logzab.com",
@@ -12081,7 +12081,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "ConfigCat",
@@ -12094,7 +12094,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Hypertune",
@@ -14453,7 +14453,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Shortcut",
@@ -15238,7 +15238,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "CodeMyUI",
@@ -15810,7 +15810,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-02"
     },
     {
       "vendor": "Proto.io",
@@ -16929,7 +16929,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "Aptabase",
@@ -16981,7 +16981,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Clicky",
@@ -21014,7 +21014,7 @@
         "full-stack",
         "developer tools"
       ],
-      "verifiedDate": "2026-05-18"
+      "verifiedDate": "2026-07-03"
     },
     {
       "vendor": "Lovable",
