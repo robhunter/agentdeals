@@ -717,7 +717,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "PocketBase",
@@ -1181,7 +1181,7 @@
         "ai",
         "free tier"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Cloudflare R2",
@@ -1228,7 +1228,7 @@
         "backup",
         "free tier"
       ],
-      "verifiedDate": "2026-05-20",
+      "verifiedDate": "2026-07-05",
       "referral_program": {
         "available": true,
         "referrer_benefit": "1 free month per referral",
@@ -1617,7 +1617,7 @@
         "ssl",
         "free tier"
       ],
-      "verifiedDate": "2026-05-20",
+      "verifiedDate": "2026-07-05",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2040,7 +2040,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-05-20",
+      "verifiedDate": "2026-07-06",
       "expires_date": "2027-01-31"
     },
     {
@@ -2407,7 +2407,7 @@
         "digitalocean",
         "github"
       ],
-      "verifiedDate": "2026-05-20",
+      "verifiedDate": "2026-07-05",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2749,7 +2749,7 @@
         "packages",
         "github"
       ],
-      "verifiedDate": "2026-05-20",
+      "verifiedDate": "2026-07-04",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3077,7 +3077,7 @@
         "compute",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-05-20",
+      "verifiedDate": "2026-07-06",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -5002,7 +5002,7 @@
         "web-app",
         "paas"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "GitHub Codespaces",
@@ -5274,7 +5274,7 @@
         "self-hosted",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Prisma Accelerate",
@@ -5382,7 +5382,7 @@
         "geocoding",
         "network"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "ipapi",
@@ -5455,7 +5455,7 @@
         "verification",
         "deliverability"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "Screenshotlayer",
@@ -5469,7 +5469,7 @@
         "web-capture",
         "images"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "URLscan.io",
@@ -5591,7 +5591,7 @@
         "open-source",
         "embedded"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Upstash Vector",
@@ -5890,7 +5890,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Thunder Client",
@@ -6108,7 +6108,7 @@
         "synthetics",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "360 Monitoring",
@@ -6124,7 +6124,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Drone CI",
@@ -6209,7 +6209,7 @@
         "distribution",
         "codepush"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Buddy",
@@ -6794,7 +6794,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Cloudmersive",
@@ -7067,7 +7067,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Doppio",
@@ -7139,7 +7139,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "FormatJSONOnline.com",
@@ -7175,7 +7175,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Geolocated.io",
@@ -7227,7 +7227,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Invantive Cloud",
@@ -7263,7 +7263,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "IP.City",
@@ -7287,7 +7287,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-04"
     },
     {
       "vendor": "ipaddress.sh",
@@ -7371,7 +7371,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "JSON2Video",
@@ -7395,7 +7395,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "JSONing",
