@@ -2463,7 +2463,7 @@
         "education",
         "copilot"
       ],
-      "verifiedDate": "2026-05-21",
+      "verifiedDate": "2026-07-07",
       "eligibility": {
         "type": "student",
         "conditions": [
@@ -2771,7 +2771,7 @@
         "images",
         "packages"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Cypress Cloud",
@@ -3528,7 +3528,7 @@
         "collaboration",
         "figma alternative"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "GitGuardian",
@@ -3891,7 +3891,7 @@
         "access control",
         "policy"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Codecov",
@@ -4622,7 +4622,7 @@
         "open source",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Grafana Loki",
@@ -4650,7 +4650,7 @@
         "gdpr",
         "open source"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Umami",
@@ -4942,7 +4942,7 @@
         "social",
         "deal-change"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Grafana k6 Cloud",
@@ -5242,7 +5242,7 @@
         "static-analysis",
         "code-scanning"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Cronitor",
@@ -5337,7 +5337,7 @@
         "infrastructure",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "AbstractAPI",
@@ -5560,7 +5560,7 @@
         "embeddings",
         "open-source"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Zilliz Cloud",
@@ -5966,7 +5966,7 @@
         "monitoring",
         "observability"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Apollo GraphOS",
@@ -6044,7 +6044,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Hyperping",
@@ -6059,7 +6059,7 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "incident.io",
@@ -6141,7 +6141,7 @@
         "open-source",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Codefresh",
@@ -7802,7 +7802,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "SerpApi",
@@ -8351,7 +8351,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Hackmd.io",
@@ -9065,7 +9065,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "beanstalkapp.com",
@@ -12107,7 +12107,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Toggled.dev",
@@ -12120,7 +12120,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "FabForm",
@@ -12348,7 +12348,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Vidhook",
@@ -12792,7 +12792,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "toranproxy.com",
@@ -13961,7 +13961,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "localhost.run",
@@ -13997,7 +13997,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "Pinggy",
@@ -15212,7 +15212,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "CMYK Pantone",
@@ -17408,7 +17408,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-05"
     },
     {
       "vendor": "CoinMarketCap",
@@ -20862,7 +20862,7 @@
         "dns",
         "secondary-dns"
       ],
-      "verifiedDate": "2026-05-20"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Gcore DNS",
