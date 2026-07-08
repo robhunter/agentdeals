@@ -6158,7 +6158,7 @@
         "kubernetes",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "Bitrise",
@@ -6887,7 +6887,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Cube",
@@ -6995,7 +6995,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "DB-IP",
@@ -7079,7 +7079,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "drawDB",
@@ -7103,7 +7103,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Export SDK",
@@ -7151,7 +7151,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "FraudLabs Pro",
@@ -7163,7 +7163,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "FreeIPAPI",
@@ -7251,7 +7251,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "IP Geolocation",
@@ -7311,7 +7311,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "ipbase.com",
@@ -7673,7 +7673,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Pixela",
@@ -7874,7 +7874,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Supportivekoala",
@@ -7919,7 +7919,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "TinyMCE",
@@ -7943,7 +7943,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "Treblle",
@@ -8051,7 +8051,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Zipcodestack",
@@ -8471,7 +8471,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "Pullflow",
@@ -8603,7 +8603,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Stickies",
@@ -8663,7 +8663,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Tencent RTC",
@@ -8747,7 +8747,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Visual Debug",
@@ -8867,7 +8867,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "Cosmic",
@@ -9409,7 +9409,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "deployhq.com",
@@ -9437,7 +9437,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-08"
     },
     {
       "vendor": "Mergify",
@@ -9946,7 +9946,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Dotenv",
@@ -9994,7 +9994,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "meterian.io",
@@ -10006,7 +10006,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-06"
     },
     {
       "vendor": "Mozilla Observatory",
@@ -10210,7 +10210,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "Cerbos Hub",
@@ -10238,7 +10238,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-21"
+      "verifiedDate": "2026-07-07"
     },
     {
       "vendor": "duo.com",
