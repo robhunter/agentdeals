@@ -7419,7 +7419,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-22"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "KillBait API",
@@ -9479,7 +9479,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Shipfox",
@@ -10090,7 +10090,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Sucuri SiteCheck",
@@ -10140,7 +10140,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-11"
     },
     {
       "vendor": "Aserto",
@@ -10154,7 +10154,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "asgardeo.io",
@@ -10182,7 +10182,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Authress",
@@ -10224,7 +10224,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Cloud-IAM",
@@ -10296,7 +10296,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-11"
     },
     {
       "vendor": "Okta",
@@ -10383,7 +10383,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Appho.st",
@@ -11047,7 +11047,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "fivenines.io",
@@ -11164,7 +11164,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "pagertree.com",
@@ -11190,7 +11190,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "pingbreak.com",
@@ -11203,7 +11203,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Pingmeter.com",
@@ -11242,7 +11242,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Servervana",
@@ -11294,7 +11294,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "statusgator.com",
@@ -11346,7 +11346,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-11"
     },
     {
       "vendor": "uptimetoolbox.com",
@@ -11575,7 +11575,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Burnermail",
@@ -11600,7 +11600,7 @@
         "free-for-dev",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "debugmail.io",
@@ -11612,7 +11612,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "dkimvalidator.com",
@@ -11672,7 +11672,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Emailvalidation.io",
@@ -11852,7 +11852,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-24"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "mailinator.com",
@@ -11900,7 +11900,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-24"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Plunk",
@@ -11936,7 +11936,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-24"
+      "verifiedDate": "2026-07-11"
     },
     {
       "vendor": "SimpleLogin",
@@ -12020,7 +12020,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-24"
+      "verifiedDate": "2026-07-11"
     },
     {
       "vendor": "Verifalia",
@@ -12044,7 +12044,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-24"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Waitlio",
@@ -13106,7 +13106,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-24"
+      "verifiedDate": "2026-07-11"
     },
     {
       "vendor": "IFTTT",
@@ -21889,7 +21889,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-24"
+      "verifiedDate": "2026-07-11"
     },
     {
       "vendor": "Google Keep",
@@ -22038,7 +22038,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-24"
+      "verifiedDate": "2026-07-11"
     },
     {
       "vendor": "Google Drive",
