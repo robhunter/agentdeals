@@ -7886,7 +7886,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-26"
+      "verifiedDate": "2026-07-14"
     },
     {
       "vendor": "Tavily AI",
@@ -11099,7 +11099,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-26"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "loader.io",
@@ -11177,7 +11177,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-26"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "phare.io",
@@ -11268,7 +11268,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-26"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "sitesure.net",
@@ -11385,7 +11385,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-26"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Bugsink",
@@ -11636,7 +11636,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-26"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "EmailJS",
@@ -11660,7 +11660,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-26"
+      "verifiedDate": "2026-07-14"
     },
     {
       "vendor": "EmailOctopus",
@@ -11684,7 +11684,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-26"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "EtherealMail",
@@ -11696,7 +11696,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "forwardemail.net",
@@ -11744,7 +11744,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "inboxkitten.com",
@@ -11756,7 +11756,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "mail-tester.com",
@@ -11768,7 +11768,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Maileroo",
@@ -11816,7 +11816,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Maildroppa",
@@ -11888,7 +11888,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Mutant Mail",
@@ -11924,7 +11924,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-14"
     },
     {
       "vendor": "SendStreak",
@@ -11984,7 +11984,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "TempMailDetector.com",
@@ -12008,7 +12008,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "Tuta",
@@ -12032,7 +12032,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-14"
     },
     {
       "vendor": "verimail.io",
@@ -12056,7 +12056,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Wraps",
@@ -12068,7 +12068,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "Abby",
@@ -12831,7 +12831,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "anvil.works",
@@ -13000,7 +13000,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "YepCode",
@@ -13372,7 +13372,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-14"
     },
     {
       "vendor": "Oaysus",
@@ -13424,7 +13424,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-14"
     },
     {
       "vendor": "readthedocs.org",
@@ -13875,7 +13875,7 @@
         "data",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-12"
     },
     {
       "vendor": "skyvia.com",
@@ -14081,7 +14081,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-13"
     },
     {
       "vendor": "asana.com",
@@ -14213,7 +14213,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-14"
     },
     {
       "vendor": "freedcamp.com",
@@ -21875,7 +21875,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-05-25"
+      "verifiedDate": "2026-07-14"
     },
     {
       "vendor": "Trello",
