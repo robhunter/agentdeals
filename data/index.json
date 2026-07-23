@@ -1410,7 +1410,7 @@
         "pubsub",
         "free tier"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-21"
     },
     {
       "vendor": "Ably",
@@ -1502,7 +1502,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-23",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -15966,7 +15966,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-22"
     },
     {
       "vendor": "Superdesigner",
@@ -15992,7 +15992,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-21"
     },
     {
       "vendor": "tabler-icons.io",
@@ -16031,7 +16031,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-23"
     },
     {
       "vendor": "Tailkits",
@@ -16044,7 +16044,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-23"
     },
     {
       "vendor": "TeleportHQ",
@@ -16200,7 +16200,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-22"
     },
     {
       "vendor": "Wdrfree SVG",
@@ -16942,7 +16942,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-22"
     },
     {
       "vendor": "Avo",
@@ -16955,7 +16955,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-21"
     },
     {
       "vendor": "Beampipe.io",
@@ -17033,7 +17033,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-21"
     },
     {
       "vendor": "Expensify",
@@ -17111,7 +17111,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-22"
     },
     {
       "vendor": "Hotjar",
@@ -17202,7 +17202,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-22"
     },
     {
       "vendor": "StatCounter",
@@ -17280,7 +17280,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-21"
     },
     {
       "vendor": "howuku.com",
@@ -17345,7 +17345,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-21"
     },
     {
       "vendor": "smartlook.com",
@@ -17884,7 +17884,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-23"
     },
     {
       "vendor": "datelist.io",
@@ -17920,7 +17920,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-21"
     },
     {
       "vendor": "Format Express",
@@ -17956,7 +17956,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-21"
     },
     {
       "vendor": "newreleases.io",
@@ -17968,7 +17968,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-23"
     },
     {
       "vendor": "OnlineExifViewer",
@@ -18136,7 +18136,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-22"
     },
     {
       "vendor": "SurveyMonkey.com",
@@ -18196,7 +18196,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-02"
+      "verifiedDate": "2026-07-22"
     },
     {
       "vendor": "Webacus",
@@ -18776,7 +18776,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-23",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18877,7 +18877,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-22",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18897,7 +18897,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-22",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18977,7 +18977,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-22",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18997,7 +18997,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-22",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19100,7 +19100,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-01",
+      "verifiedDate": "2026-07-21",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19201,7 +19201,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-23",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19401,7 +19401,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-21",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19421,7 +19421,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-02",
+      "verifiedDate": "2026-07-22",
       "eligibility": {
         "type": "startup",
         "conditions": [
