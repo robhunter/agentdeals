@@ -1746,7 +1746,7 @@
         "rollout",
         "free tier"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-24"
     },
     {
       "vendor": "Logz.io",
@@ -1822,7 +1822,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-25"
     },
     {
       "vendor": "Sanity",
@@ -1853,7 +1853,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-26"
     },
     {
       "vendor": "Hugging Face",
@@ -2245,7 +2245,7 @@
         "oss",
         "jetbrains"
       ],
-      "verifiedDate": "2026-06-05",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -2439,7 +2439,7 @@
         "google cloud",
         "credits"
       ],
-      "verifiedDate": "2026-06-05",
+      "verifiedDate": "2026-07-25",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2577,7 +2577,7 @@
         "subscriptions",
         "open-source"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-25"
     },
     {
       "vendor": "Paddle",
@@ -2619,7 +2619,7 @@
         "environment-variables",
         "encryption"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-24"
     },
     {
       "vendor": "HashiCorp Vault",
@@ -3465,7 +3465,7 @@
         "knowledge-base",
         "free tier"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-25"
     },
     {
       "vendor": "Chromatic",
@@ -3699,7 +3699,7 @@
         "open source",
         "appointments"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-25"
     },
     {
       "vendor": "Tawk.to",
@@ -3715,7 +3715,7 @@
         "ticketing",
         "free"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-26"
     },
     {
       "vendor": "Uploadcare",
@@ -3985,7 +3985,7 @@
         "uptime",
         "notifications"
       ],
-      "verifiedDate": "2026-06-05"
+      "verifiedDate": "2026-07-24"
     },
     {
       "vendor": "OpenStatus",
@@ -18917,7 +18917,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-24",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19180,7 +19180,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19221,7 +19221,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19281,7 +19281,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19301,7 +19301,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19441,7 +19441,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19501,7 +19501,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-24",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19561,7 +19561,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19991,7 +19991,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20031,7 +20031,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20099,7 +20099,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20179,7 +20179,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20199,7 +20199,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-24",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20460,7 +20460,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-04",
+      "verifiedDate": "2026-07-25",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20748,7 +20748,7 @@
         "vulnerabilities",
         "open-source"
       ],
-      "verifiedDate": "2026-06-04"
+      "verifiedDate": "2026-07-25"
     },
     {
       "vendor": "OWASP ZAP",
@@ -20806,7 +20806,7 @@
         "automation",
         "github"
       ],
-      "verifiedDate": "2026-06-04"
+      "verifiedDate": "2026-07-24"
     },
     {
       "vendor": "Renovate",
@@ -20850,7 +20850,7 @@
         "containers",
         "open-source"
       ],
-      "verifiedDate": "2026-06-04"
+      "verifiedDate": "2026-07-24"
     },
     {
       "vendor": "BuddyNS",
