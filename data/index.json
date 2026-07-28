@@ -1731,7 +1731,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-26"
     },
     {
       "vendor": "Harness Feature Flags",
@@ -1761,7 +1761,7 @@
         "analytics",
         "trial"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-26"
     },
     {
       "vendor": "Stripe",
@@ -2196,7 +2196,7 @@
         "experimentation",
         "cohorts"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2359,7 +2359,7 @@
         "aws credits",
         "google cloud"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2656,7 +2656,7 @@
         "ab-testing",
         "open-source"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Statsig",
@@ -2670,7 +2670,7 @@
         "ab-testing",
         "analytics"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Zuplo",
@@ -2707,7 +2707,7 @@
         "self-hosted",
         "microservices"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Hookdeck",
@@ -2844,7 +2844,7 @@
         "nameserver",
         "dynamic-dns"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-26"
     },
     {
       "vendor": "Tinybird",
@@ -3200,7 +3200,7 @@
         "red hat",
         "free tier"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "BrowserStack Percy",
@@ -3391,7 +3391,7 @@
         "no-code",
         "free tier"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "GlitchTip",
@@ -3421,7 +3421,7 @@
         "frontend",
         "free tier"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "LiveKit",
@@ -3480,7 +3480,7 @@
         "regression",
         "free tier"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Figma",
@@ -3653,7 +3653,7 @@
         "feedback",
         "product research"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Mux",
@@ -4057,7 +4057,7 @@
         "api",
         "conferencing"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Whereby",
@@ -4071,7 +4071,7 @@
         "embedded",
         "conferencing"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Docusaurus",
@@ -4099,7 +4099,7 @@
         "mdx",
         "open source"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "VitePress",
@@ -4198,7 +4198,7 @@
         "api",
         "open source"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-26"
     },
     {
       "vendor": "ScraperAPI",
@@ -4725,7 +4725,7 @@
         "admin panel",
         "open source"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-26"
     },
     {
       "vendor": "LocalStack",
@@ -5426,7 +5426,7 @@
         "location",
         "api"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "CurrencyFreaks",
@@ -5530,7 +5530,7 @@
         "object-detection",
         "model-training"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Scale AI",
@@ -6384,7 +6384,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Checkout",
@@ -7239,7 +7239,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "IP Geolocation API by ipwho.org",
@@ -17150,7 +17150,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12"
+      "verifiedDate": "2026-07-26"
     },
     {
       "vendor": "Moesif",
@@ -19521,7 +19521,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-28",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19751,7 +19751,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-27",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19831,7 +19831,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-27",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19851,7 +19851,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-26",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19871,7 +19871,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-27",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19971,7 +19971,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-27",
       "eligibility": {
         "type": "startup",
         "conditions": [
