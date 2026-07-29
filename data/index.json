@@ -1395,7 +1395,7 @@
         "scheduling",
         "free tier"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Pusher",
@@ -1807,7 +1807,7 @@
         "tax",
         "free tier"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Contentful",
@@ -2334,7 +2334,7 @@
         "google cloud",
         "partner discounts"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-29",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -2519,7 +2519,7 @@
         "typo-tolerant",
         "free credit"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Statically",
@@ -2815,7 +2815,7 @@
         "self-hosted",
         "api"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Loops",
@@ -3137,7 +3137,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Spacelift",
@@ -3406,7 +3406,7 @@
         "sentry-compatible",
         "free tier"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "LogRocket",
@@ -3590,7 +3590,7 @@
         "mapping",
         "gis"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Google Maps Platform",
@@ -3637,7 +3637,7 @@
         "no-code",
         "data collection"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Formbricks",
@@ -3801,7 +3801,7 @@
         "aws",
         "kiro"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-27",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -3971,7 +3971,7 @@
         "webhooks",
         "unified api"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Atlassian Statuspage",
@@ -4000,7 +4000,7 @@
         "open source",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Upptime",
@@ -4015,7 +4015,7 @@
         "open source",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Cachet",
@@ -4029,7 +4029,7 @@
         "open source",
         "incident management"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "cState",
@@ -4085,7 +4085,7 @@
         "static site",
         "open source"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Nextra",
@@ -4142,7 +4142,7 @@
         "email",
         "no-code"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "JotForm",
@@ -4212,7 +4212,7 @@
         "api",
         "data extraction"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Playwright",
@@ -4356,7 +4356,7 @@
         "monitoring",
         "open source"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Stream",
@@ -4512,7 +4512,7 @@
         "docker",
         "open source"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Argo CD",
@@ -4636,7 +4636,7 @@
         "grafana",
         "open source"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Plausible Analytics",
@@ -4711,7 +4711,7 @@
         "ci",
         "open source"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Appsmith",
@@ -5321,7 +5321,7 @@
         "real-time",
         "cloud"
       ],
-      "verifiedDate": "2026-05-19"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Sematext",
@@ -20071,7 +20071,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-27",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20219,7 +20219,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-28",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20380,7 +20380,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-27",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20400,7 +20400,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-27",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20440,7 +20440,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-06",
+      "verifiedDate": "2026-07-28",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20835,7 +20835,7 @@
         "api",
         "scanning"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Falco",
@@ -21155,7 +21155,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Google Antigravity",
@@ -21171,7 +21171,7 @@
         "google",
         "developer tools"
       ],
-      "verifiedDate": "2026-06-06"
+      "verifiedDate": "2026-07-27"
     },
     {
       "vendor": "Gemini CLI",
