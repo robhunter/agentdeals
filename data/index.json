@@ -2735,7 +2735,7 @@
         "rate-limiting",
         "authentication"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "GitHub Container Registry",
@@ -2873,7 +2873,7 @@
         "multi-channel",
         "workflow"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Svix",
@@ -2887,7 +2887,7 @@
         "delivery",
         "reliability"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Crisp",
@@ -2901,7 +2901,7 @@
         "customer-support",
         "live-chat"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Mintlify",
@@ -3022,7 +3022,7 @@
         "admin-panel",
         "dashboard"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "MinIO",
@@ -3320,7 +3320,7 @@
         "session-replay",
         "free tier"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Microsoft Founders Hub",
@@ -3437,7 +3437,7 @@
         "ai-agents",
         "free tier"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "ReadMe",
@@ -3558,7 +3558,7 @@
         "real-time",
         "communication"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Knock",
@@ -3574,7 +3574,7 @@
         "in-app",
         "workflows"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Mapbox",
@@ -3622,7 +3622,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Tally",
@@ -3684,7 +3684,7 @@
         "internationalization",
         "developer tools"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Cal.com",
@@ -4114,7 +4114,7 @@
         "static site",
         "open source"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Sphinx",
@@ -4227,7 +4227,7 @@
         "e2e",
         "open source"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Puppeteer",
@@ -4242,7 +4242,7 @@
         "headless",
         "open source"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "UNPKG",
@@ -4271,7 +4271,7 @@
         "javascript",
         "modules"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Excalidraw",
@@ -4371,7 +4371,7 @@
         "activity feeds",
         "api"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Descope",
@@ -5108,7 +5108,7 @@
         "embeddings",
         "search"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-30",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5352,7 +5352,7 @@
         "screenshots",
         "exchange-rates"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "APILayer",
@@ -5652,7 +5652,7 @@
         "nlp",
         "api"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-30",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -6280,7 +6280,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Docs",
@@ -6462,7 +6462,7 @@
         "workflow",
         "zoho"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Zoho Survey",
@@ -19261,7 +19261,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-28",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19361,7 +19361,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-30",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19951,7 +19951,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-28",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20239,7 +20239,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-30",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20259,7 +20259,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-07",
+      "verifiedDate": "2026-07-28",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20701,7 +20701,7 @@
         "scanning",
         "open-source"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Checkov",
@@ -20820,7 +20820,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-28"
     },
     {
       "vendor": "Probely",
@@ -21088,7 +21088,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Cline",
@@ -21104,7 +21104,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-06-07"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Aider",
