@@ -2721,7 +2721,7 @@
         "event-gateway",
         "reliability"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Unkey",
@@ -2980,7 +2980,7 @@
         "background-jobs",
         "automation"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "OneSignal",
@@ -2994,7 +2994,7 @@
         "mobile",
         "web-push"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "n8n",
@@ -3230,7 +3230,7 @@
         "scraping",
         "free tier"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Browserbase",
@@ -3275,7 +3275,7 @@
         "bots",
         "free"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Slack API",
@@ -3336,7 +3336,7 @@
         "azure",
         "accelerator"
       ],
-      "verifiedDate": "2026-06-09",
+      "verifiedDate": "2026-07-31",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3361,7 +3361,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Make",
@@ -3860,7 +3860,7 @@
         "deployment",
         "ota updates"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Crowdin",
@@ -4328,7 +4328,7 @@
         "security",
         "open source"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Amazon ECR Public",
@@ -4342,7 +4342,7 @@
         "aws",
         "docker"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Exceptionless",
@@ -4497,7 +4497,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Traefik",
@@ -4573,7 +4573,7 @@
         "content",
         "open source"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Payload CMS",
@@ -4696,7 +4696,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Gitea",
@@ -4957,7 +4957,7 @@
         "grafana",
         "k6"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "FOSSA",
@@ -5084,7 +5084,7 @@
         "embeddings",
         "search"
       ],
-      "verifiedDate": "2026-06-08",
+      "verifiedDate": "2026-07-31",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5203,7 +5203,7 @@
         "ai",
         "nlp"
       ],
-      "verifiedDate": "2026-06-08",
+      "verifiedDate": "2026-07-30",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5367,7 +5367,7 @@
         "exchange-rates",
         "ip-geolocation"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "BigDataCloud",
@@ -5814,7 +5814,7 @@
         "authentication",
         "api-management"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Stoplight",
@@ -5829,7 +5829,7 @@
         "api-docs",
         "developer-tools"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "SwaggerHub",
@@ -5858,7 +5858,7 @@
         "developer-tools",
         "api-discovery"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Apidog",
@@ -6306,7 +6306,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Connect",
@@ -6332,7 +6332,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Vault",
@@ -6410,7 +6410,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Cliq",
@@ -6746,7 +6746,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "BrowserCat",
@@ -7019,7 +7019,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Deepnote",
@@ -7790,7 +7790,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "ScrapingAnt",
@@ -13619,7 +13619,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-14",
+      "verifiedDate": "2026-07-29",
       "referral_program": {
         "available": true,
         "referrer_benefit": "20-35% commission depending on product",
@@ -20520,7 +20520,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-08",
+      "verifiedDate": "2026-07-30",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20687,7 +20687,7 @@
         "git",
         "open-source"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "TruffleHog",
@@ -20718,7 +20718,7 @@
         "open-source",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "Trivy",
@@ -21189,7 +21189,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-06-08"
+      "verifiedDate": "2026-07-29"
     },
     {
       "vendor": "OpenAI Codex",
