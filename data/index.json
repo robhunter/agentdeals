@@ -4256,7 +4256,7 @@
         "javascript",
         "static files"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "esm.sh",
@@ -4528,7 +4528,7 @@
         "cncf",
         "open source"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "BullMQ",
@@ -4543,7 +4543,7 @@
         "nodejs",
         "open source"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Automatisch",
@@ -4558,7 +4558,7 @@
         "self-hosted",
         "open source"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Strapi",
@@ -5039,7 +5039,7 @@
         "ingress",
         "developer-tools"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Tailscale",
@@ -5188,7 +5188,7 @@
         "ecommerce",
         "subscriptions"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Deepgram",
@@ -5227,7 +5227,7 @@
         "maps",
         "forecast"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Semgrep",
@@ -5545,7 +5545,7 @@
         "ai-data",
         "training-data"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Weaviate",
@@ -5715,7 +5715,7 @@
         "gpu",
         "serverless"
       ],
-      "verifiedDate": "2026-06-09",
+      "verifiedDate": "2026-08-01",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -5754,7 +5754,7 @@
         "mlops",
         "llm-evaluation"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Clarifai",
@@ -5844,7 +5844,7 @@
         "documentation",
         "api-docs"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "RapidAPI",
@@ -6293,7 +6293,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "Projects",
@@ -6371,7 +6371,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Wiki",
@@ -6397,7 +6397,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Desk",
@@ -6423,7 +6423,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Zoho Campaigns",
@@ -6475,7 +6475,7 @@
         "forms",
         "zoho"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "Zoho Bookings",
@@ -6488,7 +6488,7 @@
         "workflow",
         "zoho"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "DBOS",
@@ -6532,7 +6532,7 @@
         "management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "deployment.io",
@@ -6830,7 +6830,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09",
+      "verifiedDate": "2026-07-30",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -7479,7 +7479,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "microlink.io",
@@ -7503,7 +7503,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "Mockerito",
@@ -7515,7 +7515,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Mockfly",
@@ -7613,7 +7613,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "OpenAPI3 Designer",
@@ -7625,7 +7625,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "Parseur",
@@ -7733,7 +7733,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09",
+      "verifiedDate": "2026-08-01",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -7766,7 +7766,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "ROBOHASH",
@@ -7838,7 +7838,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "SmartParse",
@@ -7931,7 +7931,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Tomorrow.io Weather API",
@@ -20733,7 +20733,7 @@
         "vulnerabilities",
         "open-source"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "Grype",
@@ -20778,7 +20778,7 @@
         "templates",
         "open-source"
       ],
-      "verifiedDate": "2026-06-09"
+      "verifiedDate": "2026-07-30"
     },
     {
       "vendor": "CodeQL",
