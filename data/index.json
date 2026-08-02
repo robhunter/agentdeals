@@ -5874,7 +5874,7 @@
         "developer-tools",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-06-11"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Bruno",
@@ -6358,7 +6358,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Notebook",
@@ -6449,7 +6449,7 @@
         "no-code",
         "zoho"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "Zoho Sign",
@@ -6518,7 +6518,7 @@
         "free-for-dev",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "Cloud 66",
@@ -6546,7 +6546,7 @@
         "management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "Scalr",
@@ -6602,7 +6602,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "GitGud",
@@ -6662,7 +6662,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "savannah.gnu.org",
@@ -6674,7 +6674,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "savannah.nongnu.org",
@@ -6686,7 +6686,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "APITemplate.io",
@@ -6875,7 +6875,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "CraftMyPDF",
@@ -6911,7 +6911,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "CurrencyScoop",
@@ -7091,7 +7091,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "DynamicDocs",
@@ -7127,7 +7127,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "Financial Data",
@@ -7383,7 +7383,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "JSONGrid",
@@ -7407,7 +7407,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "JSONSwiss",
@@ -7491,7 +7491,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "MockAPI",
@@ -7539,7 +7539,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "Multi-Exit IP Address Checker",
@@ -7551,7 +7551,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "Cloudflare Mesh",
@@ -7697,7 +7697,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "Preset Cloud",
@@ -7862,7 +7862,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "Sqlable",
@@ -7898,7 +7898,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10",
+      "verifiedDate": "2026-08-01",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -8015,7 +8015,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "wrapapi.com",
@@ -8039,7 +8039,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "Zipcodebase",
@@ -8315,7 +8315,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "GitDailies",
@@ -8387,7 +8387,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Linkinize",
@@ -8483,7 +8483,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-01"
     },
     {
       "vendor": "Pumble",
@@ -8639,7 +8639,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "Teamcamp",
@@ -8855,7 +8855,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-07-31"
     },
     {
       "vendor": "RightFeature",
@@ -9101,7 +9101,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10"
+      "verifiedDate": "2026-08-02"
     },
     {
       "vendor": "CodeFactor",
