@@ -3290,7 +3290,7 @@
         "integrations",
         "free tier"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "Bugsnag",
@@ -8423,7 +8423,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "Miro",
@@ -8495,7 +8495,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "Raindrop.io",
@@ -8591,7 +8591,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "StatusPile",
@@ -8979,7 +8979,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "WPJack",
@@ -8993,7 +8993,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "Appinvento",
@@ -9257,7 +9257,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "scan.coverity.com",
@@ -9550,7 +9550,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "Argos",
@@ -9563,7 +9563,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "Bencher",
@@ -9589,7 +9589,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "checkbot.io",
@@ -9641,7 +9641,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "katalon.com",
@@ -9693,7 +9693,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "pagegym.com",
@@ -9706,7 +9706,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "qase.io",
@@ -9732,7 +9732,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "snippets.uilicious.com",
@@ -9771,7 +9771,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "Testspace.com",
@@ -9810,7 +9810,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "Vaadin",
@@ -10407,7 +10407,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-13"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "GetUpdraft",
@@ -10419,7 +10419,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "InstallOnAir",
@@ -10431,7 +10431,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-13"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "Loadly",
@@ -10443,7 +10443,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "bitnami.com",
@@ -10467,7 +10467,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "Miradore",
@@ -10479,7 +10479,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "moss.sh",
@@ -10503,7 +10503,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "runcloud.io",
@@ -10527,7 +10527,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "xcloud.host",
@@ -10565,7 +10565,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "Engage",
@@ -10630,7 +10630,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "Pocket Alert",
@@ -10656,7 +10656,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-13"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "scaledrone.com",
@@ -10812,7 +10812,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-13"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "Smart Grow Logs",
@@ -10885,7 +10885,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-13"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "localizely.com",
@@ -11424,7 +11424,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-13"
+      "verifiedDate": "2026-08-04"
     },
     {
       "vendor": "Embrace",
