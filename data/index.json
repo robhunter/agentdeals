@@ -9137,7 +9137,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "coveralls.io",
@@ -9269,7 +9269,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "scrutinizer-ci.com",
@@ -9293,7 +9293,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "shields.io",
@@ -9602,7 +9602,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "CORS-Tester",
@@ -9745,7 +9745,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "SSR (Server-side Rendering) Checker",
@@ -9823,7 +9823,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "webhook.site",
@@ -10539,7 +10539,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "courier.com",
@@ -10591,7 +10591,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "HiveMQ",
@@ -10604,7 +10604,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "httpSMS",
@@ -10669,7 +10669,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "SMSGate",
@@ -10695,7 +10695,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "synadia.com",
@@ -10734,7 +10734,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-15"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "log.dog",
@@ -10760,7 +10760,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "Better Stack Logs",
@@ -10799,7 +10799,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "openobserve.ai",
@@ -10873,7 +10873,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "Localit",
@@ -10921,7 +10921,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "SimpleLocalize",
@@ -11437,7 +11437,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "honeybadger.io",
@@ -11502,7 +11502,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "bonsai.io",
@@ -12168,7 +12168,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "Formcarry.com",
@@ -12192,7 +12192,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "FormKeep.com",
@@ -12204,7 +12204,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "formlets.com",
@@ -12228,7 +12228,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "Formsubmit.co",
@@ -12300,7 +12300,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "smartforms.dev",
@@ -12324,7 +12324,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "Survicate",
@@ -12651,7 +12651,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "CacheFly",
@@ -13183,7 +13183,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "Clappia",
@@ -13219,7 +13219,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "Mendix",
@@ -13654,7 +13654,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-07"
     },
     {
       "vendor": "sslip.io",
@@ -13667,7 +13667,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-05"
     },
     {
       "vendor": "VolaryDDNS",
@@ -13719,7 +13719,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-14"
+      "verifiedDate": "2026-08-06"
     },
     {
       "vendor": "DigitalPlat",
