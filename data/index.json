@@ -152,7 +152,7 @@
         "deployment",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-12",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -544,7 +544,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "Upstash",
@@ -683,7 +683,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-11",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -736,7 +736,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "Hasura Cloud",
@@ -883,7 +883,7 @@
         "observability",
         "apm"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-12",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1461,7 +1461,7 @@
         "crawling",
         "free tier"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-11",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -12601,7 +12601,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-12",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -13207,7 +13207,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "manubes",
@@ -13243,7 +13243,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "ToolJet",
@@ -13641,7 +13641,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "noip",
@@ -13937,7 +13937,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "Expose",
@@ -13973,7 +13973,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-10"
     },
     {
       "vendor": "localtunnel",
@@ -13985,7 +13985,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "LocalXpose",
@@ -14201,7 +14201,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-10"
     },
     {
       "vendor": "easyretro.io",
@@ -16382,7 +16382,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "nominatim.org",
@@ -16408,7 +16408,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "osmnames",
@@ -16507,7 +16507,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "apiary.io",
@@ -16531,7 +16531,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-10"
     },
     {
       "vendor": "Binder",
@@ -16555,7 +16555,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "Bootify.io",
@@ -16627,7 +16627,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-10"
     },
     {
       "vendor": "codepen.io",
@@ -16711,7 +16711,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "MarsCode",
@@ -16832,7 +16832,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "Visual Studio Code",
@@ -17421,7 +17421,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-10"
     },
     {
       "vendor": "Currencyapi",
@@ -17434,7 +17434,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "currencylayer",
@@ -17577,7 +17577,7 @@
         "containers",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "GraphComment",
@@ -17625,7 +17625,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-18"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "ApiFlash",
@@ -18352,7 +18352,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-18",
+      "verifiedDate": "2026-08-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20320,7 +20320,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-18",
+      "verifiedDate": "2026-08-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
