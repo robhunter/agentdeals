@@ -528,7 +528,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "Turso",
@@ -861,7 +861,7 @@
         "observability",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-06-20",
+      "verifiedDate": "2026-08-11",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -941,7 +941,7 @@
         "free tier",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "Checkly",
@@ -3245,7 +3245,7 @@
         "ai-agent",
         "free tier"
       ],
-      "verifiedDate": "2026-06-20",
+      "verifiedDate": "2026-08-12",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -4434,7 +4434,7 @@
         "self-hosted",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "Cerebras",
@@ -4876,7 +4876,7 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "Brave Search API",
@@ -5606,7 +5606,7 @@
         "serverless",
         "free tier"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "Chroma",
@@ -8435,7 +8435,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "Nuclino",
@@ -14033,7 +14033,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "webhookrelay.com",
@@ -16304,7 +16304,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "geocodify.com",
@@ -16330,7 +16330,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "Geokeo api",
@@ -16434,7 +16434,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "stadiamaps.com",
@@ -16747,7 +16747,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "OneCompiler",
@@ -16868,7 +16868,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "wakatime.com",
@@ -16892,7 +16892,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "WebComponents.dev",
@@ -17486,7 +17486,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "ParityVend",
@@ -17589,7 +17589,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "IntenseDebate",
@@ -17601,7 +17601,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "Remarkbox",
@@ -17613,7 +17613,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "Utterances",
@@ -17677,7 +17677,7 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-12"
     },
     {
       "vendor": "Screenshot Scout",
@@ -17716,7 +17716,7 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-19"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "FlutLab",
@@ -17728,7 +17728,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-20"
+      "verifiedDate": "2026-08-11"
     },
     {
       "vendor": "Bearer",
@@ -18246,7 +18246,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18310,7 +18310,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-13",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18553,7 +18553,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-13",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18573,7 +18573,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-12",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19060,7 +19060,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-11",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19731,7 +19731,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-19",
+      "verifiedDate": "2026-08-11",
       "eligibility": {
         "type": "startup",
         "conditions": [
