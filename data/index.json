@@ -53,7 +53,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-06-22",
+      "verifiedDate": "2026-08-15",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -320,7 +320,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "AWS",
@@ -404,7 +404,7 @@
         "free tier",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Supabase",
@@ -908,7 +908,7 @@
         "grafana",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "BetterStack",
@@ -925,7 +925,7 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "Axiom",
@@ -1329,7 +1329,7 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-06-22",
+      "verifiedDate": "2026-08-13",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2132,7 +2132,7 @@
         "security",
         "free tier"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "PostHog",
@@ -2303,7 +2303,7 @@
         "apm",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-06-22",
+      "verifiedDate": "2026-08-13",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -3772,7 +3772,7 @@
         "cloudflare",
         "infrastructure"
       ],
-      "verifiedDate": "2026-06-22",
+      "verifiedDate": "2026-08-15",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3921,7 +3921,7 @@
         "open source",
         "attribution"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "Stytch",
@@ -4820,7 +4820,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "CloudDev",
@@ -4859,7 +4859,7 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "Floci",
@@ -5146,7 +5146,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "PagerDuty",
@@ -5951,7 +5951,7 @@
         "knowledge-graph",
         "cloud"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "InfluxDB Cloud",
@@ -6254,7 +6254,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "Zoho",
@@ -6267,7 +6267,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "Zoho Assist",
@@ -8881,7 +8881,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "Crystallize",
@@ -9089,7 +9089,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "Codeac.io",
@@ -10327,7 +10327,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "Phase Two",
@@ -13346,7 +13346,7 @@
         "free-for-dev",
         "kinsta-alternative"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-13"
     },
     {
       "vendor": "MDB GO",
@@ -17703,7 +17703,7 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-21"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "thumbnail.ws",
@@ -18288,7 +18288,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-21",
+      "verifiedDate": "2026-08-14",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18513,7 +18513,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-21",
+      "verifiedDate": "2026-08-13",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -18614,7 +18614,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-21",
+      "verifiedDate": "2026-08-14",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19711,7 +19711,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-21",
+      "verifiedDate": "2026-08-14",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20658,7 +20658,7 @@
         "python",
         "open-source"
       ],
-      "verifiedDate": "2026-06-21"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "BlazeMeter",
@@ -20888,7 +20888,7 @@
         "traffic-management",
         "api"
       ],
-      "verifiedDate": "2026-06-21"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "DigitalOcean DNS",
@@ -20951,7 +20951,7 @@
         "startup credits",
         "infrastructure"
       ],
-      "verifiedDate": "2026-06-21",
+      "verifiedDate": "2026-08-14",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
