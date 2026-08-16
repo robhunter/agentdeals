@@ -767,7 +767,7 @@
         "github",
         "deal-change"
       ],
-      "verifiedDate": "2026-06-23",
+      "verifiedDate": "2026-08-14",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1196,7 +1196,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-06-23",
+      "verifiedDate": "2026-08-16",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1445,7 +1445,7 @@
         "free tier",
         "mcp-server"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "Firecrawl",
@@ -2056,7 +2056,7 @@
         "session replay",
         "free tier"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Mixpanel",
@@ -3153,7 +3153,7 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "HCP Terraform",
@@ -3606,7 +3606,7 @@
         "google",
         "gis"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Instatus",
@@ -4448,7 +4448,7 @@
         "inference",
         "api"
       ],
-      "verifiedDate": "2026-06-23",
+      "verifiedDate": "2026-08-15",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -4804,7 +4804,7 @@
         "nosql",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "ElasticMQ",
@@ -5676,7 +5676,7 @@
         "inference",
         "gpu"
       ],
-      "verifiedDate": "2026-06-23",
+      "verifiedDate": "2026-08-15",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -6345,7 +6345,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Showtime",
@@ -11539,7 +11539,7 @@
         "free-for-dev",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "addy.io",
@@ -16603,7 +16603,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "code.cs50.io",
@@ -16820,7 +16820,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "Sublime Text",
@@ -16880,7 +16880,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Wave Terminal",
@@ -17447,7 +17447,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "exchangerate-api.com",
@@ -17473,7 +17473,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "Moesif API Monetization",
@@ -17512,7 +17512,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "RevenueCat",
@@ -17525,7 +17525,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "vatlayer",
@@ -17538,7 +17538,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Container Registry Service",
@@ -17638,7 +17638,7 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-14"
     },
     {
       "vendor": "PhantomJsCloud",
@@ -17664,7 +17664,7 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "screenshotmachine.com",
@@ -18016,7 +18016,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "RandomKeygen",
@@ -19039,7 +19039,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-22",
+      "verifiedDate": "2026-08-16",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19080,7 +19080,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-22",
+      "verifiedDate": "2026-08-14",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20542,7 +20542,7 @@
         "selenium",
         "open-source"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "BrowserStack",
@@ -20557,7 +20557,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-06-22",
+      "verifiedDate": "2026-08-16",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -20601,7 +20601,7 @@
         "cross-browser",
         "automation"
       ],
-      "verifiedDate": "2026-06-22"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Applitools Eyes",
@@ -20975,7 +20975,7 @@
         "free credits",
         "api"
       ],
-      "verifiedDate": "2026-06-22",
+      "verifiedDate": "2026-08-14",
       "payment_protocols": [
         {
           "protocol": "x402",
