@@ -1031,7 +1031,7 @@
         "sso",
         "free tier"
       ],
-      "verifiedDate": "2026-06-24",
+      "verifiedDate": "2026-08-15",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1544,7 +1544,7 @@
         "container-security",
         "iac"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Fingerprint",
@@ -1561,7 +1561,7 @@
         "bot-detection",
         "free tier"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "SonarQube Cloud",
@@ -1593,7 +1593,7 @@
         "eu",
         "price-increase-2026"
       ],
-      "verifiedDate": "2026-06-24",
+      "verifiedDate": "2026-08-15",
       "referral_program": {
         "available": true,
         "referrer_benefit": "€10 credit",
@@ -1902,7 +1902,7 @@
         "fast",
         "free tier"
       ],
-      "verifiedDate": "2026-06-24",
+      "verifiedDate": "2026-08-15",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -3008,7 +3008,7 @@
         "integrations",
         "self-hosted"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "Retool",
@@ -3906,7 +3906,7 @@
         "code quality",
         "analytics"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Dub.co",
@@ -4472,7 +4472,7 @@
         "reranking",
         "api"
       ],
-      "verifiedDate": "2026-06-24",
+      "verifiedDate": "2026-08-16",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -4840,7 +4840,7 @@
         "api-gateway",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Vera AWS",
@@ -8219,7 +8219,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "DevToolLab",
@@ -9221,7 +9221,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "holistic.dev",
@@ -11948,7 +11948,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "Substack",
@@ -12935,7 +12935,7 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "flightcontrol.dev",
@@ -14153,7 +14153,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Clockify",
@@ -17046,7 +17046,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "getinsights.io",
@@ -17551,7 +17551,7 @@
         "containers",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Play with Docker",
@@ -17651,7 +17651,7 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "screenshotbase.com",
@@ -17690,7 +17690,7 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "SnapAPI",
@@ -18331,7 +18331,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-06-23",
+      "verifiedDate": "2026-08-17",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -19018,7 +19018,7 @@
         "startup-credits",
         "startupdeals"
       ],
-      "verifiedDate": "2026-06-23",
+      "verifiedDate": "2026-08-17",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -20643,7 +20643,7 @@
         "performance",
         "open-source"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Locust",
@@ -20875,7 +20875,7 @@
         "anycast",
         "ddos-protection"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "NS1 Connect",
@@ -20901,7 +20901,7 @@
         "cloud",
         "digitalocean-free-tier-2026"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Vultr DNS",
@@ -21046,7 +21046,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "GitHub Copilot",
@@ -21252,7 +21252,7 @@
         "claude",
         "deal-change"
       ],
-      "verifiedDate": "2026-06-23",
+      "verifiedDate": "2026-08-15",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21371,7 +21371,7 @@
         "packages",
         "google cloud"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Google Cloud Logging",
@@ -21491,7 +21491,7 @@
         "gpu",
         "free tier"
       ],
-      "verifiedDate": "2026-06-23",
+      "verifiedDate": "2026-08-15",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23207,7 +23207,7 @@
         "vertex-ai",
         "rag"
       ],
-      "verifiedDate": "2026-06-23"
+      "verifiedDate": "2026-08-15"
     },
     {
       "vendor": "Google GLM 5",
