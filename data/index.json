@@ -188,7 +188,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-06-25",
+      "verifiedDate": "2026-08-17",
       "referral": {
         "code": "7RZL9q",
         "url": "https://railway.com?referralCode=7RZL9q",
@@ -244,7 +244,7 @@
         "vercel-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-06-25",
+      "verifiedDate": "2026-08-17",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -371,7 +371,7 @@
         "heroku-alternative",
         "digitalocean-free-tier-2026"
       ],
-      "verifiedDate": "2026-06-25",
+      "verifiedDate": "2026-08-18",
       "expires_date": "2026-06-30",
       "free_tier_limits": {
         "credits": "$200 for 60 days",
@@ -2801,7 +2801,7 @@
         "deal-change",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Directus",
@@ -7569,7 +7569,7 @@
         "cloudflare",
         "wireguard"
       ],
-      "verifiedDate": "2026-06-25",
+      "verifiedDate": "2026-08-16",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -10042,7 +10042,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "qualys.com",
@@ -10282,7 +10282,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "MojoAuth",
@@ -10552,7 +10552,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "EMQX Serverless",
@@ -14165,7 +14165,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Cloudcraft",
@@ -16265,7 +16265,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Clockwork Micro",
@@ -16723,7 +16723,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "mockaroo",
@@ -20579,7 +20579,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-06-25",
+      "verifiedDate": "2026-08-16",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -20935,7 +20935,7 @@
         "dns",
         "free"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "Vast.ai",
@@ -21029,7 +21029,7 @@
         "no-code",
         "developer tools"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "Claude Code",
@@ -21285,7 +21285,7 @@
         "bigquery",
         "google cloud"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "Google Cloud Run",
@@ -21300,7 +21300,7 @@
         "google cloud",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Google Compute Engine",
@@ -21357,7 +21357,7 @@
         "google cloud",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Google Artifact Registry",
@@ -21440,7 +21440,7 @@
         "collaboration",
         "free tier"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "GitHub Models",
@@ -21550,7 +21550,7 @@
         "gateway",
         "free tier"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "SiliconFlow",
@@ -21656,7 +21656,7 @@
         "aurora",
         "rds"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Spotify",
@@ -21671,7 +21671,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "YouTube",
@@ -21933,7 +21933,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-16"
     },
     {
       "vendor": "Microsoft To Do",
@@ -21993,7 +21993,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-25"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Evernote",
@@ -22600,7 +22600,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-24",
+      "verifiedDate": "2026-08-17",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -23038,7 +23038,7 @@
         "agent-payments",
         "free tier"
       ],
-      "verifiedDate": "2026-06-24",
+      "verifiedDate": "2026-08-16",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -23239,7 +23239,7 @@
         "vertex-ai",
         "rag"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-17"
     },
     {
       "vendor": "Google Content API for Shopping",
@@ -23256,7 +23256,7 @@
         "deprecated",
         "product-data"
       ],
-      "verifiedDate": "2026-06-24"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Alibaba Cloud Qwen Code",
