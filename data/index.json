@@ -353,7 +353,7 @@
         "azure",
         "microsoft"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "DigitalOcean",
@@ -958,7 +958,7 @@
         "free tier",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "New Relic",
@@ -1000,7 +1000,7 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Clerk",
@@ -1056,7 +1056,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "WorkOS",
@@ -1702,7 +1702,7 @@
         "github",
         "free tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "LaunchDarkly",
@@ -1935,7 +1935,7 @@
         "deal-change",
         "per-model-pricing"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Mistral AI",
@@ -3185,7 +3185,7 @@
         "hybrid",
         "free tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Quay.io",
@@ -4892,7 +4892,7 @@
         "llm",
         "deal-change"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "OpenAI",
@@ -5258,7 +5258,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Semaphore CI",
@@ -5305,7 +5305,7 @@
         "game-dev",
         "deal-change"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "SurrealDB Cloud",
@@ -5996,7 +5996,7 @@
         "backend",
         "developer-tools"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Amazon SP-API",
@@ -6192,7 +6192,7 @@
         "flutter",
         "macos"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Appcircle",
@@ -11804,7 +11804,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "UserCheck",
@@ -12438,7 +12438,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Clair",
@@ -15563,7 +15563,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-03"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Lucide",
@@ -16639,7 +16639,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-05-11"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "codesandbox.io",
@@ -20615,7 +20615,7 @@
         "ai",
         "regression"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Artillery",
@@ -21397,7 +21397,7 @@
         "security",
         "google cloud"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Google Cloud Shell",
@@ -21457,7 +21457,7 @@
         "free tier",
         "openai-compatible"
       ],
-      "verifiedDate": "2026-06-27",
+      "verifiedDate": "2026-08-20",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -22501,7 +22501,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-26"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "MyFitnessPal",
@@ -22532,7 +22532,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-26"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Apple Health",
@@ -22624,7 +22624,7 @@
         "workers",
         "free-for-students"
       ],
-      "verifiedDate": "2026-06-26",
+      "verifiedDate": "2026-08-19",
       "eligibility": {
         "type": "student",
         "conditions": [
@@ -22778,7 +22778,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-26"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Outlook.com",
@@ -22791,7 +22791,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-26"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Proton Mail",
@@ -22858,7 +22858,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-26"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Feedly",
@@ -22978,7 +22978,7 @@
         "cursor-alternative",
         "free tier"
       ],
-      "verifiedDate": "2026-06-26"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "OVHcloud",
@@ -22998,7 +22998,7 @@
         "budget",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-06-26",
+      "verifiedDate": "2026-08-20",
       "expires_date": "2026-06-14",
       "free_tier_limits": {
         "credits": "€200 for 60 days",
@@ -23021,7 +23021,7 @@
         "budget",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-06-26"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "Exa",
@@ -23272,7 +23272,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-06-26"
+      "verifiedDate": "2026-08-18"
     },
     {
       "vendor": "E2B",
