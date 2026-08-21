@@ -814,7 +814,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Buildkite",
@@ -1126,7 +1126,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Mailjet",
@@ -2830,7 +2830,7 @@
         "automation",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "ClouDNS",
@@ -3730,7 +3730,7 @@
         "storage",
         "image optimization"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "IBM Cloud",
@@ -4680,7 +4680,7 @@
         "open source",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Hoppscotch",
@@ -5636,7 +5636,7 @@
         "serverless",
         "search"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "AssemblyAI",
@@ -6503,7 +6503,7 @@
         "postgres",
         "open-source"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Brainboard",
@@ -8651,7 +8651,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Teamplify",
@@ -21517,7 +21517,7 @@
         "self-hosted",
         "free tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Google Gemini Code Assist",
@@ -21566,7 +21566,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-06-27",
+      "verifiedDate": "2026-08-20",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -21591,7 +21591,7 @@
         "glm",
         "free tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "DeepSeek API",
@@ -21762,7 +21762,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "iHeartRadio",
@@ -21834,7 +21834,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Notion",
@@ -22021,7 +22021,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Airtable",
@@ -22079,7 +22079,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "OneDrive",
@@ -22134,7 +22134,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "pCloud",
@@ -22178,7 +22178,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Proton Pass",
@@ -22194,7 +22194,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27",
+      "verifiedDate": "2026-08-21",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -22232,7 +22232,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "LastPass",
@@ -22246,7 +22246,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "NordPass",
@@ -22332,7 +22332,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Signal",
@@ -22438,7 +22438,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Krita",
@@ -22454,7 +22454,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Blender",
@@ -22562,7 +22562,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27",
+      "verifiedDate": "2026-08-20",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -22656,7 +22656,7 @@
         "cloudflare",
         "linux"
       ],
-      "verifiedDate": "2026-06-27",
+      "verifiedDate": "2026-08-19",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -22705,7 +22705,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Duolingo",
@@ -22720,7 +22720,7 @@
         "free-tier",
         "ad-supported"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "MIT OpenCourseWare",
@@ -22735,7 +22735,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Coursera",
@@ -22873,7 +22873,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-27"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Apple News",
