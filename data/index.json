@@ -613,7 +613,7 @@
         "firebase-alternative",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Appwrite Cloud",
@@ -666,7 +666,7 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Cloudflare D1",
@@ -1015,7 +1015,7 @@
         "users",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Auth0",
@@ -1087,7 +1087,7 @@
         "transactional",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Postmark",
@@ -1267,7 +1267,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "CloudAMQP",
@@ -1297,7 +1297,7 @@
         "cloudflare",
         "free tier"
       ],
-      "verifiedDate": "2026-06-29",
+      "verifiedDate": "2026-08-21",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1679,7 +1679,7 @@
         "compute",
         "free tier"
       ],
-      "verifiedDate": "2026-06-29",
+      "verifiedDate": "2026-08-20",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1776,7 +1776,7 @@
         "subscriptions",
         "free tier"
       ],
-      "verifiedDate": "2026-06-29",
+      "verifiedDate": "2026-08-22",
       "payment_protocols": [
         {
           "protocol": "stripe-mpp",
@@ -1951,7 +1951,7 @@
         "code",
         "free tier"
       ],
-      "verifiedDate": "2026-06-29",
+      "verifiedDate": "2026-08-20",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2785,7 +2785,7 @@
         "browser-testing",
         "ci-cd"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Postman",
@@ -3451,7 +3451,7 @@
         "developer-portal",
         "free tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "GitBook",
@@ -4605,7 +4605,7 @@
         "open source",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Jaeger",
@@ -11450,7 +11450,7 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Jam",
@@ -12410,7 +12410,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Audio Enhancer",
@@ -14141,7 +14141,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "clickup.com",
@@ -21686,7 +21686,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Tubi",
@@ -21821,7 +21821,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Pocket Casts",
@@ -21920,7 +21920,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Apple Notes",
@@ -22092,7 +22092,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Flickr",
@@ -22260,7 +22260,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Slack",
@@ -22290,7 +22290,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Zoom",
@@ -22392,7 +22392,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "GIMP",
@@ -22516,7 +22516,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-20"
     },
     {
       "vendor": "Strava",
@@ -22547,7 +22547,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Proton VPN",
@@ -22750,7 +22750,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "edX",
@@ -22765,7 +22765,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Gmail",
@@ -22806,7 +22806,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28",
+      "verifiedDate": "2026-08-22",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -22902,7 +22902,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Mint (Credit Karma)",
@@ -22962,7 +22962,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-28"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Amazon Kiro",
