@@ -304,7 +304,7 @@
         "free tier",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Koyeb",
@@ -336,7 +336,7 @@
         "credits",
         "startup"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Azure",
@@ -561,7 +561,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Firebase",
@@ -752,7 +752,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "GitHub Actions",
@@ -1073,7 +1073,7 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Resend",
@@ -1158,7 +1158,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-06-30",
+      "verifiedDate": "2026-08-23",
       "referral_program": {
         "available": true,
         "referrer_benefit": "~$5 per free signup, ~$100 per paid signup",
@@ -1525,7 +1525,7 @@
         "agile",
         "free tier"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Snyk",
@@ -1576,7 +1576,7 @@
         "static analysis",
         "free tier"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Hetzner",
@@ -2277,7 +2277,7 @@
         "open source",
         "oss"
       ],
-      "verifiedDate": "2026-06-30",
+      "verifiedDate": "2026-08-23",
       "eligibility": {
         "type": "oss",
         "conditions": [
@@ -4184,7 +4184,7 @@
         "api",
         "data"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Meilisearch",
@@ -4756,7 +4756,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-06-30"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Moto",
@@ -21701,7 +21701,7 @@
         "ad-supported",
         "consumer"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Pluto TV",
@@ -21716,7 +21716,7 @@
         "ad-supported",
         "consumer"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Peacock",
@@ -21793,7 +21793,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Plex",
@@ -21963,7 +21963,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Standard Notes",
@@ -22051,7 +22051,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Google Photos",
@@ -22065,7 +22065,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "iCloud",
@@ -22304,7 +22304,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Google Meet",
@@ -22318,7 +22318,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Microsoft Teams",
@@ -22348,7 +22348,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "Telegram",
@@ -22362,7 +22362,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-22"
     },
     {
       "vendor": "WhatsApp",
@@ -22376,7 +22376,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Photopea",
@@ -22407,7 +22407,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Inkscape",
@@ -22486,7 +22486,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Samsung Health",
@@ -22585,7 +22585,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Cloudflare WARP",
@@ -22844,7 +22844,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Instapaper",
@@ -22932,7 +22932,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-23"
     },
     {
       "vendor": "Insight Timer",
@@ -22947,7 +22947,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-06-29"
+      "verifiedDate": "2026-08-21"
     },
     {
       "vendor": "Waking Up",
@@ -23359,7 +23359,7 @@
         "inference",
         "free tier"
       ],
-      "verifiedDate": "2026-06-29",
+      "verifiedDate": "2026-08-21",
       "payment_protocols": [
         {
           "protocol": "x402",
