@@ -1,9 +1,13 @@
-// Telemetry storage-layer tests (#1018).
+// Telemetry storage-layer tests (#1018, #1023).
 //
 // These are hermetic: Upstash is stubbed at `globalThis.fetch`, so every case runs
 // offline and deterministically. The behaviour under test is specifically what the
 // old code could not express — the difference between "this counter is zero" and
 // "we could not read this counter".
+//
+// Page-view counters no longer live one Redis key per (day, path); they are buffered in
+// memory and persisted as a single JSON snapshot on a flush interval (#1023), so the
+// assertions here look at what a flush *writes* rather than at per-request INCRs.
 
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert";
@@ -20,6 +24,7 @@ const {
   resetCounters,
   loadTelemetry,
   flushTelemetry,
+  flushPending,
   telemetryLoadDidFail,
 } = await import("../dist/stats.js");
 
@@ -29,6 +34,10 @@ const realFetch = globalThis.fetch;
 let calls: Call[] = [];
 /** Maps a Redis command name to the JSON body Upstash should answer with. */
 let responder: (cmd: string, args: unknown[]) => unknown = () => ({ result: 1 });
+
+const PAGE_VIEWS_KEY = "agentdeals:pageviews";
+const TELEMETRY_KEY = "agentdeals:telemetry";
+const TMP_TELEMETRY = "/tmp/agentdeals-telemetry-test.json";
 
 function installFetchStub(): void {
   globalThis.fetch = (async (_url: string, init: { body: string }) => {
@@ -49,10 +58,26 @@ function callsFor(cmd: string): Call[] {
   return calls.filter(c => c.cmd === cmd);
 }
 
-/** Lets fire-and-forget INCRs inside recordPageView settle before asserting. */
-async function drain(): Promise<void> {
-  await new Promise(resolve => setImmediate(resolve));
-  await new Promise(resolve => setImmediate(resolve));
+/** The SET that persisted the page-view snapshot, parsed. */
+function writtenSnapshot(): any {
+  const set = callsFor("SET").find(c => String(c.args[0]) === PAGE_VIEWS_KEY);
+  assert.ok(set, `no SET of ${PAGE_VIEWS_KEY}; SETs: ${callsFor("SET").map(c => c.args[0]).join(", ")}`);
+  return JSON.parse(String(set!.args[1]));
+}
+
+/** An empty-but-healthy store: every read succeeds and returns nothing. */
+const emptyStore = (cmd: string): unknown => {
+  if (cmd === "GET") return { result: null };
+  if (cmd === "SCAN") return { result: ["0", []] };
+  if (cmd === "LRANGE" || cmd === "MGET") return { result: [] };
+  return { result: "OK" };
+};
+
+/** Boots the module against a store, leaving it in the loaded state a live server has. */
+async function boot(store: (cmd: string, args: unknown[]) => unknown = emptyStore): Promise<void> {
+  responder = store;
+  await loadTelemetry(TMP_TELEMETRY);
+  calls = [];
 }
 
 describe("telemetry storage layer (#1018)", () => {
@@ -110,65 +135,78 @@ describe("telemetry storage layer (#1018)", () => {
 
   describe("recordPageView key space", () => {
     it("writes the normalized route pattern, never the raw path", async () => {
+      await boot();
       recordPageView("/vendor/hetzner", "Mozilla/5.0", undefined, 200);
-      await drain();
-      const keys = callsFor("INCR").map(c => String(c.args[0]));
-      assert.ok(keys.some(k => k.endsWith(":/vendor/:slug")), `expected a /vendor/:slug key, got ${keys.join(", ")}`);
-      assert.ok(!keys.some(k => k.includes("hetzner")), "raw slug must not reach Redis");
+      await flushPending();
+
+      const snapshot = writtenSnapshot();
+      assert.ok(snapshot.all_time["/vendor/:slug"] >= 1, "expected a /vendor/:slug counter");
+      assert.ok(!JSON.stringify(snapshot).includes("hetzner"), "raw slug must not reach Redis");
     });
 
     it("buckets a 404 to __unmatched__ even when the path looks like a page", async () => {
+      await boot();
       recordPageView("/wp-login", "Mozilla/5.0", undefined, 404);
-      await drain();
-      const keys = callsFor("INCR").map(c => String(c.args[0]));
-      assert.ok(keys.some(k => k.endsWith(`:${UNMATCHED_PAGE_KEY}`)), `expected __unmatched__, got ${keys.join(", ")}`);
-      assert.ok(!keys.some(k => k.includes("wp-login")), "a path we 404 must not mint its own key");
+      await flushPending();
+
+      const snapshot = writtenSnapshot();
+      assert.ok(snapshot.all_time[UNMATCHED_PAGE_KEY] >= 1, "expected __unmatched__");
+      assert.ok(!JSON.stringify(snapshot).includes("wp-login"), "a path we 404 must not mint its own key");
     });
 
-    it("sets a TTL on a daily key the first time it is created", async () => {
-      responder = cmd => (cmd === "INCR" ? { result: 1 } : { result: 1 });
+    it("keeps the day-scoped total alongside the per-path counters", async () => {
+      await boot();
+      recordPageView("/", "Mozilla/5.0", undefined, 200);
       recordPageView("/estimate", "Mozilla/5.0", undefined, 200);
-      await drain();
-      const expired = callsFor("EXPIRE").map(c => String(c.args[0]));
-      assert.ok(expired.some(k => k.startsWith("pv:20")), "daily key should be given a TTL on creation");
-      assert.ok(!expired.some(k => k.startsWith("pv:all:")), "all-time counters must not expire");
-    });
+      await flushPending();
 
-    it("does not re-arm the TTL on subsequent hits", async () => {
-      responder = cmd => (cmd === "INCR" ? { result: 7 } : { result: 1 });
-      recordPageView("/estimate", "Mozilla/5.0", undefined, 200);
-      await drain();
-      assert.strictEqual(callsFor("EXPIRE").length, 0, "EXPIRE on every hit would keep pushing the expiry out");
+      const today = new Date().toISOString().slice(0, 10);
+      const day = writtenSnapshot().days[today];
+      assert.strictEqual(day.total, 2);
+      assert.strictEqual(day["/"], 1);
+      assert.strictEqual(day["/estimate"], 1);
     });
   });
 
   describe("read failures are not reported as zeros (Defect B)", () => {
-    it("reports total: null and partial: true when MGET fails", async () => {
-      responder = (cmd) => {
-        if (cmd === "SCAN") return { result: ["0", ["pv:all:/", "pv:all:/estimate"]] };
-        if (cmd === "MGET") return { error: "ERR max request size exceeded" };
-        return { result: 1 };
-      };
-      const report = await getPageViews();
-      assert.strictEqual(report.all_time.total, null, "an unreadable counter must not read back as 0");
-      assert.strictEqual(report.all_time.partial, true);
-      assert.deepStrictEqual(report.all_time.top_pages, [], "must not publish a top-pages list of fake zeros");
-    });
+    it("marks the report unavailable when the snapshot could not be read", async () => {
+      responder = () => ({ error: "ERR unavailable" });
+      await loadTelemetry(TMP_TELEMETRY);
 
-    it("marks the report unavailable when SCAN itself fails", async () => {
-      responder = (cmd) => (cmd === "SCAN" ? { error: "ERR unavailable" } : { result: 1 });
       const report = await getPageViews();
       assert.strictEqual(report.available, false);
       assert.match(String(report.error), /unavailable/);
-      assert.strictEqual(report.today.total, null);
+      assert.strictEqual(report.today.total, null, "an unreadable counter must not read back as 0");
+      assert.strictEqual(report.all_time.total, null);
+      assert.deepStrictEqual(report.all_time.top_pages, [], "must not publish a top-pages list of fake zeros");
+      assert.strictEqual(report.all_time.partial, true);
+    });
+
+    it("marks the report unavailable when the legacy migration scan fails", async () => {
+      // The snapshot key is genuinely absent, but the legacy key space is unreadable —
+      // seeding an empty snapshot here would erase real history on the next flush.
+      responder = (cmd) => {
+        if (cmd === "GET") return { result: null };
+        if (cmd === "SCAN") return { error: "ERR unavailable" };
+        return { result: "OK" };
+      };
+      await loadTelemetry(TMP_TELEMETRY);
+
+      const report = await getPageViews();
+      assert.strictEqual(report.available, false);
+
+      calls = [];
+      recordPageView("/", "Mozilla/5.0", undefined, 200);
+      await flushPending();
+      assert.strictEqual(
+        callsFor("SET").filter(c => String(c.args[0]) === PAGE_VIEWS_KEY).length,
+        0,
+        "must not persist a snapshot built on an unread history",
+      );
     });
 
     it("still reports a genuine zero as zero", async () => {
-      responder = (cmd) => {
-        if (cmd === "SCAN") return { result: ["0", []] };
-        if (cmd === "MGET") return { result: [] };
-        return { result: 1 };
-      };
+      await boot();
       const report = await getPageViews();
       assert.strictEqual(report.available, true);
       assert.strictEqual(report.all_time.total, 0, "an empty keyspace is a real measurement of zero");
@@ -178,35 +216,45 @@ describe("telemetry storage layer (#1018)", () => {
 
   describe("write-path failure is surfaced (Defect A)", () => {
     it("records the Upstash error instead of swallowing it", async () => {
+      await boot();
+      resetTelemetryHealth();
       responder = () => ({ error: "ERR max daily request limit exceeded" });
+
       recordPageView("/estimate", "Mozilla/5.0", undefined, 200);
-      await drain();
+      await flushPending();
+
       const health = getTelemetryHealth();
-      assert.ok(health.write_failures > 0, "a rejected INCR must be counted");
+      assert.ok(health.write_failures > 0, "a rejected write must be counted");
       assert.match(String(health.last_write_error), /max daily request limit/);
       assert.ok(health.last_write_error_at, "the failure needs a timestamp");
       assert.strictEqual(health.last_write_at, null, "a failed write must not look like a successful one");
+      assert.strictEqual(health.quota_exhausted, true, "a spent quota is not an ordinary write error");
     });
 
     it("advances last_write_at only on a successful write", async () => {
-      await logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/test", params: {}, result_count: 0 });
-      const ok = getTelemetryHealth();
-      assert.ok(ok.last_write_at, "a successful LPUSH should stamp last_write_at");
+      await boot();
+      resetTelemetryHealth();
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/test", params: {}, result_count: 0 });
+      await flushPending();
+      assert.ok(getTelemetryHealth().last_write_at, "a successful LPUSH should stamp last_write_at");
 
       resetTelemetryHealth();
       responder = () => ({ error: "ERR quota" });
-      await logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/test", params: {}, result_count: 0 });
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/test", params: {}, result_count: 0 });
+      await flushPending();
       assert.strictEqual(getTelemetryHealth().last_write_at, null);
       assert.ok(getTelemetryHealth().write_failures > 0);
     });
 
     it("distinguishes an unreadable request log from an empty one", async () => {
       responder = () => ({ error: "ERR unavailable" });
+      await loadTelemetry(TMP_TELEMETRY);
       const failed = await getRequestLogResult(10);
       assert.strictEqual(failed.available, false);
       assert.match(String(failed.error), /unavailable/);
 
-      responder = () => ({ result: [] });
+      resetCounters();
+      await boot();
       const empty = await getRequestLogResult(10);
       assert.strictEqual(empty.available, true, "a genuinely empty log is available, just empty");
       assert.strictEqual(empty.error, null);
@@ -217,17 +265,21 @@ describe("telemetry storage layer (#1018)", () => {
   describe("a failed load must not clobber stored history", () => {
     it("refuses to persist zeros after the boot-time read failed", async () => {
       responder = () => ({ error: "ERR max requests limit exceeded. Limit: 500000, Usage: 500000" });
-      await loadTelemetry("/tmp/agentdeals-telemetry-test.json");
+      await loadTelemetry(TMP_TELEMETRY);
       assert.strictEqual(telemetryLoadDidFail(), true, "an errored GET is not an empty database");
 
       calls = [];
       await flushTelemetry();
-      assert.strictEqual(callsFor("SET").length, 0, "flushing zeros over real history is data loss");
+      assert.strictEqual(
+        callsFor("SET").filter(c => String(c.args[0]) === TELEMETRY_KEY).length,
+        0,
+        "flushing zeros over real history is data loss",
+      );
     });
 
     it("resumes persisting once storage recovers", async () => {
       responder = () => ({ error: "ERR max requests limit exceeded" });
-      await loadTelemetry("/tmp/agentdeals-telemetry-test.json");
+      await loadTelemetry(TMP_TELEMETRY);
       assert.strictEqual(telemetryLoadDidFail(), true);
 
       // Storage comes back with the real historical totals.
@@ -238,39 +290,48 @@ describe("telemetry storage layer (#1018)", () => {
       calls = [];
       await flushTelemetry();
       assert.strictEqual(telemetryLoadDidFail(), false, "a successful re-read clears the block");
-      assert.strictEqual(callsFor("SET").length, 1, "persistence should resume");
 
-      const written = JSON.parse(String(callsFor("SET")[0].args[1]));
+      const sets = callsFor("SET").filter(c => String(c.args[0]) === TELEMETRY_KEY);
+      assert.strictEqual(sets.length, 1, "persistence should resume");
+      const written = JSON.parse(String(sets[0].args[1]));
       assert.strictEqual(written.cumulative_api_hits, 282802, "history must be re-hydrated, not overwritten with zeros");
     });
 
     it("persists normally when the boot-time read succeeds", async () => {
-      responder = (cmd) => {
-        if (cmd === "GET") return { result: JSON.stringify({ cumulative_api_hits: 100 }) };
-        return { result: "OK" };
+      responder = (cmd, args) => {
+        if (cmd === "GET" && String(args[0]) === TELEMETRY_KEY) {
+          return { result: JSON.stringify({ cumulative_api_hits: 100 }) };
+        }
+        return emptyStore(cmd);
       };
-      await loadTelemetry("/tmp/agentdeals-telemetry-test.json");
+      await loadTelemetry(TMP_TELEMETRY);
       assert.strictEqual(telemetryLoadDidFail(), false);
       calls = [];
       await flushTelemetry();
-      assert.strictEqual(callsFor("SET").length, 1);
+      assert.strictEqual(callsFor("SET").filter(c => String(c.args[0]) === TELEMETRY_KEY).length, 1);
     });
   });
 
   describe("MGET chunking", () => {
     it("never sends more than 100 keys in one command", async () => {
+      // Only the one-time migration off the legacy key space still reads this way.
       const keys = Array.from({ length: 250 }, (_, i) => `pv:all:/page-${i}`);
       responder = (cmd, args) => {
-        if (cmd === "SCAN") return { result: ["0", keys] };
+        if (cmd === "GET") return { result: null };
+        if (cmd === "SCAN") return { result: ["0", String(args[2]) === "pv:all:*" ? keys : []] };
         if (cmd === "MGET") return { result: args.map(() => "1") };
-        return { result: 1 };
+        if (cmd === "LRANGE") return { result: [] };
+        return { result: "OK" };
       };
-      const report = await getPageViews();
+      await loadTelemetry(TMP_TELEMETRY);
+
       const mgets = callsFor("MGET");
       assert.ok(mgets.length >= 3, `expected 250 keys to be chunked, got ${mgets.length} call(s)`);
       for (const call of mgets) {
         assert.ok(call.args.length <= 100, `chunk of ${call.args.length} exceeds the 100-key cap`);
       }
+
+      const report = await getPageViews();
       assert.strictEqual(report.all_time.total, 250, "chunking must not lose counts");
     });
   });
