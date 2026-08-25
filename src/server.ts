@@ -19,6 +19,15 @@ import { getGuideList, getGuideBySlug } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
+import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
+
+// Surface 5 of the beacon invitation (#1024), appended to the tool results that carry a
+// recommendation. A second content block rather than text appended to the JSON one: the
+// first block is a parseable document and prose glued onto it would break every strict
+// consumer. This is also the one channel where the imperative form is correct and stays —
+// the operator installed this server deliberately, so tool instructions are legitimately
+// authoritative here in a way that fetched web content is not.
+const SIGNAL_FOOTER_CONTENT = { type: "text" as const, text: MCP_SIGNAL_FOOTER };
 
 const __dirname_server = dirname(fileURLToPath(import.meta.url));
 const PKG_VERSION = JSON.parse(readFileSync(join(__dirname_server, "..", "package.json"), "utf-8")).version;
@@ -127,7 +136,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const offerWithCode: Record<string, unknown> = { ...result.offer, referral_code: getBestReferralCode(result.offer.vendor) };
           if (resolvedFrom) offerWithCode.resolved_from = resolvedFrom;
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(offerWithCode, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(offerWithCode, null, 2) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -140,7 +149,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
             deals: result.deals.map(o => ({ ...o, referral_code: getBestReferralCode(o.vendor) })),
           };
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -206,7 +215,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           ? resultsWithCodes.map(r => ({ ...toConciseOffer(r), referral_code: r.referral_code }))
           : resultsWithCodes;
         return {
-          content: [{ type: "text" as const, text: JSON.stringify({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset }, null, 2) }],
+          content: [{ type: "text" as const, text: JSON.stringify({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset }, null, 2) }, SIGNAL_FOOTER_CONTENT],
         };
       } catch (err) {
         console.error("search_deals error:", err);
@@ -252,7 +261,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = getStackRecommendation(use_case, requirements);
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, use_case, requirements }, result_count: result.stack.length, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -266,7 +275,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = estimateCosts(services, scale ?? "hobby");
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, services, scale: scale ?? "hobby" }, result_count: result.services.length, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -280,7 +289,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = auditStack(services);
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, services }, result_count: result.services_analyzed, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -338,7 +347,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_vendors", params: { vendors }, result_count: 1, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -387,7 +396,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_vendors", params: { vendors, include_risk: doRisk }, result_count: 2, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 

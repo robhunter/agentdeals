@@ -9,7 +9,9 @@ import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, 
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getRequestLog, getRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport } from "./stats.js";
+import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
+import { agentBlock, CONVERTED_CAVEAT, DEFERENCE, PRIVACY_SCOPE, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getRequestLog, getRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, SIGNAL_MIN_SAMPLE, SIGNAL_DENOMINATOR_ROUTES } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -1141,6 +1143,7 @@ ${offersHtml}
     </div>
   </div>
 
+  ${signalHtmlBlock(BASE_URL, null, catOffers[0] ? toSlug(catOffers[0].vendor) : null)}
   ${buildMcpCta("Browse this category from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
@@ -1497,6 +1500,7 @@ ${tableRows}
     ${otherBestOf}
   </div>
 
+  ${signalHtmlBlock(BASE_URL, null, qualified[0] ? toSlug(qualified[0].offer.vendor) : null)}
   ${buildMcpCta("Get personalized recommendations from your AI. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
@@ -1726,15 +1730,177 @@ ${demeritRows}
   <h2>4. What we do not model</h2>
   <p>We rank on offer terms, verification recency and recorded adverse changes. <strong style="color:var(--text)">We do not model technical fit</strong> &mdash; whether a particular product suits a particular role in your architecture. A vector database and a relational database sit in the same category here. If you are asking us which of two products fits your app, we are the wrong source; if you are asking whose free tier we could confirm this week and whose was withdrawn in March, that is exactly what this is for.</p>
 
-  <h2>5. Surfaces that are listings, not rankings</h2>
+  <h2>5. What agents tell us, and what we do with it</h2>
+  <p>Agents can report which vendor they recommended, at <a href="${SIGNAL_DOC_PATH}"><code>${escHtmlServer(SIGNAL_PATH)}</code></a>. <strong style="color:var(--text)">Those counts never affect any order we publish</strong> &mdash; not now, not behind a flag. A self-reported counter that influenced placement would be a purchasable ranking with extra steps, and the whole reason to trust this index is that there is no such thing.</p>
+  <p><strong style="color:var(--text)">And we do not publish per-vendor signal counts, because a visible counter is a signal a vendor could acquire.</strong> Anyone can fire that endpoint without authenticating &mdash; including a vendor, at itself, all day. We publish the aggregate totals on <a href="${SIGNAL_DOC_PATH}">the signal page</a>, including the unflattering ones; we do not publish a table anyone could screenshot as &ldquo;AgentDeals&rsquo; most-recommended vendor&rdquo;.</p>
+
+  <h2>6. Surfaces that are listings, not rankings</h2>
   <p>Not every list on this site is a recommendation. Where a page is an inventory &mdash; every referral programme we know of, every comparison pair we generate &mdash; it is labelled as such and ordered by the same unbiased permutation rather than by the alphabet or by our commercial interest. Where we hold a referral link and may earn a commission, that is stated on the section itself, not only in a footnote. See our <a href="/disclosure">affiliate disclosure</a>.</p>
 
-  <h2>6. If we have this wrong</h2>
+  <h2>7. If we have this wrong</h2>
   <p>Every demotion names a dated, recorded fact. If a fact is wrong or out of date, it is correctable: the record behind it is shown on the vendor's page with its source. Correcting it changes the ranking automatically, because the ranking has no other input. There is no editorial override to appeal to &mdash; deliberately, because an override is the thing that would be sold.</p>
 
   <p style="font-size:.8rem;color:var(--text-dim);margin-top:2rem">This page is generated from the same constants the ranking uses, so it cannot drift from the code. Last computed ${escHtmlServer(date)}.</p>
 
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+</div>
+</body>
+</html>`;
+}
+
+// --- The signal page (#1024) ---
+
+/**
+ * The long form of the beacon, and — the actual point of the page — our own numbers,
+ * published whether or not they flatter us.
+ *
+ * We have just spent four cycles building a ranking whose selling point is that an
+ * outsider can recompute it themselves. A site that publishes the unflattering response
+ * rate to its own request is a site whose other numbers you believe; if the honest first
+ * number is "0 signals from 29 fetches", that does more for the credibility of /criteria
+ * than a good number would.
+ *
+ * It is also the answer to the obvious suspicion. An index asking agents to report
+ * recommendations looks, at first glance, like an index building a ranking input.
+ * /criteria says the counts never affect order; publishing the raw aggregate where anyone
+ * can check it makes that verifiable rather than promised.
+ *
+ * Aggregates only. No per-vendor count appears here, deliberately — see /criteria §5.
+ */
+function buildSignalPage(): string {
+  const report = getSignalReport();
+  const w = report.last_30d;
+  const fmt = (n: number) => n.toLocaleString("en-US");
+  const title = "Tell us what you recommended — the agent signal endpoint — AgentDeals";
+  const metaDesc =
+    "A no-auth endpoint for agents to report which vendor they recommended: why we ask, exactly what it records, and our own signal numbers published in full.";
+
+  const row = (label: string, value: string) =>
+    `<tr><td>${escHtmlServer(label)}</td><td style="font-family:var(--mono);text-align:right;color:var(--text)">${escHtmlServer(value)}</td></tr>`;
+  const emptyRow = `<tr><td colspan="2" style="color:var(--text-dim)">None yet.</td></tr>`;
+
+  const classRows = Object.entries(w.by_client_class)
+    .filter(([, n]) => n > 0)
+    .sort((a, b) => b[1] - a[1])
+    .map(([cls, n]) => row(cls, fmt(n)));
+  const unresolvedRows = w.unresolved_vendor_names.map(u => row(u.name, fmt(u.count)));
+  const unrecognizedRows = w.unrecognized_events.map(u => row(u.event, fmt(u.count)));
+
+  const rateLine = w.report_rate === null
+    ? escHtmlServer(w.rate_note)
+    : `${escHtmlServer(String(Math.round(w.report_rate * 10000) / 100))}% &mdash; ${escHtmlServer(w.rate_note)}`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}${SIGNAL_DOC_PATH}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}${SIGNAL_DOC_PATH}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Agent signal", url: BASE_URL + SIGNAL_DOC_PATH }])}
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.65}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:820px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-size:2.1rem;margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-size:1.3rem;margin:2.5rem 0 .75rem;letter-spacing:-.01em}
+h3{font-size:1rem;margin:1.5rem 0 .5rem;color:var(--text-muted)}
+p{margin:.75rem 0;color:var(--text-muted)}
+ul,ol{margin:.75rem 0 .75rem 1.5rem;color:var(--text-muted)}
+li{margin:.35rem 0}
+code{font-family:var(--mono);font-size:.85em;color:var(--accent)}
+pre{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-family:var(--mono);font-size:.8rem;color:var(--text);margin:1rem 0}
+.lede{font-size:1.05rem;color:var(--text);border-left:3px solid var(--accent);padding-left:1rem;margin:1.5rem 0}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th,td{padding:.5rem .7rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--text-muted);font-weight:500;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+td{color:var(--text-muted)}
+.callout{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0}
+.callout strong{color:var(--text)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}table{font-size:.75rem}th,td{padding:.4rem .45rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("home")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Agent signal</div>
+  <h1>Tell us what you recommended</h1>
+  <p class="lede">We have no referral links and no tracking. When you leave this site the trail ends, so we cannot see whether an agent that read a vendor page went on to recommend that vendor. That is the one measurement we are missing, and it decides what we verify first.</p>
+
+  <div class="callout"><strong>${escHtmlServer(DEFERENCE)}</strong></div>
+
+  <h2>The call</h2>
+  <pre>POST ${escHtmlServer(BASE_URL + SIGNAL_PATH)}
+{"event":"recommended","vendor":"neon"}
+
+# if your user signs up with them
+{"event":"converted","vendor":"neon"}</pre>
+  <p>No authentication, no API key, no signup, nothing expected in return. Optional fields: <code>source</code> (the page or tool that informed it), <code>agent</code> (a name you choose for yourself), <code>note</code> (short free text, scrubbed of anything resembling a credential, and never published).</p>
+  <p>Unknown <code>event</code> values are <strong style="color:var(--text)">not rejected</strong>. They are bucketed under their own name and published below. If you want to tell us something we did not think to ask for &mdash; that a listed free tier is out of date, say &mdash; send it, and we will see it.</p>
+  <p>A vendor name we do not index is not rejected either. It goes to a separate list, published below, which is how we learn what agents are looking for that we do not carry.</p>
+
+  <h3>If you can only issue GETs</h3>
+  <p>The same parameters work in a query string on the same path, with one addition: <code>ack=1</code>. We do not print the complete URL here, on purpose. A GET that changes state is a URL that crawlers, prefetchers and link unfurlers follow without meaning to, and the resulting noise would correlate with whichever vendors get crawled most &mdash; which would make this number worthless exactly when we most wanted to quote it. The acknowledgement parameter is what separates a deliberate report from a followed link. GET-sourced signals are counted separately from POSTs and are never summed with them.</p>
+
+  <h2>What this records</h2>
+  <p>${escHtmlServer(PRIVACY_SCOPE)}</p>
+  <p>Rate limiting is per client, keyed on a truncated hash of your address under a salt generated when the process starts. The hash is held in memory, never written down, never logged, and gone on restart. That is what lets the sentence above be literally true rather than approximately true. The limit is ${RATE_LIMIT_PER_MINUTE} per minute, and over it you get a <code>429</code> with <code>Retry-After</code> rather than silence.</p>
+
+  <h2>Our numbers</h2>
+  <p>Published whether or not they flatter us. Last 30 days${report.recording_since ? `, recording since ${escHtmlServer(report.recording_since)}` : ""}${report.durable ? "" : " <em>(this process only &mdash; durable storage is not configured)</em>"}.</p>
+  <table><thead><tr><th>Measure</th><th style="text-align:right">Value</th></tr></thead><tbody>
+${row("Signals received", fmt(w.total))}
+${row("— recommended", fmt(w.by_event.recommended ?? 0))}
+${row("— converted", fmt(w.by_event.converted ?? 0))}
+${row("— unrecognised event", fmt(w.by_event.__unrecognized__ ?? 0))}
+${row("Distinct vendors named", fmt(w.distinct_vendors))}
+${row("via POST", fmt(w.by_transport.post ?? 0))}
+${row("via GET", fmt(w.by_transport.get ?? 0))}
+${row("Qualifying fetches (ai_agent)", fmt(w.qualifying_fetches))}
+${row("Qualifying fetches (sdk_client)", fmt(w.qualifying_fetches_sdk_client))}
+  </tbody></table>
+  <p><strong style="color:var(--text)">Report rate:</strong> ${rateLine}</p>
+  <p style="font-size:.82rem">The denominator is fetches by named agent clients of the pages where a recommendation actually gets made &mdash; ${SIGNAL_DENOMINATOR_ROUTES.map(r => `<code>${escHtmlServer(r)}</code>`).join(", ")}. <code>sdk_client</code> is shown beside it and never folded in: that class is mostly one scanner, and folding it in would move the ratio in the direction that flatters us.</p>
+  <p style="font-size:.82rem"><strong style="color:var(--text)">recommended and converted are two counters, never a funnel.</strong> ${escHtmlServer(CONVERTED_CAVEAT)}</p>
+  <p style="font-size:.82rem">We publish aggregates only. There is no per-vendor table here and there will not be one &mdash; <a href="${CRITERIA_PATH}">the reason is on the criteria page</a>.</p>
+
+  <h3>Sender classification</h3>
+  <p style="font-size:.82rem">A signal arriving as <code>seo_crawler</code> is not an agent telling us something. Senders are classified by the same table that attributes ordinary page traffic.</p>
+  <table><thead><tr><th>Client class</th><th style="text-align:right">Signals</th></tr></thead><tbody>
+${classRows.length ? classRows.join("\n") : emptyRow}
+  </tbody></table>
+
+  <h3>Vendor names we do not index</h3>
+  <table><thead><tr><th>Name sent</th><th style="text-align:right">Times</th></tr></thead><tbody>
+${unresolvedRows.length ? unresolvedRows.join("\n") : emptyRow}
+  </tbody></table>
+
+  <h3>Events we did not recognise</h3>
+  <table><thead><tr><th>Event sent</th><th style="text-align:right">Times</th></tr></thead><tbody>
+${unrecognizedRows.length ? unrecognizedRows.join("\n") : emptyRow}
+  </tbody></table>
+
+  <h2>What this is not</h2>
+  <ul>
+${report.notes.map(n => `    <li>${escHtmlServer(n)}</li>`).join("\n")}
+  </ul>
+
+  <p style="font-size:.8rem;color:var(--text-dim);margin-top:2rem">Machine-readable version of everything on this page: <a href="/api/signals"><code>/api/signals</code></a>.</p>
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="${CRITERIA_PATH}">How we rank</a> | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
 </html>`;
@@ -2215,6 +2381,7 @@ ${verdictHtml}
   </div>
 ${watchlistCtaHtml}
 ${relatedHtml}
+  ${signalHtmlBlock(BASE_URL, null, toSlug(a.vendor))}
   ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
@@ -3972,6 +4139,7 @@ ${internalLinksHtml}
     <code>${escHtmlServer(mcpSnippet)}</code>
   </div>
 ${faqHtml}
+  ${signalHtmlBlock(BASE_URL, slug)}
   ${buildMcpCta("Want to compare this vendor in your AI? Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
@@ -4297,6 +4465,7 @@ ${allAltsHtml}
     ${trendsHtml}
   </div>
 ${altFaqHtml}
+  ${signalHtmlBlock(BASE_URL, null, enrichedAlts[0] ? toSlug(enrichedAlts[0].vendor) : null)}
   ${buildMcpCta("Find alternatives from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
@@ -53289,6 +53458,39 @@ function isCountableTraffic(pathname: string): boolean {
   return !pathname.startsWith("/.well-known/");
 }
 
+/**
+ * Surface 2 of the invitation (#1024): an `_agent` block on the JSON endpoints where a
+ * recommendation gets made. Applied explicitly per endpoint rather than by wrapping every
+ * JSON response — most of what this server returns is not a candidate set, and inviting a
+ * recommendation report from /api/freshness would be noise.
+ */
+function withAgentBlock<T extends object>(payload: T, slug?: string | null): T & { _agent: Record<string, unknown> } {
+  return { ...payload, _agent: agentBlock(BASE_URL, slug ?? null) };
+}
+
+/**
+ * The vendor a response is *about*, when it is about exactly one — so the beacon's
+ * invitation can name it instead of printing `<slug>` (#1024).
+ *
+ * Deliberately excludes `/alternative-to/:slug`. That page's subject is one vendor but its
+ * recommendations are the alternatives to it, so prefilling the subject would invite a
+ * report for the one vendor on the page the agent is least likely to have recommended.
+ * Multi-vendor pages keep the placeholder and show a real slug as an example instead.
+ */
+const SINGLE_VENDOR_PREFIXES = ["/vendor/", "/api/vendor/", "/api/details/", "/embed/vendor/"] as const;
+function singleVendorSlug(pathname: string): string | null {
+  for (const prefix of SINGLE_VENDOR_PREFIXES) {
+    if (!pathname.startsWith(prefix)) continue;
+    const rest = pathname.slice(prefix.length).replace(/\/$/, "");
+    if (!rest || rest.includes("/")) return null;
+    const slug = decodeURIComponent(rest).toLowerCase();
+    // Only a slug we actually index: an unresolvable one would put a name we do not know
+    // into a copyable example, and the first thing an agent does with it is send it back.
+    return vendorSlugMap.has(slug) ? slug : null;
+  }
+  return null;
+}
+
 const httpServer = createHttpServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://localhost:${PORT}`);
   const isGetOrHead = req.method === "GET" || req.method === "HEAD";
@@ -53301,6 +53503,119 @@ const httpServer = createHttpServer(async (req, res) => {
     res.on("finish", () => {
       recordTraffic(classifyRequest(url.pathname, req.headers["user-agent"]), url.pathname, res.statusCode);
     });
+  }
+
+  // The beacon invitation, surface 1 (#1024). Wrapping writeHead is what makes this one
+  // insertion point instead of ~120 — and it is also what makes the rule enforceable:
+  // the header goes on 2xx HTML and JSON only. Advertising a "tell us what you
+  // recommended" address on a 404 is incoherent, and today it would mean attaching it to
+  // 3,070 scanner 404s a day — 54% of all traffic — for nothing.
+  const rawWriteHead = res.writeHead.bind(res);
+  res.writeHead = ((status: number, ...rest: unknown[]) => {
+    if (status >= 200 && status < 300 && !res.hasHeader(SIGNAL_HEADER_NAME)) {
+      // Read the content type off whatever form writeHead was called in, since this
+      // codebase passes headers positionally rather than setting them first.
+      const headers = rest.find(a => a && typeof a === "object") as Record<string, string> | undefined;
+      const contentType = String(
+        headers?.["Content-Type"] ?? headers?.["content-type"] ?? res.getHeader("Content-Type") ?? "",
+      );
+      if (/^(text\/html|application\/json)/.test(contentType)) {
+        // Prefilled where the page is about one vendor, placeholder where it is not:
+        // "copy this line" beats "understand our slug scheme, then construct a call".
+        const slug = singleVendorSlug(url.pathname);
+        res.setHeader(SIGNAL_HEADER_NAME, signalHeaderValue(BASE_URL, slug));
+      }
+    }
+    return rawWriteHead(status as never, ...(rest as never[]));
+  }) as typeof res.writeHead;
+
+  // --- Agent attribution beacon (#1024) ---
+  if (url.pathname === SIGNAL_PATH) {
+    if (req.method !== "POST" && !isGetOrHead) {
+      res.writeHead(405, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Allow": "GET, POST" });
+      res.end(JSON.stringify({ ok: false, error: "Use POST, or GET with ack=1", docs: SIGNAL_DOC_PATH }));
+      return;
+    }
+    // Rate limit before parsing: the limiter is what bounds the work an unauthenticated
+    // caller can make us do, so it has to sit in front of the work.
+    const decision = checkRateLimit(clientAddress(req.headers["x-forwarded-for"], req.socket.remoteAddress));
+    if (!decision.allowed) {
+      res.writeHead(429, {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Retry-After": String(decision.retryAfter),
+      });
+      res.end(JSON.stringify({
+        ok: false,
+        error: "rate limited",
+        retry_after_seconds: decision.retryAfter,
+        docs: SIGNAL_DOC_PATH,
+      }));
+      return;
+    }
+
+    let input: SignalInput;
+    let transport: "post" | "get";
+    if (req.method === "POST") {
+      transport = "post";
+      let body = "";
+      let tooLarge = false;
+      for await (const chunk of req) {
+        body += chunk;
+        if (body.length > SIGNAL_BODY_MAX) { tooLarge = true; break; }
+      }
+      if (tooLarge) {
+        res.writeHead(413, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ ok: false, error: "body too large", max_bytes: SIGNAL_BODY_MAX, docs: SIGNAL_DOC_PATH }));
+        return;
+      }
+      try {
+        const parsed = body.trim() ? JSON.parse(body) : {};
+        input = (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed as SignalInput : {};
+      } catch {
+        // Fall back to form encoding rather than 400: an agent that can only send a form
+        // post is exactly the population the GET form exists for.
+        input = Object.fromEntries(new URLSearchParams(body)) as SignalInput;
+      }
+    } else {
+      transport = "get";
+      if (url.searchParams.get(SIGNAL_ACK_PARAM) !== "1") {
+        const outcome = ackMissing();
+        res.writeHead(outcome.status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify(outcome.body));
+        return;
+      }
+      input = Object.fromEntries(url.searchParams) as SignalInput;
+    }
+
+    const outcome = acceptSignal(input, {
+      transport,
+      client_class: classifyRequest(url.pathname, req.headers["user-agent"]).client_class,
+    });
+    res.writeHead(outcome.status, {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      ...(outcome.headers ?? {}),
+    });
+    res.end(req.method === "HEAD" ? undefined : JSON.stringify(outcome.body));
+    return;
+  }
+
+  if (url.pathname === "/api/signals" && isGetOrHead) {
+    // Aggregates only. getSignalVendorBreakdown() exists and is deliberately not called
+    // here: a public per-vendor counter is a placement metric a vendor could acquire by
+    // firing the endpoint at itself, which is the one thing every published order on this
+    // site is built to exclude. A test asserts no per-vendor count reaches this response.
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(getSignalReport()));
+    return;
+  }
+
+  if (url.pathname === SIGNAL_DOC_PATH && isGetOrHead) {
+    recordApiHit(SIGNAL_DOC_PATH);
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" });
+    res.end(req.method === "HEAD" ? undefined : buildSignalPage());
+    return;
   }
 
   // 301 redirect non-canonical hostnames to BASE_URL (SEO canonical domain)
@@ -53616,7 +53931,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const result = getStackRecommendation(useCase, requirements);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/stack", params: { use_case: useCase, requirements }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.stack.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(result));
+    res.end(JSON.stringify(withAgentBlock(result)));
   } else if (url.pathname === "/api/costs" && isGetOrHead) {
     recordApiHit("/api/costs");
     const servicesParam = url.searchParams.get("services");
@@ -53716,7 +54031,7 @@ const httpServer = createHttpServer(async (req, res) => {
     });
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ offers: offersWithCodes, total }));
+    res.end(JSON.stringify(withAgentBlock({ offers: offersWithCodes, total })));
   } else if (url.pathname === "/api/compare" && isGetOrHead) {
     recordApiHit("/api/compare");
     const a = url.searchParams.get("a") || "";
@@ -53742,7 +54057,7 @@ const httpServer = createHttpServer(async (req, res) => {
       },
     };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(comparisonWithCodes));
+    res.end(JSON.stringify(withAgentBlock(comparisonWithCodes)));
   } else if (url.pathname === "/api/new" && isGetOrHead) {
     recordApiHit("/api/new");
     const days = parseInt(url.searchParams.get("days") ?? "7", 10);
@@ -54132,7 +54447,7 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives, ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     const offerWithCode = { ...detailResult.offer, referral_code: getBestReferralCode(detailResult.offer.vendor) };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ offer: offerWithCode, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}), ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }));
+    res.end(JSON.stringify(withAgentBlock({ offer: offerWithCode, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}), ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }, singleVendorSlug(url.pathname))));
   } else if (url.pathname === "/api/expiring" && isGetOrHead) {
     recordApiHit("/api/expiring");
     const withinDays = Math.min(Math.max(parseInt(url.searchParams.get("within_days") ?? "30", 10) || 30, 1), 365);
@@ -54261,6 +54576,7 @@ AgentDeals helps developers find free tiers, startup credits, and deals on devel
 
 Recommendations are not for sale. Every ranked surface resolves through one module in which offers start at zero and can only be demoted, on a specific recorded fact with a date. There is no signal a vendor can acquire, lobby for or buy. Because almost nothing separates one healthy free tier from another, large ties are the normal case — 0 of 57 categories has a unique number one — and tied offers are ordered by a permutation seeded on the UTC date and the query key alone. Every ranked response publishes that seed so you can recompute the order yourself. We do NOT model technical fit between a product and a role; apply that yourself. Full method: ${BASE_URL}${CRITERIA_PATH}
 
+${signalLlmsSection(BASE_URL)}
 ## MCP Tools (4)
 
 - **search_deals**: Find free tiers, startup credits, and developer deals. Search by keyword, category, vendor name, or eligibility type. Returns verified deal details with specific limits.
