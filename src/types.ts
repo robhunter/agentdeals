@@ -53,10 +53,27 @@ export interface Offer {
 
 export type StabilityClass = "stable" | "watch" | "volatile" | "improving";
 
+export type RiskLevel = "stable" | "caution" | "risky";
+
+/**
+ * The one recorded fact that produced a non-stable risk level (#1038).
+ *
+ * A warning a reader cannot check is an assertion, so `caution` and `risky`
+ * travel with the dated record that earned them and every surface that shows
+ * the level shows the cause beside it.
+ */
+export interface RiskCause {
+  date: string;
+  change_type: string;
+  summary: string;
+}
+
 export interface EnrichedOffer extends Offer {
   recent_change: string | null;
   expires_soon: string | null;
-  risk_level: "stable" | "caution" | "risky" | null;
+  risk_level: RiskLevel | null;
+  /** Never null when `risk_level` is `caution` or `risky`. */
+  risk_cause: RiskCause | null;
   stability: StabilityClass;
   days_since_verified: number;
 }
@@ -67,7 +84,7 @@ export interface OfferIndex {
 
 export interface DealChange {
   vendor: string;
-  change_type: "free_tier_removed" | "limits_reduced" | "restriction" | "limits_increased" | "new_free_tier" | "new_tier" | "pricing_restructured" | "open_source_killed" | "pricing_model_change" | "startup_program_expanded" | "pricing_postponed" | "product_deprecated";
+  change_type: "free_tier_removed" | "limits_reduced" | "restriction" | "limits_increased" | "new_free_tier" | "new_tier" | "pricing_restructured" | "open_source_killed" | "pricing_model_change" | "startup_program_expanded" | "pricing_postponed" | "product_deprecated" | "rebranded";
   date: string;
   summary: string;
   previous_state: string;

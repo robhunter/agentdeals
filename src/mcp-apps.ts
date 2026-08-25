@@ -288,8 +288,13 @@ function render(args, data) {
   // Single vendor risk check
   if (data.risk_level || data.stability) {
     const vendor = data.vendor || (args.vendors && args.vendors[0]) || "Vendor";
-    const risk = data.risk_level || data.stability || "unknown";
-    const riskBadge = risk === "stable" || risk === "low" ? "badge-green" : risk === "watch" || risk === "medium" ? "badge-yellow" : "badge-red";
+    let risk = data.risk_level || data.stability || "unknown";
+    const cause = data.risk_cause || null;
+    // #1038: caution/risky are negative claims about a named company. They
+    // render only alongside the dated record that produced them.
+    const showRisk = risk === "stable" || risk === "low" || risk === "unknown" || !!cause;
+    if (!showRisk) risk = "unknown";
+    const riskBadge = risk === "stable" || risk === "low" ? "badge-green" : risk === "watch" || risk === "medium" ? "badge-yellow" : risk === "unknown" ? "badge-gray" : "badge-red";
     const changes = data.changes || data.recent_changes || [];
     el.innerHTML = \`
       <div class="card">
@@ -297,6 +302,7 @@ function render(args, data) {
           <h2>\${esc(vendor)} Risk Assessment</h2>
           <span class="badge \${riskBadge}">\${esc(risk)}</span>
         </div>
+        \${cause && risk !== "stable" ? \`<p style="margin-top:8px;font-size:13px;color:#94a3b8"><strong>Why \${esc(risk)}:</strong> \${esc(cause.date)} \u2014 \${esc(cause.summary)}</p>\` : ""}
         \${data.summary ? \`<p style="margin-top:8px;font-size:14px">\${esc(data.summary)}</p>\` : ""}
       </div>
       \${changes.length > 0 ? \`
