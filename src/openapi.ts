@@ -647,7 +647,7 @@ export const openapiSpec = {
     "/api/query-log": {
       get: {
         summary: "Recent request log",
-        description: "Returns recent request-level log entries for both MCP tool calls and REST API hits. Stored in Redis, capped at 1000 entries.",
+        description: "Returns recent request-level log entries for both MCP tool calls and REST API hits. Stored in Redis, capped at 1000 entries. Query parameter values are not published: each entry reports the parameter names it carried and the length of each value. Session identifiers are not published either; entries from one session share a session_index that is assigned within a single response and carries no meaning across responses.",
         parameters: [
           { name: "limit", in: "query", description: "Number of entries to return (1-200)", schema: { type: "integer", default: 50 } }
         ],
@@ -665,12 +665,20 @@ export const openapiSpec = {
                         type: "object",
                         properties: {
                           ts: { type: "string", format: "date-time" },
-                          type: { type: "string", enum: ["mcp", "api"] },
+                          type: { type: "string", enum: ["mcp", "api", "session_connect"] },
                           endpoint: { type: "string" },
-                          params: { type: "object" },
+                          param_lengths: {
+                            type: "object",
+                            description: "Parameter name to the character length of the value that was sent. Values themselves are retained internally and never published.",
+                            additionalProperties: { type: "integer" }
+                          },
                           user_agent: { type: "string" },
                           result_count: { type: "integer" },
-                          session_id: { type: "string" }
+                          session_index: { type: "integer", description: "Groups entries from the same session within this response only." },
+                          client_info: {
+                            type: "object",
+                            properties: { name: { type: "string" }, version: { type: "string" } }
+                          }
                         }
                       }
                     },

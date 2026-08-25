@@ -19,8 +19,9 @@
 //     exactly the ones we most want to hear from. Every web surface carries the deference
 //     clause; the MCP surfaces do not need it.
 //  4. Scope every privacy sentence to the call in front of it. "Nothing about your user is
-//     recorded" reads as a claim about the site, and /api/query-log publishes raw user
-//     agents and search params, so the site does not currently support that claim.
+//     recorded" reads as a claim about the site, and the site records more than this call
+//     does — search text is retained, and /api/query-log publishes user agents — so the
+//     site does not currently support that claim.
 //  5. `recommended` and `converted` are two counters and never a funnel. An agent almost
 //     never observes a signup, so a ratio between them would say something about agent
 //     observability while looking like it said something about a vendor.
