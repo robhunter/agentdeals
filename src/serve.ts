@@ -21,7 +21,7 @@ import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-h
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
-import { rankOffers, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import type { Agent } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
@@ -1680,7 +1680,7 @@ ${globalNavCss()}
   <h1>How we rank &mdash; in full</h1>
   <p class="lede">${escHtmlServer(DEMOTE_ONLY_POLICY)}</p>
 
-  <p>The <a href="/best">best-of pages</a> resolve through one shared module. There is no second scorer, no per-page ordering, no vendor allowlist, pin, boost or override anywhere in the selection path. Nothing derived from our own editorial copy is an input: an offer cannot rank higher because we wrote more words about it. <em>The <code>/api/stack</code> endpoint and the <code>plan_stack</code> MCP tool are being moved onto this same module; until that lands they still use a hand-written template and should not be read as ranked output.</em></p>
+  <p>Every surface that presents vendors as a recommendation &mdash; the <a href="/best">best-of pages</a>, the alternatives on every vendor page, the <code>/api/stack</code> endpoint and the <code>plan_stack</code> MCP tool &mdash; resolves through one shared module. There is no second scorer, no per-page ordering, no vendor allowlist, pin, boost or override anywhere in the selection path. Nothing derived from our own editorial copy is an input: an offer cannot rank higher because we wrote more words about it.</p>
 
   <h2>1. Gates &mdash; what is excluded, and why</h2>
   <p>A gate removes an offer from ranked surfaces entirely. It still appears on its category page and its vendor page; it is simply not something we would put in front of you as a recommendation.</p>
@@ -3438,9 +3438,14 @@ function buildVendorPage(slug: string): string | null {
   const stability = enriched.stability ?? "stable";
 
   // Alternatives: other vendors in the same primary category
-  const alternatives = offers
-    .filter(o => o.category === primary.category && o.vendor !== vendorName)
-    .slice(0, 12);
+  // "Alternatives to X" is a recommendation, so it goes through the shared
+  // module. It used to be `.slice(0, 12)` over raw file order — whoever was
+  // typed into data/index.json first won, on the single highest-traffic page
+  // type on the site.
+  const alternatives = rankForListing(
+    offers.filter(o => o.category === primary.category && o.vendor !== vendorName),
+    { queryKey: `alternatives:${primary.category}:${vendorName}`, changes: dealChanges },
+  ).entries.slice(0, 12).map(e => e.offer);
 
   // Comparison pages featuring this vendor
   const vendorComparisons = Array.from(comparisonMap.entries())
@@ -4010,10 +4015,16 @@ function buildAlternativesPage(slug: string): string | null {
       dedupedAlts.push(a);
     }
   }
-  // Enrich and sort by stability (stable first, then caution, then risky)
-  const enrichedAlts = enrichOffers(dedupedAlts);
-  const riskOrder: Record<string, number> = { stable: 0, caution: 1, risky: 2 };
-  enrichedAlts.sort((a, b) => (riskOrder[a.risk_level ?? "stable"] ?? 3) - (riskOrder[b.risk_level ?? "stable"] ?? 3));
+  // Order through the shared module. This used to sort by the derived
+  // risk_level bucket — the count-of-recorded-changes signal that demotes
+  // prominent vendors 3.2x more often than obscure ones — with file order
+  // deciding everything inside a bucket.
+  const altRanking = rankForListing(enrichOffers(dedupedAlts), {
+    queryKey: `alternative-to:${vendorName}`,
+    changes: dealChanges,
+  });
+  const enrichedAlts = altRanking.entries.map(e => e.offer);
+  const altDemerits = new Map(altRanking.entries.map(e => [e.offer.vendor, e]));
 
   // Deal-change-driven alternatives (editorially curated)
   const curatedAltNames = new Set<string>();
@@ -4082,6 +4093,8 @@ function buildAlternativesPage(slug: string): string | null {
           <a href="/vendor/${aSlug}" class="action-link">Profile</a>
           ${hasComparison ? `<a href="/compare/${compSlug}" class="action-link">Compare</a>` : ""}
         </div>
+        ${(altDemerits.get(a.vendor)?.demerits ?? []).map(d => `<div class="alt-demerit"><strong>&minus;${d.points} ${escHtmlServer(d.code)}</strong> ${escHtmlServer(d.reason)}</div>`).join("")}
+        ${altDemerits.get(a.vendor)?.gate ? `<div class="alt-demerit"><strong>${escHtmlServer(altDemerits.get(a.vendor)!.gate!.code)}</strong> ${escHtmlServer(altDemerits.get(a.vendor)!.gate!.reason)}</div>` : ""}
         ${a.referral ? `<div class="alt-referral"><span>\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")}</a></span> <a href="/disclosure" class="alt-referral-disc">(disclosure)</a></div>` : ""}
       </div>`;
   }
@@ -4100,7 +4113,7 @@ ${curatedAlts.map(a => altCard(a, true)).join("\n")}
   const allAltsHtml = enrichedAlts.length > 0 ? `
   <div class="section">
     <h2>All Free Alternatives (${enrichedAlts.length})</h2>
-    <p class="section-note">Sorted by stability &mdash; most stable first.</p>
+    <p class="section-note">${altRanking.qualified_count} of these carry no recorded demerit and are indistinguishable under every signal we hold; their order rotates daily. ${altRanking.demoted_count} are demoted with the reason named, and ${altRanking.gated_count} are listed last because they are not generally available or are not a free offer. <a href="${CRITERIA_PATH}">How we rank</a>.</p>
     <div class="alt-list">
 ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
     </div>
@@ -4240,6 +4253,8 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .alt-referral a{color:#3fb950}
 .alt-referral a:hover{color:#6fdd8b}
 .alt-referral-disc{font-size:.7rem;color:var(--text-dim)!important}
+.alt-demerit{grid-column:1/-1;font-size:.75rem;color:var(--text-muted);padding:.3rem 0 .1rem .6rem;border-left:2px solid #d29922;margin-top:.35rem}
+.alt-demerit strong{font-family:var(--mono);color:#d29922}
 .action-pill{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-muted);transition:all .2s}
 .action-pill:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 .no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
@@ -50859,14 +50874,25 @@ function buildReferralProgramsPage(): string {
       });
     }
   }
-  // Sort: vendors with our codes first, then alphabetical
-  programVendors.sort((a, b) => {
-    if (a.hasCode !== b.hasCode) return a.hasCode ? -1 : 1;
-    return a.vendor.localeCompare(b.vendor);
-  });
+  /**
+   * This page used to be one list sorted "vendors we hold a referral code for
+   * first, then alphabetical" — so the page about referral programmes was
+   * ordered by our commercial interest in them, silently.
+   *
+   * Separation plus labelling beats hidden ordering. We do have commercial
+   * relationships; they just don't get to be invisible. Within each section the
+   * order comes from the shared unbiased rotation rather than the alphabet,
+   * which is the bias we are removing everywhere else. This is an inventory
+   * listing, not a quality ranking, so it does not go through the demerit
+   * model — that would be a category error.
+   */
+  const paidSection = rotateListing(programVendors.filter(v => v.hasCode), "referral-programs:with-code");
+  const unpaidSection = rotateListing(programVendors.filter(v => !v.hasCode), "referral-programs:without-code");
+  programVendors.length = 0;
+  programVendors.push(...paidSection, ...unpaidSection);
 
-  const withCodes = programVendors.filter(v => v.hasCode).length;
-  const withoutCodes = programVendors.length - withCodes;
+  const withCodes = paidSection.length;
+  const withoutCodes = unpaidSection.length;
 
   // Group by category
   const categoryGroups = new Map<string, typeof programVendors>();
@@ -50927,7 +50953,7 @@ function buildReferralProgramsPage(): string {
   const typeLabel = (t: string) => t === "self-service" ? "Self-service" : t === "affiliate-network" ? "Affiliate network" : t === "partner" ? "Partner" : "Application";
   const commLabel = (c?: string) => c === "recurring" ? "Recurring" : c === "credits" ? "Credits" : c === "one-time" ? "One-time" : "";
 
-  const tableRows = programVendors.map(v => {
+  const renderRows = (list: typeof programVendors) => list.map(v => {
     const vendorSlug = toSlug(v.vendor);
     const statusHtml = v.hasCode
       ? `<a href="${escHtmlServer(v.referralUrl!)}" rel="noopener sponsored" target="_blank" class="status-badge status-active">Use our code</a>`
@@ -50943,6 +50969,19 @@ function buildReferralProgramsPage(): string {
         <td class="link-cell">${linkHtml}</td>
       </tr>`;
   }).join("\n");
+  const paidRows = renderRows(paidSection);
+  const unpaidRows = renderRows(unpaidSection);
+  const tableHead = `    <thead>
+      <tr>
+        <th>Vendor</th>
+        <th>Category</th>
+        <th>Referee Benefit</th>
+        <th>Referrer Benefit</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Link</th>
+      </tr>
+    </thead>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -50995,6 +51034,8 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .status-submit{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.3)}
 .status-submit:hover{text-decoration:none;border-color:var(--accent)}
 .disclosure{font-size:.8rem;color:var(--text-dim);margin-bottom:2rem;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)}
+.section-heading{font-size:1.15rem;color:var(--text);margin:2.5rem 0 .35rem;letter-spacing:-.01em}
+.section-note{color:var(--text-muted);font-size:.85rem;margin-bottom:1rem}
 .disclosure a{color:var(--text-muted)}
 .agent-cta{margin:2rem 0;padding:1.5rem;border:1px solid var(--accent);border-radius:12px;background:var(--accent-glow);text-align:center}
 .agent-cta h2{font-family:var(--serif);font-size:1.3rem;margin-bottom:.5rem}
@@ -51045,20 +51086,21 @@ ${mcpCtaCss()}
     ${categoryFilterButtons}
   </div>
 
+  <h2 class="section-heading">Programs we have a referral link for &mdash; we may earn a commission</h2>
+  <p class="section-note">${withCodes} of ${programVendors.length}. If you sign up through the &ldquo;Use our code&rdquo; link we may be paid for it. See our <a href="/disclosure">affiliate disclosure</a>. Within this section the order is the same unbiased daily rotation we use everywhere else &mdash; not by how much any of them pays us. <a href="${CRITERIA_PATH}">How we order lists</a>.</p>
   <table class="programs-table">
-    <thead>
-      <tr>
-        <th>Vendor</th>
-        <th>Category</th>
-        <th>Referee Benefit</th>
-        <th>Referrer Benefit</th>
-        <th>Type</th>
-        <th>Status</th>
-        <th>Link</th>
-      </tr>
-    </thead>
+${tableHead}
     <tbody>
-${tableRows}
+${paidRows}
+    </tbody>
+  </table>
+
+  <h2 class="section-heading">Programs we don&rsquo;t have a referral link for</h2>
+  <p class="section-note">${withoutCodes} of ${programVendors.length}. We earn nothing from these. They are here because the programme exists, not because of any relationship with us.</p>
+  <table class="programs-table">
+${tableHead}
+    <tbody>
+${unpaidRows}
     </tbody>
   </table>
 
@@ -53155,15 +53197,26 @@ function copyConfig(btn){
         var html='<div class="sb-stack">';
         for(var i=0;i<data.stack.length;i++){
           var s=data.stack[i];
-          var vendorSlug=s.vendor.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+          var cands=s.candidates||[];
+          var links='';
+          for(var k=0;k<cands.length;k++){
+            var c=cands[k];
+            var vendorSlug=c.vendor.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+            var flag=(c.demerits&&c.demerits.length>0)?' <span style="color:#d29922;font-size:.7rem">&minus;'+c.demerits.length+'</span>':'';
+            links+=(k>0?', ':'')+'<a href="/vendor/'+escHtml(vendorSlug)+'">'+escHtml(c.vendor)+'</a>'+flag;
+          }
+          var tieText=s.tie_count>cands.length
+            ? cands.length+' of '+s.tie_count+' equally-qualified options, rotated daily'
+            : cands.length+' option'+(cands.length===1?'':'s');
           html+='<div class="sb-item">'
             +'<span class="sb-role">'+escHtml(s.role)+'</span>'
             +'<div class="sb-detail">'
-            +'<div class="sb-vendor"><a href="/vendor/'+escHtml(vendorSlug)+'">'+escHtml(s.vendor)+'</a> <span style="color:var(--text-dim);font-size:.8rem">'+escHtml(s.tier)+'</span></div>'
-            +'<div class="sb-desc">'+escHtml(s.description)+'</div>'
+            +'<div class="sb-vendor">'+links+'</div>'
+            +'<div class="sb-desc">'+escHtml(tieText)+'</div>'
             +'</div></div>';
         }
         html+='</div>';
+        html+='<p style="color:var(--text-dim);font-size:.78rem;margin-top:.75rem">We rank on offer terms, verification recency and recorded changes &mdash; not on which product fits your architecture. <a href="/criteria">How we rank</a>.</p>';
         if(data.limitations&&data.limitations.length>0){
           html+='<div class="sb-meta"><div class="sb-meta-row"><span class="sb-meta-label">Monthly cost</span><span class="sb-meta-value">'+escHtml(data.total_monthly_cost)+'</span></div>';
           html+='<ul class="sb-limits">';
@@ -53992,7 +54045,11 @@ const httpServer = createHttpServer(async (req, res) => {
         }
       }
     }
-    refPrograms.sort((a, b) => a.vendor.localeCompare(b.vendor));
+    // Inventory listing, ordered by the shared unbiased rotation rather than
+    // the alphabet — the same treatment as the rendered /referral-programs page.
+    const refOrdered = rotateListing(refPrograms, "referral-programs:api");
+    refPrograms.length = 0;
+    refPrograms.push(...refOrdered);
     const refCategories = [...new Set(refPrograms.map(p => p.category))].sort();
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/referral-programs", params: { category: refCategoryFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: refPrograms.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
@@ -54200,10 +54257,14 @@ ${weekEntries.join("\n")}
 
 AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure — databases, cloud hosting, CI/CD, monitoring, auth, AI services, and more. Data is verified and includes specific free tier limits, eligibility requirements, and pricing change history.
 
+## How ranking works — read this before trusting an order
+
+Recommendations are not for sale. Every ranked surface resolves through one module in which offers start at zero and can only be demoted, on a specific recorded fact with a date. There is no signal a vendor can acquire, lobby for or buy. Because almost nothing separates one healthy free tier from another, large ties are the normal case — 0 of 57 categories has a unique number one — and tied offers are ordered by a permutation seeded on the UTC date and the query key alone. Every ranked response publishes that seed so you can recompute the order yourself. We do NOT model technical fit between a product and a role; apply that yourself. Full method: ${BASE_URL}${CRITERIA_PATH}
+
 ## MCP Tools (4)
 
 - **search_deals**: Find free tiers, startup credits, and developer deals. Search by keyword, category, vendor name, or eligibility type. Returns verified deal details with specific limits.
-- **plan_stack**: Plan a technology stack with cost-optimized choices. Recommends free-tier services, estimates costs at scale, or audits existing stacks for risk.
+- **plan_stack**: Plan a technology stack with cost-optimized choices. Per role, returns the set of free-tier offers whose terms we can stand behind today — not a single pick — with the recorded facts behind any demotion. Does not model technical fit; the caller applies that. Also estimates costs at scale and audits existing stacks for risk.
 - **compare_vendors**: Compare developer tools side by side — free tier limits, pricing tiers, risk levels, and recent pricing changes.
 - **track_changes**: Track pricing changes across developer tools — free tier removals, limit reductions, new free tiers, and upcoming expirations.
 
@@ -54225,6 +54286,7 @@ AgentDeals helps developers find free tiers, startup credits, and deals on devel
 
 ## Links
 
+- [How we rank — published criteria](${BASE_URL}${CRITERIA_PATH})
 - [REST API Developer Hub](${BASE_URL}/developers)
 - [API Documentation (Swagger)](${BASE_URL}/api/docs)
 - [Setup Guide](${BASE_URL}/setup)

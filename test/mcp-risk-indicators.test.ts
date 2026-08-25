@@ -129,15 +129,19 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
     });
     const body = JSON.parse(result.content[0].text);
     assert.ok(Array.isArray(body.stack) && body.stack.length > 0, "should return a stack");
-    for (const c of body.stack) {
-      assert.ok(
-        ["stable", "caution", "risky"].includes(c.risk_level),
-        `component ${c.vendor} should have risk_level, got ${c.risk_level}`
-      );
-      assert.ok(
-        ["stable", "watch", "volatile", "improving"].includes(c.stability),
-        `component ${c.vendor} should have stability, got ${c.stability}`
-      );
+    // #1025: a role now carries a candidate set rather than one winning vendor.
+    for (const role of body.stack) {
+      assert.ok(Array.isArray(role.candidates) && role.candidates.length > 0, `${role.role} should have candidates`);
+      for (const c of role.candidates) {
+        assert.ok(
+          ["stable", "caution", "risky"].includes(c.risk_level),
+          `candidate ${c.vendor} should have risk_level, got ${c.risk_level}`
+        );
+        assert.ok(
+          ["stable", "watch", "volatile", "improving"].includes(c.stability),
+          `candidate ${c.vendor} should have stability, got ${c.stability}`
+        );
+      }
     }
     assert.ok(Array.isArray(body.risk_warnings), "should have risk_warnings array");
   });
