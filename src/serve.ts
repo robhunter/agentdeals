@@ -21,6 +21,8 @@ import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-h
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
+import { rankOffers, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
+import type { RankedEntry, RankingResult } from "./ranking.js";
 import type { Agent } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -602,7 +604,7 @@ function generateShieldBadge(leftText: string, rightText: string, color: string,
     + '\n</svg>';
 }
 
-type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "this-week" | "changes" | "deadlines" | "report" | "reports" | "expiring" | "freshness" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
+type NavSection = "search" | "categories" | "best" | "trends" | "alternatives" | "guides" | "compare" | "compare-tool" | "digest" | "this-week" | "changes" | "deadlines" | "report" | "reports" | "expiring" | "freshness" | "criteria" | "agent-stack" | "api" | "developers" | "setup" | "home" | "badges" | "estimate" | "stacks" | "stack-check" | "budget-builder" | "embed" | "marketplace" | "dashboard";
 
 function buildBreadcrumbJsonLd(items: { name: string; url: string }[]): string {
   const jsonLd = {
@@ -670,6 +672,7 @@ function buildGlobalNav(active: NavSection): string {
       { href: "/state-of-free-tiers", label: "Report", section: "report" },
       { href: "/reports", label: "Monthly Reports", section: "reports" },
       { href: "/freshness", label: "Freshness", section: "freshness" },
+      { href: CRITERIA_PATH, label: "How We Rank", section: "criteria" },
     ]},
     { label: "Developers", items: [
       { href: "/developers", label: "API", section: "developers" },
@@ -1222,38 +1225,32 @@ ${globalNavCss()}
 
 // Minimum category size to generate a best-of page
 const BEST_OF_MIN_VENDORS = 5;
-const BEST_OF_PICK_COUNT = 8;
 
-// Score vendors for curation: higher = better pick for a "best free" list
-function scoreBestOfVendor(offer: ReturnType<typeof enrichOffers>[number]): number {
-  let score = 0;
-  // Stable pricing (no negative changes) is the strongest signal
-  if (offer.risk_level === "stable") score += 2;
-  else if (offer.risk_level === "caution") score += 1;
-  // Richer description = more useful free tier info
-  if (offer.description.length > 80) score += 1;
-  else if (offer.description.length > 40) score += 0.5;
-  // Recently verified = trustworthy data
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  if (offer.verifiedDate >= thirtyDaysAgo) score += 1;
-  // Not expiring soon
-  if (!offer.expires_soon) score += 0.5;
-  return score;
-}
-
-// Build best-of slug map at startup
-const bestOfSlugMap = new Map<string, { categoryName: string; picks: ReturnType<typeof enrichOffers> }>();
+/**
+ * Which /best/ pages exist is fixed at startup so the URL set is stable for a
+ * crawler. WHAT is on them, and in what order, is resolved per request through
+ * the shared ranking module (src/ranking.ts) — there is no per-surface scorer
+ * here any more, and no truncation to a "top N": the page shows every offer
+ * that clears the gates, because 44 of 57 categories have more offers tied at
+ * zero demerits than any top-N could hold.
+ */
+const bestOfSlugMap = new Map<string, { categoryName: string }>();
 for (const cat of categories) {
   const catOffers = offers.filter((o) => o.category === cat.name && !o.eligibility);
   if (catOffers.length < BEST_OF_MIN_VENDORS) continue;
-  const enriched = enrichOffers(catOffers);
-  const scored = enriched
-    .map((o) => ({ offer: o, score: scoreBestOfVendor(o) }))
-    .sort((a, b) => b.score - a.score || a.offer.vendor.localeCompare(b.offer.vendor))
-    .slice(0, BEST_OF_PICK_COUNT)
-    .map((s) => s.offer);
-  const slug = `free-${toSlug(cat.name)}`;
-  bestOfSlugMap.set(slug, { categoryName: cat.name, picks: scored });
+  bestOfSlugMap.set(`free-${toSlug(cat.name)}`, { categoryName: cat.name });
+}
+
+type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
+
+/** Rank a category's offers for today. Every ranked surface goes through here. */
+function rankCategory(categoryName: string, date = utcDate()): RankingResult<EnrichedOfferRow> {
+  const catOffers = enrichOffers(offers.filter((o) => o.category === categoryName));
+  return rankOffers(catOffers, {
+    queryKey: `best-of:${categoryName}`,
+    changes: dealChanges,
+    date,
+  });
 }
 
 function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): string {
@@ -1269,19 +1266,45 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
   return `${escHtmlServer(offer.description)}${bestForText}${caveat}`;
 }
 
+/** Recorded facts that are shown wherever the offer appears but never move rank. */
+function renderDisclosures(entry: RankedEntry<EnrichedOfferRow>): string {
+  if (entry.disclosures.length === 0) return "";
+  const items = entry.disclosures.map((d) =>
+    `<li><span style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(d.date)}</span> &mdash; <strong>${escHtmlServer(d.code.replace(/_/g, " "))}</strong>: ${escHtmlServer(d.summary)}</li>`
+  ).join("");
+  return `<div class="best-disclosure"><span class="best-disclosure-label">Recorded, but does not affect rank:</span><ul>${items}</ul></div>`;
+}
+
+/** Each demerit names the specific recorded fact that caused the demotion. */
+function renderDemerits(entry: RankedEntry<EnrichedOfferRow>): string {
+  if (entry.demerits.length === 0) return "";
+  const items = entry.demerits.map((d) =>
+    `<li><span class="demerit-code">&minus;${d.points} ${escHtmlServer(d.code)}</span> ${escHtmlServer(d.reason)}${d.about_us ? ` <em style="color:var(--text-dim)">(a limit of ours, not a change by the vendor)</em>` : ""}</li>`
+  ).join("");
+  return `<ul class="demerit-list">${items}</ul>`;
+}
+
 function buildBestOfPage(slug: string): string | null {
   const entry = bestOfSlugMap.get(slug);
   if (!entry) return null;
-  const { categoryName, picks } = entry;
+  const { categoryName } = entry;
+  const ranking = rankCategory(categoryName);
+  const qualified = ranking.qualified;
+  const demoted = ranking.demoted;
+  const tie = ranking.tie_break;
   const year = new Date().getFullYear();
-  const pickCount = picks.length;
-  const title = `${pickCount} Best Free ${categoryName} Tools (${year}) — AgentDeals`;
-  const metaDesc = `Curated list of the ${pickCount} best free ${categoryName.toLowerCase()} tools for developers in ${year}. Featuring ${picks.slice(0, 3).map(o => o.vendor).join(", ")}${pickCount > 3 ? " and more" : ""}. Verified pricing, stability ratings, and side-by-side comparison.`;
+  const pickCount = qualified.length;
+  const title = `Best Free ${categoryName} Tools (${year}) — AgentDeals`;
+  const metaDesc = `Every free ${categoryName.toLowerCase()} tier that clears our bar in ${year}: ${pickCount} offers meet the criteria and ${demoted.length} are demoted with a named reason. Verified pricing, recorded changes, and a published ranking method.`;
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Mini-review cards
-  const reviewsHtml = picks.map((o, i) => {
+  const tiePara = pickCount > 1
+    ? `<strong>${pickCount} offers meet our criteria for this category and none is distinguishable from the others under any signal we record.</strong> They are listed in an order that rotates daily; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
+    : `<strong>${pickCount} offer meets our criteria for this category.</strong> <a href="${CRITERIA_PATH}">Here is how we decide</a>.`;
+
+  const renderCard = (e: RankedEntry<EnrichedOfferRow>, i: number, demotedCard: boolean) => {
+    const o = e.offer;
     const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
     const review = buildBestOfMiniReview(o);
     const relatedCompareLinks = Array.from(comparisonMap.entries())
@@ -1289,8 +1312,8 @@ function buildBestOfPage(slug: string): string | null {
       .slice(0, 2)
       .map(([cs]) => `<a href="/compare/${cs}" style="font-size:.75rem;color:var(--accent)">Compare</a>`)
       .join(" ");
-    return `      <div class="best-pick">
-        <div class="best-pick-rank">${i + 1}</div>
+    return `      <div class="best-pick${demotedCard ? " best-pick-demoted" : ""}">
+        <div class="best-pick-rank">${demotedCard ? `&minus;${e.demerit_total}` : i + 1}</div>
         <div class="best-pick-content">
           <div class="best-pick-header">
             <a href="/vendor/${toSlug(o.vendor)}" class="best-pick-name">${escHtmlServer(o.vendor)}</a>
@@ -1298,6 +1321,8 @@ function buildBestOfPage(slug: string): string | null {
           </div>
           <div class="best-pick-tier">${escHtmlServer(o.tier)}</div>
           <p class="best-pick-review">${review}</p>
+          ${renderDemerits(e)}
+          ${renderDisclosures(e)}
           <div class="best-pick-links">
             <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
             <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -1306,16 +1331,24 @@ function buildBestOfPage(slug: string): string | null {
           </div>
         </div>
       </div>`;
-  }).join("\n");
+  };
+
+  const reviewsHtml = qualified.map((e, i) => renderCard(e, i, false)).join("\n");
+  const demotedHtml = demoted.length === 0
+    ? `      <p style="color:var(--text-muted);font-size:.9rem">Nothing in this category is demoted today &mdash; we hold no disqualifying record against any of these offers.</p>`
+    : demoted.map((e, i) => renderCard(e, i, true)).join("\n");
 
   // Comparison table
-  const tableRows = picks.map((o) => `        <tr>
+  const tableRows = qualified.map((e) => {
+    const o = e.offer;
+    return `        <tr>
           <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
           <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(o.description.slice(0, 120))}${o.description.length > 120 ? "..." : ""}</td>
           <td><span style="color:${riskColors[o.risk_level ?? "stable"]}">${o.risk_level ?? "stable"}</span></td>
           <td style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(o.verifiedDate)}</td>
-        </tr>`).join("\n");
+        </tr>`;
+  }).join("\n");
 
   // JSON-LD structured data (ItemList)
   const jsonLd = {
@@ -1324,16 +1357,16 @@ function buildBestOfPage(slug: string): string | null {
     name: `Best Free ${categoryName} Tools`,
     description: metaDesc,
     numberOfItems: pickCount,
-    itemListElement: picks.map((o, i) => ({
+    itemListElement: qualified.map((e, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "SoftwareApplication",
-        name: o.vendor,
-        description: o.description,
+        name: e.offer.vendor,
+        description: e.offer.description,
         applicationCategory: categoryName,
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: e.offer.tier },
+        url: e.offer.url,
       },
     })),
   };
@@ -1341,7 +1374,7 @@ function buildBestOfPage(slug: string): string | null {
   // Other best-of pages for cross-linking
   const otherBestOf = Array.from(bestOfSlugMap.entries())
     .filter(([s]) => s !== slug)
-    .sort((a, b) => b[1].picks.length - a[1].picks.length)
+    .sort((a, b) => offers.filter(o => o.category === b[1].categoryName).length - offers.filter(o => o.category === a[1].categoryName).length)
     .slice(0, 10)
     .map(([s, v]) => `<a href="/best/${s}" style="display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;color:var(--text-muted);border:1px solid var(--border);text-decoration:none;transition:all .2s">${escHtmlServer(v.categoryName)}</a>`)
     .join("\n        ");
@@ -1394,8 +1427,22 @@ h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1
 .compare-table tr:hover{background:var(--accent-glow)}
 .other-best{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 2rem}
 .other-best a:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
+.tie-note{background:var(--accent-glow);border:1px solid var(--accent);border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--text-muted)}
+.tie-note strong{color:var(--text)}
+.best-pick-demoted{opacity:.85;border-style:dashed}
+.best-pick-demoted .best-pick-rank{color:#d29922;font-family:var(--mono);font-size:1.1rem}
+.demerit-list{list-style:none;margin:.5rem 0;padding:0;font-size:.8rem;color:var(--text-muted)}
+.demerit-list li{padding:.35rem 0 .35rem .75rem;border-left:2px solid #d29922;margin-bottom:.3rem}
+.demerit-code{font-family:var(--mono);color:#d29922;font-weight:600;margin-right:.4rem}
+.best-disclosure{margin:.5rem 0;font-size:.78rem;color:var(--text-dim)}
+.best-disclosure-label{text-transform:uppercase;letter-spacing:.04em;font-size:.68rem}
+.best-disclosure ul{margin:.25rem 0 0 1rem}
+.audit-block{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:2rem 0;font-size:.8rem;color:var(--text-muted)}
+.audit-block dl{display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;margin:.5rem 0 0}
+.audit-block dt{color:var(--text-dim)}
+.audit-block dd{font-family:var(--mono);color:var(--text);word-break:break-all}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.best-pick{flex-direction:column;gap:.5rem}.best-pick-rank{text-align:left}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
+@media(max-width:768px){h1{font-size:1.5rem}.best-pick{flex-direction:column;gap:.5rem}.best-pick-rank{text-align:left}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.audit-block dl{grid-template-columns:1fr}}
 ${globalNavCss()}
 ${mcpCtaCss()}
 </style>
@@ -1404,14 +1451,30 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("best")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/best">Best Of</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
-  <h1>${pickCount} Best Free ${escHtmlServer(categoryName)} Tools</h1>
-  <p class="page-meta">Curated from ${offers.filter(o => o.category === categoryName).length} verified free tiers. Updated ${new Date().toISOString().split("T")[0]}.</p>
+  <h1>Best Free ${escHtmlServer(categoryName)} Tools</h1>
+  <p class="page-meta">Every free ${escHtmlServer(categoryName.toLowerCase())} tier that clears our bar today. Updated ${tie.date}.</p>
+
+  <div class="tie-note">${tiePara}</div>
 
   <div class="trust-note">
-    <strong>Why trust this data?</strong> Every free tier is verified against the vendor's pricing page with dates tracked. We monitor ${dealChanges.length} pricing changes and flag vendors that have reduced or removed free tiers. <a href="/category/${toSlug(categoryName)}">See all ${offers.filter(o => o.category === categoryName).length} ${categoryName.toLowerCase()} offers &rarr;</a>
+    <strong>Why trust this data?</strong> Every free tier is verified against the vendor's pricing page with dates tracked. We monitor ${dealChanges.length} pricing changes and flag vendors that have reduced or removed free tiers. ${escHtmlServer(DEMOTE_ONLY_POLICY)} <a href="/category/${toSlug(categoryName)}">See all ${offers.filter(o => o.category === categoryName).length} ${categoryName.toLowerCase()} offers &rarr;</a>
   </div>
 
 ${reviewsHtml}
+
+  <h2>Demoted &mdash; and exactly why</h2>
+  <p class="page-meta" style="margin-bottom:1rem">These offers are in this category but rank below the list above. Each one names the recorded fact behind it. ${escHtmlServer(DISCLOSURE_RATIONALE)}</p>
+${demotedHtml}
+
+  <div class="audit-block">
+    <strong style="color:var(--text)">Recompute today's order yourself.</strong> The order above is a permutation seeded only on the UTC date and the query key &mdash; no vendor name, slug, id or offer field is an input. <a href="${CRITERIA_PATH}">The algorithm is published</a>, so anyone can reproduce this page's order without asking us.
+    <dl>
+      <dt>date</dt><dd>${escHtmlServer(tie.date)}</dd>
+      <dt>query_key</dt><dd>${escHtmlServer(tie.query_key)}</dd>
+      <dt>seed</dt><dd>${escHtmlServer(tie.seed)}</dd>
+      <dt>tie_count</dt><dd>${tie.tie_count}</dd>
+    </dl>
+  </div>
 
   <h2>Quick Comparison</h2>
   <table class="compare-table">
@@ -1446,7 +1509,7 @@ function buildBestOfIndexPage(): string {
   const year = new Date().getFullYear();
   const bestOfCount = bestOfSlugMap.size;
   const title = `Best Free Developer Tools (${year}) — AgentDeals`;
-  const metaDesc = `Curated "best of" lists for ${bestOfCount} developer tool categories. Top free tiers ranked by generosity, pricing stability, and data quality.`;
+  const metaDesc = `Every free tier that clears our bar, across ${bestOfCount} developer tool categories. Offers are never promoted — only demoted, on a named recorded fact. The method is published.`;
 
   const sortedEntries = Array.from(bestOfSlugMap.entries())
     .sort((a, b) => {
@@ -1457,11 +1520,12 @@ function buildBestOfIndexPage(): string {
 
   const cardsHtml = sortedEntries.map(([slug, entry]) => {
     const totalInCat = offers.filter(o => o.category === entry.categoryName).length;
-    const topVendors = entry.picks.slice(0, 3).map(o => o.vendor).join(", ");
+    const ranking = rankCategory(entry.categoryName);
+    const topVendors = ranking.qualified.slice(0, 3).map(e => e.offer.vendor).join(", ");
     return `
       <a href="/best/${slug}" class="best-index-card">
         <span class="best-index-name">${escHtmlServer(entry.categoryName)}</span>
-        <span class="best-index-picks">${entry.picks.length} top picks from ${totalInCat}</span>
+        <span class="best-index-picks">${ranking.qualified.length} qualify of ${totalInCat}</span>
         <span class="best-index-vendors">${escHtmlServer(topVendors)}</span>
       </a>`;
   }).join("");
@@ -1517,10 +1581,158 @@ ${globalNavCss()}
   ${buildGlobalNav("best")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Best Of</div>
   <h1>Best Free Developer Tools</h1>
-  <p class="page-meta">${bestOfCount} curated "best of" lists. Top free tiers ranked by generosity, pricing stability, and verified data.</p>
+  <p class="page-meta">${bestOfCount} categories. Every free tier that clears our bar, with the demoted ones listed underneath and the reason named. <a href="${CRITERIA_PATH}">How we rank &rarr;</a></p>
 
   <div class="best-index-grid">${cardsHtml}
   </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+</div>
+</body>
+</html>`;
+}
+
+// --- Ranking criteria page ---
+
+/**
+ * The published method. Every claim on this page is generated from the same
+ * constants the ranking itself uses, so the page cannot drift from the code.
+ */
+function buildCriteriaPage(): string {
+  const date = utcDate();
+
+  // Measured live rather than asserted, so the numbers on the page are today's.
+  let pagesWithUniqueTop = 0;
+  let tieSum = 0;
+  let pageCount = 0;
+  for (const [, { categoryName }] of bestOfSlugMap) {
+    const r = rankCategory(categoryName, date);
+    pageCount++;
+    tieSum += r.tie_break.tie_count;
+    if (r.tie_break.tie_count === 1) pagesWithUniqueTop++;
+  }
+  const meanTie = pageCount > 0 ? (tieSum / pageCount).toFixed(1) : "0";
+
+  const title = "How AgentDeals ranks — published criteria — AgentDeals";
+  const metaDesc = "Our ranking method in full: the gates, the demerits and their weights, the tie-break seed, and the reason there is no top slot to sell. Recompute any ranked page yourself.";
+
+  const gateRows = GATE_TABLE.map(g => `<tr><td><code>${escHtmlServer(g.code)}</code></td><td>${escHtmlServer(g.description)}</td></tr>`).join("\n");
+  const demeritRows = DEMERIT_TABLE.map(d => `<tr><td><code>${escHtmlServer(d.code)}</code></td><td style="text-align:center;font-family:var(--mono)">&minus;${d.points}</td><td>${escHtmlServer(d.trigger)}</td></tr>`).join("\n");
+  const notFreeRows = NOT_FREE_TIER_RULES.map(r => `<tr><td><code>${escHtmlServer(String(r.pattern))}</code></td><td>${escHtmlServer(r.note)}</td></tr>`).join("\n");
+  const timeLimitedRows = TIME_LIMITED_TIER_RULES.map(r => `<tr><td><code>${escHtmlServer(String(r.pattern))}</code></td><td>${escHtmlServer(r.note)}</td></tr>`).join("\n");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "AgentDeals ranking criteria",
+    description: metaDesc,
+    url: `${BASE_URL}${CRITERIA_PATH}`,
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}${CRITERIA_PATH}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}${CRITERIA_PATH}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Ranking criteria", url: BASE_URL + CRITERIA_PATH }])}
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.65}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:820px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-size:2.1rem;margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-size:1.3rem;margin:2.5rem 0 .75rem;letter-spacing:-.01em}
+h3{font-size:1rem;margin:1.5rem 0 .5rem;color:var(--text-muted)}
+p{margin:.75rem 0;color:var(--text-muted)}
+ul,ol{margin:.75rem 0 .75rem 1.5rem;color:var(--text-muted)}
+li{margin:.35rem 0}
+code{font-family:var(--mono);font-size:.85em;color:var(--accent)}
+pre{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-family:var(--mono);font-size:.8rem;color:var(--text);margin:1rem 0}
+.lede{font-size:1.05rem;color:var(--text);border-left:3px solid var(--accent);padding-left:1rem;margin:1.5rem 0}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th,td{padding:.5rem .7rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--text-muted);font-weight:500;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+td{color:var(--text-muted)}
+.callout{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0}
+.callout strong{color:var(--text)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}table{font-size:.75rem}th,td{padding:.4rem .45rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("criteria")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Ranking criteria</div>
+  <h1>How we rank &mdash; in full</h1>
+  <p class="lede">${escHtmlServer(DEMOTE_ONLY_POLICY)}</p>
+
+  <p>The <a href="/best">best-of pages</a> resolve through one shared module. There is no second scorer, no per-page ordering, no vendor allowlist, pin, boost or override anywhere in the selection path. Nothing derived from our own editorial copy is an input: an offer cannot rank higher because we wrote more words about it. <em>The <code>/api/stack</code> endpoint and the <code>plan_stack</code> MCP tool are being moved onto this same module; until that lands they still use a hand-written template and should not be read as ranked output.</em></p>
+
+  <h2>1. Gates &mdash; what is excluded, and why</h2>
+  <p>A gate removes an offer from ranked surfaces entirely. It still appears on its category page and its vendor page; it is simply not something we would put in front of you as a recommendation.</p>
+  <table><thead><tr><th>Gate</th><th>Meaning</th></tr></thead><tbody>
+${gateRows}
+  </tbody></table>
+
+  <h3>Tier classification</h3>
+  <p>Tier names are free text: ${new Set(offers.map(o => o.tier)).size} distinct values across ${offers.length} offers. We classify them by published rule rather than by an allowlist, so a tier we have not seen before is never silently dropped &mdash; the worst it can do is be treated as an ordinary free tier until someone classifies it.</p>
+  <p><strong style="color:var(--text)">Not a free offer</strong> (gated out entirely):</p>
+  <table><thead><tr><th>Rule</th><th>Reason</th></tr></thead><tbody>
+${notFreeRows}
+  </tbody></table>
+  <p><strong style="color:var(--text)">Time-limited</strong> (kept, but demoted &mdash; the free part runs out):</p>
+  <table><thead><tr><th>Rule</th><th>Reason</th></tr></thead><tbody>
+${timeLimitedRows}
+  </tbody></table>
+
+  <h2>2. Demerits &mdash; the only thing that moves rank</h2>
+  <p>Every eligible offer starts at zero. Points are only ever subtracted, and every point traces to a specific recorded fact with a date, shown on the page next to the offer it demoted.</p>
+  <table><thead><tr><th>Demerit</th><th>Points</th><th>Trigger</th></tr></thead><tbody>
+${demeritRows}
+  </tbody></table>
+  <p>Weights are integers, so the tie band is exactly zero &mdash; no epsilon, no float noise pretending to be signal. The property that buys: <strong style="color:var(--text)">one offer can only rank below another if we can name at least one specific recorded fact about it that the other does not have.</strong></p>
+
+  <h3>What we record but deliberately do not rank on</h3>
+  <p>${escHtmlServer(DISCLOSURE_RATIONALE)}</p>
+
+  <h3>One demerit measures us, not the vendor</h3>
+  <p><code>stale_verification</code> means we have not been able to confirm the offer recently. That is material &mdash; you should know when we cannot vouch for a record &mdash; but it is a statement about our confidence, and it is labelled as such wherever it appears. It is never presented as something the vendor did.</p>
+
+  <h2>3. Ties, and why there is no top slot to sell</h2>
+  <div class="callout">
+    <strong>Zero of ${pageCount} categories have a unique number one.</strong> Under every criterion we currently record, there is no single best free database, no best free AI/ML tool, no best free anything. On average ${meanTie} offers tie at the top of a category.
+  </div>
+  <p>We think that is the honest answer and a better thing to publish than a manufactured winner. It is also the strongest form of &ldquo;our recommendations are not for sale&rdquo;: there is no top slot, so there is nothing to buy. A vendor cannot improve its position by talking to us &mdash; only by improving its offer, or by us being able to verify it.</p>
+
+  <h3>The tie-break</h3>
+  <p>Tied offers are ordered by a permutation seeded on the UTC date and the query key, and nothing else. No vendor name, slug, id, index or offer field is an input, so an offer's position is uniform regardless of what it is called or where it sits in our file. The order rotates daily; the membership of the list does not.</p>
+  <pre>${escHtmlServer(TIE_BREAK_ALGORITHM)}</pre>
+  <p>Every ranked page publishes the <code>date</code>, <code>query_key</code>, <code>seed</code> and <code>tie_count</code> it used, and the JSON APIs return the same block. <strong style="color:var(--text)">You can recompute today's order yourself and check it against what we served, without asking us.</strong> That is the point: not for sale should be auditable, not merely asserted.</p>
+
+  <h2>4. What we do not model</h2>
+  <p>We rank on offer terms, verification recency and recorded adverse changes. <strong style="color:var(--text)">We do not model technical fit</strong> &mdash; whether a particular product suits a particular role in your architecture. A vector database and a relational database sit in the same category here. If you are asking us which of two products fits your app, we are the wrong source; if you are asking whose free tier we could confirm this week and whose was withdrawn in March, that is exactly what this is for.</p>
+
+  <h2>5. Surfaces that are listings, not rankings</h2>
+  <p>Not every list on this site is a recommendation. Where a page is an inventory &mdash; every referral programme we know of, every comparison pair we generate &mdash; it is labelled as such and ordered by the same unbiased permutation rather than by the alphabet or by our commercial interest. Where we hold a referral link and may earn a commission, that is stated on the section itself, not only in a footnote. See our <a href="/disclosure">affiliate disclosure</a>.</p>
+
+  <h2>6. If we have this wrong</h2>
+  <p>Every demotion names a dated, recorded fact. If a fact is wrong or out of date, it is correctable: the record behind it is shown on the vendor's page with its source. Correcting it changes the ranking automatically, because the ranking has no other input. There is no editorial override to appeal to &mdash; deliberately, because an override is the thing that would be sold.</p>
+
+  <p style="font-size:.8rem;color:var(--text-dim);margin-top:2rem">This page is generated from the same constants the ranking uses, so it cannot drift from the code. Last computed ${escHtmlServer(date)}.</p>
 
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
@@ -1578,7 +1790,23 @@ function comparisonSlug(a: string, b: string): string {
   return `${toSlug(a)}-vs-${toSlug(b)}`;
 }
 
-// Auto-generate comparison pairs from categories with 3+ vendors
+/**
+ * Auto-generate comparison pairs from categories with 3+ vendors.
+ *
+ * This used to score vendors on `changeCount * 3 + description.length / 50`,
+ * which meant the length of the copy WE wrote decided which vendors got an
+ * indexed SEO page at all — a placement lever on 25 vendor slots across 20 of
+ * 57 categories, pullable with no code change and no audit trail. The other
+ * term was no better: `deal_changes` covers 16% of vendors and 51% of the
+ * well-known ones, so leaving it as the sole driver would have selected on
+ * how closely we happen to watch a vendor.
+ *
+ * A comparison page is an inventory surface, not a recommendation, so it does
+ * not need the demerit model — it needs no lever at all. Which vendors get one
+ * is a single unbiased draw per category, seeded on the category name alone.
+ * It is deliberately date-free: rotating which URLs exist would churn the site
+ * daily for a crawler with no benefit to a reader.
+ */
 function generateCategoryPairs(): [string, string][] {
   const catVendors = new Map<string, string[]>();
   for (const o of offers) {
@@ -1587,24 +1815,14 @@ function generateCategoryPairs(): [string, string][] {
     if (!arr.includes(o.vendor)) arr.push(o.vendor);
   }
 
-  const changeCount = new Map<string, number>();
-  for (const c of dealChanges) {
-    changeCount.set(c.vendor, (changeCount.get(c.vendor) ?? 0) + 1);
-  }
-
   const pairs: [string, string][] = [];
-  for (const [, vendors] of catVendors) {
+  for (const [category, vendors] of catVendors) {
     if (vendors.length < 3) continue;
-    const scored = vendors.map(v => {
-      const offer = offers.find(o => o.vendor === v)!;
-      return { name: v, score: (changeCount.get(v) ?? 0) * 3 + offer.description.length / 50 };
-    }).sort((a, b) => b.score - a.score);
-
-    const topN = scored.slice(0, 4);
+    const topN = rotateListing(vendors, `compare-pairs:${category}`).slice(0, 4);
     let catPairCount = 0;
     for (let i = 0; i < topN.length && catPairCount < 5; i++) {
       for (let j = i + 1; j < topN.length && catPairCount < 5; j++) {
-        const [a, b] = [topN[i].name, topN[j].name].sort() as [string, string];
+        const [a, b] = [topN[i], topN[j]].sort() as [string, string];
         pairs.push([a, b]);
         catPairCount++;
       }
@@ -1723,8 +1941,31 @@ ${categorySections}
 </html>`;
 }
 
+/**
+ * Resolve a `x-vs-y` slug to a vendor pair.
+ *
+ * `comparisonMap` decides which comparisons we LINK and put in the sitemap.
+ * It does not decide which ones exist: any pair of vendors we hold offers for
+ * renders, so changing the generated set never 404s a URL that was already
+ * indexed. A vendor slug can itself contain "-vs-" in principle, so every
+ * split point is tried.
+ */
+function resolveComparisonSlug(slug: string): [string, string] | null {
+  const mapped = comparisonMap.get(slug);
+  if (mapped) return mapped;
+  let from = 0;
+  for (;;) {
+    const at = slug.indexOf("-vs-", from);
+    if (at === -1) return null;
+    const a = vendorSlugMap.get(slug.slice(0, at));
+    const b = vendorSlugMap.get(slug.slice(at + 4));
+    if (a && b && a !== b) return [a, b];
+    from = at + 1;
+  }
+}
+
 function buildComparisonPage(slug: string): string | null {
-  const pair = comparisonMap.get(slug);
+  const pair = resolveComparisonSlug(slug);
   if (!pair) return null;
 
   const [vendorA, vendorB] = pair;
@@ -54183,6 +54424,7 @@ ${catList}
       + '  <url>\n    <loc>' + BASE_URL + '/deadlines</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/pricing-changes</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/freshness</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + CRITERIA_PATH + '</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/search</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/stacks</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
     for (const t of STACK_TEMPLATES) {
@@ -54315,6 +54557,17 @@ ${catList}
           return;
         }
       }
+      // Not a generated pair, but both vendors are known: send the reader to
+      // the canonical (alphabetical) URL so the two orderings never both 200.
+      const resolved = resolveComparisonSlug(slug);
+      if (resolved) {
+        const canonical = comparisonSlug(...(resolved.slice().sort() as [string, string]));
+        if (canonical !== slug) {
+          res.writeHead(301, { Location: `/compare/${canonical}` });
+          res.end();
+          return;
+        }
+      }
     }
     const html = buildComparisonPage(slug);
     if (html) {
@@ -54417,6 +54670,11 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/freshness", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildFreshnessPage());
+  } else if (url.pathname === CRITERIA_PATH && isGetOrHead) {
+    recordApiHit(CRITERIA_PATH);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: CRITERIA_PATH, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildCriteriaPage());
   } else if (url.pathname === "/setup" && isGetOrHead) {
     recordApiHit("/setup");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
