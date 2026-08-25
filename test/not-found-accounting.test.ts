@@ -2,7 +2,7 @@
 //
 // The defect these lock: 84% of the page views we recorded on 2026-08-25 were a scanner
 // walking paths we do not serve, and the same requests inflated every client class's hit
-// count on /api/traffic. Both figures were about to be quoted to an external partner.
+// count on /api/traffic. Both figures are published, and both were wrong.
 //
 // The properties under test are the ones that make the numbers quotable:
 //   - a non-resolving request is counted, under its own name, outside every total
@@ -459,7 +459,7 @@ describe("404s are not page views (#1029)", () => {
   });
 
   describe("the pre-#1021 junk key space", () => {
-    // The keys the PM quoted from the live all_time.top_pages, verbatim.
+    // The keys observed in the live all_time.top_pages, verbatim.
     const JUNK = [
       "/%2f%2eenv",
       "/%2eenv",
@@ -581,7 +581,7 @@ describe("404s are not page views (#1029)", () => {
       await loadTelemetry(telemetryFile);
 
       const pv = (await getPageViews()).today;
-      assert.equal(pv.total, 573, "the figure the PM measured by hand");
+      assert.equal(pv.total, 573, "the figure measured by hand from the stored page keys");
       assert.equal(pv.unclassified_legacy, 3007);
       assert.equal(pv.total + pv.unclassified_legacy, 3580, "and the arithmetic closes");
       assert.ok(!pv.top_pages.some((p: any) => p.path === UNMATCHED_PAGE_KEY));
@@ -630,7 +630,7 @@ describe("404s are not page views (#1029)", () => {
 
       assert.equal(report.today.data_days_available, 1);
       assert.equal(report.today.coverage.split(";")[0], "complete");
-      // The failure the PM hit: today, 7d and 30d all read 4,984 because the keyspace was
+      // The observed failure: today, 7d and 30d all read 4,984 because the keyspace was
       // rebuilt that morning. Arithmetically right, presentationally a month-long claim.
       assert.equal(report.last_30d.days, 30);
       assert.equal(report.last_30d.data_days_available, 1);

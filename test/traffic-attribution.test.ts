@@ -192,7 +192,7 @@ describe("client-class traffic attribution (#1019)", () => {
   it("observing the service is not using it", async () => {
     await boot();
     recordTraffic("/best/free-databases", UA.chrome, 200);
-    // The PM polling their own dashboards, exactly as during #1023 verification.
+    // An operator polling our own dashboards, exactly as during #1023 verification.
     for (let i = 0; i < 20; i++) {
       recordTraffic("/api/pageviews", UA.curl, 200);
       recordTraffic("/api/traffic", UA.curl, 200);

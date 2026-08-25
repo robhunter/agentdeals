@@ -69,8 +69,8 @@ interface Rule {
 const RULES: Rule[] = [
   // --- internal: our own tooling, self-declared -------------------------------------
   // An opt-in marker only. The reliable half of internal attribution is path-based and
-  // lives in the caller (see isObservabilityPath) precisely because the PM's point is
-  // that nobody remembers to set a header during an incident.
+  // lives in the caller (see isObservabilityPath) precisely because nobody remembers to
+  // set a header during an incident.
   { pattern: /agentdeals-internal|agentdeals-monitor/i, client_class: "internal", family: "agentdeals-internal" },
 
   // --- ai_agent ----------------------------------------------------------------------
