@@ -76,10 +76,25 @@ export function useRedis(): boolean {
   return !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
 }
 
+/** Where a recorded search came from. Automated MCP traffic and human web traffic are
+ *  very different signals for catalog decisions, and only `source` can tell them apart. */
+export type SearchSource = "web" | "api" | "mcp";
+
 export interface SearchQueryEntry {
   query: string;
   category?: string;
+  /** What the caller actually got back, after their own filters. */
   results_count: number;
+  /**
+   * What the query alone matches against the whole catalog, ignoring category,
+   * eligibility, stability and payment-protocol filters. This — not `results_count` —
+   * is the catalog-coverage signal: a search filtered down to nothing is not a gap in
+   * what we cover (#1018 Defect C). Absent on entries recorded before this shipped.
+   */
+  unfiltered_count?: number;
+  /** True when the caller supplied any filter beyond the query itself. */
+  filtered?: boolean;
+  source?: SearchSource;
   timestamp: string;
 }
 
@@ -469,7 +484,12 @@ function parseTelemetryData(data: Record<string, unknown>): void {
         typeof (entry as SearchQueryEntry).results_count === "number" &&
         typeof (entry as SearchQueryEntry).timestamp === "string"
       ) {
-        searchQueryLog.push(entry as SearchQueryEntry);
+        const parsed = { ...(entry as SearchQueryEntry) };
+        // A malformed unfiltered_count must not silently drive the catalog-gap list.
+        if (typeof parsed.unfiltered_count !== "number" || !Number.isFinite(parsed.unfiltered_count)) {
+          delete parsed.unfiltered_count;
+        }
+        searchQueryLog.push(parsed);
       }
     }
     if (searchQueryLog.length > SEARCH_QUERY_RING_MAX) {
@@ -1473,26 +1493,68 @@ export function getPageViewsToday(): number {
 // Persisted as a ring buffer (last SEARCH_QUERY_RING_MAX entries) on telemetry.json,
 // so /api/metrics analytics survive deploys.
 
-export function recordSearchQuery(query: string | undefined, resultCount: number, category?: string, userAgent?: string): void {
+export interface SearchQueryContext {
+  category?: string;
+  userAgent?: string;
+  source?: SearchSource;
+  /**
+   * Results for the query alone against the whole catalog. Callers that applied a filter
+   * must supply this; without it a search narrowed to nothing by the caller's own
+   * category/eligibility/stability/payment filter is indistinguishable from a query we
+   * genuinely have no offers for, which is what made `zero_result_queries_7d` unusable
+   * for catalog decisions (#1018 Defect C).
+   */
+  unfilteredCount?: number;
+  filtered?: boolean;
+}
+
+export function recordSearchQuery(
+  query: string | undefined,
+  resultCount: number,
+  context: SearchQueryContext = {},
+): void {
   if (!query) return;
-  if (userAgent && isBot(userAgent)) return;
+  if (context.userAgent && isBot(context.userAgent)) return;
   const normalized = query.trim().toLowerCase();
   if (!normalized) return;
+  const filtered = context.filtered ?? false;
   const entry: SearchQueryEntry = {
     query: normalized,
     timestamp: new Date().toISOString(),
     results_count: resultCount,
+    // With no filters applied the two counts are the same measurement by definition, so
+    // callers only have to do the extra work when they actually narrowed the search.
+    unfiltered_count: filtered ? (context.unfilteredCount ?? resultCount) : resultCount,
   };
-  if (category) entry.category = category;
+  if (filtered) entry.filtered = true;
+  if (context.category) entry.category = context.category;
+  if (context.source) entry.source = context.source;
   searchQueryLog.push(entry);
   if (searchQueryLog.length > SEARCH_QUERY_RING_MAX) {
     searchQueryLog.splice(0, searchQueryLog.length - SEARCH_QUERY_RING_MAX);
   }
 }
 
+function rank(counts: Map<string, number>, limit: number): { query: string; count: number }[] {
+  return [...counts.entries()]
+    .map(([query, count]) => ({ query, count }))
+    .sort((a, b) => b.count - a.count || a.query.localeCompare(b.query))
+    .slice(0, limit);
+}
+
+// An entry counts as a catalog gap only if the query alone matched nothing. Entries
+// recorded before `unfiltered_count` existed fall back to `results_count`, which is the
+// old (over-reporting) behaviour — correct for the unfiltered majority, and the only
+// honest reading of a record that never captured the distinction.
+function catalogMatchCount(entry: SearchQueryEntry): number {
+  return entry.unfiltered_count ?? entry.results_count;
+}
+
 export function getSearchAnalytics(): {
   top_queries_7d: { query: string; count: number }[];
   zero_result_queries_7d: { query: string; count: number }[];
+  filtered_to_zero_queries_7d: { query: string; count: number }[];
+  queries_by_source_7d: Record<string, number>;
   queries_by_category_7d: Record<string, number>;
 } {
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
@@ -1501,39 +1563,35 @@ export function getSearchAnalytics(): {
     return Number.isFinite(t) && t >= sevenDaysAgo;
   });
 
-  // Top 20 queries by frequency
   const queryCounts = new Map<string, number>();
+  // Genuine gaps: the catalog has nothing for this query at all.
+  const zeroResultCounts = new Map<string, number>();
+  // The caller's own filters removed everything. Worth seeing — it says the filter
+  // combination is too narrow — but it is not a signal to go add offers.
+  const filteredToZeroCounts = new Map<string, number>();
+  const sourceCounts: Record<string, number> = {};
+  const categoryCounts: Record<string, number> = {};
+
   for (const e of recent) {
     queryCounts.set(e.query, (queryCounts.get(e.query) ?? 0) + 1);
-  }
-  const topQueries = [...queryCounts.entries()]
-    .map(([query, count]) => ({ query, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 20);
 
-  // Top 10 zero-result queries
-  const zeroResultCounts = new Map<string, number>();
-  for (const e of recent) {
-    if (e.results_count === 0) {
+    if (catalogMatchCount(e) === 0) {
       zeroResultCounts.set(e.query, (zeroResultCounts.get(e.query) ?? 0) + 1);
+    } else if (e.results_count === 0) {
+      filteredToZeroCounts.set(e.query, (filteredToZeroCounts.get(e.query) ?? 0) + 1);
     }
-  }
-  const zeroResultQueries = [...zeroResultCounts.entries()]
-    .map(([query, count]) => ({ query, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 10);
 
-  // Search volume by category (from results that matched a category)
-  const categoryCounts: Record<string, number> = {};
-  for (const e of recent) {
-    if (e.category) {
-      categoryCounts[e.category] = (categoryCounts[e.category] ?? 0) + 1;
-    }
+    const source = e.source ?? "unknown";
+    sourceCounts[source] = (sourceCounts[source] ?? 0) + 1;
+
+    if (e.category) categoryCounts[e.category] = (categoryCounts[e.category] ?? 0) + 1;
   }
 
   return {
-    top_queries_7d: topQueries,
-    zero_result_queries_7d: zeroResultQueries,
+    top_queries_7d: rank(queryCounts, 20),
+    zero_result_queries_7d: rank(zeroResultCounts, 10),
+    filtered_to_zero_queries_7d: rank(filteredToZeroCounts, 10),
+    queries_by_source_7d: sourceCounts,
     queries_by_category_7d: categoryCounts,
   };
 }

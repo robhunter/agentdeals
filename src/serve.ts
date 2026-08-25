@@ -53381,7 +53381,16 @@ const httpServer = createHttpServer(async (req, res) => {
       }
       return enriched;
     });
-    recordSearchQuery(q, total, category, req.headers["user-agent"]);
+    // `total` is post-filter. For the catalog-gap signal we need what the query alone
+    // matches, and only when a filter was actually applied (#1018 Defect C).
+    const offersFiltered = Boolean(category || eligibilityType || validStability || validPaymentProtocol);
+    recordSearchQuery(q, total, {
+      category,
+      userAgent: req.headers["user-agent"],
+      source: "api",
+      filtered: offersFiltered,
+      unfilteredCount: offersFiltered && sanitizedQ ? searchOffers(sanitizedQ).length : total,
+    });
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ offers: offersWithCodes, total }));
@@ -54451,7 +54460,14 @@ ${catList}
       const sanitized = sanitizeQuery(query);
       if (sanitized) {
         const total = searchOffers(sanitized, categoryFilter || undefined, typeFilter || undefined, sortParam || undefined).length;
-        recordSearchQuery(query, total, categoryFilter || undefined, req.headers["user-agent"]);
+        const searchFiltered = Boolean(categoryFilter || typeFilter);
+        recordSearchQuery(query, total, {
+          category: categoryFilter || undefined,
+          userAgent: req.headers["user-agent"],
+          source: "web",
+          filtered: searchFiltered,
+          unfilteredCount: searchFiltered ? searchOffers(sanitized).length : total,
+        });
       }
     }
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/search", params: { q: query, category: categoryFilter, type: typeFilter, sort: sortParam, page: String(page) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
