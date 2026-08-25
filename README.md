@@ -308,6 +308,9 @@ curl "https://agentdeals.dev/api/audit-stack?services=Vercel,Supabase,Clerk"
 # Server stats
 curl "https://agentdeals.dev/api/stats"
 
+# Traffic attributed by client class (AI agent / crawler / browser), and web vs MCP
+curl "https://agentdeals.dev/api/traffic"
+
 # OpenAPI spec
 curl "https://agentdeals.dev/api/openapi.json"
 ```
