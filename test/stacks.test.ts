@@ -16,13 +16,16 @@ describe("stack recommendation logic", () => {
     assert.ok(Array.isArray(result.limitations));
     assert.ok(typeof result.upgrade_path === "string");
 
-    // Check stack components have required fields
-    for (const component of result.stack) {
-      assert.ok(component.role, "Should have role");
-      assert.ok(component.vendor, "Should have vendor");
-      assert.ok(component.tier, "Should have tier");
-      assert.ok(component.description, "Should have description");
-      assert.ok(component.url, "Should have url");
+    // Check roles and their candidates have required fields
+    for (const role of result.stack) {
+      assert.ok(role.role, "Should have role");
+      assert.ok(role.candidates.length > 0, "Should have candidates");
+      for (const c of role.candidates) {
+        assert.ok(c.vendor, "Should have vendor");
+        assert.ok(c.tier, "Should have tier");
+        assert.ok(c.description, "Should have description");
+        assert.ok(c.url, "Should have url");
+      }
     }
 
     // Should include hosting and database roles
@@ -81,24 +84,28 @@ describe("stack recommendation logic", () => {
   it("description is capped at 200 characters", async () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
     const result = getStackRecommendation("Next.js SaaS app");
-    for (const component of result.stack) {
-      assert.ok(component.description.length <= 200, `Description for ${component.vendor} exceeds 200 chars`);
+    for (const role of result.stack) {
+      for (const c of role.candidates) {
+        assert.ok(c.description.length <= 200, `Description for ${c.vendor} exceeds 200 chars`);
+      }
     }
   });
 
-  it("stack components include risk_level and stability fields", async () => {
+  it("candidates include risk_level and stability fields", async () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
     const result = getStackRecommendation("Next.js SaaS app");
     assert.ok(result.stack.length > 0);
-    for (const component of result.stack) {
-      assert.ok(
-        ["stable", "caution", "risky"].includes(component.risk_level),
-        `${component.vendor} risk_level should be stable|caution|risky, got ${component.risk_level}`
-      );
-      assert.ok(
-        ["stable", "watch", "volatile", "improving"].includes(component.stability),
-        `${component.vendor} stability should be stable|watch|volatile|improving, got ${component.stability}`
-      );
+    for (const role of result.stack) {
+      for (const c of role.candidates) {
+        assert.ok(
+          ["stable", "caution", "risky"].includes(c.risk_level),
+          `${c.vendor} risk_level should be stable|caution|risky, got ${c.risk_level}`
+        );
+        assert.ok(
+          ["stable", "watch", "volatile", "improving"].includes(c.stability),
+          `${c.vendor} stability should be stable|watch|volatile|improving, got ${c.stability}`
+        );
+      }
     }
   });
 
@@ -113,19 +120,93 @@ describe("stack recommendation logic", () => {
     }
   });
 
-  it("risk_warnings surfaced when stack contains non-stable components", async () => {
+  it("every risk warning names a candidate we are actually showing", async () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
     const result = getStackRecommendation("Next.js SaaS app");
-    const hasRisky = result.stack.some(
-      (c: any) => c.risk_level !== "stable" || c.stability !== "stable"
-    );
-    if (hasRisky) {
-      assert.ok(
-        result.risk_warnings.length > 0,
-        "risk_warnings should not be empty when stack has non-stable components"
-      );
-    } else {
-      assert.strictEqual(result.risk_warnings.length, 0);
+    const shown = new Set(result.stack.flatMap((r: any) => r.candidates.map((c: any) => `${c.vendor} (${r.role})`)));
+    for (const w of result.risk_warnings) {
+      const prefix = w.slice(0, w.indexOf("):") + 1);
+      assert.ok(shown.has(prefix), `warning references ${prefix}, which is not in the returned candidate set`);
+    }
+  });
+});
+
+// #1025: plan_stack stops naming one winner per role. The old behaviour put
+// Supabase in every database slot of every template because it was typed first
+// in `preferredVendors`; the fallback was `publicOffers[0]`, index order in the
+// JSON file. Both are gone.
+describe("plan_stack does not name a winner", () => {
+  it("returns a candidate set per role, not a single vendor", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const result = getStackRecommendation("Next.js SaaS app");
+    for (const role of result.stack) {
+      assert.ok(Array.isArray(role.candidates), `${role.role} must return candidates`);
+      assert.ok(role.candidates.length > 1, `${role.role} returned ${role.candidates.length} candidate — that is a pick, not a set`);
+      assert.strictEqual((role as any).vendor, undefined, "a role must not carry a single winning vendor");
+    }
+  });
+
+  it("no vendor occupies the same slot across every template", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const firsts = ["Next.js SaaS app", "AI agent backend", "side project with database"].map((useCase) => {
+      const db = getStackRecommendation(useCase).stack.find((r: any) => r.role === "Database");
+      return db?.candidates[0]?.vendor;
+    });
+    assert.ok(firsts.every(Boolean), "each use case should return a database role");
+    assert.notStrictEqual(new Set(firsts).size, 1, `the same vendor led every template: ${firsts[0]}`);
+  });
+
+  it("discloses the size of the tie it drew from, and the seed", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const result = getStackRecommendation("Next.js SaaS app");
+    for (const role of result.stack) {
+      assert.ok(role.tie_count >= role.candidates.length || role.tie_count === 0, `${role.role} shows more candidates than tie_count claims`);
+      assert.match(role.tie_break.seed, /^[0-9a-f]{64}$/);
+      assert.strictEqual(role.tie_break.query_key, `stack:Next.js SaaS app:${role.role}`);
+      assert.ok(role.reason.length > 40, `${role.role} must explain itself`);
+    }
+  });
+
+  it("states plainly that we do not model technical fit", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const result = getStackRecommendation("Next.js SaaS app");
+    assert.match(result.method.not_modelled, /do NOT model technical fit/i);
+    assert.match(result.method.policy, /nothing to add/);
+    assert.strictEqual(result.method.criteria_url, "/criteria");
+  });
+
+  it("the tier gate replaces the hand-typed allowlist — Always Free is reachable again", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const seen = new Set<string>();
+    for (const useCase of ["Next.js SaaS app", "AI agent backend", "static blog", "devops platform", "ecommerce store"]) {
+      for (const role of getStackRecommendation(useCase).stack) {
+        for (const c of role.candidates) seen.add(c.tier);
+      }
+    }
+    // `findBestOffer()` gated on {Free, Hobby, Open Source, Free Credits}, so no
+    // offer outside that set could ever appear. Any tier outside it proves the
+    // allowlist is gone.
+    const outsideOldAllowlist = [...seen].filter((t) => !["Free", "Hobby", "Open Source", "Free Credits"].includes(t));
+    assert.ok(outsideOldAllowlist.length > 0, "no tier outside the old allowlist appeared — the gate may not have changed");
+  });
+
+  it("rotates day to day but is stable within a day", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const a = getStackRecommendation("Next.js SaaS app", undefined, "2026-08-25");
+    const b = getStackRecommendation("Next.js SaaS app", undefined, "2026-08-25");
+    const c = getStackRecommendation("Next.js SaaS app", undefined, "2026-08-26");
+    const names = (r: any) => r.stack.map((role: any) => role.candidates.map((x: any) => x.vendor).join(","));
+    assert.deepStrictEqual(names(a), names(b));
+    assert.notDeepStrictEqual(names(a), names(c));
+  });
+
+  it("a demoted candidate is never shown above one with no demerits", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    for (const useCase of ["Next.js SaaS app", "AI chatbot", "ecommerce store"]) {
+      for (const role of getStackRecommendation(useCase).stack) {
+        const totals = role.candidates.map((c: any) => c.demerits.reduce((s: number, d: any) => s + d.points, 0));
+        assert.deepStrictEqual(totals, [...totals].sort((x, y) => x - y), `${useCase}/${role.role} is out of band order`);
+      }
     }
   });
 });
@@ -165,6 +246,8 @@ describe("stack REST endpoint", () => {
     assert.strictEqual(body.total_monthly_cost, "$0");
     assert.ok(Array.isArray(body.limitations));
     assert.ok(typeof body.upgrade_path === "string");
+    assert.ok(Array.isArray(body.stack[0].candidates));
+    assert.strictEqual(body.method.criteria_url, "/criteria");
   });
 
   it("GET /api/stack returns 400 without use_case", async () => {
