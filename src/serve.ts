@@ -52012,6 +52012,14 @@ ${globalNavCss()}
 </html>`;
 }
 
+const PRIVACY_LAST_UPDATED = "2026-03-20";
+
+function privacyLastUpdatedLabel(): string {
+  const [y, m, d] = PRIVACY_LAST_UPDATED.split("-");
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  return `${months[parseInt(m, 10) - 1]} ${parseInt(d, 10)}, ${y}`;
+}
+
 function buildPrivacyPage(): string {
   const title = "Privacy Policy — AgentDeals";
   const metaDesc = "AgentDeals privacy policy. We are a read-only data server — no accounts, no cookies, no personal data collected.";
@@ -52022,7 +52030,7 @@ function buildPrivacyPage(): string {
     name: title,
     description: metaDesc,
     url: `${BASE_URL}/privacy`,
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: PRIVACY_LAST_UPDATED,
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -52119,7 +52127,7 @@ ${globalNavCss()}
     <p>Questions about this policy? Open an issue on our <a href="https://github.com/robhunter/agentdeals/issues">GitHub repository</a>.</p>
   </div>
 
-  <p class="updated">Last updated: March 20, 2026</p>
+  <p class="updated">Last updated: ${privacyLastUpdatedLabel()}</p>
 
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
