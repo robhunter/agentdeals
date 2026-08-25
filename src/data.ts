@@ -1,9 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass, Referral, RiskCause } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass, Referral, RiskCause, LinkUnreachable } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
+import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
@@ -52,6 +53,7 @@ export function loadOffers(): Offer[] {
 export function resetCache(): void {
   cachedOffers = null;
   cachedChanges = null;
+  resetLinkHealthCache();
 }
 
 export function getCategories(): { name: string; count: number }[] {
@@ -362,7 +364,8 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
     // vendor. The cause travels with the level so no surface can render the
     // warning without the dated fact behind it.
     const assessment = vendorRiskAssessment(vendorAllChangesList.get(key) ?? []);
-    const risk_level = assessment.level;
+    const link_unreachable = unreachableNoticeForUrl(offer.url, now.getTime());
+    const risk_level = link_unreachable && assessment.level === "stable" ? null : assessment.level;
     const risk_cause = assessment.cause
       ? { date: assessment.cause.date, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
       : null;
@@ -374,7 +377,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     );
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, stability, days_since_verified };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, stability, days_since_verified, link_unreachable };
     return stripReferrerValue(enriched);
   });
 }
@@ -563,12 +566,13 @@ export interface ComparisonResult {
 export interface VendorRiskResult {
   vendor: string;
   category: string;
-  risk_level: "stable" | "caution" | "risky";
+  risk_level: "stable" | "caution" | "risky" | null;
   /** Never null when risk_level is caution or risky (#1038). */
   risk_cause: RiskCause | null;
+  link_unreachable: LinkUnreachable | null;
   free_tier_longevity_days: number;
   changes: DealChange[];
-  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky"; risk_cause: RiskCause | null; demerits: Array<{ code: string; points: number; reason: string }> }>;
+  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky" | null; risk_cause: RiskCause | null; link_unreachable: LinkUnreachable | null; demerits: Array<{ code: string; points: number; reason: string }> }>;
   summary: string;
 }
 
@@ -669,6 +673,7 @@ export function checkVendorRisk(
     .sort((a, b) => b.date.localeCompare(a.date));
 
   const assessment = vendorRiskAssessment(vendorChanges);
+  const linkUnreachable = unreachableNoticeForUrl(offer.url);
   const riskLevel = assessment.level;
 
   // Free tier longevity: days since verifiedDate with no negative changes after it
@@ -695,9 +700,11 @@ export function checkVendorRisk(
     tier: e.offer.tier,
     ...(() => {
       const a = vendorRiskAssessment(allChanges.filter((c) => c.vendor.toLowerCase() === e.offer.vendor.toLowerCase()));
+      const unreachable = unreachableNoticeForUrl(e.offer.url);
       return {
-        risk_level: a.level,
+        risk_level: unreachable && a.level === "stable" ? null : a.level,
         risk_cause: a.cause ? { date: a.cause.date, change_type: a.cause.change_type, summary: a.cause.summary } : null,
+        link_unreachable: unreachable,
       };
     })(),
     demerits: e.demerits.map((d) => ({ code: d.code, points: d.points, reason: d.reason })),
@@ -708,10 +715,15 @@ export function checkVendorRisk(
   // and a warning without its reason is an assertion.
   let summary: string;
   const cause = assessment.cause;
+  const unreachableClause = linkUnreachable
+    ? ` Its pricing page has not resolved for us${linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : ""}, so we cannot confirm its current terms.`
+    : "";
   if (riskLevel === "risky" && cause) {
-    summary = `${offer.vendor} is high risk — ${cause.date}: ${cause.summary} Consider alternatives.`;
+    summary = `${offer.vendor} is high risk — ${cause.date}: ${cause.summary} Consider alternatives.${unreachableClause}`;
   } else if (riskLevel === "caution" && cause) {
-    summary = `${offer.vendor} warrants caution — ${cause.date}: ${cause.summary} Monitor for further changes.`;
+    summary = `${offer.vendor} warrants caution — ${cause.date}: ${cause.summary} Monitor for further changes.${unreachableClause}`;
+  } else if (linkUnreachable) {
+    summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}.${unreachableClause} Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
     summary = `${offer.vendor} has a stable pricing history with no free tier removal, limit reduction or pricing restructure on record. Free tier verified for ${longevityDays} days.`;
   }
@@ -720,8 +732,9 @@ export function checkVendorRisk(
     result: {
       vendor: offer.vendor,
       category: offer.category,
-      risk_level: riskLevel,
+      risk_level: linkUnreachable && riskLevel === "stable" ? null : riskLevel,
       risk_cause: cause ? { date: cause.date, change_type: cause.change_type, summary: cause.summary } : null,
+      link_unreachable: linkUnreachable,
       free_tier_longevity_days: longevityDays,
       changes: vendorChanges,
       alternatives,
