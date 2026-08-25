@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
+import { vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -25,7 +25,7 @@ import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscri
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
-import type { Agent } from "./types.js";
+import type { Agent, RiskCause } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -267,7 +267,57 @@ const changeTypeBadge: Record<string, { label: string; color: string }> = {
   startup_program_expanded: { label: "expanded", color: "#3fb950" },
   pricing_postponed: { label: "postponed", color: "#58a6ff" },
   product_deprecated: { label: "deprecated", color: "#f85149" },
+  restriction: { label: "restricted", color: "#d29922" },
+  new_tier: { label: "new tier", color: "#58a6ff" },
+  rebranded: { label: "rebranded", color: "#8b949e" },
 };
+
+const RISK_COLORS: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+const STABILITY_COLORS: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
+
+function riskCauseLabel(cause: RiskCause): string {
+  return `${cause.date} ${changeTypeBadge[cause.change_type]?.label ?? cause.change_type.replace(/_/g, " ")}`;
+}
+
+/**
+ * The only way a risk level reaches an HTML surface (#1038).
+ *
+ * `caution` and `risky` are negative factual claims about a named company, so
+ * they render *with* the dated record that produced them, and render nothing
+ * at all without one — a warning a reader cannot check is an assertion. Before
+ * this, `/vendor/railway` carried `caution` in its `<h1>` because Railway had
+ * expanded its free tier, and `/vendor/neon` carried one whose cause was seven
+ * months old and therefore invisible on the page.
+ *
+ * `stable` needs no cause: it is the absence of a claim against the vendor.
+ */
+function riskBadgeHtml(
+  level: string | null | undefined,
+  cause: RiskCause | null | undefined,
+  opts: { compact?: boolean; margin?: boolean } = {},
+): string {
+  if (!level) return "";
+  if (level !== "stable" && !cause) return "";
+  const color = RISK_COLORS[level] ?? "#8b949e";
+  const size = opts.compact ? ".65rem" : ".7rem";
+  const margin = opts.margin === false ? "" : "margin-left:.5rem;";
+  const badge = `<span style="display:inline-block;${margin}font-size:${size};padding:.15rem .5rem;border-radius:10px;background:${color}22;color:${color};font-weight:600">${level}</span>`;
+  if (level === "stable" || !cause) return badge;
+  return `${badge} <span style="font-size:${size};color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`;
+}
+
+/** Table-cell form of the same rule: the level, and under it the dated cause. */
+function riskCellHtml(level: string | null | undefined, cause: RiskCause | null | undefined): string {
+  const resolved = level ?? "stable";
+  // A level with no cause is neither publishable as a warning nor rewritable
+  // into "stable" — that would be a positive claim we also cannot back.
+  if (resolved !== "stable" && !cause) return `<span style="color:var(--text-dim)">&mdash;</span>`;
+  const color = RISK_COLORS[resolved] ?? "#8b949e";
+  const causeHtml = resolved !== "stable" && cause
+    ? `<br><span style="font-size:.7rem;color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`
+    : "";
+  return `<span style="color:${color}">${resolved}</span>${causeHtml}`;
+}
 
 function buildChangesHtml(): string {
   return recentChanges.map((c) => {
@@ -1265,7 +1315,12 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
   if (desc.includes("student") || desc.includes("education")) bestFor.push("students");
   if (desc.includes("unlimited") || desc.includes("no limit")) bestFor.push("unlimited usage needs");
   const bestForText = bestFor.length > 0 ? ` Best for ${bestFor.join(" and ")}.` : "";
-  const caveat = offer.risk_level === "caution" ? " Note: pricing has changed in the past." : offer.risk_level === "risky" ? " Caution: pricing has changed multiple times." : "";
+  // #1038: this used to say "pricing has changed in the past" / "changed
+  // multiple times" off a count of records of any type, so a vendor that
+  // *raised* its limits got the caveat. It now quotes the record itself.
+  const caveat = offer.risk_level !== "stable" && offer.risk_cause
+    ? ` Note — ${offer.risk_cause.date}: ${escHtmlServer(offer.risk_cause.summary)}`
+    : "";
   return `${escHtmlServer(offer.description)}${bestForText}${caveat}`;
 }
 
@@ -1308,7 +1363,7 @@ function buildBestOfPage(slug: string): string | null {
 
   const renderCard = (e: RankedEntry<EnrichedOfferRow>, i: number, demotedCard: boolean) => {
     const o = e.offer;
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     const review = buildBestOfMiniReview(o);
     const relatedCompareLinks = Array.from(comparisonMap.entries())
       .filter(([, [a, b]]) => a === o.vendor || b === o.vendor)
@@ -1348,7 +1403,7 @@ function buildBestOfPage(slug: string): string | null {
           <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
           <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(o.description.slice(0, 120))}${o.description.length > 120 ? "..." : ""}</td>
-          <td><span style="color:${riskColors[o.risk_level ?? "stable"]}">${o.risk_level ?? "stable"}</span></td>
+          <td>${riskCellHtml(o.risk_level, o.risk_cause)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(o.verifiedDate)}</td>
         </tr>`;
   }).join("\n");
@@ -1715,6 +1770,11 @@ ${demeritRows}
 
   <h3>One demerit measures us, not the vendor</h3>
   <p><code>stale_verification</code> means we have not been able to confirm the offer recently. That is material &mdash; you should know when we cannot vouch for a record &mdash; but it is a statement about our confidence, and it is labelled as such wherever it appears. It is never presented as something the vendor did.</p>
+
+  <h3>The risk label is not a rank, and it is never a count</h3>
+  <p>Vendor pages carry a <code>stable</code> / <code>caution</code> / <code>risky</code> label. <strong style="color:var(--text)">It moves no order on this site</strong> &mdash; the ranking module cannot read it, and flipping every label leaves every listing we publish in the same order.</p>
+  <p>It is decided by the <em>type</em> of a recorded change, never by how many records we hold. A vendor that expanded its free tier, postponed a fee, added a tier or changed its name cannot be labelled <code>caution</code> for any of those. <strong style="color:var(--text)">A <code>caution</code> or <code>risky</code> label always renders together with the single dated record that produced it, on the same page and next to the label. Where we cannot show the reason, we do not show the label.</strong></p>
+  <p>The honest limit: <code>stable</code> means we hold no record of a free tier removal, a limit reduction or a pricing restructure for that vendor. It is a statement about our records, not a clean bill of health &mdash; a vendor we have never had cause to examine reads the same as one with a long clean history. Until August 2026 the label was derived from a count of records of any type, which inverted that: the vendors we watched most closely were the ones it flagged, and several were flagged for good news. That is fixed, and this paragraph is here so the next version of it is checkable.</p>
 
   <h2>3. Ties, and why there is no top slot to sell</h2>
   <div class="callout">
@@ -2146,11 +2206,7 @@ function buildComparisonPage(slug: string): string | null {
   const riskA = enrichOffers([offers.find(o => o.vendor === a.vendor)!])[0];
   const riskB = enrichOffers([offers.find(o => o.vendor === b.vendor)!])[0];
 
-  const riskBadge = (level: string | null) => {
-    const colors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
-    const color = colors[level ?? ""] ?? "#8b949e";
-    return `<span style="display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:600;background:${color}20;color:${color};border:1px solid ${color}40">${level ?? "unknown"}</span>`;
-  };
+  const riskBadge = (o: { risk_level: string | null; risk_cause: RiskCause | null }) => riskBadgeHtml(o.risk_level, o.risk_cause, { margin: false });
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
@@ -2182,8 +2238,10 @@ function buildComparisonPage(slug: string): string | null {
   const tierB = b.tier.toLowerCase();
   const hasFreeA = tierA !== "none" && !a.description.toLowerCase().includes("no free tier");
   const hasFreeB = tierB !== "none" && !b.description.toLowerCase().includes("no free tier");
-  const stabilityA = riskA.risk_level ?? "unknown";
-  const stabilityB = riskB.risk_level ?? "unknown";
+  // These are risk levels, not stability classes — two different scales.
+  // They render only when their cause does (#1038).
+  const stabilityA = riskA.risk_cause || riskA.risk_level === "stable" ? riskA.risk_level ?? "unknown" : "unknown";
+  const stabilityB = riskB.risk_cause || riskB.risk_level === "stable" ? riskB.risk_level ?? "unknown" : "unknown";
   const changesCountA = a.deal_changes.length;
   const changesCountB = b.deal_changes.length;
 
@@ -2348,7 +2406,7 @@ ${categoryContextHtml}
 ${verdictHtml}
   <div class="compare-grid">
     <div class="vendor-col">
-      <h2><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA.risk_level)}</h2>
+      <h2><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA)}</h2>
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
@@ -2357,7 +2415,7 @@ ${verdictHtml}
       ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
     <div class="vendor-col">
-      <h2><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB.risk_level)}</h2>
+      <h2><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)}</h2>
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
@@ -2678,11 +2736,7 @@ function buildVsPage(slug: string): string | null {
   const riskA = enrichOffers([offers.find(o => o.vendor === a.vendor)!])[0];
   const riskB = enrichOffers([offers.find(o => o.vendor === b.vendor)!])[0];
 
-  const riskBadge = (level: string | null) => {
-    const colors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
-    const color = colors[level ?? ""] ?? "#8b949e";
-    return `<span style="display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:600;background:${color}20;color:${color};border:1px solid ${color}40">${level ?? "unknown"}</span>`;
-  };
+  const riskBadge = (o: { risk_level: string | null; risk_cause: RiskCause | null }) => riskBadgeHtml(o.risk_level, o.risk_cause, { margin: false });
 
   const stabilityBadge = (stability: string) => {
     const colors: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
@@ -2849,7 +2903,7 @@ ${globalNavCss()}
   <h2>Side-by-Side Comparison</h2>
   <div class="compare-grid">
     <div class="vendor-col">
-      <h3><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA.risk_level)} ${stabilityBadge(riskA.stability ?? "stable")}</h3>
+      <h3><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA)} ${stabilityBadge(riskA.stability ?? "stable")}</h3>
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
@@ -2858,7 +2912,7 @@ ${globalNavCss()}
       <div class="desc-block">${escHtmlServer(a.description)}</div>
     </div>
     <div class="vendor-col">
-      <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB.risk_level)} ${stabilityBadge(riskB.stability ?? "stable")}</h3>
+      <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)} ${stabilityBadge(riskB.stability ?? "stable")}</h3>
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
@@ -3601,9 +3655,17 @@ function buildVendorPage(slug: string): string | null {
 
   // Risk assessment
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
-  const riskLevel = enriched.risk_level ?? "stable";
+  const riskCause = enriched.risk_cause;
+  // #1038: a level we cannot show the cause for is not publishable in the H1.
+  const riskLevel = enriched.risk_level && (enriched.risk_level === "stable" || riskCause) ? enriched.risk_level : "stable";
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
   const stability = enriched.stability ?? "stable";
+  // The badge sits in the largest text on the page. Its reason sits directly
+  // under it — not only in the history section further down, which for a cause
+  // older than 90 days did not carry it at all (Neon, #1038).
+  const riskCauseLine = riskLevel !== "stable" && riskCause
+    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(riskCause.date)}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+    : "";
 
   // Alternatives: other vendors in the same primary category
   // "Alternatives to X" is a recommendation, so it goes through the shared
@@ -3708,11 +3770,11 @@ function buildVendorPage(slug: string): string | null {
           <tr class="current-vendor-row">
             <td><strong>${escHtmlServer(vendorName)}</strong></td>
             <td>${escHtmlServer(primary.tier)}</td>
-            <td><span class="stability-dot" style="background:${riskColor}"></span> ${escHtmlServer(stability)}</td>
+            <td><span class="stability-dot" style="background:${STABILITY_COLORS[stability] ?? "#8b949e"}"></span> ${escHtmlServer(stability)}</td>
           </tr>
 ${enrichedAlts.map(a => {
   const aStability = a.stability ?? "stable";
-  const aColor = riskColors[a.risk_level ?? "stable"] ?? "#8b949e";
+  const aColor = STABILITY_COLORS[aStability] ?? "#8b949e";
   return `          <tr>
             <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
             <td>${escHtmlServer(a.tier)}</td>
@@ -3742,7 +3804,14 @@ ${enrichedAlts.map(a => {
 
   // Prominent change notice for vendors with significant changes
   const latestChange = vendorChanges[0];
-  const changeNoticeHtml = latestChange && (latestChange.change_type === "free_tier_removed" || latestChange.change_type === "limits_reduced" || latestChange.change_type === "open_source_killed" || latestChange.change_type === "product_deprecated" || latestChange.change_type === "pricing_restructured") ? (() => {
+  // #1038: this was a seventh inline copy of the change-direction taxonomy, and
+  // it keyed on the *latest* record rather than the one that earned the badge —
+  // so it could show a different record from the one the <h1> is warning about,
+  // or none at all. It reads the shared set, and it stands down when the cause
+  // line above has already published this exact record.
+  const causeAlreadyShown = riskCause !== null && latestChange !== undefined && latestChange !== null
+    && latestChange.date === riskCause.date && latestChange.change_type === riskCause.change_type;
+  const changeNoticeHtml = latestChange && !causeAlreadyShown && NEGATIVE_CHANGE_TYPES.has(latestChange.change_type) ? (() => {
     const badge = changeTypeBadge[latestChange.change_type] ?? { label: latestChange.change_type, color: "#8b949e" };
     const anchor = `${toSlug(latestChange.vendor)}-${latestChange.date}`;
     return `<div class="change-notice" style="margin:1rem 0;padding:.75rem 1rem;border:1px solid ${badge.color}40;border-left:3px solid ${badge.color};border-radius:0 8px 8px 0;background:${badge.color}10">
@@ -3937,11 +4006,17 @@ ${allCompareLinks.join("\n")}
   // FAQ data for vendor pages — expanded to 6-8 questions
   const faqFreeAnswer = `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${primary.description.slice(0, 200)}${primary.description.length > 200 ? "..." : ""}`;
   const faqTierAnswer = `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`;
+  // #1038: these answers ship inside FAQPage JSON-LD, which is the version of
+  // this page an AI search engine quotes. They used to reach for the *count* of
+  // recorded changes and for `vendorChanges[0]` — the most recent record of any
+  // type — so a vendor could be told it "requires caution" and then handed a
+  // free-tier expansion as the evidence. They now quote the record that
+  // produced the level, and nothing else.
   const faqReliableAnswer = riskLevel === "stable"
-    ? `${vendorName}'s free tier is considered stable. ${vendorChanges.length === 0 ? "There are no recorded pricing changes." : `There ${vendorChanges.length === 1 ? "has been 1 recorded pricing change" : `have been ${vendorChanges.length} recorded pricing changes`}, but the free tier remains available.`}`
+    ? `${vendorName}'s free tier is considered stable: we hold no free tier removal, limit reduction or pricing restructure on record for this vendor.${vendorChanges.length > 0 ? ` We do hold ${vendorChanges.length === 1 ? "1 other recorded change" : `${vendorChanges.length} other recorded changes`} — see the pricing history below.` : ""}`
     : riskLevel === "caution"
-    ? `${vendorName}'s free tier requires caution. There ${vendorChanges.length === 1 ? "has been 1 recorded pricing change" : `have been ${vendorChanges.length} recorded pricing changes`}. ${vendorChanges[0] ? `Most recently: ${vendorChanges[0].summary}` : ""}`
-    : `${vendorName}'s free tier is considered risky. There ${vendorChanges.length === 1 ? "has been 1 significant pricing change" : `have been ${vendorChanges.length} significant pricing changes`}. ${vendorChanges[0] ? `Most recently: ${vendorChanges[0].summary}` : ""} Consider alternatives.`;
+    ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."}`
+    : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
 
   // NEW: Additional FAQ items
@@ -4087,6 +4162,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear} <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></h1>
+${riskCauseLine}
   <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives. Verified ${verifiedMonth}. Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}
 ${categoryContextHtml}
@@ -4122,7 +4198,7 @@ ${compareTableHtml}
 ${growthPathHtml}
 
   <div class="section">
-    <h2>Pricing Change History (${vendorChanges.length} recorded)</h2>
+    <h2 id="changes">Pricing Change History (${vendorChanges.length} recorded)</h2>
     ${changesHtml}
     <p style="margin-top:.75rem;font-size:.8rem"><a href="/pricing-changes">View all ${dealChanges.length} pricing changes across all vendors &rarr;</a></p>
   </div>
@@ -4166,7 +4242,9 @@ function buildAlternativesPage(slug: string): string | null {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
-  const riskLevel = enriched.risk_level ?? "stable";
+  const riskCause = enriched.risk_cause;
+  // #1038: no publishable cause, no warning.
+  const riskLevel = enriched.risk_level && (enriched.risk_level === "stable" || riskCause) ? enriched.risk_level : "stable";
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
 
   // Get all categories this vendor belongs to
@@ -4216,6 +4294,9 @@ function buildAlternativesPage(slug: string): string | null {
   const situationHtml = (() => {
     const parts: string[] = [];
     parts.push(`<div class="risk-row"><span class="risk-label">Risk Level:</span> <span class="risk-badge-inline" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></div>`);
+    if (riskLevel !== "stable" && riskCause) {
+      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(riskCause.date)}</span> &mdash; ${escHtmlServer(riskCause.summary)}</div>`);
+    }
     parts.push(`<div class="risk-row"><span class="risk-label">Category:</span> ${vendorCategories.map(c => `<a href="/category/${toSlug(c)}" class="cat-pill">${escHtmlServer(c)}</a>`).join(" ")}</div>`);
     parts.push(`<div class="risk-row"><span class="risk-label">Pricing Page:</span> <a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">${escHtmlServer(primary.url.replace(/^https?:\/\//, "").slice(0, 50))}${primary.url.replace(/^https?:\/\//, "").length > 50 ? "..." : ""}</a></div>`);
     if (vendorChanges.length > 0) {
@@ -4242,15 +4323,13 @@ function buildAlternativesPage(slug: string): string | null {
   // Build alternative cards
   const vName = vendorName; // narrowed for closure
   function altCard(a: typeof enrichedAlts[0], curated: boolean): string {
-    const aRisk = a.risk_level ?? "stable";
-    const aRiskColor = riskColors[aRisk] ?? "#8b949e";
     const aSlug = toSlug(a.vendor);
     const compSlug = comparisonSlug(vName < a.vendor ? vName : a.vendor, vName < a.vendor ? a.vendor : vName);
     const hasComparison = comparisonMap.has(compSlug);
     return `<div class="alt-row${curated ? " curated" : ""}">
         <div class="alt-info">
           <a href="/vendor/${aSlug}" class="alt-vendor-name">${escHtmlServer(a.vendor)}</a>
-          <span class="risk-badge-sm" style="background:${aRiskColor}20;color:${aRiskColor};border:1px solid ${aRiskColor}40">${aRisk}</span>
+          ${riskBadgeHtml(a.risk_level, a.risk_cause, { compact: true, margin: false })}
           ${curated ? '<span class="curated-badge">recommended</span>' : ""}
         </div>
         <div class="alt-tier">${escHtmlServer(a.tier)}</div>
@@ -4318,13 +4397,16 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
   // FAQ data for alternative-to pages
   const topStableAlts = enrichedAlts.filter(a => (a.risk_level ?? "stable") === "stable").slice(0, 5);
   const faqBestAltsAnswer = topStableAlts.length > 0
-    ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}. All have stable pricing with no recent changes.`
+    ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}. We hold no free tier removal, limit reduction or pricing restructure on record for any of them.`
     : `There are ${enrichedAlts.length} free alternatives to ${vendorName} available. ${enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ")} are among the options.`;
+  // #1038: "flagged due to N recorded pricing changes" then quoting
+  // vendorChanges[0] could hand the reader a limits_increased record as the
+  // reason for a warning. The flag has exactly one cause and this names it.
   const faqFreeTierAnswer = riskLevel === "stable"
-    ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : `However, there ${vendorChanges.length === 1 ? "has been 1 pricing change" : `have been ${vendorChanges.length} pricing changes`} on record.`}`
+    ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : `We hold ${vendorChanges.length === 1 ? "1 recorded change" : `${vendorChanges.length} recorded changes`} for this vendor, none of them a free tier removal, limit reduction or pricing restructure.`}`
     : riskLevel === "caution"
-    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" due to ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. ${vendorChanges[0] ? vendorChanges[0].summary : ""}`
-    : `${vendorName}'s free tier (${primary.tier}) is considered risky. ${vendorChanges[0] ? vendorChanges[0].summary : ""} Consider migrating to a more stable alternative.`;
+    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."}`
+    : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."} Consider migrating to a more stable alternative.`;
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${vendorCategories.join(", ")} categor${vendorCategories.length > 1 ? "ies" : "y"}.`;
   const faqChangesAnswer = vendorChanges.length > 0
     ? `Yes, ${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was on ${vendorChanges[0].date}: ${vendorChanges[0].summary}`
@@ -4480,33 +4562,26 @@ function buildAlternativesIndexPage(): string {
 
   // Identify vendors with strongest "look elsewhere" signals
   // Priority: vendors with deal changes indicating negative trends, or risky ratings
-  const vendorSignals = new Map<string, { changes: number; negative: number; riskLevel: string; categories: string[] }>();
+  // #1038: this list used to score `+1 per other change`, so a vendor that
+  // expanded its free tier earned a place on a page headed "Free Alternatives
+  // to Popular Tools" — we recommended leaving a vendor for improving. A
+  // vendor appears here only if it carries a risk level we can name a cause
+  // for, and the row publishes that cause instead of a change count.
+  const vendorSignals = new Map<string, { riskLevel: string; riskCause: RiskCause | null; categories: string[] }>();
 
   for (const o of offers) {
     if (!vendorSignals.has(o.vendor)) {
       const enriched = enrichOffers([o])[0];
-      vendorSignals.set(o.vendor, { changes: 0, negative: 0, riskLevel: enriched.risk_level ?? "stable", categories: [] });
+      vendorSignals.set(o.vendor, { riskLevel: enriched.risk_level ?? "stable", riskCause: enriched.risk_cause, categories: [] });
     }
     const sig = vendorSignals.get(o.vendor)!;
     if (!sig.categories.includes(o.category)) sig.categories.push(o.category);
   }
 
-  for (const c of allChanges) {
-    const sig = vendorSignals.get(c.vendor);
-    if (sig) {
-      sig.changes++;
-      if (["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"].includes(c.change_type)) {
-        sig.negative++;
-      }
-    }
-  }
-
-  // Score: risky=3, caution=2, stable=0, +2 per negative change, +1 per other change
-  const scored = Array.from(vendorSignals.entries()).map(([vendor, sig]) => {
-    const riskScore = sig.riskLevel === "risky" ? 3 : sig.riskLevel === "caution" ? 2 : 0;
-    const score = riskScore + sig.negative * 2 + (sig.changes - sig.negative);
-    return { vendor, score, ...sig };
-  }).filter(v => v.score > 0).sort((a, b) => b.score - a.score);
+  const scored = Array.from(vendorSignals.entries())
+    .map(([vendor, sig]) => ({ vendor, score: sig.riskLevel === "risky" ? 2 : sig.riskLevel === "caution" ? 1 : 0, ...sig }))
+    .filter(v => v.score > 0 && v.riskCause !== null)
+    .sort((a, b) => b.score - a.score || (b.riskCause!.date).localeCompare(a.riskCause!.date) || a.vendor.localeCompare(b.vendor));
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
@@ -4514,11 +4589,9 @@ function buildAlternativesIndexPage(): string {
   const metaDesc = `Browse free alternatives to ${scored.length} developer tools. Find stable replacements when vendors raise prices, remove free tiers, or reduce limits.`;
 
   const vendorListHtml = scored.map(v => {
-    const rc = riskColors[v.riskLevel] ?? "#8b949e";
     return `<a href="/alternative-to/${toSlug(v.vendor)}" class="idx-row">
         <span class="idx-vendor">${escHtmlServer(v.vendor)}</span>
-        <span class="risk-badge-sm" style="background:${rc}20;color:${rc};border:1px solid ${rc}40">${v.riskLevel}</span>
-        <span class="idx-changes">${v.changes} change${v.changes !== 1 ? "s" : ""}</span>
+        ${riskBadgeHtml(v.riskLevel, v.riskCause, { compact: true, margin: false })}
         <span class="idx-cats">${v.categories.slice(0, 2).map(c => escHtmlServer(c)).join(", ")}${v.categories.length > 2 ? "..." : ""}</span>
       </a>`;
   }).join("\n");
@@ -6643,7 +6716,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
 
   // Build alternative cards
   const altCards = enriched.map((o) => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `      <div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -6665,7 +6738,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
   <h2>Other ${escHtmlServer(primaryOffer?.category ?? "")} Tools</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">More free tools in the same category that may fit your needs.</p>
   ${enrichedCategory.map((o) => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `      <div class="alt-card" style="border-color:var(--border)">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -6687,7 +6760,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
           <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
           <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(o.description.slice(0, 120))}${o.description.length > 120 ? "..." : ""}</td>
-          <td><span style="color:${riskColors[o.risk_level ?? "stable"]}">${o.risk_level ?? "stable"}</span></td>
+          <td>${riskCellHtml(o.risk_level, o.risk_cause)}</td>
         </tr>`).join("\n");
 
   // JSON-LD
@@ -7775,13 +7848,12 @@ function buildEventPage(slug: string): string | null {
     const rows = catOffers.map(o => {
       const vendorSlug = toSlug(o.vendor);
       const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
-      const riskLevel = o.risk_level ?? "stable";
-      const riskColor = riskColors[riskLevel] ?? "#8b949e";
+
       return '<tr>'
         + '<td><a href="/vendor/' + vendorSlug + '">' + escHtmlServer(o.vendor) + '</a></td>'
         + '<td>' + escHtmlServer(o.tier) + '</td>'
         + '<td>' + escHtmlServer(o.description.slice(0, 100)) + (o.description.length > 100 ? "..." : "") + '</td>'
-        + '<td><span class="risk-badge-sm" style="color:' + riskColor + '">' + riskLevel + '</span></td>'
+        + '<td>' + riskCellHtml(o.risk_level, o.risk_cause) + '</td>'
         + '<td>' + o.verifiedDate + '</td>'
         + '</tr>';
     }).join("\n");
@@ -7971,7 +8043,7 @@ function buildReportsIndexPage(): string {
   const monthCards = months.map(m => {
     const [y, mo] = m.split("-");
     const monthChanges = allChanges.filter(c => c.date.startsWith(m));
-    const negative = monthChanges.filter(c => ["free_tier_removed","limits_reduced","restriction","product_deprecated","open_source_killed","pricing_model_change"].includes(c.change_type)).length;
+    const negative = monthChanges.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
     const positive = monthChanges.filter(c => ["new_free_tier","limits_increased","startup_program_expanded","new_tier"].includes(c.change_type)).length;
     const neutral = monthChanges.length - negative - positive;
     const sentiment = negative > positive ? "bearish" : positive > negative ? "bullish" : "mixed";
@@ -8404,7 +8476,7 @@ function buildAiFreeTiersPage(): string {
 
   // Build alternative cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -8670,7 +8742,7 @@ function buildHostingAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -9015,7 +9087,7 @@ function buildDatabaseAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -9361,7 +9433,7 @@ function buildMonitoringAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -9694,7 +9766,7 @@ function buildCiCdAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -10023,7 +10095,7 @@ function buildSecurityAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -10365,7 +10437,7 @@ function buildTestingAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -10691,7 +10763,7 @@ function buildStorageAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -11008,7 +11080,7 @@ function buildAnalyticsAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -11329,7 +11401,7 @@ function buildAiMlAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -11656,7 +11728,7 @@ function buildEmailAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -11994,7 +12066,7 @@ function buildDesignAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -12336,7 +12408,7 @@ function buildProjectManagementAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -12669,7 +12741,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -12983,7 +13055,7 @@ function buildFreeLlmApisPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -13310,7 +13382,7 @@ function buildApiDevelopmentAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -13633,7 +13705,7 @@ function buildTeamCollaborationAlternativesPage(): string {
 
   // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
-    const riskBadge = o.risk_level ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[o.risk_level]}22;color:${riskColors[o.risk_level]};font-weight:600;margin-left:.5rem">${o.risk_level}</span>` : "";
+    const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
@@ -14050,7 +14122,7 @@ function buildFreeStartupStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -14105,7 +14177,7 @@ function buildFreeStartupStackPage(): string {
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
         <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
@@ -14367,7 +14439,7 @@ function buildFreeAiStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -14420,7 +14492,7 @@ function buildFreeAiStackPage(): string {
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
         <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
@@ -14720,7 +14792,7 @@ function buildFreeDevopsStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -14773,7 +14845,7 @@ function buildFreeDevopsStackPage(): string {
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
         <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
@@ -15074,7 +15146,7 @@ function buildFreeFrontendStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -15127,7 +15199,7 @@ function buildFreeFrontendStackPage(): string {
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
         <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
@@ -15464,7 +15536,7 @@ function buildFreeNextjsStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -15523,7 +15595,7 @@ function buildFreeNextjsStackPage(): string {
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
         <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
@@ -15884,7 +15956,7 @@ function buildFreeDjangoStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -15962,7 +16034,7 @@ function buildFreeDjangoStackPage(): string {
     const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : vendorName === "Django Built-in Auth" ? "Unlimited — included in Django" : "—";
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -16343,7 +16415,7 @@ function buildFreeFastapiStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -16421,7 +16493,7 @@ function buildFreeFastapiStackPage(): string {
     const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : vendorName === "FastAPI Built-in" ? "Unlimited — built into FastAPI" : "—";
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -16819,7 +16891,7 @@ function buildFreeGoStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -16897,7 +16969,7 @@ function buildFreeGoStackPage(): string {
     const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : (vendorName === "Go Goroutines" ? "Unlimited — built into Go runtime" : vendorName === "swaggo/swag" ? "Open source — generates from comments" : "—");
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -17329,7 +17401,7 @@ function buildFreeSaasStackPage(): string {
           <span class="pick-badge">Recommended</span>
           <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
           <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${rec.risk_level ? `<span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors[rec.risk_level]}22;color:${riskColors[rec.risk_level]};font-weight:600">${rec.risk_level}</span>` : ""}
+          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
         <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
@@ -17407,7 +17479,7 @@ function buildFreeSaasStackPage(): string {
     const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : (vendorName === "Stripe" ? "No monthly fee \u2014 2.9% + 30\u00a2/txn" : "\u2014");
-    const riskBadge = rec?.risk_level ? `<span style="color:${riskColors[rec.risk_level]}">${rec.risk_level}</span>` : `<span style="color:${riskColors.stable}">stable</span>`;
+    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -26211,7 +26283,7 @@ function buildFreeTierTrackerPage(): string {
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
 
   // Separate negative and positive
-  const removedOrReduced = q1Changes.filter(c => ["free_tier_removed", "open_source_killed"].includes(c.change_type));
+  const removedOrReduced = q1Changes.filter(c => SEVERE_CHANGE_TYPES.has(c.change_type));
   const limitsReduced = q1Changes.filter(c => ["limits_reduced", "restriction"].includes(c.change_type));
   const restructured = q1Changes.filter(c => ["pricing_restructured", "pricing_model_change", "product_deprecated"].includes(c.change_type));
   const expanded = q1Changes.filter(c => positiveTypes.includes(c.change_type));
@@ -47042,25 +47114,28 @@ function buildStackCheckPage(): string {
   const totalChanges = allChanges.length;
 
   // Build vendor lookup for client-side enrichment
-  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; stability: string; recent_changes: Array<{ date: string; change_type: string; summary: string; impact: string }> }> = {};
+  // #1038: this page carried its own third definition of risk — an inline
+  // type test over only the 3 most recent records, with no date window. It now
+  // reads the one definition, and ships the cause so the client can render it.
+  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; risk_cause: RiskCause | null; stability: string; recent_changes: Array<{ date: string; change_type: string; summary: string; impact: string }> }> = {};
   for (const offer of allOffers) {
     const slug = toSlug(offer.vendor);
-    const vendorChanges = allChanges
+    const allVendorChanges = allChanges
       .filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
-      .sort((a, b) => b.date.localeCompare(a.date))
-      .slice(0, 3);
+      .sort((a, b) => b.date.localeCompare(a.date));
+    const vendorChanges = allVendorChanges.slice(0, 3);
     const stability = stabilityMap.get(slug) || "stable";
-    const riskLevel = vendorChanges.length === 0 ? "stable"
-      : vendorChanges.some(c => ["free_tier_removed", "product_deprecated", "open_source_killed"].includes(c.change_type)) ? "risky"
-      : vendorChanges.some(c => ["limits_reduced", "restriction", "pricing_restructured", "pricing_model_change"].includes(c.change_type)) ? "caution"
-      : "stable";
+    const assessment = vendorRiskAssessment(allVendorChanges);
     vendorLookup[slug] = {
       vendor: offer.vendor,
       category: offer.category,
       description: offer.description,
       tier: offer.tier,
       slug,
-      risk_level: riskLevel,
+      risk_level: assessment.level,
+      risk_cause: assessment.cause
+        ? { date: assessment.cause.date, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
+        : null,
       stability,
       recent_changes: vendorChanges.map(c => ({ date: c.date, change_type: c.change_type, summary: c.summary, impact: c.impact })),
     };
@@ -47415,9 +47490,13 @@ function buildStackCheckPage(): string {
           continue;
         }
         var rl = svc.risk_level || 'stable';
+        var rc = svc.risk_cause || null;
+        // #1038: a warning renders only with its dated cause.
+        if (rl !== 'stable' && !rc) rl = 'stable';
         var slug = toSlug(svc.vendor);
         cardsHtml += '<div class="service-card"><div class="card-header"><span class="card-vendor"><a href="/vendor/' + esc(slug) + '">' + esc(svc.vendor) + '</a></span>';
         cardsHtml += '<div style="display:flex;gap:.5rem;align-items:center"><span class="card-category">' + esc(svc.category) + '</span><span class="risk-badge ' + esc(rl) + '">' + esc(rl) + '</span></div></div>';
+        if (rl !== 'stable' && rc) cardsHtml += '<p class="card-risk-cause"><strong>Why ' + esc(rl) + ':</strong> ' + esc(rc.date) + ' &mdash; ' + esc(rc.summary) + '</p>';
         cardsHtml += '<p class="card-tier">' + esc(svc.tier) + '</p>';
 
         if (svc.recent_changes && svc.recent_changes.length > 0) {
@@ -47760,9 +47839,13 @@ ${globalNavCss()}
       });
   }
 
-  function riskBadge(level) {
+  function riskBadge(level, cause) {
+    // #1038: caution/risky render only with the dated record behind them.
+    if (level !== 'stable' && !cause) return '';
     var cls = level === 'stable' ? 'badge-stable' : level === 'caution' ? 'badge-caution' : 'badge-risky';
-    return '<span class="badge ' + cls + '">' + level + '</span>';
+    var badge = '<span class="badge ' + cls + '">' + level + '</span>';
+    if (level === 'stable') return badge;
+    return badge + ' <span class="risk-cause">' + escHtml(cause.date) + ' &mdash; ' + escHtml(cause.summary) + '</span>';
   }
 
   function changeTypeBadge(type) {
@@ -47773,10 +47856,11 @@ ${globalNavCss()}
   function renderVendorCard(v) {
     var slug = toSlug(v.vendor);
     var risk = v.risk_level || 'stable';
+    var riskCause = v.risk_cause || null;
     var changes = v.deal_changes || v.recent_changes || [];
     var html = '<div class="vendor-card">';
     html += '<h3><a href="/vendor/' + slug + '">' + escHtml(v.vendor) + '</a></h3>';
-    html += '<span class="badge badge-category">' + escHtml(v.category) + '</span> ' + riskBadge(risk);
+    html += '<span class="badge badge-category">' + escHtml(v.category) + '</span> ' + riskBadge(risk, riskCause);
     html += '<div class="vendor-desc">' + escHtml(v.description) + '</div>';
     html += '<div class="vendor-meta">Tier: ' + escHtml(v.tier) + ' &middot; Verified: ' + escHtml(v.verifiedDate || v.verified_date || '') + '</div>';
     html += '<div class="vendor-links">';
@@ -47832,13 +47916,14 @@ ${globalNavCss()}
       description: data.description,
       tier: data.tier,
       risk_level: data.risk_level,
+      risk_cause: data.risk_cause,
       verifiedDate: data.verified_date,
       deal_changes: data.recent_changes || []
     });
     if (data.safer_alternatives && data.safer_alternatives.length > 0) {
       html += '<div style="margin-top:1rem;font-size:.85rem;color:var(--text-muted)"><strong>Alternatives:</strong> ';
       html += data.safer_alternatives.map(function(alt) {
-        return '<a href="/vendor/' + toSlug(alt.vendor) + '">' + escHtml(alt.vendor) + '</a> (' + alt.risk_level + ')';
+        return '<a href="/vendor/' + toSlug(alt.vendor) + '">' + escHtml(alt.vendor) + '</a>' + (alt.risk_level === 'stable' || alt.risk_cause ? ' (' + escHtml(alt.risk_level) + ')' : '');
       }).join(', ');
       html += '</div>';
     }
@@ -48192,15 +48277,18 @@ function buildBudgetBuilderPage(): string {
   const totalChanges = allChanges.length;
 
   // Build per-category vendor data with risk levels for client-side recommendation engine
-  const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string; recent_changes: number }>> = {};
+  // #1038: a fourth definition of risk lived here — its own inline type test,
+  // no date window, on a high/medium/low scale of its own — and unlike the
+  // others it *ranks*: `riskPenalty` below moves a vendor down the client-side
+  // recommender. It reads the one definition now, and the card publishes the
+  // dated cause, so nothing here demotes a vendor for a reason we won't show.
+  const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string; risk_cause: RiskCause | null }>> = {};
   for (const cat of estimatorData) {
     categoryVendors[cat.id] = cat.vendors.map(v => {
       const vendorChanges = allChanges.filter(c => toSlug(c.vendor) === v.slug || c.vendor.toLowerCase() === v.name.toLowerCase());
-      const stability = stabilityMap.get(v.slug) || "stable";
-      const riskLevel = vendorChanges.some(c => ["free_tier_removed", "product_deprecated", "open_source_killed"].includes(c.change_type)) ? "high"
-        : vendorChanges.some(c => ["limits_reduced", "restriction", "pricing_restructured", "pricing_model_change"].includes(c.change_type)) ? "medium"
-        : "low";
-      return { slug: v.slug, name: v.name, free: v.free, starter: v.starter, growth: v.growth, scale: v.scale, notes: v.notes, risk_level: riskLevel, recent_changes: vendorChanges.length };
+      const assessment = vendorRiskAssessment(vendorChanges);
+      return { slug: v.slug, name: v.name, free: v.free, starter: v.starter, growth: v.growth, scale: v.scale, notes: v.notes, risk_level: assessment.level,
+        risk_cause: assessment.cause ? { date: assessment.cause.date, change_type: assessment.cause.change_type, summary: assessment.cause.summary } : null };
     });
   }
 
@@ -48487,7 +48575,7 @@ function buildBudgetBuilderPage(): string {
     + '      // For $0 budget, only consider free tiers\n'
     + '      cost = 0;\n'
     + '    }\n'
-    + '    var riskPenalty = v.risk_level === "high" ? 100 : v.risk_level === "medium" ? 30 : 0;\n'
+    + '    var riskPenalty = v.risk_cause ? (v.risk_level === "risky" ? 100 : v.risk_level === "caution" ? 30 : 0) : 0;\n'
     + '    var score = cost + riskPenalty - (v.free !== "" && cost === 0 ? 50 : 0); // bonus for free tier\n'
     + '    return { vendor: v, cost: cost, score: score };\n'
     + '  });\n'
@@ -48500,7 +48588,7 @@ function buildBudgetBuilderPage(): string {
     + '  var results = document.getElementById("results");\n'
     + '  results.style.display = "block";\n'
     + '  var totalCost = 0;\n'
-    + '  var riskCounts = { low: 0, medium: 0, high: 0 };\n'
+    + '  var riskCounts = { stable: 0, caution: 0, risky: 0 };\n'
     + '  var stackHtml = "";\n'
     + '  var catKeys = Array.from(selectedCategories);\n'
     + '  var paidEquivalent = 0; // Estimate what these services would cost at paid tier\n'
@@ -48510,7 +48598,7 @@ function buildBudgetBuilderPage(): string {
     + '    if (!rec) return;\n'
     + '    var cost = selectedBudget === 0 ? 0 : rec.starter;\n'
     + '    totalCost += cost;\n'
-    + '    riskCounts[rec.risk_level]++;\n'
+    + '    if (riskCounts[rec.risk_level] !== undefined) riskCounts[rec.risk_level]++;\n'
     + '    paidEquivalent += rec.growth > 0 ? rec.growth : rec.starter > 0 ? rec.starter : 25; // estimate paid value\n'
     + '\n'
     + '    // Get alternatives (next 2 vendors)\n'
@@ -48522,7 +48610,8 @@ function buildBudgetBuilderPage(): string {
     + '    stackHtml += \'<span class="stack-card-category">\' + (CATEGORY_LABELS[catId] || catId) + \'</span>\';\n'
     + '    stackHtml += \'<span class="stack-card-cost">\' + (cost === 0 ? "FREE" : "$" + cost + "/mo") + \'</span>\';\n'
     + '    stackHtml += \'</div>\';\n'
-    + '    stackHtml += \'<div class="stack-card-vendor"><a href="/vendor/\' + rec.slug + \'">\' + rec.name + \'</a> <span class="risk-badge \' + rec.risk_level + \'">\' + rec.risk_level + \' risk</span></div>\';\n'
+    + '    stackHtml += \'<div class="stack-card-vendor"><a href="/vendor/\' + rec.slug + \'">\' + rec.name + \'</a>\' + (rec.risk_cause ? \' <span class="risk-badge \' + rec.risk_level + \'">\' + rec.risk_level + \'</span>\' : "") + \'</div>\';\n'
+    + '    if (rec.risk_cause) stackHtml += \'<div class="stack-card-risk-cause">Why \' + rec.risk_level + \': \' + rec.risk_cause.date + \' — \' + rec.risk_cause.summary + \'</div>\';\n'
     + '    stackHtml += \'<div class="stack-card-free">\' + rec.free + \'</div>\';\n'
     + '    if (rec.notes) stackHtml += \'<div style="color:var(--text-dim);font-size:.8rem">\' + rec.notes + \'</div>\';\n'
     + '\n'
@@ -48532,7 +48621,7 @@ function buildBudgetBuilderPage(): string {
     + '      alts.forEach(function(alt) {\n'
     + '        var altCost = selectedBudget === 0 ? 0 : alt.starter;\n'
     + '        stackHtml += \'<div class="alt-row"><a href="/vendor/\' + alt.slug + \'">\' + alt.name + \'</a>\';\n'
-    + '        stackHtml += \'<span>\' + (altCost === 0 ? "FREE" : "$" + altCost + "/mo") + \' · <span class="risk-badge \' + alt.risk_level + \'">\' + alt.risk_level + \'</span></span></div>\';\n'
+    + '        stackHtml += \'<span>\' + (altCost === 0 ? "FREE" : "$" + altCost + "/mo") + (alt.risk_cause ? \' · <span class="risk-badge \' + alt.risk_level + \'" title="\' + alt.risk_cause.date + \': \' + alt.risk_cause.summary + \'">\' + alt.risk_level + \'</span>\' : "") + \'</span></div>\';\n'
     + '      });\n'
     + '      stackHtml += \'</div>\';\n'
     + '    }\n'
@@ -48576,15 +48665,15 @@ function buildBudgetBuilderPage(): string {
     + '  }\n'
     + '\n'
     + '  // Risk summary\n'
-    + '  var total = riskCounts.low + riskCounts.medium + riskCounts.high;\n'
+    + '  var total = riskCounts.stable + riskCounts.caution + riskCounts.risky;\n'
     + '  var riskHtml = \'<h3>Stack Risk Assessment</h3>\';\n'
     + '  riskHtml += \'<div class="risk-meter">\';\n'
-    + '  for (var i = 0; i < riskCounts.low; i++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--green)"></div>\';\n'
-    + '  for (var j = 0; j < riskCounts.medium; j++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--yellow)"></div>\';\n'
-    + '  for (var k = 0; k < riskCounts.high; k++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--red)"></div>\';\n'
+    + '  for (var i = 0; i < riskCounts.stable; i++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--green)"></div>\';\n'
+    + '  for (var j = 0; j < riskCounts.caution; j++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--yellow)"></div>\';\n'
+    + '  for (var k = 0; k < riskCounts.risky; k++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--red)"></div>\';\n'
     + '  riskHtml += \'</div>\';\n'
-    + '  riskHtml += \'<p style="color:var(--text-muted);font-size:.85rem;margin-top:.5rem">\' + riskCounts.low + \' low risk, \' + riskCounts.medium + \' medium risk, \' + riskCounts.high + \' high risk</p>\';\n'
-    + '  if (riskCounts.high > 0) riskHtml += \'<p style="color:var(--red);font-size:.85rem;margin-top:.25rem">&#x26a0; \' + riskCounts.high + \' service(s) have recently restricted or removed their free tier. Consider alternatives.</p>\';\n'
+    + '  riskHtml += \'<p style="color:var(--text-muted);font-size:.85rem;margin-top:.5rem">\' + riskCounts.stable + \' stable, \' + riskCounts.caution + \' caution, \' + riskCounts.risky + \' risky</p>\';\n'
+    + '  if (riskCounts.risky > 0) riskHtml += \'<p style="color:var(--red);font-size:.85rem;margin-top:.25rem">&#x26a0; \' + riskCounts.risky + \' service(s) have removed a free tier or changed an open-source licence in the last 12 months. Consider alternatives.</p>\';\n'
     + '  document.getElementById("risk-summary").innerHTML = riskHtml;\n'
     + '\n'
     + '  // Shareable URL\n'
@@ -52083,12 +52172,11 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
 
   // Results HTML
   const resultsHtml = results.map((r, idx) => {
-    const risk = r.risk_level ?? "stable";
-    const rc = riskColors[risk] ?? "#8b949e";
+
     let card = '<a href="/vendor/' + toSlug(r.vendor) + '" class="result-card">'
       + '<div class="result-header">'
       + '<span class="result-vendor">' + escHtmlServer(r.vendor) + '</span>'
-      + '<span class="risk-badge-sm" style="background:' + rc + '20;color:' + rc + ';border:1px solid ' + rc + '40">' + risk + '</span>'
+      + riskBadgeHtml(r.risk_level, r.risk_cause, { compact: true, margin: false })
       + '<span class="result-cat">' + escHtmlServer(r.category) + '</span>'
       + '</div>'
       + '<div class="result-tier">' + escHtmlServer(r.tier) + '</div>'
@@ -52410,7 +52498,7 @@ function buildTrendsPage(slug: string): string | null {
   }
 
   // At-risk vendors (risky or caution)
-  const atRisk = enriched.filter(o => o.risk_level === "risky" || o.risk_level === "caution")
+  const atRisk = enriched.filter(o => (o.risk_level === "risky" || o.risk_level === "caution") && o.risk_cause)
     .sort((a, b) => (a.risk_level === "risky" ? 0 : 1) - (b.risk_level === "risky" ? 0 : 1));
 
   // Stable picks (stable risk, no recent changes)
@@ -52451,11 +52539,9 @@ function buildTrendsPage(slug: string): string | null {
     <h2>At-Risk Vendors</h2>
     <div class="vendor-list">
 ${atRisk.map(o => {
-    const rc = riskColors[o.risk_level ?? ""] ?? "#8b949e";
     return `      <a href="/vendor/${toSlug(o.vendor)}" class="vendor-item">
         <span class="vi-name">${escHtmlServer(o.vendor)}</span>
-        <span class="vi-risk" style="color:${rc}">${o.risk_level}</span>
-        ${o.recent_change ? `<span class="vi-change">${escHtmlServer(o.recent_change)}</span>` : ""}
+        <span class="vi-risk">${riskBadgeHtml(o.risk_level, o.risk_cause, { compact: true, margin: false })}</span>
       </a>`;
   }).join("\n")}
     </div>
@@ -52895,7 +52981,7 @@ ${globalNavCss()}
 
   <div style="text-align:center;margin:-1.5rem auto 2.5rem;max-width:640px">
     <a href="/state-of-free-tiers" style="display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text-muted);font-size:.85rem;text-decoration:none;transition:all .2s">
-      <span style="color:#f85149;font-weight:600">${dealChanges.filter(c => ["free_tier_removed","limits_reduced","restriction","open_source_killed","product_deprecated"].includes(c.change_type)).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${dealChanges.filter(c => ["new_free_tier","limits_increased","startup_program_expanded"].includes(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
+      <span style="color:#f85149;font-weight:600">${dealChanges.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${dealChanges.filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
     </a>
   </div>
 

@@ -373,6 +373,7 @@ export const openapiSpec = {
                     vendor: { type: "string" },
                     category: { type: "string" },
                     risk_level: { type: "string", enum: ["stable", "caution", "risky"] },
+                    risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } },
                     free_tier_longevity_days: { type: "number" },
                     changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
                     alternatives: {
@@ -383,7 +384,8 @@ export const openapiSpec = {
                           vendor: { type: "string" },
                           category: { type: "string" },
                           tier: { type: "string" },
-                          risk_level: { type: "string", enum: ["stable", "caution", "risky"] }
+                          risk_level: { type: "string", enum: ["stable", "caution", "risky"] },
+                          risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } }
                         }
                       }
                     },
