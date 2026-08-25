@@ -52,50 +52,70 @@ describe("enrichOffers", () => {
     assert.strictEqual(enriched[0].recent_change, null);
   });
 
-  it("returns caution for vendor with exactly 1 deal change", async () => {
+  // #1038: these two tests used to assert the count-based rule directly — "1
+  // change = caution, 2+ = risky". That rule is the defect: it counted records
+  // we happened to have written, so `limits_increased` demoted a vendor and a
+  // vendor we had never examined rendered stable. What replaces them asserts
+  // the property the rule is supposed to have.
+  it("counts nothing — the number of records a vendor has cannot move its risk level", async () => {
     const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
     const changes = loadDealChanges();
     const offers = loadOffers();
 
-    // Count changes per vendor
     const counts = new Map<string, number>();
     for (const c of changes) {
       const key = c.vendor.toLowerCase();
       counts.set(key, (counts.get(key) ?? 0) + 1);
     }
 
-    // Find vendor with exactly 1 change
-    const singleChangeVendor = [...counts.entries()].find(([, count]) => count === 1);
-    if (!singleChangeVendor) return; // Skip if no such vendor
+    // A vendor with several records, none of them demoting, must stay stable.
+    const FAVOURABLE = new Set(["limits_increased", "new_free_tier", "new_tier", "startup_program_expanded", "pricing_postponed", "rebranded"]);
+    const byVendor = new Map<string, { change_type: string }[]>();
+    for (const c of changes) {
+      const key = c.vendor.toLowerCase();
+      if (!byVendor.has(key)) byVendor.set(key, []);
+      byVendor.get(key)!.push(c);
+    }
 
-    const offer = offers.find((o: { vendor: string }) => o.vendor.toLowerCase() === singleChangeVendor[0]);
-    if (!offer) return;
-
-    const enriched = enrichOffers([offer]);
-    assert.strictEqual(enriched[0].risk_level, "caution");
+    let checked = 0;
+    for (const [vendor, vendorChanges] of byVendor) {
+      if (!vendorChanges.every((c) => FAVOURABLE.has(c.change_type))) continue;
+      const offer = offers.find((o: { vendor: string }) => o.vendor.toLowerCase() === vendor);
+      if (!offer) continue;
+      const enriched = enrichOffers([offer])[0];
+      assert.strictEqual(
+        enriched.risk_level,
+        "stable",
+        `${offer.vendor} has ${vendorChanges.length} record(s), all favourable or neutral (${vendorChanges.map((c) => c.change_type).join(", ")}), and must not be warned`,
+      );
+      assert.strictEqual(enriched.risk_cause, null);
+      checked++;
+    }
+    assert.ok(checked > 0, "expected at least one vendor whose whole history is favourable");
   });
 
-  it("returns risky for vendor with 2+ deal changes", async () => {
-    const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
-    const changes = loadDealChanges();
-    const offers = loadOffers();
+  it("a vendor whose only record is limits_increased renders stable", async () => {
+    const { enrichOffers } = await import("../dist/data.js");
+    const offer = {
+      vendor: "Testing Vendor 1038", category: "Databases", tier: "Free", description: "d",
+      url: "https://example.com", verifiedDate: "2026-08-01", tags: [],
+    };
+    // enrichOffers reads the live change file, so assert through the function
+    // that decides, with the record the issue is named for.
+    const { vendorRiskAssessment } = await import("../dist/data.js");
+    const assessment = vendorRiskAssessment([
+      { vendor: "Testing Vendor 1038", change_type: "limits_increased", date: "2026-08-01", summary: "Free tier expanded", previous_state: "", current_state: "", impact: "high", source_url: "", category: "Databases", alternatives: [] },
+    ]);
+    assert.strictEqual(assessment.level, "stable");
+    assert.strictEqual(assessment.cause, null);
+    assert.strictEqual(enrichOffers([offer])[0].risk_level, "stable");
+  });
 
-    // Count changes per vendor
-    const counts = new Map<string, number>();
-    for (const c of changes) {
-      const key = c.vendor.toLowerCase();
-      counts.set(key, (counts.get(key) ?? 0) + 1);
-    }
-
-    // Find vendor with 2+ changes
-    const multiChangeVendor = [...counts.entries()].find(([, count]) => count >= 2);
-    if (!multiChangeVendor) return; // Skip if no such vendor
-
-    const offer = offers.find((o: { vendor: string }) => o.vendor.toLowerCase() === multiChangeVendor[0]);
-    if (!offer) return;
-
-    const enriched = enrichOffers([offer]);
-    assert.strictEqual(enriched[0].risk_level, "risky");
+  it("never publishes a risk level it cannot name a cause for", async () => {
+    const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const enriched = enrichOffers(loadOffers());
+    const uncaused = enriched.filter((o: { risk_level: string | null; risk_cause: unknown }) => o.risk_level !== "stable" && !o.risk_cause);
+    assert.strictEqual(uncaused.length, 0, `${uncaused.length} offers carry a warning with no cause`);
   });
 
   it("preserves original offer fields in enriched result", async () => {

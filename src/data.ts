@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass, Referral } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass, Referral, RiskCause } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
 
@@ -226,27 +226,54 @@ export function searchOffers(
   return results;
 }
 
-const NEGATIVE_STABILITY_TYPES = new Set([
-  "free_tier_removed",
-  "open_source_killed",
-  "limits_reduced",
-  "pricing_restructured",
-  "product_deprecated",
-  "restriction",
-]);
+/**
+ * Which way a change points for the user. One table, because before #1038
+ * five copies of this idea existed in the codebase and they had drifted:
+ * `classifyStability` counted `pricing_model_change` as neither negative nor
+ * positive (so Xata retiring its SaaS free tier read as `stable`) and left
+ * `new_tier` out of the positive set, while the weekly digest had its own two
+ * lists that disagreed with both.
+ *
+ * Direction is not the same question as risk. RISK_DEMOTION below is stricter:
+ * it decides what we are willing to publish a warning label for. This table
+ * decides what we are willing to *call* negative. The invariant between them —
+ * nothing RISK_DEMOTION demotes may be positive or neutral here — is asserted
+ * in risk-badge.test.ts.
+ */
+export const CHANGE_DIRECTION: Record<DealChange["change_type"], "negative" | "positive" | "neutral"> = {
+  free_tier_removed: "negative",
+  open_source_killed: "negative",
+  product_deprecated: "negative",
+  limits_reduced: "negative",
+  restriction: "negative",
+  pricing_restructured: "negative",
+  pricing_model_change: "negative",
+  limits_increased: "positive",
+  new_free_tier: "positive",
+  new_tier: "positive",
+  startup_program_expanded: "positive",
+  pricing_postponed: "positive",
+  rebranded: "neutral",
+};
 
+const directionSet = (d: "negative" | "positive" | "neutral") =>
+  new Set(Object.entries(CHANGE_DIRECTION).filter(([, v]) => v === d).map(([k]) => k));
+
+export const NEGATIVE_CHANGE_TYPES = directionSet("negative");
+export const POSITIVE_CHANGE_TYPES = directionSet("positive");
+
+/** Severity, not direction: the negatives that end a free tier outright. */
 const VOLATILE_TYPES = new Set([
   "free_tier_removed",
   "open_source_killed",
   "product_deprecated",
 ]);
 
-const POSITIVE_STABILITY_TYPES = new Set([
-  "limits_increased",
-  "new_free_tier",
-  "startup_program_expanded",
-  "pricing_postponed",
-]);
+/** The two the risk scale treats as severe. Exported so no caller inlines them. */
+export const SEVERE_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed"]);
+
+const NEGATIVE_STABILITY_TYPES = NEGATIVE_CHANGE_TYPES;
+const POSITIVE_STABILITY_TYPES = POSITIVE_CHANGE_TYPES;
 
 export function classifyStability(vendorChanges: DealChange[]): StabilityClass {
   if (vendorChanges.length === 0) return "stable";
@@ -301,14 +328,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
     }
   }
 
-  // Build vendor → all-time change count for risk_level
-  const vendorAllChanges = new Map<string, number>();
-  for (const c of changes) {
-    const key = c.vendor.toLowerCase();
-    vendorAllChanges.set(key, (vendorAllChanges.get(key) ?? 0) + 1);
-  }
-
-  // Build vendor → all changes for stability classification
+  // Build vendor → all changes for risk assessment and stability classification
   const vendorAllChangesList = new Map<string, DealChange[]>();
   for (const c of changes) {
     const key = c.vendor.toLowerCase();
@@ -336,16 +356,16 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       }
     }
 
-    // risk_level: 0 changes = stable, 1 = caution, 2+ = risky
-    const changeCount = vendorAllChanges.get(key) ?? 0;
-    let risk_level: "stable" | "caution" | "risky" | null = null;
-    if (changeCount >= 2) {
-      risk_level = "risky";
-    } else if (changeCount === 1) {
-      risk_level = "caution";
-    } else {
-      risk_level = "stable";
-    }
+    // risk_level: the single definition in vendorRiskAssessment (#1038). It
+    // used to be a count of every change record of every type, which measured
+    // how closely we had watched the vendor rather than anything about the
+    // vendor. The cause travels with the level so no surface can render the
+    // warning without the dated fact behind it.
+    const assessment = vendorRiskAssessment(vendorAllChangesList.get(key) ?? []);
+    const risk_level = assessment.level;
+    const risk_cause = assessment.cause
+      ? { date: assessment.cause.date, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
+      : null;
 
     // stability: derived from change types, not just count
     const stability = classifyStability(vendorAllChangesList.get(key) ?? []);
@@ -354,7 +374,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     );
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, stability, days_since_verified };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, stability, days_since_verified };
     return stripReferrerValue(enriched);
   });
 }
@@ -544,40 +564,89 @@ export interface VendorRiskResult {
   vendor: string;
   category: string;
   risk_level: "stable" | "caution" | "risky";
+  /** Never null when risk_level is caution or risky (#1038). */
+  risk_cause: RiskCause | null;
   free_tier_longevity_days: number;
   changes: DealChange[];
-  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky"; demerits: Array<{ code: string; points: number; reason: string }> }>;
+  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky"; risk_cause: RiskCause | null; demerits: Array<{ code: string; points: number; reason: string }> }>;
   summary: string;
 }
 
-const NEGATIVE_CHANGE_TYPES = new Set([
-  "free_tier_removed",
-  "open_source_killed",
-  "limits_reduced",
-  "pricing_restructured",
-  "product_deprecated",
-]);
+/**
+ * Every change type that appears in data/deal_changes.json, and how far it
+ * demotes the vendor. `null` demotes nothing.
+ *
+ * #1038: the definition the public surfaces used counted change records of
+ * *any* type, all-time. `limits_increased` — a vendor expanding its free tier
+ * — pushed that vendor toward `caution`, and a vendor we had never examined
+ * rendered `stable` because we had written nothing about it. The badge was a
+ * map of our own coverage, so it flagged the companies we watch most closely
+ * and rewarded obscurity.
+ *
+ * The table is exhaustive on purpose. A type left out of it is a silent
+ * decision either way, so `risk-badge.test.ts` asserts it covers every type
+ * present in the data.
+ */
+export const RISK_DEMOTION: Record<DealChange["change_type"], "risky" | "caution" | null> = {
+  // The free tier we list stopped existing.
+  free_tier_removed: "risky",
+  open_source_killed: "risky",
+  // The free tier still exists and is worth less than it was.
+  limits_reduced: "caution",
+  pricing_restructured: "caution",
+  // Neutral or favourable to the user. These can never raise a risk level.
+  limits_increased: null,
+  new_free_tier: null,
+  new_tier: null,
+  startup_program_expanded: null,
+  pricing_postponed: null,
+  rebranded: null, // a naming event, not a pricing one
+  // Negative, but not risk inputs today — see the #1038 PR description. In
+  // short: `product_deprecated` is dominated by unrelated products of large
+  // vendors (an AWS Lambda runtime deprecation says nothing about AWS's free
+  // tier) and `restriction` currently holds at least one correction to our own
+  // data. Both would reintroduce the coverage proxy this issue removed.
+  product_deprecated: null,
+  restriction: null,
+  pricing_model_change: null,
+};
 
-const RISKY_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed"]);
+const RISK_RANK: Record<"stable" | "caution" | "risky", number> = { stable: 0, caution: 1, risky: 2 };
+
+export interface VendorRiskAssessment {
+  level: "stable" | "caution" | "risky";
+  /** The record that produced the level. Never null when level !== "stable". */
+  cause: DealChange | null;
+}
+
+/**
+ * The only definition of vendor risk in the codebase.
+ *
+ * Returns the level *and* the dated record that earned it, because no surface
+ * may publish a warning it cannot show the reason for (#1038).
+ */
+export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number = Date.now()): VendorRiskAssessment {
+  const twelveMonthsAgo = new Date(nowMs - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+  let best: { level: "caution" | "risky"; cause: DealChange } | null = null;
+  for (const c of vendorChanges) {
+    const demotion = RISK_DEMOTION[c.change_type];
+    if (!demotion) continue;
+    // A severe change ages into `caution`, never into `stable`. We still hold
+    // the record, and `stable` is itself a published claim — SendGrid's free
+    // tier removal is 15 months old and calling that vendor stable would be a
+    // false statement we made ourselves.
+    const level = demotion === "risky" && c.date < twelveMonthsAgo ? "caution" : demotion;
+    if (!best || RISK_RANK[level] > RISK_RANK[best.level] || (level === best.level && c.date > best.cause.date)) {
+      best = { level, cause: c };
+    }
+  }
+
+  return best ? { level: best.level, cause: best.cause } : { level: "stable", cause: null };
+}
 
 export function vendorRiskLevel(vendorChanges: DealChange[]): "stable" | "caution" | "risky" {
-  const twelveMonthsAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
-
-  for (const c of vendorChanges) {
-    if (RISKY_CHANGE_TYPES.has(c.change_type) && c.date >= twelveMonthsAgo) {
-      return "risky";
-    }
-  }
-
-  for (const c of vendorChanges) {
-    if (c.change_type === "limits_reduced" || c.change_type === "pricing_restructured") {
-      return "caution";
-    }
-  }
-
-  return "stable";
+  return vendorRiskAssessment(vendorChanges).level;
 }
 
 export function checkVendorRisk(
@@ -599,7 +668,8 @@ export function checkVendorRisk(
     .filter((c) => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
     .sort((a, b) => b.date.localeCompare(a.date));
 
-  const riskLevel = vendorRiskLevel(vendorChanges);
+  const assessment = vendorRiskAssessment(vendorChanges);
+  const riskLevel = assessment.level;
 
   // Free tier longevity: days since verifiedDate with no negative changes after it
   const verifiedDate = new Date(offer.verifiedDate);
@@ -623,18 +693,27 @@ export function checkVendorRisk(
     vendor: e.offer.vendor,
     category: e.offer.category,
     tier: e.offer.tier,
-    risk_level: vendorRiskLevel(allChanges.filter((c) => c.vendor.toLowerCase() === e.offer.vendor.toLowerCase())),
+    ...(() => {
+      const a = vendorRiskAssessment(allChanges.filter((c) => c.vendor.toLowerCase() === e.offer.vendor.toLowerCase()));
+      return {
+        risk_level: a.level,
+        risk_cause: a.cause ? { date: a.cause.date, change_type: a.cause.change_type, summary: a.cause.summary } : null,
+      };
+    })(),
     demerits: e.demerits.map((d) => ({ code: d.code, points: d.points, reason: d.reason })),
   }));
 
-  // Build summary
+  // Build summary. Every non-stable summary names the dated record that
+  // produced the level (#1038) — the tool result is a surface like any other,
+  // and a warning without its reason is an assertion.
   let summary: string;
-  if (riskLevel === "risky") {
-    summary = `${offer.vendor} is high risk — has had a free tier removal or open source license change in the last 12 months. Consider alternatives.`;
-  } else if (riskLevel === "caution") {
-    summary = `${offer.vendor} has had pricing changes (limit reductions or restructuring). Monitor for further changes.`;
+  const cause = assessment.cause;
+  if (riskLevel === "risky" && cause) {
+    summary = `${offer.vendor} is high risk — ${cause.date}: ${cause.summary} Consider alternatives.`;
+  } else if (riskLevel === "caution" && cause) {
+    summary = `${offer.vendor} warrants caution — ${cause.date}: ${cause.summary} Monitor for further changes.`;
   } else {
-    summary = `${offer.vendor} has a stable pricing history with no negative changes recorded. Free tier verified for ${longevityDays} days.`;
+    summary = `${offer.vendor} has a stable pricing history with no free tier removal, limit reduction or pricing restructure on record. Free tier verified for ${longevityDays} days.`;
   }
 
   return {
@@ -642,6 +721,7 @@ export function checkVendorRisk(
       vendor: offer.vendor,
       category: offer.category,
       risk_level: riskLevel,
+      risk_cause: cause ? { date: cause.date, change_type: cause.change_type, summary: cause.summary } : null,
       free_tier_longevity_days: longevityDays,
       changes: vendorChanges,
       alternatives,
@@ -1007,8 +1087,8 @@ export function getWeeklyDigest(): {
   // Build summary
   const parts: string[] = [];
   if (changes.length > 0) {
-    const negative = changes.filter((c) => ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"].includes(c.change_type));
-    const positive = changes.filter((c) => ["new_free_tier", "limits_increased", "startup_program_expanded"].includes(c.change_type));
+    const negative = changes.filter((c) => CHANGE_DIRECTION[c.change_type] === "negative");
+    const positive = changes.filter((c) => CHANGE_DIRECTION[c.change_type] === "positive");
     parts.push(`${changes.length} pricing change${changes.length !== 1 ? "s" : ""} tracked${usedFallback ? " in the past 30 days" : " this week"}`);
     if (negative.length > 0) parts.push(`${negative.length} negative (${negative.map((c) => c.vendor).join(", ")})`);
     if (positive.length > 0) parts.push(`${positive.length} positive (${positive.map((c) => c.vendor).join(", ")})`);
@@ -1109,8 +1189,8 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const dateLabel = `${months[weekStart.getUTCMonth()]} ${weekStart.getUTCDate()}\u2013${weekEnd.getUTCDate()}, ${weekStart.getUTCFullYear()}`;
 
-  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
-  const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+  const negativeTypes = NEGATIVE_STABILITY_TYPES;
+  const positiveTypes = POSITIVE_STABILITY_TYPES;
 
   const losses = topChanges.filter(c => negativeTypes.has(c.change_type));
   const brightSpots = topChanges.filter(c => positiveTypes.has(c.change_type));

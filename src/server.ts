@@ -36,7 +36,9 @@ function toConciseOffer(offer: Offer | EnrichedOffer) {
   const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
   const enriched = offer as Partial<EnrichedOffer>;
   if (enriched.risk_level !== undefined) {
-    return { ...base, risk_level: enriched.risk_level, stability: enriched.stability };
+    // risk_cause travels with risk_level everywhere (#1038) — a client that
+    // renders the level has to be able to render the reason for it.
+    return { ...base, risk_level: enriched.risk_level, risk_cause: enriched.risk_cause ?? null, stability: enriched.stability };
   }
   return base;
 }

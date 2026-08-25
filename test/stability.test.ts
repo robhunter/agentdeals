@@ -103,21 +103,43 @@ describe("classifyStability", () => {
     assert.strictEqual(classifyStability(changes), "improving");
   });
 
+  // #1038: this used to assert `pricing_model_change` was neutral. All five
+  // records of that type describe a free tier getting worse — Xata retiring
+  // its SaaS free tier, Xero ending free API access, X migrating legacy free
+  // users to pay-per-use — so reading them as neutral rendered Xata `stable`.
+  // `rebranded` is now the only genuinely neutral type: a naming event.
   it("returns stable for vendor with only neutral changes", async () => {
     const { classifyStability } = await import("../dist/data.js");
     const changes = [{
       vendor: "TestVendor",
-      change_type: "pricing_model_change",
+      change_type: "rebranded",
       date: "2026-01-15",
-      summary: "Pricing model restructured",
-      previous_state: "Old model",
-      current_state: "New model",
+      summary: "Rebranded to NewName, URL changed",
+      previous_state: "OldName",
+      current_state: "NewName",
       impact: "low",
       source_url: "https://example.com",
       category: "CI/CD",
       alternatives: [],
     }];
     assert.strictEqual(classifyStability(changes), "stable");
+  });
+
+  it("a pricing model change that retires a free tier is not neutral", async () => {
+    const { classifyStability } = await import("../dist/data.js");
+    const changes = [{
+      vendor: "TestVendor",
+      change_type: "pricing_model_change",
+      date: "2026-04-19",
+      summary: "Pivoted to open source; SaaS free tier retired",
+      previous_state: "Free tier",
+      current_state: "Self-host only",
+      impact: "high",
+      source_url: "https://example.com",
+      category: "Databases",
+      alternatives: [],
+    }];
+    assert.strictEqual(classifyStability(changes), "watch");
   });
 });
 
