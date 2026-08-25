@@ -83,8 +83,17 @@ const RULES: Rule[] = [
   {
     name: "postal address",
     pattern:
-      /\b\d{3,5}\s+[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)?\s+(?:Way|Street|Road|Avenue|Drive|Lane|Boulevard|Court|Place|Terrace|Circle)\b/,
+      /\b\d{1,6}\s+[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)?\s+(?:Way|Street|St\.|Road|Rd\.|Avenue|Ave\.?|Drive|Dr\.|Lane|Ln\.|Boulevard|Blvd\.?|Court|Ct\.|Place|Pl\.|Terrace|Circle|Parkway|Pkwy\.?|Highway|Hwy\.?)(?:\b|,)|\b(?:P\.?\s?O\.?\s+Box|Suite|Ste\.|Unit|Apt\.?)\s+#?\d+/i,
     why: "a street address is personal data whether or not it is also a business address",
+  },
+  {
+    name: "city, state and ZIP",
+    pattern:
+      /\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2},?\s+(?:A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AT]|W[AIVY])\s+\d{5}(?:-\d{4})?\b/,
+    why:
+      "the rule above depends on a street-suffix vocabulary, so an abbreviation, a PO box or " +
+      "a bare locality line slips it — a city, state and ZIP together is the part of a US " +
+      "address that always looks like one",
   },
   {
     name: "private commercial conversation",
