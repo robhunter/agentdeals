@@ -221,17 +221,6 @@ export function resetTelemetryHealth(): void {
   for (const k of Object.keys(lastLoggedAt)) delete lastLoggedAt[k];
 }
 
-async function redisGet(): Promise<TelemetryData | null> {
-  const res = await redisCommand<string | null>(["GET", REDIS_KEY]);
-  if (!res.ok || !res.result) return null;
-  try {
-    return JSON.parse(res.result) as TelemetryData;
-  } catch (err) {
-    recordRedisFailure("GET", false, `unparseable telemetry blob: ${err instanceof Error ? err.message : String(err)}`);
-    return null;
-  }
-}
-
 async function redisSet(data: TelemetryData): Promise<boolean> {
   const res = await redisCommand<string>(["SET", REDIS_KEY, JSON.stringify(data)]);
   return res.ok && res.result === "OK";
@@ -409,17 +398,34 @@ function buildTelemetryData(): TelemetryData {
   };
 }
 
+// True when Redis is configured but the boot-time load could not be read. In that state
+// the in-memory `cumulative` totals are NOT the real historical totals — they are zeros —
+// so flushing them to Redis would destroy the stored history. See flushTelemetry.
+let telemetryLoadFailed = false;
+
+export function telemetryLoadDidFail(): boolean {
+  return telemetryLoadFailed;
+}
+
 export async function loadTelemetry(filePath: string): Promise<void> {
   telemetryPath = filePath;
 
   // Try Redis first if configured
   if (useRedis()) {
-    const data = await redisGet();
-    if (data) {
-      parseTelemetryData(data as unknown as Record<string, unknown>);
-      cumulative.last_deploy_at = serverStartedISO;
-      return;
+    const res = await redisCommand<string | null>(["GET", REDIS_KEY]);
+    if (res.ok && res.result) {
+      try {
+        parseTelemetryData(JSON.parse(res.result) as unknown as Record<string, unknown>);
+        cumulative.last_deploy_at = serverStartedISO;
+        telemetryLoadFailed = false;
+        return;
+      } catch {
+        // Corrupt blob — fall through to the file backup rather than trusting it.
+      }
     }
+    // A failed read is not an empty database. Starting from zero here and then writing
+    // those zeros back is how a transient outage turns into permanent data loss.
+    if (!res.ok) telemetryLoadFailed = true;
   }
 
   // Fall back to file
@@ -435,10 +441,31 @@ export async function loadTelemetry(filePath: string): Promise<void> {
 
 export async function flushTelemetry(): Promise<void> {
   if (!telemetryPath) return;
+
+  // If the boot-time load failed, our cumulative totals started at zero and writing them
+  // back would clobber the stored history. Retry the read first: once storage recovers we
+  // re-hydrate and resume persisting. Until then, file-only.
+  if (useRedis() && telemetryLoadFailed) {
+    const res = await redisCommand<string | null>(["GET", REDIS_KEY]);
+    if (res.ok) {
+      if (res.result) {
+        try {
+          parseTelemetryData(JSON.parse(res.result) as unknown as Record<string, unknown>);
+        } catch {
+          // Corrupt blob — treat as recovered-but-empty rather than blocking forever.
+        }
+      }
+      telemetryLoadFailed = false;
+      console.error("[telemetry] storage recovered — resuming persistence");
+    } else {
+      logRedisFailure("SET", `skipping persist: boot load failed (${res.error})`);
+    }
+  }
+
   const data = buildTelemetryData();
 
   // Write to Redis if configured
-  if (useRedis()) {
+  if (useRedis() && !telemetryLoadFailed) {
     await redisSet(data);
   }
 
@@ -452,6 +479,7 @@ export async function flushTelemetry(): Promise<void> {
 }
 
 export function resetCounters(): void {
+  telemetryLoadFailed = false;
   totalSessions = 0;
   totalDisconnects = 0;
   landingPageViews = 0;
