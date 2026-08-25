@@ -215,11 +215,11 @@ export function resolveSignalVendor(raw: unknown): { vendor: string | null; unre
 /**
  * Accept one signal. Returns the response to send.
  *
- * Rejects almost nothing on purpose. The AC originally specified a 400 for an unknown
- * `event`; the PM overrode that during copy review and they were right — an agent trying
- * `{"event":"outdated"}` is telling us for free what it wanted to report, and a 400
- * throws away the most interesting data this endpoint will ever collect. Unknown events
- * are bucketed with the string preserved and published as their own list.
+ * Rejects almost nothing on purpose. A 400 for an unknown `event` was specified early on
+ * and deliberately dropped during review — an agent trying `{"event":"outdated"}` is
+ * telling us for free what it wanted to report, and a 400 throws away the most
+ * interesting data this endpoint will ever collect. Unknown events are bucketed with the
+ * string preserved and published as their own list.
  *
  * What does earn a non-2xx: a missing vendor (there is nothing to record), a GET without
  * `?ack=1` (see below), and the rate limit.

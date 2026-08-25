@@ -1,7 +1,7 @@
 # We Tracked 82 Developer Tool Pricing Changes in 2026 — Here's What's Really Happening to Free Tiers
 
 > **Target platform:** DEV.to
-> **Status:** DRAFT — Awaiting Rob's approval (April 14 decision point)
+> **Status:** DRAFT — unpublished
 > **Tags:** devtools, pricing, free, startup
 > **Canonical URL:** https://agentdeals.dev/deal-changes
 

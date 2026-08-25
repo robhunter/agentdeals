@@ -447,7 +447,7 @@ describe("telemetry command budget (#1023)", () => {
       await loadTelemetry(telemetryFile);
       const report = await getPageViews();
 
-      assert.strictEqual(report.all_time.total, 10_675, "the published all-time numbers");
+      assert.strictEqual(report.all_time.total, 10_675, "the all-time history the migration must carry across");
       // The legacy day counter says 89 while its page keys account for 70. That gap is
       // what the old build counted and could not name — 404s, mostly. #1029 reports the
       // page keys as the total and the gap under its own name, so nothing is dropped and

@@ -119,8 +119,8 @@ describe("/best/:slug shows the whole qualified band", () => {
 });
 
 describe("/best/:slug is not a mirror of /category/:slug", () => {
-  // The PM's kill condition: if the gates make no difference, the page is
-  // duplicate content on 57 URLs and should not exist.
+  // The kill condition for this page type: if the gates make no difference, the page
+  // is duplicate content on 57 URLs and should not exist.
   it("the gates remove offers the category page shows", async () => {
     const best = await get("/best/free-ai-ml");
     const category = await get("/category/ai-ml");
