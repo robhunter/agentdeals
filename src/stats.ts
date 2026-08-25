@@ -690,6 +690,7 @@ export function resetTelemetryBuffers(): void {
   trafficSinceBoot = {};
   notFoundSinceBoot = 0;
   redirectsSinceBoot = 0;
+  signalsSinceBoot = 0;
   // The process-local page-view tally is part of "just booted" too. Without this a test
   // that reads getStats().page_views_today inherits every view the previous one recorded.
   pageViewsToday = 0;
@@ -1136,6 +1137,19 @@ interface PageViewSnapshot {
   /** Rolling sample of recent non-resolving requests, oldest first (#1029). */
   not_found_sample: NotFoundSample[];
   /**
+   * date -> signal key -> count (#1024). Flat namespaced keys — see SIGNAL_FACETS below.
+   * Rides inside this snapshot rather than in keys of its own for the same reason the
+   * class counters do: #1023 made the whole snapshot one SET per flush interval, so a
+   * reported signal costs zero additional Redis commands however many arrive.
+   */
+  signals: Record<string, Record<string, number>>;
+  /** Same key space as `signals`, never pruned by date — the all-time window reads it. */
+  signals_all_time: Record<string, number>;
+  /** Bounded ring of recent scrubbed notes, oldest first. Internal only — see SignalNote. */
+  signal_notes: SignalNote[];
+  /** Date the beacon started recording. Below it there is no data, not zero signals. */
+  signals_from: string;
+  /**
    * Date the all-time counters were repaired onto the normalized key space (#1029).
    * Counts carried across from before it were collected by a build that treated a 404 as
    * a page view, so the series is only quotable from this date on.
@@ -1167,6 +1181,10 @@ function emptySnapshot(): PageViewSnapshot {
     not_found: {},
     redirects: {},
     not_found_sample: [],
+    signals: {},
+    signals_all_time: {},
+    signal_notes: [],
+    signals_from: "",
     all_time_trustworthy_from: "",
     outcome_split_from: "",
   };
@@ -1238,6 +1256,10 @@ function countPendingPageViewKeys(): number {
   for (const day of Object.values(pendingPageViews.families)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.not_found)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.redirects)) n += Object.keys(day).length;
+  // A reported signal must make the flush worth running on its own — it is the rarest
+  // event on the site and the one we would most regret losing to an unclean restart.
+  for (const day of Object.values(pendingPageViews.signals)) n += Object.keys(day).length;
+  n += pendingPageViews.signal_notes.length;
   // Samples on their own must also make the flush worth running: a burst of 404s from a
   // class already counted today adds no new counter key, and without this the sample
   // would sit in memory until some other traffic happened to trigger a write.
@@ -1263,6 +1285,10 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     redirects: {},
     // Oldest first, capped — the delta is newer than the base by construction.
     not_found_sample: [...base.not_found_sample, ...delta.not_found_sample].slice(-NOT_FOUND_SAMPLE_MAX),
+    signals: {},
+    signals_all_time: { ...base.signals_all_time },
+    signal_notes: [...base.signal_notes, ...delta.signal_notes].slice(-SIGNAL_NOTE_MAX),
+    signals_from: base.signals_from || delta.signals_from,
     all_time_trustworthy_from: base.all_time_trustworthy_from || delta.all_time_trustworthy_from,
     outcome_split_from: base.outcome_split_from || delta.outcome_split_from,
   };
@@ -1273,6 +1299,17 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
   for (const [date, map] of Object.entries(base.families)) out.families[date] = { ...map };
   for (const [date, map] of Object.entries(base.not_found)) out.not_found[date] = { ...map };
   for (const [date, map] of Object.entries(base.redirects)) out.redirects[date] = { ...map };
+  for (const [date, map] of Object.entries(base.signals)) out.signals[date] = { ...map };
+
+  for (const [date, map] of Object.entries(delta.signals)) {
+    const target = (out.signals[date] ??= {});
+    for (const [key, count] of Object.entries(map)) {
+      bumpSignalKey(target, key, count, MAX_SIGNAL_KEYS_PER_FACET_PER_DAY);
+    }
+  }
+  for (const [key, count] of Object.entries(delta.signals_all_time)) {
+    bumpSignalKey(out.signals_all_time, key, count, MAX_SIGNAL_ALL_TIME_KEYS_PER_FACET);
+  }
 
   for (const [date, map] of Object.entries(delta.days)) {
     const target = (out.days[date] ??= {});
@@ -1342,11 +1379,14 @@ function pruneSnapshot(snapshot: PageViewSnapshot): void {
   // Class totals and MCP call counts are narrow enough to keep for the 30-day window
   // the web_vs_mcp comparison reports over. The outcome counters are the same shape (a
   // fixed enum per date) and answer questions over the same window.
-  for (const field of ["classes", "mcp", "not_found", "redirects"] as const) {
+  for (const field of ["classes", "mcp", "not_found", "redirects", "signals"] as const) {
     for (const date of Object.keys(snapshot[field]).sort().reverse().slice(CLASS_DAY_RETENTION)) {
       delete snapshot[field][date];
     }
   }
+  // signals_all_time is deliberately not pruned by date and needs no size prune: its key
+  // space is bounded per facet on the way in, and the all-time window is the only place
+  // the totals survive the 30-day day-map retention.
   // The sample is deliberately NOT capped here. Two places already bound it: the recorder
   // (in-memory growth between flushes) and the merge (base + delta, which is both what a
   // reader sees and what the next flush writes). A third copy of the same rule is a line
@@ -1463,6 +1503,12 @@ function normalizeSnapshot(raw: unknown): PageViewSnapshot {
   snapshot.not_found = numericMapOfMaps(obj.not_found);
   snapshot.redirects = numericMapOfMaps(obj.redirects);
   snapshot.not_found_sample = notFoundSamples(obj.not_found_sample);
+  // Absent on a snapshot written before #1024 — an empty map is the correct reading of
+  // "the beacon did not exist yet", and `signals_from` is what says so on the report.
+  snapshot.signals = numericMapOfMaps(obj.signals);
+  snapshot.signals_all_time = numericMap(obj.signals_all_time);
+  snapshot.signal_notes = signalNotes(obj.signal_notes);
+  snapshot.signals_from = typeof obj.signals_from === "string" ? obj.signals_from : "";
   snapshot.all_time_trustworthy_from =
     typeof obj.all_time_trustworthy_from === "string" ? obj.all_time_trustworthy_from : "";
   snapshot.outcome_split_from =
@@ -1487,6 +1533,28 @@ function notFoundSamples(raw: unknown): NotFoundSample[] {
       client_class: typeof e.client_class === "string" ? e.client_class : "unknown",
       status: typeof e.status === "number" && Number.isFinite(e.status) ? e.status : 0,
       path: sanitizeSamplePath(e.path),
+    });
+  }
+  return out;
+}
+
+// Re-validated on the way back in for the same reason not_found_sample is: `note` is the
+// only field in the snapshot that is caller-supplied prose, so a stored blob written by an
+// older build — or hand-edited — must not be trusted to still be inside its caps.
+function signalNotes(raw: unknown): SignalNote[] {
+  if (!Array.isArray(raw)) return [];
+  const out: SignalNote[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== "object") continue;
+    const e = entry as Record<string, unknown>;
+    const note = typeof e.note === "string" ? e.note.slice(0, SIGNAL_NOTE_TEXT_MAX) : "";
+    if (!note) continue;
+    out.push({
+      ts: typeof e.ts === "string" ? e.ts : "",
+      event: typeof e.event === "string" ? e.event.slice(0, 40) : "",
+      vendor: typeof e.vendor === "string" ? e.vendor.slice(0, 80) : null,
+      note,
+      redacted: e.redacted === true,
     });
   }
   return out;
@@ -2361,6 +2429,448 @@ export function getTrafficReport(): TrafficReport {
     notes: TRAFFIC_NOTES,
     storage,
   };
+}
+
+// --- Agent attribution beacon storage (#1024) ---
+//
+// One flat key space, namespaced by facet, held in the page-view snapshot. Two rules
+// decide the layout and both come from what the numbers are for:
+//
+//  1. Anything whose value comes from a *fixed enum we control* — the event, the
+//     transport, the client class, the grand total — is unbounded and exact. Those are
+//     the numbers that get published, and a published total that silently folded into an
+//     overflow bucket would be worse than no total.
+//  2. Anything whose value comes from the *caller* — a vendor slug, a self-identifier, an
+//     unrecognized event string — is bounded, and its overflow stays inside its own facet.
+//     A flood of junk self-identifiers must not be able to crowd out the vendor detail,
+//     and neither may crowd out a headline counter.
+//
+// Per-vendor keys are stored and internally queryable and are NEVER rendered on a public
+// surface (PM ruling on #1024): a visible per-vendor recommendation counter is a signal a
+// vendor can acquire, which is the one thing every published order here is built to
+// exclude. getSignalReport() is the public shape; getSignalVendorBreakdown() is not.
+export const SIGNAL_EVENTS = ["recommended", "converted"] as const;
+export type SignalEvent = (typeof SIGNAL_EVENTS)[number];
+export const SIGNAL_TRANSPORTS = ["post", "get"] as const;
+export type SignalTransport = (typeof SIGNAL_TRANSPORTS)[number];
+
+/** Bucket for an event string we do not recognise. The string itself lands under `x:`. */
+export const SIGNAL_UNRECOGNIZED_EVENT = "__unrecognized__";
+/** Every accepted signal, whatever else about it we could or could not name. */
+const SIGNAL_TOTAL_KEY = "total";
+
+const SIGNAL_SEP = ":";
+/** Caller-supplied facets. Bounded, each overflowing into its own bucket. */
+const SIGNAL_FACETS = {
+  vendor: "v",
+  unresolved: "u",
+  agent: "a",
+  rawEvent: "x",
+  /** Which surface produced the signal — the one thing that says which invitation works. */
+  source: "s",
+} as const;
+const MAX_SIGNAL_KEYS_PER_FACET_PER_DAY = 100;
+const MAX_SIGNAL_ALL_TIME_KEYS_PER_FACET = 300;
+const SIGNAL_OVERFLOW = "__other__";
+
+/**
+ * Keys whose value space we define, so they can never grow the map. Held out of the cap
+ * exactly as PSEUDO_DAY_KEYS are: folding one of these into an overflow bucket would move
+ * a number we publish into a number we cannot name.
+ */
+function buildFixedSignalKeys(): Set<string> {
+  const keys = new Set<string>([SIGNAL_TOTAL_KEY]);
+  for (const e of [...SIGNAL_EVENTS, SIGNAL_UNRECOGNIZED_EVENT]) keys.add(`e${SIGNAL_SEP}${e}`);
+  for (const t of SIGNAL_TRANSPORTS) keys.add(`t${SIGNAL_SEP}${t}`);
+  for (const c of TRAFFIC_CLASSES) keys.add(`c${SIGNAL_SEP}${c}`);
+  return keys;
+}
+const FIXED_SIGNAL_KEYS = buildFixedSignalKeys();
+
+/** Overflow within a facet stays within that facet — same rule as classRouteOverflowKey. */
+function signalOverflowKey(key: string): string {
+  const facet = key.slice(0, key.indexOf(SIGNAL_SEP));
+  return `${facet}${SIGNAL_SEP}${SIGNAL_OVERFLOW}`;
+}
+
+/** How many keys of `facet` are already present, for the per-facet cap. */
+function facetSize(map: Record<string, number>, prefix: string): number {
+  let n = 0;
+  for (const k of Object.keys(map)) if (k.startsWith(prefix)) n++;
+  return n;
+}
+
+// bumpBounded caps the whole map; signals cap per facet, so this is its own small helper
+// rather than a fifth parameter on the shared one.
+function bumpSignalKey(
+  map: Record<string, number>,
+  key: string,
+  delta: number,
+  cap: number,
+  known?: Record<string, number>,
+): void {
+  if (FIXED_SIGNAL_KEYS.has(key)) {
+    bump(map, key, delta);
+    return;
+  }
+  const prefix = key.slice(0, key.indexOf(SIGNAL_SEP) + 1);
+  const overflow = signalOverflowKey(key);
+  if (key !== overflow && !(key in map) && !(known && key in known)) {
+    const size = facetSize(map, prefix) + (known ? facetSize(known, prefix) : 0);
+    if (size >= cap) key = overflow;
+  }
+  bump(map, key, delta);
+}
+
+/** What the endpoint hands the recorder. Already validated, scrubbed and resolved. */
+export interface SignalRecord {
+  /** The raw event string as sent, for the `x:` bucket. */
+  event: string;
+  /** Canonical vendor slug when the resolver named one. */
+  vendor: string | null;
+  /** Sanitized caller-supplied vendor name when the resolver did not. Catalog-gap feed. */
+  unresolved: string | null;
+  /** Sanitized self-identifier, or null when the caller sent none. */
+  agent: string | null;
+  /** Normalized route the caller says informed it, or null. */
+  source: string | null;
+  /** Scrubbed free text. Kept in a bounded internal ring, never on a public surface. */
+  note: string | null;
+  /** True when the scrubber replaced something in `note`. Disclosed, not hidden. */
+  note_redacted?: boolean;
+  transport: SignalTransport;
+  client_class: string;
+}
+
+/**
+ * Recent scrubbed notes, oldest first. Bounded, and deliberately NOT public: it is
+ * caller-supplied free text, so rendering it on a page we serve would make anyone who can
+ * POST a publisher on this domain. Same shape and same reasoning as not_found_sample,
+ * except that one carries no free text and this one does.
+ */
+export interface SignalNote {
+  ts: string;
+  event: string;
+  vendor: string | null;
+  note: string;
+  redacted: boolean;
+}
+const SIGNAL_NOTE_MAX = 50;
+/** Second cap, applied at the storage boundary: the scrubber's cap is not this module's. */
+const SIGNAL_NOTE_TEXT_MAX = 200;
+
+let signalsSinceBoot = 0;
+
+/**
+ * Record one reported signal. Pure in-memory accounting — no Redis command on the request
+ * path at all, per the AC. Recorded whether or not storage is configured, so a dev run and
+ * the test suite still see the beacon working; the report says which of the two it is.
+ */
+export function recordSignal(rec: SignalRecord): void {
+  signalsSinceBoot++;
+  // Gated exactly as recordTraffic is, and the report depends on it: the denominator
+  // comes from `class_routes`, which recordTraffic only writes when storage is
+  // configured. If the numerator accumulated without storage and the denominator did
+  // not, every rate would divide two counts collected under different rules. Same
+  // regime for both, or neither — the since-boot tally above is what a storage-less
+  // dev run gets to see, exactly as trafficSinceBoot is.
+  if (!useRedis()) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const day = (pendingPageViews.signals[today] ??= {});
+  const knownDay = pageViewSnapshot.signals[today];
+  const all = pendingPageViews.signals_all_time;
+  const knownAll = pageViewSnapshot.signals_all_time;
+  if (!pendingPageViews.signals_from && !pageViewSnapshot.signals_from) {
+    pendingPageViews.signals_from = today;
+  }
+
+  const recognized = (SIGNAL_EVENTS as readonly string[]).includes(rec.event);
+  const eventKey = recognized ? rec.event : SIGNAL_UNRECOGNIZED_EVENT;
+  const cls = (TRAFFIC_CLASSES as readonly string[]).includes(rec.client_class)
+    ? rec.client_class
+    : "unknown";
+
+  const fixed = [
+    SIGNAL_TOTAL_KEY,
+    `e${SIGNAL_SEP}${eventKey}`,
+    `t${SIGNAL_SEP}${rec.transport}`,
+    `c${SIGNAL_SEP}${cls}`,
+  ];
+  const bounded: string[] = [];
+  // The per-vendor key carries the event with it: "recommended neon" and "converted neon"
+  // are different facts and collapsing them would make the internal breakdown useless.
+  if (rec.vendor) bounded.push(`${SIGNAL_FACETS.vendor}${SIGNAL_SEP}${eventKey}${SIGNAL_SEP}${rec.vendor}`);
+  if (rec.unresolved) bounded.push(`${SIGNAL_FACETS.unresolved}${SIGNAL_SEP}${rec.unresolved}`);
+  if (rec.agent) bounded.push(`${SIGNAL_FACETS.agent}${SIGNAL_SEP}${rec.agent}`);
+  if (rec.source) bounded.push(`${SIGNAL_FACETS.source}${SIGNAL_SEP}${rec.source}`);
+  // An unrecognized event is the most interesting thing this endpoint collects — an agent
+  // telling us for free what it wanted to report — so the string is preserved, not dropped.
+  if (!recognized) bounded.push(`${SIGNAL_FACETS.rawEvent}${SIGNAL_SEP}${rec.event}`);
+
+  for (const key of fixed) {
+    bump(day, key, 1);
+    bump(all, key, 1);
+  }
+  for (const key of bounded) {
+    bumpSignalKey(day, key, 1, MAX_SIGNAL_KEYS_PER_FACET_PER_DAY, knownDay);
+    bumpSignalKey(all, key, 1, MAX_SIGNAL_ALL_TIME_KEYS_PER_FACET, knownAll);
+  }
+
+  if (rec.note) {
+    pendingPageViews.signal_notes.push({
+      ts: new Date().toISOString(),
+      event: eventKey,
+      vendor: rec.vendor,
+      note: rec.note.slice(0, SIGNAL_NOTE_TEXT_MAX),
+      redacted: rec.note_redacted === true,
+    });
+    if (pendingPageViews.signal_notes.length > SIGNAL_NOTE_MAX) {
+      pendingPageViews.signal_notes.splice(0, pendingPageViews.signal_notes.length - SIGNAL_NOTE_MAX);
+    }
+  }
+}
+
+/** Routes where a recommendation actually gets made — the report-rate denominator. */
+export const SIGNAL_DENOMINATOR_ROUTES = [
+  "/vendor/:slug",
+  "/alternative-to/:slug",
+  "/compare/:slug",
+  "/best/:slug",
+  "/category/:slug",
+] as const;
+
+/**
+ * Below this many qualifying fetches we publish the counts and refuse to divide them.
+ * At the ~29 ai_agent decision-page hits/day we see today that is over a month out, which
+ * is the point: this instrument's first job is counting, not rate-estimation, and a rate
+ * computed off 19 fetches would read as a measurement when it is a coin flip.
+ */
+export const SIGNAL_MIN_SAMPLE = 1000;
+
+export interface SignalWindow {
+  days: number;
+  from: string;
+  to: string;
+  total: number;
+  /** By recognized event, plus the unrecognized bucket. Never a ratio between them. */
+  by_event: Record<string, number>;
+  /** Never summed into a headline: a GET and a POST are different populations (#1024). */
+  by_transport: Record<string, number>;
+  /** The tell that separates a real agent from a crawler that found a way to fire. */
+  by_client_class: Record<string, number>;
+  /** Distinct vendors that received at least one signal. Never which vendors. */
+  distinct_vendors: number;
+  /** Names agents used that we do not index. A catalog-gap feed, not a signal count. */
+  unresolved_vendor_names: { name: string; count: number }[];
+  /** Event strings we do not recognise, preserved verbatim. */
+  unrecognized_events: { event: string; count: number }[];
+  /** Self-identifiers, as reported. Unverified — anyone may claim any name. */
+  by_reporting_agent: { agent: string; count: number }[];
+  /** Which surface the sender says informed it. The only read on which invitation works. */
+  by_source: { source: string; count: number }[];
+  /** ai_agent hits on the decision routes in the same window. The denominator. */
+  qualifying_fetches: number;
+  /** Reported beside it, never folded in: that class is mostly one scanner today. */
+  qualifying_fetches_sdk_client: number;
+  /** null below SIGNAL_MIN_SAMPLE — see `rate_note`. */
+  report_rate: number | null;
+  rate_note: string;
+}
+
+const SIGNAL_LIST_LIMIT = 20;
+
+function emptySignalWindow(days: number): SignalWindow {
+  const dates = datesInWindow(days);
+  return {
+    days,
+    from: dates[dates.length - 1] ?? "",
+    to: dates[0] ?? "",
+    total: 0,
+    by_event: {},
+    by_transport: {},
+    by_client_class: {},
+    distinct_vendors: 0,
+    unresolved_vendor_names: [],
+    unrecognized_events: [],
+    by_reporting_agent: [],
+    by_source: [],
+    qualifying_fetches: 0,
+    qualifying_fetches_sdk_client: 0,
+    report_rate: null,
+    rate_note: "",
+  };
+}
+
+function rankFacet(map: Record<string, number>, prefix: string): { key: string; count: number }[] {
+  return Object.entries(map)
+    .filter(([k]) => k.startsWith(prefix))
+    .map(([k, count]) => ({ key: k.slice(prefix.length), count }))
+    .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key))
+    .slice(0, SIGNAL_LIST_LIMIT);
+}
+
+/** Reduce a signal key map into a window. `dates` is null for the all-time map. */
+function foldSignals(map: Record<string, number>, window: SignalWindow): void {
+  const vendors = new Set<string>();
+  for (const [key, count] of Object.entries(map)) {
+    if (key === SIGNAL_TOTAL_KEY) {
+      window.total += count;
+      continue;
+    }
+    const sep = key.indexOf(SIGNAL_SEP);
+    if (sep < 0) continue;
+    const facet = key.slice(0, sep);
+    const rest = key.slice(sep + 1);
+    if (facet === "e") window.by_event[rest] = (window.by_event[rest] ?? 0) + count;
+    else if (facet === "t") window.by_transport[rest] = (window.by_transport[rest] ?? 0) + count;
+    else if (facet === "c") window.by_client_class[rest] = (window.by_client_class[rest] ?? 0) + count;
+    else if (facet === SIGNAL_FACETS.vendor && rest !== SIGNAL_OVERFLOW) {
+      // `rest` is `${event}:${slug}` — count the vendor, once, across events.
+      const slugAt = rest.indexOf(SIGNAL_SEP);
+      if (slugAt >= 0) vendors.add(rest.slice(slugAt + 1));
+    }
+  }
+  window.distinct_vendors = vendors.size;
+  window.unresolved_vendor_names = rankFacet(map, `${SIGNAL_FACETS.unresolved}${SIGNAL_SEP}`)
+    .map(e => ({ name: e.key, count: e.count }));
+  window.unrecognized_events = rankFacet(map, `${SIGNAL_FACETS.rawEvent}${SIGNAL_SEP}`)
+    .map(e => ({ event: e.key, count: e.count }));
+  window.by_reporting_agent = rankFacet(map, `${SIGNAL_FACETS.agent}${SIGNAL_SEP}`)
+    .map(e => ({ agent: e.key, count: e.count }));
+  window.by_source = rankFacet(map, `${SIGNAL_FACETS.source}${SIGNAL_SEP}`)
+    .map(e => ({ source: e.key, count: e.count }));
+  for (const t of SIGNAL_TRANSPORTS) window.by_transport[t] ??= 0;
+  for (const e of SIGNAL_EVENTS) window.by_event[e] ??= 0;
+}
+
+/** ai_agent (and separately sdk_client) hits on the decision routes over `dates`. */
+function qualifyingFetches(view: PageViewSnapshot, dates: string[], cls: string): number {
+  let total = 0;
+  for (const date of dates) {
+    const map = view.class_routes[date] ?? {};
+    for (const route of SIGNAL_DENOMINATOR_ROUTES) {
+      total += map[`${cls}${CLASS_ROUTE_SEP}${route}`] ?? 0;
+    }
+  }
+  return total;
+}
+
+function applyRate(window: SignalWindow): void {
+  if (window.qualifying_fetches < SIGNAL_MIN_SAMPLE) {
+    window.report_rate = null;
+    window.rate_note =
+      `below minimum sample: a rate is not computed under ${SIGNAL_MIN_SAMPLE} qualifying fetches ` +
+      `(${window.qualifying_fetches} in this window). The counts above are exact.`;
+    return;
+  }
+  window.report_rate = Math.round((window.total / window.qualifying_fetches) * 10000) / 10000;
+  window.rate_note =
+    `${window.total} signals from ${window.qualifying_fetches} ai_agent fetches of decision pages. ` +
+    `Self-reported by the sender and unverified.`;
+}
+
+function buildSignalWindow(view: PageViewSnapshot, days: number): SignalWindow {
+  const window = emptySignalWindow(days);
+  const dates = datesInWindow(days);
+  const merged: Record<string, number> = {};
+  for (const date of dates) {
+    for (const [key, count] of Object.entries(view.signals[date] ?? {})) bump(merged, key, count);
+  }
+  foldSignals(merged, window);
+  window.qualifying_fetches = qualifyingFetches(view, dates, "ai_agent");
+  window.qualifying_fetches_sdk_client = qualifyingFetches(view, dates, "sdk_client");
+  applyRate(window);
+  return window;
+}
+
+function buildSignalAllTime(view: PageViewSnapshot): SignalWindow {
+  const window = emptySignalWindow(0);
+  window.from = view.signals_from || "";
+  window.to = new Date().toISOString().slice(0, 10);
+  foldSignals(view.signals_all_time, window);
+  // The class×route map is pruned at 30 days, so there is no all-time denominator to
+  // report. Saying so beats reporting a 30-day denominator under an all-time label.
+  window.qualifying_fetches = 0;
+  window.qualifying_fetches_sdk_client = 0;
+  window.report_rate = null;
+  window.rate_note =
+    "no all-time denominator: the class-by-route counters are retained for 30 days, so a " +
+    "qualifying-fetch count over all time does not exist. Read the 7d and 30d windows for rates.";
+  return window;
+}
+
+export const SIGNAL_NOTES = [
+  "Self-reported and unverified. Anyone can POST to /api/signal without authenticating, so every count here is a claim by its sender, not an observation of ours.",
+  "Signal counts never feed ranking, sorting or ordering on any surface. That is asserted by a test, not just stated here — see /criteria.",
+  "post and get are reported separately and are never summed into a headline. The GET form exists for agents that cannot POST, requires ?ack=1, and is never published as a fireable URL — so the two populations are not comparable.",
+  "client_class is the sender's classification from the same table that attributes page traffic. A signal arriving as seo_crawler is not an agent telling us something.",
+  "recommended and converted are two independent counters, never a funnel. Agents rarely observe whether their user signed up, so converted undercounts by an unknown factor and is not a conversion rate.",
+  "The report rate is signals divided by ai_agent fetches of the pages where a recommendation gets made (/vendor, /alternative-to, /compare, /best, /category). sdk_client fetches are reported beside it and never folded in.",
+  `No rate is computed below ${SIGNAL_MIN_SAMPLE} qualifying fetches. At current named-agent traffic that threshold is over a month out, and stating it beats discovering it later.`,
+  "Per-vendor counts are recorded and are not published. A visible per-vendor counter would be a placement metric a vendor could acquire by firing it themselves.",
+  "This call records the vendor slug, the event, an optional name the caller chooses for itself, and the sender's client class. Nothing about the caller's user, no IP, no identity.",
+];
+
+export interface SignalReport {
+  today: SignalWindow;
+  last_7d: SignalWindow;
+  last_30d: SignalWindow;
+  all_time: SignalWindow;
+  /** False when storage is not configured: the numbers are this process's, not durable. */
+  durable: boolean;
+  recording_since: string | null;
+  since_boot: number;
+  notes: string[];
+  storage: TelemetryHealth;
+}
+
+/**
+ * The public shape. Aggregates only — no per-vendor counts anywhere in it, deliberately
+ * (PM ruling on #1024). Serves the in-memory snapshot merged with un-flushed deltas, so
+ * it costs zero Redis commands however often it is polled.
+ */
+export function getSignalReport(): SignalReport {
+  const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
+  return {
+    today: buildSignalWindow(view, 1),
+    last_7d: buildSignalWindow(view, 7),
+    last_30d: buildSignalWindow(view, 30),
+    all_time: buildSignalAllTime(view),
+    durable: useRedis() && pageViewsLoaded,
+    recording_since: view.signals_from || null,
+    since_boot: signalsSinceBoot,
+    notes: SIGNAL_NOTES,
+    storage: getTelemetryHealth(),
+  };
+}
+
+/**
+ * Per-vendor detail. NOT a public surface — nothing in serve.ts may render this on a
+ * response, and a test asserts that. It exists so the question "which vendors are agents
+ * naming" can be answered by whoever runs the service, without publishing a leaderboard
+ * that a vendor could climb by firing the endpoint at itself.
+ */
+export function getSignalVendorBreakdown(): { event: string; vendor: string; count: number }[] {
+  const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
+  const out: { event: string; vendor: string; count: number }[] = [];
+  const prefix = `${SIGNAL_FACETS.vendor}${SIGNAL_SEP}`;
+  for (const [key, count] of Object.entries(view.signals_all_time)) {
+    if (!key.startsWith(prefix)) continue;
+    const rest = key.slice(prefix.length);
+    const sep = rest.indexOf(SIGNAL_SEP);
+    if (sep < 0) continue;
+    out.push({ event: rest.slice(0, sep), vendor: rest.slice(sep + 1), count });
+  }
+  return out.sort((a, b) => b.count - a.count || a.vendor.localeCompare(b.vendor));
+}
+
+/**
+ * Recent scrubbed notes, newest first. NOT a public surface either: caller-supplied prose
+ * rendered on a page we serve would make anyone who can POST a publisher on this domain.
+ */
+export function getSignalNotes(): SignalNote[] {
+  const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
+  return [...view.signal_notes].reverse();
 }
 
 // --- Search query analytics ---
