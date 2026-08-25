@@ -434,6 +434,92 @@ export async function getRequestLog(limit = 50): Promise<RequestLogEntry[]> {
   return (await getRequestLogResult(limit)).entries;
 }
 
+export const PUBLISHED_TEXT_MAX = 200;
+
+export interface PublicRequestLogEntry {
+  ts: string;
+  type: RequestLogEntry["type"];
+  endpoint: string;
+  param_lengths: Record<string, number>;
+  user_agent?: string;
+  result_count: number;
+  session_index?: number;
+  client_info?: { name: string; version: string };
+}
+
+function publishedLength(value: unknown): number {
+  if (typeof value === "string") return value.length;
+  try {
+    return JSON.stringify(value)?.length ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+function lengthsByParamName(params: Record<string, unknown> | undefined): Record<string, number> {
+  const lengths: Record<string, number> = {};
+  if (!params) return lengths;
+  for (const [name, value] of Object.entries(params)) {
+    if (value === undefined) continue;
+    lengths[name] = publishedLength(value);
+  }
+  return lengths;
+}
+
+function boundedText(raw: unknown): string | undefined {
+  if (typeof raw !== "string") return undefined;
+  let printable = "";
+  for (const ch of raw) {
+    const code = ch.codePointAt(0) ?? 0;
+    printable += code < 0x20 || code === 0x7f ? " " : ch;
+  }
+  const bounded = printable.replace(/\s+/g, " ").trim().slice(0, PUBLISHED_TEXT_MAX);
+  return bounded || undefined;
+}
+
+export function toPublicRequestLog(entries: RequestLogEntry[]): PublicRequestLogEntry[] {
+  const indexBySession = new Map<string, number>();
+  return entries.map(entry => {
+    const published: PublicRequestLogEntry = {
+      ts: entry.ts,
+      type: entry.type,
+      endpoint: entry.endpoint,
+      param_lengths: lengthsByParamName(entry.params),
+      result_count: entry.result_count,
+    };
+    const userAgent = boundedText(entry.user_agent);
+    if (userAgent) published.user_agent = userAgent;
+    if (entry.client_info) {
+      published.client_info = {
+        name: boundedText(entry.client_info.name) ?? "unknown",
+        version: boundedText(entry.client_info.version) ?? "unknown",
+      };
+    }
+    if (entry.session_id) {
+      let index = indexBySession.get(entry.session_id);
+      if (index === undefined) {
+        index = indexBySession.size + 1;
+        indexBySession.set(entry.session_id, index);
+      }
+      published.session_index = index;
+    }
+    return published;
+  });
+}
+
+export async function getPublicRequestLogResult(limit = 50): Promise<{
+  entries: PublicRequestLogEntry[];
+  available: boolean;
+  error: string | null;
+}> {
+  const stored = await getRequestLogResult(limit);
+  return {
+    entries: toPublicRequestLog(stored.entries),
+    available: stored.available,
+    error: stored.error,
+  };
+}
+
 function parseTelemetryData(data: Record<string, unknown>): void {
   cumulative.sessions = (data.cumulative_sessions as number) ?? 0;
   cumulative.tool_calls = (data.cumulative_tool_calls as number) ?? 0;
