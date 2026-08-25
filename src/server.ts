@@ -161,7 +161,18 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         const paged = filtered.slice(effectiveOffset, effectiveOffset + effectiveLimit);
         const results = enrichOffers(paged);
         const finalTotal = since ? filtered.length : total;
-        recordSearchQuery(query, finalTotal, category);
+        // `finalTotal` is what this caller got after its own category / eligibility /
+        // stability / payment-protocol / since filters. Recording only that made a
+        // filtered-to-zero MCP call look identical to a query the catalog has nothing
+        // for — and this is the highest-volume search path, so it dominated the
+        // zero-result list that catalog priorities are read off (#1018 Defect C).
+        const searchFiltered = Boolean(category || eligibility || stability || payment_protocol || since);
+        recordSearchQuery(query, finalTotal, {
+          category,
+          source: "mcp",
+          filtered: searchFiltered,
+          unfilteredCount: searchFiltered && sanitizedQuery ? searchOffers(sanitizedQuery).length : finalTotal,
+        });
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { query, category, eligibility, sort, limit: effectiveLimit, offset: effectiveOffset, since }, result_count: results.length, session_id: getSessionId?.() });
 
         // Zero-result suggestion (only when no results match at all, not just paginated past end)

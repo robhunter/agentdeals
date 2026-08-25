@@ -137,7 +137,7 @@ describe("search query ring buffer persistence (#965)", () => {
     assert.strictEqual(analytics.queries_by_category_7d["databases"], 2);
 
     // Add a new query this deploy, flush, and verify it joined the persisted ring
-    recordSearchQuery("postgres", 8, "databases");
+    recordSearchQuery("postgres", 8, { category: "databases" });
     await flushTelemetry();
 
     const persisted = JSON.parse(readFileSync(telemetryFile, "utf-8"));
@@ -235,7 +235,7 @@ describe("search query ring buffer persistence (#965)", () => {
     assert.deepStrictEqual(analytics.top_queries_7d, []);
 
     // After load, recording new queries works
-    recordSearchQuery("vercel", 3, "hosting");
+    recordSearchQuery("vercel", 3, { category: "hosting" });
     const analytics2 = getSearchAnalytics();
     assert.strictEqual(analytics2.top_queries_7d.length, 1);
     assert.strictEqual(analytics2.top_queries_7d[0].query, "vercel");
