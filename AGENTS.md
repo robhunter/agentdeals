@@ -47,6 +47,37 @@ Base URL: `https://agentdeals.dev/api`
 
 Full API documentation with Swagger UI: https://agentdeals.dev/api/docs
 
+## What We Measure
+
+Because agents read this site far more than they call the MCP server, we attribute every
+HTTP request to a client class and publish the result at `/api/traffic`:
+
+| Class | What it is |
+|---|---|
+| `ai_agent` | LLM agents and AI-assistant fetchers — ChatGPT-User, OAI-SearchBot, GPTBot, Claude-User, ClaudeBot, PerplexityBot, Google-Extended, CCBot and similar |
+| `search_crawler` | Search-engine indexers — Googlebot, bingbot, Applebot, … |
+| `seo_crawler` | SEO and marketing-intelligence crawlers — AhrefsBot, SemrushBot, … |
+| `other_bot` | Declared bots that are none of the above — link previews, uptime monitors, archivers |
+| `sdk_client` | HTTP libraries and CLIs — undici, python-httpx, curl, Go-http-client, headless browsers |
+| `browser` | A real engine token with no bot marker |
+| `internal` | Our own tooling observing the service. Excluded from the headline counts |
+| `unknown` | Genuinely unattributable, including an absent User-Agent |
+
+`/api/traffic` reports these for today, the last 7 days and the last 30 days, with
+per-family counts inside `ai_agent`, the top route patterns per class, and a `web_vs_mcp`
+block comparing web hits to MCP tool calls over the same window.
+
+Two deliberate choices worth knowing about:
+
+- **`sdk_client` is not folded into `ai_agent`.** `undici` and `python-httpx` traffic may
+  be an agent or may be a scraper; counting it as an agent would overclaim.
+- **Bot traffic is counted, not dropped.** The separate `/api/pageviews` figure remains
+  human-shaped traffic only, so that number did not change meaning.
+
+**No PII.** We store the class and a bounded family label from a fixed table — never a
+user agent, never an IP address, never a full request path outside a fixed route-pattern
+key space.
+
 ## MCP Tools
 
 ### search_deals
