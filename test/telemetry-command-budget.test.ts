@@ -26,6 +26,8 @@ const {
   flushPending,
   logRequest,
   UNMATCHED_PAGE_KEY,
+  OVERFLOW_PAGE_KEY,
+  NOT_FOUND_KEY,
   OTHER_REFERRER_KEY,
   FLUSH_INTERVAL_SECONDS,
 } = await import("../dist/stats.js");
@@ -446,7 +448,12 @@ describe("telemetry command budget (#1023)", () => {
       const report = await getPageViews();
 
       assert.strictEqual(report.all_time.total, 10_675, "the numbers the partnership conversation is about");
-      assert.strictEqual(report.today.total, 89);
+      // The legacy day counter says 89 while its page keys account for 70. That gap is
+      // what the old build counted and could not name — 404s, mostly. #1029 reports the
+      // page keys as the total and the gap under its own name, so nothing is dropped and
+      // nothing unnameable is inside a number anyone would quote.
+      assert.strictEqual(report.today.total, 70);
+      assert.strictEqual(report.today.unclassified_legacy, 19);
       assert.strictEqual(report.referrers_today["news.ycombinator.com"], 12);
     });
 
@@ -482,12 +489,17 @@ describe("telemetry command budget (#1023)", () => {
       );
     });
 
-    it("folds overflowing all-time paths into __unmatched__ without losing the total", async () => {
+    // The fold bucket is __other_pages__, not __unmatched__ (#1029): these are pages we
+    // served and cannot name individually, and they belong in the total. __unmatched__ is
+    // now the legacy bucket for traffic recorded before outcomes were counted, and is
+    // reported outside the total — folding served hits there would delete them from it.
+    it("folds overflowing all-time paths into __other_pages__ without losing the total", async () => {
       for (let i = 0; i < 400; i++) redis.values.set(`pv:all:/page-${i}`, "3");
       await loadTelemetry(telemetryFile);
 
       const report = await getPageViews();
       assert.strictEqual(report.all_time.total, 1200, "the total is preserved exactly");
+      assert.strictEqual(report.all_time.unclassified_legacy, 0, "an overflowing page is not legacy traffic");
       const snapshot = (await getPageViews()).all_time.top_pages;
       assert.ok(snapshot.length <= 20);
       // 400 paths capped to 300 named + one fold bucket.
@@ -495,7 +507,8 @@ describe("telemetry command budget (#1023)", () => {
       await flushPending();
       const keys = Object.keys(storedSnapshot().all_time);
       assert.ok(keys.length <= 302, `all-time key space grew to ${keys.length}`);
-      assert.ok(keys.includes(UNMATCHED_PAGE_KEY));
+      assert.ok(keys.includes(OVERFLOW_PAGE_KEY));
+      assert.ok(!keys.includes(UNMATCHED_PAGE_KEY), "served overflow must not land in the legacy bucket");
     });
 
     it("prunes day buckets to the retention window", async () => {

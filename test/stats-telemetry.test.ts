@@ -20,6 +20,7 @@ const {
   resetTelemetryHealth,
   normalizePagePath,
   UNMATCHED_PAGE_KEY,
+  NOT_FOUND_KEY,
   logRequest,
   resetCounters,
   loadTelemetry,
@@ -144,14 +145,39 @@ describe("telemetry storage layer (#1018)", () => {
       assert.ok(!JSON.stringify(snapshot).includes("hetzner"), "raw slug must not reach Redis");
     });
 
-    it("buckets a 404 to __unmatched__ even when the path looks like a page", async () => {
+    // Contract changed by #1029. It used to be "a 404 buckets to __unmatched__", which
+    // bounded the key space but still counted the request as a page view — 84% of a day's
+    // recorded views on the day that was found. It is now "a 404 is not a page view":
+    // counted, under its own name, outside the total.
+    it("counts a 404 as not-found rather than as a page view, however page-like the path", async () => {
       await boot();
       recordPageView("/wp-login", "Mozilla/5.0", undefined, 404);
+      recordPageView("/estimate", "Mozilla/5.0", undefined, 200);
       await flushPending();
 
       const snapshot = writtenSnapshot();
-      assert.ok(snapshot.all_time[UNMATCHED_PAGE_KEY] >= 1, "expected __unmatched__");
+      const today = new Date().toISOString().slice(0, 10);
+      assert.strictEqual(snapshot.days[today][NOT_FOUND_KEY], 1, "expected a not-found counter");
+      assert.strictEqual(snapshot.all_time[NOT_FOUND_KEY], 1);
+      assert.strictEqual(snapshot.days[today].total, 1, "only the served request is in the total");
+      assert.strictEqual(snapshot.days[today][UNMATCHED_PAGE_KEY], undefined, "nothing writes the legacy bucket");
       assert.ok(!JSON.stringify(snapshot).includes("wp-login"), "a path we 404 must not mint its own key");
+
+      const report = await getPageViews();
+      assert.strictEqual(report.today.total, 1);
+      assert.strictEqual(report.today.not_found, 1);
+    });
+
+    it("counts a 3xx apart from both — the request that follows it is the page view", async () => {
+      await boot();
+      recordPageView("/compare/b-vs-a", "Mozilla/5.0", undefined, 301);
+      recordPageView("/compare/a-vs-b", "Mozilla/5.0", undefined, 200);
+      await flushPending();
+
+      const report = await getPageViews();
+      assert.strictEqual(report.today.total, 1, "the redirect and its target are one page view");
+      assert.strictEqual(report.today.redirects, 1);
+      assert.strictEqual(report.today.not_found, 0, "a redirect is not a not-found");
     });
 
     it("keeps the day-scoped total alongside the per-path counters", async () => {

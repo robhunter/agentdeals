@@ -28,6 +28,8 @@ const {
   flushPending,
   normalizeRoutePath,
   UNMATCHED_PAGE_KEY,
+  OVERFLOW_PAGE_KEY,
+  NOT_FOUND_KEY,
 } = await import("../dist/stats.js");
 const { classifyRequest, CLIENT_CLASSES } = await import("../dist/client-class.js");
 
@@ -308,7 +310,7 @@ describe("client-class traffic attribution (#1019)", () => {
     // 200 + one bucket per class. Bounded is what matters, and this is the bound.
     assert.ok(keys.length <= 208, `class_routes grew to ${keys.length} keys — cap not enforced`);
     assert.ok(
-      keys.includes(`ai_agent|${UNMATCHED_PAGE_KEY}`) && keys.includes(`search_crawler|${UNMATCHED_PAGE_KEY}`),
+      keys.includes(`ai_agent|${OVERFLOW_PAGE_KEY}`) && keys.includes(`search_crawler|${OVERFLOW_PAGE_KEY}`),
       "overflow folds into a per-class bucket, not a shared one",
     );
     // Nothing is dropped, and nothing moves between classes on a busy day.
@@ -318,15 +320,41 @@ describe("client-class traffic attribution (#1019)", () => {
     assert.equal(sum("search_crawler"), 400);
   });
 
-  it("a 404 does not mint a route key, however well-formed the path looks", async () => {
+  // Contract changed by #1029: a 404 no longer mints a route key *at all*, rather than
+  // minting the shared unmatched one. A client that only ever 404s is not a client that
+  // read our pages, so it must not appear in that class's hit count or route list.
+  it("a 404 is counted apart from served traffic and mints no route key", async () => {
     await boot();
     recordTraffic("/wp-login.php", UA.curl, 404);
     recordTraffic("/vendor/real", UA.curl, 200);
     await flushPending();
 
-    const routes = storedSnapshot().class_routes[today()];
-    assert.equal(routes[`sdk_client|${UNMATCHED_PAGE_KEY}`], 1);
+    const snapshot = storedSnapshot();
+    const routes = snapshot.class_routes[today()];
     assert.equal(routes["sdk_client|/vendor/:slug"], 1);
+    assert.equal(routes[`sdk_client|${UNMATCHED_PAGE_KEY}`], undefined, "no route key for a 404");
+    assert.equal(routes[`sdk_client|${OVERFLOW_PAGE_KEY}`], undefined);
+    assert.equal(snapshot.classes[today()].sdk_client, 1, "only the served request is a hit");
+    assert.equal(snapshot.not_found[today()].sdk_client, 1, "the 404 is counted, under its own name");
+
+    const window = getTrafficReport().today;
+    assert.equal(window.hits_total, 1);
+    assert.equal(window.by_class.sdk_client, 1);
+    assert.equal(window.not_found_total, 1);
+    assert.equal(window.not_found_by_class.sdk_client, 1);
+  });
+
+  it("counts a 3xx apart from both — the redirect and its target are one hit", async () => {
+    await boot();
+    recordTraffic("/vendors/neon", UA.chrome, 301);
+    recordTraffic("/vendor/neon", UA.chrome, 200);
+    await flushPending();
+
+    const window = getTrafficReport().today;
+    assert.equal(window.hits_total, 1, "a redirect plus the request that follows it is one hit");
+    assert.equal(window.redirect_total, 1);
+    assert.equal(window.not_found_total, 0, "a redirect is not a not-found");
+    assert.equal(storedSnapshot().redirects[today()].browser, 1);
   });
 
   it("normalizeRoutePath keeps API routes bounded too", () => {
@@ -410,6 +438,22 @@ describe("window honesty and storage bounds", () => {
       snap.mcp[day(i)] = 999999;
     }
     for (let k = 0; k < 300; k++) snap.all_time[`/some-page-slug-${k}`] = 99999999;
+    // #1029's additions: two class-keyed outcome maps over the same 30 days, and the
+    // bounded not-found sample at its cap with the longest path each entry can hold.
+    snap.not_found = {};
+    snap.redirects = {};
+    for (let i = 0; i < 30; i++) {
+      snap.not_found[day(i)] = Object.fromEntries(CLASSES.map(c => [c, 9999999]));
+      snap.redirects[day(i)] = Object.fromEntries(CLASSES.map(c => [c, 9999999]));
+    }
+    snap.not_found_sample = Array.from({ length: 50 }, () => ({
+      ts: new Date().toISOString(),
+      client_class: "search_crawler",
+      status: 404,
+      path: `/${"a".repeat(80)}...`,
+    }));
+    snap.all_time_trustworthy_from = "2026-08-25";
+    snap.outcome_split_from = "2026-08-25";
 
     const bytes = JSON.stringify(snap).length;
     assert.ok(bytes < 400_000, `worst-case snapshot is ${(bytes / 1024).toFixed(0)}KB`);

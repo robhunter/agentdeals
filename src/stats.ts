@@ -688,6 +688,12 @@ export function resetTelemetryBuffers(): void {
   requestLogHydrated = false;
   lastFlushAt = null;
   trafficSinceBoot = {};
+  notFoundSinceBoot = 0;
+  redirectsSinceBoot = 0;
+  // The process-local page-view tally is part of "just booted" too. Without this a test
+  // that reads getStats().page_views_today inherits every view the previous one recorded.
+  pageViewsToday = 0;
+  pageViewsTodayDate = new Date().toISOString().slice(0, 10);
 }
 
 export function recordToolCall(tool: string, clientName?: string): void {
@@ -962,6 +968,71 @@ export const OTHER_REFERRER_KEY = "__other__";
 
 const DAY_TOTAL_KEY = "total";
 
+// --- Request outcome (#1029) ---
+//
+// A request that does not resolve to a page is not a page view. Before this, a 404 was
+// bucketed to __unmatched__ *inside* the day map and counted toward the day total, so 84%
+// of a day's recorded page views were a scanner walking paths we do not serve — and the
+// same requests inflated every client class's hit count on /api/traffic.
+//
+// Three outcomes, counted apart, because collapsing them loses a distinction we quote:
+//   served    (2xx) — we returned content. This is the page view.
+//   redirect  (3xx) — the URL resolves, to somewhere else. Counting it as a page view
+//                     double-counts: the client then fetches the target and that is a
+//                     second request. Visible, never in the total.
+//   not_found (4xx/5xx) — did not resolve. Visible, never in the total.
+export type RequestOutcome = "served" | "redirect" | "not_found";
+
+/**
+ * Classify a served status code. `undefined` means the caller did not record a status
+ * (an internal call, or a test recording an intent rather than a response) and is treated
+ * as served — the same reading the pre-#1029 code gave it.
+ */
+export function requestOutcome(statusCode?: number): RequestOutcome {
+  if (statusCode === undefined) return "served";
+  if (statusCode >= 400) return "not_found";
+  if (statusCode >= 300) return "redirect";
+  return "served";
+}
+
+/** Counts *about* a day, stored alongside the paths in the same map. Never a page path. */
+export const NOT_FOUND_KEY = "__not_found__";
+export const REDIRECT_KEY = "__redirect__";
+
+/**
+ * Where a *served* page view goes when we cannot name its path — either the day's key
+ * space is full, or the path is one we answered but cannot normalize.
+ *
+ * It exists because `__unmatched__` used to mean both "we served this and cannot name it"
+ * and "this is not a page at all", and the two have to be separated to exclude one from
+ * the total without dropping the other. Everything under this key is a request we
+ * answered with a page, so it counts.
+ */
+export const OVERFLOW_PAGE_KEY = "__other_pages__";
+
+/**
+ * What `normalizePagePath`/`normalizeRoutePath` return for a path that is not a route we
+ * serve. Declared here rather than next to them because PSEUDO_DAY_KEYS below needs it at
+ * module-evaluation time.
+ */
+export const UNMATCHED_PAGE_KEY = "__unmatched__";
+
+/**
+ * Keys inside a day/all-time map that are not page paths and are never in `total`.
+ *
+ * `__unmatched__` is in here as a *legacy* bucket: the pre-#1029 build wrote 404s there
+ * and had no other use for it that mattered at scale, but it recorded no status code, so
+ * its contents cannot be split now. It is reported as `unclassified_legacy` — excluded
+ * from the total because it is overwhelmingly non-resolving traffic, and named for what
+ * we actually know rather than asserted to be entirely 404s. Nothing writes it any more.
+ */
+const PSEUDO_DAY_KEYS = new Set<string>([DAY_TOTAL_KEY, NOT_FOUND_KEY, REDIRECT_KEY, UNMATCHED_PAGE_KEY]);
+
+/** Where a non-served outcome is tallied inside a day/all-time path map. */
+function outcomeKey(outcome: Exclude<RequestOutcome, "served">): string {
+  return outcome === "redirect" ? REDIRECT_KEY : NOT_FOUND_KEY;
+}
+
 // --- Client-class traffic attribution (#1019) ---
 //
 // These counters ride inside the page-view snapshot rather than in keys of their own.
@@ -1006,15 +1077,51 @@ const CLASS_ROUTE_SEP = "|";
 /** Overflow bucket for the per-day family map. Matches UNKNOWN_FAMILY in client-class.ts. */
 const UNKNOWN_FAMILY_KEY = "unknown";
 
+/**
+ * One remembered non-resolving request (#1029). The `__unmatched__` bucket answers "how
+ * many" and nothing else, which is not enough to tell a vulnerability scanner from a
+ * search engine walking our URLs wrong — two facts that lead to opposite decisions.
+ *
+ * The path is sanitized and truncated on the way in. It is never used to construct a key
+ * (that is what bounded the key space in the first place) and carries no PII.
+ */
+export interface NotFoundSample {
+  ts: string;
+  client_class: string;
+  status: number;
+  path: string;
+}
+
+/** How many recent non-resolving requests to remember. Rides in the existing snapshot. */
+const NOT_FOUND_SAMPLE_MAX = 50;
+const NOT_FOUND_SAMPLE_PATH_MAX = 80;
+
+/**
+ * Reduce an attacker-controlled path to something safe to store and to render. Strips
+ * everything outside printable ASCII plus the characters that could close out of a
+ * markup or shell context, then truncates.
+ */
+export function sanitizeSamplePath(raw: unknown): string {
+  const clean = String(raw ?? "")
+    .replace(/[^\x20-\x7e]/g, "")
+    .replace(/[<>"'`&\\]/g, "");
+  return clean.length > NOT_FOUND_SAMPLE_PATH_MAX
+    ? `${clean.slice(0, NOT_FOUND_SAMPLE_PATH_MAX)}...`
+    : clean;
+}
+
 interface PageViewSnapshot {
-  /** date -> path -> count, including the DAY_TOTAL_KEY pseudo-path. Humans only. */
+  /** date -> path -> count, including the pseudo-keys in PSEUDO_DAY_KEYS. Humans only. */
   days: Record<string, Record<string, number>>;
   /** date -> referrer domain -> count. */
   referrers: Record<string, Record<string, number>>;
-  /** path -> count, never pruned by date. */
+  /** path -> count, never pruned by date. Carries the same pseudo-keys as a day map. */
   all_time: Record<string, number>;
   updated_at: string;
-  /** date -> client class -> hits. Every classified request, bots included (#1019). */
+  /**
+   * date -> client class -> hits we *served* (2xx). Bots included (#1019); requests that
+   * redirected or did not resolve are in `redirects`/`not_found` and never here (#1029).
+   */
   classes: Record<string, Record<string, number>>;
   /** date -> `${class}|${route}` -> hits. Flattened so the 2-level helpers still apply. */
   class_routes: Record<string, Record<string, number>>;
@@ -1022,6 +1129,29 @@ interface PageViewSnapshot {
   families: Record<string, Record<string, number>>;
   /** date -> MCP tool calls, so web_vs_mcp compares the same window on both sides. */
   mcp: Record<string, number>;
+  /** date -> client class -> requests that did not resolve to a page (4xx/5xx) (#1029). */
+  not_found: Record<string, Record<string, number>>;
+  /** date -> client class -> 3xx. Apart, so a redirect and its target are not two hits. */
+  redirects: Record<string, Record<string, number>>;
+  /** Rolling sample of recent non-resolving requests, oldest first (#1029). */
+  not_found_sample: NotFoundSample[];
+  /**
+   * Date the all-time counters were repaired onto the normalized key space (#1029).
+   * Counts carried across from before it were collected by a build that treated a 404 as
+   * a page view, so the series is only quotable from this date on.
+   */
+  all_time_trustworthy_from: string;
+  /**
+   * Date from which `classes` counts served requests only (#1029).
+   *
+   * The page-view maps repair themselves — the total is recomputed from the page keys —
+   * but `classes` holds one number per class per day with the 404s already added in, and
+   * the obvious way to back them out (subtract that class's `__unmatched__` route count)
+   * is not safe: that bucket also absorbs route-key overflow and served-but-unnormalized
+   * routes, neither of which I can bound to zero by inspection. So the day the split
+   * landed is disclosed rather than guessed at, and any window reaching before it says so.
+   */
+  outcome_split_from: string;
 }
 
 function emptySnapshot(): PageViewSnapshot {
@@ -1034,6 +1164,11 @@ function emptySnapshot(): PageViewSnapshot {
     class_routes: {},
     families: {},
     mcp: {},
+    not_found: {},
+    redirects: {},
+    not_found_sample: [],
+    all_time_trustworthy_from: "",
+    outcome_split_from: "",
   };
 }
 
@@ -1049,6 +1184,26 @@ let pageViewsRereadPending = false;
 // Process-local tally, kept even with no storage configured so a dev run and the test
 // suite can still see classification happening. Not a substitute for the snapshot.
 let trafficSinceBoot: Record<string, number> = {};
+/** Non-served outcomes since boot. Kept apart from trafficSinceBoot for the same reason
+ * they are kept apart in the snapshot: `by_class` counts requests we served (#1029). */
+let notFoundSinceBoot = 0;
+let redirectsSinceBoot = 0;
+
+// Newest last, matching the snapshot's ordering so a merge is a plain concatenation.
+function recordNotFoundSample(client_class: string, path: string, status: number): void {
+  pendingPageViews.not_found_sample.push({
+    ts: new Date().toISOString(),
+    client_class,
+    status,
+    path: sanitizeSamplePath(path),
+  });
+  if (pendingPageViews.not_found_sample.length > NOT_FOUND_SAMPLE_MAX) {
+    pendingPageViews.not_found_sample.splice(
+      0,
+      pendingPageViews.not_found_sample.length - NOT_FOUND_SAMPLE_MAX,
+    );
+  }
+}
 
 function bump(map: Record<string, number>, key: string, delta: number): void {
   map[key] = (map[key] ?? 0) + delta;
@@ -1081,6 +1236,12 @@ function countPendingPageViewKeys(): number {
   for (const day of Object.values(pendingPageViews.classes)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.class_routes)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.families)) n += Object.keys(day).length;
+  for (const day of Object.values(pendingPageViews.not_found)) n += Object.keys(day).length;
+  for (const day of Object.values(pendingPageViews.redirects)) n += Object.keys(day).length;
+  // Samples on their own must also make the flush worth running: a burst of 404s from a
+  // class already counted today adds no new counter key, and without this the sample
+  // would sit in memory until some other traffic happened to trigger a write.
+  n += pendingPageViews.not_found_sample.length;
   return n;
 }
 
@@ -1098,18 +1259,28 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     class_routes: {},
     families: {},
     mcp: { ...base.mcp },
+    not_found: {},
+    redirects: {},
+    // Oldest first, capped — the delta is newer than the base by construction.
+    not_found_sample: [...base.not_found_sample, ...delta.not_found_sample].slice(-NOT_FOUND_SAMPLE_MAX),
+    all_time_trustworthy_from: base.all_time_trustworthy_from || delta.all_time_trustworthy_from,
+    outcome_split_from: base.outcome_split_from || delta.outcome_split_from,
   };
   for (const [date, map] of Object.entries(base.days)) out.days[date] = { ...map };
   for (const [date, map] of Object.entries(base.referrers)) out.referrers[date] = { ...map };
   for (const [date, map] of Object.entries(base.classes)) out.classes[date] = { ...map };
   for (const [date, map] of Object.entries(base.class_routes)) out.class_routes[date] = { ...map };
   for (const [date, map] of Object.entries(base.families)) out.families[date] = { ...map };
+  for (const [date, map] of Object.entries(base.not_found)) out.not_found[date] = { ...map };
+  for (const [date, map] of Object.entries(base.redirects)) out.redirects[date] = { ...map };
 
   for (const [date, map] of Object.entries(delta.days)) {
     const target = (out.days[date] ??= {});
     for (const [key, count] of Object.entries(map)) {
-      if (key === DAY_TOTAL_KEY) bump(target, key, count);
-      else bumpBounded(target, key, count, MAX_PAGE_KEYS_PER_DAY, UNMATCHED_PAGE_KEY);
+      // Pseudo-keys are counts about the day, not paths: they must never be folded into
+      // the overflow bucket, and they must never consume a slot in the path key space.
+      if (PSEUDO_DAY_KEYS.has(key)) bump(target, key, count);
+      else bumpBounded(target, key, count, MAX_PAGE_KEYS_PER_DAY, OVERFLOW_PAGE_KEY);
     }
   }
   for (const [date, map] of Object.entries(delta.referrers)) {
@@ -1119,7 +1290,16 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     }
   }
   for (const [key, count] of Object.entries(delta.all_time)) {
-    bumpBounded(out.all_time, key, count, MAX_ALL_TIME_PAGE_KEYS, UNMATCHED_PAGE_KEY);
+    if (PSEUDO_DAY_KEYS.has(key)) bump(out.all_time, key, count);
+    else bumpBounded(out.all_time, key, count, MAX_ALL_TIME_PAGE_KEYS, OVERFLOW_PAGE_KEY);
+  }
+  // Both are keyed by the fixed class enum, so they need no cap for the same reason
+  // `classes` needs none.
+  for (const field of ["not_found", "redirects"] as const) {
+    for (const [date, map] of Object.entries(delta[field])) {
+      const target = (out[field][date] ??= {});
+      for (const [key, count] of Object.entries(map)) bump(target, key, count);
+    }
   }
   // The class map is keyed by a fixed 8-value enum, so it needs no cap — an unbounded
   // key here would mean the classifier returned something it cannot return.
@@ -1148,7 +1328,7 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
 // move hits between classes on a busy day, which is the one number we quote.
 function classRouteOverflowKey(key: string): string {
   const cls = key.split(CLASS_ROUTE_SEP)[0];
-  return `${cls}${CLASS_ROUTE_SEP}${UNMATCHED_PAGE_KEY}`;
+  return `${cls}${CLASS_ROUTE_SEP}${OVERFLOW_PAGE_KEY}`;
 }
 
 // Retention is applied here rather than by Redis TTLs — one fewer command per key, and it
@@ -1160,21 +1340,89 @@ function pruneSnapshot(snapshot: PageViewSnapshot): void {
     for (const date of dates.slice(PAGE_VIEW_DAY_RETENTION)) delete snapshot[field][date];
   }
   // Class totals and MCP call counts are narrow enough to keep for the 30-day window
-  // the web_vs_mcp comparison reports over.
-  for (const date of Object.keys(snapshot.classes).sort().reverse().slice(CLASS_DAY_RETENTION)) {
-    delete snapshot.classes[date];
+  // the web_vs_mcp comparison reports over. The outcome counters are the same shape (a
+  // fixed enum per date) and answer questions over the same window.
+  for (const field of ["classes", "mcp", "not_found", "redirects"] as const) {
+    for (const date of Object.keys(snapshot[field]).sort().reverse().slice(CLASS_DAY_RETENTION)) {
+      delete snapshot[field][date];
+    }
   }
-  for (const date of Object.keys(snapshot.mcp).sort().reverse().slice(CLASS_DAY_RETENTION)) {
-    delete snapshot.mcp[date];
-  }
-  const entries = Object.entries(snapshot.all_time);
+  // The sample is deliberately NOT capped here. Two places already bound it: the recorder
+  // (in-memory growth between flushes) and the merge (base + delta, which is both what a
+  // reader sees and what the next flush writes). A third copy of the same rule is a line
+  // no test can bite, which makes it a line nobody can safely change later.
+  //
+  // Pseudo-keys are held out of the cap: they are counts about the whole series, they
+  // cannot grow the key space, and folding one into __unmatched__ would move a
+  // deliberately-excluded number back into the reported total.
+  const pseudo = Object.entries(snapshot.all_time).filter(([k]) => PSEUDO_DAY_KEYS.has(k));
+  const entries = Object.entries(snapshot.all_time).filter(([k]) => !PSEUDO_DAY_KEYS.has(k));
   if (entries.length > MAX_ALL_TIME_PAGE_KEYS) {
     entries.sort((a, b) => b[1] - a[1]);
-    const kept = Object.fromEntries(entries.slice(0, MAX_ALL_TIME_PAGE_KEYS));
+    const kept = Object.fromEntries([...entries.slice(0, MAX_ALL_TIME_PAGE_KEYS), ...pseudo]);
     const folded = entries.slice(MAX_ALL_TIME_PAGE_KEYS).reduce((sum, [, v]) => sum + v, 0);
     snapshot.all_time = kept;
-    if (folded > 0) bump(snapshot.all_time, UNMATCHED_PAGE_KEY, folded);
+    if (folded > 0) bump(snapshot.all_time, OVERFLOW_PAGE_KEY, folded);
   }
+}
+
+/**
+ * One-time repair of the pre-#1021 all-time key space (#1029).
+ *
+ * Before path normalization existed, `recordPageView` used the raw pathname, so every
+ * string a scanner put in a request line became a permanent counter: `/$(pwd)/.env`,
+ * `/%2f%2eenv`, `/%2egit/%63onfig`. #1023's migration carried those counts faithfully
+ * into the snapshot, which is where they still are — `all_time.top_pages` serves them.
+ *
+ * They were never page views, they were scans, so their counts move to the not-found
+ * bucket rather than being deleted: the arithmetic stays exact and the scan volume stays
+ * visible, which is the whole shape of this issue.
+ *
+ * This much is provable: a key that fails normalization is one we cannot have answered
+ * with a page, because the router has no route of that shape.
+ *
+ * What this deliberately does NOT touch:
+ *   `__unmatched__` — already collapsed, and the build that wrote it recorded no status
+ *     code, so it cannot be split into 404s and served-but-unnamed. It is reported as
+ *     `unclassified_legacy`: outside the total, named for what we actually know.
+ *   a 404 on a slug-shaped path — `/wp-login`, `/telescope` — normalizes to itself and is
+ *     indistinguishable from a real page in a counter that never recorded a status.
+ * That residue is why the payload carries `trustworthy_from` rather than a claim that the
+ * all-time series is now clean.
+ *
+ * Idempotent: after the first pass there is nothing left that fails normalization.
+ */
+function repairAllTimeKeys(snapshot: PageViewSnapshot): { keys: number; hits: number } {
+  let keys = 0;
+  let hits = 0;
+  for (const [key, count] of Object.entries(snapshot.all_time)) {
+    if (PSEUDO_DAY_KEYS.has(key) || key === OVERFLOW_PAGE_KEY) continue;
+    if (normalizePagePath(key) === key) continue;
+    delete snapshot.all_time[key];
+    bump(snapshot.all_time, NOT_FOUND_KEY, count);
+    keys++;
+    hits += count;
+  }
+  return { keys, hits };
+}
+
+/** Repair + stamp, applied wherever a stored snapshot is adopted as the base. */
+function adoptSnapshot(snapshot: PageViewSnapshot): PageViewSnapshot {
+  const repaired = repairAllTimeKeys(snapshot);
+  if (repaired.keys > 0) {
+    console.error(
+      `[telemetry] #1029 all-time repair: moved ${repaired.keys} non-route keys ` +
+        `(${repaired.hits} hits) into ${NOT_FOUND_KEY}`,
+    );
+  }
+  // Repair, then prune — never the other way round. The prune's overflow bucket means
+  // "a page we served but cannot name", so anything folded into it before the repair has
+  // run is permanently mislabelled as served.
+  pruneSnapshot(snapshot);
+  const today = new Date().toISOString().slice(0, 10);
+  if (!snapshot.all_time_trustworthy_from) snapshot.all_time_trustworthy_from = today;
+  if (!snapshot.outcome_split_from) snapshot.outcome_split_from = today;
+  return snapshot;
 }
 
 function numericMap(raw: unknown): Record<string, number> {
@@ -1209,7 +1457,39 @@ function normalizeSnapshot(raw: unknown): PageViewSnapshot {
   snapshot.class_routes = numericMapOfMaps(obj.class_routes);
   snapshot.families = numericMapOfMaps(obj.families);
   snapshot.mcp = numericMap(obj.mcp);
+  // Absent on a snapshot written before #1029. An empty map reads as "that build did not
+  // separate outcomes", which is true — the not-found hits it recorded are inside
+  // `classes` and `days`, and `trustworthy_from` is what says so.
+  snapshot.not_found = numericMapOfMaps(obj.not_found);
+  snapshot.redirects = numericMapOfMaps(obj.redirects);
+  snapshot.not_found_sample = notFoundSamples(obj.not_found_sample);
+  snapshot.all_time_trustworthy_from =
+    typeof obj.all_time_trustworthy_from === "string" ? obj.all_time_trustworthy_from : "";
+  snapshot.outcome_split_from =
+    typeof obj.outcome_split_from === "string" ? obj.outcome_split_from : "";
   return snapshot;
+}
+
+// Re-validates on the way back in: the blob is stored data, and the path field is the one
+// piece of it that originated in a request line.
+function notFoundSamples(raw: unknown): NotFoundSample[] {
+  if (!Array.isArray(raw)) return [];
+  const out: NotFoundSample[] = [];
+  // Not re-capped here: the merge bounds what any reader sees and what the next flush
+  // writes back, so an oversized stored blob is reported at the cap and rewritten at the
+  // cap. What this loop is for is the per-entry validation below — the path is the one
+  // field in the snapshot that originated in a request line.
+  for (const entry of raw) {
+    if (!entry || typeof entry !== "object") continue;
+    const e = entry as Record<string, unknown>;
+    out.push({
+      ts: typeof e.ts === "string" ? e.ts : "",
+      client_class: typeof e.client_class === "string" ? e.client_class : "unknown",
+      status: typeof e.status === "number" && Number.isFinite(e.status) ? e.status : 0,
+      path: sanitizeSamplePath(e.path),
+    });
+  }
+  return out;
 }
 
 async function redisMget(keys: string[]): Promise<RedisResult<(string | null)[]>> {
@@ -1280,9 +1560,6 @@ const DYNAMIC_PAGE_PREFIXES = [
   "/best/",
 ] as const;
 
-// Every page view that is not a route we actually serve collapses into this one key.
-export const UNMATCHED_PAGE_KEY = "__unmatched__";
-
 // Maps a raw request path onto a bounded key space. Before this, `recordPageView` used the
 // raw pathname, so any string an attacker put in a request line became a permanent Redis
 // key — the live keyspace contained entries like `/$(pwd)/.env` (#1018).
@@ -1341,12 +1618,26 @@ export function recordTraffic(
 ): void {
   const { client_class, family } = classification;
   const today = new Date().toISOString().slice(0, 10);
+  const outcome = requestOutcome(statusCode);
+
+  // A client that only ever 404s is not a client that read 3,000 pages, so the outcome
+  // decides which counter moves — not just which route key it lands under (#1029).
+  if (outcome !== "served") {
+    if (outcome === "not_found") {
+      notFoundSinceBoot++;
+      recordNotFoundSample(client_class, path, statusCode ?? 0);
+    } else {
+      redirectsSinceBoot++;
+    }
+    if (!useRedis()) return;
+    bump((pendingPageViews[outcome === "redirect" ? "redirects" : "not_found"][today] ??= {}), client_class, 1);
+    return;
+  }
 
   trafficSinceBoot[client_class] = (trafficSinceBoot[client_class] ?? 0) + 1;
   if (!useRedis()) return;
 
-  const served = statusCode === undefined || statusCode < 400;
-  const route = served ? normalizeRoutePath(path) : UNMATCHED_PAGE_KEY;
+  const route = normalizeRoutePath(path);
 
   bump((pendingPageViews.classes[today] ??= {}), client_class, 1);
   bumpBounded(
@@ -1354,7 +1645,7 @@ export function recordTraffic(
     `${client_class}${CLASS_ROUTE_SEP}${route}`,
     1,
     MAX_CLASS_ROUTE_KEYS_PER_DAY,
-    `${client_class}${CLASS_ROUTE_SEP}${UNMATCHED_PAGE_KEY}`,
+    `${client_class}${CLASS_ROUTE_SEP}${OVERFLOW_PAGE_KEY}`,
     pageViewSnapshot.class_routes[today],
   );
   // Per-family detail is only kept for the class it is asked about. Every other class
@@ -1382,19 +1673,33 @@ export function recordPageView(path: string, userAgent: string, referer?: string
     pageViewsToday = 0;
     pageViewsTodayDate = today;
   }
-  pageViewsToday++;
+  const outcome = requestOutcome(statusCode);
+  if (outcome === "served") pageViewsToday++;
 
   if (!useRedis()) return;
 
-  const served = statusCode === undefined || statusCode < 400;
-  const key = served ? normalizePagePath(path) : UNMATCHED_PAGE_KEY;
+  // Requests that did not resolve to a page are counted, under their own name, and are
+  // not part of the day total. They also earn no referrer credit and no path key — the
+  // path is not one of ours (#1029).
+  if (outcome !== "served") {
+    const day = (pendingPageViews.days[today] ??= {});
+    bump(day, outcomeKey(outcome), 1);
+    bump(pendingPageViews.all_time, outcomeKey(outcome), 1);
+    return;
+  }
+
+  // A path we answered but cannot name goes to the served-overflow bucket, never to
+  // __unmatched__ — that key now means "recorded before we counted outcomes" and is
+  // reported outside the total, so a served hit landing there would vanish from it.
+  const normalized = normalizePagePath(path);
+  const key = normalized === UNMATCHED_PAGE_KEY ? OVERFLOW_PAGE_KEY : normalized;
 
   // Pure in-memory accounting — no Redis command on the request path at all. The deltas
   // go out aggregated on the next flush (#1023).
   const day = (pendingPageViews.days[today] ??= {});
-  bumpBounded(day, key, 1, MAX_PAGE_KEYS_PER_DAY, UNMATCHED_PAGE_KEY, pageViewSnapshot.days[today]);
+  bumpBounded(day, key, 1, MAX_PAGE_KEYS_PER_DAY, OVERFLOW_PAGE_KEY, pageViewSnapshot.days[today]);
   bump(day, DAY_TOTAL_KEY, 1);
-  bumpBounded(pendingPageViews.all_time, key, 1, MAX_ALL_TIME_PAGE_KEYS, UNMATCHED_PAGE_KEY, pageViewSnapshot.all_time);
+  bumpBounded(pendingPageViews.all_time, key, 1, MAX_ALL_TIME_PAGE_KEYS, OVERFLOW_PAGE_KEY, pageViewSnapshot.all_time);
 
   if (referer) {
     try {
@@ -1459,7 +1764,9 @@ async function migrateLegacyPageViews(): Promise<PageViewSnapshot | null> {
   }
 
   // pv:all:* never had a total key; the day maps did, and it is carried across as-is.
-  pruneSnapshot(snapshot);
+  // Deliberately NOT pruned here: pruning folds overflowing keys into the served-overflow
+  // bucket, and doing that before the repair has classified them would relabel junk keys
+  // as pages we served. adoptSnapshot repairs first, then prunes.
   return snapshot;
 }
 
@@ -1470,7 +1777,7 @@ async function loadPageViews(): Promise<void> {
 
   if (res.result) {
     try {
-      pageViewSnapshot = normalizeSnapshot(JSON.parse(res.result));
+      pageViewSnapshot = adoptSnapshot(normalizeSnapshot(JSON.parse(res.result)));
       pageViewsLoaded = true;
       pageViewsRereadPending = true;
       legacyMigrationDone = true;
@@ -1483,7 +1790,9 @@ async function loadPageViews(): Promise<void> {
   if (!legacyMigrationDone) {
     const migrated = await migrateLegacyPageViews();
     if (!migrated) return; // could not read the legacy keys — retry rather than zero them
-    pageViewSnapshot = migrated;
+    // Repaired on the way in: the legacy key space is precisely where the junk keys came
+    // from, so a rebuild from it must not re-create what the repair removed.
+    pageViewSnapshot = adoptSnapshot(migrated);
     legacyMigrationDone = true;
   }
   pageViewsLoaded = true;
@@ -1515,7 +1824,7 @@ async function flushPageViews(): Promise<void> {
     pageViewsRereadPending = false;
     const read = await redisCommand<string | null>(["GET", PAGE_VIEWS_KEY]);
     if (read.ok && read.result) {
-      try { pageViewSnapshot = normalizeSnapshot(JSON.parse(read.result)); }
+      try { pageViewSnapshot = adoptSnapshot(normalizeSnapshot(JSON.parse(read.result))); }
       catch { /* corrupt — keep the last known-good local copy */ }
     }
   }
@@ -1582,10 +1891,21 @@ export function flushPending(): Promise<void> {
 }
 
 export interface PageViewPeriod {
+  /** Pages we served (2xx). Excludes redirects and non-resolving requests (#1029). */
   total: number | null;
   top_pages: { path: string; views: number }[];
   /** True when at least one key in this period could not be read. */
   partial: boolean;
+  /** Requests that resolved to no page (4xx/5xx). Counted, never inside `total`. */
+  not_found: number;
+  /** 3xx. Counted apart so a redirect and the request that follows it are not two views. */
+  redirects: number;
+  /**
+   * Hits the pre-#1029 build collapsed into `__unmatched__` before it recorded a status
+   * code. Overwhelmingly 404s, but it did not record enough to prove that, so they are
+   * excluded from `total` and reported under a name that claims only what we know.
+   */
+  unclassified_legacy: number;
 }
 
 export interface PageViewsReport {
@@ -1593,34 +1913,83 @@ export interface PageViewsReport {
   yesterday: PageViewPeriod;
   all_time: PageViewPeriod;
   referrers_today: Record<string, number>;
+  /**
+   * Date from which `all_time` was collected under the current counting rules. Counts
+   * before it came from a build that treated a 404 as a page view and minted a permanent
+   * key per scanned path; they are retained, repaired where that was possible, and are
+   * not quotable.
+   */
+  all_time_trustworthy_from: string | null;
+  /** What each figure includes and excludes. Meant to be read next to the numbers. */
+  notes: string[];
   /** False when the storage layer could not be read at all — the numbers are not measurements. */
   available: boolean;
   error: string | null;
   storage: TelemetryHealth;
 }
 
-const UNAVAILABLE_PERIOD: PageViewPeriod = { total: null, top_pages: [], partial: true };
+const UNAVAILABLE_PERIOD: PageViewPeriod = {
+  total: null,
+  top_pages: [],
+  partial: true,
+  not_found: 0,
+  redirects: 0,
+  unclassified_legacy: 0,
+};
+
+const PAGE_VIEW_NOTES = [
+  "`total` counts requests we answered with a page (2xx), by a non-bot client, over the stated period. It excludes bots, redirects, non-resolving requests, API routes, /mcp and static assets.",
+  "`not_found` counts requests that resolved to no page (4xx/5xx). Before #1029 these were inside `total` and were 84% of it on the day the defect was found.",
+  "`redirects` counts 3xx answers to page requests. A redirect is followed, and the request that follows it is the page view — counting both would double it. Redirects issued before the page-view hook (non-canonical hostnames, /vendors/*) are counted on /api/traffic instead, so that figure is the larger of the two.",
+  "`top_pages` lists normalized route patterns, not raw paths, and is truncated to the top 20 — the entries do not sum to `total`.",
+  "`all_time` has no retention and spans the pre-#1029 counting rules; read `all_time_trustworthy_from` before quoting it. Daily figures are retained for 7 days.",
+];
 
 const TOP_PAGES_LIMIT = 20;
 
 function topPages(map: Record<string, number>): { path: string; views: number }[] {
   return Object.entries(map)
-    .filter(([path]) => path !== DAY_TOTAL_KEY)
+    .filter(([path]) => !PSEUDO_DAY_KEYS.has(path))
     .map(([path, views]) => ({ path, views }))
     .sort((a, b) => b.views - a.views)
     .slice(0, TOP_PAGES_LIMIT);
 }
 
-// A day map carries its own total. An absent day is a measured zero, not an unknown —
-// we hold the whole snapshot, so "we have no record of that day" is a real answer.
+/**
+ * `total` is the sum of the page keys, not the stored `total` counter.
+ *
+ * They agree for anything recorded after #1029 — one served view bumps exactly one page
+ * key and the counter — but they disagree for a day recorded before it, because that
+ * build bumped the counter for 404s too. Summing the page keys counts only what we can
+ * name as a page, which is the right answer for both eras and needs no retroactive
+ * rewrite of stored history to get there.
+ */
+function periodFrom(map: Record<string, number>): PageViewPeriod {
+  const total = Object.entries(map).reduce((sum, [k, v]) => (PSEUDO_DAY_KEYS.has(k) ? sum : sum + v), 0);
+  // Whatever the old counter counted that we cannot name as a page: the collapsed
+  // __unmatched__ bucket, plus any excess the stored total carries over the page keys
+  // (a legacy day whose per-path keys expired out from under its total). Taking the
+  // larger keeps the arithmetic closed instead of quietly dropping the difference.
+  const stored = map[DAY_TOTAL_KEY] ?? 0;
+  const unclassified = Math.max(map[UNMATCHED_PAGE_KEY] ?? 0, stored - total);
+  return {
+    total,
+    top_pages: topPages(map),
+    partial: false,
+    not_found: map[NOT_FOUND_KEY] ?? 0,
+    redirects: map[REDIRECT_KEY] ?? 0,
+    unclassified_legacy: Math.max(0, unclassified),
+  };
+}
+
+// An absent day is a measured zero, not an unknown — we hold the whole snapshot, so
+// "we have no record of that day" is a real answer.
 function dayPeriod(map: Record<string, number> | undefined): PageViewPeriod {
-  if (!map) return { total: 0, top_pages: [], partial: false };
-  return { total: map[DAY_TOTAL_KEY] ?? 0, top_pages: topPages(map), partial: false };
+  return periodFrom(map ?? {});
 }
 
 function allTimePeriod(map: Record<string, number>): PageViewPeriod {
-  const total = Object.entries(map).reduce((sum, [k, v]) => (k === DAY_TOTAL_KEY ? sum : sum + v), 0);
-  return { total, top_pages: topPages(map), partial: false };
+  return periodFrom(map);
 }
 
 // Serves the in-memory snapshot plus everything not yet flushed. Costs zero Redis
@@ -1636,10 +2005,12 @@ export async function getPageViews(): Promise<PageViewsReport> {
     // No storage configured: today's in-memory counter is a real measurement, the
     // historical periods are simply not available here.
     return {
-      today: { total: pageViewsToday, top_pages: [], partial: false },
+      today: { total: pageViewsToday, top_pages: [], partial: false, not_found: notFoundSinceBoot, redirects: redirectsSinceBoot, unclassified_legacy: 0 },
       yesterday: { ...UNAVAILABLE_PERIOD },
       all_time: { ...UNAVAILABLE_PERIOD },
       referrers_today: {},
+      all_time_trustworthy_from: null,
+      notes: PAGE_VIEW_NOTES,
       available: false,
       error: "redis-not-configured",
       storage,
@@ -1654,6 +2025,8 @@ export async function getPageViews(): Promise<PageViewsReport> {
       yesterday: { ...UNAVAILABLE_PERIOD },
       all_time: { ...UNAVAILABLE_PERIOD },
       referrers_today: {},
+      all_time_trustworthy_from: null,
+      notes: PAGE_VIEW_NOTES,
       available: false,
       error: redisHealth.lastReadError ?? "page-view snapshot not loaded",
       storage,
@@ -1667,6 +2040,8 @@ export async function getPageViews(): Promise<PageViewsReport> {
     yesterday: dayPeriod(view.days[yesterday]),
     all_time: allTimePeriod(view.all_time),
     referrers_today: { ...(view.referrers[today] ?? {}) },
+    all_time_trustworthy_from: view.all_time_trustworthy_from || null,
+    notes: PAGE_VIEW_NOTES,
     available: true,
     error: null,
     storage,
@@ -1695,13 +2070,33 @@ export interface TrafficWindow {
    * them, and silently.
    */
   detail_days: number;
-  /** Every classified request in the window, `internal` included. */
+  /**
+   * How many days of the window we actually hold data for. A keyspace rebuilt this
+   * morning makes `last_30d` arithmetically correct and presentationally a lie; this is
+   * the field that says so, and `coverage` says it in words.
+   */
+  data_days_available: number;
+  /** "complete", or a sentence naming how much of the window is backed by data. */
+  coverage: string;
+  /** Every request in the window we answered with content (2xx), `internal` included. */
   hits_total: number;
   /** `hits_total` minus `internal`. This is the number to quote. */
   hits_excluding_internal: number;
   by_class: Record<string, number>;
   ai_agent_by_family: Record<string, number>;
   top_routes_by_class: Record<string, { route: string; hits: number }[]>;
+  /** Requests that resolved to no page. Never inside `hits_total` (#1029). */
+  not_found_total: number;
+  not_found_by_class: Record<string, number>;
+  /** 3xx. Also outside `hits_total` — the request that follows the redirect is the hit. */
+  redirect_total: number;
+  redirects_by_class: Record<string, number>;
+  /**
+   * Empty once the whole window post-dates the outcome split (#1029). While it is not,
+   * the listed dates were recorded by a build that counted non-resolving requests inside
+   * `by_class`, so `hits_total` for this window is high by however many those were.
+   */
+  pre_split_dates: string[];
 }
 
 export interface WebVsMcp {
@@ -1725,7 +2120,15 @@ export interface TrafficReport {
   /** False when the storage layer could not be read — the numbers are not measurements. */
   available: boolean;
   error: string | null;
+  /** Served requests only, matching `by_class`. */
   since_boot_by_class: Record<string, number>;
+  since_boot_not_found: number;
+  since_boot_redirects: number;
+  /**
+   * The last few non-resolving requests, newest first. Enough to tell a vulnerability
+   * scanner from a broken integration, which the count alone cannot (#1029).
+   */
+  not_found_sample: NotFoundSample[];
   notes: string[];
   storage: TelemetryHealth;
 }
@@ -1747,12 +2150,54 @@ function emptyWindow(days: number): TrafficWindow {
     from: dates[dates.length - 1],
     to: dates[0],
     detail_days: Math.min(days, PAGE_VIEW_DAY_RETENTION),
+    data_days_available: 0,
+    coverage: coverageNote(days, 0),
     hits_total: 0,
     hits_excluding_internal: 0,
     by_class: {},
     ai_agent_by_family: {},
     top_routes_by_class: {},
+    not_found_total: 0,
+    not_found_by_class: {},
+    redirect_total: 0,
+    redirects_by_class: {},
+    pre_split_dates: [],
   };
+}
+
+/**
+ * Earliest date we hold any record for, across every dated map. Derived rather than
+ * stored so that a keyspace rebuild moves it forward on its own — the failure mode of a
+ * stored "collecting since" date is that it survives the reset it was supposed to warn
+ * about. A genuinely silent first day understates coverage by one, which errs the safe
+ * way.
+ */
+function earliestRecordedDate(view: PageViewSnapshot): string | null {
+  let earliest: string | null = null;
+  const dated = [view.classes, view.days, view.not_found, view.redirects, view.referrers];
+  for (const map of dated) {
+    for (const date of Object.keys(map)) {
+      if (Object.keys(map[date] ?? {}).length === 0) continue;
+      if (earliest === null || date < earliest) earliest = date;
+    }
+  }
+  for (const date of Object.keys(view.mcp)) {
+    if (earliest === null || date < earliest) earliest = date;
+  }
+  return earliest;
+}
+
+function coverageNote(days: number, available: number, earliest?: string | null): string {
+  if (available >= days) return "complete";
+  const since = earliest ? ` (earliest record ${earliest})` : "";
+  return `partial — ${available} of ${days} day${days === 1 ? "" : "s"} of data available${since}`;
+}
+
+function daysBetweenInclusive(from: string, to: string): number {
+  const a = Date.parse(`${from}T00:00:00Z`);
+  const b = Date.parse(`${to}T00:00:00Z`);
+  if (!Number.isFinite(a) || !Number.isFinite(b) || b < a) return 0;
+  return Math.round((b - a) / 86400000) + 1;
 }
 
 function buildWindow(view: PageViewSnapshot, days: number): TrafficWindow {
@@ -1760,11 +2205,38 @@ function buildWindow(view: PageViewSnapshot, days: number): TrafficWindow {
   const window = emptyWindow(days);
   const routeTotals: Record<string, Record<string, number>> = {};
 
+  const earliest = earliestRecordedDate(view);
+  // Clamped by construction: the span runs from the later of (earliest record, window
+  // start) to the window end, which cannot exceed the window.
+  window.data_days_available = earliest
+    ? daysBetweenInclusive(earliest > window.from ? earliest : window.from, window.to)
+    : 0;
+  window.coverage = coverageNote(days, window.data_days_available, earliest);
+
+  // The split landed mid-day, so its own date is mixed and counts as pre-split.
+  const split = view.outcome_split_from;
+  if (split) {
+    window.pre_split_dates = dates.filter(d => d <= split && view.classes[d]).sort();
+    if (window.pre_split_dates.length > 0) {
+      window.coverage +=
+        `; hits_total still includes non-resolving requests on ${window.pre_split_dates.join(", ")}, ` +
+        `recorded before the outcome split on ${split}`;
+    }
+  }
+
   for (const date of dates) {
     for (const [cls, count] of Object.entries(view.classes[date] ?? {})) {
       window.by_class[cls] = (window.by_class[cls] ?? 0) + count;
       window.hits_total += count;
       if (cls !== "internal") window.hits_excluding_internal += count;
+    }
+    for (const [cls, count] of Object.entries(view.not_found[date] ?? {})) {
+      window.not_found_by_class[cls] = (window.not_found_by_class[cls] ?? 0) + count;
+      window.not_found_total += count;
+    }
+    for (const [cls, count] of Object.entries(view.redirects[date] ?? {})) {
+      window.redirects_by_class[cls] = (window.redirects_by_class[cls] ?? 0) + count;
+      window.redirect_total += count;
     }
     for (const [family, count] of Object.entries(view.families[date] ?? {})) {
       window.ai_agent_by_family[family] = (window.ai_agent_by_family[family] ?? 0) + count;
@@ -1781,7 +2253,11 @@ function buildWindow(view: PageViewSnapshot, days: number): TrafficWindow {
 
   // Classes we never saw still appear, at zero — an absent key would read as "unknown"
   // when what we mean is "measured, and it was none".
-  for (const cls of TRAFFIC_CLASSES) window.by_class[cls] ??= 0;
+  for (const cls of TRAFFIC_CLASSES) {
+    window.by_class[cls] ??= 0;
+    window.not_found_by_class[cls] ??= 0;
+    window.redirects_by_class[cls] ??= 0;
+  }
 
   for (const [cls, routes] of Object.entries(routeTotals)) {
     window.top_routes_by_class[cls] = Object.entries(routes)
@@ -1819,6 +2295,9 @@ const TRAFFIC_NOTES = [
   "No PII. Only the class and a bounded family label from a fixed table are stored; user agents and IPs are never persisted.",
   "Attribution starts from the deploy that introduced it — windows longer than that are short by however much history predates it, not wrong.",
   "Class totals are retained for 30 days; the per-family and per-route breakdowns only for 7. Each window states its own detail_days rather than presenting 7 days of detail as 30.",
+  "hits_total, hits_excluding_internal, by_class and top_routes_by_class count requests we answered with content (2xx). Requests that did not resolve are in not_found_*, and 3xx answers are in redirect_* — a client that only ever 404s is not a client that read our pages (#1029).",
+  "not_found carries no route breakdown: an unmatched path has no route by definition. not_found_sample carries the actual paths, sanitized and truncated, for the last 50.",
+  "Each window states data_days_available alongside days. Where they differ the window is arithmetically correct and shorter than its label — read coverage before quoting it.",
 ];
 
 /**
@@ -1843,6 +2322,13 @@ export function getTrafficReport(): TrafficReport {
     available: false,
     error,
     since_boot_by_class,
+    since_boot_not_found: notFoundSinceBoot,
+    since_boot_redirects: redirectsSinceBoot,
+    // The buffered sample is a real observation of this process, exactly like the
+    // since-boot tallies beside it. Returning [] here would report the count of a thing
+    // while hiding the thing itself, on the code path — no storage, or storage we could
+    // not read — where an operator most needs to see what is hitting the server.
+    not_found_sample: [...pendingPageViews.not_found_sample].reverse(),
     notes: TRAFFIC_NOTES,
     storage,
   });
@@ -1869,6 +2355,9 @@ export function getTrafficReport(): TrafficReport {
     available: true,
     error: null,
     since_boot_by_class,
+    since_boot_not_found: notFoundSinceBoot,
+    since_boot_redirects: redirectsSinceBoot,
+    not_found_sample: [...view.not_found_sample].reverse(),
     notes: TRAFFIC_NOTES,
     storage,
   };
@@ -1935,18 +2424,58 @@ function catalogMatchCount(entry: SearchQueryEntry): number {
   return entry.unfiltered_count ?? entry.results_count;
 }
 
+/**
+ * How much of the nominal 7-day window these lists are actually backed by (#1029).
+ *
+ * The log is a ring of the last SEARCH_QUERY_RING_MAX entries, so a `_7d` list can be
+ * two hours of a busy morning wearing a week's label — which is exactly what happened
+ * after the #1023 repair reset it, and is why the corrected zero-result list could not be
+ * delivered on #1018. The window states its own denominator rather than relying on the
+ * reader to remember.
+ */
+export interface SearchWindowCoverage {
+  days: number;
+  data_days_available: number;
+  coverage: string;
+  entries: number;
+  oldest_entry: string | null;
+  /** True when the ring is full, so the window is bounded by entry count, not by time. */
+  ring_saturated: boolean;
+}
+
 export function getSearchAnalytics(): {
   top_queries_7d: { query: string; count: number }[];
   zero_result_queries_7d: { query: string; count: number }[];
   filtered_to_zero_queries_7d: { query: string; count: number }[];
   queries_by_source_7d: Record<string, number>;
   queries_by_category_7d: Record<string, number>;
+  window_7d: SearchWindowCoverage;
 } {
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const recent = searchQueryLog.filter(e => {
     const t = new Date(e.timestamp).getTime();
     return Number.isFinite(t) && t >= sevenDaysAgo;
   });
+
+  const timestamps = recent
+    .map(e => new Date(e.timestamp).getTime())
+    .filter(t => Number.isFinite(t));
+  const oldest = timestamps.length > 0 ? Math.min(...timestamps) : null;
+  // Round up: a partial day of data is a day the window is backed by, and rounding down
+  // would report 0 for everything short of 24 hours.
+  const spanDays = oldest === null ? 0 : Math.min(7, Math.ceil((Date.now() - oldest) / 86400000)) || 1;
+  const window_7d: SearchWindowCoverage = {
+    days: 7,
+    data_days_available: spanDays,
+    coverage: coverageNote(
+      7,
+      spanDays,
+      oldest === null ? null : new Date(oldest).toISOString().slice(0, 10),
+    ),
+    entries: recent.length,
+    oldest_entry: oldest === null ? null : new Date(oldest).toISOString(),
+    ring_saturated: searchQueryLog.length >= SEARCH_QUERY_RING_MAX,
+  };
 
   const queryCounts = new Map<string, number>();
   // Genuine gaps: the catalog has nothing for this query at all.
@@ -1978,6 +2507,7 @@ export function getSearchAnalytics(): {
     filtered_to_zero_queries_7d: rank(filteredToZeroCounts, 10),
     queries_by_source_7d: sourceCounts,
     queries_by_category_7d: categoryCounts,
+    window_7d,
   };
 }
 
