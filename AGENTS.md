@@ -67,16 +67,29 @@ HTTP request to a client class and publish the result at `/api/traffic`:
 per-family counts inside `ai_agent`, the top route patterns per class, and a `web_vs_mcp`
 block comparing web hits to MCP tool calls over the same window.
 
-Two deliberate choices worth knowing about:
+Three deliberate choices worth knowing about:
 
 - **`sdk_client` is not folded into `ai_agent`.** `undici` and `python-httpx` traffic may
   be an agent or may be a scraper; counting it as an agent would overclaim.
 - **Bot traffic is counted, not dropped.** The separate `/api/pageviews` figure remains
   human-shaped traffic only, so that number did not change meaning.
+- **A request that did not resolve to a page is not a hit.** Requests are split by
+  outcome: served (2xx) is what `hits_total`, `by_class` and the page-view total count;
+  `not_found_*` (4xx/5xx) and `redirect_*` (3xx) are reported next to them and never
+  inside them. A redirect is excluded because the request that follows it is the hit, and
+  counting both would double it.
+
+Every window states its own denominator: `days` is the window it is labelled with,
+`data_days_available` is how much of that we hold data for, and `coverage` says so in
+words. `/api/pageviews` carries `all_time_trustworthy_from`, the date its all-time series
+became comparable.
 
 **No PII.** We store the class and a bounded family label from a fixed table — never a
-user agent, never an IP address, never a full request path outside a fixed route-pattern
-key space.
+user agent, never an IP address. Request paths are stored as a fixed route-pattern key
+space, with one exception: `not_found_sample` on `/api/traffic` keeps the last 50
+non-resolving request paths, sanitized to printable ASCII and truncated to 80 characters,
+so that a vulnerability scan can be told apart from a broken integration. Those paths are
+never used to construct a storage key.
 
 ## MCP Tools
 
