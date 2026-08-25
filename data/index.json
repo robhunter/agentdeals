@@ -11881,14 +11881,14 @@
     {
       "vendor": "Mailtrap.io",
       "category": "Email",
-      "description": "Email API, SMTP, 4,000 emails/month free for transactional and marketing emails.",
+      "description": "Three separate free products. Email API/SMTP: 4,000 emails/month (150/day cap), 1 domain, 3-day log retention. Email Sandbox (testing): 50 test emails/month, 1 sandbox. Email Marketing: 1,500 emails/month, 500 contacts. 1 user each.",
       "tier": "Free",
       "url": "https://mailtrap.io/",
       "tags": [
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Mutant Mail",
