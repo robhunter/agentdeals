@@ -170,14 +170,14 @@ describe("#1038 — the level is checkable", () => {
   it("every offer carrying a warning carries the record that produced it", async () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
     const uncaused = enrichOffers(loadOffers())
-      .filter((o: { risk_level: string | null; risk_cause: unknown }) => o.risk_level !== "stable" && !o.risk_cause);
+      .filter((o: { risk_level: string | null; risk_cause: unknown }) => o.risk_level && o.risk_level !== "stable" && !o.risk_cause);
     assert.strictEqual(uncaused.length, 0);
   });
 
   it("the vendor page publishes the dated cause beside the badge in the <h1>", async () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
     const warned = enrichOffers(loadOffers())
-      .filter((o: { risk_level: string | null }) => o.risk_level !== "stable")
+      .filter((o: { risk_level: string | null }) => o.risk_level && o.risk_level !== "stable")
       .slice(0, 6);
     assert.ok(warned.length > 0, "expected at least one warned vendor to test");
 
@@ -210,7 +210,7 @@ describe("#1038 — the level is checkable", () => {
 
   it("the alternatives surfaces publish the cause too", async () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
-    const warned = enrichOffers(loadOffers()).find((o: { risk_level: string | null }) => o.risk_level !== "stable");
+    const warned = enrichOffers(loadOffers()).find((o: { risk_level: string | null }) => o.risk_level && o.risk_level !== "stable");
     assert.ok(warned, "expected a warned vendor");
     const { text } = await get(`/alternative-to/${toSlug(warned.vendor)}`);
     if (!/Risk Level:/.test(text)) return; // page shape changed

@@ -13,6 +13,7 @@ import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER
 import { agentBlock, CONVERTED_CAVEAT, DEFERENCE, PRIVACY_SCOPE, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, SIGNAL_MIN_SAMPLE, SIGNAL_DENOMINATOR_ROUTES } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
+import { LINK_GRACE_DAYS } from "./link-health.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
@@ -25,7 +26,7 @@ import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscri
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
-import type { Agent, RiskCause } from "./types.js";
+import type { Agent, RiskCause, LinkUnreachable } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -306,8 +307,18 @@ function riskBadgeHtml(
   return `${badge} <span style="font-size:${size};color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`;
 }
 
+function stabilityCellHtml(stability: string, linkUnreachable: LinkUnreachable | null | undefined): string {
+  if (linkUnreachable) {
+    const since = linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
+    return `<span style="color:var(--text-dim)" title="Link has not resolved${escHtmlServer(since)}">link unreachable</span>`;
+  }
+  const color = STABILITY_COLORS[stability] ?? "#8b949e";
+  return `<span class="stability-dot" style="background:${color}"></span> ${escHtmlServer(stability)}`;
+}
+
 /** Table-cell form of the same rule: the level, and under it the dated cause. */
 function riskCellHtml(level: string | null | undefined, cause: RiskCause | null | undefined): string {
+  if (level === null) return `<span style="color:var(--text-dim)">&mdash;</span>`;
   const resolved = level ?? "stable";
   // A level with no cause is neither publishable as a warning nor rewritable
   // into "stable" — that would be a positive claim we also cannot back.
@@ -1775,6 +1786,11 @@ ${demeritRows}
   <p>Vendor pages carry a <code>stable</code> / <code>caution</code> / <code>risky</code> label. <strong style="color:var(--text)">It moves no order on this site</strong> &mdash; the ranking module cannot read it, and flipping every label leaves every listing we publish in the same order.</p>
   <p>It is decided by the <em>type</em> of a recorded change, never by how many records we hold. A vendor that expanded its free tier, postponed a fee, added a tier or changed its name cannot be labelled <code>caution</code> for any of those. <strong style="color:var(--text)">A <code>caution</code> or <code>risky</code> label always renders together with the single dated record that produced it, on the same page and next to the label. Where we cannot show the reason, we do not show the label.</strong></p>
   <p>The honest limit: <code>stable</code> means we hold no record of a free tier removal, a limit reduction or a pricing restructure for that vendor. It is a statement about our records, not a clean bill of health &mdash; a vendor we have never had cause to examine reads the same as one with a long clean history. Until August 2026 the label was derived from a count of records of any type, which inverted that: the vendors we watched most closely were the ones it flagged, and several were flagged for good news. That is fixed, and this paragraph is here so the next version of it is checkable.</p>
+
+  <h3>What we publish when the link itself stops resolving</h3>
+  <p>Verification asks whether an offer's terms are still right. A separate daily check asks the cheaper question of whether its link still resolves at all, and it runs over every record regardless of how recently that record was verified.</p>
+  <p><strong style="color:var(--text)">Where the link has not resolved for ${LINK_GRACE_DAYS} days, or the server has answered <code>410 Gone</code>, we withhold the <code>stable</code> label and the verification date and publish the date the link was last reachable instead.</strong> A green label and a recent date over a destination that no longer answers is the most confident-looking thing on the page and the least true. A vendor is allowed an outage, which is what the ${LINK_GRACE_DAYS} days are for.</p>
+  <p>The distinction that does the work: <strong style="color:var(--text)">being refused is not evidence about a vendor.</strong> A <code>403</code>, a <code>429</code>, a gateway error or a timeout tells you that our checker was turned away from a datacentre address, and it changes nothing we publish in either direction &mdash; we do not withhold the label, and we do not claim the link is dead. Only an answer about the destination counts: <code>404</code> confirmed by a full request, <code>410</code>, or a hostname with no address. This is the same rule as <code>stale_verification</code> above and the risk label before it, and it keeps arriving because each surface used to implement its own version.</p>
 
   <h2>3. Ties, and why there is no top slot to sell</h2>
   <div class="callout">
@@ -3667,6 +3683,14 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(riskCause.date)}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
+  const linkUnreachable = enriched.link_unreachable;
+  const h1RiskBadge = enriched.risk_level === null || (linkUnreachable && riskLevel === "stable")
+    ? ""
+    : ` <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span>`;
+  const linkUnreachableLine = linkUnreachable
+    ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
+    : "";
+
   // Alternatives: other vendors in the same primary category
   // "Alternatives to X" is a recommendation, so it goes through the shared
   // module. It used to be `.slice(0, 12)` over raw file order — whoever was
@@ -3689,18 +3713,24 @@ function buildVendorPage(slug: string): string | null {
     : `${vendorName} Pricing ${currentYear}: Plans, Costs & Free Alternatives | AgentDeals`;
   const descLimits = primary.description.slice(0, 100).replace(/\.\s.*$/, "");
   const verifiedMonth = (() => { const d = primary.verifiedDate.split("-"); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${months[parseInt(d[1],10)-1]} ${d[0]}`; })();
+  const verifiedSentence = enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
   const metaDesc = hasFree
-    ? `${vendorName} free tier includes ${descLimits}. Verified ${verifiedMonth}. Compare with ${alternatives.length} alternatives in ${primary.category}.`
-    : `${vendorName} pricing details and ${alternatives.length} free alternatives in ${primary.category}. Verified ${verifiedMonth}.`;
+    ? `${vendorName} free tier includes ${descLimits}.${verifiedSentence} Compare with ${alternatives.length} alternatives in ${primary.category}.`
+    : `${vendorName} pricing details and ${alternatives.length} free alternatives in ${primary.category}.${verifiedSentence}`;
 
   // --- NEW: Quick Verdict ---
   const stabilityLabel: Record<string, string> = { stable: "stable", watch: "on our watch list", volatile: "volatile", improving: "improving" };
   const stabilityText = stabilityLabel[stability] || "stable";
   const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
-  const verdictLine2 = vendorChanges.length === 0
+  const unconfirmableSince = linkUnreachable
+    ? (linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "")
+    : "";
+  const verdictLine2 = linkUnreachable
+    ? `Its pricing page has not resolved for us${unconfirmableSince}, so we cannot confirm these terms today.`
+    : vendorChanges.length === 0
     ? `It's ${stabilityText} — zero pricing changes recorded.`
     : `It's ${stabilityText} — ${vendorChanges.length} pricing change${vendorChanges.length > 1 ? "s" : ""} recorded.`;
-  const verdictLine3 = alternatives.length > 0
+  const verdictLine3 = alternatives.length > 0 && !linkUnreachable
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";
   const quickVerdictHtml = `
@@ -3770,15 +3800,13 @@ function buildVendorPage(slug: string): string | null {
           <tr class="current-vendor-row">
             <td><strong>${escHtmlServer(vendorName)}</strong></td>
             <td>${escHtmlServer(primary.tier)}</td>
-            <td><span class="stability-dot" style="background:${STABILITY_COLORS[stability] ?? "#8b949e"}"></span> ${escHtmlServer(stability)}</td>
+            <td>${stabilityCellHtml(stability, linkUnreachable)}</td>
           </tr>
 ${enrichedAlts.map(a => {
-  const aStability = a.stability ?? "stable";
-  const aColor = STABILITY_COLORS[aStability] ?? "#8b949e";
   return `          <tr>
             <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
             <td>${escHtmlServer(a.tier)}</td>
-            <td><span class="stability-dot" style="background:${aColor}"></span> ${escHtmlServer(aStability)}</td>
+            <td>${stabilityCellHtml(a.stability ?? "stable", a.link_unreachable)}</td>
           </tr>`;
 }).join("\n")}
         </tbody>
@@ -4012,7 +4040,9 @@ ${allCompareLinks.join("\n")}
   // type — so a vendor could be told it "requires caution" and then handed a
   // free-tier expansion as the evidence. They now quote the record that
   // produced the level, and nothing else.
-  const faqReliableAnswer = riskLevel === "stable"
+  const faqReliableAnswer = linkUnreachable
+    ? `We cannot say. ${vendorName}'s pricing page has not resolved for us${unconfirmableSince}, so we are not publishing a stability judgement for this vendor until it does.`
+    : riskLevel === "stable"
     ? `${vendorName}'s free tier is considered stable: we hold no free tier removal, limit reduction or pricing restructure on record for this vendor.${vendorChanges.length > 0 ? ` We do hold ${vendorChanges.length === 1 ? "1 other recorded change" : `${vendorChanges.length} other recorded changes`} — see the pricing history below.` : ""}`
     : riskLevel === "caution"
     ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."}`
@@ -4020,13 +4050,17 @@ ${allCompareLinks.join("\n")}
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
 
   // NEW: Additional FAQ items
-  const faqProductionAnswer = hasFree
+  const faqProductionAnswer = linkUnreachable
+    ? `${vendorName}'s pricing page has not resolved for us${unconfirmableSince}. We cannot confirm what its free tier offers today, so we are not recommending it for production or for anything else until we can.`
+    : hasFree
     ? (riskLevel === "stable"
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. With ${stabilityText} pricing and ${escHtmlServer(keyLimit)}, it's a reasonable starting point. Monitor your usage against the limits and have an upgrade plan ready.`
       : `${vendorName}'s free tier is usable for prototyping and development, but exercise caution for production workloads given its ${stabilityText} pricing history. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`;
   const faqChangedAnswer = vendorChanges.length > 0
     ? `Yes, ${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${vendorChanges[0].date}).`
+    : linkUnreachable
+    ? `We hold no recorded pricing changes for ${vendorName}, but its pricing page has not resolved for us${unconfirmableSince}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
   const faqAlternativesAnswer = alternatives.length > 0
     ? `The top free alternatives to ${vendorName} in ${primary.category} include ${alternatives.slice(0, 5).map(a => `${a.vendor} (${a.tier})`).join(", ")}. See all ${alternatives.length} alternatives above.`
@@ -4161,9 +4195,10 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
-  <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear} <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></h1>
+  <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear}${h1RiskBadge}</h1>
 ${riskCauseLine}
-  <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives. Verified ${verifiedMonth}. Last updated ${escHtmlServer(lastUpdated)}.</p>
+${linkUnreachableLine}
+  <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}
 ${categoryContextHtml}
 ${changeNoticeHtml}
@@ -4185,8 +4220,8 @@ ${referralCalloutHtml}
       <div class="detail-value"><a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">Visit &rarr;</a></div>
     </div>
     <div class="detail-card">
-      <div class="detail-label">Verified</div>
-      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(primary.verifiedDate)}</div>
+      <div class="detail-label">${linkUnreachable ? "Link last reachable" : "Verified"}</div>
+      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : primary.verifiedDate)}</div>
     </div>
   </div>
 
@@ -4335,7 +4370,7 @@ function buildAlternativesPage(slug: string): string | null {
         <div class="alt-tier">${escHtmlServer(a.tier)}</div>
         <div class="alt-meta">
           <span class="alt-category">${escHtmlServer(a.category)}</span>
-          <span class="alt-date">Verified ${a.verifiedDate}</span>
+          <span class="alt-date">${a.link_unreachable ? `Link unreachable${a.link_unreachable.last_reachable ? ` since ${escHtmlServer(a.link_unreachable.last_reachable)}` : ""}` : `Verified ${a.verifiedDate}`}</span>
         </div>
         <div class="alt-actions">
           <a href="/vendor/${aSlug}" class="action-link">Profile</a>
@@ -4395,7 +4430,7 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
   };
 
   // FAQ data for alternative-to pages
-  const topStableAlts = enrichedAlts.filter(a => (a.risk_level ?? "stable") === "stable").slice(0, 5);
+  const topStableAlts = enrichedAlts.filter(a => a.risk_level === "stable").slice(0, 5);
   const faqBestAltsAnswer = topStableAlts.length > 0
     ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}. We hold no free tier removal, limit reduction or pricing restructure on record for any of them.`
     : `There are ${enrichedAlts.length} free alternatives to ${vendorName} available. ${enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ")} are among the options.`;

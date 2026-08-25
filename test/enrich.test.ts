@@ -114,8 +114,15 @@ describe("enrichOffers", () => {
   it("never publishes a risk level it cannot name a cause for", async () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
     const enriched = enrichOffers(loadOffers());
-    const uncaused = enriched.filter((o: { risk_level: string | null; risk_cause: unknown }) => o.risk_level !== "stable" && !o.risk_cause);
+    const uncaused = enriched.filter((o: { risk_level: string | null; risk_cause: unknown }) => o.risk_level && o.risk_level !== "stable" && !o.risk_cause);
     assert.strictEqual(uncaused.length, 0, `${uncaused.length} offers carry a warning with no cause`);
+  });
+
+  it("withholds a level only where the link is confirmed unreachable, never for any other reason", async () => {
+    const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const withheld = enrichOffers(loadOffers()).filter((o: { risk_level: string | null }) => o.risk_level === null);
+    const unexplained = withheld.filter((o: { link_unreachable: unknown }) => !o.link_unreachable);
+    assert.strictEqual(unexplained.length, 0, `${unexplained.length} offers publish no level and no reason for withholding it`);
   });
 
   it("preserves original offer fields in enriched result", async () => {

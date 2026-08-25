@@ -372,7 +372,8 @@ export const openapiSpec = {
                   properties: {
                     vendor: { type: "string" },
                     category: { type: "string" },
-                    risk_level: { type: "string", enum: ["stable", "caution", "risky"] },
+                    risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where the offer's own link is confirmed unreachable (#1046) — we withhold the level rather than publish a favourable one we cannot check." },
+                    link_unreachable: { type: "object", nullable: true, description: "Non-null only where a check reached a conclusion about the destination: a 404 confirmed by a full request, a 410, or a hostname with no address. Being refused (403, 429, 5xx, timeout) is evidence about our checker and never produces one of these.", properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
                     risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } },
                     free_tier_longevity_days: { type: "number" },
                     changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
@@ -384,7 +385,8 @@ export const openapiSpec = {
                           vendor: { type: "string" },
                           category: { type: "string" },
                           tier: { type: "string" },
-                          risk_level: { type: "string", enum: ["stable", "caution", "risky"] },
+                          risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where this alternative's own link is confirmed unreachable (#1046)." },
+                          link_unreachable: { type: "object", nullable: true, properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
                           risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } }
                         }
                       }

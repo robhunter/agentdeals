@@ -58,7 +58,7 @@ async function checkUrl(url) {
       redirect: "follow",
     });
     // Some servers reject HEAD — fall back to GET
-    if (res.status === 405 || res.status === 403) {
+    if (!res.ok) {
       clearTimeout(timeout);
       const controller2 = new AbortController();
       const timeout2 = setTimeout(() => controller2.abort(), FETCH_TIMEOUT_MS);

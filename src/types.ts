@@ -68,6 +68,12 @@ export interface RiskCause {
   summary: string;
 }
 
+export interface LinkUnreachable {
+  last_reachable: string | null;
+  checked: string;
+  terminal: boolean;
+}
+
 export interface EnrichedOffer extends Offer {
   recent_change: string | null;
   expires_soon: string | null;
@@ -76,6 +82,7 @@ export interface EnrichedOffer extends Offer {
   risk_cause: RiskCause | null;
   stability: StabilityClass;
   days_since_verified: number;
+  link_unreachable: LinkUnreachable | null;
 }
 
 export interface OfferIndex {
