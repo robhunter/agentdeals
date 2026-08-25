@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass, Referral } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
+import { rankForListing } from "./ranking.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
@@ -75,9 +76,13 @@ export function getOfferDetails(
   const match = offers.find((o) => o.vendor.toLowerCase() === lowerName);
 
   if (match) {
-    const sameCategoryOffers = offers
-      .filter((o) => o.category === match.category && o.vendor !== match.vendor)
-      .slice(0, 5);
+    // Related vendors and alternatives are a recommendation, so they resolve
+    // through the shared selection module (#1025) rather than `.slice(0, 5)`
+    // over data/index.json order.
+    const sameCategoryOffers = rankForListing(
+      offers.filter((o) => o.category === match.category && o.vendor !== match.vendor),
+      { queryKey: `related:${match.category}:${match.vendor}`, changes: loadDealChanges() },
+    ).entries.slice(0, 5).map((e) => e.offer);
     const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
     const result: Offer & { relatedVendors: string[]; alternatives?: Offer[] } = { ...match, relatedVendors };
     if (includeAlternatives) {
@@ -541,7 +546,7 @@ export interface VendorRiskResult {
   risk_level: "stable" | "caution" | "risky";
   free_tier_longevity_days: number;
   changes: DealChange[];
-  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky" }>;
+  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky"; demerits: Array<{ code: string; points: number; reason: string }> }>;
   summary: string;
 }
 
@@ -607,24 +612,20 @@ export function checkVendorRisk(
     Math.floor((Date.now() - longevityStart.getTime()) / (24 * 60 * 60 * 1000))
   );
 
-  // Find up to 3 more-stable alternatives in same category
-  const sameCategoryOffers = offers.filter(
-    (o) => o.category === offer.category && o.vendor !== offer.vendor
-  );
-  const alternativesWithRisk = sameCategoryOffers.map((o) => {
-    const oChanges = allChanges.filter((c) => c.vendor.toLowerCase() === o.vendor.toLowerCase());
-    return {
-      vendor: o.vendor,
-      category: o.category,
-      tier: o.tier,
-      risk_level: vendorRiskLevel(oChanges),
-    };
-  });
-  // Prefer stable > caution > risky, then alphabetical
-  const riskOrder = { stable: 0, caution: 1, risky: 2 };
-  const alternatives = alternativesWithRisk
-    .sort((a, b) => riskOrder[a.risk_level] - riskOrder[b.risk_level] || a.vendor.localeCompare(b.vendor))
-    .slice(0, 3);
+  // Up to 3 alternatives in the same category. This is a recommendation, so it
+  // resolves through the shared selection module (#1025) rather than the old
+  // "risk bucket, then alphabetical" sort — which ranked on the count of
+  // changes we happen to have recorded and broke ties with the alphabet.
+  const alternatives = rankForListing(
+    offers.filter((o) => o.category === offer.category && o.vendor !== offer.vendor),
+    { queryKey: `vendor-risk-alternatives:${offer.vendor}`, changes: allChanges },
+  ).entries.slice(0, 3).map((e) => ({
+    vendor: e.offer.vendor,
+    category: e.offer.category,
+    tier: e.offer.tier,
+    risk_level: vendorRiskLevel(allChanges.filter((c) => c.vendor.toLowerCase() === e.offer.vendor.toLowerCase())),
+    demerits: e.demerits.map((d) => ({ code: d.code, points: d.points, reason: d.reason })),
+  }));
 
   // Build summary
   let summary: string;

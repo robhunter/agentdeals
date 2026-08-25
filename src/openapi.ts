@@ -575,15 +575,15 @@ export const openapiSpec = {
     },
     "/api/stack": {
       get: {
-        summary: "Get free-tier stack recommendation",
-        description: "Returns a curated infrastructure stack recommendation based on your project type. Covers hosting, database, auth, and more — all free tier.",
+        summary: "Get free-tier stack candidates per role",
+        description: "For each role in your project type (hosting, database, auth, …) returns the set of free-tier offers whose terms we can stand behind today — deliberately not a single pick, because under every signal we record dozens of them tie. Each candidate carries its demerits, with the recorded fact and date behind each, plus any recorded changes we disclose but do not rank on. This endpoint does NOT model technical fit between a product and a role; the caller must apply that. The method is published at /criteria, and every role returns the tie_break seed so its order can be recomputed independently.",
         parameters: [
           { name: "use_case", in: "query", required: true, description: "What you're building (e.g., 'Next.js SaaS app', 'API backend', 'static blog')", schema: { type: "string" }, example: "Next.js SaaS app" },
           { name: "requirements", in: "query", description: "Comma-separated infrastructure needs (e.g., 'database,auth,email')", schema: { type: "string" }, example: "database,auth,email" }
         ],
         responses: {
           "200": {
-            description: "Stack recommendation",
+            description: "Candidate sets per role, with the evidence behind each",
             content: {
               "application/json": {
                 schema: {
@@ -596,13 +596,33 @@ export const openapiSpec = {
                         type: "object",
                         properties: {
                           role: { type: "string" },
-                          vendor: { type: "string" },
-                          tier: { type: "string" },
-                          description: { type: "string" },
-                          url: { type: "string", format: "uri" }
+                          category: { type: "string" },
+                          candidates: {
+                            type: "array",
+                            description: "The rotated tied set for this role, capped at 8. Not ordered by merit — every member is indistinguishable under our criteria.",
+                            items: {
+                              type: "object",
+                              properties: {
+                                vendor: { type: "string" },
+                                tier: { type: "string" },
+                                description: { type: "string" },
+                                url: { type: "string", format: "uri" },
+                                verified_date: { type: "string", format: "date" },
+                                demerits: { type: "array", description: "Empty when we hold nothing against the offer.", items: { type: "object", properties: { code: { type: "string" }, points: { type: "integer" }, reason: { type: "string" }, date: { type: "string" }, about_us: { type: "boolean", description: "True when the demerit describes a limit of ours rather than a fact about the vendor." } } } },
+                                disclosures: { type: "array", description: "Recorded changes shown but never ranked on.", items: { type: "object", properties: { code: { type: "string" }, date: { type: "string" }, summary: { type: "string" } } } }
+                              }
+                            }
+                          },
+                          tie_count: { type: "integer", description: "How many offers tie at zero demerits in this role." },
+                          eligible_count: { type: "integer" },
+                          demoted_count: { type: "integer" },
+                          excluded_count: { type: "integer" },
+                          reason: { type: "string" },
+                          tie_break: { type: "object", properties: { date: { type: "string" }, query_key: { type: "string" }, seed: { type: "string" }, tie_count: { type: "integer" }, algorithm: { type: "string" } } }
                         }
                       }
                     },
+                    method: { type: "object", properties: { policy: { type: "string" }, not_modelled: { type: "string" }, criteria_url: { type: "string" } } },
                     total_monthly_cost: { type: "string" },
                     limitations: { type: "array", items: { type: "string" } },
                     upgrade_path: { type: "string" }

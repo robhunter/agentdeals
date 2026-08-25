@@ -224,7 +224,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
     "plan_stack",
     {
       description:
-        "Plan a technology stack with cost-optimized infrastructure choices. Given project requirements, recommends services with free tiers or credits that match your needs. Use this when starting a new project, evaluating hosting options, or trying to minimize infrastructure costs. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
+        "Plan a technology stack with cost-optimized infrastructure choices. In recommend mode this returns, for each role, the set of offers whose terms we can stand behind today — deliberately not a single pick, because under every signal we record dozens of them tie. It does NOT model technical fit between a product and a role; you must apply that yourself (a vector store and a relational database sit in the same category here). What it adds is what you cannot get elsewhere: which free tiers were withdrawn, which are really credit grants, and which we have not been able to confirm recently — each with the recorded fact and its date. Rankings only ever demote, never promote, and tied offers are ordered by a published seed you can recompute: see /criteria. Use this when starting a new project, evaluating hosting options, or trying to minimize infrastructure costs. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,

@@ -548,3 +548,49 @@ export function rankOffers<T extends Offer>(candidates: T[], opts: RankOptions):
 export function rotateListing<T>(items: T[], queryKey: string, date?: string): T[] {
   return seededShuffle(items, tieBreakSeed(date ?? "", queryKey, 0));
 }
+
+export interface ListedEntry<T> extends RankedEntry<T> {
+  /** Set when a gate applies. The entry is listed last, with the gate stated. */
+  gate?: Gate;
+}
+
+export interface ListingResult<T> {
+  entries: ListedEntry<T>[];
+  qualified_count: number;
+  demoted_count: number;
+  gated_count: number;
+  tie_break: TieBreak;
+}
+
+/**
+ * Rank a "what else could fill this need" list, e.g. the alternatives on a
+ * vendor page.
+ *
+ * Same ranking, one difference: a gated offer is moved to the end with its
+ * gate stated rather than removed. A `/best/` page claims *every free X that
+ * clears our bar*, so an offer that does not clear the bar has no business on
+ * it. An alternatives list claims *the other things in this category*, and
+ * dropping them silently would empty 91 of these pages — every vendor whose
+ * category peers are all eligibility-restricted, which is most of the startup
+ * and fintech programmes. Listing them with "requires accelerator/student
+ * qualification" attached tells the reader more than hiding them does.
+ */
+export function rankForListing<T extends Offer>(candidates: T[], opts: RankOptions): ListingResult<T> {
+  const date = opts.date ?? utcDate();
+  const result = rankOffers(candidates, { ...opts, date });
+  // One band past the worst demerit total, so the gated tail gets its own
+  // permutation and can never be interleaved with rankable offers.
+  const gatedBand = result.ranked.reduce((max, e) => Math.max(max, e.demerit_total), 0) + 1;
+  const gatedTail: ListedEntry<T>[] = seededShuffle(
+    result.excluded,
+    tieBreakSeed(date, opts.queryKey, gatedBand),
+  ).map((e) => ({ offer: e.offer, demerits: [], demerit_total: gatedBand, disclosures: [], gate: e.gate }));
+
+  return {
+    entries: [...result.ranked, ...gatedTail],
+    qualified_count: result.qualified.length,
+    demoted_count: result.demoted.length,
+    gated_count: result.excluded.length,
+    tie_break: result.tie_break,
+  };
+}
