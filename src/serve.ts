@@ -8,7 +8,7 @@ import { createServer, getServerCard } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, getRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -53081,7 +53081,11 @@ const httpServer = createHttpServer(async (req, res) => {
     !url.pathname.startsWith("/.well-known/") &&
     url.pathname !== "/feed.xml";
   if (isPagePath) {
-    recordPageView(url.pathname, req.headers["user-agent"] ?? "", req.headers["referer"]);
+    // Recorded on response finish so the served status is known: a path we 404 is not a
+    // route of ours and must not mint its own analytics key (#1018).
+    res.on("finish", () => {
+      recordPageView(url.pathname, req.headers["user-agent"] ?? "", req.headers["referer"], res.statusCode);
+    });
   }
 
   if (url.pathname === "/mcp") {
@@ -53317,9 +53321,16 @@ const httpServer = createHttpServer(async (req, res) => {
     res.end(JSON.stringify(result));
   } else if (url.pathname === "/api/query-log" && isGetOrHead) {
     const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") ?? "50", 10) || 50, 1), 200);
-    const entries = await getRequestLog(limit);
+    const log = await getRequestLogResult(limit);
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ entries, count: entries.length }));
+    res.end(JSON.stringify({
+      entries: log.entries,
+      count: log.entries.length,
+      available: log.available,
+      error: log.error,
+      newest_entry_at: log.entries[0]?.ts ?? null,
+      storage: getTelemetryHealth(),
+    }));
   } else if (url.pathname === "/api/openapi.json" && isGetOrHead) {
     recordApiHit("/api/openapi.json");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/openapi.json", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
