@@ -1870,6 +1870,7 @@ ${row("Distinct vendors named", fmt(w.distinct_vendors))}
 ${row("via POST", fmt(w.by_transport.post ?? 0))}
 ${row("via GET", fmt(w.by_transport.get ?? 0))}
 ${row("Qualifying fetches (ai_agent)", fmt(w.qualifying_fetches))}
+${row("— days of fetch data behind it", `${w.denominator_days_available} of ${w.days}`)}
 ${row("Qualifying fetches (sdk_client)", fmt(w.qualifying_fetches_sdk_client))}
   </tbody></table>
   <p><strong style="color:var(--text)">Report rate:</strong> ${rateLine}</p>
