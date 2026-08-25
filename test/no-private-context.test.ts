@@ -4,13 +4,15 @@
 // and they are the easiest place for context to leak, because a comment feels like a note
 // to yourself rather than something published. It is not: it ships.
 //
-// Three things went in this way and had to be taken back out (2026-08-25):
+// Four things went in this way and had to be taken back out (2026-08-25):
 //   - a business identity block (entity name, tax ID, street address) in a docs/ file,
 //     added as a convenience for filling in affiliate registrations
 //   - two comments explaining a retention choice by pointing at a private commercial
 //     conversation, which is context the reader cannot have and we do not want to give
 //   - a scatter of comments and test names attributing a decision to an internal role
 //     rather than stating the reason for it
+//   - a test name saying a published figure was "going to a partner", which named a
+//     counterparty without naming a conversation and so slipped the rule above
 //
 // The last one is the instructive case, because it is also just worse commenting. "X
 // overrode this during review" tells you who to blame; "a 400 here throws away the most
@@ -88,6 +90,16 @@ const RULES: Rule[] = [
     name: "private commercial conversation",
     pattern: /\bpartner(?:ship)?\s+(?:conversation|discussion|talks|call|negotiation)/i,
     why: "pointing a code comment at a private commercial discussion tells a reader it exists and what it is about",
+  },
+  {
+    name: "commercial counterparty as audience",
+    pattern:
+      /\b(?:going|sent|shown|quoted|promised|reported|shared|pitched|due)\s+to\s+(?:an?|the|our)\s+(?:external\s+|prospective\s+|potential\s+|commercial\s+)?(?:partner|investor|acquirer|buyer)\b|\b(?:our|my)\s+(?:external\s+|prospective\s+|potential\s+|commercial\s+)?(?:partner|investor|acquirer|buyer)\b/i,
+    why:
+      "'partner' alone is ordinary product vocabulary here — vendors run partner programs, " +
+      "/disclosure lists referral partners, and type: 'partner' is a schema value. What is " +
+      "banned is a counterparty of ours as the audience for a number or a decision: that is " +
+      "what reveals a commercial relationship and what it turns on",
   },
   {
     name: "internal role attribution",

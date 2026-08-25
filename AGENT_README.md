@@ -29,6 +29,12 @@ A remote MCP server that aggregates publicly available discounts, free tiers, st
 - PRs: Squash merge preferred
 - Branches: `<issue-number>-<short-description>`
 - Index data: `data/index.json` — structured vendor offer entries
+- **Do not add code comments in this repo.** This is a public tree; express intent
+  through naming, small functions and test names instead. Existing comments stay —
+  the rule applies to new ones.
+- Comments are not the only published prose: test names, assertion messages and
+  anything under `docs/` ship to every reader too. `test/no-private-context.test.ts`
+  scans all of it. If it fires, fix the text — do not widen the exclusion.
 
 ## Commands
 

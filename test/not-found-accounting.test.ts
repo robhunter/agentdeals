@@ -200,7 +200,7 @@ describe("404s are not page views (#1029)", () => {
       assert.equal(traffic.web_vs_mcp ?? undefined, undefined);
     });
 
-    it("keeps web_vs_mcp clean, since that is the number going to a partner", async () => {
+    it("keeps web_vs_mcp clean, since that is the number we publish", async () => {
       await boot();
       for (let i = 0; i < 50; i++) recordTraffic(`/probe-${i}`, UA.curl, 404);
       recordTraffic("/vendor/neon", UA.chatgpt, 200);
