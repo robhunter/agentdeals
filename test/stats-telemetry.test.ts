@@ -18,6 +18,9 @@ const {
   UNMATCHED_PAGE_KEY,
   logRequest,
   resetCounters,
+  loadTelemetry,
+  flushTelemetry,
+  telemetryLoadDidFail,
 } = await import("../dist/stats.js");
 
 type Call = { cmd: string; args: unknown[] };
@@ -208,6 +211,49 @@ describe("telemetry storage layer (#1018)", () => {
       assert.strictEqual(empty.available, true, "a genuinely empty log is available, just empty");
       assert.strictEqual(empty.error, null);
       assert.deepStrictEqual(empty.entries, []);
+    });
+  });
+
+  describe("a failed load must not clobber stored history", () => {
+    it("refuses to persist zeros after the boot-time read failed", async () => {
+      responder = () => ({ error: "ERR max requests limit exceeded. Limit: 500000, Usage: 500000" });
+      await loadTelemetry("/tmp/agentdeals-telemetry-test.json");
+      assert.strictEqual(telemetryLoadDidFail(), true, "an errored GET is not an empty database");
+
+      calls = [];
+      await flushTelemetry();
+      assert.strictEqual(callsFor("SET").length, 0, "flushing zeros over real history is data loss");
+    });
+
+    it("resumes persisting once storage recovers", async () => {
+      responder = () => ({ error: "ERR max requests limit exceeded" });
+      await loadTelemetry("/tmp/agentdeals-telemetry-test.json");
+      assert.strictEqual(telemetryLoadDidFail(), true);
+
+      // Storage comes back with the real historical totals.
+      responder = (cmd) => {
+        if (cmd === "GET") return { result: JSON.stringify({ cumulative_api_hits: 282802, cumulative_sessions: 24955 }) };
+        return { result: "OK" };
+      };
+      calls = [];
+      await flushTelemetry();
+      assert.strictEqual(telemetryLoadDidFail(), false, "a successful re-read clears the block");
+      assert.strictEqual(callsFor("SET").length, 1, "persistence should resume");
+
+      const written = JSON.parse(String(callsFor("SET")[0].args[1]));
+      assert.strictEqual(written.cumulative_api_hits, 282802, "history must be re-hydrated, not overwritten with zeros");
+    });
+
+    it("persists normally when the boot-time read succeeds", async () => {
+      responder = (cmd) => {
+        if (cmd === "GET") return { result: JSON.stringify({ cumulative_api_hits: 100 }) };
+        return { result: "OK" };
+      };
+      await loadTelemetry("/tmp/agentdeals-telemetry-test.json");
+      assert.strictEqual(telemetryLoadDidFail(), false);
+      calls = [];
+      await flushTelemetry();
+      assert.strictEqual(callsFor("SET").length, 1);
     });
   });
 
