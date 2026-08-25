@@ -60,7 +60,7 @@ const upstash = createServer((req, res) => {
 
 const today = new Date().toISOString().slice(0, 10);
 
-// The exact junk keys the PM quoted from the live all_time.top_pages, plus the real
+// The exact junk keys observed in the live all_time.top_pages, plus the real
 // shape of today's counters: a day total that counted its own 404s, and class counters
 // with the 404s already inside them.
 const SEEDED = {

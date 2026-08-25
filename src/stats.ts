@@ -1043,8 +1043,8 @@ function outcomeKey(outcome: Exclude<RequestOutcome, "served">): string {
 // that exhausted the quota in the first place.
 //
 // Retention differs by map because the shapes differ in width: the class totals are 8
-// numbers a day and a partner conversation wants a month of them, while the route and
-// family breakdowns are wide and only useful recently.
+// numbers a day and are cheap enough to keep for a month, while the route and family
+// breakdowns are wide and only useful recently.
 // The classifier lives in client-class.ts and is *not* imported here: this module is
 // loaded directly from source by several tests, and Node's type stripping cannot resolve
 // a relative import out of a .ts file. Callers classify and pass the result in, which is
@@ -1792,9 +1792,9 @@ export function recordPageView(path: string, userAgent: string, referer?: string
 
 let legacyMigrationDone = false;
 
-// One-time move off the per-key layout. The all-time counters are real history (the
-// partnership conversation is about exactly these numbers), so they are read across and
-// folded into the snapshot rather than abandoned. Legacy keys are left in place: the
+// One-time move off the per-key layout. The all-time counters are real history and
+// cannot be reconstructed from anything else, so they are read across and folded into
+// the snapshot rather than abandoned. Legacy keys are left in place: the
 // dailies carry TTLs and expire themselves, and pv:all:* becomes inert once we stop
 // reading it. Returns false if any read failed — a partial migration would silently
 // under-count history, so we retry on the next flush instead of persisting it.
