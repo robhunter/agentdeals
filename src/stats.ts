@@ -104,45 +104,137 @@ interface TelemetryData {
   cumulative_search_queries?: SearchQueryEntry[];
 }
 
-async function redisGet(): Promise<TelemetryData | null> {
+// --- Upstash REST command layer ---
+// Every Redis helper funnels through redisCommand() so that failures are (a) recorded
+// and (b) distinguishable from legitimately-empty results.
+//
+// This is the defect that let a write outage run silently for 17 days (#1018): each
+// helper had its own try/catch returning false/[]/null, and none of them ever looked at
+// the `error` field Upstash returns in a 200 response body. An errored SCAN and an empty
+// keyspace were indistinguishable; a rejected INCR was indistinguishable from a
+// successful one. Root cause could not be read off the symptoms because the only
+// component that ever saw the error message threw it away.
+
+type RedisResult<T> = { ok: true; result: T } | { ok: false; error: string };
+
+// Commands that mutate state. Used to attribute a failure to the read or the write path,
+// which is the distinction that matters when diagnosing an outage.
+const WRITE_COMMANDS = new Set(["SET", "INCR", "LPUSH", "LTRIM", "EXPIRE", "DEL"]);
+
+const redisHealth = {
+  lastWriteAt: null as string | null,
+  lastWriteError: null as string | null,
+  lastWriteErrorAt: null as string | null,
+  lastReadError: null as string | null,
+  lastReadErrorAt: null as string | null,
+  writeFailures: 0,
+  readFailures: 0,
+};
+
+// Throttle stderr so a hard outage can't turn into a log flood (one line per command
+// class per minute is enough to see the actual Upstash error in the platform logs).
+const lastLoggedAt: Record<string, number> = {};
+function logRedisFailure(command: string, error: string): void {
+  const now = Date.now();
+  if (now - (lastLoggedAt[command] ?? 0) < 60_000) return;
+  lastLoggedAt[command] = now;
+  console.error(`[telemetry] redis ${command} failed: ${error}`);
+}
+
+function recordRedisFailure(command: string, isWrite: boolean, error: string): void {
+  const at = new Date().toISOString();
+  if (isWrite) {
+    redisHealth.writeFailures++;
+    redisHealth.lastWriteError = error;
+    redisHealth.lastWriteErrorAt = at;
+  } else {
+    redisHealth.readFailures++;
+    redisHealth.lastReadError = error;
+    redisHealth.lastReadErrorAt = at;
+  }
+  logRedisFailure(command, error);
+}
+
+async function redisCommand<T>(cmd: (string | number)[]): Promise<RedisResult<T>> {
+  if (!useRedis()) return { ok: false, error: "redis-not-configured" };
+  const command = String(cmd[0]).toUpperCase();
+  const isWrite = WRITE_COMMANDS.has(command);
   const url = process.env.UPSTASH_REDIS_REST_URL!;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
   try {
     const res = await fetch(url, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(["GET", REDIS_KEY]),
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(cmd),
     });
-    const json = (await res.json()) as { result?: string | null };
-    if (json.result) {
-      return JSON.parse(json.result) as TelemetryData;
+    // Upstash reports command-level errors in the body with HTTP 200 (quota exhaustion,
+    // max-data-size, WRONGTYPE, ...), so the status code alone is not sufficient.
+    const json = (await res.json().catch(() => ({}))) as { result?: T; error?: string };
+    if (!res.ok || typeof json.error === "string") {
+      const error = json.error ?? `HTTP ${res.status}`;
+      recordRedisFailure(command, isWrite, error);
+      return { ok: false, error };
     }
-    return null;
-  } catch {
+    if (isWrite) redisHealth.lastWriteAt = new Date().toISOString();
+    return { ok: true, result: json.result as T };
+  } catch (err) {
+    const error = err instanceof Error ? err.message : String(err);
+    recordRedisFailure(command, isWrite, error);
+    return { ok: false, error };
+  }
+}
+
+// Storage-layer health, surfaced on /api/pageviews and /api/query-log so a future stall
+// is visible without forensics (#1018).
+export interface TelemetryHealth {
+  configured: boolean;
+  last_write_at: string | null;
+  last_write_error: string | null;
+  last_write_error_at: string | null;
+  last_read_error: string | null;
+  last_read_error_at: string | null;
+  write_failures: number;
+  read_failures: number;
+}
+
+export function getTelemetryHealth(): TelemetryHealth {
+  return {
+    configured: useRedis(),
+    last_write_at: redisHealth.lastWriteAt,
+    last_write_error: redisHealth.lastWriteError,
+    last_write_error_at: redisHealth.lastWriteErrorAt,
+    last_read_error: redisHealth.lastReadError,
+    last_read_error_at: redisHealth.lastReadErrorAt,
+    write_failures: redisHealth.writeFailures,
+    read_failures: redisHealth.readFailures,
+  };
+}
+
+export function resetTelemetryHealth(): void {
+  redisHealth.lastWriteAt = null;
+  redisHealth.lastWriteError = null;
+  redisHealth.lastWriteErrorAt = null;
+  redisHealth.lastReadError = null;
+  redisHealth.lastReadErrorAt = null;
+  redisHealth.writeFailures = 0;
+  redisHealth.readFailures = 0;
+  for (const k of Object.keys(lastLoggedAt)) delete lastLoggedAt[k];
+}
+
+async function redisGet(): Promise<TelemetryData | null> {
+  const res = await redisCommand<string | null>(["GET", REDIS_KEY]);
+  if (!res.ok || !res.result) return null;
+  try {
+    return JSON.parse(res.result) as TelemetryData;
+  } catch (err) {
+    recordRedisFailure("GET", false, `unparseable telemetry blob: ${err instanceof Error ? err.message : String(err)}`);
     return null;
   }
 }
 
 async function redisSet(data: TelemetryData): Promise<boolean> {
-  const url = process.env.UPSTASH_REDIS_REST_URL!;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(["SET", REDIS_KEY, JSON.stringify(data)]),
-    });
-    const json = (await res.json()) as { result?: string };
-    return json.result === "OK";
-  } catch {
-    return false;
-  }
+  const res = await redisCommand<string>(["SET", REDIS_KEY, JSON.stringify(data)]);
+  return res.ok && res.result === "OK";
 }
 
 // Request-level logging to Upstash Redis
@@ -161,53 +253,19 @@ export interface RequestLogEntry {
 }
 
 async function redisLpush(key: string, value: string): Promise<boolean> {
-  if (!useRedis()) return false;
-  const url = process.env.UPSTASH_REDIS_REST_URL!;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify(["LPUSH", key, value]),
-    });
-    const json = (await res.json()) as { result?: number };
-    return typeof json.result === "number";
-  } catch {
-    return false;
-  }
+  const res = await redisCommand<number>(["LPUSH", key, value]);
+  return res.ok && typeof res.result === "number";
 }
 
 async function redisLtrim(key: string, start: number, stop: number): Promise<boolean> {
-  if (!useRedis()) return false;
-  const url = process.env.UPSTASH_REDIS_REST_URL!;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
-  try {
-    await fetch(url, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify(["LTRIM", key, start, stop]),
-    });
-    return true;
-  } catch {
-    return false;
-  }
+  const res = await redisCommand<string>(["LTRIM", key, start, stop]);
+  return res.ok;
 }
 
-async function redisLrange(key: string, start: number, stop: number): Promise<string[]> {
-  if (!useRedis()) return [];
-  const url = process.env.UPSTASH_REDIS_REST_URL!;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify(["LRANGE", key, start, stop]),
-    });
-    const json = (await res.json()) as { result?: string[] };
-    return json.result ?? [];
-  } catch {
-    return [];
-  }
+async function redisLrange(key: string, start: number, stop: number): Promise<RedisResult<string[]>> {
+  const res = await redisCommand<string[]>(["LRANGE", key, start, stop]);
+  if (!res.ok) return res;
+  return { ok: true, result: res.result ?? [] };
 }
 
 export async function logRequest(entry: RequestLogEntry): Promise<void> {
@@ -218,12 +276,24 @@ export async function logRequest(entry: RequestLogEntry): Promise<void> {
   }
 }
 
-export async function getRequestLog(limit = 50): Promise<RequestLogEntry[]> {
-  const raw = await redisLrange(REQUEST_LOG_KEY, 0, limit - 1);
-  return raw.map((s) => {
+// Returns the log alongside an explicit `available` flag. An unreachable Redis
+// previously produced an empty array indistinguishable from "no traffic yet" (#1018).
+export async function getRequestLogResult(limit = 50): Promise<{
+  entries: RequestLogEntry[];
+  available: boolean;
+  error: string | null;
+}> {
+  const res = await redisLrange(REQUEST_LOG_KEY, 0, limit - 1);
+  if (!res.ok) return { entries: [], available: false, error: res.error };
+  const entries = res.result.map((s) => {
     try { return JSON.parse(s) as RequestLogEntry; }
     catch { return null; }
   }).filter((e): e is RequestLogEntry => e !== null);
+  return { entries, available: true, error: null };
+}
+
+export async function getRequestLog(limit = 50): Promise<RequestLogEntry[]> {
+  return (await getRequestLogResult(limit)).entries;
 }
 
 function parseTelemetryData(data: Record<string, unknown>): void {
@@ -649,76 +719,118 @@ function isBot(userAgent: string): boolean {
 let pageViewsToday = 0;
 let pageViewsTodayDate = new Date().toISOString().slice(0, 10);
 
-async function redisIncr(key: string): Promise<boolean> {
-  if (!useRedis()) return false;
-  const url = process.env.UPSTASH_REDIS_REST_URL!;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify(["INCR", key]),
-    });
-    const json = (await res.json()) as { result?: number };
-    return typeof json.result === "number";
-  } catch {
-    return false;
+// Daily page-view and referrer keys expire after DAILY_KEY_TTL_SECONDS. Without a TTL,
+// every distinct path ever requested became a permanent key (#1018).
+const DAILY_KEY_TTL_SECONDS = 35 * 24 * 60 * 60;
+
+// Upstash rejects oversized requests, and a rejected MGET used to read back as a page of
+// zeros. Chunking keeps each command small enough to succeed.
+const MGET_CHUNK_SIZE = 100;
+
+// INCR returns the post-increment value, so a result of 1 means we just created the key —
+// the only moment an EXPIRE is needed. Setting it on every hit would double command volume
+// and keep pushing the expiry out, which for a daily key is exactly wrong.
+async function redisIncrWithTtl(key: string, ttlSeconds?: number): Promise<boolean> {
+  const res = await redisCommand<number>(["INCR", key]);
+  if (!res.ok || typeof res.result !== "number") return false;
+  if (ttlSeconds !== undefined && res.result === 1) {
+    await redisCommand<number>(["EXPIRE", key, ttlSeconds]);
   }
+  return true;
 }
 
-async function redisMget(...keys: string[]): Promise<(string | null)[]> {
-  if (!useRedis()) return keys.map(() => null);
-  const url = process.env.UPSTASH_REDIS_REST_URL!;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify(["MGET", ...keys]),
-    });
-    const json = (await res.json()) as { result?: (string | null)[] };
-    return json.result ?? keys.map(() => null);
-  } catch {
-    return keys.map(() => null);
+async function redisMget(keys: string[]): Promise<RedisResult<(string | null)[]>> {
+  const res = await redisCommand<(string | null)[]>(["MGET", ...keys]);
+  if (!res.ok) return res;
+  const values = res.result;
+  if (!Array.isArray(values) || values.length !== keys.length) {
+    const error = `MGET returned ${Array.isArray(values) ? values.length : typeof values} values for ${keys.length} keys`;
+    recordRedisFailure("MGET", false, error);
+    return { ok: false, error };
   }
+  return { ok: true, result: values };
 }
 
-async function redisScan(pattern: string, count = 100): Promise<string[]> {
-  if (!useRedis()) return [];
-  const url = process.env.UPSTASH_REDIS_REST_URL!;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+async function redisScan(pattern: string, count = 100): Promise<RedisResult<string[]>> {
   const keys: string[] = [];
   let cursor = "0";
-  try {
-    do {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify(["SCAN", cursor, "MATCH", pattern, "COUNT", String(count)]),
-      });
-      const json = (await res.json()) as { result?: [string, string[]] };
-      if (!json.result) break;
-      cursor = json.result[0];
-      keys.push(...json.result[1]);
-    } while (cursor !== "0" && keys.length < 500);
-    return keys;
-  } catch {
-    return [];
-  }
+  do {
+    const res = await redisCommand<[string, string[]]>(["SCAN", cursor, "MATCH", pattern, "COUNT", String(count)]);
+    if (!res.ok) return res;
+    if (!res.result) break;
+    cursor = res.result[0];
+    keys.push(...res.result[1]);
+  } while (cursor !== "0" && keys.length < 500);
+  return { ok: true, result: keys };
 }
 
-async function redisGetMulti(keys: string[]): Promise<Map<string, number>> {
-  if (keys.length === 0) return new Map();
-  const values = await redisMget(...keys);
-  const result = new Map<string, number>();
-  for (let i = 0; i < keys.length; i++) {
-    const v = values[i];
-    if (v !== null) result.set(keys[i], parseInt(v, 10) || 0);
+// Reads a set of counter keys. `missing` lists keys whose value could not be read, so
+// callers can tell "we could not read this" from "this is genuinely zero" (#1018 Defect B).
+async function redisGetMulti(keys: string[]): Promise<{ values: Map<string, number>; missing: string[] }> {
+  const values = new Map<string, number>();
+  const missing: string[] = [];
+  if (keys.length === 0) return { values, missing };
+  for (let i = 0; i < keys.length; i += MGET_CHUNK_SIZE) {
+    const chunk = keys.slice(i, i + MGET_CHUNK_SIZE);
+    const res = await redisMget(chunk);
+    if (!res.ok) {
+      // The whole chunk is unreadable — report it rather than counting it as zeros.
+      missing.push(...chunk);
+      continue;
+    }
+    for (let j = 0; j < chunk.length; j++) {
+      const v = res.result[j];
+      if (v === null) continue; // key genuinely absent (expired/never created)
+      values.set(chunk[j], parseInt(v, 10) || 0);
+    }
   }
-  return result;
+  return { values, missing };
 }
 
-export function recordPageView(path: string, userAgent: string, referer?: string): void {
+// Page paths that carry a slug. Longest-prefix-first so /embed/vendor/ is not
+// swallowed by a shorter prefix.
+const DYNAMIC_PAGE_PREFIXES = [
+  "/embed/vendor/",
+  "/embed/category/",
+  "/alternative-to/",
+  "/category/",
+  "/compare/",
+  "/vendors/",
+  "/vendor/",
+  "/reports/",
+  "/guides/",
+  "/trends/",
+  "/stacks/",
+  "/events/",
+  "/digest/",
+  "/badge/",
+  "/best/",
+] as const;
+
+// Every page view that is not a route we actually serve collapses into this one key.
+export const UNMATCHED_PAGE_KEY = "__unmatched__";
+
+// Maps a raw request path onto a bounded key space. Before this, `recordPageView` used the
+// raw pathname, so any string an attacker put in a request line became a permanent Redis
+// key — the live keyspace contained entries like `/$(pwd)/.env` (#1018).
+export function normalizePagePath(path: string): string {
+  if (typeof path !== "string" || path.length === 0) return UNMATCHED_PAGE_KEY;
+  const clean = path.split("?")[0].split("#")[0];
+  if (clean === "/") return "/";
+  for (const prefix of DYNAMIC_PAGE_PREFIXES) {
+    if (clean.startsWith(prefix)) return `${prefix}:slug`;
+  }
+  // Static pages are a fixed, server-defined set of single-segment slugs. Anything with
+  // another path segment, an unusual character, or an implausible length is not a page we
+  // serve — it is scanner traffic.
+  if (/^\/[a-z0-9][a-z0-9._-]{0,63}$/.test(clean)) return clean;
+  return UNMATCHED_PAGE_KEY;
+}
+
+// `statusCode`, when supplied, is the status we actually served. A 404 means the path is
+// not a route of ours regardless of how well-formed it looks, so it buckets to
+// __unmatched__ — this is what bounds the keyspace for slug-shaped probes like /wp-login.
+export function recordPageView(path: string, userAgent: string, referer?: string, statusCode?: number): void {
   if (isBot(userAgent)) return;
 
   const today = new Date().toISOString().slice(0, 10);
@@ -730,92 +842,127 @@ export function recordPageView(path: string, userAgent: string, referer?: string
 
   if (!useRedis()) return;
 
+  const served = statusCode === undefined || statusCode < 400;
+  const key = served ? normalizePagePath(path) : UNMATCHED_PAGE_KEY;
+
   // Fire-and-forget — don't await
-  const dailyPath = `pv:${today}:${path}`;
+  const dailyPath = `pv:${today}:${key}`;
   const dailyTotal = `pv:${today}:total`;
-  const allTimePath = `pv:all:${path}`;
-  redisIncr(dailyPath).catch(() => {});
-  redisIncr(dailyTotal).catch(() => {});
-  redisIncr(allTimePath).catch(() => {});
+  const allTimePath = `pv:all:${key}`;
+  redisIncrWithTtl(dailyPath, DAILY_KEY_TTL_SECONDS).catch(() => {});
+  redisIncrWithTtl(dailyTotal, DAILY_KEY_TTL_SECONDS).catch(() => {});
+  // All-time counters persist, but only over the normalized key space.
+  redisIncrWithTtl(allTimePath).catch(() => {});
 
   // Track referrer domain
   if (referer) {
     try {
       const refUrl = new URL(referer);
       const domain = refUrl.hostname.replace(/^www\./, "");
-      redisIncr(`ref:${today}:${domain}`).catch(() => {});
+      redisIncrWithTtl(`ref:${today}:${domain}`, DAILY_KEY_TTL_SECONDS).catch(() => {});
     } catch {
       // Invalid referrer URL — skip
     }
   }
 }
 
-export async function getPageViews(): Promise<{
-  today: { total: number; top_pages: { path: string; views: number }[] };
-  yesterday: { total: number; top_pages: { path: string; views: number }[] };
-  all_time: { total: number; top_pages: { path: string; views: number }[] };
+export interface PageViewPeriod {
+  total: number | null;
+  top_pages: { path: string; views: number }[];
+  /** True when at least one key in this period could not be read. */
+  partial: boolean;
+}
+
+export interface PageViewsReport {
+  today: PageViewPeriod;
+  yesterday: PageViewPeriod;
+  all_time: PageViewPeriod;
   referrers_today: Record<string, number>;
-}> {
+  /** False when the storage layer could not be read at all — the numbers are not measurements. */
+  available: boolean;
+  error: string | null;
+  storage: TelemetryHealth;
+}
+
+const UNAVAILABLE_PERIOD: PageViewPeriod = { total: null, top_pages: [], partial: true };
+
+// Collects one `pv:<scope>:*` period. A read failure yields total: null rather than 0 —
+// presenting an unreadable counter as a measured zero is what produced a "top pages" list
+// in which every entry had 0 views (#1018 Defect B).
+async function collectPeriod(prefix: string): Promise<{ period: PageViewPeriod; error: string | null }> {
+  const scan = await redisScan(`${prefix}*`);
+  if (!scan.ok) return { period: { ...UNAVAILABLE_PERIOD }, error: scan.error };
+
+  const keys = scan.result;
+  const totalKey = `${prefix}total`;
+  const { values, missing } = await redisGetMulti(keys);
+  const missingSet = new Set(missing);
+
+  const pages = keys
+    .filter(k => k !== totalKey && !missingSet.has(k))
+    .map(k => ({ path: k.replace(prefix, ""), views: values.get(k) ?? 0 }))
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 20);
+
+  // `pv:all:*` has no explicit total key, so fall back to summing what we could read.
+  // A sum over a partially-readable key set is not a measurement — report null instead.
+  let total: number | null;
+  if (keys.includes(totalKey)) {
+    total = missingSet.has(totalKey) ? null : (values.get(totalKey) ?? 0);
+  } else if (missing.length > 0) {
+    total = null;
+  } else {
+    total = [...values.entries()].reduce((sum, [k, v]) => (k === totalKey ? sum : sum + v), 0);
+  }
+
+  return { period: { total, top_pages: pages, partial: missing.length > 0 }, error: null };
+}
+
+export async function getPageViews(): Promise<PageViewsReport> {
   const today = new Date().toISOString().slice(0, 10);
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const storage = getTelemetryHealth();
 
   if (!useRedis()) {
+    // No storage configured: today's in-memory counter is a real measurement, the
+    // historical periods are simply not available here.
     return {
-      today: { total: pageViewsToday, top_pages: [] },
-      yesterday: { total: 0, top_pages: [] },
-      all_time: { total: pageViewsToday, top_pages: [] },
+      today: { total: pageViewsToday, top_pages: [], partial: false },
+      yesterday: { ...UNAVAILABLE_PERIOD },
+      all_time: { ...UNAVAILABLE_PERIOD },
       referrers_today: {},
+      available: false,
+      error: "redis-not-configured",
+      storage,
     };
   }
 
-  // Get today's pages
-  const todayKeys = await redisScan(`pv:${today}:*`);
-  const todayPathKeys = todayKeys.filter(k => k !== `pv:${today}:total`);
-  const todayTotalKeys = todayKeys.filter(k => k === `pv:${today}:total`);
-  const todayValues = await redisGetMulti(todayKeys);
-  const todayTotal = todayValues.get(`pv:${today}:total`) ?? 0;
-  const todayPages = todayPathKeys
-    .map(k => ({ path: k.replace(`pv:${today}:`, ""), views: todayValues.get(k) ?? 0 }))
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 20);
-
-  // Get yesterday's pages
-  const yesterdayKeys = await redisScan(`pv:${yesterday}:*`);
-  const yesterdayPathKeys = yesterdayKeys.filter(k => k !== `pv:${yesterday}:total`);
-  const yesterdayValues = await redisGetMulti(yesterdayKeys);
-  const yesterdayTotal = yesterdayValues.get(`pv:${yesterday}:total`) ?? 0;
-  const yesterdayPages = yesterdayPathKeys
-    .map(k => ({ path: k.replace(`pv:${yesterday}:`, ""), views: yesterdayValues.get(k) ?? 0 }))
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 20);
-
-  // Get all-time pages
-  const allTimeKeys = await redisScan("pv:all:*");
-  const allTimeValues = await redisGetMulti(allTimeKeys);
-  let allTimeTotal = 0;
-  const allTimePages = allTimeKeys
-    .map(k => {
-      const views = allTimeValues.get(k) ?? 0;
-      allTimeTotal += views;
-      return { path: k.replace("pv:all:", ""), views };
-    })
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 20);
+  const todayResult = await collectPeriod(`pv:${today}:`);
+  const yesterdayResult = await collectPeriod(`pv:${yesterday}:`);
+  const allTimeResult = await collectPeriod("pv:all:");
 
   // Get today's referrers
-  const refKeys = await redisScan(`ref:${today}:*`);
-  const refValues = await redisGetMulti(refKeys);
+  const refScan = await redisScan(`ref:${today}:*`);
   const referrers: Record<string, number> = {};
-  for (const k of refKeys) {
-    const domain = k.replace(`ref:${today}:`, "");
-    referrers[domain] = refValues.get(k) ?? 0;
+  if (refScan.ok) {
+    const { values, missing } = await redisGetMulti(refScan.result);
+    const missingSet = new Set(missing);
+    for (const k of refScan.result) {
+      if (missingSet.has(k)) continue;
+      referrers[k.replace(`ref:${today}:`, "")] = values.get(k) ?? 0;
+    }
   }
 
+  const error = todayResult.error ?? yesterdayResult.error ?? allTimeResult.error ?? (refScan.ok ? null : refScan.error);
+
   return {
-    today: { total: todayTotal, top_pages: todayPages },
-    yesterday: { total: yesterdayTotal, top_pages: yesterdayPages },
-    all_time: { total: allTimeTotal, top_pages: allTimePages },
+    today: todayResult.period,
+    yesterday: yesterdayResult.period,
+    all_time: allTimeResult.period,
     referrers_today: referrers,
+    available: error === null,
+    error,
+    storage: getTelemetryHealth(),
   };
 }
 
