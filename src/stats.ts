@@ -687,6 +687,7 @@ export function resetTelemetryBuffers(): void {
   requestLogDropped = 0;
   requestLogHydrated = false;
   lastFlushAt = null;
+  trafficSinceBoot = {};
 }
 
 export function recordToolCall(tool: string, clientName?: string): void {
@@ -695,6 +696,11 @@ export function recordToolCall(tool: string, clientName?: string): void {
     const bucket = (clientName && clientName.trim()) || "unknown";
     toolCallsByClient[bucket] = (toolCallsByClient[bucket] ?? 0) + 1;
     toolCallsByName[tool] = (toolCallsByName[tool] ?? 0) + 1;
+    // Also bucketed by day (#1019). The all-time cumulative counter cannot answer
+    // "web hits vs MCP tool calls over the same 7 days", which is the headline number.
+    if (useRedis()) {
+      bump(pendingPageViews.mcp, new Date().toISOString().slice(0, 10), 1);
+    }
   }
 }
 
@@ -956,18 +962,79 @@ export const OTHER_REFERRER_KEY = "__other__";
 
 const DAY_TOTAL_KEY = "total";
 
+// --- Client-class traffic attribution (#1019) ---
+//
+// These counters ride inside the page-view snapshot rather than in keys of their own.
+// That is deliberate: #1023 made the whole snapshot one SET per flush interval, so
+// attribution costs *zero additional Redis commands* however much traffic it measures.
+// A key space of its own would have re-introduced the O(requests served) write pattern
+// that exhausted the quota in the first place.
+//
+// Retention differs by map because the shapes differ in width: the class totals are 8
+// numbers a day and a partner conversation wants a month of them, while the route and
+// family breakdowns are wide and only useful recently.
+// The classifier lives in client-class.ts and is *not* imported here: this module is
+// loaded directly from source by several tests, and Node's type stripping cannot resolve
+// a relative import out of a .ts file. Callers classify and pass the result in, which is
+// the better layering anyway — a storage module has no business parsing user agents.
+//
+// TRAFFIC_CLASSES therefore restates the taxonomy. traffic-attribution.test.ts asserts it
+// is identical to CLIENT_CLASSES, so the two cannot drift apart unnoticed.
+export const TRAFFIC_CLASSES = [
+  "internal",
+  "ai_agent",
+  "search_crawler",
+  "seo_crawler",
+  "other_bot",
+  "sdk_client",
+  "browser",
+  "unknown",
+] as const;
+export type TrafficClass = (typeof TRAFFIC_CLASSES)[number];
+
+/** What a caller hands `recordTraffic` — produced by classifyRequest in client-class.ts. */
+export interface TrafficClassification {
+  client_class: string;
+  family: string;
+}
+
+const CLASS_DAY_RETENTION = 30;
+const MAX_CLASS_ROUTE_KEYS_PER_DAY = 200;
+const MAX_FAMILY_KEYS_PER_DAY = 40;
+/** Separator for the flattened `class|route` composite key — not valid in either half. */
+const CLASS_ROUTE_SEP = "|";
+/** Overflow bucket for the per-day family map. Matches UNKNOWN_FAMILY in client-class.ts. */
+const UNKNOWN_FAMILY_KEY = "unknown";
+
 interface PageViewSnapshot {
-  /** date -> path -> count, including the DAY_TOTAL_KEY pseudo-path. */
+  /** date -> path -> count, including the DAY_TOTAL_KEY pseudo-path. Humans only. */
   days: Record<string, Record<string, number>>;
   /** date -> referrer domain -> count. */
   referrers: Record<string, Record<string, number>>;
   /** path -> count, never pruned by date. */
   all_time: Record<string, number>;
   updated_at: string;
+  /** date -> client class -> hits. Every classified request, bots included (#1019). */
+  classes: Record<string, Record<string, number>>;
+  /** date -> `${class}|${route}` -> hits. Flattened so the 2-level helpers still apply. */
+  class_routes: Record<string, Record<string, number>>;
+  /** date -> ai_agent family -> hits. */
+  families: Record<string, Record<string, number>>;
+  /** date -> MCP tool calls, so web_vs_mcp compares the same window on both sides. */
+  mcp: Record<string, number>;
 }
 
 function emptySnapshot(): PageViewSnapshot {
-  return { days: {}, referrers: {}, all_time: {}, updated_at: "" };
+  return {
+    days: {},
+    referrers: {},
+    all_time: {},
+    updated_at: "",
+    classes: {},
+    class_routes: {},
+    families: {},
+    mcp: {},
+  };
 }
 
 /** Last state known to be stored. */
@@ -978,6 +1045,10 @@ let pendingPageViews = emptySnapshot();
 let pageViewsLoaded = false;
 /** Set by a successful load; consumed by the first flush after it. */
 let pageViewsRereadPending = false;
+
+// Process-local tally, kept even with no storage configured so a dev run and the test
+// suite can still see classification happening. Not a substitute for the snapshot.
+let trafficSinceBoot: Record<string, number> = {};
 
 function bump(map: Record<string, number>, key: string, delta: number): void {
   map[key] = (map[key] ?? 0) + delta;
@@ -1004,9 +1075,12 @@ function bumpBounded(
 }
 
 function countPendingPageViewKeys(): number {
-  let n = Object.keys(pendingPageViews.all_time).length;
+  let n = Object.keys(pendingPageViews.all_time).length + Object.keys(pendingPageViews.mcp).length;
   for (const day of Object.values(pendingPageViews.days)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.referrers)) n += Object.keys(day).length;
+  for (const day of Object.values(pendingPageViews.classes)) n += Object.keys(day).length;
+  for (const day of Object.values(pendingPageViews.class_routes)) n += Object.keys(day).length;
+  for (const day of Object.values(pendingPageViews.families)) n += Object.keys(day).length;
   return n;
 }
 
@@ -1020,9 +1094,16 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     referrers: {},
     all_time: { ...base.all_time },
     updated_at: base.updated_at,
+    classes: {},
+    class_routes: {},
+    families: {},
+    mcp: { ...base.mcp },
   };
   for (const [date, map] of Object.entries(base.days)) out.days[date] = { ...map };
   for (const [date, map] of Object.entries(base.referrers)) out.referrers[date] = { ...map };
+  for (const [date, map] of Object.entries(base.classes)) out.classes[date] = { ...map };
+  for (const [date, map] of Object.entries(base.class_routes)) out.class_routes[date] = { ...map };
+  for (const [date, map] of Object.entries(base.families)) out.families[date] = { ...map };
 
   for (const [date, map] of Object.entries(delta.days)) {
     const target = (out.days[date] ??= {});
@@ -1040,16 +1121,51 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
   for (const [key, count] of Object.entries(delta.all_time)) {
     bumpBounded(out.all_time, key, count, MAX_ALL_TIME_PAGE_KEYS, UNMATCHED_PAGE_KEY);
   }
+  // The class map is keyed by a fixed 8-value enum, so it needs no cap — an unbounded
+  // key here would mean the classifier returned something it cannot return.
+  for (const [date, map] of Object.entries(delta.classes)) {
+    const target = (out.classes[date] ??= {});
+    for (const [key, count] of Object.entries(map)) bump(target, key, count);
+  }
+  for (const [date, map] of Object.entries(delta.class_routes)) {
+    const target = (out.class_routes[date] ??= {});
+    for (const [key, count] of Object.entries(map)) {
+      bumpBounded(target, key, count, MAX_CLASS_ROUTE_KEYS_PER_DAY, classRouteOverflowKey(key));
+    }
+  }
+  for (const [date, map] of Object.entries(delta.families)) {
+    const target = (out.families[date] ??= {});
+    for (const [key, count] of Object.entries(map)) {
+      bumpBounded(target, key, count, MAX_FAMILY_KEYS_PER_DAY, UNKNOWN_FAMILY_KEY);
+    }
+  }
+  for (const [date, count] of Object.entries(delta.mcp)) bump(out.mcp, date, count);
   return out;
+}
+
+// Overflow within a class stays within that class: `ai_agent|/vendor/:slug` folds to
+// `ai_agent|__unmatched__`, never into another class's bucket. Getting this wrong would
+// move hits between classes on a busy day, which is the one number we quote.
+function classRouteOverflowKey(key: string): string {
+  const cls = key.split(CLASS_ROUTE_SEP)[0];
+  return `${cls}${CLASS_ROUTE_SEP}${UNMATCHED_PAGE_KEY}`;
 }
 
 // Retention is applied here rather than by Redis TTLs — one fewer command per key, and it
 // works for a snapshot that has no per-key expiry to hang a TTL on. Overflowing all-time
 // paths fold into __unmatched__ so the total stays exact.
 function pruneSnapshot(snapshot: PageViewSnapshot): void {
-  for (const field of ["days", "referrers"] as const) {
+  for (const field of ["days", "referrers", "class_routes", "families"] as const) {
     const dates = Object.keys(snapshot[field]).sort().reverse();
     for (const date of dates.slice(PAGE_VIEW_DAY_RETENTION)) delete snapshot[field][date];
+  }
+  // Class totals and MCP call counts are narrow enough to keep for the 30-day window
+  // the web_vs_mcp comparison reports over.
+  for (const date of Object.keys(snapshot.classes).sort().reverse().slice(CLASS_DAY_RETENTION)) {
+    delete snapshot.classes[date];
+  }
+  for (const date of Object.keys(snapshot.mcp).sort().reverse().slice(CLASS_DAY_RETENTION)) {
+    delete snapshot.mcp[date];
   }
   const entries = Object.entries(snapshot.all_time);
   if (entries.length > MAX_ALL_TIME_PAGE_KEYS) {
@@ -1087,6 +1203,12 @@ function normalizeSnapshot(raw: unknown): PageViewSnapshot {
   snapshot.referrers = numericMapOfMaps(obj.referrers);
   snapshot.all_time = numericMap(obj.all_time);
   snapshot.updated_at = typeof obj.updated_at === "string" ? obj.updated_at : "";
+  // Absent on a snapshot written before #1019 — an empty map is the correct reading of
+  // "this build did not measure that", and the counters start accumulating from now.
+  snapshot.classes = numericMapOfMaps(obj.classes);
+  snapshot.class_routes = numericMapOfMaps(obj.class_routes);
+  snapshot.families = numericMapOfMaps(obj.families);
+  snapshot.mcp = numericMap(obj.mcp);
   return snapshot;
 }
 
@@ -1181,7 +1303,78 @@ export function normalizePagePath(path: string): string {
 // `statusCode`, when supplied, is the status we actually served. A 404 means the path is
 // not a route of ours regardless of how well-formed it looks, so it buckets to
 // __unmatched__ — this is what bounds the keyspace for slug-shaped probes like /wp-login.
+// API routes carry a slug the same way pages do. Normalising them here keeps the
+// class×route key space bounded for /api/* exactly as normalizePagePath does for pages.
+const DYNAMIC_API_PREFIXES = ["/api/vendor/", "/api/category/", "/api/compare/", "/api/badge/"] as const;
+
+/** Bounded route key for any request path, page or API. */
+export function normalizeRoutePath(path: string): string {
+  if (typeof path !== "string" || path.length === 0) return UNMATCHED_PAGE_KEY;
+  const clean = path.split("?")[0].split("#")[0];
+  for (const prefix of DYNAMIC_API_PREFIXES) {
+    if (clean.startsWith(prefix)) return `${prefix}:slug`;
+  }
+  if (clean.startsWith("/api/") && /^\/api\/[a-z0-9][a-z0-9._-]{0,63}(\.[a-z]{2,5})?$/.test(clean)) {
+    return clean;
+  }
+  if (clean === "/mcp" || clean === "/health") return clean;
+  return normalizePagePath(clean);
+}
+
+/**
+ * Attribute one HTTP request to a client class and count it (#1019).
+ *
+ * Called for *every* request, not just HTML pages — the point of the issue is that the
+ * commercially interesting traffic is agents fetching vendor pages and API routes, and
+ * the old page-view path both skipped /api/* and dropped bots on the floor.
+ *
+ * Costs zero Redis commands: everything lands in the in-memory delta that #1023's flush
+ * already writes as a single snapshot.
+ *
+ * NO PII: only the class and the bounded family label are persisted. The User-Agent is
+ * read and discarded.
+ */
+export function recordTraffic(
+  classification: TrafficClassification,
+  path: string,
+  statusCode?: number,
+): void {
+  const { client_class, family } = classification;
+  const today = new Date().toISOString().slice(0, 10);
+
+  trafficSinceBoot[client_class] = (trafficSinceBoot[client_class] ?? 0) + 1;
+  if (!useRedis()) return;
+
+  const served = statusCode === undefined || statusCode < 400;
+  const route = served ? normalizeRoutePath(path) : UNMATCHED_PAGE_KEY;
+
+  bump((pendingPageViews.classes[today] ??= {}), client_class, 1);
+  bumpBounded(
+    (pendingPageViews.class_routes[today] ??= {}),
+    `${client_class}${CLASS_ROUTE_SEP}${route}`,
+    1,
+    MAX_CLASS_ROUTE_KEYS_PER_DAY,
+    `${client_class}${CLASS_ROUTE_SEP}${UNMATCHED_PAGE_KEY}`,
+    pageViewSnapshot.class_routes[today],
+  );
+  // Per-family detail is only kept for the class it is asked about. Every other class
+  // has a family label too, but storing them all would widen the map for no question
+  // anyone is asking.
+  if (client_class === "ai_agent") {
+    bumpBounded(
+      (pendingPageViews.families[today] ??= {}),
+      family,
+      1,
+      MAX_FAMILY_KEYS_PER_DAY,
+      UNKNOWN_FAMILY_KEY,
+      pageViewSnapshot.families[today],
+    );
+  }
+}
+
 export function recordPageView(path: string, userAgent: string, referer?: string, statusCode?: number): void {
+  // Bots stay out of *this* counter so the human-visitor figure does not change meaning
+  // (#1019 is additive). Bot traffic is counted — by recordTraffic, in its own class.
   if (isBot(userAgent)) return;
 
   const today = new Date().toISOString().slice(0, 10);
@@ -1487,6 +1680,198 @@ export function getPageViewsToday(): number {
     pageViewsTodayDate = today;
   }
   return pageViewsToday;
+}
+
+// --- Traffic attribution report (#1019) ---
+
+export interface TrafficWindow {
+  days: number;
+  from: string;
+  to: string;
+  /**
+   * How many days actually back `ai_agent_by_family` and `top_routes_by_class`.
+   * Class totals are retained for 30 days but the wide detail maps only for 7, so on the
+   * 30-day window this is 7 — reading those breakdowns as month-long would understate
+   * them, and silently.
+   */
+  detail_days: number;
+  /** Every classified request in the window, `internal` included. */
+  hits_total: number;
+  /** `hits_total` minus `internal`. This is the number to quote. */
+  hits_excluding_internal: number;
+  by_class: Record<string, number>;
+  ai_agent_by_family: Record<string, number>;
+  top_routes_by_class: Record<string, { route: string; hits: number }[]>;
+}
+
+export interface WebVsMcp {
+  window_days: number;
+  /** Web + API requests, excluding our own observability traffic. */
+  web_hits: number;
+  /** Of those, the ones we can positively attribute to an AI agent. */
+  ai_agent_hits: number;
+  mcp_tool_calls: number;
+  /** web_hits : mcp_tool_calls, or null when there were no tool calls to divide by. */
+  web_to_mcp_ratio: number | null;
+  /** ai_agent_hits : mcp_tool_calls — the honest, conservative version of the same claim. */
+  ai_agent_to_mcp_ratio: number | null;
+}
+
+export interface TrafficReport {
+  today: TrafficWindow;
+  last_7d: TrafficWindow;
+  last_30d: TrafficWindow;
+  web_vs_mcp: { today: WebVsMcp; last_7d: WebVsMcp; last_30d: WebVsMcp };
+  /** False when the storage layer could not be read — the numbers are not measurements. */
+  available: boolean;
+  error: string | null;
+  since_boot_by_class: Record<string, number>;
+  notes: string[];
+  storage: TelemetryHealth;
+}
+
+const TOP_ROUTES_PER_CLASS = 10;
+
+function datesInWindow(days: number): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < days; i++) {
+    out.push(new Date(Date.now() - i * 86400000).toISOString().slice(0, 10));
+  }
+  return out;
+}
+
+function emptyWindow(days: number): TrafficWindow {
+  const dates = datesInWindow(days);
+  return {
+    days,
+    from: dates[dates.length - 1],
+    to: dates[0],
+    detail_days: Math.min(days, PAGE_VIEW_DAY_RETENTION),
+    hits_total: 0,
+    hits_excluding_internal: 0,
+    by_class: {},
+    ai_agent_by_family: {},
+    top_routes_by_class: {},
+  };
+}
+
+function buildWindow(view: PageViewSnapshot, days: number): TrafficWindow {
+  const dates = datesInWindow(days);
+  const window = emptyWindow(days);
+  const routeTotals: Record<string, Record<string, number>> = {};
+
+  for (const date of dates) {
+    for (const [cls, count] of Object.entries(view.classes[date] ?? {})) {
+      window.by_class[cls] = (window.by_class[cls] ?? 0) + count;
+      window.hits_total += count;
+      if (cls !== "internal") window.hits_excluding_internal += count;
+    }
+    for (const [family, count] of Object.entries(view.families[date] ?? {})) {
+      window.ai_agent_by_family[family] = (window.ai_agent_by_family[family] ?? 0) + count;
+    }
+    for (const [key, count] of Object.entries(view.class_routes[date] ?? {})) {
+      const sep = key.indexOf(CLASS_ROUTE_SEP);
+      if (sep < 0) continue;
+      const cls = key.slice(0, sep);
+      const route = key.slice(sep + 1);
+      const bucket = (routeTotals[cls] ??= {});
+      bucket[route] = (bucket[route] ?? 0) + count;
+    }
+  }
+
+  // Classes we never saw still appear, at zero — an absent key would read as "unknown"
+  // when what we mean is "measured, and it was none".
+  for (const cls of TRAFFIC_CLASSES) window.by_class[cls] ??= 0;
+
+  for (const [cls, routes] of Object.entries(routeTotals)) {
+    window.top_routes_by_class[cls] = Object.entries(routes)
+      .map(([route, hits]) => ({ route, hits }))
+      .sort((a, b) => b.hits - a.hits)
+      .slice(0, TOP_ROUTES_PER_CLASS);
+  }
+  return window;
+}
+
+function ratio(a: number, b: number): number | null {
+  if (b <= 0) return null;
+  return Math.round((a / b) * 10) / 10;
+}
+
+function buildWebVsMcp(view: PageViewSnapshot, window: TrafficWindow, days: number): WebVsMcp {
+  let mcpCalls = 0;
+  for (const date of datesInWindow(days)) mcpCalls += view.mcp[date] ?? 0;
+  const web = window.hits_excluding_internal;
+  const ai = window.by_class["ai_agent"] ?? 0;
+  return {
+    window_days: days,
+    web_hits: web,
+    ai_agent_hits: ai,
+    mcp_tool_calls: mcpCalls,
+    web_to_mcp_ratio: ratio(web, mcpCalls),
+    ai_agent_to_mcp_ratio: ratio(ai, mcpCalls),
+  };
+}
+
+const TRAFFIC_NOTES = [
+  "`internal` covers requests to observability endpoints (/api/pageviews, /api/query-log, /api/traffic, /api/metrics, /health) plus anything carrying an agentdeals-internal user agent. Excluded from hits_excluding_internal and from web_vs_mcp.",
+  "A maintainer running a bare `curl` against a normal page is indistinguishable from any other scripted client and is counted as `sdk_client`, not `internal`. It can therefore inflate web_hits but never ai_agent_hits.",
+  "`sdk_client` is deliberately not folded into `ai_agent`: undici/python-httpx traffic may be an agent or a scraper, and overclaiming it would make the headline number unquotable.",
+  "No PII. Only the class and a bounded family label from a fixed table are stored; user agents and IPs are never persisted.",
+  "Attribution starts from the deploy that introduced it — windows longer than that are short by however much history predates it, not wrong.",
+  "Class totals are retained for 30 days; the per-family and per-route breakdowns only for 7. Each window states its own detail_days rather than presenting 7 days of detail as 30.",
+];
+
+/**
+ * Traffic by client class over today / 7d / 30d, plus the web-vs-MCP comparison.
+ * Serves the in-memory snapshot merged with un-flushed deltas, so it costs zero Redis
+ * commands however often it is polled (#1023) and reflects the last request immediately.
+ */
+export function getTrafficReport(): TrafficReport {
+  const storage = getTelemetryHealth();
+  const since_boot_by_class: Record<string, number> = {};
+  for (const cls of TRAFFIC_CLASSES) since_boot_by_class[cls] = trafficSinceBoot[cls] ?? 0;
+
+  const unavailable = (error: string): TrafficReport => ({
+    today: emptyWindow(1),
+    last_7d: emptyWindow(7),
+    last_30d: emptyWindow(30),
+    web_vs_mcp: {
+      today: buildWebVsMcp(emptySnapshot(), emptyWindow(1), 1),
+      last_7d: buildWebVsMcp(emptySnapshot(), emptyWindow(7), 7),
+      last_30d: buildWebVsMcp(emptySnapshot(), emptyWindow(30), 30),
+    },
+    available: false,
+    error,
+    since_boot_by_class,
+    notes: TRAFFIC_NOTES,
+    storage,
+  });
+
+  if (!useRedis()) return unavailable("redis-not-configured");
+  // Same discipline as getPageViews: a failed load is not a measured zero (#1018 Defect B).
+  if (!pageViewsLoaded) {
+    return unavailable(redisHealth.lastReadError ?? "page-view snapshot not loaded");
+  }
+
+  const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
+  const today = buildWindow(view, 1);
+  const last7 = buildWindow(view, 7);
+  const last30 = buildWindow(view, 30);
+  return {
+    today,
+    last_7d: last7,
+    last_30d: last30,
+    web_vs_mcp: {
+      today: buildWebVsMcp(view, today, 1),
+      last_7d: buildWebVsMcp(view, last7, 7),
+      last_30d: buildWebVsMcp(view, last30, 30),
+    },
+    available: true,
+    error: null,
+    since_boot_by_class,
+    notes: TRAFFIC_NOTES,
+    storage,
+  };
 }
 
 // --- Search query analytics ---

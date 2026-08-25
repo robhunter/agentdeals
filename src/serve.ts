@@ -8,7 +8,8 @@ import { createServer, getServerCard } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getRequestLog, getRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint } from "./stats.js";
+import { classifyRequest } from "./client-class.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getRequestLog, getRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -48666,6 +48667,7 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/costs", desc: "Estimate infrastructure costs", params: "services, scale" },
     { method: "GET", path: "/api/query-log", desc: "Recent request log", params: "limit" },
     { method: "GET", path: "/api/pageviews", desc: "Page view analytics", params: "path, period" },
+    { method: "GET", path: "/api/traffic", desc: "Traffic attributed by client class (AI agent / crawler / browser), with web-vs-MCP comparison", params: "" },
     { method: "GET", path: "/api/stats", desc: "Service statistics", params: "" },
     { method: "GET", path: "/api/feed", desc: "Atom feed of pricing changes", params: "" },
     { method: "POST", path: "/api/watchlist", desc: "Subscribe to vendor pricing changes via webhook", params: "vendor, webhook_url (body)" },
@@ -52982,9 +52984,30 @@ const canonicalHost = (() => {
   try { return new URL(BASE_URL).hostname; } catch { return undefined; }
 })();
 
+// Requests that are not a client consuming our content. Excluded from client-class
+// attribution so the web-vs-MCP comparison stays meaningful (#1019):
+//   /mcp    — that IS the MCP side of the comparison; counting it as a web hit would
+//             put the same traffic on both sides of the ratio
+//   assets  — a browser fetching a favicon is one page view, not two requests
+const TRAFFIC_EXCLUDED_PATHS = new Set(["/mcp", "/favicon.png", "/favicon.ico", "/og-image.png"]);
+function isCountableTraffic(pathname: string): boolean {
+  if (TRAFFIC_EXCLUDED_PATHS.has(pathname)) return false;
+  return !pathname.startsWith("/.well-known/");
+}
+
 const httpServer = createHttpServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://localhost:${PORT}`);
   const isGetOrHead = req.method === "GET" || req.method === "HEAD";
+
+  // Client-class attribution, on every request rather than only HTML pages (#1019).
+  // Registered first so a request that redirects or 404s is still attributed — the
+  // page-view hook sits below the redirect branches and misses all of them. Recorded
+  // on finish so the served status is known; costs no Redis commands.
+  if (isCountableTraffic(url.pathname)) {
+    res.on("finish", () => {
+      recordTraffic(classifyRequest(url.pathname, req.headers["user-agent"]), url.pathname, res.statusCode);
+    });
+  }
 
   // 301 redirect non-canonical hostnames to BASE_URL (SEO canonical domain)
   if (canonicalHost) {
@@ -53341,6 +53364,12 @@ const httpServer = createHttpServer(async (req, res) => {
     res.end(JSON.stringify(getConnectionStats(sessions.size)));
   } else if (url.pathname === "/api/pageviews" && isGetOrHead) {
     const data = await getPageViews();
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(data));
+  } else if (url.pathname === "/api/traffic" && isGetOrHead) {
+    // Traffic by client class (#1019). Not recorded as an API hit and classified
+    // `internal` by path: observing the system is not using it.
+    const data = getTrafficReport();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(data));
   } else if (url.pathname === "/api/offers" && isGetOrHead) {
