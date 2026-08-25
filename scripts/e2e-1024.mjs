@@ -197,6 +197,12 @@ console.log("\n5. The denominator is the decision pages, ai_agent only");
   check("sdk_client reported apart, never folded in", r.today.qualifying_fetches_sdk_client, 40);
   check("no rate below the minimum sample", r.today.report_rate, null);
   checkTrue("and it says why", /below minimum sample/.test(r.today.rate_note), r.today.rate_note);
+  check("today has a full day of fetch data behind it", r.today.denominator_days_available, 1);
+  // Signals are kept 30 days, the counters they divide by 7 — so a 30-day rate would
+  // divide a longer numerator by a shorter denominator. It must refuse rather than round.
+  checkTrue("the 30-day window refuses a rate its denominator cannot support",
+    r.last_30d.report_rate === null && /denominator covers \d+ of 30 days/.test(r.last_30d.rate_note),
+    r.last_30d.rate_note);
 }
 
 console.log("\n6. Nothing per-vendor reaches a public surface");

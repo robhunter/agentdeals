@@ -2672,7 +2672,17 @@ export interface SignalWindow {
   qualifying_fetches: number;
   /** Reported beside it, never folded in: that class is mostly one scanner today. */
   qualifying_fetches_sdk_client: number;
-  /** null below SIGNAL_MIN_SAMPLE — see `rate_note`. */
+  /**
+   * How many days of the window the denominator actually covers.
+   *
+   * The numerator and the denominator are retained for different lengths — signals for
+   * 30 days, the class-by-route counters they are divided by for 7. So a 30-day window
+   * holds 30 days of signals over at most 7 days of fetches, and dividing the two would
+   * overstate the rate by up to a factor of four. This field is what makes that visible,
+   * and applyRate refuses the division whenever it is short of `days`.
+   */
+  denominator_days_available: number;
+  /** null below SIGNAL_MIN_SAMPLE, or when the denominator is short — see `rate_note`. */
   report_rate: number | null;
   rate_note: string;
 }
@@ -2696,6 +2706,7 @@ function emptySignalWindow(days: number): SignalWindow {
     by_source: [],
     qualifying_fetches: 0,
     qualifying_fetches_sdk_client: 0,
+    denominator_days_available: 0,
     report_rate: null,
     rate_note: "",
   };
@@ -2756,6 +2767,17 @@ function qualifyingFetches(view: PageViewSnapshot, dates: string[], cls: string)
 }
 
 function applyRate(window: SignalWindow): void {
+  // Checked before the sample size, because it is the failure that would produce a
+  // plausible-looking number rather than a small one.
+  if (window.days > 0 && window.denominator_days_available < window.days) {
+    window.report_rate = null;
+    window.rate_note =
+      `denominator covers ${window.denominator_days_available} of ${window.days} days: the ` +
+      `class-by-route counters this divides by are retained for ${PAGE_VIEW_DAY_RETENTION} days ` +
+      `while signals are kept for ${CLASS_DAY_RETENTION}, so a rate over this window would divide ` +
+      `a longer numerator by a shorter denominator. Both counts above are exact for their own spans.`;
+    return;
+  }
   if (window.qualifying_fetches < SIGNAL_MIN_SAMPLE) {
     window.report_rate = null;
     window.rate_note =
@@ -2779,6 +2801,7 @@ function buildSignalWindow(view: PageViewSnapshot, days: number): SignalWindow {
   foldSignals(merged, window);
   window.qualifying_fetches = qualifyingFetches(view, dates, "ai_agent");
   window.qualifying_fetches_sdk_client = qualifyingFetches(view, dates, "sdk_client");
+  window.denominator_days_available = dates.filter(d => view.class_routes[d]).length;
   applyRate(window);
   return window;
 }
@@ -2792,6 +2815,7 @@ function buildSignalAllTime(view: PageViewSnapshot): SignalWindow {
   // report. Saying so beats reporting a 30-day denominator under an all-time label.
   window.qualifying_fetches = 0;
   window.qualifying_fetches_sdk_client = 0;
+  window.denominator_days_available = 0;
   window.report_rate = null;
   window.rate_note =
     "no all-time denominator: the class-by-route counters are retained for 30 days, so a " +
@@ -2806,7 +2830,7 @@ export const SIGNAL_NOTES = [
   "client_class is the sender's classification from the same table that attributes page traffic. A signal arriving as seo_crawler is not an agent telling us something.",
   "recommended and converted are two independent counters, never a funnel. Agents rarely observe whether their user signed up, so converted undercounts by an unknown factor and is not a conversion rate.",
   "The report rate is signals divided by ai_agent fetches of the pages where a recommendation gets made (/vendor, /alternative-to, /compare, /best, /category). sdk_client fetches are reported beside it and never folded in.",
-  `No rate is computed below ${SIGNAL_MIN_SAMPLE} qualifying fetches. At current named-agent traffic that threshold is over a month out, and stating it beats discovering it later.`,
+  `No rate is computed below ${SIGNAL_MIN_SAMPLE} qualifying fetches, nor over any window whose denominator covers fewer days than the window itself. Signals are retained for ${CLASS_DAY_RETENTION} days and the counters they divide by for ${PAGE_VIEW_DAY_RETENTION}, so the 30-day window reports both counts and refuses the division — each window states its own denominator_days_available.`,
   "Per-vendor counts are recorded and are not published. A visible per-vendor counter would be a placement metric a vendor could acquire by firing it themselves.",
   "This call records the vendor slug, the event, an optional name the caller chooses for itself, and the sender's client class. Nothing about the caller's user, no IP, no identity.",
 ];
