@@ -8,7 +8,7 @@ import { createServer, getServerCard } from "./server.js";
 import { loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, logRequest, getRequestLog, getRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getRequestLog, getRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint } from "./stats.js";
 import { openapiSpec } from "./openapi.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -56034,9 +56034,26 @@ if (!BASE_URL.includes("localhost")) {
 const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
 setInterval(() => flushTelemetry(), FLUSH_INTERVAL_MS).unref();
 
-// Flush on graceful shutdown
+// Page-view counters and the request log are buffered in memory and written as aggregated
+// batches on this interval, so Redis command volume is O(flush intervals) rather than
+// O(requests served) (#1023).
+setInterval(() => {
+  flushPending().catch((err) => console.error(`[telemetry] flush failed: ${err?.message ?? err}`));
+}, FLUSH_INTERVAL_SECONDS * 1000).unref();
+
+// Flush on graceful shutdown. Buffered counters go first: they exist only in memory, so
+// a missed flush here is the one interval of data this design accepts losing on an
+// *unclean* exit and should never lose on a clean one.
+let shuttingDown = false;
 async function onShutdown() {
-  await flushTelemetry();
+  if (shuttingDown) return;
+  shuttingDown = true;
+  try {
+    await flushPending();
+    await flushTelemetry();
+  } catch (err: any) {
+    console.error(`[telemetry] shutdown flush failed: ${err?.message ?? err}`);
+  }
   process.exit(0);
 }
 process.on("SIGTERM", () => onShutdown());

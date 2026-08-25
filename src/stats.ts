@@ -131,6 +131,32 @@ const redisHealth = {
   readFailures: 0,
 };
 
+// --- Command budget accounting (#1023) ---
+// Upstash bills per command, not per HTTP request, and the plan ceiling is a hard stop:
+// past it every command is rejected. The 2026-08-07 outage was this ceiling being reached,
+// so the number of commands we spend is itself a thing that has to be measured.
+const DEFAULT_MONTHLY_COMMAND_BUDGET = 300_000;
+const MONTHLY_COMMAND_BUDGET =
+  Number(process.env.TELEMETRY_COMMAND_BUDGET) > 0
+    ? Number(process.env.TELEMETRY_COMMAND_BUDGET)
+    : DEFAULT_MONTHLY_COMMAND_BUDGET;
+
+// Projecting a daily rate from a few seconds of uptime produces nonsense. Divide by at
+// least this much elapsed time so a freshly-booted process under-reports rather than
+// reporting a wild extrapolation.
+const RATE_ESTIMATE_FLOOR_SECONDS = 300;
+
+let commandsIssued = 0;
+
+// Upstash's phrasing for a spent quota has varied ("max requests limit exceeded",
+// "max daily request limit exceeded"). Matching it lets the endpoint say *which* failure
+// mode we are in, which is the difference between "upgrade the plan" and "fix the code".
+const QUOTA_ERROR_PATTERN = /max (?:requests|daily request|commands?)\s+limit exceeded|quota/i;
+
+function isQuotaError(error: string | null): boolean {
+  return typeof error === "string" && QUOTA_ERROR_PATTERN.test(error);
+}
+
 // Throttle stderr so a hard outage can't turn into a log flood (one line per command
 // class per minute is enough to see the actual Upstash error in the platform logs).
 const lastLoggedAt: Record<string, number> = {};
@@ -159,6 +185,10 @@ async function redisCommand<T>(cmd: (string | number)[]): Promise<RedisResult<T>
   if (!useRedis()) return { ok: false, error: "redis-not-configured" };
   const command = String(cmd[0]).toUpperCase();
   const isWrite = WRITE_COMMANDS.has(command);
+  // Counted on attempt, not on success: a command rejected for quota has already been
+  // charged against the quota, so counting only successes would under-report the spend
+  // exactly when it matters most.
+  commandsIssued++;
   const url = process.env.UPSTASH_REDIS_REST_URL!;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
   try {
@@ -195,9 +225,30 @@ export interface TelemetryHealth {
   last_read_error_at: string | null;
   write_failures: number;
   read_failures: number;
+  /** True when the last write failure was the plan's command ceiling rather than a bug. */
+  quota_exhausted: boolean;
+  /** What this process has actually spent, and what that projects to (#1023). */
+  commands_since_boot: number;
+  uptime_seconds: number;
+  estimated_commands_per_day: number;
+  estimated_commands_per_month: number;
+  monthly_command_budget: number;
+  over_budget: boolean;
+  /** Work sitting in memory waiting for the next flush. */
+  pending_page_view_keys: number;
+  pending_request_log_entries: number;
+  /** Request-log entries dropped because a single interval overflowed the batch cap. */
+  request_log_dropped: number;
+  last_flush_at: string | null;
+  flush_interval_seconds: number;
 }
 
 export function getTelemetryHealth(): TelemetryHealth {
+  const uptimeSeconds = Math.round((Date.now() - startedAt) / 1000);
+  const perDay = Math.round(
+    (commandsIssued / Math.max(uptimeSeconds, RATE_ESTIMATE_FLOOR_SECONDS)) * 86_400,
+  );
+  const perMonth = perDay * 30;
   return {
     configured: useRedis(),
     last_write_at: redisHealth.lastWriteAt,
@@ -207,6 +258,18 @@ export function getTelemetryHealth(): TelemetryHealth {
     last_read_error_at: redisHealth.lastReadErrorAt,
     write_failures: redisHealth.writeFailures,
     read_failures: redisHealth.readFailures,
+    quota_exhausted: isQuotaError(redisHealth.lastWriteError) || isQuotaError(redisHealth.lastReadError),
+    commands_since_boot: commandsIssued,
+    uptime_seconds: uptimeSeconds,
+    estimated_commands_per_day: perDay,
+    estimated_commands_per_month: perMonth,
+    monthly_command_budget: MONTHLY_COMMAND_BUDGET,
+    over_budget: perMonth > MONTHLY_COMMAND_BUDGET,
+    pending_page_view_keys: countPendingPageViewKeys(),
+    pending_request_log_entries: requestLogPending.length,
+    request_log_dropped: requestLogDropped,
+    last_flush_at: lastFlushAt,
+    flush_interval_seconds: FLUSH_INTERVAL_SECONDS,
   };
 }
 
@@ -218,6 +281,7 @@ export function resetTelemetryHealth(): void {
   redisHealth.lastReadErrorAt = null;
   redisHealth.writeFailures = 0;
   redisHealth.readFailures = 0;
+  commandsIssued = 0;
   for (const k of Object.keys(lastLoggedAt)) delete lastLoggedAt[k];
 }
 
@@ -241,44 +305,114 @@ export interface RequestLogEntry {
   client_info?: { name: string; version: string };
 }
 
-async function redisLpush(key: string, value: string): Promise<boolean> {
-  const res = await redisCommand<number>(["LPUSH", key, value]);
-  return res.ok && typeof res.result === "number";
-}
+// At most this many entries go out in one flush. A single variadic LPUSH is one command
+// regardless of how many values it carries, so the cap exists to bound the request body,
+// not the command count. Overflow is counted and surfaced rather than dropped silently.
+const REQUEST_LOG_FLUSH_MAX = 250;
 
-async function redisLtrim(key: string, start: number, stop: number): Promise<boolean> {
-  const res = await redisCommand<string>(["LTRIM", key, start, stop]);
-  return res.ok;
-}
+// Let the stored list run this far past its cap before spending a command to trim it.
+const REQUEST_LOG_TRIM_THRESHOLD = Math.floor(REQUEST_LOG_MAX * 1.2);
+
+// Newest-first mirror of the stored list: hydrated once at boot, then kept in step with
+// everything this process pushes. Reads are served from here, so /api/query-log costs
+// zero Redis commands no matter how often it is polled (#1023).
+let requestLogMirror: RequestLogEntry[] = [];
+let requestLogPending: RequestLogEntry[] = [];
+let requestLogDropped = 0;
+let requestLogHydrated = false;
 
 async function redisLrange(key: string, start: number, stop: number): Promise<RedisResult<string[]>> {
   const res = await redisCommand<string[]>(["LRANGE", key, start, stop]);
   if (!res.ok) return res;
-  return { ok: true, result: res.result ?? [] };
+  if (res.result === null || res.result === undefined) return { ok: true, result: [] };
+  // A non-array here means the key is not a list (or the response is not what we asked
+  // for). Report it as a read failure rather than letting an unexpected shape throw its
+  // way out of the boot path — same reasoning as the MGET length check.
+  if (!Array.isArray(res.result)) {
+    const error = `LRANGE returned ${typeof res.result}, expected a list`;
+    recordRedisFailure("LRANGE", false, error);
+    return { ok: false, error };
+  }
+  return { ok: true, result: res.result };
 }
 
-export async function logRequest(entry: RequestLogEntry): Promise<void> {
-  const pushed = await redisLpush(REQUEST_LOG_KEY, JSON.stringify(entry));
-  if (pushed) {
-    // Cap list at REQUEST_LOG_MAX entries
-    await redisLtrim(REQUEST_LOG_KEY, 0, REQUEST_LOG_MAX - 1);
+// Buffered: one LPUSH per flush interval instead of LPUSH+LTRIM per request. The old
+// path cost 2 Redis commands for every logged HTTP request, which is what made command
+// volume O(requests served) and put steady-state spend over the plan ceiling (#1023).
+export function logRequest(entry: RequestLogEntry): void {
+  requestLogMirror.unshift(entry);
+  if (requestLogMirror.length > REQUEST_LOG_MAX) requestLogMirror.length = REQUEST_LOG_MAX;
+
+  if (!useRedis()) return;
+  requestLogPending.push(entry);
+  if (requestLogPending.length > REQUEST_LOG_FLUSH_MAX) {
+    const overflow = requestLogPending.length - REQUEST_LOG_FLUSH_MAX;
+    requestLogDropped += overflow;
+    requestLogPending.splice(0, overflow);
+  }
+}
+
+function parseLogEntry(raw: string): RequestLogEntry | null {
+  try { return JSON.parse(raw) as RequestLogEntry; }
+  catch { return null; }
+}
+
+async function loadRequestLog(): Promise<void> {
+  if (!useRedis()) return;
+  const res = await redisLrange(REQUEST_LOG_KEY, 0, REQUEST_LOG_MAX - 1);
+  if (!res.ok) return; // stays unhydrated — reads report unavailable rather than empty
+  const stored = res.result
+    .map(parseLogEntry)
+    .filter((e): e is RequestLogEntry => e !== null);
+  // Anything logged while the read was in flight is newer than everything stored.
+  requestLogMirror = [...requestLogMirror, ...stored].slice(0, REQUEST_LOG_MAX);
+  requestLogHydrated = true;
+}
+
+async function flushRequestLog(): Promise<void> {
+  if (!useRedis() || requestLogPending.length === 0) return;
+  const batch = requestLogPending;
+  requestLogPending = [];
+
+  // LPUSH is variadic: the whole batch is a single command. Values are pushed left-to-right,
+  // so the chronologically-last entry ends up at index 0 — the newest-first ordering readers
+  // already expect.
+  const push = await redisCommand<number>([
+    "LPUSH",
+    REQUEST_LOG_KEY,
+    ...batch.map((e) => JSON.stringify(e)),
+  ]);
+  if (!push.ok) {
+    // Keep the batch for the next attempt rather than losing it, bounded the same way.
+    requestLogPending = [...batch, ...requestLogPending].slice(-REQUEST_LOG_FLUSH_MAX);
+    return;
+  }
+  // LPUSH returns the new length, so the trim can wait until the list has actually
+  // outgrown its cap by a margin. Trimming on every flush would cost as many commands as
+  // the push itself to remove a handful of entries nothing reads (readers ask for ≤200).
+  if (typeof push.result === "number" && push.result > REQUEST_LOG_TRIM_THRESHOLD) {
+    await redisCommand<string>(["LTRIM", REQUEST_LOG_KEY, 0, REQUEST_LOG_MAX - 1]);
   }
 }
 
 // Returns the log alongside an explicit `available` flag. An unreachable Redis
 // previously produced an empty array indistinguishable from "no traffic yet" (#1018).
+// Served from the in-memory mirror; `available` is false until the boot-time read of the
+// stored list has succeeded, so an unread log is still never reported as an empty one.
 export async function getRequestLogResult(limit = 50): Promise<{
   entries: RequestLogEntry[];
   available: boolean;
   error: string | null;
 }> {
-  const res = await redisLrange(REQUEST_LOG_KEY, 0, limit - 1);
-  if (!res.ok) return { entries: [], available: false, error: res.error };
-  const entries = res.result.map((s) => {
-    try { return JSON.parse(s) as RequestLogEntry; }
-    catch { return null; }
-  }).filter((e): e is RequestLogEntry => e !== null);
-  return { entries, available: true, error: null };
+  if (!useRedis()) return { entries: [], available: false, error: "redis-not-configured" };
+  if (!requestLogHydrated) {
+    return {
+      entries: [],
+      available: false,
+      error: redisHealth.lastReadError ?? "request log not loaded",
+    };
+  }
+  return { entries: requestLogMirror.slice(0, limit), available: true, error: null };
 }
 
 export async function getRequestLog(limit = 50): Promise<RequestLogEntry[]> {
@@ -410,6 +544,12 @@ export function telemetryLoadDidFail(): boolean {
 export async function loadTelemetry(filePath: string): Promise<void> {
   telemetryPath = filePath;
 
+  // Page views and the request log are stored separately and hydrate here so the whole
+  // boot-time read is one place. Both fail closed: an unread store stays unloaded and is
+  // retried on the next flush rather than being treated as empty (#1018/#1022).
+  await loadPageViews();
+  await loadRequestLog();
+
   // Try Redis first if configured
   if (useRedis()) {
     const res = await redisCommand<string | null>(["GET", REDIS_KEY]);
@@ -510,6 +650,23 @@ export function resetCounters(): void {
   cumulative.referral_vendor_counts = {};
   cumulative.api_hits_by_endpoint = {};
   searchQueryLog.length = 0;
+  resetTelemetryBuffers();
+}
+
+// Clears the buffered write paths and their loaded-from-storage state. Separate from
+// resetCounters so a test can put the process back in its just-booted, nothing-loaded
+// condition without touching the cumulative counters.
+export function resetTelemetryBuffers(): void {
+  pageViewSnapshot = emptySnapshot();
+  pendingPageViews = emptySnapshot();
+  pageViewsLoaded = false;
+  pageViewsRereadPending = false;
+  legacyMigrationDone = false;
+  requestLogMirror = [];
+  requestLogPending = [];
+  requestLogDropped = 0;
+  requestLogHydrated = false;
+  lastFlushAt = null;
 }
 
 export function recordToolCall(tool: string, clientName?: string): void {
@@ -747,24 +904,170 @@ function isBot(userAgent: string): boolean {
 let pageViewsToday = 0;
 let pageViewsTodayDate = new Date().toISOString().slice(0, 10);
 
-// Daily page-view and referrer keys expire after DAILY_KEY_TTL_SECONDS. Without a TTL,
-// every distinct path ever requested became a permanent key (#1018).
-const DAILY_KEY_TTL_SECONDS = 35 * 24 * 60 * 60;
-
 // Upstash rejects oversized requests, and a rejected MGET used to read back as a page of
-// zeros. Chunking keeps each command small enough to succeed.
+// zeros. Chunking keeps each command small enough to succeed. Only the one-time migration
+// off the legacy key space still reads this way.
 const MGET_CHUNK_SIZE = 100;
 
-// INCR returns the post-increment value, so a result of 1 means we just created the key —
-// the only moment an EXPIRE is needed. Setting it on every hit would double command volume
-// and keep pushing the expiry out, which for a daily key is exactly wrong.
-async function redisIncrWithTtl(key: string, ttlSeconds?: number): Promise<boolean> {
-  const res = await redisCommand<number>(["INCR", key]);
-  if (!res.ok || typeof res.result !== "number") return false;
-  if (ttlSeconds !== undefined && res.result === 1) {
-    await redisCommand<number>(["EXPIRE", key, ttlSeconds]);
+// --- Page-view storage (#1023) ---
+//
+// Counters used to live one Redis key per (day, path): 3-4 INCRs per page view on write,
+// and a SCAN + MGET fan-out per /api/pageviews call on read. That makes command volume
+// O(requests served) on both sides, which is what exhausted the plan's command quota.
+//
+// They now live in a single JSON snapshot key. Writes accumulate in memory and the whole
+// snapshot is rewritten once per flush interval, so:
+//   * write cost is O(flush intervals), not O(page views) — 2 commands per flush, and
+//     zero when nothing changed;
+//   * read cost is zero — /api/pageviews serves the in-memory snapshot merged with the
+//     un-flushed deltas, so there is no fan-out to cache and no SCAN at all;
+//   * retention is enforced in code (no TTL command, no EXPIRE per key), and the key
+//     space cannot grow without bound because the maps are capped.
+const PAGE_VIEWS_KEY = "agentdeals:pageviews";
+const PAGE_VIEW_DAY_RETENTION = 7;
+const MAX_PAGE_KEYS_PER_DAY = 300;
+const MAX_ALL_TIME_PAGE_KEYS = 300;
+
+// A Referer header is attacker-controlled, so the referrer map is the one part of this
+// key space a stranger can grow. Capping it is what keeps command *payload* — and, before
+// this change, command *count* — from scaling with hostile traffic.
+const MAX_REFERRER_DOMAINS_PER_DAY = 100;
+export const OTHER_REFERRER_KEY = "__other__";
+
+const DAY_TOTAL_KEY = "total";
+
+interface PageViewSnapshot {
+  /** date -> path -> count, including the DAY_TOTAL_KEY pseudo-path. */
+  days: Record<string, Record<string, number>>;
+  /** date -> referrer domain -> count. */
+  referrers: Record<string, Record<string, number>>;
+  /** path -> count, never pruned by date. */
+  all_time: Record<string, number>;
+  updated_at: string;
+}
+
+function emptySnapshot(): PageViewSnapshot {
+  return { days: {}, referrers: {}, all_time: {}, updated_at: "" };
+}
+
+/** Last state known to be stored. */
+let pageViewSnapshot = emptySnapshot();
+/** Increments not yet persisted. Same shape so merging is a plain deep add. */
+let pendingPageViews = emptySnapshot();
+/** False until we have a trustworthy base to add deltas to — see flushPageViews. */
+let pageViewsLoaded = false;
+/** Set by a successful load; consumed by the first flush after it. */
+let pageViewsRereadPending = false;
+
+function bump(map: Record<string, number>, key: string, delta: number): void {
+  map[key] = (map[key] ?? 0) + delta;
+}
+
+// Adds to `map`, folding into `overflowKey` once the key space is full. `known` is a
+// second map (the persisted side) consulted so a key already in the snapshot is not
+// treated as new. Counts are never dropped, only relabelled.
+function bumpBounded(
+  map: Record<string, number>,
+  key: string,
+  delta: number,
+  cap: number,
+  overflowKey: string,
+  known?: Record<string, number>,
+): void {
+  if (key !== overflowKey && !(key in map) && !(known && key in known)) {
+    const size = known
+      ? new Set([...Object.keys(map), ...Object.keys(known)]).size
+      : Object.keys(map).length;
+    if (size >= cap) key = overflowKey;
   }
-  return true;
+  bump(map, key, delta);
+}
+
+function countPendingPageViewKeys(): number {
+  let n = Object.keys(pendingPageViews.all_time).length;
+  for (const day of Object.values(pendingPageViews.days)) n += Object.keys(day).length;
+  for (const day of Object.values(pendingPageViews.referrers)) n += Object.keys(day).length;
+  return n;
+}
+
+function hasPendingPageViews(): boolean {
+  return countPendingPageViewKeys() > 0;
+}
+
+function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageViewSnapshot {
+  const out: PageViewSnapshot = {
+    days: {},
+    referrers: {},
+    all_time: { ...base.all_time },
+    updated_at: base.updated_at,
+  };
+  for (const [date, map] of Object.entries(base.days)) out.days[date] = { ...map };
+  for (const [date, map] of Object.entries(base.referrers)) out.referrers[date] = { ...map };
+
+  for (const [date, map] of Object.entries(delta.days)) {
+    const target = (out.days[date] ??= {});
+    for (const [key, count] of Object.entries(map)) {
+      if (key === DAY_TOTAL_KEY) bump(target, key, count);
+      else bumpBounded(target, key, count, MAX_PAGE_KEYS_PER_DAY, UNMATCHED_PAGE_KEY);
+    }
+  }
+  for (const [date, map] of Object.entries(delta.referrers)) {
+    const target = (out.referrers[date] ??= {});
+    for (const [key, count] of Object.entries(map)) {
+      bumpBounded(target, key, count, MAX_REFERRER_DOMAINS_PER_DAY, OTHER_REFERRER_KEY);
+    }
+  }
+  for (const [key, count] of Object.entries(delta.all_time)) {
+    bumpBounded(out.all_time, key, count, MAX_ALL_TIME_PAGE_KEYS, UNMATCHED_PAGE_KEY);
+  }
+  return out;
+}
+
+// Retention is applied here rather than by Redis TTLs — one fewer command per key, and it
+// works for a snapshot that has no per-key expiry to hang a TTL on. Overflowing all-time
+// paths fold into __unmatched__ so the total stays exact.
+function pruneSnapshot(snapshot: PageViewSnapshot): void {
+  for (const field of ["days", "referrers"] as const) {
+    const dates = Object.keys(snapshot[field]).sort().reverse();
+    for (const date of dates.slice(PAGE_VIEW_DAY_RETENTION)) delete snapshot[field][date];
+  }
+  const entries = Object.entries(snapshot.all_time);
+  if (entries.length > MAX_ALL_TIME_PAGE_KEYS) {
+    entries.sort((a, b) => b[1] - a[1]);
+    const kept = Object.fromEntries(entries.slice(0, MAX_ALL_TIME_PAGE_KEYS));
+    const folded = entries.slice(MAX_ALL_TIME_PAGE_KEYS).reduce((sum, [, v]) => sum + v, 0);
+    snapshot.all_time = kept;
+    if (folded > 0) bump(snapshot.all_time, UNMATCHED_PAGE_KEY, folded);
+  }
+}
+
+function numericMap(raw: unknown): Record<string, number> {
+  const out: Record<string, number> = {};
+  if (!raw || typeof raw !== "object") return out;
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    if (typeof v === "number" && Number.isFinite(v)) out[k] = v;
+  }
+  return out;
+}
+
+function numericMapOfMaps(raw: unknown): Record<string, Record<string, number>> {
+  const out: Record<string, Record<string, number>> = {};
+  if (!raw || typeof raw !== "object") return out;
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) out[k] = numericMap(v);
+  return out;
+}
+
+// The snapshot may have been written by an older build or hand-edited; take what parses
+// and ignore the rest rather than rejecting the whole blob.
+function normalizeSnapshot(raw: unknown): PageViewSnapshot {
+  const snapshot = emptySnapshot();
+  if (!raw || typeof raw !== "object") return snapshot;
+  const obj = raw as Record<string, unknown>;
+  snapshot.days = numericMapOfMaps(obj.days);
+  snapshot.referrers = numericMapOfMaps(obj.referrers);
+  snapshot.all_time = numericMap(obj.all_time);
+  snapshot.updated_at = typeof obj.updated_at === "string" ? obj.updated_at : "";
+  return snapshot;
 }
 
 async function redisMget(keys: string[]): Promise<RedisResult<(string | null)[]>> {
@@ -873,25 +1176,196 @@ export function recordPageView(path: string, userAgent: string, referer?: string
   const served = statusCode === undefined || statusCode < 400;
   const key = served ? normalizePagePath(path) : UNMATCHED_PAGE_KEY;
 
-  // Fire-and-forget — don't await
-  const dailyPath = `pv:${today}:${key}`;
-  const dailyTotal = `pv:${today}:total`;
-  const allTimePath = `pv:all:${key}`;
-  redisIncrWithTtl(dailyPath, DAILY_KEY_TTL_SECONDS).catch(() => {});
-  redisIncrWithTtl(dailyTotal, DAILY_KEY_TTL_SECONDS).catch(() => {});
-  // All-time counters persist, but only over the normalized key space.
-  redisIncrWithTtl(allTimePath).catch(() => {});
+  // Pure in-memory accounting — no Redis command on the request path at all. The deltas
+  // go out aggregated on the next flush (#1023).
+  const day = (pendingPageViews.days[today] ??= {});
+  bumpBounded(day, key, 1, MAX_PAGE_KEYS_PER_DAY, UNMATCHED_PAGE_KEY, pageViewSnapshot.days[today]);
+  bump(day, DAY_TOTAL_KEY, 1);
+  bumpBounded(pendingPageViews.all_time, key, 1, MAX_ALL_TIME_PAGE_KEYS, UNMATCHED_PAGE_KEY, pageViewSnapshot.all_time);
 
-  // Track referrer domain
   if (referer) {
     try {
       const refUrl = new URL(referer);
       const domain = refUrl.hostname.replace(/^www\./, "");
-      redisIncrWithTtl(`ref:${today}:${domain}`, DAILY_KEY_TTL_SECONDS).catch(() => {});
+      const refDay = (pendingPageViews.referrers[today] ??= {});
+      bumpBounded(
+        refDay,
+        domain,
+        1,
+        MAX_REFERRER_DOMAINS_PER_DAY,
+        OTHER_REFERRER_KEY,
+        pageViewSnapshot.referrers[today],
+      );
     } catch {
       // Invalid referrer URL — skip
     }
   }
+}
+
+// --- Page-view load / migration / flush ---
+
+let legacyMigrationDone = false;
+
+// One-time move off the per-key layout. The all-time counters are real history (the
+// counters are the ones we publish), so they are read across and
+// folded into the snapshot rather than abandoned. Legacy keys are left in place: the
+// dailies carry TTLs and expire themselves, and pv:all:* becomes inert once we stop
+// reading it. Returns false if any read failed — a partial migration would silently
+// under-count history, so we retry on the next flush instead of persisting it.
+async function migrateLegacyPageViews(): Promise<PageViewSnapshot | null> {
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const snapshot = emptySnapshot();
+
+  const sources: { pattern: string; apply: (suffix: string, value: number) => void }[] = [
+    {
+      pattern: "pv:all:",
+      apply: (suffix, value) => bump(snapshot.all_time, suffix, value),
+    },
+    {
+      pattern: `pv:${today}:`,
+      apply: (suffix, value) => bump((snapshot.days[today] ??= {}), suffix, value),
+    },
+    {
+      pattern: `pv:${yesterday}:`,
+      apply: (suffix, value) => bump((snapshot.days[yesterday] ??= {}), suffix, value),
+    },
+    {
+      pattern: `ref:${today}:`,
+      apply: (suffix, value) => bump((snapshot.referrers[today] ??= {}), suffix, value),
+    },
+  ];
+
+  for (const { pattern, apply } of sources) {
+    const scan = await redisScan(`${pattern}*`);
+    if (!scan.ok) return null;
+    if (scan.result.length === 0) continue;
+    const { values, missing } = await redisGetMulti(scan.result);
+    if (missing.length > 0) return null;
+    for (const key of scan.result) apply(key.slice(pattern.length), values.get(key) ?? 0);
+  }
+
+  // pv:all:* never had a total key; the day maps did, and it is carried across as-is.
+  pruneSnapshot(snapshot);
+  return snapshot;
+}
+
+async function loadPageViews(): Promise<void> {
+  if (!useRedis()) return;
+  const res = await redisCommand<string | null>(["GET", PAGE_VIEWS_KEY]);
+  if (!res.ok) return; // a failed read is not an empty database — stay unloaded (#1022)
+
+  if (res.result) {
+    try {
+      pageViewSnapshot = normalizeSnapshot(JSON.parse(res.result));
+      pageViewsLoaded = true;
+      pageViewsRereadPending = true;
+      legacyMigrationDone = true;
+      return;
+    } catch {
+      // Corrupt blob — fall through and rebuild from the legacy key space.
+    }
+  }
+
+  if (!legacyMigrationDone) {
+    const migrated = await migrateLegacyPageViews();
+    if (!migrated) return; // could not read the legacy keys — retry rather than zero them
+    pageViewSnapshot = migrated;
+    legacyMigrationDone = true;
+  }
+  pageViewsLoaded = true;
+  pageViewsRereadPending = true;
+}
+
+async function flushPageViews(): Promise<void> {
+  if (!useRedis()) return;
+
+  if (!pageViewsLoaded) {
+    // Same guard as flushTelemetry: until we have read the stored history, writing our
+    // in-memory view over it would turn an outage into permanent loss (#1022). Deltas keep
+    // accumulating in memory — the key space is capped, so that is bounded.
+    await loadPageViews();
+    if (!pageViewsLoaded) {
+      logRedisFailure("SET", "skipping page-view persist: snapshot not loaded");
+      return;
+    }
+  }
+
+  if (!hasPendingPageViews()) return;
+
+  // One best-effort re-read on the first flush after boot. During a deploy the outgoing
+  // instance flushes on SIGTERM, which can land *after* our boot read; merging into that
+  // stale base would drop its final batch. After this we are the only writer, so the
+  // in-memory snapshot is exactly what we last stored and re-reading every flush would
+  // just spend a command to learn what we already know.
+  if (pageViewsRereadPending) {
+    pageViewsRereadPending = false;
+    const read = await redisCommand<string | null>(["GET", PAGE_VIEWS_KEY]);
+    if (read.ok && read.result) {
+      try { pageViewSnapshot = normalizeSnapshot(JSON.parse(read.result)); }
+      catch { /* corrupt — keep the last known-good local copy */ }
+    }
+  }
+
+  // Take the buffer before the round trip, not after. Requests keep arriving during the
+  // SET, and clearing `pendingPageViews` on the far side of the await would discard every
+  // view recorded in that window — they are not in `merged`, so nothing would ever store
+  // them. Anything counted from here on lands in the next batch.
+  const batch = pendingPageViews;
+  pendingPageViews = emptySnapshot();
+
+  const merged = mergeSnapshot(pageViewSnapshot, batch);
+  pruneSnapshot(merged);
+  merged.updated_at = new Date().toISOString();
+
+  const write = await redisCommand<string>(["SET", PAGE_VIEWS_KEY, JSON.stringify(merged)]);
+  if (!write.ok) {
+    // Put the batch back, on top of whatever arrived while the write was failing.
+    pendingPageViews = mergeSnapshot(batch, pendingPageViews);
+    return;
+  }
+
+  pageViewSnapshot = merged;
+}
+
+// How often serve.ts calls flushPending(). Exposed on the health block so the reported
+// command-rate projection can be reasoned about without reading the source.
+//
+// This value divides straight into Redis command spend — halving it doubles the bill —
+// so the env override is floored rather than trusted. It also sets how much counter data
+// an unclean restart can lose; 60s is the balance point between the two.
+const DEFAULT_FLUSH_INTERVAL_SECONDS = 60;
+const MIN_FLUSH_INTERVAL_SECONDS = 5;
+export const FLUSH_INTERVAL_SECONDS = Number(process.env.TELEMETRY_FLUSH_INTERVAL_SECONDS) > 0
+  ? Math.max(MIN_FLUSH_INTERVAL_SECONDS, Number(process.env.TELEMETRY_FLUSH_INTERVAL_SECONDS))
+  : DEFAULT_FLUSH_INTERVAL_SECONDS;
+
+let lastFlushAt: string | null = null;
+
+async function runFlush(): Promise<void> {
+  try {
+    if (!requestLogHydrated) await loadRequestLog();
+    await flushPageViews();
+    await flushRequestLog();
+    lastFlushAt = new Date().toISOString();
+  } catch (err) {
+    // A flush must never reject: it runs unattended on a timer and on the shutdown path.
+    logRedisFailure("FLUSH", err instanceof Error ? err.message : String(err));
+  }
+}
+
+// Serialises flushes. If a write stalls past the interval the next timer tick would
+// otherwise run concurrently, and the second run would clear `pendingPageViews` including
+// anything recorded after the first run built its merge — deltas dropped without ever
+// being stored. Chaining also means the shutdown flush queues behind an in-flight one
+// rather than being skipped, which a plain re-entrancy flag would get wrong.
+let flushChain: Promise<void> = Promise.resolve();
+
+// Pushes everything buffered on the request path. Called on a timer and on SIGTERM.
+export function flushPending(): Promise<void> {
+  if (!useRedis()) return Promise.resolve();
+  flushChain = flushChain.then(runFlush, runFlush);
+  return flushChain;
 }
 
 export interface PageViewPeriod {
@@ -914,38 +1388,32 @@ export interface PageViewsReport {
 
 const UNAVAILABLE_PERIOD: PageViewPeriod = { total: null, top_pages: [], partial: true };
 
-// Collects one `pv:<scope>:*` period. A read failure yields total: null rather than 0 —
-// presenting an unreadable counter as a measured zero is what produced a "top pages" list
-// in which every entry had 0 views (#1018 Defect B).
-async function collectPeriod(prefix: string): Promise<{ period: PageViewPeriod; error: string | null }> {
-  const scan = await redisScan(`${prefix}*`);
-  if (!scan.ok) return { period: { ...UNAVAILABLE_PERIOD }, error: scan.error };
+const TOP_PAGES_LIMIT = 20;
 
-  const keys = scan.result;
-  const totalKey = `${prefix}total`;
-  const { values, missing } = await redisGetMulti(keys);
-  const missingSet = new Set(missing);
-
-  const pages = keys
-    .filter(k => k !== totalKey && !missingSet.has(k))
-    .map(k => ({ path: k.replace(prefix, ""), views: values.get(k) ?? 0 }))
+function topPages(map: Record<string, number>): { path: string; views: number }[] {
+  return Object.entries(map)
+    .filter(([path]) => path !== DAY_TOTAL_KEY)
+    .map(([path, views]) => ({ path, views }))
     .sort((a, b) => b.views - a.views)
-    .slice(0, 20);
-
-  // `pv:all:*` has no explicit total key, so fall back to summing what we could read.
-  // A sum over a partially-readable key set is not a measurement — report null instead.
-  let total: number | null;
-  if (keys.includes(totalKey)) {
-    total = missingSet.has(totalKey) ? null : (values.get(totalKey) ?? 0);
-  } else if (missing.length > 0) {
-    total = null;
-  } else {
-    total = [...values.entries()].reduce((sum, [k, v]) => (k === totalKey ? sum : sum + v), 0);
-  }
-
-  return { period: { total, top_pages: pages, partial: missing.length > 0 }, error: null };
+    .slice(0, TOP_PAGES_LIMIT);
 }
 
+// A day map carries its own total. An absent day is a measured zero, not an unknown —
+// we hold the whole snapshot, so "we have no record of that day" is a real answer.
+function dayPeriod(map: Record<string, number> | undefined): PageViewPeriod {
+  if (!map) return { total: 0, top_pages: [], partial: false };
+  return { total: map[DAY_TOTAL_KEY] ?? 0, top_pages: topPages(map), partial: false };
+}
+
+function allTimePeriod(map: Record<string, number>): PageViewPeriod {
+  const total = Object.entries(map).reduce((sum, [k, v]) => (k === DAY_TOTAL_KEY ? sum : sum + v), 0);
+  return { total, top_pages: topPages(map), partial: false };
+}
+
+// Serves the in-memory snapshot plus everything not yet flushed. Costs zero Redis
+// commands: the SCAN + MGET fan-out this used to run per caller is gone entirely, which
+// is stronger than caching it (#1023). Numbers include un-flushed deltas, so a page view
+// is visible here immediately rather than after the next flush.
 export async function getPageViews(): Promise<PageViewsReport> {
   const today = new Date().toISOString().slice(0, 10);
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
@@ -965,32 +1433,30 @@ export async function getPageViews(): Promise<PageViewsReport> {
     };
   }
 
-  const todayResult = await collectPeriod(`pv:${today}:`);
-  const yesterdayResult = await collectPeriod(`pv:${yesterday}:`);
-  const allTimeResult = await collectPeriod("pv:all:");
-
-  // Get today's referrers
-  const refScan = await redisScan(`ref:${today}:*`);
-  const referrers: Record<string, number> = {};
-  if (refScan.ok) {
-    const { values, missing } = await redisGetMulti(refScan.result);
-    const missingSet = new Set(missing);
-    for (const k of refScan.result) {
-      if (missingSet.has(k)) continue;
-      referrers[k.replace(`ref:${today}:`, "")] = values.get(k) ?? 0;
-    }
+  if (!pageViewsLoaded) {
+    // We never got a trustworthy base. The deltas since boot are real but they are not
+    // the totals, and reporting a partial count as the total is the Defect B mistake.
+    return {
+      today: { ...UNAVAILABLE_PERIOD },
+      yesterday: { ...UNAVAILABLE_PERIOD },
+      all_time: { ...UNAVAILABLE_PERIOD },
+      referrers_today: {},
+      available: false,
+      error: redisHealth.lastReadError ?? "page-view snapshot not loaded",
+      storage,
+    };
   }
 
-  const error = todayResult.error ?? yesterdayResult.error ?? allTimeResult.error ?? (refScan.ok ? null : refScan.error);
+  const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
 
   return {
-    today: todayResult.period,
-    yesterday: yesterdayResult.period,
-    all_time: allTimeResult.period,
-    referrers_today: referrers,
-    available: error === null,
-    error,
-    storage: getTelemetryHealth(),
+    today: dayPeriod(view.days[today]),
+    yesterday: dayPeriod(view.days[yesterday]),
+    all_time: allTimePeriod(view.all_time),
+    referrers_today: { ...(view.referrers[today] ?? {}) },
+    available: true,
+    error: null,
+    storage,
   };
 }
 
