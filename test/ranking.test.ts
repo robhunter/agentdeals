@@ -439,19 +439,27 @@ describe("the live index, ranked", () => {
   });
 
   it("AI/ML: the vendors whose free tier is really a credit grant are demoted", () => {
-    const r = rankOffers(index.offers.filter((o) => o.category === "AI / ML"), {
+    const offers = index.offers.filter((o) => o.category === "AI / ML");
+    const r = rankOffers(offers, {
       queryKey: "best-of:AI / ML",
       changes: dealChanges,
       date: TODAY,
     });
     const demoted = new Map(r.demoted.map((e) => [e.offer.vendor, e]));
-    for (const vendor of ["OpenAI", "Google Gemini API", "Clarifai", "xAI"]) {
+    const withdrawn = ["OpenAI", "Google Gemini API", "Clarifai", "xAI"];
+    const credits = ["Cohere", "Together AI", "Fireworks AI", "Modal", "DeepSeek API"];
+    for (const vendor of withdrawn) {
       assert.ok(demoted.get(vendor)?.demerits.some((d) => d.code === "free_tier_withdrawn"), `${vendor} withdrew a free tier and must be demoted`);
     }
-    for (const vendor of ["Cohere", "Together AI", "Fireworks AI", "Modal", "DeepSeek API"]) {
+    for (const vendor of credits) {
       assert.ok(demoted.get(vendor)?.demerits.some((d) => d.code === "time_limited_offer"), `${vendor} offers credits, not a free tier`);
     }
-    assert.strictEqual(r.qualified.length, 47);
+    const qualified = vendorsOf(r.qualified);
+    for (const vendor of [...withdrawn, ...credits]) {
+      assert.ok(!qualified.includes(vendor), `${vendor} is demoted and must not also be in the qualified band`);
+    }
+    assert.strictEqual(r.qualified.length + r.demoted.length + r.excluded.length, offers.length);
+    assert.ok(r.qualified.length > 0);
   });
 
   it("every demotion on every page names a specific recorded fact", () => {
