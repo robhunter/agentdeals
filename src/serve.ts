@@ -24,13 +24,58 @@ import { getPlatformCodeForVendor, getBestReferralCode, listAllReferralCodes } f
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
-import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
+import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
+import { linkifyVerdictBlocks, overdueReport, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
 import type { Agent, RiskCause, LinkUnreachable } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
+
+function newestChangeBySlug(changes: Array<{ vendor?: string; date?: string }>, notAfter: string): Map<string, string> {
+  const newest = new Map<string, string>();
+  for (const c of changes) {
+    if (!c.vendor || !c.date || c.date > notAfter) continue;
+    const slug = toSlug(c.vendor);
+    const current = newest.get(slug);
+    if (!current || c.date > current) newest.set(slug, c.date);
+  }
+  return newest;
+}
+
+function latestChangeDate(changes: Array<{ date?: string }>, notAfter = utcToday()): string | null {
+  let latest: string | null = null;
+  for (const c of changes) {
+    const d = c.date;
+    if (!d || d > notAfter) continue;
+    if (latest === null || d > latest) latest = d;
+  }
+  return latest;
+}
+
+function dataChangesSegment(changes: Array<{ date?: string }>): string {
+  const latest = latestChangeDate(changes);
+  return latest ? ` Latest tracked change ${latest}.` : "";
+}
+
+function withVerdictLinks(html: string): string {
+  return linkifyVerdictBlocks(html, namedVendorSlug);
+}
+
+function verifiedThrough(records: Array<{ verifiedDate?: string }>): string | null {
+  let latest: string | null = null;
+  for (const r of records) {
+    const d = r.verifiedDate;
+    if (d && (latest === null || d > latest)) latest = d;
+  }
+  return latest;
+}
+
+function dataVerifiedSegment(records: Array<{ verifiedDate?: string }>): string {
+  const latest = verifiedThrough(records);
+  return latest ? ` Data verified through ${latest}.` : "";
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -1169,7 +1214,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>Free ${escHtmlServer(categoryName)} Tools</h1>
-  <p class="cat-meta">${catCount} verified free tiers and developer deals. Last updated ${new Date().toISOString().split("T")[0]}.</p>
+  <p class="cat-meta">${catCount} verified free tiers and developer deals.${dataVerifiedSegment(catOffers)}</p>
 
   ${introHtml}
   ${analysisCta}
@@ -2450,7 +2495,7 @@ ${globalNavCss()}
   ${buildGlobalNav("compare")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/compare">Comparisons</a> &rsaquo; ${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</div>
   <h1>${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</h1>
-  <p class="page-meta">Side-by-side free tier comparison. Last updated ${new Date().toISOString().split("T")[0]}.</p>
+  <p class="page-meta">Side-by-side free tier comparison.${dataVerifiedSegment([a, b])}</p>
 ${categoryContextHtml}
 ${verdictHtml}
   <div class="compare-grid">
@@ -2943,7 +2988,7 @@ ${globalNavCss()}
   ${buildGlobalNav("compare")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/${toSlug(a.category)}">${escHtmlServer(a.category)}</a> &rsaquo; ${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}</div>
   <h1>${escHtmlServer(a.vendor)} vs ${escHtmlServer(b.vendor)}: Free Tier Comparison</h1>
-  <p class="page-meta">Side-by-side comparison of free tiers, pricing changes, and stability. Last updated ${new Date().toISOString().split("T")[0]}.</p>
+  <p class="page-meta">Side-by-side comparison of free tiers, pricing changes, and stability.${dataVerifiedSegment([a, b])}</p>
 
   <div class="verdict-box">
     <strong>Quick Verdict:</strong> ${escHtmlServer(config.verdict)}
@@ -3371,7 +3416,7 @@ function buildThisWeekPage(weeksAgo: number): string {
     description: digest.headline,
     url: `${BASE_URL}${canonicalPath}`,
     datePublished: digest.week_of,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: digest.week_ending ?? digest.week_of,
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}${canonicalPath}` },
   };
@@ -7900,7 +7945,7 @@ function buildEventPage(slug: string): string | null {
       "@type": "Organization",
       name: event.organizer,
     },
-    dateModified: today,
+    dateModified: latestChangeDate(eventChanges) ?? verifiedThrough(eventOffers) ?? event.startDate,
   };
 
   const statusBadge = isActive
@@ -14191,7 +14236,7 @@ function buildFreeStartupStackPage(): string {
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
     datePublished: "2026-03-25",
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/free-startup-stack", "2026-03-25"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -14509,7 +14554,7 @@ function buildFreeAiStackPage(): string {
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
     datePublished: "2026-03-25",
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/free-ai-stack", "2026-03-25"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -14862,7 +14907,7 @@ function buildFreeDevopsStackPage(): string {
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
     datePublished: "2026-03-25",
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/free-devops-stack", "2026-03-25"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -15215,8 +15260,8 @@ function buildFreeFrontendStackPage(): string {
     headline: title,
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
-    datePublished: "2026-03-26",
-    dateModified: new Date().toISOString().slice(0, 10),
+    datePublished: "2026-03-25",
+    dateModified: pageDateModified("/free-frontend-stack", "2026-03-26"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -15579,7 +15624,7 @@ function buildFreeNextjsStackPage(): string {
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
     datePublished: "2026-04-03",
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/free-nextjs-stack", "2026-04-03"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -15999,7 +16044,7 @@ function buildFreeDjangoStackPage(): string {
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
     datePublished: "2026-04-03",
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/free-django-stack", "2026-04-03"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -16457,8 +16502,8 @@ function buildFreeFastapiStackPage(): string {
     headline: title,
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
-    datePublished: "2026-04-04",
-    dateModified: new Date().toISOString().slice(0, 10),
+    datePublished: "2026-04-03",
+    dateModified: pageDateModified("/free-fastapi-stack", "2026-04-04"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -16933,8 +16978,8 @@ function buildFreeGoStackPage(): string {
     headline: title,
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
-    datePublished: "2026-04-04",
-    dateModified: new Date().toISOString().slice(0, 10),
+    datePublished: "2026-04-03",
+    dateModified: pageDateModified("/free-go-stack", "2026-04-04"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -17416,7 +17461,7 @@ function buildFreeSaasStackPage(): string {
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
     datePublished: "2026-04-04",
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/free-saas-stack", "2026-04-04"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -17906,7 +17951,7 @@ function buildHetznerPricing2026Page(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/hetzner-pricing-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -18283,7 +18328,7 @@ function buildQ1PricingReportPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/q1-2026-developer-pricing-report", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -18421,7 +18466,7 @@ mcpCtaCss() + "\n" +
   "<div class=\"breadcrumb\"><a href=\"/\">AgentDeals</a> &rsaquo; <a href=\"/changes\">Changes</a> &rsaquo; Q1 2026 Report</div>\n" +
   "<h1>Q1 2026 Developer Pricing Report</h1>\n" +
   "<p class=\"subtitle\">The Great Free Tier Reckoning</p>\n" +
-  "<p class=\"pub-date\">Published " + pubDate + " &middot; Updated " + new Date().toISOString().split("T")[0] + " &middot; " + q1Changes.length + " verified changes across " + uniqueVendors + " developer tools</p>\n" +
+  "<p class=\"pub-date\">Published " + pubDate + pageFreshness("/q1-2026-developer-pricing-report") + " &middot; " + q1Changes.length + " verified changes across " + uniqueVendors + " developer tools</p>\n" +
 
   // --- Executive Summary ---
   "<h2>Executive Summary</h2>\n" +
@@ -18681,7 +18726,7 @@ function buildQ2PricingPreview2026Page(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/q2-pricing-preview-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -18944,7 +18989,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/google-developer-program-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -19354,7 +19399,7 @@ function buildSupabaseVsFirebasePage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/supabase-vs-firebase", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -19445,7 +19490,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/database-alternatives">Databases</a> &rsaquo; Supabase vs Firebase</div>
   <h1>Supabase vs Firebase — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/supabase-vs-firebase")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">500 MB</div><div class="stat-label">Supabase DB</div></div>
@@ -19687,7 +19732,7 @@ function buildVercelVsNetlifyPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/vercel-vs-netlify", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -19778,7 +19823,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Hosting</a> &rsaquo; Vercel vs Netlify</div>
   <h1>Vercel vs Netlify — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/vercel-vs-netlify")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">100 GB</div><div class="stat-label">Vercel Bandwidth</div></div>
@@ -20015,7 +20060,7 @@ function buildNeonVsSupabasePage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/neon-vs-supabase", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -20106,7 +20151,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/database-alternatives">Databases</a> &rsaquo; Neon vs Supabase</div>
   <h1>Neon vs Supabase — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/neon-vs-supabase")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">100</div><div class="stat-label">Neon Projects</div></div>
@@ -20347,7 +20392,7 @@ function buildRailwayVsRenderPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/railway-vs-render", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -20438,7 +20483,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Hosting</a> &rsaquo; Railway vs Render</div>
   <h1>Railway vs Render — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/railway-vs-render")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">0.5 GB</div><div class="stat-label">Railway RAM</div></div>
@@ -20679,7 +20724,7 @@ function buildDatadogVsNewRelicPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/datadog-vs-new-relic", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -20770,7 +20815,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/monitoring-alternatives">Monitoring</a> &rsaquo; Datadog vs New Relic</div>
   <h1>Datadog vs New Relic — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/datadog-vs-new-relic")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">5 hosts</div><div class="stat-label">Datadog Free</div></div>
@@ -21026,7 +21071,7 @@ function buildHcpTerraformMigrationPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/hcp-terraform-migration", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -21144,7 +21189,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; HCP Terraform Migration</div>
   <h1>HCP Terraform Migration Guide — March 31 Deadline</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Deadline: March 31, 2026 &middot; Affects legacy free plan users</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/hcp-terraform-migration")} &middot; Deadline: March 31, 2026 &middot; Affects legacy free plan users</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">Mar 31</div><div class="stat-label">Legacy Plan Ends</div></div>
@@ -21419,7 +21464,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/terraform-cloud-free-tier-removed", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -21811,7 +21856,7 @@ function buildGeminiApiPricing2026Page(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/gemini-api-pricing-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -21907,7 +21952,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing 2026</div>
   <h1>Gemini API Pricing 2026 — Free Tier Changes, Spend Caps &amp; Alternatives</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Updated April 2, 2026 &middot; Spend caps enforced April 1 &middot; 3.1 Pro paid-only &middot; Prepaid billing live</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/gemini-api-pricing-2026")} &middot; Spend caps enforced April 1 &middot; 3.1 Pro paid-only &middot; Prepaid billing live</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">$250</div><div class="stat-label">Tier 1 Spend Cap</div></div>
@@ -22182,7 +22227,7 @@ function buildGeminiApiPricingChangesPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/gemini-api-pricing-changes", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -22578,7 +22623,7 @@ function buildFreeTierRiskPage(): string {
   const title = "Free Tier Risk Index — Predictive Analysis of Which Free Tiers May Disappear Next";
   const metaDesc = "Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from 80 tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.";
   const slug = "free-tier-risk";
-  const pubDate = "2026-04-08";
+  const pubDate = "2026-03-26";
 
   // Categorize deal changes
   const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "product_deprecated", "open_source_killed", "pricing_model_change", "pricing_restructured"];
@@ -22744,7 +22789,7 @@ function buildFreeTierRiskPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/free-tier-risk", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -23097,7 +23142,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Risk scores derived from our dataset of ${dealChanges.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools. Each vendor scored on pricing history (40%), financial signals (25%), competitive pressure (20%), and free tier strategic value (15%). Pricing history sourced from official vendor announcements and our <a href="/changes">deal change tracker</a>. Financial signals based on public funding data, acquisition history, and profitability indicators. Category heatmap and pattern analysis computed dynamically from our full deal_changes dataset. This index is updated as new pricing changes are tracked. Last updated: ${new Date().toISOString().split("T")[0]}.
+    <strong>Methodology:</strong> Risk scores derived from our dataset of ${dealChanges.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools. Each vendor scored on pricing history (40%), financial signals (25%), competitive pressure (20%), and free tier strategic value (15%). Pricing history sourced from official vendor announcements and our <a href="/changes">deal change tracker</a>. Financial signals based on public funding data, acquisition history, and profitability indicators. Category heatmap and pattern analysis computed dynamically from our full deal_changes dataset. This index is recomputed from the change record on every request.${dataChangesSegment(dealChanges)}
   </div>
 
   <div class="search-cta">
@@ -23237,7 +23282,7 @@ function buildStabilityDashboardPage(): string {
     name: title,
     description: metaDesc,
     creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: latestChangeDate(allChanges) ?? "2026-04-02",
     url: `${BASE_URL}/${slug}`,
     variableMeasured: [
       { "@type": "PropertyValue", name: "Volatile Vendors", value: volatileVendors.length },
@@ -23328,7 +23373,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Stability Dashboard</div>
   <h1>${escHtmlServer(title)}</h1>
-  <p class="subtitle">Real-time risk ratings based on <strong>${allChanges.length}</strong> tracked pricing changes across <strong>${stabilityMap.size}</strong> vendors. Last updated ${new Date().toISOString().split("T")[0]}.</p>
+  <p class="subtitle">Real-time risk ratings based on <strong>${allChanges.length}</strong> tracked pricing changes across <strong>${stabilityMap.size}</strong> vendors.${dataChangesSegment(allChanges)}</p>
 
   <div class="summary-stats">
     <div class="stat-card">
@@ -23535,7 +23580,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/openai-assistants-alternatives", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -23630,7 +23675,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ai-ml-alternatives">AI / ML</a> &rsaquo; Assistants API Sunset Guide</div>
   <h1>OpenAI Assistants API Sunset: Migration Guide &amp; Free Alternatives</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/openai-assistants-alternatives")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -24033,7 +24078,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/openai-assistants-migration-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -24144,7 +24189,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; <a href="/shutdowns">Shutdowns</a> &rsaquo; Assistants API Migration</div>
   <h1>OpenAI Assistants API Migration Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/openai-assistants-migration-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -24529,7 +24574,7 @@ function buildTenorAlternativesPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/tenor-alternatives", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -24629,7 +24674,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Tenor API Shutdown Guide</div>
   <h1>Tenor API Shutdown: GIF API Alternatives &amp; Migration Guide</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${tenorChanges.length} Tenor pricing change${tenorChanges.length !== 1 ? "s" : ""} tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/tenor-alternatives")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${tenorChanges.length} Tenor pricing change${tenorChanges.length !== 1 ? "s" : ""} tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -24996,7 +25041,7 @@ function buildFirebaseStudioShutdownPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/firebase-studio-shutdown", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -25096,7 +25141,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">IDE &amp; Code Editors</a> &rsaquo; Firebase Studio Shutdown Guide</div>
   <h1>Firebase Studio Shutdown: Free Cloud IDE Alternatives &amp; Migration Paths</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${firebaseChanges.length} Firebase/Google pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/firebase-studio-shutdown")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${firebaseChanges.length} Firebase/Google pricing changes tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysToFreeze} days</div>
@@ -25587,7 +25632,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     name: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/openai-assistants-migration", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -25693,7 +25738,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/shutdowns">Shutdown Tracker</a> &rsaquo; OpenAI Assistants API</div>\n' +
     '  <h1>OpenAI Assistants API Sunset \u2014 Migration Cost Guide</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + migrationPaths.length + ' migration paths compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + openaiChanges.length + ' OpenAI pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/openai-assistants-migration") + ' &middot; ' + migrationPaths.length + ' migration paths compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + openaiChanges.length + ' OpenAI pricing changes tracked</p>\n' +
     '\n' +
     // Deadline banner
     '  <div class="deadline-banner">\n' +
@@ -26281,7 +26326,7 @@ ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">Home</a> / <a href="/guides">Guides</a> / Shutdown Tracker</div>
   <h1>${escHtmlServer(title)}</h1>
   <p class="subtitle">${escHtmlServer(subtitle)}</p>
-  <div class="pub-date">Updated ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${nextDaysLeft} days` : ""}</div>
+  <div class="pub-date">Published ${pubDate}${pageFreshness("/shutdowns")} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${nextDaysLeft} days` : ""}</div>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${activeCount}</div><div class="stat-label">Active Shutdowns</div></div>
@@ -26628,7 +26673,7 @@ function buildFreeTierTrackerPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/free-tier-tracker", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -26822,7 +26867,7 @@ function buildStartupCreditsPage(): string {
   const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
   const metaDesc = "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. Updated April 2026.";
   const slug = "startup-credits";
-  const pubDate = "2026-04-13";
+  const pubDate = "2026-03-27";
 
   interface StartupProgram {
     name: string;
@@ -26966,7 +27011,7 @@ function buildStartupCreditsPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/startup-credits", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -27078,7 +27123,7 @@ function buildStartupCreditsPage(): string {
     '  ' + buildGlobalNav("alternatives") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Startup Programs</a> &rsaquo; Credits Comparison</div>\n' +
     '  <h1>Startup Credits Comparison \u2014 The 2026 Guide</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + programs.length + ' programs compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/startup-credits") + ' &middot; ' + programs.length + ' programs compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + programs.length + '</div><div class="stat-label">Programs Compared</div></div>\n' +
@@ -27401,7 +27446,7 @@ function buildAiCodingPricing2026Page(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/ai-coding-pricing-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -27486,7 +27531,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">AI Coding</a> &rsaquo; Pricing Guide 2026</div>
   <h1>AI Coding Tools Pricing — 2026 Comparison</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${aiCodingChanges.length} pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/ai-coding-pricing-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${aiCodingChanges.length} pricing changes tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${tools.length}</div><div class="stat-label">Tools Compared</div></div>
@@ -28024,7 +28069,7 @@ function buildAiCodingToolsPricingPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/ai-coding-tools-pricing", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -28148,7 +28193,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">AI Coding</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>AI Coding Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + aiCodingChanges.length + ' pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/ai-coding-tools-pricing") + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + aiCodingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + tools.length + '</div><div class="stat-label">Tools Compared</div></div>\n' +
@@ -28810,7 +28855,7 @@ function buildCiCdPricingPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/ci-cd-pricing", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -28933,7 +28978,7 @@ function buildCiCdPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ci-cd-alternatives">CI/CD</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>CI/CD Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + cicdOffers.length + ' CI/CD tools &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/ci-cd-pricing") + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + cicdOffers.length + ' CI/CD tools &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + tools.length + '</div><div class="stat-label">Tools Compared</div></div>\n' +
@@ -29714,7 +29759,7 @@ function buildDatabasePricingPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/database-pricing", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -29838,7 +29883,7 @@ function buildDatabasePricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + dbOffers.length + ' database services &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/database-pricing") + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + dbOffers.length + ' database services &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Services Compared</div></div>\n' +
@@ -30505,7 +30550,7 @@ function buildVectorDatabasePricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Vector Database Pricing</div>\n' +
     '  <h1>Vector Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + vectorOffers.length + ' vector database entries &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/vector-database-pricing") + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + vectorOffers.length + ' vector database entries &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Services Compared</div></div>\n' +
@@ -31117,7 +31162,7 @@ function buildHostingPricingPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/hosting-pricing", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -31232,7 +31277,7 @@ function buildHostingPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Cloud Hosting</a> &rsaquo; Pricing Comparison</div>\n' +
     '  <h1>Cloud Hosting &amp; PaaS Pricing \u2014 The 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + services.length + ' platforms compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + hostingChanges.length + ' pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/hosting-pricing") + ' &middot; ' + services.length + ' platforms compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + hostingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Platforms Compared</div></div>\n' +
@@ -31875,7 +31920,7 @@ function buildLlmApiPricingPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/llm-api-pricing", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -31989,7 +32034,7 @@ function buildLlmApiPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ai-ml-alternatives">AI / ML</a> &rsaquo; LLM API Pricing</div>\n' +
     '  <h1>LLM API Pricing &mdash; The 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; ' + providers.length + ' providers compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + llmChanges.length + ' pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/llm-api-pricing") + ' &middot; ' + providers.length + ' providers compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + llmChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Providers Compared</div></div>\n' +
@@ -32245,7 +32290,7 @@ function buildAgentPaymentsPage(): string {
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/agent-payments", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -32851,7 +32896,7 @@ function buildDallEShutdownPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/dall-e-shutdown", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -32981,7 +33026,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; DALL-E Shutdown Guide</div>
   <h1>DALL-E API Shutdown: Migration Guide &amp; Free Image Generation Alternatives</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${dalleChanges.length} OpenAI pricing change${dalleChanges.length !== 1 ? "s" : ""} tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/dall-e-shutdown")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${dalleChanges.length} OpenAI pricing change${dalleChanges.length !== 1 ? "s" : ""} tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -33372,7 +33417,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/openai-realtime-migration", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
@@ -33401,7 +33446,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + ' &middot; Last updated ' + new Date().toISOString().split("T")[0] + ' &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data verified against official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + pageFreshness("/openai-realtime-migration") + ' &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data verified against official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
 }
 
 // --- AWS App Runner Migration Guide page ---
@@ -33515,7 +33560,7 @@ function buildAppRunnerMigrationPage(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/aws-app-runner-migration", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -33645,7 +33690,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; App Runner Migration Guide</div>
   <h1>AWS App Runner Migration Guide: Alternatives with Free Tiers &amp; Pricing</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${awsChanges.length} AWS pricing change${awsChanges.length !== 1 ? "s" : ""} tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/aws-app-runner-migration")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${awsChanges.length} AWS pricing change${awsChanges.length !== 1 ? "s" : ""} tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -34137,7 +34182,7 @@ function buildAwsFreeTier2026Page(): string {
     headline: title,
     description: metaDesc,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/aws-free-tier-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -34224,7 +34269,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier 2026</div>
   <h1>AWS Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${awsOffers.length} AWS entries tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/aws-free-tier-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${awsOffers.length} AWS entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
@@ -34583,7 +34628,7 @@ function buildGcpFreeTier2026Page(): string {
     headline: title,
     description: metaDescGcp,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/gcp-free-tier-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -34669,7 +34714,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCP Free Tier 2026</div>
   <h1>GCP Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${gcpOffers.length} GCP entries tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/gcp-free-tier-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${gcpOffers.length} GCP entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
@@ -35010,7 +35055,7 @@ function buildAzureFreeTier2026Page(): string {
     headline: title,
     description: metaDescAzure,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/azure-free-tier-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -35096,7 +35141,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier 2026</div>
   <h1>Azure Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${azureOffers.length} Azure entries tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/azure-free-tier-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${azureOffers.length} Azure entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
@@ -35464,7 +35509,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
     headline: title,
     description: metaDescDO,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/digitalocean-free-tier-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -35550,7 +35595,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; DigitalOcean Free Tier 2026</div>
   <h1>DigitalOcean Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${doOffers.length} DigitalOcean entries tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/digitalocean-free-tier-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${doOffers.length} DigitalOcean entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number green">$200</div><div class="stat-label">Free Credits (60 days)</div></div>
@@ -35973,7 +36018,7 @@ function buildCloudFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescComp,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/cloud-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -36065,7 +36110,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Cloud Free Tier Comparison</div>
   <h1>Cloud Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 4 cloud providers compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/cloud-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 4 cloud providers compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -36600,7 +36645,7 @@ function buildDatabaseFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescDb,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/database-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -36695,7 +36740,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Database Free Tier Comparison</div>
   <h1>Database Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 44 database services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/database-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 44 database services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -37284,7 +37329,7 @@ function buildCicdFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescCicd,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/cicd-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -37379,7 +37424,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/ci-cd">CI/CD</a> &rsaquo; CI/CD Free Tier Comparison</div>
   <h1>CI/CD Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 37 CI/CD services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/cicd-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 37 CI/CD services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -37903,7 +37948,7 @@ function buildServerlessFreeTierComparison2026Page(): string {
   const title = "Serverless Free Tier Comparison 2026 — AWS Lambda vs Cloud Functions vs Azure Functions vs Workers";
   const metaDescServerless = "Side-by-side comparison of 10+ serverless free tiers in 2026. Compare AWS Lambda, Google Cloud Functions, Azure Functions, Cloudflare Workers, Deno Deploy, Cloud Run, Val Town, and more — invocations, compute, cold starts, and billing models.";
   const slug = "serverless-free-tier-comparison-2026";
-  const pubDate = "2026-04-01";
+  const pubDate = "2026-03-31";
 
   // Collect serverless-related deal changes
   const serverlessVendorKeywords = ["Vercel", "Cloudflare Workers", "Cloudflare Durable Objects", "Cloudflare Queues", "Deno Deploy", "Val Town", "Google Cloud", "AWS", "Azure", "Cloud Run", "Lambda", "Cloud Functions", "Azure Functions", "DBOS", "Inngest", "Trigger.dev"];
@@ -37956,7 +38001,7 @@ function buildServerlessFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescServerless,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/serverless-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -38051,7 +38096,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/serverless">Serverless</a> &rsaquo; Serverless Free Tier Comparison</div>
   <h1>Serverless Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 10+ serverless platforms compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/serverless-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 10+ serverless platforms compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -38607,7 +38652,7 @@ function buildAuthComparison2026Page(): string {
     headline: title,
     description: metaDescAuth,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/auth-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -38708,7 +38753,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/auth">Auth</a> &rsaquo; Auth &amp; Identity Comparison</div>
   <h1>Auth &amp; Identity Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ auth services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/auth-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ auth services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -39553,7 +39598,7 @@ function buildEmailComparison2026Page(): string {
     headline: title,
     description: metaDescEmail,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/email-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -39654,7 +39699,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/email">Email</a> &rsaquo; Email Comparison</div>
   <h1>Email &amp; Transactional Messaging Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ email services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/email-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ email services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -39667,7 +39712,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> offers the highest free volume at 62,000 emails/month when sent from EC2 &mdash; unmatched for apps already on AWS. <strong>Resend</strong> has the best developer experience with a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 3,500 emails/month production plus full inbox simulation. <strong>Maileroo</strong> is the hidden gem with 5,000 emails/month free and no daily cap.</p>
+    <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> offers the highest free volume at 62,000 emails/month when sent from EC2 &mdash; unmatched for apps already on AWS. <strong>Resend</strong> has the best developer experience with a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 4,000 emails/month production plus a separate sandbox for inbox simulation. <strong>Maileroo</strong> is the hidden gem with 3,000 emails/month free and no daily cap.</p>
     <p><strong>The SendGrid exodus:</strong> SendGrid &mdash; the most widely-used transactional email API &mdash; permanently removed its free tier on May 27, 2025. The perpetual 100 emails/day plan is gone, replaced by a 60-day trial only, then $19.95/month minimum. Mailgun removed its 10,000/month free tier after Sinch acquisition. Thousands of side projects and startups were forced to migrate. The email API market is now split: pure-play transactional APIs (Resend, Postmark, MailerSend), all-in-one platforms (Brevo, Loops), and infrastructure (SES). This guide covers all paths.</p>
     <p><strong>Pricing is confusing:</strong> Per-email vs per-contact vs per-day caps. Transactional vs marketing distinctions. Overage charges that 10x your bill. Deliverability reputation that takes months to build, making switching costly. This comparison cuts through the confusion with concrete numbers.</p>
   </div>
@@ -39740,7 +39785,7 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Maileroo<span class="winner-badge">HIDDEN GEM</span></td>
         <td>Transactional</td>
-        <td>5,000/mo</td>
+        <td>3,000/mo</td>
         <td>None</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
@@ -39752,8 +39797,8 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Mailtrap<span class="winner-badge">BEST TESTING</span></td>
         <td>Transactional + Testing</td>
-        <td>3,500/mo (sending)</td>
-        <td>~117/day</td>
+        <td>4,000/mo (sending)</td>
+        <td>150/day</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
@@ -39984,7 +40029,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Maileroo <span class="winner-badge">HIDDEN GEM</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5,000 emails/month with no daily cap. REST API and SMTP relay. Custom domain support, delivery tracking, and webhooks. Relatively new entrant but the free tier is more generous than Resend or MailerSend with no daily sending limit. Worth evaluating for early-stage projects that need burst capacity. Good email verification built in.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month with no daily cap. REST API and SMTP relay. Custom domain support, delivery tracking, and webhooks. Relatively new entrant matching Resend and MailerSend on monthly volume, with no daily sending limit. Worth evaluating for early-stage projects that need burst capacity. Good email verification built in.</div>
   </div>
 
   <div class="diff-card">
@@ -40118,7 +40163,7 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Email testing / staging</td>
         <td><strong>Mailtrap</strong></td>
-        <td>Virtual inboxes + 3.5K/mo production sending</td>
+        <td>Virtual inboxes + 4K/mo production sending</td>
         <td>Low &mdash; separate test + prod environments</td>
       </tr>
       <tr>
@@ -40140,7 +40185,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Mailtrap <span class="winner-badge">BEST TESTING</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Email Testing: unlimited test inboxes with up to 100 test emails/month. Email Sending: 1,000 emails/month for production. The testing product captures emails in a virtual inbox, lets you inspect HTML/text/headers, check spam scores, and validate links. The sending product is a separate service for production delivery. Best for development teams who need proper email QA workflows.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> three separate free products. Email API/SMTP: 4,000 emails/month with a 150/day cap, 1 domain, 3-day log retention. Email Sandbox (testing): 50 test emails/month, 1 sandbox. Email Marketing: 1,500 emails/month, 500 contacts. The testing product captures emails in a virtual inbox, lets you inspect HTML/text/headers, check spam scores, and validate links. The sending product is a separate service for production delivery. Best for development teams who need proper email QA workflows.</div>
   </div>
 
   <div class="diff-card">
@@ -40359,7 +40404,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Best for startups &rarr; Resend or Maileroo</strong>
-      <p>Resend: 3K/mo free, best DX with React Email and TypeScript SDK. Maileroo: 5K/mo free with no daily cap &mdash; more volume if you don't need React Email integration. Both are indie-funded with no acquisition risk.</p>
+      <p>Resend: 3K/mo free, best DX with React Email and TypeScript SDK. Maileroo: 3K/mo free with no daily cap &mdash; the same monthly volume as Resend without the 100/day ceiling. Both are indie-funded with no acquisition risk.</p>
     </div>
 
     <div class="verdict-item">
@@ -40379,7 +40424,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Best for testing/development &rarr; Mailtrap</strong>
-      <p>Virtual inboxes, spam analysis, HTML checking, and link validation. 3.5K/mo production sending included. The standard for email QA workflows. Separate testing and production environments prevent accidental sends to real users.</p>
+      <p>Virtual inboxes, spam analysis, HTML checking, and link validation. 4K/mo production sending included, on a separate product from the 50-email testing sandbox. The standard for email QA workflows. Separate testing and production environments prevent accidental sends to real users.</p>
     </div>
 
     <div class="verdict-item">
@@ -40532,7 +40577,7 @@ function buildMonitoringComparison2026Page(): string {
     headline: title,
     description: metaDescMonitoring,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/monitoring-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -40633,7 +40678,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/monitoring">Monitoring</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
   <h1>Monitoring &amp; Observability Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 25+ monitoring services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/monitoring-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 25+ monitoring services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -41534,7 +41579,7 @@ function buildStorageComparison2026Page(): string {
     headline: title,
     description: metaDescStorage,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/storage-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -41635,7 +41680,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/storage">Storage</a> &rsaquo; Storage &amp; CDN Comparison</div>
   <h1>Storage &amp; CDN Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ storage &amp; CDN services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/storage-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ storage &amp; CDN services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -42341,7 +42386,7 @@ function buildTestingFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescTesting,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/testing-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -42442,7 +42487,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/testing">Testing</a> &rsaquo; Testing Free Tier Comparison</div>
   <h1>Testing &amp; QA Tools Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ testing services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/testing-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ testing services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -43013,7 +43058,7 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescAnalytics,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/analytics-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -43114,7 +43159,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/analytics">Analytics</a> &rsaquo; Analytics Free Tier Comparison</div>
   <h1>Analytics &amp; Product Analytics Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ analytics services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/analytics-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ analytics services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -43699,7 +43744,7 @@ function buildApiDevelopmentFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescApi,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/api-development-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -43800,7 +43845,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/api-development">API Development</a> &rsaquo; API Development Free Tier Comparison</div>
   <h1>API Development Tools Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ API development tools compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/api-development-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ API development tools compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -44299,7 +44344,7 @@ function buildSecurityFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescSec,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/security-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -44400,7 +44445,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/security">Security</a> &rsaquo; Security Free Tier Comparison</div>
   <h1>Developer Security Tools Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ security tools compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/security-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ security tools compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -45022,7 +45067,7 @@ function buildHostingFreeTierComparison2026Page(): string {
     headline: title,
     description: metaDescHosting,
     datePublished: pubDate,
-    dateModified: new Date().toISOString().split("T")[0],
+    dateModified: pageDateModified("/hosting-free-tier-comparison-2026", pubDate),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
@@ -45123,7 +45168,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Hosting Free Tier Comparison</div>
   <h1>Hosting &amp; PaaS Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Last updated ${new Date().toISOString().split("T")[0]} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ hosting platforms compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/hosting-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ hosting platforms compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -45743,8 +45788,8 @@ function buildStateOfFreeTiersPage(): string {
     name: "State of Developer Free Tiers (2026)",
     description: metaDesc,
     url: `${BASE_URL}/state-of-free-tiers`,
-    datePublished: "2026-01-01",
-    dateModified: now,
+    datePublished: "2026-04-05",
+    dateModified: pageDateModified("/state-of-free-tiers", "2026-04-05"),
     publisher: {
       "@type": "Organization",
       name: "AgentDeals",
@@ -45816,7 +45861,7 @@ ${globalNavCss()}
   ${buildGlobalNav("report")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers</div>
   <h1>State of Developer Free Tiers (2026)</h1>
-  <p class="page-meta">${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story. Last updated ${now}.</p>
+  <p class="page-meta">${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story.${dataChangesSegment(dealChanges)}${pageFreshnessSentence("/state-of-free-tiers")}</p>
 
   <!-- 1. Executive Summary -->
   <h2>Executive Summary</h2>
@@ -49792,8 +49837,8 @@ ${entriesHtml}
     url: `${BASE_URL}/pricing-changes`,
     keywords: ["developer tool pricing", "free tier removed", "free tier changelog", "developer pricing changes " + currentYear],
     creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    dateModified: sorted.length > 0 ? sorted[0].date : today,
-    temporalCoverage: sorted.length > 0 ? `${sorted[sorted.length - 1].date}/${sorted[0].date}` : today,
+    dateModified: sorted.length > 0 ? sorted[0].date : "2026-04-04",
+    temporalCoverage: sorted.length > 0 ? `${sorted[sorted.length - 1].date}/${sorted[0].date}` : undefined,
     variableMeasured: [
       { "@type": "PropertyValue", name: "Total changes tracked", value: allChanges.length },
       { "@type": "PropertyValue", name: "Free tiers removed", value: removedCount },
@@ -50527,7 +50572,7 @@ function buildFreshnessPage(): string {
     name: "AgentDeals Data Freshness",
     description: metaDesc,
     url: `${BASE_URL}/freshness`,
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: verifiedThrough(offers) ?? "2026-03-19",
     creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -51083,7 +51128,7 @@ function buildAgentStackPage(): string {
     description: metaDesc,
     url: `${BASE_URL}/agent-stack`,
     datePublished: "2026-03-19",
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/agent-stack", "2026-03-19"),
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -51506,7 +51551,7 @@ function buildMarketplacePage(): string {
     name: title,
     description: metaDesc,
     url: `${BASE_URL}/marketplace`,
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/marketplace", "2026-04-12"),
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -51960,7 +52005,7 @@ function buildDisclosurePage(): string {
     name: title,
     description: metaDesc,
     url: `${BASE_URL}/disclosure`,
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: pageDateModified("/disclosure", "2026-04-11"),
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
@@ -52054,7 +52099,7 @@ ${globalNavCss()}
     ${referralOffers.length > 0 ? `<ul>${referralOffers.map(o => `<li><a href="/vendor/${toSlug(o.vendor)}">${escHtmlServer(o.vendor)}</a>: ${escHtmlServer(o.referral!.referee_value ?? "Referral link available")}${o.referral!.terms_url ? ` (<a href="${escHtmlServer(o.referral!.terms_url)}" rel="noopener" target="_blank">program terms</a>)` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
   </div>
 
-  <p class="updated">Last updated: ${new Date().toISOString().split("T")[0]}</p>
+  <p class="updated">Published 2026-04-11${pageFreshness("/disclosure")}</p>
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
@@ -53790,6 +53835,24 @@ const httpServer = createHttpServer(async (req, res) => {
     return;
   }
 
+  if (url.pathname === "/api/page-reviews" && isGetOrHead) {
+    const today = utcToday();
+    const report = overdueReport(today);
+    const changeDateFor = newestChangeBySlug(loadDealChanges(), today);
+    const pages = report.pages.map(p => ({
+      ...p,
+      names_no_resolvable_vendor: p.tier === "A" && p.vendors_asserted.length === 0,
+      verdict_records_changed_since_review: verdictsOutdatedBy(p, slug => changeDateFor.get(slug) ?? null),
+    }));
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({
+      ...report,
+      totals: { ...report.totals, pages_with_outdated_verdicts: pages.filter(p => p.verdict_records_changed_since_review.length > 0).length },
+      pages,
+    }, null, 2));
+    return;
+  }
+
   if (url.pathname === "/api/analytics/history" && isGetOrHead) {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(durableHistoryBody);
@@ -54726,15 +54789,14 @@ const httpServer = createHttpServer(async (req, res) => {
     const baseUrl = BASE_URL;
     const escXml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
     const weekEntries: string[] = [];
+    const entryUpdates: string[] = [];
     for (let w = 0; w < 4; w++) {
       const digest = getFormattedWeeklyDigest(w, 50);
       if (digest.top_changes.length === 0) continue;
       const weekUrl = w === 0 ? `${baseUrl}/this-week` : `${baseUrl}/this-week?week=${w}`;
-      const weekEndDate = new Date(digest.week_ending + "T12:00:00Z");
-      const now = new Date();
-      let pubDateObj = weekEndDate > now ? new Date(digest.week_of + "T12:00:00Z") : weekEndDate;
-      if (pubDateObj > now) pubDateObj = now;
-      const pubDate = pubDateObj.toISOString();
+      const newestChange = latestChangeDate(digest.top_changes) ?? digest.week_of;
+      const pubDate = new Date(newestChange + "T12:00:00Z").toISOString();
+      entryUpdates.push(pubDate);
       const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       const ws = new Date(digest.week_of + "T00:00:00Z");
       const we = new Date(digest.week_ending + "T00:00:00Z");
@@ -54749,7 +54811,7 @@ const httpServer = createHttpServer(async (req, res) => {
     <summary type="html">${escXml(digest.digest_html)}</summary>
   </entry>`);
     }
-    const updatedTs = weekEntries.length > 0 ? new Date().toISOString() : new Date().toISOString();
+    const updatedTs = entryUpdates.length > 0 ? entryUpdates.reduce((a, b) => (b > a ? b : a)) : new Date().toISOString();
     const atom = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>AgentDeals — Weekly Pricing Digest</title>
@@ -55253,7 +55315,7 @@ ${catList}
     recordApiHit("/agent-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAgentStackPage());
+    res.end(withVerdictLinks(buildAgentStackPage()));
   } else if (url.pathname === "/freshness" && isGetOrHead) {
     recordApiHit("/freshness");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/freshness", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -55273,7 +55335,7 @@ ${catList}
     recordApiHit("/marketplace");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/marketplace", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildMarketplacePage());
+    res.end(withVerdictLinks(buildMarketplacePage()));
 
   } else if (url.pathname === "/referral-programs" && isGetOrHead) {
     recordApiHit("/referral-programs");
@@ -55316,7 +55378,7 @@ ${catList}
     recordApiHit("/disclosure");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/disclosure", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildDisclosurePage());
+    res.end(withVerdictLinks(buildDisclosurePage()));
   } else if (url.pathname === "/privacy" && isGetOrHead) {
     recordApiHit("/privacy");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/privacy", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -55505,117 +55567,117 @@ ${catList}
     recordApiHit("/free-startup-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-startup-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeStartupStackPage());
+    res.end(withVerdictLinks(buildFreeStartupStackPage()));
   } else if (url.pathname === "/free-ai-stack" && isGetOrHead) {
     recordApiHit("/free-ai-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-ai-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeAiStackPage());
+    res.end(withVerdictLinks(buildFreeAiStackPage()));
   } else if (url.pathname === "/free-devops-stack" && isGetOrHead) {
     recordApiHit("/free-devops-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-devops-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeDevopsStackPage());
+    res.end(withVerdictLinks(buildFreeDevopsStackPage()));
   } else if (url.pathname === "/free-frontend-stack" && isGetOrHead) {
     recordApiHit("/free-frontend-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-frontend-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeFrontendStackPage());
+    res.end(withVerdictLinks(buildFreeFrontendStackPage()));
   } else if (url.pathname === "/free-nextjs-stack" && isGetOrHead) {
     recordApiHit("/free-nextjs-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-nextjs-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeNextjsStackPage());
+    res.end(withVerdictLinks(buildFreeNextjsStackPage()));
   } else if (url.pathname === "/free-django-stack" && isGetOrHead) {
     recordApiHit("/free-django-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-django-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeDjangoStackPage());
+    res.end(withVerdictLinks(buildFreeDjangoStackPage()));
   } else if (url.pathname === "/free-fastapi-stack" && isGetOrHead) {
     recordApiHit("/free-fastapi-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-fastapi-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeFastapiStackPage());
+    res.end(withVerdictLinks(buildFreeFastapiStackPage()));
   } else if (url.pathname === "/free-go-stack" && isGetOrHead) {
     recordApiHit("/free-go-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-go-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeGoStackPage());
+    res.end(withVerdictLinks(buildFreeGoStackPage()));
   } else if (url.pathname === "/free-saas-stack" && isGetOrHead) {
     recordApiHit("/free-saas-stack");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-saas-stack", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeSaasStackPage());
+    res.end(withVerdictLinks(buildFreeSaasStackPage()));
   } else if (url.pathname === "/supabase-vs-firebase" && isGetOrHead) {
     recordApiHit("/supabase-vs-firebase");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/supabase-vs-firebase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildSupabaseVsFirebasePage());
+    res.end(withVerdictLinks(buildSupabaseVsFirebasePage()));
   } else if (url.pathname === "/vercel-vs-netlify" && isGetOrHead) {
     recordApiHit("/vercel-vs-netlify");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vercel-vs-netlify", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildVercelVsNetlifyPage());
+    res.end(withVerdictLinks(buildVercelVsNetlifyPage()));
   } else if (url.pathname === "/neon-vs-supabase" && isGetOrHead) {
     recordApiHit("/neon-vs-supabase");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/neon-vs-supabase", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildNeonVsSupabasePage());
+    res.end(withVerdictLinks(buildNeonVsSupabasePage()));
   } else if (url.pathname === "/railway-vs-render" && isGetOrHead) {
     recordApiHit("/railway-vs-render");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/railway-vs-render", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildRailwayVsRenderPage());
+    res.end(withVerdictLinks(buildRailwayVsRenderPage()));
   } else if (url.pathname === "/datadog-vs-new-relic" && isGetOrHead) {
     recordApiHit("/datadog-vs-new-relic");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/datadog-vs-new-relic", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildDatadogVsNewRelicPage());
+    res.end(withVerdictLinks(buildDatadogVsNewRelicPage()));
   } else if (url.pathname === "/google-developer-program-2026" && isGetOrHead) {
     recordApiHit("/google-developer-program-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/google-developer-program-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildGoogleDeveloperProgram2026Page());
+    res.end(withVerdictLinks(buildGoogleDeveloperProgram2026Page()));
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildHetznerPricing2026Page());
+    res.end(withVerdictLinks(buildHetznerPricing2026Page()));
   } else if (url.pathname === "/q1-2026-developer-pricing-report" && isGetOrHead) {
     recordApiHit("/q1-2026-developer-pricing-report");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/q1-2026-developer-pricing-report", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildQ1PricingReportPage());
+    res.end(withVerdictLinks(buildQ1PricingReportPage()));
   } else if (url.pathname === "/q2-pricing-preview-2026" && isGetOrHead) {
     recordApiHit("/q2-pricing-preview-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/q2-pricing-preview-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildQ2PricingPreview2026Page());
+    res.end(withVerdictLinks(buildQ2PricingPreview2026Page()));
   } else if (url.pathname === "/hcp-terraform-migration" && isGetOrHead) {
     recordApiHit("/hcp-terraform-migration");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hcp-terraform-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildHcpTerraformMigrationPage());
+    res.end(withVerdictLinks(buildHcpTerraformMigrationPage()));
   } else if (url.pathname === "/terraform-cloud-free-tier-removed" && isGetOrHead) {
     recordApiHit("/terraform-cloud-free-tier-removed");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/terraform-cloud-free-tier-removed", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildTerraformCloudFreeTierRemovedPage());
+    res.end(withVerdictLinks(buildTerraformCloudFreeTierRemovedPage()));
   } else if (url.pathname === "/startup-credits" && isGetOrHead) {
     recordApiHit("/startup-credits");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/startup-credits", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildStartupCreditsPage());
+    res.end(withVerdictLinks(buildStartupCreditsPage()));
   } else if (url.pathname === "/free-tier-tracker" && isGetOrHead) {
     recordApiHit("/free-tier-tracker");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-tier-tracker", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeTierTrackerPage());
+    res.end(withVerdictLinks(buildFreeTierTrackerPage()));
   } else if (url.pathname === "/free-tier-risk" && isGetOrHead) {
     recordApiHit("/free-tier-risk");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-tier-risk", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFreeTierRiskPage());
+    res.end(withVerdictLinks(buildFreeTierRiskPage()));
   } else if (url.pathname === "/stability" && isGetOrHead) {
     recordApiHit("/stability");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/stability", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -55625,192 +55687,192 @@ ${catList}
     recordApiHit("/gemini-api-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gemini-api-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildGeminiApiPricing2026Page());
+    res.end(withVerdictLinks(buildGeminiApiPricing2026Page()));
   } else if (url.pathname === "/gemini-api-pricing-changes" && isGetOrHead) {
     recordApiHit("/gemini-api-pricing-changes");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gemini-api-pricing-changes", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildGeminiApiPricingChangesPage());
+    res.end(withVerdictLinks(buildGeminiApiPricingChangesPage()));
   } else if (url.pathname === "/ai-coding-pricing-2026" && isGetOrHead) {
     recordApiHit("/ai-coding-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-coding-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAiCodingPricing2026Page());
+    res.end(withVerdictLinks(buildAiCodingPricing2026Page()));
   } else if (url.pathname === "/ai-coding-tools-pricing" && isGetOrHead) {
     recordApiHit("/ai-coding-tools-pricing");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-coding-tools-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAiCodingToolsPricingPage());
+    res.end(withVerdictLinks(buildAiCodingToolsPricingPage()));
   } else if (url.pathname === "/ci-cd-pricing" && isGetOrHead) {
     recordApiHit("/ci-cd-pricing");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ci-cd-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildCiCdPricingPage());
+    res.end(withVerdictLinks(buildCiCdPricingPage()));
   } else if (url.pathname === "/database-pricing" && isGetOrHead) {
     recordApiHit("/database-pricing");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildDatabasePricingPage());
+    res.end(withVerdictLinks(buildDatabasePricingPage()));
   } else if (url.pathname === "/vector-database-pricing" && isGetOrHead) {
     recordApiHit("/vector-database-pricing");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vector-database-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildVectorDatabasePricingPage());
+    res.end(withVerdictLinks(buildVectorDatabasePricingPage()));
   } else if (url.pathname === "/hosting-pricing" && isGetOrHead) {
     recordApiHit("/hosting-pricing");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hosting-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildHostingPricingPage());
+    res.end(withVerdictLinks(buildHostingPricingPage()));
   } else if (url.pathname === "/llm-api-pricing" && isGetOrHead) {
     recordApiHit("/llm-api-pricing");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/llm-api-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildLlmApiPricingPage());
+    res.end(withVerdictLinks(buildLlmApiPricingPage()));
   } else if (url.pathname === "/agent-payments" && isGetOrHead) {
     recordApiHit("/agent-payments");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/agent-payments", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAgentPaymentsPage());
+    res.end(withVerdictLinks(buildAgentPaymentsPage()));
   } else if (url.pathname === "/x402-services" && isGetOrHead) {
     recordApiHit("/x402-services");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/x402-services", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildX402ServicesPage());
+    res.end(withVerdictLinks(buildX402ServicesPage()));
   } else if (url.pathname === "/dall-e-shutdown" && isGetOrHead) {
     recordApiHit("/dall-e-shutdown");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/dall-e-shutdown", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildDallEShutdownPage());
+    res.end(withVerdictLinks(buildDallEShutdownPage()));
   } else if (url.pathname === "/openai-realtime-migration" && isGetOrHead) {
     recordApiHit("/openai-realtime-migration");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-realtime-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildOpenAIRealtimeMigrationPage());
+    res.end(withVerdictLinks(buildOpenAIRealtimeMigrationPage()));
   } else if (url.pathname === "/aws-app-runner-migration" && isGetOrHead) {
     recordApiHit("/aws-app-runner-migration");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-app-runner-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAppRunnerMigrationPage());
+    res.end(withVerdictLinks(buildAppRunnerMigrationPage()));
   } else if (url.pathname === "/aws-free-tier-2026" && isGetOrHead) {
     recordApiHit("/aws-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAwsFreeTier2026Page());
+    res.end(withVerdictLinks(buildAwsFreeTier2026Page()));
   } else if (url.pathname === "/gcp-free-tier-2026" && isGetOrHead) {
     recordApiHit("/gcp-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gcp-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildGcpFreeTier2026Page());
+    res.end(withVerdictLinks(buildGcpFreeTier2026Page()));
   } else if (url.pathname === "/azure-free-tier-2026" && isGetOrHead) {
     recordApiHit("/azure-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/azure-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAzureFreeTier2026Page());
+    res.end(withVerdictLinks(buildAzureFreeTier2026Page()));
   } else if (url.pathname === "/digitalocean-free-tier-2026" && isGetOrHead) {
     recordApiHit("/digitalocean-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digitalocean-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildDigitalOceanFreeTier2026Page());
+    res.end(withVerdictLinks(buildDigitalOceanFreeTier2026Page()));
   } else if (url.pathname === "/cicd-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/cicd-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cicd-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildCicdFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildCicdFreeTierComparison2026Page()));
   } else if (url.pathname === "/storage-comparison-2026" && isGetOrHead) {
     recordApiHit("/storage-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/storage-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildStorageComparison2026Page());
+    res.end(withVerdictLinks(buildStorageComparison2026Page()));
   } else if (url.pathname === "/testing-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/testing-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/testing-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildTestingFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildTestingFreeTierComparison2026Page()));
   } else if (url.pathname === "/analytics-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/analytics-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/analytics-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAnalyticsFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildAnalyticsFreeTierComparison2026Page()));
   } else if (url.pathname === "/api-development-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/api-development-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api-development-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildApiDevelopmentFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildApiDevelopmentFreeTierComparison2026Page()));
   } else if (url.pathname === "/security-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/security-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/security-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildSecurityFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildSecurityFreeTierComparison2026Page()));
   } else if (url.pathname === "/hosting-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/hosting-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hosting-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildHostingFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildHostingFreeTierComparison2026Page()));
   } else if (url.pathname === "/state-of-free-tiers" && isGetOrHead) {
     recordApiHit("/state-of-free-tiers");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/state-of-free-tiers", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildStateOfFreeTiersPage());
+    res.end(withVerdictLinks(buildStateOfFreeTiersPage()));
   } else if (url.pathname === "/email-comparison-2026" && isGetOrHead) {
     recordApiHit("/email-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildEmailComparison2026Page());
+    res.end(withVerdictLinks(buildEmailComparison2026Page()));
   } else if (url.pathname === "/monitoring-comparison-2026" && isGetOrHead) {
     recordApiHit("/monitoring-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/monitoring-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildMonitoringComparison2026Page());
+    res.end(withVerdictLinks(buildMonitoringComparison2026Page()));
   } else if (url.pathname === "/auth-comparison-2026" && isGetOrHead) {
     recordApiHit("/auth-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/auth-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildAuthComparison2026Page());
+    res.end(withVerdictLinks(buildAuthComparison2026Page()));
   } else if (url.pathname === "/serverless-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/serverless-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/serverless-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildServerlessFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildServerlessFreeTierComparison2026Page()));
   } else if (url.pathname === "/database-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/database-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildDatabaseFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildDatabaseFreeTierComparison2026Page()));
   } else if (url.pathname === "/cloud-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/cloud-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cloud-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildCloudFreeTierComparison2026Page());
+    res.end(withVerdictLinks(buildCloudFreeTierComparison2026Page()));
   } else if (url.pathname === "/openai-assistants-alternatives" && isGetOrHead) {
     recordApiHit("/openai-assistants-alternatives");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-assistants-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildOpenaiAssistantsAlternativesPage());
+    res.end(withVerdictLinks(buildOpenaiAssistantsAlternativesPage()));
   } else if (url.pathname === "/openai-assistants-migration-2026" && isGetOrHead) {
     recordApiHit("/openai-assistants-migration-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-assistants-migration-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildOpenaiAssistantsMigration2026Page());
+    res.end(withVerdictLinks(buildOpenaiAssistantsMigration2026Page()));
   } else if (url.pathname === "/openai-assistants-migration" && isGetOrHead) {
     recordApiHit("/openai-assistants-migration");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-assistants-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildOpenAIAssistantsMigrationPage());
+    res.end(withVerdictLinks(buildOpenAIAssistantsMigrationPage()));
   } else if (url.pathname === "/firebase-studio-shutdown" && isGetOrHead) {
     recordApiHit("/firebase-studio-shutdown");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/firebase-studio-shutdown", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildFirebaseStudioShutdownPage());
+    res.end(withVerdictLinks(buildFirebaseStudioShutdownPage()));
   } else if (url.pathname === "/tenor-alternatives" && isGetOrHead) {
     recordApiHit("/tenor-alternatives");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/tenor-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildTenorAlternativesPage());
+    res.end(withVerdictLinks(buildTenorAlternativesPage()));
   } else if (url.pathname === "/shutdowns" && isGetOrHead) {
     recordApiHit("/shutdowns");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/shutdowns", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildShutdownTrackerPage());
+    res.end(withVerdictLinks(buildShutdownTrackerPage()));
   } else if (alternativesPageMap.has(url.pathname.slice(1)) && isGetOrHead) {
     const slug = url.pathname.slice(1);
     recordApiHit("/" + slug);
@@ -55888,12 +55950,12 @@ ${catList}
     recordApiHit("/stack-check");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/stack-check", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildStackCheckPage());
+    res.end(withVerdictLinks(buildStackCheckPage()));
   } else if (url.pathname === "/compare-tool" && isGetOrHead) {
     recordApiHit("/compare-tool");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/compare-tool", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildCompareToolPage());
+    res.end(withVerdictLinks(buildCompareToolPage()));
   } else if (url.pathname === "/estimate" && isGetOrHead) {
     recordApiHit("/estimate");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/estimate", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -55903,7 +55965,7 @@ ${catList}
     recordApiHit("/budget-builder");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/budget-builder", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(buildBudgetBuilderPage());
+    res.end(withVerdictLinks(buildBudgetBuilderPage()));
   } else if (url.pathname === "/developers" && isGetOrHead) {
     recordApiHit("/developers");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/developers", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

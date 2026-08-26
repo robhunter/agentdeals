@@ -44,6 +44,20 @@ export function isSubSlug(needle: string, haystack: string): boolean {
   return haystack.includes("-" + needle + "-");
 }
 
+const NAMES_MORE_THAN_ONE_SUBJECT = /\s(?:\+|&|and|or|vs\.?|versus)\s|\s*\/\s*|,/i;
+
+export function namedVendorSlug(phrase: string): string | null {
+  const slug = toSlug(phrase);
+  if (!slug) return null;
+  const resolution = resolveVendorSlug(slug);
+  if (resolution.type === "exact") return resolution.slug;
+  if (resolution.type !== "redirect") return null;
+  if (NAMES_MORE_THAN_ONE_SUBJECT.test(phrase)) return null;
+  const resolved = resolution.slug;
+  if (resolved.startsWith(slug + "-") || slug.startsWith(resolved + "-")) return resolved;
+  return null;
+}
+
 export function resolveVendorSlug(input: string): VendorSlugResolution {
   if (!input) return { type: "none" };
   if (vendorSlugMap.has(input)) return { type: "exact", slug: input };
