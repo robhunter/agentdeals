@@ -15,8 +15,10 @@ const {
   resetTelemetryHealth,
   loadTelemetry,
   flushPending,
+  getTelemetryHealth,
   OTHER_SESSION_CLIENT_KEY,
   UNNAMED_SESSION_CLIENT_KEY,
+  MAX_SESSION_CLIENT_KEYS_PER_DAY,
 } = await import("../dist/stats.js");
 
 const PAGE_VIEWS_KEY = "agentdeals:pageviews";
@@ -220,7 +222,7 @@ describe("daily MCP session counts (#1052)", () => {
 
     const clients = storedSnapshot().session_clients[today()];
     assert.ok(
-      Object.keys(clients).length <= 121,
+      Object.keys(clients).length <= MAX_SESSION_CLIENT_KEYS_PER_DAY + 1,
       `key space must stay bounded, saw ${Object.keys(clients).length}`,
     );
     assert.ok(clients[OTHER_SESSION_CLIENT_KEY] > 0, "the excess must be folded, not dropped");
@@ -269,6 +271,122 @@ describe("daily MCP session counts (#1052)", () => {
     assert.deepStrictEqual(
       series.daily.map((d: { date: string }) => d.date),
       ["2026-01-01", today()],
+    );
+  });
+
+  it("keeps the stored first-measured date when a later day flushes over it", async () => {
+    redis.values.set(
+      PAGE_VIEWS_KEY,
+      JSON.stringify({
+        days: {},
+        all_time: {},
+        sessions: { "2026-01-01": 5 },
+        sessions_from: "2026-01-01",
+        updated_at: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    await boot();
+    recordSessionConnect("opencode");
+    await flushPending();
+
+    assert.strictEqual(
+      storedSnapshot().sessions_from,
+      "2026-01-01",
+      "a flush must not move the date the series began",
+    );
+    assert.strictEqual(getSessionSeries().recording_since, "2026-01-01");
+  });
+
+  it("adds the day's clients to the stored ones rather than replacing them", async () => {
+    await boot();
+    recordSessionConnect("opencode");
+    recordSessionConnect("claude-code");
+    await flushPending();
+
+    await redeploy();
+    recordSessionConnect("opencode");
+    recordSessionConnect("codex-mcp-client");
+    await flushPending();
+
+    assert.deepStrictEqual(storedSnapshot().session_clients[today()], {
+      opencode: 2,
+      "claude-code": 1,
+      "codex-mcp-client": 1,
+    });
+    assert.strictEqual(storedSnapshot().sessions[today()], 4);
+  });
+
+  it("holds the stored client key space at the cap across repeated flushes", async () => {
+    await boot();
+    for (let i = 0; i < 400; i++) recordSessionConnect(`first-batch-${i}`);
+    await flushPending();
+    for (let i = 0; i < 400; i++) recordSessionConnect(`second-batch-${i}`);
+    await flushPending();
+
+    const clients = storedSnapshot().session_clients[today()];
+    assert.ok(
+      Object.keys(clients).length <= MAX_SESSION_CLIENT_KEYS_PER_DAY + 1,
+      `key space must stay bounded across flushes, saw ${Object.keys(clients).length}`,
+    );
+    const total = Object.values(clients).reduce((a, b) => (a as number) + (b as number), 0);
+    assert.strictEqual(total, 800, "no session may be lost to the cap");
+    assert.strictEqual(storedSnapshot().sessions[today()], 800);
+  });
+
+  it("caps the merged day when an outgoing instance flushes its own clients after we booted", async () => {
+    await boot();
+    for (let i = 0; i < MAX_SESSION_CLIENT_KEYS_PER_DAY; i++) {
+      recordSessionConnect(`incoming-${i}`);
+    }
+
+    const departing: Record<string, number> = {};
+    for (let i = 0; i < MAX_SESSION_CLIENT_KEYS_PER_DAY; i++) departing[`departing-${i}`] = 1;
+    redis.values.set(
+      PAGE_VIEWS_KEY,
+      JSON.stringify({
+        days: {},
+        all_time: {},
+        sessions: { [today()]: MAX_SESSION_CLIENT_KEYS_PER_DAY },
+        session_clients: { [today()]: departing },
+        sessions_from: today(),
+        updated_at: new Date().toISOString(),
+      }),
+    );
+
+    await flushPending();
+
+    const clients = storedSnapshot().session_clients[today()];
+    assert.ok(
+      Object.keys(clients).length <= MAX_SESSION_CLIENT_KEYS_PER_DAY + 1,
+      `the merge must bound the key space it did not record, saw ${Object.keys(clients).length}`,
+    );
+    const total = Object.values(clients).reduce((a, b) => (a as number) + (b as number), 0);
+    assert.strictEqual(
+      total,
+      MAX_SESSION_CLIENT_KEYS_PER_DAY * 2,
+      "both instances' sessions must survive the merge",
+    );
+    assert.strictEqual(
+      storedSnapshot().sessions[today()],
+      MAX_SESSION_CLIENT_KEYS_PER_DAY * 2,
+      "the day total must include the departing instance's final batch",
+    );
+  });
+
+  it("bounds what an unflushed burst of new client names can hold in memory", async () => {
+    await boot();
+    const before = getTelemetryHealth().pending_page_view_keys;
+    for (let i = 0; i < 5000; i++) recordSessionConnect(`burst-${i}`);
+
+    const growth = getTelemetryHealth().pending_page_view_keys - before;
+    assert.ok(
+      growth <= MAX_SESSION_CLIENT_KEYS_PER_DAY + 2,
+      `an unflushed burst must not grow the buffer per distinct name, grew by ${growth}`,
+    );
+    assert.strictEqual(
+      getConnectionStats(0).sessionsToday,
+      5000,
+      "bounding the buffer must not lose a session from the day",
     );
   });
 

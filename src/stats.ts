@@ -817,9 +817,7 @@ export function recordSessionConnect(clientName?: string): void {
     OTHER_SESSION_CLIENT_KEY,
     pageViewSnapshot.session_clients[today],
   );
-  if (!pendingPageViews.sessions_from && !pageViewSnapshot.sessions_from) {
-    pendingPageViews.sessions_from = today;
-  }
+  pendingPageViews.sessions_from = today;
 }
 
 export function getSessionsForDate(date: string): number {
@@ -1186,7 +1184,7 @@ const CLASS_ROUTE_SEP = "|";
 const UNKNOWN_FAMILY_KEY = "unknown";
 
 const SESSION_DAY_RETENTION = 90;
-const MAX_SESSION_CLIENT_KEYS_PER_DAY = 120;
+export const MAX_SESSION_CLIENT_KEYS_PER_DAY = 120;
 export const OTHER_SESSION_CLIENT_KEY = "__other_clients__";
 export const UNNAMED_SESSION_CLIENT_KEY = "unknown";
 
