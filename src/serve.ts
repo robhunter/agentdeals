@@ -26,6 +26,7 @@ import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscri
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
+import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
 import type { Agent, RiskCause, LinkUnreachable } from "./types.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -1690,6 +1691,9 @@ function buildCriteriaPage(): string {
   const demeritRows = DEMERIT_TABLE.map(d => `<tr><td><code>${escHtmlServer(d.code)}</code></td><td style="text-align:center;font-family:var(--mono)">&minus;${d.points}</td><td>${escHtmlServer(d.trigger)}</td></tr>`).join("\n");
   const notFreeRows = NOT_FREE_TIER_RULES.map(r => `<tr><td><code>${escHtmlServer(String(r.pattern))}</code></td><td>${escHtmlServer(r.note)}</td></tr>`).join("\n");
   const timeLimitedRows = TIME_LIMITED_TIER_RULES.map(r => `<tr><td><code>${escHtmlServer(String(r.pattern))}</code></td><td>${escHtmlServer(r.note)}</td></tr>`).join("\n");
+  const membershipGateRows = MEMBERSHIP_GATE_ORDER.map(g => `<tr><td><code>${escHtmlServer(g)}</code> &mdash; ${escHtmlServer(MEMBERSHIP_GATE_RULES[g].label)}</td><td>${escHtmlServer(MEMBERSHIP_GATE_RULES[g].rule)}</td></tr>`).join("\n");
+  const classifiedCount = offers.filter(o => o.product_role).length;
+  const gatedCount = offers.filter(o => o.product_role && (o.product_role.deployment_model === "local_dev_only" || o.product_role.is_addon)).length;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -1806,14 +1810,24 @@ ${demeritRows}
   <h2>4. What we do not model</h2>
   <p>We rank on offer terms, verification recency and recorded adverse changes. <strong style="color:var(--text)">We do not model technical fit</strong> &mdash; whether a particular product suits a particular role in your architecture. A vector database and a relational database sit in the same category here. If you are asking us which of two products fits your app, we are the wrong source; if you are asking whose free tier we could confirm this week and whose was withdrawn in March, that is exactly what this is for.</p>
 
-  <h2>5. What agents tell us, and what we do with it</h2>
+  <h2 id="membership">5. Two product properties that decide membership, and never order</h2>
+  <p>Section 4 is about fit and it still stands. This is a different thing: two factual properties of a product, of the same kind as its category and read from the vendor's own words. They answer whether a product <em>could</em> stand in for another at all, not whether it would suit you better.</p>
+  <table><thead><tr><th>Property</th><th>What it means</th></tr></thead><tbody>
+${membershipGateRows}
+  </tbody></table>
+  <p>${escHtmlServer(MEMBERSHIP_GATE_SYMMETRY)}</p>
+  <p>${escHtmlServer(MEMBERSHIP_GATE_SCOPE)}</p>
+  <p><strong style="color:var(--text)">Neither property is available on request.</strong> A vendor cannot ask to be classified, declassified, or exempted, for the same reason there is no top slot to buy. ${escHtmlServer(MEMBERSHIP_GATE_CORRECTIONS)}</p>
+  <p>The honest limit: we have classified ${classifiedCount} of ${offers.length} records, ${gatedCount} of which carry a gate. <strong style="color:var(--text)">A record with no classification has not been reviewed &mdash; it does not mean we have checked and found it hosted.</strong> Absence of the property publishes nothing in either direction and gates nothing, which is the same rule we use for a link we were merely refused.</p>
+
+  <h2>6. What agents tell us, and what we do with it</h2>
   <p>Agents can report which vendor they recommended, at <a href="${SIGNAL_DOC_PATH}"><code>${escHtmlServer(SIGNAL_PATH)}</code></a>. <strong style="color:var(--text)">Those counts never affect any order we publish</strong> &mdash; not now, not behind a flag. A self-reported counter that influenced placement would be a purchasable ranking with extra steps, and the whole reason to trust this index is that there is no such thing.</p>
   <p><strong style="color:var(--text)">And we do not publish per-vendor signal counts, because a visible counter is a signal a vendor could acquire.</strong> Anyone can fire that endpoint without authenticating &mdash; including a vendor, at itself, all day. We publish the aggregate totals on <a href="${SIGNAL_DOC_PATH}">the signal page</a>, including the unflattering ones; we do not publish a table anyone could screenshot as &ldquo;AgentDeals&rsquo; most-recommended vendor&rdquo;.</p>
 
-  <h2>6. Surfaces that are listings, not rankings</h2>
+  <h2>7. Surfaces that are listings, not rankings</h2>
   <p>Not every list on this site is a recommendation. Where a page is an inventory &mdash; every referral programme we know of, every comparison pair we generate &mdash; it is labelled as such and ordered by the same unbiased permutation rather than by the alphabet or by our commercial interest. Where we hold a referral link and may earn a commission, that is stated on the section itself, not only in a footnote. See our <a href="/disclosure">affiliate disclosure</a>.</p>
 
-  <h2>7. If we have this wrong</h2>
+  <h2>8. If we have this wrong</h2>
   <p>Every demotion names a dated, recorded fact. If a fact is wrong or out of date, it is correctable: the record behind it is shown on the vendor's page with its source. Correcting it changes the ranking automatically, because the ranking has no other input. There is no editorial override to appeal to &mdash; deliberately, because an override is the thing that would be sold.</p>
 
   <p style="font-size:.8rem;color:var(--text-dim);margin-top:2rem">This page is generated from the same constants the ranking uses, so it cannot drift from the code. Last computed ${escHtmlServer(date)}.</p>
@@ -3696,8 +3710,19 @@ function buildVendorPage(slug: string): string | null {
   // module. It used to be `.slice(0, 12)` over raw file order — whoever was
   // typed into data/index.json first won, on the single highest-traffic page
   // type on the site.
-  const alternatives = rankForListing(
+  const productRoleLine = (() => {
+    const role = primary.product_role;
+    const sentence = productRoleSentence(primary);
+    if (!role || !sentence) return "";
+    return `  <p class="product-role-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Product role:</strong> ${escHtmlServer(sentence)} We read that from <a href="${escHtmlServer(role.source_url)}" rel="nofollow noopener">${escHtmlServer(role.source_url)}</a> on <span class="product-role-reviewed" style="font-family:var(--mono)">${escHtmlServer(role.reviewed)}</span>, where it says: &ldquo;${escHtmlServer(role.source_quote)}&rdquo; <a href="${CRITERIA_PATH}#membership">How we use this</a>.</p>`;
+  })();
+
+  const alternativesMembership = partitionAlternatives(
     offers.filter(o => o.category === primary.category && o.vendor !== vendorName),
+    primary,
+  );
+  const alternatives = rankForListing(
+    alternativesMembership.kept,
     { queryKey: `alternatives:${primary.category}:${vendorName}`, changes: dealChanges },
   ).entries.slice(0, 12).map(e => e.offer);
 
@@ -3878,6 +3903,8 @@ ${enrichedAlts.map(a => {
   </div>` : "";
 
   // Alternatives HTML
+  const membershipExclusionsHtml = alternativesMembership.removed.length > 0 ? `
+    <p class="alt-excluded" style="margin:.7rem 0 0;font-size:.85rem;color:var(--text-muted)">Left out of this list: ${alternativesMembership.removed.map(r => `<a href="/vendor/${toSlug(r.offer.vendor)}">${escHtmlServer(r.offer.vendor)}</a> (${escHtmlServer(MEMBERSHIP_GATE_RULES[r.gate].label.toLowerCase())})`).join(", ")}. Each is still listed in <a href="/category/${toSlug(primary.category)}">${escHtmlServer(primary.category)}</a>, with the vendor's own words we read that from on its page. <a href="${CRITERIA_PATH}#membership">How we decide this</a>.</p>` : "";
   const alternativesHtml = alternatives.length > 0 ? `
   <div class="section">
     <h2>Alternatives in ${escHtmlServer(primary.category)}</h2>
@@ -3886,7 +3913,7 @@ ${alternatives.map(a => `      <a href="/vendor/${toSlug(a.vendor)}" class="alt-
         <span class="alt-name">${escHtmlServer(a.vendor)}</span>
         <span class="alt-tier">${escHtmlServer(a.tier)}</span>
       </a>`).join("\n")}
-    </div>
+    </div>${membershipExclusionsHtml}
   </div>` : "";
 
   // Comparisons HTML — include both /compare/ pages and root-level VS pages
@@ -4198,6 +4225,7 @@ ${mcpCtaCss()}
   <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear}${h1RiskBadge}</h1>
 ${riskCauseLine}
 ${linkUnreachableLine}
+${productRoleLine}
   <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}
 ${categoryContextHtml}
@@ -4301,7 +4329,8 @@ function buildAlternativesPage(slug: string): string | null {
   // risk_level bucket — the count-of-recorded-changes signal that demotes
   // prominent vendors 3.2x more often than obscure ones — with file order
   // deciding everything inside a bucket.
-  const altRanking = rankForListing(enrichOffers(dedupedAlts), {
+  const altMembership = partitionAlternativesAcross(dedupedAlts, vendorOffers);
+  const altRanking = rankForListing(enrichOffers(altMembership.kept), {
     queryKey: `alternative-to:${vendorName}`,
     changes: dealChanges,
   });
@@ -4396,7 +4425,8 @@ ${curatedAlts.map(a => altCard(a, true)).join("\n")}
   const allAltsHtml = enrichedAlts.length > 0 ? `
   <div class="section">
     <h2>All Free Alternatives (${enrichedAlts.length})</h2>
-    <p class="section-note">${altRanking.qualified_count} of these carry no recorded demerit and are indistinguishable under every signal we hold; their order rotates daily. ${altRanking.demoted_count} are demoted with the reason named, and ${altRanking.gated_count} are listed last because they are not generally available or are not a free offer. <a href="${CRITERIA_PATH}">How we rank</a>.</p>
+    <p class="section-note">${altRanking.qualified_count} of these carry no recorded demerit and are indistinguishable under every signal we hold; their order rotates daily. ${altRanking.demoted_count} are demoted with the reason named, and ${altRanking.gated_count} are listed last because they are not generally available or are not a free offer. <a href="${CRITERIA_PATH}">How we rank</a>.</p>${altMembership.removed.length > 0 ? `
+    <p class="alt-excluded" style="font-size:.85rem;color:var(--text-muted)">Left out of this list: ${altMembership.removed.map(r => `<a href="/vendor/${toSlug(r.offer.vendor)}">${escHtmlServer(r.offer.vendor)}</a> (${escHtmlServer(MEMBERSHIP_GATE_RULES[r.gate].label.toLowerCase())})`).join(", ")}. Each is still listed in its category, with the vendor's own words we read that from on its page. <a href="${CRITERIA_PATH}#membership">How we decide this</a>.</p>` : ""}
     <div class="alt-list">
 ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
     </div>
@@ -6745,7 +6775,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
   // Skip category section when we have enough tagged alternatives (6+)
   const primaryOffer = offers.find(o => o.vendor === config.primaryVendor);
   const categoryOffers = taggedOffers.length >= 6 ? [] : (primaryOffer
-    ? offers.filter(o => o.category === primaryOffer.category && o.vendor !== config.primaryVendor && !taggedOffers.some(t => t.vendor === o.vendor))
+    ? partitionAlternatives(offers.filter(o => o.category === primaryOffer.category && o.vendor !== config.primaryVendor && !taggedOffers.some(t => t.vendor === o.vendor)), primaryOffer).kept
     : []);
   const enrichedCategory = enrichOffers(categoryOffers.slice(0, 5));
 

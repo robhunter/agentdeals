@@ -2,6 +2,7 @@ import { searchOffers, loadDealChanges, vendorRiskLevel, classifyStability } fro
 import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NOTICE } from "./ranking.js";
 import type { Demerit, Disclosure, TieBreak } from "./ranking.js";
 import type { Offer, StabilityClass, DealChange } from "./types.js";
+import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
 
 /**
  * plan_stack no longer answers "what should I use".
@@ -310,7 +311,8 @@ export function getStackRecommendation(
 
   const stack: StackRole[] = [];
   for (const { role, category } of roleSpecs) {
-    const categoryOffers = searchOffers(undefined, category);
+    const roleMembership = partitionRoleCandidates(searchOffers(undefined, category));
+    const categoryOffers = roleMembership.kept;
     if (categoryOffers.length === 0) continue;
 
     const ranking = rankOffers(categoryOffers, {
@@ -329,9 +331,12 @@ export function getStackRecommendation(
     );
 
     const tieCount = ranking.qualified.length;
-    const reason = tieCount > 0
+    const roleMembershipNote = roleMembership.removed.length > 0
+      ? ` ${roleMembership.removed.map((r) => `${r.offer.vendor} (${MEMBERSHIP_GATE_RULES[r.gate].label.toLowerCase()})`).join(", ")} ${roleMembership.removed.length === 1 ? "is" : "are"} listed in ${category} but cannot fill this role, so ${roleMembership.removed.length === 1 ? "it is" : "they are"} not a candidate here.`
+      : "";
+    const reason = (tieCount > 0
       ? `${tieCount} of ${ranking.ranked.length} ${category} offers carry no recorded demerit and are indistinguishable under every signal we hold; ${candidates.length} shown, in an order seeded on ${date} and the query key. ${ranking.demoted.length} demoted with a named reason, ${ranking.excluded.length} excluded by the gates.`
-      : `No ${category} offer is free of recorded demerits today. Showing the least demoted, each with its reason attached. ${ranking.excluded.length} excluded by the gates.`;
+      : `No ${category} offer is free of recorded demerits today. Showing the least demoted, each with its reason attached. ${ranking.excluded.length} excluded by the gates.`) + roleMembershipNote;
 
     stack.push({
       role,

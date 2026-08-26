@@ -752,7 +752,15 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-08-22"
+      "verifiedDate": "2026-08-22",
+      "product_role": {
+        "deployment_model": "hosted",
+        "is_addon": true,
+        "augments": "a database you already run",
+        "source_url": "https://hasura.io/docs/3.0/connectors/overview/",
+        "source_quote": "We use native data connectors to make your data accessible through a GraphQL API.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "GitHub Actions",
@@ -3038,7 +3046,14 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-08-24"
+      "verifiedDate": "2026-08-24",
+      "product_role": {
+        "deployment_model": "self_hosted",
+        "is_addon": false,
+        "source_url": "https://min.io/pricing",
+        "source_quote": "Purpose-built subscription tiers support no-cost development to mission-critical production.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "Backblaze",
@@ -4741,7 +4756,14 @@
         "serverless",
         "deal-change"
       ],
-      "verifiedDate": "2026-08-25"
+      "verifiedDate": "2026-08-25",
+      "product_role": {
+        "deployment_model": "local_dev_only",
+        "is_addon": false,
+        "source_url": "https://www.localstack.cloud/",
+        "source_quote": "LocalStack creates secure cloud development and testing sandbox environments so AI agents, software developers, and CI/CD pipelines can build, test, and validate applications before they touch the cloud.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "Testcontainers",
@@ -4804,7 +4826,14 @@
         "nosql",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-08-15"
+      "verifiedDate": "2026-08-15",
+      "product_role": {
+        "deployment_model": "local_dev_only",
+        "is_addon": false,
+        "source_url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html",
+        "source_quote": "With the downloadable version of Amazon DynamoDB, you can develop and test applications without accessing the DynamoDB web service. Instead, the database is self-contained on your computer.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "ElasticMQ",
@@ -4820,7 +4849,14 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-08-14"
+      "verifiedDate": "2026-08-14",
+      "product_role": {
+        "deployment_model": "self_hosted",
+        "is_addon": false,
+        "source_url": "https://github.com/softwaremill/elasticmq",
+        "source_quote": "In-memory message queue with an Amazon SQS-compatible interface. Runs stand-alone or embedded.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "CloudDev",
@@ -4840,7 +4876,14 @@
         "api-gateway",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-08-15"
+      "verifiedDate": "2026-08-15",
+      "product_role": {
+        "deployment_model": "local_dev_only",
+        "is_addon": false,
+        "source_url": "https://github.com/Jeffrin-dev/CloudDev",
+        "source_quote": "Run AWS services locally - open-source alternative to LocalStack. S3, DynamoDB, Lambda, SQS, API Gateway and 38 more services in one command.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "Vera AWS",
@@ -4859,7 +4902,14 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-08-14"
+      "verifiedDate": "2026-08-14",
+      "product_role": {
+        "deployment_model": "local_dev_only",
+        "is_addon": false,
+        "source_url": "https://github.com/project-vera/vera",
+        "source_quote": "High-fidelity, anycloud emulators running in your laptop. For DevOps programming, testing, and simulation.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "Floci",
@@ -4876,7 +4926,14 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-08-11"
+      "verifiedDate": "2026-08-11",
+      "product_role": {
+        "deployment_model": "local_dev_only",
+        "is_addon": false,
+        "source_url": "https://github.com/floci-io/floci",
+        "source_quote": "Light, fluffy, and always free - The AWS Local Emulator alternative",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "Brave Search API",
@@ -5289,7 +5346,15 @@
         "orm",
         "serverless"
       ],
-      "verifiedDate": "2026-08-22"
+      "verifiedDate": "2026-08-22",
+      "product_role": {
+        "deployment_model": "hosted",
+        "is_addon": true,
+        "augments": "a database you already run",
+        "source_url": "https://www.prisma.io/docs/accelerate",
+        "source_quote": "Prisma Accelerate is a managed connection pool and global cache.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "Unity DevOps",
@@ -9550,7 +9615,14 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-05"
+      "verifiedDate": "2026-08-05",
+      "product_role": {
+        "deployment_model": "hosted",
+        "is_addon": false,
+        "source_url": "https://appetize.io",
+        "source_quote": "Cloud emulators for iOS and Android that give every team instant mobile access.",
+        "reviewed": "2026-08-25"
+      }
     },
     {
       "vendor": "Argos",

@@ -36,6 +36,17 @@ export interface PaymentProtocol {
   example_cost?: string;
 }
 
+export type DeploymentModel = "hosted" | "self_hosted" | "local_dev_only";
+
+export interface ProductRole {
+  deployment_model: DeploymentModel;
+  is_addon: boolean;
+  augments?: string;
+  source_url: string;
+  source_quote: string;
+  reviewed: string;
+}
+
 export interface Offer {
   vendor: string;
   category: string;
@@ -49,6 +60,7 @@ export interface Offer {
   payment_protocols?: PaymentProtocol[];
   referral?: Referral;
   referral_program?: ReferralProgram;
+  product_role?: ProductRole;
 }
 
 export type StabilityClass = "stable" | "watch" | "volatile" | "improving";
