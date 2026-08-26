@@ -5,6 +5,7 @@ import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, St
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
+import { filterAlternatives } from "./product-role.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
@@ -82,7 +83,7 @@ export function getOfferDetails(
     // through the shared selection module (#1025) rather than `.slice(0, 5)`
     // over data/index.json order.
     const sameCategoryOffers = rankForListing(
-      offers.filter((o) => o.category === match.category && o.vendor !== match.vendor),
+      filterAlternatives(offers.filter((o) => o.category === match.category && o.vendor !== match.vendor), match),
       { queryKey: `related:${match.category}:${match.vendor}`, changes: loadDealChanges() },
     ).entries.slice(0, 5).map((e) => e.offer);
     const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
@@ -692,7 +693,7 @@ export function checkVendorRisk(
   // "risk bucket, then alphabetical" sort — which ranked on the count of
   // changes we happen to have recorded and broke ties with the alphabet.
   const alternatives = rankForListing(
-    offers.filter((o) => o.category === offer.category && o.vendor !== offer.vendor),
+    filterAlternatives(offers.filter((o) => o.category === offer.category && o.vendor !== offer.vendor), offer),
     { queryKey: `vendor-risk-alternatives:${offer.vendor}`, changes: allChanges },
   ).entries.slice(0, 3).map((e) => ({
     vendor: e.offer.vendor,
