@@ -861,16 +861,13 @@ export function recordReferralVendorLookup(vendor: string): void {
   referralVendorCounts[key] = (referralVendorCounts[key] ?? 0) + 1;
 }
 
-// Classify MCP client names as 'agent' (real user-facing agent) or 'crawler'
-// (registry/scanner/health-probe). Case-insensitive substring match on the patterns below.
-// Conservative: unknown or unmatched names default to 'agent' — we'd rather over-count
-// agents than under-count them. Keep the rule list here so we can tune it in one place.
 export const CRAWLER_CLIENT_PATTERNS = [
   "crawler",
   "probe",
   "scanner",
   "validator",
   "inspector",
+  "introspector",
   "scoring",
   "enricher",
   "registry",
@@ -888,29 +885,93 @@ export const CRAWLER_CLIENT_PATTERNS = [
   "yellowmcp",
   "mcpscoringengine",
   "fabrique-noauth-probe",
+  "index",
+  "catalog",
+  "audit",
+  "watch",
+  "uptime",
+  "beat",
+  "grade",
+  "research",
+  "census",
+  "poll",
+  "walker",
+  "scraper",
+  "miner",
+  "extractor",
+  "discovery",
+  "liveness",
+  "readiness",
+  "reputation",
+  "trust",
+  "verifier",
+  "observatory",
+  "smithery",
+  "censys",
+  "spec-check",
+  "tirekick",
+  "sweep",
+  "recon",
 ] as const;
 
-export function classifyMcpClient(name: string): "agent" | "crawler" {
-  const lower = (name || "").toLowerCase();
+export const AGENT_CLIENT_NAMES = [
+  "claude-code",
+  "claude-desktop",
+  "cline",
+  "codex-mcp-client",
+  "continue",
+  "cursor",
+  "goose",
+  "librechat",
+  "lobehub-mcp-client",
+  "metamcp-client",
+  "mcporter",
+  "opencode",
+  "windsurf",
+  "zed",
+] as const;
+
+export const INTERNAL_CLIENT_PREFIX = "agentdeals";
+
+export type McpClientClass = "agent" | "crawler" | "internal" | "unattributed";
+
+export function classifyMcpClient(name: string): McpClientClass {
+  const lower = (name || "").trim().toLowerCase();
+  if (!lower) return "unattributed";
+  if (lower.startsWith(INTERNAL_CLIENT_PREFIX)) return "internal";
+  if ((AGENT_CLIENT_NAMES as readonly string[]).includes(lower)) return "agent";
   for (const pattern of CRAWLER_CLIENT_PATTERNS) {
     if (lower.includes(pattern)) return "crawler";
   }
-  return "agent";
+  return "unattributed";
 }
 
+export const SESSION_CLASSIFICATION_RULE =
+  "agent counts only client names on an explicit allowlist of agent products. crawler counts names matching a registry/scanner/probe/monitor pattern. internal is our own traffic. unattributed is everything else, including the generic name 'mcp' — a name we do not recognise is not evidence of an agent, and no missing crawler pattern can add to the agent count.";
+
 export function getSessionClassification(): {
-  sessions_by_type: { agent: number; crawler: number; total: number };
-  clients_top: { name: string; sessions: number; type: "agent" | "crawler" }[];
+  sessions_by_type: {
+    agent: number;
+    crawler: number;
+    internal: number;
+    unattributed: number;
+    total: number;
+  };
+  clients_top: { name: string; sessions: number; type: McpClientClass }[];
+  classification_rule: string;
 } {
   const mergedClients: Record<string, number> = { ...cumulative.clients };
   for (const [name, count] of Object.entries(sessionClients)) {
     mergedClients[name] = (mergedClients[name] ?? 0) + count;
   }
-  let agentSessions = 0;
-  let crawlerSessions = 0;
+  const byType: Record<McpClientClass, number> = {
+    agent: 0,
+    crawler: 0,
+    internal: 0,
+    unattributed: 0,
+  };
   for (const [name, count] of Object.entries(mergedClients)) {
-    if (classifyMcpClient(name) === "crawler") crawlerSessions += count;
-    else agentSessions += count;
+    byType[classifyMcpClient(name)] += count;
   }
   const clientsTop = Object.entries(mergedClients)
     .map(([name, sessions]) => ({ name, sessions, type: classifyMcpClient(name) }))
@@ -918,11 +979,11 @@ export function getSessionClassification(): {
     .slice(0, 10);
   return {
     sessions_by_type: {
-      agent: agentSessions,
-      crawler: crawlerSessions,
-      total: agentSessions + crawlerSessions,
+      ...byType,
+      total: byType.agent + byType.crawler + byType.internal + byType.unattributed,
     },
     clients_top: clientsTop,
+    classification_rule: SESSION_CLASSIFICATION_RULE,
   };
 }
 
