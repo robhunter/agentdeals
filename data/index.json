@@ -128,7 +128,7 @@
         "vercel-alternative",
         "deal-change"
       ],
-      "verifiedDate": "2026-07-03",
+      "verifiedDate": "2026-08-26",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Up to 20% revenue share",
@@ -503,7 +503,7 @@
         "free tier",
         "vector-database"
       ],
-      "verifiedDate": "2026-07-03",
+      "verifiedDate": "2026-08-26",
       "referral_program": {
         "available": true,
         "referrer_benefit": "$100 Amazon gift card per referral",
@@ -854,7 +854,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-24"
     },
     {
       "vendor": "Sentry",
@@ -1984,7 +1984,7 @@
         "api",
         "free tier"
       ],
-      "verifiedDate": "2026-07-03",
+      "verifiedDate": "2026-08-25",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2227,7 +2227,7 @@
         "accelerator",
         "aws"
       ],
-      "verifiedDate": "2026-07-03",
+      "verifiedDate": "2026-08-24",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -2867,7 +2867,7 @@
         "sql",
         "api"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Novu",
@@ -2937,7 +2937,7 @@
         "github",
         "jekyll"
       ],
-      "verifiedDate": "2026-07-03",
+      "verifiedDate": "2026-08-25",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3890,7 +3890,7 @@
         "open source",
         "internationalization"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Permit.io",
@@ -4314,7 +4314,7 @@
         "prototyping",
         "figma alternative"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Pixlr",
@@ -5045,7 +5045,7 @@
         "vpn",
         "access-control"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "PythonAnywhere",
@@ -5564,7 +5564,7 @@
         "threat-intelligence",
         "api"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Kaggle",
@@ -5580,7 +5580,7 @@
         "competitions",
         "datasets"
       ],
-      "verifiedDate": "2026-04-05"
+      "verifiedDate": "2026-08-24"
     },
     {
       "vendor": "Roboflow",
@@ -5640,7 +5640,7 @@
         "embeddings",
         "milvus"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "LanceDB",
@@ -6655,7 +6655,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "framagit.org",
@@ -6787,7 +6787,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Beeceptor",
@@ -6871,7 +6871,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Colaboratory",
@@ -6916,7 +6916,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Country-State-City Microservice API",
@@ -7096,7 +7096,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "DiffJSON",
@@ -7252,7 +7252,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-24"
     },
     {
       "vendor": "Hex",
@@ -8608,7 +8608,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Screen Sharing via Browser",
@@ -9030,7 +9030,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-24"
     },
     {
       "vendor": "TinaCMS",
@@ -9190,7 +9190,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "CodSpeed",
@@ -9648,7 +9648,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-24"
     },
     {
       "vendor": "BugBug",
@@ -9700,7 +9700,7 @@
         "qa",
         "trial"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-24"
     },
     {
       "vendor": "gridlastic.com",
@@ -9970,7 +9970,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "crypteron.com",
@@ -10845,7 +10845,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "logzab.com",
@@ -14249,7 +14249,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Crosswork",
@@ -15015,7 +15015,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-24"
     },
     {
       "vendor": "Proton Drive",
@@ -15882,7 +15882,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Proto.io",
