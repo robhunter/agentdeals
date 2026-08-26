@@ -36,8 +36,6 @@ const apiHits: Record<string, number> = {};
 let totalSessions = 0;
 let totalDisconnects = 0;
 let landingPageViews = 0;
-let sessionsToday = 0;
-let sessionsTodayDate = new Date().toISOString().slice(0, 10);
 
 // Cumulative stats loaded from external storage
 let cumulative = {
@@ -729,7 +727,6 @@ export function resetCounters(): void {
   totalSessions = 0;
   totalDisconnects = 0;
   landingPageViews = 0;
-  sessionsToday = 0;
   for (const key of Object.keys(toolCalls)) toolCalls[key] = 0;
   for (const key of Object.keys(apiHits)) delete apiHits[key];
   for (const key of Object.keys(sessionClients)) delete sessionClients[key];
@@ -807,14 +804,40 @@ export function recordSessionConnect(clientName?: string): void {
   if (!cumulative.first_session_at) {
     cumulative.first_session_at = new Date().toISOString();
   }
-  const today = new Date().toISOString().slice(0, 10);
-  if (today !== sessionsTodayDate) {
-    sessionsToday = 0;
-    sessionsTodayDate = today;
-  }
-  sessionsToday++;
-  const name = clientName || "unknown";
+  const name = (clientName && clientName.trim()) || UNNAMED_SESSION_CLIENT_KEY;
   sessionClients[name] = (sessionClients[name] ?? 0) + 1;
+
+  const today = new Date().toISOString().slice(0, 10);
+  bump(pendingPageViews.sessions, today, 1);
+  bumpBounded(
+    (pendingPageViews.session_clients[today] ??= {}),
+    name,
+    1,
+    MAX_SESSION_CLIENT_KEYS_PER_DAY,
+    OTHER_SESSION_CLIENT_KEY,
+    pageViewSnapshot.session_clients[today],
+  );
+  pendingPageViews.sessions_from = today;
+}
+
+export function getSessionsForDate(date: string): number {
+  return (pageViewSnapshot.sessions[date] ?? 0) + (pendingPageViews.sessions[date] ?? 0);
+}
+
+export function getSessionSeries(): SessionSeries {
+  const dates = new Set([
+    ...Object.keys(pageViewSnapshot.sessions),
+    ...Object.keys(pendingPageViews.sessions),
+  ]);
+  return {
+    daily: [...dates]
+      .sort()
+      .map(date => ({ date, sessions: getSessionsForDate(date) })),
+    today: getSessionsForDate(new Date().toISOString().slice(0, 10)),
+    recording_since: pageViewSnapshot.sessions_from || pendingPageViews.sessions_from || null,
+    all_time: cumulative.sessions + totalSessions,
+    retention_days: SESSION_DAY_RETENTION,
+  };
 }
 
 export function recordSessionDisconnect(): void {
@@ -979,10 +1002,6 @@ export function getConnectionStats(activeSessions: number): {
   toolCallsByName: Record<string, number>;
 } {
   const today = new Date().toISOString().slice(0, 10);
-  if (today !== sessionsTodayDate) {
-    sessionsToday = 0;
-    sessionsTodayDate = today;
-  }
   const totalToolCalls = Object.values(toolCalls).reduce((a, b) => a + b, 0);
   const totalApiHits = Object.values(apiHits).reduce((a, b) => a + b, 0);
   // Merge cumulative + current deployment client counts
@@ -1003,7 +1022,7 @@ export function getConnectionStats(activeSessions: number): {
     totalSessionsAllTime: cumulative.sessions + totalSessions,
     totalApiHitsAllTime: cumulative.api_hits + totalApiHits,
     totalToolCallsAllTime: cumulative.tool_calls + totalToolCalls,
-    sessionsToday,
+    sessionsToday: getSessionsForDate(today),
     serverStarted: serverStartedISO,
     clients: mergedClients,
     toolCallsByClient: mergedToolCallsByClient,
@@ -1164,6 +1183,11 @@ const CLASS_ROUTE_SEP = "|";
 /** Overflow bucket for the per-day family map. Matches UNKNOWN_FAMILY in client-class.ts. */
 const UNKNOWN_FAMILY_KEY = "unknown";
 
+const SESSION_DAY_RETENTION = 90;
+export const MAX_SESSION_CLIENT_KEYS_PER_DAY = 120;
+export const OTHER_SESSION_CLIENT_KEY = "__other_clients__";
+export const UNNAMED_SESSION_CLIENT_KEY = "unknown";
+
 /**
  * One remembered non-resolving request (#1029). The `__unmatched__` bucket answers "how
  * many" and nothing else, which is not enough to tell a vulnerability scanner from a
@@ -1216,6 +1240,9 @@ interface PageViewSnapshot {
   families: Record<string, Record<string, number>>;
   /** date -> MCP tool calls, so web_vs_mcp compares the same window on both sides. */
   mcp: Record<string, number>;
+  sessions: Record<string, number>;
+  session_clients: Record<string, Record<string, number>>;
+  sessions_from: string;
   /** date -> client class -> requests that did not resolve to a page (4xx/5xx) (#1029). */
   not_found: Record<string, Record<string, number>>;
   /** date -> client class -> 3xx. Apart, so a redirect and its target are not two hits. */
@@ -1264,6 +1291,8 @@ function emptySnapshot(): PageViewSnapshot {
     class_routes: {},
     families: {},
     mcp: {},
+    sessions: {},
+    session_clients: {},
     not_found: {},
     redirects: {},
     not_found_sample: [],
@@ -1271,6 +1300,7 @@ function emptySnapshot(): PageViewSnapshot {
     signals_all_time: {},
     signal_notes: [],
     signals_from: "",
+    sessions_from: "",
     all_time_trustworthy_from: "",
     outcome_split_from: "",
   };
@@ -1350,6 +1380,8 @@ function countPendingPageViewKeys(): number {
   // class already counted today adds no new counter key, and without this the sample
   // would sit in memory until some other traffic happened to trigger a write.
   n += pendingPageViews.not_found_sample.length;
+  n += Object.keys(pendingPageViews.sessions).length;
+  for (const day of Object.values(pendingPageViews.session_clients)) n += Object.keys(day).length;
   return n;
 }
 
@@ -1367,6 +1399,8 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     class_routes: {},
     families: {},
     mcp: { ...base.mcp },
+    sessions: { ...base.sessions },
+    session_clients: {},
     not_found: {},
     redirects: {},
     // Oldest first, capped — the delta is newer than the base by construction.
@@ -1375,6 +1409,7 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     signals_all_time: { ...base.signals_all_time },
     signal_notes: [...base.signal_notes, ...delta.signal_notes].slice(-SIGNAL_NOTE_MAX),
     signals_from: base.signals_from || delta.signals_from,
+    sessions_from: base.sessions_from || delta.sessions_from,
     all_time_trustworthy_from: base.all_time_trustworthy_from || delta.all_time_trustworthy_from,
     outcome_split_from: base.outcome_split_from || delta.outcome_split_from,
   };
@@ -1383,6 +1418,7 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
   for (const [date, map] of Object.entries(base.classes)) out.classes[date] = { ...map };
   for (const [date, map] of Object.entries(base.class_routes)) out.class_routes[date] = { ...map };
   for (const [date, map] of Object.entries(base.families)) out.families[date] = { ...map };
+  for (const [date, map] of Object.entries(base.session_clients)) out.session_clients[date] = { ...map };
   for (const [date, map] of Object.entries(base.not_found)) out.not_found[date] = { ...map };
   for (const [date, map] of Object.entries(base.redirects)) out.redirects[date] = { ...map };
   for (const [date, map] of Object.entries(base.signals)) out.signals[date] = { ...map };
@@ -1443,6 +1479,13 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     }
   }
   for (const [date, count] of Object.entries(delta.mcp)) bump(out.mcp, date, count);
+  for (const [date, count] of Object.entries(delta.sessions)) bump(out.sessions, date, count);
+  for (const [date, map] of Object.entries(delta.session_clients)) {
+    const target = (out.session_clients[date] ??= {});
+    for (const [key, count] of Object.entries(map)) {
+      bumpBounded(target, key, count, MAX_SESSION_CLIENT_KEYS_PER_DAY, OTHER_SESSION_CLIENT_KEY);
+    }
+  }
   return out;
 }
 
@@ -1467,6 +1510,11 @@ function pruneSnapshot(snapshot: PageViewSnapshot): void {
   // fixed enum per date) and answer questions over the same window.
   for (const field of ["classes", "mcp", "not_found", "redirects", "signals"] as const) {
     for (const date of Object.keys(snapshot[field]).sort().reverse().slice(CLASS_DAY_RETENTION)) {
+      delete snapshot[field][date];
+    }
+  }
+  for (const field of ["sessions", "session_clients"] as const) {
+    for (const date of Object.keys(snapshot[field]).sort().reverse().slice(SESSION_DAY_RETENTION)) {
       delete snapshot[field][date];
     }
   }
@@ -1583,6 +1631,8 @@ function normalizeSnapshot(raw: unknown): PageViewSnapshot {
   snapshot.class_routes = numericMapOfMaps(obj.class_routes);
   snapshot.families = numericMapOfMaps(obj.families);
   snapshot.mcp = numericMap(obj.mcp);
+  snapshot.sessions = numericMap(obj.sessions);
+  snapshot.session_clients = numericMapOfMaps(obj.session_clients);
   // Absent on a snapshot written before #1029. An empty map reads as "that build did not
   // separate outcomes", which is true — the not-found hits it recorded are inside
   // `classes` and `days`, and `trustworthy_from` is what says so.
@@ -1595,6 +1645,7 @@ function normalizeSnapshot(raw: unknown): PageViewSnapshot {
   snapshot.signals_all_time = numericMap(obj.signals_all_time);
   snapshot.signal_notes = signalNotes(obj.signal_notes);
   snapshot.signals_from = typeof obj.signals_from === "string" ? obj.signals_from : "";
+  snapshot.sessions_from = typeof obj.sessions_from === "string" ? obj.sessions_from : "";
   snapshot.all_time_trustworthy_from =
     typeof obj.all_time_trustworthy_from === "string" ? obj.all_time_trustworthy_from : "";
   snapshot.outcome_split_from =
@@ -2283,8 +2334,22 @@ export interface TrafficReport {
    * scanner from a broken integration, which the count alone cannot (#1029).
    */
   not_found_sample: NotFoundSample[];
+  sessions: SessionSeries;
   notes: string[];
   storage: TelemetryHealth;
+}
+
+export interface SessionSeriesDay {
+  date: string;
+  sessions: number;
+}
+
+export interface SessionSeries {
+  daily: SessionSeriesDay[];
+  today: number;
+  recording_since: string | null;
+  all_time: number;
+  retention_days: number;
 }
 
 const TOP_ROUTES_PER_CLASS = 10;
@@ -2452,6 +2517,7 @@ const TRAFFIC_NOTES = [
   "hits_total, hits_excluding_internal, by_class and top_routes_by_class count requests we answered with content (2xx). Requests that did not resolve are in not_found_*, and 3xx answers are in redirect_* — a client that only ever 404s is not a client that read our pages (#1029).",
   "not_found carries no route breakdown: an unmatched path has no route by definition. not_found_sample carries the actual paths, sanitized and truncated, for the last 50.",
   "Each window states data_days_available alongside days. Where they differ the window is arithmetically correct and shorter than its label — read coverage before quoting it.",
+  "sessions.daily counts MCP sessions opened per UTC day and survives a deploy. It starts at sessions.recording_since; there is no measurement before that date, so a chart must start the line there rather than draw zero. sessions.all_time predates the series and cannot be split across dates.",
 ];
 
 /**
@@ -2483,6 +2549,7 @@ export function getTrafficReport(): TrafficReport {
     // while hiding the thing itself, on the code path — no storage, or storage we could
     // not read — where an operator most needs to see what is hitting the server.
     not_found_sample: [...pendingPageViews.not_found_sample].reverse(),
+    sessions: getSessionSeries(),
     notes: TRAFFIC_NOTES,
     storage,
   });
@@ -2512,6 +2579,7 @@ export function getTrafficReport(): TrafficReport {
     since_boot_not_found: notFoundSinceBoot,
     since_boot_redirects: redirectsSinceBoot,
     not_found_sample: [...view.not_found_sample].reverse(),
+    sessions: getSessionSeries(),
     notes: TRAFFIC_NOTES,
     storage,
   };

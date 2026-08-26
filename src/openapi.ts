@@ -864,7 +864,7 @@ export const openapiSpec = {
                     totalSessionsAllTime: { type: "integer", description: "Cumulative sessions across all deploys (persisted in Redis)" },
                     totalApiHitsAllTime: { type: "integer", description: "Cumulative REST API hits across all deploys (persisted in Redis)" },
                     totalToolCallsAllTime: { type: "integer", description: "Cumulative MCP tool calls across all deploys (persisted in Redis)" },
-                    sessionsToday: { type: "integer", description: "Sessions since midnight UTC (resets daily)" },
+                    sessionsToday: { type: "integer", description: "Sessions opened since midnight UTC. Persisted per day, so a deploy does not reset it. Counts only from the date the daily series began — see sessions.recording_since on /api/traffic." },
                     serverStarted: { type: "string", format: "date-time", description: "ISO timestamp of current server start" },
                     clients: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative session counts per MCP client name (e.g. claude-desktop, cursor)" },
                     toolCallsByClient: { type: "object", additionalProperties: { type: "integer" }, description: "Cumulative MCP tool-call counts per MCP client name. Missing/empty client IDs bucket to 'unknown'. Values sum to totalToolCallsAllTime (invariant)." },
