@@ -76,6 +76,16 @@ function parseSSEData(text: string): any[] {
   return results;
 }
 
+function assertFreshnessLine(html: string, page: string): void {
+  const line = html.match(/<p class="pub-date">([\s\S]*?)<\/p>/);
+  assert.ok(line, `${page} should carry a pub-date line`);
+  assert.match(line[1], /Published \d{4}-\d{2}-\d{2}/, `${page} should state when it was published`);
+  assert.match(line[1], /Not yet reviewed|Reviewed \d{4}-\d{2}-\d{2}/, `${page} should state its review standing`);
+  const today = new Date().toISOString().slice(0, 10);
+  assert.ok(!/Last updated/.test(line[1]), `${page} still renders a Last updated claim`);
+  assert.ok(!line[1].includes(`Published ${today}`), `${page} claims it was published today`);
+}
+
 describe("HTTP transport", () => {
   let proc: ChildProcess | null = null;
 
@@ -4041,7 +4051,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-llm-apis"), "Should cross-link to free LLM APIs");
   });
 
-  it("pricing comparison pages have BreadcrumbList JSON-LD and Last updated date", async () => {
+  it("pricing comparison pages have BreadcrumbList JSON-LD and a dated freshness line", async () => {
     proc = await startHttpServer();
     const pages = [
       "/ai-coding-tools-pricing",
@@ -4054,11 +4064,11 @@ describe("HTTP transport", () => {
       assert.strictEqual(response.status, 200);
       const html = await response.text();
       assert.ok(html.includes("BreadcrumbList"), `${page} should have BreadcrumbList JSON-LD`);
-      assert.ok(html.includes("Last updated"), `${page} should show Last updated date`);
+      assertFreshnessLine(html, page);
     }
   });
 
-  it("auth and monitoring comparison pages have Last updated date", async () => {
+  it("auth and monitoring comparison pages have a dated freshness line", async () => {
     proc = await startHttpServer();
     const pages = [
       "/auth-comparison-2026",
@@ -4068,13 +4078,13 @@ describe("HTTP transport", () => {
       const response = await fetch(`http://localhost:${serverPort}${page}`);
       assert.strictEqual(response.status, 200);
       const html = await response.text();
-      assert.ok(html.includes("Last updated"), `${page} should show Last updated date`);
+      assertFreshnessLine(html, page);
       assert.ok(html.includes("FAQPage"), `${page} should have FAQPage schema`);
       assert.ok(html.includes("BreadcrumbList"), `${page} should have BreadcrumbList schema`);
     }
   });
 
-  it("migration guides have BreadcrumbList JSON-LD and Last updated date", async () => {
+  it("migration guides have BreadcrumbList JSON-LD and a dated freshness line", async () => {
     proc = await startHttpServer();
     const pages = [
       "/openai-assistants-migration",
@@ -4086,7 +4096,7 @@ describe("HTTP transport", () => {
       assert.strictEqual(response.status, 200);
       const html = await response.text();
       assert.ok(html.includes("BreadcrumbList"), `${page} should have BreadcrumbList JSON-LD`);
-      assert.ok(html.includes("Last updated"), `${page} should show Last updated date`);
+      assertFreshnessLine(html, page);
     }
   });
 

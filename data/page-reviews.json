@@ -1,0 +1,964 @@
+{
+  "version": 1,
+  "sla_days": {
+    "A": 30,
+    "B": 90
+  },
+  "pages": [
+    {
+      "path": "/agent-payments",
+      "published": "2026-04-09",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/agent-stack",
+      "published": "2026-03-19",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/ai-coding-pricing-2026",
+      "published": "2026-03-27",
+      "tier": "A",
+      "vendors_asserted": [
+        "aider",
+        "claude-code",
+        "cline",
+        "cursor",
+        "github-copilot",
+        "google-gemini-code-assist",
+        "windsurf"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/ai-coding-tools-pricing",
+      "published": "2026-04-08",
+      "tier": "A",
+      "vendors_asserted": [
+        "aider",
+        "bolt-new",
+        "claude-code",
+        "cline",
+        "cursor",
+        "devin",
+        "gemini-cli",
+        "github-copilot",
+        "google-gemini-code-assist",
+        "lovable",
+        "openai-codex",
+        "windsurf"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/analytics-free-tier-comparison-2026",
+      "published": "2026-04-01",
+      "tier": "A",
+      "vendors_asserted": [
+        "amplitude",
+        "google-analytics",
+        "mixpanel",
+        "plausible-analytics",
+        "posthog",
+        "umami"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/api-development-free-tier-comparison-2026",
+      "published": "2026-04-01",
+      "tier": "A",
+      "vendors_asserted": [
+        "bruno",
+        "hoppscotch",
+        "postman",
+        "thunder-client"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/auth-comparison-2026",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "auth0",
+        "clerk",
+        "firebase",
+        "hanko",
+        "keycloak",
+        "ory",
+        "propelauth",
+        "supabase",
+        "workos"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/aws-app-runner-migration",
+      "published": "2026-04-10",
+      "tier": "A",
+      "vendors_asserted": [
+        "aws",
+        "azure",
+        "fly-io",
+        "google-cloud-run",
+        "northflank",
+        "railway",
+        "render"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/aws-free-tier-2026",
+      "published": "2026-03-27",
+      "tier": "A",
+      "vendors_asserted": [
+        "azure",
+        "cloudflare",
+        "dynamodb-local",
+        "neon",
+        "supabase"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/azure-free-tier-2026",
+      "published": "2026-03-31",
+      "tier": "A",
+      "vendors_asserted": [
+        "aws",
+        "azure"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/budget-builder",
+      "published": "2026-04-08",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/ci-cd-pricing",
+      "published": "2026-04-09",
+      "tier": "A",
+      "vendors_asserted": [
+        "aws",
+        "azure-devops",
+        "bitbucket-pipelines",
+        "bitrise",
+        "buildkite",
+        "codefresh",
+        "codemagic",
+        "drone-ci",
+        "github-actions",
+        "gitlab-ci",
+        "google-cloud-build",
+        "harness-ci",
+        "jenkins",
+        "woodpecker-ci"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/cicd-free-tier-comparison-2026",
+      "published": "2026-03-31",
+      "tier": "A",
+      "vendors_asserted": [
+        "bitrise",
+        "buildkite",
+        "circleci",
+        "codemagic",
+        "drone-ci",
+        "github-actions",
+        "gitlab-ci"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/cloud-free-tier-comparison-2026",
+      "published": "2026-03-31",
+      "tier": "A",
+      "vendors_asserted": [
+        "aws",
+        "azure",
+        "digitalocean"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/compare-tool",
+      "published": "2026-04-08",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/dall-e-shutdown",
+      "published": "2026-04-10",
+      "tier": "A",
+      "vendors_asserted": [
+        "cloudflare-workers-ai",
+        "lumenfall-ai",
+        "openai",
+        "pollinations-ai",
+        "replicate"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/database-free-tier-comparison-2026",
+      "published": "2026-03-31",
+      "tier": "A",
+      "vendors_asserted": [
+        "cloudflare-d1",
+        "cockroachdb",
+        "firebase",
+        "neon",
+        "supabase",
+        "turso",
+        "upstash"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/database-pricing",
+      "published": "2026-04-09",
+      "tier": "A",
+      "vendors_asserted": [
+        "amazon-aurora-postgresql",
+        "cloudflare-d1",
+        "cockroachdb",
+        "convex",
+        "dynamodb-local",
+        "firebase",
+        "neon",
+        "nile",
+        "supabase",
+        "turso",
+        "weaviate",
+        "zilliz-cloud"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/datadog-vs-new-relic",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "datadog",
+        "grafana-cloud",
+        "new-relic"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/digitalocean-free-tier-2026",
+      "published": "2026-03-31",
+      "tier": "A",
+      "vendors_asserted": [
+        "aws",
+        "azure",
+        "cloudflare",
+        "railway",
+        "render"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/disclosure",
+      "published": "2026-04-11",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/email-comparison-2026",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "brevo",
+        "emailoctopus",
+        "maileroo",
+        "mailtrap-io",
+        "resend",
+        "sendgrid"
+      ],
+      "reviewed_at": "2026-08-26",
+      "reviewer": "coder"
+    },
+    {
+      "path": "/firebase-studio-shutdown",
+      "published": "2026-04-02",
+      "tier": "A",
+      "vendors_asserted": [
+        "bolt-new",
+        "cursor",
+        "github-codespaces",
+        "lovable",
+        "replit",
+        "windsurf"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-ai-stack",
+      "published": "2026-03-25",
+      "tier": "A",
+      "vendors_asserted": [
+        "deepgram",
+        "github-copilot",
+        "groq",
+        "hugging-face",
+        "kaggle",
+        "langfuse",
+        "pinecone",
+        "portkey",
+        "roboflow",
+        "weights-biases"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-devops-stack",
+      "published": "2026-03-25",
+      "tier": "A",
+      "vendors_asserted": [
+        "axiom",
+        "betterstack",
+        "doppler",
+        "github-actions",
+        "github-container-registry",
+        "grafana-cloud",
+        "hcp-terraform",
+        "pagerduty",
+        "railway",
+        "sentry"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-django-stack",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "algolia",
+        "cloudflare",
+        "cloudflare-r2",
+        "github-actions",
+        "neon",
+        "railway",
+        "resend",
+        "sentry",
+        "upstash"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-fastapi-stack",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "auth0",
+        "cloudflare-r2",
+        "github-actions",
+        "neon",
+        "railway",
+        "resend",
+        "sentry",
+        "upstash"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-frontend-stack",
+      "published": "2026-03-25",
+      "tier": "A",
+      "vendors_asserted": [
+        "cloudflare",
+        "cloudflare-pages",
+        "cloudinary",
+        "figma",
+        "posthog",
+        "resend",
+        "sanity",
+        "sentry",
+        "tally"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-go-stack",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "auth0",
+        "cloudflare-r2",
+        "github-actions",
+        "neon",
+        "railway",
+        "resend",
+        "sentry",
+        "upstash"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-nextjs-stack",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "algolia",
+        "clerk",
+        "cloudflare-r2",
+        "github-actions",
+        "inngest",
+        "neon",
+        "posthog",
+        "resend",
+        "sentry",
+        "vercel"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-saas-stack",
+      "published": "2026-04-04",
+      "tier": "A",
+      "vendors_asserted": [
+        "clerk",
+        "cloudflare-r2",
+        "github-actions",
+        "inngest",
+        "neon",
+        "posthog",
+        "railway",
+        "resend",
+        "sentry"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-startup-stack",
+      "published": "2026-03-25",
+      "tier": "A",
+      "vendors_asserted": [
+        "algolia",
+        "clerk",
+        "cloudflare-r2",
+        "github-actions",
+        "new-relic",
+        "posthog",
+        "resend",
+        "sentry",
+        "supabase",
+        "vercel"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/free-tier-risk",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "auth0",
+        "cloudflare",
+        "github",
+        "neon",
+        "netlify",
+        "railway",
+        "render",
+        "supabase",
+        "vercel"
+      ],
+      "reviewed_at": "2026-04-08",
+      "reviewer": "content revision"
+    },
+    {
+      "path": "/free-tier-tracker",
+      "published": "2026-03-27",
+      "tier": "A",
+      "vendors_asserted": [
+        "brave-search-api",
+        "cloudflare",
+        "digitalocean",
+        "github",
+        "github-copilot",
+        "google-cloud",
+        "grafana-cloud",
+        "hcp-terraform",
+        "localstack",
+        "minio",
+        "postman",
+        "terragrunt-scale",
+        "windsurf"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/gcp-free-tier-2026",
+      "published": "2026-03-27",
+      "tier": "A",
+      "vendors_asserted": [
+        "aws",
+        "azure",
+        "cloudflare"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/gemini-api-pricing-2026",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "groq",
+        "openrouter"
+      ],
+      "reviewed_at": "2026-04-02",
+      "reviewer": "content revision"
+    },
+    {
+      "path": "/gemini-api-pricing-changes",
+      "published": "2026-04-08",
+      "tier": "A",
+      "vendors_asserted": [
+        "openai"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/google-developer-program-2026",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "aws",
+        "azure",
+        "firebase",
+        "google-ai-pro-ultra",
+        "groq",
+        "openrouter",
+        "oracle-cloud"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/hcp-terraform-migration",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "hcp-terraform",
+        "scalr",
+        "spacelift"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/hetzner-pricing-2026",
+      "published": "2026-03-25",
+      "tier": "A",
+      "vendors_asserted": [
+        "digitalocean",
+        "ovhcloud"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/hosting-free-tier-comparison-2026",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "cloudflare-pages",
+        "cloudflare-workers",
+        "deno-deploy",
+        "fly-io",
+        "github-pages",
+        "koyeb",
+        "netlify",
+        "railway",
+        "render",
+        "vercel"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/hosting-pricing",
+      "published": "2026-04-13",
+      "tier": "A",
+      "vendors_asserted": [
+        "cloudflare-pages",
+        "cloudflare-workers",
+        "deno-deploy",
+        "fly-io",
+        "github-pages",
+        "google-cloud-run",
+        "netlify",
+        "railway",
+        "render",
+        "vercel"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/llm-api-pricing",
+      "published": "2026-04-13",
+      "tier": "A",
+      "vendors_asserted": [
+        "anthropic-api",
+        "baseten",
+        "cerebras",
+        "cloudflare-workers-ai",
+        "deepseek-api",
+        "github-models",
+        "google-gemini-api",
+        "groq",
+        "ollama",
+        "openai",
+        "openrouter",
+        "replicate",
+        "xai"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/marketplace",
+      "published": "2026-04-12",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/monitoring-comparison-2026",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "axiom",
+        "better-stack-logs",
+        "checkly",
+        "grafana-cloud",
+        "healthchecks-io",
+        "new-relic",
+        "sentry",
+        "uptimerobot"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/neon-vs-supabase",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "appwrite",
+        "cockroachdb",
+        "neon",
+        "pocketbase",
+        "supabase",
+        "turso"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/openai-assistants-alternatives",
+      "published": "2026-04-02",
+      "tier": "A",
+      "vendors_asserted": [
+        "cerebras",
+        "cohere",
+        "deepseek-api",
+        "github-models",
+        "google-gemini-api",
+        "groq",
+        "openai",
+        "openrouter"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/openai-assistants-migration",
+      "published": "2026-04-09",
+      "tier": "A",
+      "vendors_asserted": [
+        "azure",
+        "google-gemini-api",
+        "openai"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/openai-assistants-migration-2026",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "mistral-ai",
+        "openai"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/openai-realtime-migration",
+      "published": "2026-04-10",
+      "tier": "A",
+      "vendors_asserted": [
+        "assemblyai",
+        "azure",
+        "deepgram",
+        "google-cloud",
+        "openai"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/q1-2026-developer-pricing-report",
+      "published": "2026-03-24",
+      "tier": "A",
+      "vendors_asserted": [
+        "cloudflare"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/q2-pricing-preview-2026",
+      "published": "2026-03-25",
+      "tier": "A",
+      "vendors_asserted": [
+        "hcp-terraform",
+        "hetzner",
+        "odrive",
+        "openai",
+        "ovhcloud"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/railway-vs-render",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "fly-io",
+        "railway",
+        "render"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/security-free-tier-comparison-2026",
+      "published": "2026-04-01",
+      "tier": "A",
+      "vendors_asserted": [
+        "codeql",
+        "gitleaks",
+        "owasp-zap",
+        "semgrep",
+        "trivy"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/serverless-free-tier-comparison-2026",
+      "published": "2026-03-31",
+      "tier": "A",
+      "vendors_asserted": [
+        "aws",
+        "azure",
+        "cloudflare-workers",
+        "dbos",
+        "deno-deploy",
+        "google-cloud",
+        "google-cloud-run",
+        "val-town",
+        "vercel"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/shutdowns",
+      "published": "2026-04-02",
+      "tier": "A",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/stack-check",
+      "published": "2026-04-08",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/startup-credits",
+      "published": "2026-03-27",
+      "tier": "A",
+      "vendors_asserted": [],
+      "reviewed_at": "2026-04-13",
+      "reviewer": "content revision"
+    },
+    {
+      "path": "/state-of-free-tiers",
+      "published": "2026-04-05",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/storage-comparison-2026",
+      "published": "2026-04-03",
+      "tier": "A",
+      "vendors_asserted": [
+        "backblaze-b2",
+        "cloudflare-r2",
+        "cloudinary",
+        "minio"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/supabase-vs-firebase",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "appwrite-cloud",
+        "firebase",
+        "pocketbase",
+        "supabase"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/tenor-alternatives",
+      "published": "2026-04-02",
+      "tier": "A",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/terraform-cloud-free-tier-removed",
+      "published": "2026-04-08",
+      "tier": "A",
+      "vendors_asserted": [
+        "hcp-terraform",
+        "scalr",
+        "spacelift",
+        "terragrunt-scale"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/testing-free-tier-comparison-2026",
+      "published": "2026-04-01",
+      "tier": "A",
+      "vendors_asserted": [
+        "checkly",
+        "chromatic",
+        "grafana-k6-cloud",
+        "playwright",
+        "postman"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/vector-database-pricing",
+      "published": "2026-04-10",
+      "tier": "A",
+      "vendors_asserted": [
+        "chroma",
+        "lancedb",
+        "mongodb-atlas",
+        "neon",
+        "pinecone",
+        "qdrant",
+        "supabase",
+        "turbopuffer",
+        "upstash-vector",
+        "weaviate",
+        "zilliz-cloud"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/vercel-vs-netlify",
+      "published": "2026-03-26",
+      "tier": "A",
+      "vendors_asserted": [
+        "cloudflare-pages",
+        "coolify",
+        "netlify",
+        "railway",
+        "vercel"
+      ],
+      "reviewed_at": null,
+      "reviewer": null
+    },
+    {
+      "path": "/x402-services",
+      "published": "2026-04-14",
+      "tier": "B",
+      "vendors_asserted": [],
+      "reviewed_at": null,
+      "reviewer": null
+    }
+  ]
+}

@@ -194,6 +194,7 @@ const OBSERVABILITY_PATHS = new Set([
   "/api/metrics",
   "/api/analytics/daily",
   "/api/analytics/history",
+  "/api/page-reviews",
   "/health",
 ]);
 

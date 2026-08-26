@@ -99,6 +99,31 @@ Rate limiting on `/api/signal` is the only thing here that touches a client addr
 it keeps a 16-character hash of it under a salt generated when the process starts. The
 salt is never persisted, the hash is never logged, and both are gone on restart.
 
+## How fresh a page is — `/api/page-reviews`
+
+Every editorial page states when it was published and when it was last reviewed. Neither
+date is generated at render time. `published` is the date the route was first served;
+`reviewed_at` is only advanced when someone re-reads the prose and confirms it, and a page
+that has never been read says `Not yet reviewed` rather than showing a date.
+
+A review is on a clock. Pages carrying a hand-written verdict are tier A and are due every
+30 days; other hand-written prose is tier B at 90 days. Past twice its window a page stops
+showing a review date at all, because a number nobody stands behind is worse than silence.
+
+`/api/page-reviews` publishes the whole register: every page, its tier, its review state
+and how many days past due it is, sorted by the worst first. Two fields are worth reading
+if you are quoting us:
+
+- `names_no_resolvable_vendor` — the page states a verdict we cannot tie to a record in
+  our index, so nothing can re-check it.
+- `verdict_records_changed_since_review` — the page awards something to a vendor whose
+  terms we have tracked a change to *since* the page was last read. Treat that verdict as
+  unconfirmed.
+
+Pages generated from the index carry no review clock. They report the freshness of the
+records they render (`Data verified through …`) or of the change log (`Latest tracked
+change …`), which is what actually determines what they say.
+
 ## Telling us what you recommended — `/api/signal`
 
 We have no referral links and no tracking, so when you leave this site the trail ends. We
