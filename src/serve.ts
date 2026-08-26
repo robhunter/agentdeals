@@ -11,8 +11,9 @@ import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
 import { agentBlock, CONVERTED_CAVEAT, DEFERENCE, PRIVACY_SCOPE, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, SIGNAL_MIN_SAMPLE, SIGNAL_DENOMINATOR_ROUTES, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, SIGNAL_MIN_SAMPLE, SIGNAL_DENOMINATOR_ROUTES, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, redisJsonGet, redisJsonMget, redisJsonSet } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
+import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS } from "./link-health.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
@@ -53725,7 +53726,17 @@ const httpServer = createHttpServer(async (req, res) => {
   // on finish so the served status is known; costs no Redis commands.
   if (isCountableTraffic(url.pathname)) {
     res.on("finish", () => {
-      recordTraffic(classifyRequest(url.pathname, req.headers["user-agent"]), url.pathname, res.statusCode);
+      const classification = classifyRequest(url.pathname, req.headers["user-agent"]);
+      recordTraffic(classification, url.pathname, res.statusCode);
+      if (SINGLE_VENDOR_PREFIXES.some(prefix => url.pathname.startsWith(prefix))) {
+        recordVendorRequest({
+          slug: singleVendorSlug(url.pathname),
+          client_class: classification.client_class,
+          address: clientAddress(req.headers["x-forwarded-for"], req.socket.remoteAddress),
+          status: res.statusCode,
+          date: new Date().toISOString().slice(0, 10),
+        });
+      }
     });
   }
 
@@ -53856,6 +53867,42 @@ const httpServer = createHttpServer(async (req, res) => {
   if (url.pathname === "/api/analytics/history" && isGetOrHead) {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(durableHistoryBody);
+    return;
+  }
+
+  if (url.pathname === VENDOR_SERIES_PATH && isGetOrHead) {
+    if (!vendorExportAuthorized(req.headers["authorization"])) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+      return;
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    const to = url.searchParams.get("to") ?? today;
+    const defaultFrom = new Date(Date.parse(to) - (VENDOR_SERIES_RETENTION_DAYS - 1) * 86400000)
+      .toISOString().slice(0, 10);
+    const from = url.searchParams.get("from") ?? defaultFrom;
+    if (!isSeriesDate(from) || !isSeriesDate(to)) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "from and to must be YYYY-MM-DD" }));
+      return;
+    }
+    const dates = seriesDateRange(from, to);
+    const series = await readVendorSeries(dates);
+    if (!series.ok) {
+      res.writeHead(503, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: series.error ?? "unavailable", available: false, from, to }));
+      return;
+    }
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      available: true,
+      from,
+      to,
+      requested_days: dates.length,
+      days: series.days,
+      gauge: vendorSeriesGauge(),
+      notes: VENDOR_SERIES_NOTES,
+    }, null, 2));
     return;
   }
 
@@ -54254,7 +54301,7 @@ const httpServer = createHttpServer(async (req, res) => {
     // `internal` by path: observing the system is not using it.
     const data = getTrafficReport();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(data));
+    res.end(JSON.stringify({ ...data, vendor_series: vendorSeriesGauge() }));
   } else if (url.pathname === "/api/offers" && isGetOrHead) {
     recordApiHit("/api/offers");
     const q = url.searchParams.get("q") || undefined;
@@ -56995,6 +57042,16 @@ setInterval(() => {
   flushPending().catch((err) => console.error(`[telemetry] flush failed: ${err?.message ?? err}`));
 }, FLUSH_INTERVAL_SECONDS * 1000).unref();
 
+configureVendorSeries({
+  get: redisJsonGet,
+  mget: redisJsonMget,
+  set: redisJsonSet,
+});
+
+setInterval(() => {
+  flushVendorSeries().catch((err) => console.error(`[vendor-series] flush failed: ${err?.message ?? err}`));
+}, FLUSH_INTERVAL_SECONDS * 1000).unref();
+
 // Flush on graceful shutdown. Buffered counters go first: they exist only in memory, so
 // a missed flush here is the one interval of data this design accepts losing on an
 // *unclean* exit and should never lose on a clean one.
@@ -57004,6 +57061,7 @@ async function onShutdown() {
   shuttingDown = true;
   try {
     await flushPending();
+    await flushVendorSeries(true);
     await flushTelemetry();
   } catch (err: any) {
     console.error(`[telemetry] shutdown flush failed: ${err?.message ?? err}`);
