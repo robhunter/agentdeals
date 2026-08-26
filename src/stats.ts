@@ -2554,6 +2554,9 @@ const SIGNAL_FACETS = {
   rawEvent: "x",
   /** Which surface produced the signal — the one thing that says which invitation works. */
   source: "s",
+  event: "e",
+  transport: "t",
+  clientClass: "c",
 } as const;
 const MAX_SIGNAL_KEYS_PER_FACET_PER_DAY = 100;
 const MAX_SIGNAL_ALL_TIME_KEYS_PER_FACET = 300;
@@ -2566,9 +2569,9 @@ const SIGNAL_OVERFLOW = "__other__";
  */
 function buildFixedSignalKeys(): Set<string> {
   const keys = new Set<string>([SIGNAL_TOTAL_KEY]);
-  for (const e of [...SIGNAL_EVENTS, SIGNAL_UNRECOGNIZED_EVENT]) keys.add(`e${SIGNAL_SEP}${e}`);
-  for (const t of SIGNAL_TRANSPORTS) keys.add(`t${SIGNAL_SEP}${t}`);
-  for (const c of TRAFFIC_CLASSES) keys.add(`c${SIGNAL_SEP}${c}`);
+  for (const e of [...SIGNAL_EVENTS, SIGNAL_UNRECOGNIZED_EVENT]) keys.add(`${SIGNAL_FACETS.event}${SIGNAL_SEP}${e}`);
+  for (const t of SIGNAL_TRANSPORTS) keys.add(`${SIGNAL_FACETS.transport}${SIGNAL_SEP}${t}`);
+  for (const c of TRAFFIC_CLASSES) keys.add(`${SIGNAL_FACETS.clientClass}${SIGNAL_SEP}${c}`);
   return keys;
 }
 const FIXED_SIGNAL_KEYS = buildFixedSignalKeys();
@@ -2678,9 +2681,9 @@ export function recordSignal(rec: SignalRecord): void {
 
   const fixed = [
     SIGNAL_TOTAL_KEY,
-    `e${SIGNAL_SEP}${eventKey}`,
-    `t${SIGNAL_SEP}${rec.transport}`,
-    `c${SIGNAL_SEP}${cls}`,
+    `${SIGNAL_FACETS.event}${SIGNAL_SEP}${eventKey}`,
+    `${SIGNAL_FACETS.transport}${SIGNAL_SEP}${rec.transport}`,
+    `${SIGNAL_FACETS.clientClass}${SIGNAL_SEP}${cls}`,
   ];
   const bounded: string[] = [];
   // The per-vendor key carries the event with it: "recommended neon" and "converted neon"
@@ -2818,9 +2821,9 @@ function foldSignals(map: Record<string, number>, window: SignalWindow): void {
     if (sep < 0) continue;
     const facet = key.slice(0, sep);
     const rest = key.slice(sep + 1);
-    if (facet === "e") window.by_event[rest] = (window.by_event[rest] ?? 0) + count;
-    else if (facet === "t") window.by_transport[rest] = (window.by_transport[rest] ?? 0) + count;
-    else if (facet === "c") window.by_client_class[rest] = (window.by_client_class[rest] ?? 0) + count;
+    if (facet === SIGNAL_FACETS.event) window.by_event[rest] = (window.by_event[rest] ?? 0) + count;
+    else if (facet === SIGNAL_FACETS.transport) window.by_transport[rest] = (window.by_transport[rest] ?? 0) + count;
+    else if (facet === SIGNAL_FACETS.clientClass) window.by_client_class[rest] = (window.by_client_class[rest] ?? 0) + count;
     else if (facet === SIGNAL_FACETS.vendor && rest !== SIGNAL_OVERFLOW) {
       // `rest` is `${event}:${slug}` — count the vendor, once, across events.
       const slugAt = rest.indexOf(SIGNAL_SEP);
@@ -2928,6 +2931,7 @@ export interface SignalReport {
   all_time: SignalWindow;
   /** False when storage is not configured: the numbers are this process's, not durable. */
   durable: boolean;
+  durable_rollup: DurableRollupCoverage | null;
   recording_since: string | null;
   since_boot: number;
   notes: string[];
@@ -2947,6 +2951,7 @@ export function getSignalReport(): SignalReport {
     last_30d: buildSignalWindow(view, 30),
     all_time: buildSignalAllTime(view),
     durable: useRedis() && pageViewsLoaded,
+    durable_rollup: getDurableRollupCoverage(),
     recording_since: view.signals_from || null,
     since_boot: signalsSinceBoot,
     notes: SIGNAL_NOTES,
@@ -2981,6 +2986,164 @@ export function getSignalVendorBreakdown(): { event: string; vendor: string; cou
 export function getSignalNotes(): SignalNote[] {
   const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
   return [...view.signal_notes].reverse();
+}
+
+export interface RollupSignalFacets {
+  total: number;
+  by_event: Record<string, number>;
+  by_transport: Record<string, number>;
+  by_client_class: Record<string, number>;
+  by_source: Record<string, number>;
+  by_reporting_agent: Record<string, number>;
+  by_vendor: Record<string, number>;
+  unresolved_vendor_names: Record<string, number>;
+  unrecognized_events: Record<string, number>;
+}
+
+export interface RollupDayPageViews {
+  served: number;
+  not_found: number;
+  redirects: number;
+  unclassified_legacy: number;
+  by_route: Record<string, number>;
+}
+
+export interface RollupDaySource {
+  date: string;
+  page_views: RollupDayPageViews;
+  referrers: Record<string, number>;
+  classes: Record<string, number>;
+  class_routes: Record<string, number>;
+  families: Record<string, number>;
+  mcp_tool_calls: number;
+  not_found: Record<string, number>;
+  redirects: Record<string, number>;
+  signals: RollupSignalFacets;
+  available: boolean;
+  reason: string | null;
+}
+
+function emptySignalFacets(): RollupSignalFacets {
+  return {
+    total: 0,
+    by_event: {},
+    by_transport: {},
+    by_client_class: {},
+    by_source: {},
+    by_reporting_agent: {},
+    by_vendor: {},
+    unresolved_vendor_names: {},
+    unrecognized_events: {},
+  };
+}
+
+export function splitSignalKeys(map: Record<string, number>): RollupSignalFacets {
+  const out = emptySignalFacets();
+  const target: Record<string, Record<string, number>> = {
+    [SIGNAL_FACETS.event]: out.by_event,
+    [SIGNAL_FACETS.transport]: out.by_transport,
+    [SIGNAL_FACETS.clientClass]: out.by_client_class,
+    [SIGNAL_FACETS.source]: out.by_source,
+    [SIGNAL_FACETS.agent]: out.by_reporting_agent,
+    [SIGNAL_FACETS.vendor]: out.by_vendor,
+    [SIGNAL_FACETS.unresolved]: out.unresolved_vendor_names,
+    [SIGNAL_FACETS.rawEvent]: out.unrecognized_events,
+  };
+  for (const [key, count] of Object.entries(map)) {
+    if (key === SIGNAL_TOTAL_KEY) {
+      out.total += count;
+      continue;
+    }
+    const sep = key.indexOf(SIGNAL_SEP);
+    if (sep < 0) continue;
+    const bucket = target[key.slice(0, sep)];
+    if (!bucket) continue;
+    const rest = key.slice(sep + 1);
+    bucket[rest] = (bucket[rest] ?? 0) + count;
+  }
+  return out;
+}
+
+export function splitDayPageViews(map: Record<string, number>): RollupDayPageViews {
+  const period = periodFrom(map);
+  const by_route: Record<string, number> = {};
+  for (const [key, count] of Object.entries(map)) {
+    if (!PSEUDO_DAY_KEYS.has(key)) by_route[key] = count;
+  }
+  return {
+    served: period.total ?? 0,
+    not_found: period.not_found,
+    redirects: period.redirects,
+    unclassified_legacy: period.unclassified_legacy,
+    by_route,
+  };
+}
+
+export function getRollupDaySource(date: string): RollupDaySource {
+  const empty = {
+    date,
+    page_views: splitDayPageViews({}),
+    referrers: {},
+    classes: {},
+    class_routes: {},
+    families: {},
+    mcp_tool_calls: 0,
+    not_found: {},
+    redirects: {},
+    signals: emptySignalFacets(),
+  };
+  if (!useRedis()) return { ...empty, available: false, reason: "redis-not-configured" };
+  if (!pageViewsLoaded) {
+    return {
+      ...empty,
+      available: false,
+      reason: redisHealth.lastReadError ?? "page-view snapshot not loaded",
+    };
+  }
+  const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
+  return {
+    date,
+    page_views: splitDayPageViews(view.days[date] ?? {}),
+    referrers: { ...(view.referrers[date] ?? {}) },
+    classes: { ...(view.classes[date] ?? {}) },
+    class_routes: { ...(view.class_routes[date] ?? {}) },
+    families: { ...(view.families[date] ?? {}) },
+    mcp_tool_calls: view.mcp[date] ?? 0,
+    not_found: { ...(view.not_found[date] ?? {}) },
+    redirects: { ...(view.redirects[date] ?? {}) },
+    signals: splitSignalKeys(view.signals[date] ?? {}),
+    available: true,
+    reason: null,
+  };
+}
+
+export function getRollupDatesAvailable(): string[] {
+  if (!useRedis() || !pageViewsLoaded) return [];
+  const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
+  const dates = new Set<string>();
+  for (const field of ["days", "referrers", "classes", "class_routes", "families", "not_found", "redirects", "signals"] as const) {
+    for (const date of Object.keys(view[field])) dates.add(date);
+  }
+  for (const date of Object.keys(view.mcp)) dates.add(date);
+  return [...dates].sort();
+}
+
+export interface DurableRollupCoverage {
+  first_date: string | null;
+  last_date: string | null;
+  last_complete_date: string | null;
+  days: number;
+  path: string;
+}
+
+let durableRollupCoverage: DurableRollupCoverage | null = null;
+
+export function setDurableRollupCoverage(coverage: DurableRollupCoverage | null): void {
+  durableRollupCoverage = coverage;
+}
+
+export function getDurableRollupCoverage(): DurableRollupCoverage | null {
+  return durableRollupCoverage;
 }
 
 // --- Search query analytics ---
