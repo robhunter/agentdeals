@@ -11,7 +11,8 @@ import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
 import { agentBlock, CONVERTED_CAVEAT, DEFERENCE, PRIVACY_SCOPE, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, SIGNAL_MIN_SAMPLE, SIGNAL_DENOMINATOR_ROUTES } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, SIGNAL_MIN_SAMPLE, SIGNAL_DENOMINATOR_ROUTES, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage } from "./stats.js";
+import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS } from "./link-health.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
@@ -234,6 +235,24 @@ setInterval(() => {
 // Load cumulative telemetry from Redis or disk (survives deploys)
 const telemetryFile = join(__dirname, "..", "data", "telemetry.json");
 await loadTelemetry(telemetryFile);
+
+const rollupDir = process.env.AGENTDEALS_ROLLUP_DIR ?? join(__dirname, "..", "data", "analytics");
+const durableRollups = readRollups(rollupDir);
+const durableRollupCoverage = coverageOf(durableRollups, rollupDir);
+setDurableRollupCoverage(durableRollupCoverage);
+const durableHistoryBody = JSON.stringify({
+  coverage: durableRollupCoverage,
+  days: durableRollups.map(r => ({
+    date: r.date,
+    complete: r.complete,
+    served: r.page_views.served,
+    not_found: r.page_views.not_found,
+    redirects: r.page_views.redirects,
+    mcp_tool_calls: r.mcp_tool_calls,
+    signals: r.signals.total,
+    by_class: r.traffic.by_class,
+  })),
+});
 
 // Build landing page HTML at startup with real stats
 const offers = loadOffers();
@@ -53768,6 +53787,38 @@ const httpServer = createHttpServer(async (req, res) => {
     // site is built to exclude. A test asserts no per-vendor count reaches this response.
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(getSignalReport()));
+    return;
+  }
+
+  if (url.pathname === "/api/analytics/history" && isGetOrHead) {
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(durableHistoryBody);
+    return;
+  }
+
+  if (url.pathname === "/api/analytics/daily" && isGetOrHead) {
+    const requested = url.searchParams.get("date") ?? new Date().toISOString().slice(0, 10);
+    if (!ROLLUP_DATE_PATTERN.test(requested)) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: "date must be YYYY-MM-DD" }));
+      return;
+    }
+    const source = getRollupDaySource(requested);
+    if (!source.available) {
+      res.writeHead(503, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({
+        error: source.reason,
+        available: false,
+        date: requested,
+        dates_available: getRollupDatesAvailable(),
+      }));
+      return;
+    }
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({
+      ...buildDailyRollup(source, new Date().toISOString()),
+      dates_available: getRollupDatesAvailable(),
+    }));
     return;
   }
 

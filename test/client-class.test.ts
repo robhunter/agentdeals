@@ -199,6 +199,13 @@ describe("classifyRequest — internal attribution", () => {
     assert.equal(classifyRequest("/api/query-log?limit=200", UA.curl).client_class, "internal");
   });
 
+  it("the rollup endpoints are internal, so the collector cannot inflate what it records", () => {
+    assert.equal(isObservabilityPath("/api/analytics/daily"), true);
+    assert.equal(isObservabilityPath("/api/analytics/history"), true);
+    assert.equal(classifyRequest("/api/analytics/daily?date=2026-08-20", UA.curl).client_class, "internal");
+    assert.equal(classifyRequest("/api/analytics/history", UA.chrome).client_class, "internal");
+  });
+
   it("a content path is classified on its user agent, not its path", () => {
     assert.equal(classifyRequest("/vendor/neon", UA.chatgptUser).client_class, "ai_agent");
     assert.equal(classifyRequest("/api/offers", UA.chrome).client_class, "browser");

@@ -1,0 +1,63 @@
+name: Daily analytics rollup
+
+on:
+  schedule:
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Single YYYY-MM-DD to roll up (blank = every date on offer)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: analytics-rollup
+  cancel-in-progress: false
+
+jobs:
+  rollup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Roll up
+        id: rollup
+        env:
+          SINGLE_DATE: ${{ github.event.inputs.date }}
+        run: |
+          set -o pipefail
+          if [ -n "$SINGLE_DATE" ]; then
+            node scripts/rollup-analytics.js --date "$SINGLE_DATE" | tee /tmp/rollup.log
+          else
+            node scripts/rollup-analytics.js | tee /tmp/rollup.log
+          fi
+          WRITTEN=$(grep -oE '^Rolled up: [0-9]+' /tmp/rollup.log | grep -oE '[0-9]+$' || echo 0)
+          echo "written=$WRITTEN" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push if changed
+        env:
+          WRITTEN: ${{ steps.rollup.outputs.written }}
+        run: |
+          if [ -z "$(git status --porcelain -- data/analytics)" ]; then
+            echo "No change under data/analytics — skipping commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/analytics
+          git commit -m "data(auto): analytics rollup — ${WRITTEN} day(s)"
+          git push origin HEAD:main

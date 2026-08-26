@@ -192,6 +192,8 @@ const OBSERVABILITY_PATHS = new Set([
   "/api/query-log",
   "/api/traffic",
   "/api/metrics",
+  "/api/analytics/daily",
+  "/api/analytics/history",
   "/health",
 ]);
 
