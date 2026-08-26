@@ -1758,6 +1758,44 @@ function signalNotes(raw: unknown): SignalNote[] {
   return out;
 }
 
+export interface JsonReadResult {
+  ok: boolean;
+  value: unknown;
+  error?: string;
+}
+
+export interface JsonWriteResult {
+  ok: boolean;
+  error?: string;
+}
+
+function parseJsonValue(raw: string | null): unknown {
+  if (typeof raw !== "string" || raw.length === 0) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+export async function redisJsonGet(key: string): Promise<JsonReadResult> {
+  const res = await redisCommand<string | null>(["GET", key]);
+  if (!res.ok) return { ok: false, value: null, error: res.error };
+  return { ok: true, value: parseJsonValue(res.result ?? null) };
+}
+
+export async function redisJsonMget(keys: string[]): Promise<{ ok: boolean; values: unknown[]; error?: string }> {
+  if (keys.length === 0) return { ok: true, values: [] };
+  const res = await redisMget(keys);
+  if (!res.ok) return { ok: false, values: [], error: res.error };
+  return { ok: true, values: res.result.map(parseJsonValue) };
+}
+
+export async function redisJsonSet(key: string, value: unknown, ttlSeconds: number): Promise<JsonWriteResult> {
+  const res = await redisCommand<string>(["SET", key, JSON.stringify(value), "EX", String(Math.max(1, Math.floor(ttlSeconds)))]);
+  return res.ok ? { ok: true } : { ok: false, error: res.error };
+}
+
 async function redisMget(keys: string[]): Promise<RedisResult<(string | null)[]>> {
   const res = await redisCommand<(string | null)[]>(["MGET", ...keys]);
   if (!res.ok) return res;
