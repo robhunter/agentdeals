@@ -112,6 +112,8 @@ export interface DealChange {
   source_url: string;
   category: string;
   alternatives: string[];
+  detected_by?: string;
+  recorded_date?: string;
 }
 
 export interface DealChangesIndex {

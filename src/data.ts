@@ -433,6 +433,47 @@ export function loadDealChanges(): DealChange[] {
   return cachedChanges;
 }
 
+export interface ChangeLogFreshness {
+  total: number;
+  last_recorded_date: string | null;
+  days_since_last_recorded: number | null;
+  last_detected_date: string | null;
+  days_since_last_detected: number | null;
+  recorded_last_30_days: number;
+  machine_detected_total: number;
+  entries_without_recorded_date: number;
+}
+
+export function changeLogFreshness(changes: DealChange[], now: Date = new Date()): ChangeLogFreshness {
+  const today = now.toISOString().slice(0, 10);
+  const daysBetween = (from: string, to: string) =>
+    Math.round((Date.parse(to) - Date.parse(from)) / 86400000);
+  const recorded = changes.map((c) => c.recorded_date).filter((d): d is string => !!d).sort();
+  const detected = changes
+    .filter((c) => c.detected_by)
+    .map((c) => c.recorded_date)
+    .filter((d): d is string => !!d)
+    .sort();
+  const last = recorded.length > 0 ? recorded[recorded.length - 1] : null;
+  const lastDetected = detected.length > 0 ? detected[detected.length - 1] : null;
+  const thirtyDaysAgo = new Date(Date.parse(today) - 30 * 86400000).toISOString().slice(0, 10);
+  return {
+    total: changes.length,
+    last_recorded_date: last,
+    days_since_last_recorded: last === null ? null : Math.max(0, daysBetween(last, today)),
+    last_detected_date: lastDetected,
+    days_since_last_detected:
+      lastDetected === null ? null : Math.max(0, daysBetween(lastDetected, today)),
+    recorded_last_30_days: recorded.filter((d) => d >= thirtyDaysAgo).length,
+    machine_detected_total: changes.filter((c) => c.detected_by).length,
+    entries_without_recorded_date: changes.length - recorded.length,
+  };
+}
+
+export function getChangeLogFreshness(now: Date = new Date()): ChangeLogFreshness {
+  return changeLogFreshness(loadDealChanges(), now);
+}
+
 export function getDealChanges(
   since?: string,
   changeType?: string,

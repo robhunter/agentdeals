@@ -20,9 +20,11 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { reverifyBatch } from "./reverify.js";
 import { fetchPageText, verifyWithHaiku } from "./verify-freshness.js";
+import { buildChangeEntry, appendChangeEntries } from "./change-log.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
+const INDEX_PATH =
+  process.env.AGENTDEALS_INDEX_PATH || resolve(__dirname, "..", "data", "index.json");
 const DEFAULT_LIMIT = 100;
 const URL_CONCURRENCY = 10;
 const AI_RATE_LIMIT_MS = 500;
@@ -54,12 +56,12 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-async function runUrlMode(picked, data, dryRun, now) {
+export async function runUrlMode(picked, data, dryRun, now, batchFn = reverifyBatch) {
   let verified = 0;
   let flagged = 0;
   for (let i = 0; i < picked.length; i += URL_CONCURRENCY) {
     const batch = picked.slice(i, i + URL_CONCURRENCY);
-    const results = await reverifyBatch(batch);
+    const results = await batchFn(batch);
     for (const v of results.verified) {
       if (!dryRun) {
         data.offers[v.index].verifiedDate = staggeredDate(now);
@@ -71,37 +73,45 @@ async function runUrlMode(picked, data, dryRun, now) {
       flagged++;
     }
   }
-  return { verified, flagged, changed: 0, changes: [] };
+  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [] };
 }
 
-async function runAiMode(picked, data, dryRun, now) {
-  const Anthropic = (await import("@anthropic-ai/sdk")).default;
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error("ANTHROPIC_API_KEY required for --ai mode");
+export async function runAiMode(picked, data, dryRun, now, options = {}) {
+  const fetchFn = options.fetchFn ?? fetchPageText;
+  const appendFn = options.appendFn ?? appendChangeEntries;
+  const rateLimitMs = options.rateLimitMs ?? AI_RATE_LIMIT_MS;
+  let verifyFn = options.verifyFn;
+  if (!verifyFn) {
+    const Anthropic = (await import("@anthropic-ai/sdk")).default;
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error("ANTHROPIC_API_KEY required for --ai mode");
+    }
+    const client = new Anthropic();
+    verifyFn = (offer, pageText) => verifyWithHaiku(client, offer, pageText);
   }
-  const client = new Anthropic();
 
   let verified = 0;
   let flagged = 0;
   let changed = 0;
   const changes = [];
+  const unclassified = [];
 
   for (const entry of picked) {
     const { offer, index } = entry;
-    const page = await fetchPageText(offer.url);
+    const page = await fetchFn(offer.url);
     if (!page.ok) {
       console.log(`  ⚠ ${offer.vendor} — ${page.error} (${offer.url})`);
       flagged++;
-      await sleep(AI_RATE_LIMIT_MS);
+      await sleep(rateLimitMs);
       continue;
     }
     let result;
     try {
-      result = await verifyWithHaiku(client, offer, page.text);
+      result = await verifyFn(offer, page.text);
     } catch (err) {
       console.log(`  ⚠ ${offer.vendor} — AI error: ${err.message}`);
       flagged++;
-      await sleep(AI_RATE_LIMIT_MS);
+      await sleep(rateLimitMs);
       continue;
     }
     if (result.status === "confirmed") {
@@ -111,20 +121,54 @@ async function runAiMode(picked, data, dryRun, now) {
       verified++;
     } else if (result.status === "changed") {
       changed++;
-      changes.push({
-        vendor: offer.vendor,
-        category: offer.category,
-        tier: offer.tier,
-        summary: result.summary,
-      });
-      console.log(`  ⚠ ${offer.vendor} (${offer.category}, ${offer.tier}): ${result.summary}`);
+      const { entry: change, missing } = buildChangeEntry(offer, result, { now });
+      if (change) {
+        changes.push(change);
+        console.log(`  ⚠ ${offer.vendor} (${offer.category}, ${change.change_type}): ${change.summary}`);
+      } else {
+        unclassified.push({ vendor: offer.vendor, url: offer.url, missing, summary: result.summary });
+        console.log(
+          `  ⚠ ${offer.vendor} — change detected but not recordable, missing ${missing.join(", ")}: ${result.summary || "no detail"}`
+        );
+      }
     } else {
       flagged++;
       console.log(`  ⚠ ${offer.vendor} — unclear: ${result.summary || "no detail"}`);
     }
-    await sleep(AI_RATE_LIMIT_MS);
+    await sleep(rateLimitMs);
   }
-  return { verified, flagged, changed, changes };
+
+  const { appended, suppressed } = appendFn(changes, {
+    dryRun,
+    windowDays: options.windowDays,
+    path: options.changesPath,
+  });
+  for (const { candidate, reason } of suppressed) {
+    console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}`);
+  }
+
+  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified };
+}
+
+export function repickWindowDays(total, batchSize) {
+  if (!batchSize || batchSize < 1) return 1;
+  return Math.max(1, Math.ceil(total / batchSize));
+}
+
+export function summaryLines(result, { useAi, checked, oldestRemaining, total }) {
+  const lines = ["", "── Summary ──", `Checked: ${checked}`, `Verified (date bumped): ${result.verified}`];
+  if (useAi) {
+    lines.push(`Changed (PM review needed): ${result.changed}`);
+    lines.push(`Recorded to data/deal_changes.json: ${result.recorded.length}`);
+    lines.push(`Already recorded, not written again: ${result.suppressed.length}`);
+    lines.push(`Detected but not recordable: ${result.unclassified.length}`);
+  } else {
+    lines.push("Change detection: not run. URL mode compares nothing and cannot report a change.");
+  }
+  lines.push(`Flagged (URL/AI failure): ${result.flagged}`);
+  lines.push(`Oldest remaining verifiedDate: ${oldestRemaining ?? "n/a"}`);
+  lines.push(`Total entries: ${total}`);
+  return lines;
 }
 
 async function main() {
@@ -167,21 +211,18 @@ async function main() {
   }
 
   const result = useAi
-    ? await runAiMode(picked, data, dryRun, now)
+    ? await runAiMode(picked, data, dryRun, now, {
+        windowDays: repickWindowDays(offers.length, picked.length),
+      })
     : await runUrlMode(picked, data, dryRun, now);
 
   if (!dryRun && result.verified > 0) {
     writeFileSync(INDEX_PATH, JSON.stringify(data, null, 2) + "\n");
   }
 
-  console.log("");
-  console.log("── Summary ──");
-  console.log(`Checked: ${picked.length}`);
-  console.log(`Verified (date bumped): ${result.verified}`);
-  if (useAi) console.log(`Changed (PM review needed): ${result.changed}`);
-  console.log(`Flagged (URL/AI failure): ${result.flagged}`);
-  console.log(`Oldest remaining verifiedDate: ${oldestRemaining ?? "n/a"}`);
-  console.log(`Total entries: ${offers.length}`);
+  for (const line of summaryLines(result, { useAi, checked: picked.length, oldestRemaining, total: offers.length })) {
+    console.log(line);
+  }
 
   process.exit(0);
 }

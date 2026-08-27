@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
+import { vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -310,6 +310,14 @@ const stats = {
   tools: 4,
   dealChanges: dealChanges.length,
 };
+
+export function changeLogFreshnessNote(now: Date = new Date()): string {
+  const freshness = getChangeLogFreshness(now);
+  if (!freshness.last_recorded_date) return "";
+  const days = freshness.days_since_last_recorded ?? 0;
+  const when = days === 0 ? "today" : days === 1 ? "yesterday" : `${days} days ago`;
+  return `  <p class="log-freshness" style="color:var(--text-dim);font-size:.8rem;margin:-1rem 0 1.5rem">We last added an entry to this log ${when}, on ${freshness.last_recorded_date}. The counts above are changes by the date they took effect, not by the date we recorded them.</p>\n`;
+}
 
 // Prepare recent deal changes for landing page (5 most recent, sorted newest first)
 const recentChanges = [...dealChanges]
@@ -50326,6 +50334,7 @@ ${globalNavCss()}
     </div>
   </div>
 
+${changeLogFreshnessNote()}
 ${monthsHtml}
 
   <div class="mcp-cta">
@@ -50528,6 +50537,7 @@ ${globalNavCss()}
     </div>
   </div>
 
+${changeLogFreshnessNote()}
 ${totalUpcoming > 0 ? upcomingHtml : `  <div class="no-upcoming">No upcoming pricing changes in the next 30 days. Check back soon or <a href="/feed.xml">subscribe via RSS</a>.</div>`}
 
 ${recent.length > 0 ? `  <div class="recent-section">
@@ -54210,6 +54220,7 @@ const httpServer = createHttpServer(async (req, res) => {
       search_analytics: searchAnalytics,
       api_hits_by_endpoint: getApiHitsByEndpoint(),
       top_search_queries_7d: searchAnalytics.top_queries_7d,
+      change_log_freshness: getChangeLogFreshness(),
     }));
   } else if (url.pathname === "/.well-known/glama.json") {
     res.writeHead(200, { "Content-Type": "application/json" });
@@ -54506,17 +54517,18 @@ const httpServer = createHttpServer(async (req, res) => {
     }
     // Personalized mode when vendors or categories filter is active
     const isPersonalized = !!(vendorsFilter || categoriesFilter);
+    const changeLogFreshness = getChangeLogFreshness();
     if (isPersonalized) {
       const result = getPersonalizedChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, personalized: true }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.your_stack_changes.length });
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify(result));
+      res.end(JSON.stringify({ ...result, change_log_freshness: changeLogFreshness }));
     } else {
       const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
       const allTimeTotal = loadDealChanges().length;
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ ...result, all_time_total: allTimeTotal }));
+      res.end(JSON.stringify({ ...result, all_time_total: allTimeTotal, change_log_freshness: changeLogFreshness }));
     }
   } else if (url.pathname === "/api/deadlines" && isGetOrHead) {
     recordApiHit("/api/deadlines");
