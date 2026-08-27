@@ -14164,7 +14164,7 @@ function buildFreeStartupStackPage(): string {
       icon: "📧",
       recommended: { vendor: "Resend", why: "3K emails/month free with a modern, developer-first API. Clean SDK, React Email templates, and excellent deliverability." },
       alternatives: ["Resend"],
-      outgrow: "When you exceed 3K emails/month. For high-volume transactional email, consider SendGrid or Amazon SES at scale.",
+      outgrow: "When you exceed 3K emails/month. For high-volume transactional email, consider Amazon SES at scale — no free tier, but $0.10/1,000.",
       relatedPage: "/email-alternatives",
     },
     {
@@ -15558,7 +15558,7 @@ function buildFreeNextjsStackPage(): string {
       icon: "✉️",
       recommended: { vendor: "Resend", why: "Modern developer-first email API built for React. 3,000 emails/month, 100/day on free tier. The react-email library lets you build email templates with JSX — same component model as your Next.js app. TypeScript SDK, webhook delivery tracking, and domain verification." },
       alternatives: ["Amazon SES", "Brevo", "Mailtrap"],
-      outgrow: "When you exceed 3,000 emails/month or 100/day. Amazon SES offers 62,000 emails/month free from EC2 at $0.10/1K after — cheapest at scale. Brevo gives 300 emails/day (9,000/month) with no monthly cap and includes marketing automation. Mailtrap is best for testing with virtual inboxes.",
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Amazon SES has no free tier since AWS restructured its Free Tier on July 16, 2025, but at $0.10/1K it is the cheapest at scale. Brevo gives 300 emails/day (9,000/month) with no monthly cap and includes marketing automation. Mailtrap is best for testing with virtual inboxes.",
       whyNot: "Why not SendGrid: Free tier removed May 2025. Existing free plans reduced to 100 emails/day. The Twilio acquisition killed the developer-first positioning. Resend is the spiritual successor.",
       relatedPage: "/email-comparison-2026",
     },
@@ -15975,7 +15975,7 @@ function buildFreeDjangoStackPage(): string {
       icon: "✉️",
       recommended: { vendor: "Resend", why: "Modern developer-first email API. 3,000 emails/month, 100/day on free tier. Works with Django's send_mail() via django-anymail or a simple custom backend. TypeScript SDK is unnecessary — Resend's REST API is clean enough to call with requests or the official Python SDK. Domain verification, webhook delivery tracking." },
       alternatives: ["Postmark", "Brevo", "Amazon SES"],
-      outgrow: "When you exceed 3,000 emails/month or 100/day. Postmark offers 100 emails/month free but exceptional deliverability. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES offers 62,000 emails/month free from EC2 at $0.10/1K after — cheapest at scale.",
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Postmark offers 100 emails/month free but exceptional deliverability. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES has no free tier since AWS restructured its Free Tier on July 16, 2025, but at $0.10/1K it is the cheapest at scale.",
       whyNot: "Why not SendGrid: Free tier removed May 2025. Existing free plans reduced to 100 emails/day. Many Django tutorials still reference SendGrid — those guides are outdated.",
       relatedPage: "/email-comparison-2026",
     },
@@ -16437,7 +16437,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "✉️",
       recommended: { vendor: "Resend", why: "Modern developer-first email API. 3,000 emails/month, 100/day on free tier. Clean REST API — call directly with httpx (FastAPI's recommended HTTP client) or the official Python SDK. No framework-specific adapter needed unlike Django. Domain verification, webhook delivery tracking, and React Email templates if you have a frontend." },
       alternatives: ["Resend", "Brevo"],
-      outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES offers 62,000 emails/month free from EC2 at $0.10/1K after — cheapest at scale for high-volume transactional email.",
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES has no free tier since July 16, 2025 but at $0.10/1K is the cheapest at scale for high-volume transactional email.",
       whyNot: "Why not SendGrid: Free tier removed May 2025. Many Python API tutorials still reference SendGrid — those guides are outdated.",
       relatedPage: "/email-comparison-2026",
     },
@@ -16913,7 +16913,7 @@ function buildFreeGoStackPage(): string {
       icon: "✉️",
       recommended: { vendor: "Resend", why: "Modern developer-first email API. 3,000 emails/month, 100/day on free tier. Clean REST API — call with net/http (stdlib) or any HTTP client. No framework-specific adapter needed. Go's net/smtp in the standard library handles basic SMTP sending, but API-based delivery (Resend, Postmark) is more reliable for production — handles SPF/DKIM/DMARC, bounce tracking, and deliverability monitoring." },
       alternatives: ["Brevo"],
-      outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES offers 62,000 emails/month free from EC2 at $0.10/1K after — cheapest at scale.",
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES has no free tier since AWS restructured its Free Tier on July 16, 2025, but at $0.10/1K it is the cheapest at scale.",
       whyNot: "Why not SendGrid: Free tier removed May 2025. Many Go tutorials still reference SendGrid — those guides are outdated. Why not net/smtp alone: Go's stdlib SMTP works for dev/testing, but lacks bounce handling, deliverability monitoring, and template rendering that production email requires.",
       relatedPage: "/email-comparison-2026",
     },
@@ -17385,7 +17385,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F4E7}",
       recommended: { vendor: "Resend", why: "3,000 emails/month free with a modern, developer-first API. React Email for templates \u2014 write email templates in JSX. Clean SDK, excellent deliverability, and webhook notifications for bounces and complaints. The new standard for SaaS transactional email (welcome emails, password resets, invoice notifications, team invitations)." },
       alternatives: ["Brevo", "Amazon SES"],
-      outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation included \u2014 good for SaaS that needs both transactional and newsletter email. Amazon SES offers 62,000/month free from EC2 \u2014 cheapest at scale ($0.10/1K emails) but requires more setup.",
+      outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation included \u2014 good for SaaS that needs both transactional and newsletter email. Amazon SES no longer has a free tier \u2014 cheapest at scale ($0.10/1K emails) but requires more setup.",
       whyNot: "Why not SendGrid: Free tier removed May 2025. Many tutorials still reference it \u2014 those are outdated. Why not Mailgun: Free tier removed. Why not Postmark: No free production tier (test mode only). Postmark has the best deliverability but costs $15/mo for 10K emails.",
       relatedPage: "/email-comparison-2026",
       isFrameworkSection: false,
@@ -22684,7 +22684,7 @@ function buildFreeTierRiskPage(): string {
     { vendor: "PlanetScale", risk: "dead", category: "Databases", reasoning: "Free tier removed April 2024. Hobby plan eliminated entirely. Migrate to Neon, Turso, or CockroachDB.", lastChange: "2024-04-08", changeType: "free_tier_removed" },
     { vendor: "Fauna", risk: "dead", category: "Databases", reasoning: "Product deprecated May 2025. Entire service shutting down. Migrate immediately to MongoDB Atlas, CockroachDB, or Supabase.", lastChange: "2025-05-30", changeType: "product_deprecated" },
     { vendor: "MinIO (OSS)", risk: "dead", category: "Storage", reasoning: "Open-source version killed Feb 2026 (GNU AGPL → proprietary). Self-hosted MinIO is no longer free for production. Use S3-compatible alternatives.", lastChange: "2026-02-12", changeType: "open_source_killed" },
-    { vendor: "SendGrid", risk: "dead", category: "Email", reasoning: "Free tier removed May 2025 under Twilio ownership. Use Resend (3K emails/mo free), Mailgun (1K/mo), or Amazon SES.", lastChange: "2025-05-27", changeType: "free_tier_removed" },
+    { vendor: "SendGrid", risk: "dead", category: "Email", reasoning: "Free tier removed May 2025 under Twilio ownership. Use Resend (3K emails/mo free) or Maileroo (3K/mo); Mailgun and Amazon SES have since dropped their free tiers too.", lastChange: "2025-05-27", changeType: "free_tier_removed" },
     { vendor: "Logz.io", risk: "dead", category: "Logging", reasoning: "Free tier removed Mar 2026. Use Grafana Cloud (50 GB logs free), Axiom (500 GB/mo), or self-hosted ELK.", lastChange: "2026-03-02", changeType: "free_tier_removed" },
     { vendor: "Freshping", risk: "dead", category: "Monitoring", reasoning: "Free tier removed Mar 2026. Use BetterStack (10 monitors free), UptimeRobot (50 monitors), or Grafana Cloud synthetics.", lastChange: "2026-03-06", changeType: "free_tier_removed" },
   ];
@@ -34071,7 +34071,7 @@ function buildAwsFreeTier2026Page(): string {
     { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small)", category: "DevOps" },
     { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring" },
     { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute" },
-    { name: "Amazon SES", slug: "aws", limits: "3,000 free messages/month when sent from EC2 (62K/month total with SES)", category: "Email" },
+    { name: "Amazon SES", slug: "amazon-ses", limits: "No free tier — $200 in expiring AWS credits, then $0.10/1,000 emails", category: "Email" },
   ];
 
   const twelveMonthServices: AwsService[] = [
@@ -39713,7 +39713,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> offers the highest free volume at 62,000 emails/month when sent from EC2 &mdash; unmatched for apps already on AWS. <strong>Resend</strong> has the best developer experience with a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 4,000 emails/month production plus a separate sandbox for inbox simulation. <strong>Maileroo</strong> is the hidden gem with 3,000 emails/month free and no daily cap.</p>
+    <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> is the cheapest at volume at $0.10 per 1,000 emails, but it no longer has a free tier &mdash; AWS replaced the old 62,000/month-from-EC2 allowance with $200 of Free Tier credits that expire, so budget for it from the first email. <strong>Resend</strong> has the best developer experience with a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 4,000 emails/month production plus a separate sandbox for inbox simulation. <strong>Maileroo</strong> is the hidden gem with 3,000 emails/month free and no daily cap.</p>
     <p><strong>The SendGrid exodus:</strong> SendGrid &mdash; the most widely-used transactional email API &mdash; permanently removed its free tier on May 27, 2025. The perpetual 100 emails/day plan is gone, replaced by a 60-day trial only, then $19.95/month minimum. Mailgun removed its 10,000/month free tier after Sinch acquisition. Thousands of side projects and startups were forced to migrate. The email API market is now split: pure-play transactional APIs (Resend, Postmark, MailerSend), all-in-one platforms (Brevo, Loops), and infrastructure (SES). This guide covers all paths.</p>
     <p><strong>Pricing is confusing:</strong> Per-email vs per-contact vs per-day caps. Transactional vs marketing distinctions. Overage charges that 10x your bill. Deliverability reputation that takes months to build, making switching costly. This comparison cuts through the confusion with concrete numbers.</p>
   </div>
@@ -39760,16 +39760,16 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr>
-        <td class="provider-col">Amazon SES<span class="winner-badge">MOST VOLUME</span></td>
+        <td class="provider-col">Amazon SES<span class="removed-badge">FREE REMOVED</span></td>
         <td>Transactional</td>
-        <td>62K/mo (from EC2)</td>
+        <td>None &mdash; $200 credits, 6 mo</td>
         <td>None</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
         <td class="check">&#10003; SNS</td>
         <td class="partial">Free (manual warm-up)</td>
-        <td><span style="color:#3fb950">Stable</span></td>
+        <td><span style="color:#f85149">Volatile</span></td>
       </tr>
       <tr>
         <td class="provider-col">Resend<span class="winner-badge">BEST DX</span></td>
@@ -40019,8 +40019,8 @@ ${mcpCtaCss()}
   <p class="section-intro">Purpose-built APIs for sending password resets, order confirmations, welcome emails, and other triggered messages. No marketing features, no contact management &mdash; just fast, reliable email delivery with developer-first APIs.</p>
 
   <div class="diff-card">
-    <h3>Amazon SES <span class="winner-badge">MOST VOLUME</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 62,000 emails/month when sent from an EC2 instance, Lambda, or Elastic Beanstalk. $0.10/1,000 emails from external sources. The raw volume champion. No monthly subscription, pure pay-per-use beyond free tier. Full SMTP and API support. Dedicated IPs are free but require manual warm-up. The catch: no built-in template editor, analytics dashboard, or suppression management &mdash; you build or integrate those yourself. Best for teams already on AWS who want maximum volume at minimum cost.</div>
+    <h3>Amazon SES <span class="removed-badge">FREE REMOVED</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> none. The 62,000 emails/month allowance for mail sent from EC2, Lambda or Elastic Beanstalk is gone for accounts opened since AWS restructured its Free Tier on July 16, 2025. New accounts get up to $200 in AWS Free Tier credits spendable across eligible services, a free plan that runs 6 months from account creation, and credits that expire 12 months from account creation. After that it is $0.10/1,000 emails from anywhere, plus EC2 compute and data transfer if you send from AWS. No monthly subscription, pure pay-per-use. Full SMTP and API support. Dedicated IPs are free but require manual warm-up. The catch: no built-in template editor, analytics dashboard, or suppression management &mdash; you build or integrate those yourself. Best for teams already on AWS who want the lowest per-email price and can budget for it from the first send.</div>
   </div>
 
   <div class="diff-card">
@@ -40271,7 +40271,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Amazon SES (direct SMTP)</h3>
-    <div class="diff-desc"><strong>Cost:</strong> $0.10/1,000 emails (no free tier from external servers). When your application isn't running on AWS, SES is still the cheapest SMTP relay available. SMTP interface compatible with any language or framework. No monthly minimums. You're paying for raw infrastructure without any managed layer &mdash; bring your own templates, analytics, and suppression management.</div>
+    <div class="diff-desc"><strong>Cost:</strong> $0.10/1,000 emails (no free tier, wherever you send from). When your application isn't running on AWS, SES is still the cheapest SMTP relay available. SMTP interface compatible with any language or framework. No monthly minimums. You're paying for raw infrastructure without any managed layer &mdash; bring your own templates, analytics, and suppression management.</div>
   </div>
 
   <div class="context-box">
@@ -40472,8 +40472,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>SES free tier only from EC2/Lambda</h3>
-    <div class="diff-desc">SES's 62,000 free emails/month only applies when sent from AWS services (EC2, Lambda, Elastic Beanstalk). Sending from external servers (Railway, Render, DigitalOcean) costs $0.10/1,000 from the first email. If your app isn't on AWS, there's no free tier &mdash; just very cheap pay-per-use pricing. Still 7x cheaper than most alternatives at scale.</div>
+    <h3>SES has no free tier at all now</h3>
+    <div class="diff-desc">SES used to give 62,000 free emails/month when sent from AWS services (EC2, Lambda, Elastic Beanstalk) and nothing when sent from anywhere else. Since AWS restructured its Free Tier on July 16, 2025, accounts opened after that date get neither: sending costs $0.10/1,000 from the first email wherever it originates, drawn against $200 of expiring Free Tier credits until they run out. Being on EC2 no longer earns you free sending &mdash; it only adds compute and data transfer charges. Still very cheap pay-per-use, and still several times cheaper than most alternatives at scale, but plan for a bill from day one.</div>
   </div>
 
   <div class="diff-card">
@@ -40686,7 +40686,7 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">25+</div><div class="stat-label">Monitoring Services Compared</div></div>
     <div class="stat-card"><div class="stat-number green">500GB</div><div class="stat-label">Highest Free Ingest (Axiom)</div></div>
-    <div class="stat-card"><div class="stat-number green">Grafana</div><div class="stat-label">Best Overall Free Tier</div></div>
+    <div class="stat-card"><div class="stat-number green">Grafana Cloud</div><div class="stat-label">Best Overall Free Tier</div></div>
     <div class="stat-card"><div class="stat-number red">$66K/yr</div><div class="stat-label">Datadog at 100 Hosts</div></div>
   </div>
 
@@ -41693,7 +41693,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the most generous free raw limits (25 GB storage + 25 GB egress). <strong>Backblaze B2</strong> has the cheapest paid storage at $0.006/GB with free egress through Cloudflare CDN. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: <strong>MinIO</strong> is the industry standard.</p>
+    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at $0.006/GB with free egress through Cloudflare CDN. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: <strong>MinIO</strong> is the industry standard.</p>
     <p><strong>The S3 egress tax is legendary.</strong> AWS S3 egress charges are the #1 developer bill shock story. S3 bills across 6 dimensions most developers don&rsquo;t know about: storage, egress, PUT requests, GET requests, lifecycle transitions, and the hidden NAT Gateway charge ($0.045/GB) that appears on your EC2 bill, not your S3 bill. At 1 TB/month egress, S3 costs $92 in bandwidth alone. R2 costs $0. This single difference has disrupted the entire cloud storage market.</p>
   </div>
 
@@ -41745,13 +41745,13 @@ ${mcpCtaCss()}
         <td class="cheapest">Zero egress</td>
       </tr>
       <tr>
-        <td class="provider-col">Storj<span class="winner-badge">MOST STORAGE</span></td>
+        <td class="provider-col">Storj<span class="caution-badge">30-DAY TRIAL</span></td>
         <td>Object</td>
-        <td>25 GB</td>
-        <td>25 GB/mo</td>
+        <td>25 GB for 30 days</td>
+        <td>Trial only</td>
         <td class="check">&#10003;</td>
         <td class="partial">Edge</td>
-        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
         <td>$0.007/GB</td>
       </tr>
       <tr>
@@ -41937,8 +41937,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Storj <span class="winner-badge">MOST FREE STORAGE</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 25 GB storage + 25 GB egress per month &mdash; the most generous free tier of any provider. Decentralized storage network: files encrypted, split, and distributed across independent nodes. S3-compatible gateway. Edge-optimized downloads (retrieves from nearest nodes). Unique trade-off: decentralized architecture means slightly higher first-byte latency, but competitive download speeds and inherent data redundancy. Best for projects that need maximum free capacity.</div>
+    <h3>Storj <span class="caution-badge">30-DAY TRIAL</span></h3>
+    <div class="diff-desc"><strong>Free trial:</strong> 25 GB storage free for 30 days, no credit card required. There is no permanent free tier. After the trial it is $7/TB stored and $7/TB egress against a $5 minimum monthly fee &mdash; waived during the trial and for accounts paying in STORJ token. Decentralized storage network: files encrypted, split, and distributed across independent nodes. S3-compatible gateway. Edge-optimized downloads (retrieves from nearest nodes). Unique trade-off: decentralized architecture means slightly higher first-byte latency, but competitive download speeds and inherent data redundancy.</div>
   </div>
 
   <div class="diff-card">
@@ -42116,7 +42116,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Storj (Decentralized Network)</h3>
-    <div class="diff-desc">Also listed under zero-egress storage above. Storj&rsquo;s decentralized architecture encrypts, splits, and distributes files across thousands of independent nodes. Unlike IPFS, Storj provides an S3-compatible API for familiar workflows while maintaining decentralized redundancy. 25 GB free.</div>
+    <div class="diff-desc">Also listed under zero-egress storage above. Storj&rsquo;s decentralized architecture encrypts, splits, and distributes files across thousands of independent nodes. Unlike IPFS, Storj provides an S3-compatible API for familiar workflows while maintaining decentralized redundancy. 25 GB free for the first 30 days, then paid with a $5 monthly minimum.</div>
   </div>
 
   <h2 id="cost-trap">Growth Cost Trap: Scaling from Free to Enterprise</h2>
@@ -42210,8 +42210,8 @@ ${mcpCtaCss()}
     <h3>Recommendations by Use Case</h3>
 
     <div class="verdict-item">
-      <strong>Most generous free tier overall &rarr; Storj</strong>
-      <p>25 GB storage + 25 GB egress free. Decentralized, encrypted, S3-compatible. No other provider gives you this much capacity at zero cost.</p>
+      <strong>Largest trial capacity &rarr; Storj</strong>
+      <p>25 GB storage free for 30 days, no credit card. Decentralized, encrypted, S3-compatible. This is a trial and not a free tier: once it ends, a $5 minimum monthly fee applies, so plan an exit or a budget before you load data into it.</p>
     </div>
 
     <div class="verdict-item">
@@ -42240,8 +42240,8 @@ ${mcpCtaCss()}
     </div>
 
     <div class="verdict-item">
-      <strong>Best for side projects / personal sites &rarr; Cloudflare R2 or Storj</strong>
-      <p>R2: 10 GB free with zero egress, permanently. Storj: 25 GB free. Both S3-compatible. For personal projects that might go viral (HN front page, Reddit), zero-egress insurance prevents surprise bills.</p>
+      <strong>Best for side projects / personal sites &rarr; Cloudflare R2</strong>
+      <p>R2: 10 GB free with zero egress, permanently. S3-compatible. For personal projects that might go viral (HN front page, Reddit), zero-egress insurance prevents surprise bills. Storj is S3-compatible too but its 25 GB runs for 30 days only, which is the wrong shape for a site you intend to leave up.</p>
     </div>
 
     <div class="verdict-item">
@@ -53872,7 +53872,11 @@ const httpServer = createHttpServer(async (req, res) => {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({
       ...report,
-      totals: { ...report.totals, pages_with_outdated_verdicts: pages.filter(p => p.verdict_records_changed_since_review.length > 0).length },
+      totals: {
+        ...report.totals,
+        pages_with_outdated_verdicts: pages.filter(p => p.verdict_records_changed_since_review.length > 0).length,
+        unresolved_badge_subjects: [...new Set(pages.flatMap(p => p.badge_subjects_unresolved))].sort(),
+      },
       pages,
     }, null, 2));
     return;

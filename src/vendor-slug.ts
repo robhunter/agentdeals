@@ -58,6 +58,52 @@ export function namedVendorSlug(phrase: string): string | null {
   return null;
 }
 
+const SUBJECT_ALIASES: Record<string, string> = {
+  gcp: "google-cloud",
+  "appwrite-auth": "appwrite-cloud",
+};
+
+export function badgeAliasTargets(): string[] {
+  return [...new Set(Object.values(SUBJECT_ALIASES))];
+}
+
+const NON_VENDOR_SUBJECTS = [
+  "Django Built-in Auth",
+  "FastAPI Built-in",
+  "Go Goroutines",
+];
+
+export function nonVendorSubjects(): string[] {
+  return [...NON_VENDOR_SUBJECTS];
+}
+
+export function isNonVendorSubject(phrase: string): boolean {
+  return NON_VENDOR_SUBJECTS.some(s => toSlug(s) === toSlug(phrase));
+}
+
+const TRAILING_QUALIFIER = /^(.+?)\s*\([^()]*\)$/;
+const SUBJECT_SEPARATOR = /\s(?:\+|&|and)\s/i;
+
+export function assertedVendorSlugs(phrase: string): string[] {
+  const direct = namedVendorSlug(phrase);
+  if (direct) return [direct];
+
+  const alias = SUBJECT_ALIASES[toSlug(phrase)];
+  if (alias && vendorSlugMap.has(alias)) return [alias];
+
+  const parts = phrase.split(SUBJECT_SEPARATOR).map(p => p.trim()).filter(Boolean);
+  if (parts.length > 1) {
+    const resolved = parts.map(p => assertedVendorSlugs(p));
+    if (resolved.every(r => r.length > 0)) return [...new Set(resolved.flat())];
+    return [];
+  }
+
+  const qualified = phrase.match(TRAILING_QUALIFIER);
+  if (qualified) return assertedVendorSlugs(qualified[1]);
+
+  return [];
+}
+
 export function resolveVendorSlug(input: string): VendorSlugResolution {
   if (!input) return { type: "none" };
   if (vendorSlugMap.has(input)) return { type: "exact", slug: input };

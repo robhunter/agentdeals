@@ -26,6 +26,7 @@ export interface PageReviewRecord {
   published: string;
   tier: ReviewTier;
   vendors_asserted: string[];
+  badge_subjects_unresolved: string[];
   reviewed_at: string | null;
   reviewer: string | null;
 }
@@ -47,6 +48,7 @@ export interface ReviewStatus {
   days_overdue: number;
   state: ReviewState;
   vendors_asserted: string[];
+  badge_subjects_unresolved: string[];
 }
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -73,6 +75,7 @@ function normalizeRecord(raw: any): PageReviewRecord | null {
     published: raw.published,
     tier,
     vendors_asserted: Array.isArray(raw.vendors_asserted) ? raw.vendors_asserted.filter((s: unknown) => typeof s === "string") : [],
+    badge_subjects_unresolved: Array.isArray(raw.badge_subjects_unresolved) ? raw.badge_subjects_unresolved.filter((s: unknown) => typeof s === "string") : [],
     reviewed_at: isReviewDate(raw.reviewed_at) ? raw.reviewed_at : null,
     reviewer: typeof raw.reviewer === "string" && raw.reviewer ? raw.reviewer : null,
   };
@@ -146,6 +149,7 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
     days_overdue: overdue,
     state,
     vendors_asserted: record.vendors_asserted,
+    badge_subjects_unresolved: record.badge_subjects_unresolved,
   };
 }
 
@@ -247,6 +251,78 @@ export function verdictBlocks(html: string): string[] {
   return blocks;
 }
 
+const BADGE_SPAN = /<span\b[^>]*class="[^"]*\b(?:winner-badge|pick-badge)\b[^"]*"[^>]*>([^<]*)<\/span>/g;
+const VENDOR_ANCHOR_BEFORE = /<a\b[^>]*href="\/vendor\/([a-z0-9][a-z0-9-]*)"[^>]*>([^<]*)<\/a>\s*$/;
+const VENDOR_ANCHOR_AFTER = /^\s*<a\b[^>]*href="\/vendor\/([a-z0-9][a-z0-9-]*)"[^>]*>([^<]*)<\/a>/;
+const NAMED_ELEMENT_AFTER = /^\s*<(span|strong|b|em|a)\b[^>]*>([^<]+)<\/\1>/;
+
+export interface BadgedSubject {
+  subject: string;
+  badge: string;
+  linkedSlug: string | null;
+}
+
+function collapseEntities(raw: string): string {
+  return raw.replace(/&amp;/g, "&").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+}
+
+export function badgedSubjects(html: string): BadgedSubject[] {
+  const found: BadgedSubject[] = [];
+  const scan = new RegExp(BADGE_SPAN.source, "g");
+  let m: RegExpExecArray | null;
+  while ((m = scan.exec(html)) !== null) {
+    const badge = collapseEntities(m[1]);
+    const before = html.slice(0, m.index);
+    const linkedBefore = before.match(VENDOR_ANCHOR_BEFORE);
+    if (linkedBefore) {
+      found.push({ subject: collapseEntities(linkedBefore[2]), badge, linkedSlug: linkedBefore[1] });
+      continue;
+    }
+    const tagEnd = before.lastIndexOf(">");
+    const preceding = collapseEntities(tagEnd >= 0 ? before.slice(tagEnd + 1) : before);
+    if (preceding) {
+      found.push({ subject: preceding, badge, linkedSlug: null });
+      continue;
+    }
+    const after = html.slice(m.index + m[0].length);
+    const linkedAfter = after.match(VENDOR_ANCHOR_AFTER);
+    if (linkedAfter) {
+      found.push({ subject: collapseEntities(linkedAfter[2]), badge, linkedSlug: linkedAfter[1] });
+      continue;
+    }
+    const namedAfter = after.match(NAMED_ELEMENT_AFTER);
+    found.push({ subject: namedAfter ? collapseEntities(namedAfter[2]) : "", badge, linkedSlug: null });
+  }
+  return found;
+}
+
+export type SubjectVendorLookup = (phrase: string) => string[];
+
+export interface UnresolvedBadge {
+  subject: string;
+  badges: string[];
+}
+
+export interface SubjectResolver {
+  slugsFor: SubjectVendorLookup;
+  isNonVendor: (phrase: string) => boolean;
+}
+
+export function unresolvedBadgeSubjects(html: string, resolver: SubjectResolver): UnresolvedBadge[] {
+  const byName = new Map<string, Set<string>>();
+  for (const { subject, badge, linkedSlug } of badgedSubjects(html)) {
+    if (linkedSlug) continue;
+    if (subject && resolver.isNonVendor(subject)) continue;
+    if (subject && resolver.slugsFor(subject).length > 0) continue;
+    const badges = byName.get(subject) ?? new Set<string>();
+    badges.add(badge);
+    byName.set(subject, badges);
+  }
+  return [...byName.entries()]
+    .map(([subject, badges]) => ({ subject, badges: [...badges].sort() }))
+    .sort((a, b) => a.subject.localeCompare(b.subject));
+}
+
 function extractBalanced(html: string, openIndex: number, tag: string): string | null {
   const openTag = new RegExp(`<${tag}\\b`, "g");
   const closeTag = new RegExp(`</${tag}>`, "g");
@@ -318,6 +394,7 @@ export function vendorSlugsLinkedIn(fragment: string): string[] {
 
 export interface VendorLookup {
   slugForPhrase: VendorSlugLookup;
+  slugsForSubject: SubjectVendorLookup;
   nameForSlug: (slug: string) => string | null;
 }
 
@@ -337,8 +414,7 @@ export function vendorsAssertedIn(html: string, lookup: VendorLookup): string[] 
   for (const block of blocks) {
     for (const slug of vendorSlugsLinkedIn(block)) found.add(slug);
     for (const name of namedSubjects(block)) {
-      const slug = lookup.slugForPhrase(name);
-      if (slug) found.add(slug);
+      for (const slug of lookup.slugsForSubject(name)) found.add(slug);
     }
     const text = stripTags(block);
     for (const { slug, name } of linkedOnPage) {

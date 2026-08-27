@@ -45,7 +45,7 @@ function jsonLdOf(html: string): any {
 }
 
 function record(over: Partial<PageReviewRecord> = {}): PageReviewRecord {
-  return { path: "/p", published: "2026-01-01", tier: "A", vendors_asserted: [], reviewed_at: null, reviewer: null, ...over };
+  return { path: "/p", published: "2026-01-01", tier: "A", vendors_asserted: [], badge_subjects_unresolved: [], reviewed_at: null, reviewer: null, ...over };
 }
 
 before(async () => { proc = await startServer(); });
@@ -208,18 +208,18 @@ describe("#1061 vendor names in a verdict resolve to the vendor page", () => {
 describe("#1061 which pages carry a verdict", () => {
   it("reads a vendor out of a winner badge row", () => {
     const html = '<h3>Mailtrap <span class="winner-badge">BEST TESTING</span></h3>';
-    assert.deepStrictEqual(vendorsAssertedIn(html, { slugForPhrase: n => (n === "Mailtrap" ? "mailtrap-io" : null), nameForSlug: () => null }), ["mailtrap-io"]);
+    assert.deepStrictEqual(vendorsAssertedIn(html, { slugForPhrase: n => (n === "Mailtrap" ? "mailtrap-io" : null), slugsForSubject: n => (n === "Mailtrap" ? ["mailtrap-io"] : []), nameForSlug: () => null }), ["mailtrap-io"]);
   });
 
   it("counts a vendor the verdict block links directly", () => {
     const html = '<div class="verdict-box"><p><a href="/vendor/supabase">Supabase</a> wins.</p></div>';
-    assert.deepStrictEqual(vendorsAssertedIn(html, { slugForPhrase: () => null, nameForSlug: () => null }), ["supabase"]);
+    assert.deepStrictEqual(vendorsAssertedIn(html, { slugForPhrase: () => null, slugsForSubject: () => [], nameForSlug: () => null }), ["supabase"]);
   });
 
   it("counts a vendor named in verdict prose when the page links it elsewhere", () => {
     const html = '<div class="executive-summary"><p>Hetzner is raising prices across every line.</p></div>'
       + '<table><tr><td><a href="/vendor/hetzner">Hetzner</a></td></tr></table>';
-    const lookup = { slugForPhrase: () => null, nameForSlug: (s: string) => (s === "hetzner" ? "Hetzner" : null) };
+    const lookup = { slugForPhrase: () => null, slugsForSubject: () => [], nameForSlug: (s: string) => (s === "hetzner" ? "Hetzner" : null) };
     assert.deepStrictEqual(vendorsAssertedIn(html, lookup), ["hetzner"]);
   });
 
