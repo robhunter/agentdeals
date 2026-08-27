@@ -12,7 +12,7 @@
         "frontend",
         "jamstack"
       ],
-      "verifiedDate": "2026-07-04",
+      "verifiedDate": "2026-08-26",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -717,7 +717,7 @@
         "free tier",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "PocketBase",
@@ -2613,7 +2613,7 @@
         "dependencies",
         "open-source"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Infisical",
@@ -2757,7 +2757,7 @@
         "packages",
         "github"
       ],
-      "verifiedDate": "2026-07-04",
+      "verifiedDate": "2026-08-26",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2923,7 +2923,7 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "GitHub Pages",
@@ -3127,7 +3127,7 @@
         "jira",
         "confluence"
       ],
-      "verifiedDate": "2026-07-04",
+      "verifiedDate": "2026-08-26",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3842,7 +3842,7 @@
         "dead man switch",
         "alerts"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "ImageKit",
@@ -3954,7 +3954,7 @@
         "fraud prevention",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "Liveblocks",
@@ -5030,7 +5030,7 @@
         "sbom",
         "licensing"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "Twingate",
@@ -5059,7 +5059,7 @@
         "web-app",
         "paas"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "GitHub Codespaces",
@@ -5520,7 +5520,7 @@
         "verification",
         "deliverability"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "Screenshotlayer",
@@ -6155,7 +6155,7 @@
         "performance",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "Middleware.io",
@@ -6501,7 +6501,7 @@
         "marketing",
         "zoho"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Zoho Forms",
@@ -6763,7 +6763,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "APIVerve",
@@ -7000,7 +7000,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Data Fetcher",
@@ -7120,7 +7120,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "Doczilla",
@@ -7328,7 +7328,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "IP.City",
@@ -7352,7 +7352,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "ipaddress.sh",
@@ -7654,7 +7654,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "numlookupapi.com",
@@ -11005,7 +11005,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "Texterify",
@@ -12166,7 +12166,7 @@
         "feature-toggles",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "Hypertune",
@@ -12216,7 +12216,7 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "feedback.fish",
@@ -14141,7 +14141,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "acunote.com",
@@ -14525,7 +14525,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Shortcut",
@@ -15310,7 +15310,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "CodeMyUI",
@@ -16363,7 +16363,7 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-25"
     },
     {
       "vendor": "geoapify.com",
@@ -17053,7 +17053,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "Clicky",
@@ -21086,7 +21086,7 @@
         "full-stack",
         "developer tools"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Lovable",
@@ -21606,7 +21606,7 @@
         "gemini",
         "free tier"
       ],
-      "verifiedDate": "2026-07-03"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "LLM7.io",
@@ -22495,7 +22495,7 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-07-02"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "DaVinci Resolve",
