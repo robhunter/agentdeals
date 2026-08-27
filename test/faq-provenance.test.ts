@@ -12,6 +12,7 @@ import {
 import {
   FAQ_BASELINE, answerWithProvenance, faqPageJsonLd, faqProvenanceClause, statesVendorFigure,
 } from "../dist/faq-provenance.js";
+import { NEVER_REVIEWED, registerWith, reviewFailedOn, type RegisterFixture } from "./page-review-fixture.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -329,23 +330,20 @@ describe("#1086 every structured answer that states a vendor figure carries the 
 
 describe("#1086 recording a failed review changes what the structured copy of the page says", () => {
   const SUBJECT = "/llm-api-pricing";
-  let tmp: string;
+  const REVIEWED_ON = "2026-08-27";
+  let unreviewed: RegisterFixture;
+  let failed: RegisterFixture;
   let before_: { proc: ChildProcess; port: number };
   let after_: { proc: ChildProcess; port: number };
   const rendered = new Map<string, string>();
 
   before(async () => {
-    tmp = mkdtempSync(path.join(tmpdir(), "faq-failed-review-"));
-    const register = JSON.parse(readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8"));
-    const subject = register.pages.find((p: any) => p.path === SUBJECT);
-    assert.ok(subject, `${SUBJECT} left the register, so this fixture no longer stands for anything`);
-    assert.strictEqual(subject.reviewed_at, null, `${SUBJECT} now carries a real review, so the fixture would not be a change`);
-    subject.reviewed_at = "2026-08-27";
-    subject.reviewer = "fixture";
-    subject.review_outcome = "fail";
-    const file = path.join(tmp, "page-reviews.json");
-    writeFileSync(file, JSON.stringify(register));
-    [before_, after_] = await Promise.all([startServer({}), startServer({ AGENTDEALS_PAGE_REVIEWS_PATH: file })]);
+    unreviewed = registerWith(REPO, "faq-unreviewed-", { [SUBJECT]: NEVER_REVIEWED });
+    failed = registerWith(REPO, "faq-failed-review-", { [SUBJECT]: reviewFailedOn(REVIEWED_ON) });
+    [before_, after_] = await Promise.all([
+      startServer({ AGENTDEALS_PAGE_REVIEWS_PATH: unreviewed.file }),
+      startServer({ AGENTDEALS_PAGE_REVIEWS_PATH: failed.file }),
+    ]);
     rendered.set("before", await fetch(`http://localhost:${before_.port}${SUBJECT}`).then((r) => r.text()));
     rendered.set("after", await fetch(`http://localhost:${after_.port}${SUBJECT}`).then((r) => r.text()));
   });
@@ -353,7 +351,9 @@ describe("#1086 recording a failed review changes what the structured copy of th
   after(() => {
     before_?.proc.kill();
     after_?.proc.kill();
-    if (tmp) rmSync(tmp, { recursive: true, force: true });
+    for (const fixture of [unreviewed, failed]) {
+      if (fixture) rmSync(fixture.dir, { recursive: true, force: true });
+    }
   });
 
   it("has answers that state a figure, so the fixture can show a difference", () => {
@@ -372,15 +372,18 @@ describe("#1086 recording a failed review changes what the structured copy of th
     const dated = faqAnswersIn(SUBJECT, rendered.get("after")!).filter((a) => PROVENANCE.test(a.text));
     assert.ok(dated.length >= 4, `only ${dated.length} answers carry a date`);
     for (const answer of dated) {
-      assert.ok(answer.text.endsWith("last checked 2026-08-27; corrections outstanding."), answer.question);
+      assert.ok(answer.text.endsWith(`last checked ${REVIEWED_ON}; corrections outstanding.`), answer.question);
     }
   });
 
   it("leaves the structured date at publication rather than advancing it to the review", () => {
     const article = jsonLdBlocks(rendered.get("after")!).find((b) => b?.dateModified);
     assert.ok(article, `${SUBJECT} publishes no structured date`);
-    assert.strictEqual(article.dateModified, "2026-04-13");
-    assert.strictEqual(article.datePublished, "2026-04-13");
+    const published = failed.row(SUBJECT).published;
+    assert.match(published, /^\d{4}-\d{2}-\d{2}$/);
+    assert.notStrictEqual(published, REVIEWED_ON);
+    assert.strictEqual(article.dateModified, published);
+    assert.strictEqual(article.datePublished, published);
   });
 });
 

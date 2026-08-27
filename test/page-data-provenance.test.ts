@@ -11,6 +11,7 @@ import {
   type PageReviewRecord, type PageSourceMeasurement,
 } from "../src/page-reviews.ts";
 import { namedVendorSlug } from "../dist/vendor-slug.js";
+import { NEVER_REVIEWED, registerWith, reviewFailedOn, type RegisterFixture } from "./page-review-fixture.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -282,43 +283,40 @@ describe("a page may only name the source it actually reads", () => {
 
 describe("a review that found defects reaches the reader", () => {
   const SUBJECT = "/storage-comparison-2026";
-  let tmp: string;
+  const CONTROL = "/monitoring-comparison-2026";
+  const REVIEWED_ON = "2026-08-26";
+  let fixture: RegisterFixture;
   let server: { proc: ChildProcess; port: number };
   const rendered = new Map<string, string>();
 
   before(async () => {
-    tmp = mkdtempSync(path.join(tmpdir(), "failed-review-"));
-    const register = JSON.parse(readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8"));
-    const subject = register.pages.find((p: any) => p.path === SUBJECT);
-    assert.ok(subject, `${SUBJECT} left the register, so this fixture no longer stands for anything`);
-    assert.strictEqual(subject.reviewed_at, null, `${SUBJECT} now carries a real review, so the fixture would not be a change`);
-    subject.reviewed_at = "2026-08-26";
-    subject.reviewer = "fixture";
-    subject.review_outcome = "fail";
-    const registerPath = path.join(tmp, "page-reviews.json");
-    writeFileSync(registerPath, JSON.stringify(register));
-    server = await startServer({ AGENTDEALS_PAGE_REVIEWS_PATH: registerPath });
-    for (const route of [SUBJECT, "/monitoring-comparison-2026"]) {
+    fixture = registerWith(REPO, "failed-review-", {
+      [SUBJECT]: reviewFailedOn(REVIEWED_ON),
+      [CONTROL]: NEVER_REVIEWED,
+    });
+    server = await startServer({ AGENTDEALS_PAGE_REVIEWS_PATH: fixture.file });
+    for (const route of [SUBJECT, CONTROL]) {
       rendered.set(route, await fetch(`http://localhost:${server.port}${route}`).then((r) => r.text()));
     }
   });
 
   after(() => {
     server?.proc.kill();
-    if (tmp) rmSync(tmp, { recursive: true, force: true });
+    if (fixture) rmSync(fixture.dir, { recursive: true, force: true });
   });
 
   it("says so on the page whose review failed", () => {
-    assert.match(rendered.get(SUBJECT)!, /Reviewed 2026-08-26, corrections outstanding/);
+    assert.match(rendered.get(SUBJECT)!, new RegExp(`Reviewed ${REVIEWED_ON}, corrections outstanding`));
   });
 
   it("names the date the figures were last checked, rather than claiming none has happened", () => {
-    assert.match(rendered.get(SUBJECT)!, /Figures compiled 2026-04-03, last checked 2026-08-26/);
-    assert.doesNotMatch(rendered.get(SUBJECT)!, /Figures compiled 2026-04-03, not re-checked since/);
+    const compiled = fixture.row(SUBJECT).published;
+    assert.match(rendered.get(SUBJECT)!, new RegExp(`Figures compiled ${compiled}, last checked ${REVIEWED_ON}`));
+    assert.doesNotMatch(rendered.get(SUBJECT)!, new RegExp(`Figures compiled ${compiled}, not re-checked since`));
   });
 
-  it("leaves a page the fixture did not touch saying it was never re-checked", () => {
-    assert.match(rendered.get("/monitoring-comparison-2026")!, /not re-checked since/);
-    assert.doesNotMatch(rendered.get("/monitoring-comparison-2026")!, /corrections outstanding/);
+  it("leaves a page the fixture set as never reviewed saying it was never re-checked", () => {
+    assert.match(rendered.get(CONTROL)!, /not re-checked since/);
+    assert.doesNotMatch(rendered.get(CONTROL)!, /corrections outstanding/);
   });
 });
