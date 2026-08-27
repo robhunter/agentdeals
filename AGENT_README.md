@@ -62,7 +62,7 @@ PORT=8080 npm run serve
 
 Endpoints:
 - `POST /mcp` — MCP JSON-RPC requests (requires `Accept: application/json, text/event-stream` header)
-- `GET /mcp` — SSE stream for server-initiated notifications
+- `GET /mcp` — SSE stream for server-initiated notifications. The server writes an SSE comment frame as soon as the stream opens and every 25s after (`MCP_SSE_KEEPALIVE_MS` overrides the interval), so a proxy that closes an idle response does not cut it. A second `GET` on a session that already holds a stream replaces it rather than being refused — a session has one client, so a repeat `GET` is that client reconnecting. A `GET` or `POST` naming a session the server is not holding answers `400` with a JSON-RPC body giving the condition (`unknown_session` or `no_session`) and the recovery (`reinitialize`)
 - `DELETE /mcp` — Session termination
 - `GET /health` — Health check
 - `GET /.well-known/glama.json` — Glama registry ownership verification
