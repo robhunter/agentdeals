@@ -8,7 +8,7 @@ export interface FaqItem {
 export const FAQ_BASELINE = {
   answers: 166,
   stating_a_figure: 77,
-  a_digit_but_no_figure: 39,
+  a_digit_but_no_figure: 40,
 };
 
 const CURRENCY_AMOUNT = /[$€£¢]\s?\d|\d\s?¢|\b\d[\d,.]*\s?(?:USD|EUR|GBP)\b/;
