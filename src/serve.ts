@@ -26,7 +26,7 @@ import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-h
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
-import { linkifyVerdictBlocks, overdueReport, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { linkifyVerdictBlocks, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
@@ -40500,7 +40500,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. ${pageCompiledClause("/email-comparison-2026")}. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -42311,7 +42311,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. ${pageCompiledClause("/storage-comparison-2026")}. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -42983,7 +42983,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. ${pageCompiledClause("/testing-free-tier-comparison-2026")}. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -43669,7 +43669,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. ${pageCompiledClause("/analytics-free-tier-comparison-2026")}. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -44269,7 +44269,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. ${pageCompiledClause("/api-development-free-tier-comparison-2026")}. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -44990,7 +44990,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. ${pageCompiledClause("/security-free-tier-comparison-2026")}. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -45618,7 +45618,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. ${pageCompiledClause("/hosting-free-tier-comparison-2026")}. <a href="/freshness">Check data freshness</a>.
   </div>
 
 

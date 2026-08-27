@@ -1,20 +1,27 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { overdueReport, pageReviewsPath, parsePageReviews } from "../dist/page-reviews.js";
 
-const HELP = `Record that an editorial page was re-read and found correct.
+const HELP = `Record that an editorial page was re-read, and what the reading found.
 
 A review advances the page's freshness date. Nothing else may: a render, a deploy and a
 data refresh all leave it alone, which is the point — the date has to mean a person or a
 model actually read the prose.
 
-A review is refused unless --checked names every vendor the page's verdict blocks commit
-us to. A verdict that awards a badge to a vendor whose record has since moved is the
-failure this guards against, so a review that skipped that vendor is not a review.
+--outcome says what the reading concluded, so the date means a review happened rather
+than a review passed. A page whose review found defects renders "corrections outstanding"
+beside its compilation date until someone fixes them and reviews it again.
 
-Usage: node scripts/review-page.js --path <route> --checked <slug,slug> --reviewer <name> [options]
+A pass is refused unless --checked names every vendor the page's verdict blocks commit
+us to. A verdict that awards a badge to a vendor whose record has since moved is the
+failure this guards against, so a review that skipped that vendor is not a pass. A fail
+carries no such requirement: a reader who finds one wrong number has found the page
+wrong, and making them finish the sweep first is what leaves the defect unrecorded.
+
+Usage: node scripts/review-page.js --path <route> --outcome <pass|fail> --reviewer <name> [options]
        node scripts/review-page.js --list
 
   --path <route>      Page reviewed, e.g. /email-comparison-2026
+  --outcome <verdict> pass or fail
   --checked <slugs>   Comma-separated vendor slugs verified against their current record
   --reviewer <name>   Who or what performed the review
   --date <date>       Review date, YYYY-MM-DD (default: today, UTC)
@@ -25,11 +32,12 @@ Usage: node scripts/review-page.js --path <route> --checked <slug,slug> --review
 `;
 
 function parseArgs(argv) {
-  const opts = { path: null, checked: null, reviewer: null, date: null, list: false, file: pageReviewsPath(), dryRun: false };
+  const opts = { path: null, checked: null, reviewer: null, date: null, outcome: null, list: false, file: pageReviewsPath(), dryRun: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--help" || arg === "-h") return { help: true };
     else if (arg === "--path") opts.path = argv[++i];
+    else if (arg === "--outcome") opts.outcome = argv[++i];
     else if (arg === "--checked") opts.checked = argv[++i];
     else if (arg === "--reviewer") opts.reviewer = argv[++i];
     else if (arg === "--date") opts.date = argv[++i];
@@ -70,6 +78,9 @@ if (opts.list) {
 
 if (!opts.path) fail("--path is required");
 if (!opts.reviewer) fail("--reviewer is required — a review has to be attributable");
+if (opts.outcome !== "pass" && opts.outcome !== "fail") {
+  fail("--outcome must be pass or fail — a review date with no verdict cannot say whether the page was found correct");
+}
 
 const record = index.pages.find(p => p.path === opts.path);
 if (!record) fail(`${opts.path} is not on the review register. Run scripts/sync-page-reviews.js if it is a new page.`);
@@ -81,16 +92,18 @@ if (date < record.published) fail(`--date ${date} precedes the page's publicatio
 
 const checked = new Set((opts.checked ?? "").split(",").map(s => s.trim()).filter(Boolean));
 const missing = record.vendors_asserted.filter(slug => !checked.has(slug));
-if (missing.length > 0) {
+if (opts.outcome === "pass" && missing.length > 0) {
   fail(`${opts.path} states a verdict about ${record.vendors_asserted.length} vendors and --checked omits ${missing.length}: ${missing.join(", ")}`);
 }
 const unexpected = [...checked].filter(slug => !record.vendors_asserted.includes(slug));
 
 record.reviewed_at = date;
 record.reviewer = opts.reviewer;
+record.review_outcome = opts.outcome;
 
-console.log(`${opts.path} reviewed ${date} by ${opts.reviewer}`);
-console.log(`  verdict vendors checked: ${record.vendors_asserted.length ? record.vendors_asserted.join(", ") : "(none stated)"}`);
+console.log(`${opts.path} reviewed ${date} by ${opts.reviewer} — ${opts.outcome}`);
+console.log(`  vendors its verdicts commit us to: ${record.vendors_asserted.length ? record.vendors_asserted.join(", ") : "(none stated)"}`);
+if (missing.length > 0) console.log(`  of those, not checked: ${missing.join(", ")}`);
 if (unexpected.length > 0) console.log(`  also checked, not stated in a verdict block: ${unexpected.join(", ")}`);
 if (opts.dryRun) {
   console.log("dry run — nothing written");

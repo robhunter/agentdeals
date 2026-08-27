@@ -49,16 +49,16 @@ PY
 }
 
 run_mutation "every page may cite the index" src/page-reviews.ts \
-  'return record.reads_index ? indexCitation(indexSize) : compiledNotice(record.published);' \
-  'return indexCitation(indexSize);'
+  'if (record.reads_index) return indexCitation(indexSize);' \
+  'if (record.reads_index || record.published >= "") return indexCitation(indexSize);'
 
 run_mutation "no page states when it was compiled" src/page-reviews.ts \
-  'return record.reads_index ? indexCitation(indexSize) : compiledNotice(record.published);' \
-  'return record.reads_index ? indexCitation(indexSize) : "";'
+  'return compiledNotice(record.published, reviewStatus(record, today).reviewed_at);' \
+  'return "";'
 
 run_mutation "the compiled notice carries today instead of the compilation date" src/page-reviews.ts \
-  'return record.reads_index ? indexCitation(indexSize) : compiledNotice(record.published);' \
-  'return record.reads_index ? indexCitation(indexSize) : compiledNotice(utcToday());'
+  'return compiledNotice(record.published, reviewStatus(record, today).reviewed_at);' \
+  'return compiledNotice(today, reviewStatus(record, today).reviewed_at);'
 
 run_mutation "a missing register entry defaults to reading the index" src/page-reviews.ts \
   'reads_index: raw.reads_index === true,' \

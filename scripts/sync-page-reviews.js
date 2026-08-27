@@ -1,9 +1,13 @@
 import { execFileSync } from "node:child_process";
 import { spawn } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { deriveTier, parsePageReviews, pageReviewsPath, unresolvedBadgeSubjects, vendorsAssertedIn } from "../dist/page-reviews.js";
+import {
+  CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, deriveTier, parsePageReviews, pageReviewsPath,
+  perturbTextFields, unresolvedBadgeSubjects, vendorsAssertedIn,
+} from "../dist/page-reviews.js";
 import { assertedVendorSlugs, isNonVendorSubject, namedVendorSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -14,6 +18,14 @@ Renders every page that carries hand-written prose, derives its review tier from
 whether it states a verdict naming a vendor, and records which vendors that verdict
 commits us to. Review dates already on record are carried over untouched: this
 regenerates what is derived, never what a reviewer asserted.
+
+Which stores a page reads is measured rather than carried over. Each page is rendered
+again against a catalogue and a change log whose text fields have been replaced, and a
+byte-identical render means the page never opened that store.
+
+A page that reads no catalogue record keeps whichever data_source it was given, and a
+page new to the register defaults to "unsourced" — the state that fails the ratchet —
+so a page asserting vendor facts from nowhere has to be argued for rather than slip in.
 
 Publication dates come from the first commit in which the page's route was served,
 which is an event that happened, unlike a hand-typed literal.
@@ -79,11 +91,11 @@ function routeFirstServed(route) {
   }
 }
 
-function startServer() {
+function startServer(env = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [join(REPO, "dist", "serve.js")], {
       stdio: ["ignore", "ignore", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PAGE_REVIEWS_PATH: "/dev/null" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PAGE_REVIEWS_PATH: "/dev/null", ...env },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("server startup timed out")); }, 30000);
     child.stderr.on("data", (buf) => {
@@ -92,6 +104,23 @@ function startServer() {
     });
     child.on("error", (err) => { clearTimeout(timeout); reject(err); });
   });
+}
+
+function writePerturbed(dir, name, key, fields) {
+  const store = JSON.parse(readFileSync(join(REPO, "data", name), "utf-8"));
+  const touched = perturbTextFields(store[key], fields);
+  if (touched < 100) throw new Error(`only ${touched} text fields perturbed in ${name}; a readership measurement against it would prove nothing`);
+  const target = join(dir, name);
+  writeFileSync(target, JSON.stringify(store));
+  return target;
+}
+
+async function render(port, route) {
+  const res = await fetch(`http://localhost:${port}${route}`, {
+    headers: { "user-agent": "agentdeals-internal/1.0 (sync-page-reviews)" },
+  });
+  if (res.status !== 200) throw new Error(`${route} returned ${res.status}`);
+  return res.text();
 }
 
 async function main() {
@@ -107,16 +136,27 @@ async function main() {
   };
   const resolver = { slugsFor: assertedVendorSlugs, isNonVendor: isNonVendorSubject };
 
-  const { child, port } = await startServer();
+  const tmp = mkdtempSync(join(tmpdir(), "sync-page-reviews-"));
+  const perturbedIndex = writePerturbed(tmp, "index.json", "offers", CATALOGUE_TEXT_FIELDS);
+  const perturbedChanges = writePerturbed(tmp, "deal_changes.json", "changes", CHANGE_LOG_TEXT_FIELDS);
+
+  const [real, blindIndex, blindChanges] = await Promise.all([
+    startServer(),
+    startServer({ AGENTDEALS_INDEX_PATH: perturbedIndex }),
+    startServer({ AGENTDEALS_CHANGES_PATH: perturbedChanges }),
+  ]);
   const pages = [];
   const changes = [];
   try {
     for (const route of [...EDITORIAL_PAGES].sort()) {
-      const res = await fetch(`http://localhost:${port}${route}`, { headers: { "user-agent": "agentdeals-internal/1.0 (sync-page-reviews)" } });
-      if (res.status !== 200) throw new Error(`${route} returned ${res.status}`);
-      const html = await res.text();
+      const [html, withoutIndex, withoutChanges] = await Promise.all([
+        render(real.port, route),
+        render(blindIndex.port, route),
+        render(blindChanges.port, route),
+      ]);
       const prior = byPath.get(route);
       const published = prior?.published ?? routeFirstServed(route) ?? new Date().toISOString().slice(0, 10);
+      const readsIndex = html !== withoutIndex;
       const record = {
         path: route,
         published,
@@ -125,10 +165,18 @@ async function main() {
         badge_subjects_unresolved: unresolvedBadgeSubjects(html, resolver).map(b => b.subject),
         reviewed_at: prior?.reviewed_at ?? null,
         reviewer: prior?.reviewer ?? null,
+        review_outcome: prior?.review_outcome ?? null,
+        reads_index: readsIndex,
+        reads_changes: html !== withoutChanges,
+        data_source: readsIndex ? "catalogue" : prior && prior.data_source !== "catalogue" ? prior.data_source : "unsourced",
+        data_source_reason: prior?.data_source_reason ?? null,
       };
-      if (!prior) changes.push(`+ ${route} (published ${published}, tier ${record.tier})`);
+      if (!prior) changes.push(`+ ${route} (published ${published}, tier ${record.tier}, data_source ${record.data_source})`);
       else {
         if (prior.tier !== record.tier) changes.push(`~ ${route} tier ${prior.tier} -> ${record.tier}`);
+        if (prior.reads_index !== record.reads_index) changes.push(`~ ${route} reads_index ${prior.reads_index} -> ${record.reads_index}`);
+        if (prior.reads_changes !== record.reads_changes) changes.push(`~ ${route} reads_changes ${prior.reads_changes} -> ${record.reads_changes}`);
+        if (prior.data_source !== record.data_source) changes.push(`~ ${route} data_source ${prior.data_source} -> ${record.data_source}`);
         const before = prior.vendors_asserted.join(","), after = record.vendors_asserted.join(",");
         if (before !== after) changes.push(`~ ${route} vendors ${prior.vendors_asserted.length} -> ${record.vendors_asserted.length}`);
         const unresolvedBefore = prior.badge_subjects_unresolved.join(","), unresolvedAfter = record.badge_subjects_unresolved.join(",");
@@ -137,7 +185,10 @@ async function main() {
       pages.push(record);
     }
   } finally {
-    child.kill();
+    real.child.kill();
+    blindIndex.child.kill();
+    blindChanges.child.kill();
+    rmSync(tmp, { recursive: true, force: true });
   }
 
   for (const stale of byPath.keys()) {
@@ -147,7 +198,10 @@ async function main() {
   const index = { version: 1, sla_days: { A: 30, B: 90 }, pages };
   const serialized = JSON.stringify(index, null, 2) + "\n";
   const tierA = pages.filter(p => p.tier === "A").length;
+  const unsourcedA = pages.filter(p => p.tier === "A" && p.data_source === "unsourced").length;
   console.log(`${pages.length} pages, ${tierA} tier A, ${pages.length - tierA} tier B`);
+  console.log(`${pages.filter(p => p.reads_index).length} read the catalogue, ${pages.filter(p => p.reads_changes).length} read the change log`);
+  console.log(`${unsourcedA} tier-A pages assert vendor facts and read no catalogue record`);
   for (const line of changes) console.log(line);
   if (opts.dryRun) { console.log("dry run — nothing written"); return; }
   writeFileSync(opts.out, serialized);
