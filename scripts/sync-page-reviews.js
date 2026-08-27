@@ -3,8 +3,8 @@ import { spawn } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { deriveTier, parsePageReviews, pageReviewsPath, vendorsAssertedIn } from "../dist/page-reviews.js";
-import { namedVendorSlug, vendorSlugMap } from "../dist/vendor-slug.js";
+import { deriveTier, parsePageReviews, pageReviewsPath, unresolvedBadgeSubjects, vendorsAssertedIn } from "../dist/page-reviews.js";
+import { assertedVendorSlugs, isNonVendorSubject, namedVendorSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -100,7 +100,12 @@ async function main() {
 
   const existing = existsSync(opts.out) ? parsePageReviews(readFileSync(opts.out, "utf-8")) : { pages: [] };
   const byPath = new Map(existing.pages.map(p => [p.path, p]));
-  const lookup = { slugForPhrase: namedVendorSlug, nameForSlug: (slug) => vendorSlugMap.get(slug) ?? null };
+  const lookup = {
+    slugForPhrase: namedVendorSlug,
+    slugsForSubject: assertedVendorSlugs,
+    nameForSlug: (slug) => vendorSlugMap.get(slug) ?? null,
+  };
+  const resolver = { slugsFor: assertedVendorSlugs, isNonVendor: isNonVendorSubject };
 
   const { child, port } = await startServer();
   const pages = [];
@@ -117,6 +122,7 @@ async function main() {
         published,
         tier: deriveTier(html),
         vendors_asserted: vendorsAssertedIn(html, lookup),
+        badge_subjects_unresolved: unresolvedBadgeSubjects(html, resolver).map(b => b.subject),
         reviewed_at: prior?.reviewed_at ?? null,
         reviewer: prior?.reviewer ?? null,
       };
@@ -125,6 +131,8 @@ async function main() {
         if (prior.tier !== record.tier) changes.push(`~ ${route} tier ${prior.tier} -> ${record.tier}`);
         const before = prior.vendors_asserted.join(","), after = record.vendors_asserted.join(",");
         if (before !== after) changes.push(`~ ${route} vendors ${prior.vendors_asserted.length} -> ${record.vendors_asserted.length}`);
+        const unresolvedBefore = prior.badge_subjects_unresolved.join(","), unresolvedAfter = record.badge_subjects_unresolved.join(",");
+        if (unresolvedBefore !== unresolvedAfter) changes.push(`~ ${route} unresolved badge subjects [${unresolvedBefore}] -> [${unresolvedAfter}]`);
       }
       pages.push(record);
     }

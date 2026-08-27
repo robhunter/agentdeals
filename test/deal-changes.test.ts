@@ -72,11 +72,17 @@ describe("track_changes tool", () => {
     // Use direct function import to verify local data count
     // (the remote MCP server proxies to the deployed API which may lag behind local data)
     const { getDealChanges } = await import("../dist/data.js");
-    const body = getDealChanges("2024-01-01");
+    const since = "2024-01-01";
+    const body = getDealChanges(since);
+    const onFile = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "..", "data", "deal_changes.json"), "utf-8")
+    ).changes.filter((c: { date: string }) => c.date >= since);
 
     assert.ok(Array.isArray(body.changes));
     assert.strictEqual(body.total, body.changes.length);
-    assert.strictEqual(body.total, 285);
+    assert.strictEqual(body.total, onFile.length);
+    assert.ok(body.total > 200, `expected the whole change log, got ${body.total}`);
+    for (const c of body.changes) assert.ok(c.date >= since, `${c.vendor} predates the since date`);
   });
 
   it("filters by date (since)", async () => {

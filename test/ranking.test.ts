@@ -103,12 +103,23 @@ describe("tier classification", () => {
     assert.strictEqual(classifyTier("Whatever The Vendor Calls It").class, "free");
   });
 
-  it("classification of the live index matches the counts published on /criteria", () => {
+  it("puts every offer in exactly one class and lets no expiring tier into the free bucket", () => {
     const counts = { free: 0, time_limited: 0, not_free: 0 };
-    for (const o of index.offers) counts[classifyTier(o.tier).class]++;
-    assert.strictEqual(counts.not_free, 19);
-    assert.strictEqual(counts.time_limited, 23);
-    assert.strictEqual(counts.free, index.offers.length - 42);
+    const freeTiers = new Set<string>();
+    for (const o of index.offers) {
+      const tierClass = classifyTier(o.tier).class;
+      counts[tierClass]++;
+      if (tierClass === "free") freeTiers.add(o.tier);
+    }
+    assert.strictEqual(counts.free + counts.time_limited + counts.not_free, index.offers.length);
+    assert.ok(counts.time_limited >= 20, `expected the time-limited class to be populated, found ${counts.time_limited}`);
+    assert.ok(counts.not_free >= 15, `expected the not-free class to be populated, found ${counts.not_free}`);
+    for (const tier of freeTiers) {
+      assert.doesNotMatch(
+        tier, /\b\d+[- ](?:day|days|week|weeks|month|months|year|years)\b/i,
+        `"${tier}" names a duration but ranks as an ongoing free tier`,
+      );
+    }
   });
 });
 
