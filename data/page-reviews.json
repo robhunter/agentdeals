@@ -1022,9 +1022,9 @@
         "openai"
       ],
       "badge_subjects_unresolved": [],
-      "reviewed_at": null,
-      "reviewer": null,
-      "review_outcome": null,
+      "reviewed_at": "2026-08-27",
+      "reviewer": "pm",
+      "review_outcome": "fail",
       "reads_index": false,
       "reads_changes": true,
       "data_source": "unsourced",
