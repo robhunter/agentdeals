@@ -9,7 +9,8 @@ import { filterAlternatives } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause } from "./change-dates.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
+const INDEX_PATH =
+  process.env.AGENTDEALS_INDEX_PATH || path.join(__dirname, "..", "data", "index.json");
 const CHANGES_PATH =
   process.env.AGENTDEALS_CHANGES_PATH || path.join(__dirname, "..", "data", "deal_changes.json");
 

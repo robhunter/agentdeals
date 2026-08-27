@@ -5,7 +5,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  daysBetween, deriveTier, freshnessSegmentFor, linkifyVerdictBlocks, overdueReport,
+  compiledNotice, dataProvenanceFor, daysBetween, deriveTier, freshnessSegmentFor, indexCitation,
+  linkifyVerdictBlocks, overdueReport,
   parsePageReviews, reviewStatus, verdictBlocks, vendorsAssertedIn, verdictsOutdatedBy,
   SLA_DAYS, EXPIRY_MULTIPLE, type PageReviewRecord,
 } from "../src/page-reviews.ts";
@@ -437,3 +438,45 @@ describe("#1061 the email comparison's verdict agrees with the records it names"
 function addDays(date: string, days: number): string {
   return new Date(Date.parse(date + "T00:00:00Z") + days * 86_400_000).toISOString().slice(0, 10);
 }
+
+describe("what a page is allowed to say about where its figures came from", () => {
+  const record = (over: Partial<PageReviewRecord> = {}): PageReviewRecord => ({
+    path: "/example",
+    published: "2026-04-03",
+    tier: "A",
+    vendors_asserted: [],
+    badge_subjects_unresolved: [],
+    reviewed_at: null,
+    reviewer: null,
+    reads_index: false,
+    ...over,
+  });
+
+  it("under-claims when the register does not say whether a page reads the catalogue", () => {
+    const parsed = parsePageReviews(
+      JSON.stringify({ pages: [{ path: "/undeclared", published: "2026-04-03", tier: "A" }] })
+    );
+    assert.strictEqual(parsed.pages[0].reads_index, false);
+  });
+
+  it("keeps a declared readership through parsing", () => {
+    const parsed = parsePageReviews(
+      JSON.stringify({ pages: [{ path: "/declared", published: "2026-04-03", tier: "A", reads_index: true }] })
+    );
+    assert.strictEqual(parsed.pages[0].reads_index, true);
+  });
+
+  it("cites the catalogue only for a page that reads it", () => {
+    assert.strictEqual(dataProvenanceFor(record({ reads_index: true }), 1580), indexCitation(1580));
+    assert.strictEqual(dataProvenanceFor(record(), 1580), compiledNotice("2026-04-03"));
+  });
+
+  it("dates the notice from the page's own compilation, not from any other date", () => {
+    assert.strictEqual(dataProvenanceFor(record({ published: "2026-03-27" }), 1580), compiledNotice("2026-03-27"));
+    assert.ok(compiledNotice("2026-03-27").includes("2026-03-27"));
+  });
+
+  it("says nothing at all about a page the register does not hold", () => {
+    assert.strictEqual(dataProvenanceFor(null, 1580), "");
+  });
+});
