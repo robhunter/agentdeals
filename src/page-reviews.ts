@@ -21,6 +21,22 @@ export const EXPIRY_MULTIPLE = 2;
 
 export type ReviewState = "current" | "overdue" | "expired" | "never_reviewed";
 
+export type ReviewOutcome = "pass" | "fail";
+
+export const REVIEW_OUTCOMES: ReviewOutcome[] = ["pass", "fail"];
+
+export type PageDataSource = "catalogue" | "editorial" | "unsourced";
+
+export const PAGE_DATA_SOURCES: PageDataSource[] = ["catalogue", "editorial", "unsourced"];
+
+export const PAGE_DATA_SOURCE_RULE: Record<PageDataSource, string> = {
+  catalogue: "renders fields from the catalogue, measured by perturbing it",
+  editorial: "asserts no vendor facts of its own, and says why",
+  unsourced: "asserts vendor facts that are literals in the page and reach no record",
+};
+
+export const UNSOURCED_TIER_A_BASELINE = 43;
+
 export interface PageReviewRecord {
   path: string;
   published: string;
@@ -29,7 +45,11 @@ export interface PageReviewRecord {
   badge_subjects_unresolved: string[];
   reviewed_at: string | null;
   reviewer: string | null;
+  review_outcome: ReviewOutcome | null;
   reads_index: boolean;
+  reads_changes: boolean;
+  data_source: PageDataSource;
+  data_source_reason: string | null;
 }
 
 export interface PageReviewIndex {
@@ -48,8 +68,13 @@ export interface ReviewStatus {
   days_since: number;
   days_overdue: number;
   state: ReviewState;
+  review_outcome: ReviewOutcome | null;
   vendors_asserted: string[];
   badge_subjects_unresolved: string[];
+  reads_index: boolean;
+  reads_changes: boolean;
+  data_source: PageDataSource;
+  data_source_reason: string | null;
 }
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -71,15 +96,20 @@ function normalizeRecord(raw: any): PageReviewRecord | null {
   if (!raw || typeof raw.path !== "string" || !raw.path.startsWith("/")) return null;
   if (!isReviewDate(raw.published)) return null;
   const tier: ReviewTier = raw.tier === "A" ? "A" : "B";
+  const reviewedAt = isReviewDate(raw.reviewed_at) ? raw.reviewed_at : null;
   return {
     path: raw.path,
     published: raw.published,
     tier,
     vendors_asserted: Array.isArray(raw.vendors_asserted) ? raw.vendors_asserted.filter((s: unknown) => typeof s === "string") : [],
     badge_subjects_unresolved: Array.isArray(raw.badge_subjects_unresolved) ? raw.badge_subjects_unresolved.filter((s: unknown) => typeof s === "string") : [],
-    reviewed_at: isReviewDate(raw.reviewed_at) ? raw.reviewed_at : null,
+    reviewed_at: reviewedAt,
     reviewer: typeof raw.reviewer === "string" && raw.reviewer ? raw.reviewer : null,
+    review_outcome: reviewedAt !== null && REVIEW_OUTCOMES.includes(raw.review_outcome) ? raw.review_outcome : null,
     reads_index: raw.reads_index === true,
+    reads_changes: raw.reads_changes === true,
+    data_source: PAGE_DATA_SOURCES.includes(raw.data_source) ? raw.data_source : "unsourced",
+    data_source_reason: typeof raw.data_source_reason === "string" && raw.data_source_reason.trim() ? raw.data_source_reason.trim() : null,
   };
 }
 
@@ -150,8 +180,13 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
     days_since: daysSince,
     days_overdue: overdue,
     state,
+    review_outcome: reviewedAt === null ? null : record.review_outcome,
     vendors_asserted: record.vendors_asserted,
     badge_subjects_unresolved: record.badge_subjects_unresolved,
+    reads_index: record.reads_index,
+    reads_changes: record.reads_changes,
+    data_source: record.data_source,
+    data_source_reason: record.data_source_reason,
   };
 }
 
@@ -161,6 +196,7 @@ export function freshnessSegmentFor(record: PageReviewRecord | null, today: stri
   if (!record) return "";
   const status = reviewStatus(record, today);
   if (status.state === "never_reviewed") return `${SEPARATOR}Not yet reviewed`;
+  if (status.review_outcome === "fail") return `${SEPARATOR}Reviewed ${status.reviewed_at}, corrections outstanding`;
   if (status.state === "expired") return "";
   return `${SEPARATOR}Reviewed ${status.reviewed_at}`;
 }
@@ -182,17 +218,30 @@ export function indexCitation(indexSize: number): string {
   return `Data verified from our index of ${indexSize.toLocaleString()} developer tools`;
 }
 
-export function compiledNotice(compiledOn: string): string {
-  return `Figures compiled ${compiledOn}, not re-checked since`;
+export function compiledNotice(compiledOn: string, lastChecked: string | null = null): string {
+  if (lastChecked === null) return `Figures compiled ${compiledOn}, not re-checked since`;
+  return `Figures compiled ${compiledOn}, last checked ${lastChecked}`;
 }
 
-export function dataProvenanceFor(record: PageReviewRecord | null, indexSize: number): string {
+export function dataProvenanceFor(record: PageReviewRecord | null, indexSize: number, today: string): string {
   if (!record) return "";
-  return record.reads_index ? indexCitation(indexSize) : compiledNotice(record.published);
+  if (record.reads_index) return indexCitation(indexSize);
+  return compiledNotice(record.published, reviewStatus(record, today).reviewed_at);
 }
 
-export function pageDataProvenance(pagePath: string, indexSize: number): string {
-  return dataProvenanceFor(getPageReview(pagePath), indexSize);
+export function pageDataProvenance(pagePath: string, indexSize: number, today = utcToday()): string {
+  return dataProvenanceFor(getPageReview(pagePath), indexSize, today);
+}
+
+export function compiledClause(record: PageReviewRecord | null, today: string): string {
+  if (!record) return "";
+  const lastChecked = reviewStatus(record, today).reviewed_at;
+  if (lastChecked === null) return `Compiled ${record.published}, not re-checked since`;
+  return `Compiled ${record.published}, last checked ${lastChecked}`;
+}
+
+export function pageCompiledClause(pagePath: string, today = utcToday()): string {
+  return compiledClause(getPageReview(pagePath), today);
 }
 
 export function pageDateModified(pagePath: string, fallbackPublished: string, today = utcToday()): string {
@@ -228,7 +277,10 @@ export interface OverdueReport {
   sla_days: Record<ReviewTier, number>;
   tier_rule: Record<ReviewTier, string>;
   expiry_multiple: number;
+  data_source_rule: Record<PageDataSource, string>;
   totals: { pages: number; current: number; overdue: number; expired: number; never_reviewed: number };
+  data_sources: Record<PageDataSource, number>;
+  unsourced_tier_a: { pages: number; budget: number; paths: string[] };
   pages: ReviewStatus[];
 }
 
@@ -238,12 +290,18 @@ export function overdueReport(today: string, index: PageReviewIndex = loadPageRe
     .sort((a, b) => b.days_overdue - a.days_overdue || a.path.localeCompare(b.path));
   const totals = { pages: pages.length, current: 0, overdue: 0, expired: 0, never_reviewed: 0 };
   for (const p of pages) totals[p.state] += 1;
+  const dataSources: Record<PageDataSource, number> = { catalogue: 0, editorial: 0, unsourced: 0 };
+  for (const p of pages) dataSources[p.data_source] += 1;
+  const unsourced = unsourcedTierAPaths(index.pages);
   return {
     generated_for: today,
     sla_days: { ...SLA_DAYS },
     tier_rule: { ...TIER_RULE },
     expiry_multiple: EXPIRY_MULTIPLE,
+    data_source_rule: { ...PAGE_DATA_SOURCE_RULE },
     totals,
+    data_sources: dataSources,
+    unsourced_tier_a: { pages: unsourced.length, budget: UNSOURCED_TIER_A_BASELINE, paths: unsourced },
     pages,
   };
 }
@@ -446,6 +504,147 @@ export function vendorsAssertedIn(html: string, lookup: VendorLookup): string[] 
 
 export function deriveTier(html: string): ReviewTier {
   return verdictBlocks(html).length > 0 ? "A" : "B";
+}
+
+export const PERTURBATION_SENTINEL = "PMPERTURB";
+export const CATALOGUE_TEXT_FIELDS = ["description", "tier", "notes", "limits"];
+export const CHANGE_LOG_TEXT_FIELDS = ["summary", "previous_state", "current_state"];
+
+export function perturbTextFields(records: any[], fields: string[]): number {
+  let touched = 0;
+  for (const record of records) {
+    if (!record || typeof record !== "object") continue;
+    for (const field of fields) {
+      if (typeof record[field] !== "string") continue;
+      record[field] = `${PERTURBATION_SENTINEL} ${record[field].replace(/\d/g, "9")}`;
+      touched += 1;
+    }
+  }
+  return touched;
+}
+
+const TABLE_ROW = /<tr\b[\s\S]*?<\/tr>/g;
+const ROW_CELL = /<t[dh]\b[^>]*>[\s\S]*?<\/t[dh]>/g;
+const VENDOR_CELL_LINK = /href="\/vendor\/([a-z0-9][a-z0-9-]*)"/;
+
+export interface VendorFactRow {
+  subject: string;
+  slug: string;
+}
+
+function cellText(fragment: string): string {
+  return fragment
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&[a-z]+;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function vendorFactRows(html: string, slugFor: VendorSlugLookup): VendorFactRow[] {
+  const found: VendorFactRow[] = [];
+  for (const row of html.match(TABLE_ROW) ?? []) {
+    const cells = row.match(ROW_CELL) ?? [];
+    const first = cells[0];
+    if (first === undefined) continue;
+    if (!cells.slice(1).some(cell => /\d/.test(cellText(cell)))) continue;
+    const subject = cellText(first);
+    const linked = first.match(VENDOR_CELL_LINK);
+    const slug = linked ? linked[1]! : subject ? slugFor(subject) : null;
+    if (slug) found.push({ subject, slug });
+  }
+  return found;
+}
+
+export interface PageSourceMeasurement {
+  reads_index: boolean;
+  reads_changes: boolean;
+  vendor_fact_rows: number;
+}
+
+export interface PageSourceViolation {
+  path: string;
+  problem: string;
+}
+
+export function unsourcedTierAPaths(pages: PageReviewRecord[]): string[] {
+  return pages
+    .filter(page => page.tier === "A" && page.data_source === "unsourced")
+    .map(page => page.path)
+    .sort();
+}
+
+function declarationViolations(page: PageReviewRecord, seen: PageSourceMeasurement): PageSourceViolation[] {
+  const violations: PageSourceViolation[] = [];
+  if (page.reads_index !== seen.reads_index) {
+    violations.push({
+      path: page.path,
+      problem: `reads_index says ${page.reads_index}, perturbing the catalogue says ${seen.reads_index}`,
+    });
+  }
+  if (page.reads_changes !== seen.reads_changes) {
+    violations.push({
+      path: page.path,
+      problem: `reads_changes says ${page.reads_changes}, perturbing the change log says ${seen.reads_changes}`,
+    });
+  }
+  if (seen.reads_index && page.data_source !== "catalogue") {
+    violations.push({
+      path: page.path,
+      problem: `data_source ${page.data_source} on a page that renders catalogue fields`,
+    });
+  }
+  if (!seen.reads_index && page.data_source === "catalogue") {
+    violations.push({
+      path: page.path,
+      problem: "data_source catalogue on a page the catalogue perturbation leaves byte-identical",
+    });
+  }
+  if (page.data_source !== "editorial") return violations;
+  if (page.data_source_reason === null) {
+    violations.push({ path: page.path, problem: "data_source editorial with no stated reason" });
+  }
+  if (seen.vendor_fact_rows > 0) {
+    violations.push({
+      path: page.path,
+      problem: `data_source editorial on a page with ${seen.vendor_fact_rows} table rows putting a number beside a catalogued vendor`,
+    });
+  }
+  if (page.vendors_asserted.length > 0) {
+    violations.push({
+      path: page.path,
+      problem: `data_source editorial on a page whose verdict blocks assert ${page.vendors_asserted.length} vendors`,
+    });
+  }
+  return violations;
+}
+
+export function pageSourceViolations(
+  pages: PageReviewRecord[],
+  measured: Map<string, PageSourceMeasurement>,
+  tierABudget: number = UNSOURCED_TIER_A_BASELINE
+): PageSourceViolation[] {
+  const violations: PageSourceViolation[] = [];
+  for (const page of pages) {
+    const seen = measured.get(page.path);
+    if (seen === undefined) {
+      violations.push({ path: page.path, problem: "on the register but not measured" });
+      continue;
+    }
+    violations.push(...declarationViolations(page, seen));
+  }
+  const unsourced = unsourcedTierAPaths(pages);
+  if (unsourced.length !== tierABudget) {
+    const direction =
+      unsourced.length > tierABudget
+        ? `${unsourced.length - tierABudget} more than the budget allows, and the budget does not rise`
+        : `${tierABudget - unsourced.length} fewer than the budget; lower UNSOURCED_TIER_A_BASELINE to ${unsourced.length} so the slot cannot be reused`;
+    violations.push({
+      path: "",
+      problem: `${unsourced.length} tier-A pages assert vendor facts and read no catalogue record — ${direction}`,
+    });
+  }
+  return violations;
 }
 
 export function escapeRegExp(value: string): string {
