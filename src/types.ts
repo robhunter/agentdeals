@@ -76,6 +76,7 @@ export type RiskLevel = "stable" | "caution" | "risky";
  */
 export interface RiskCause {
   date: string;
+  date_source?: ChangeDateSource;
   change_type: string;
   summary: string;
 }

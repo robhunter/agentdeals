@@ -209,6 +209,18 @@ function regionFrom(html: string, start: string, end?: string): string {
   return j === -1 ? html.slice(i) : html.slice(i, j);
 }
 
+function structuredItemFor(html: string, vendor: string): { datePublished?: string } | null {
+  for (const block of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    const json = JSON.parse(block[1]);
+    if (!Array.isArray(json.itemListElement)) continue;
+    const found = json.itemListElement
+      .map((el: any) => el.item)
+      .find((item: any) => typeof item?.headline === "string" && item.headline.startsWith(`${vendor}:`));
+    if (found) return found;
+  }
+  return null;
+}
+
 function last30DaysTile(html: string): number {
   const m = html.match(/<div class="stat-value">(\d+)<\/div>\s*<div class="stat-label">Last 30 Days<\/div>/);
   assert.ok(m, "could not find the Last 30 Days tile");
@@ -396,16 +408,18 @@ describe("no surface renders a discovery date as the date the vendor changed som
 
   it("does not publish a discovery date as datePublished in structured data", async () => {
     for (const route of ["/", "/changes", "/expiring"]) {
-      const { discovered } = await bodies(route);
-      for (const block of discovered.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
-        const json = JSON.parse(block[1]);
-        const items = JSON.stringify(json);
-        if (!items.includes(SUBJECT)) continue;
-        assert.ok(
-          !new RegExp(`"datePublished":"${TODAY}"`).test(items),
-          `${route} published a discovery date as datePublished`
-        );
-      }
+      const { dated, discovered } = await bodies(route);
+      assert.strictEqual(
+        structuredItemFor(dated, SUBJECT)?.datePublished,
+        TODAY,
+        `${route} carries no structured item for the entry when its date is an effective date, so the check below proves nothing`
+      );
+      const item = structuredItemFor(discovered, SUBJECT);
+      assert.ok(item, `${route} dropped the entry from its structured data rather than listing it undated`);
+      assert.ok(
+        !("datePublished" in item!),
+        `${route} published a discovery date as datePublished`
+      );
     }
   });
 

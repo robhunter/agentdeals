@@ -29,7 +29,7 @@
  */
 
 import { createHash } from "node:crypto";
-import type { DealChange, Offer } from "./types.js";
+import type { ChangeDateSource, DealChange, Offer } from "./types.js";
 
 /** Stable URL where the criteria below are published in full. */
 export const CRITERIA_PATH = "/criteria";
@@ -187,6 +187,7 @@ export type DisclosureCode = "limits_reduced" | "pricing_restructured" | "restri
 export interface Disclosure {
   code: DisclosureCode;
   date: string;
+  date_source?: ChangeDateSource;
   summary: string;
 }
 
@@ -424,6 +425,7 @@ export function evaluate<T extends Offer>(
       disclosures.push({
         code: change.change_type as DisclosureCode,
         date: change.date,
+        date_source: change.date_source,
         summary: change.summary,
       });
     }
