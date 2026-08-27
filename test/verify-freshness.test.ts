@@ -4,8 +4,21 @@ import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
-const { findStaleOffers, fetchPageText, verifyWithHaiku, verifyFreshness } =
-  await import("../scripts/verify-freshness.js");
+const {
+  findStaleOffers,
+  fetchPageText,
+  verifyOfferAgainstPage,
+  parseVerifierResponse,
+  createVerifierClient,
+  verifyFreshness,
+  VERIFIER_MODEL,
+  VERIFIER_API_KEY_ENV,
+  VERIFIER_BASE_URL,
+} = await import("../scripts/verify-freshness.js");
+
+function stubClient(text: string) {
+  return { model: VERIFIER_MODEL, baseUrl: VERIFIER_BASE_URL, complete: async () => text };
+}
 
 describe("verify-freshness", () => {
   const now = new Date("2026-03-16T00:00:00Z");
@@ -95,71 +108,138 @@ describe("verify-freshness", () => {
     });
   });
 
-  describe("verifyWithHaiku", () => {
+  describe("verifyOfferAgainstPage", () => {
+    const offer = { vendor: "Test", category: "Hosting", tier: "Free", description: "Free hosting" };
+
     it("parses confirmed response", async () => {
-      const mockClient = {
-        messages: {
-          create: async () => ({
-            content: [{ text: '{"status":"confirmed"}' }],
-          }),
-        },
-      };
-      const offer = { vendor: "Test", category: "Hosting", tier: "Free", description: "Free hosting" };
-      const result = await verifyWithHaiku(mockClient, offer, "Free hosting plan available");
+      const result = await verifyOfferAgainstPage(stubClient('{"status":"confirmed"}'), offer, "Free hosting plan available");
       assert.strictEqual(result.status, "confirmed");
     });
 
     it("parses changed response", async () => {
-      const mockClient = {
-        messages: {
-          create: async () => ({
-            content: [{ text: '{"status":"changed","summary":"Free tier removed"}' }],
-          }),
-        },
-      };
-      const offer = { vendor: "Test", category: "Hosting", tier: "Free", description: "Free hosting" };
-      const result = await verifyWithHaiku(mockClient, offer, "Paid plans start at $5/mo");
+      const result = await verifyOfferAgainstPage(
+        stubClient('{"status":"changed","summary":"Free tier removed"}'),
+        offer,
+        "Paid plans start at $5/mo"
+      );
       assert.strictEqual(result.status, "changed");
       assert.strictEqual(result.summary, "Free tier removed");
     });
 
     it("handles unclear response", async () => {
-      const mockClient = {
-        messages: {
-          create: async () => ({
-            content: [{ text: '{"status":"unclear","summary":"Page requires login"}' }],
-          }),
-        },
-      };
-      const offer = { vendor: "Test", category: "Hosting", tier: "Free", description: "Free hosting" };
-      const result = await verifyWithHaiku(mockClient, offer, "Please sign in");
+      const result = await verifyOfferAgainstPage(
+        stubClient('{"status":"unclear","summary":"Page requires login"}'),
+        offer,
+        "Please sign in"
+      );
       assert.strictEqual(result.status, "unclear");
     });
 
-    it("handles malformed AI response gracefully", async () => {
-      const mockClient = {
-        messages: {
-          create: async () => ({
-            content: [{ text: "I think the deal looks correct" }],
-          }),
-        },
-      };
-      const offer = { vendor: "Test", category: "Hosting", tier: "Free", description: "Free hosting" };
-      const result = await verifyWithHaiku(mockClient, offer, "Free hosting");
-      assert.strictEqual(result.status, "unclear");
+    it("sends the stored terms and the page text in the prompt", async () => {
+      let seen = "";
+      const client = { complete: async (prompt: string) => { seen = prompt; return '{"status":"confirmed"}'; } };
+      await verifyOfferAgainstPage(client, offer, "Free hosting plan available");
+      for (const fragment of [offer.vendor, offer.tier, offer.description, "Free hosting plan available"]) {
+        assert.ok(seen.includes(fragment), `prompt should carry ${fragment}`);
+      }
+    });
+  });
+
+  describe("parseVerifierResponse", () => {
+    it("handles malformed AI response gracefully", () => {
+      assert.strictEqual(parseVerifierResponse("I think the deal looks correct").status, "unclear");
     });
 
-    it("extracts JSON from verbose AI response", async () => {
-      const mockClient = {
-        messages: {
-          create: async () => ({
-            content: [{ text: 'The deal is still valid. {"status":"confirmed"}' }],
-          }),
+    it("extracts JSON from verbose AI response", () => {
+      assert.strictEqual(parseVerifierResponse('The deal is still valid. {"status":"confirmed"}').status, "confirmed");
+    });
+
+    it("reads a fenced code block", () => {
+      const result = parseVerifierResponse('```json\n{"status":"changed","summary":"Limit cut"}\n```');
+      assert.strictEqual(result.status, "changed");
+      assert.strictEqual(result.summary, "Limit cut");
+    });
+
+    it("reads a fenced answer whose text contains a closing brace", () => {
+      const result = parseVerifierResponse(
+        '```json\n{"status":"changed","summary":"Template ${quota} removed","change_type":"limits_reduced"}\n```'
+      );
+      assert.strictEqual(result.status, "changed");
+      assert.strictEqual(result.change_type, "limits_reduced");
+    });
+
+    it("refuses a status it does not recognise", () => {
+      assert.strictEqual(parseVerifierResponse('{"status":"probably fine"}').status, "unclear");
+    });
+
+    it("refuses a non-string response", () => {
+      assert.strictEqual(parseVerifierResponse(undefined).status, "unclear");
+    });
+  });
+
+  describe("createVerifierClient", () => {
+    it("refuses to run without a key, naming the variable", () => {
+      const saved = process.env[VERIFIER_API_KEY_ENV];
+      delete process.env[VERIFIER_API_KEY_ENV];
+      try {
+        assert.throws(() => createVerifierClient(), new RegExp(VERIFIER_API_KEY_ENV));
+      } finally {
+        if (saved !== undefined) process.env[VERIFIER_API_KEY_ENV] = saved;
+      }
+    });
+
+    it("posts an OpenAI-shaped chat completion to the configured endpoint", async () => {
+      const calls: any[] = [];
+      const client = createVerifierClient({
+        apiKey: "test-key",
+        baseUrl: "https://openrouter.test/api/v1",
+        fetchImpl: async (url: string, init: any) => {
+          calls.push({ url, init });
+          return {
+            ok: true,
+            json: async () => ({ choices: [{ message: { content: '{"status":"confirmed"}' } }] }),
+          };
         },
-      };
-      const offer = { vendor: "Test", category: "Hosting", tier: "Free", description: "Free hosting" };
-      const result = await verifyWithHaiku(mockClient, offer, "Free hosting plan available");
-      assert.strictEqual(result.status, "confirmed");
+      });
+      const text = await client.complete("does this still hold?");
+      assert.strictEqual(text, '{"status":"confirmed"}');
+      assert.strictEqual(calls.length, 1);
+      assert.strictEqual(calls[0].url, "https://openrouter.test/api/v1/chat/completions");
+      assert.strictEqual(calls[0].init.method, "POST");
+      assert.strictEqual(calls[0].init.headers.Authorization, "Bearer test-key");
+      const body = JSON.parse(calls[0].init.body);
+      assert.strictEqual(body.model, VERIFIER_MODEL);
+      assert.deepStrictEqual(body.messages, [{ role: "user", content: "does this still hold?" }]);
+      assert.strictEqual(body.temperature, 0);
+    });
+
+    it("defaults to the OpenRouter endpoint", () => {
+      assert.strictEqual(createVerifierClient({ apiKey: "test-key" }).baseUrl, VERIFIER_BASE_URL);
+      assert.match(VERIFIER_BASE_URL, /^https:\/\/openrouter\.ai\//);
+    });
+
+    it("asks the model the cost and accuracy were measured on", () => {
+      assert.strictEqual(
+        VERIFIER_MODEL,
+        "google/gemma-3-27b-it",
+        "changing the model changes both the price per record and the answer quality — measure again before moving it"
+      );
+    });
+
+    it("reports the status when the endpoint rejects the request", async () => {
+      const client = createVerifierClient({
+        apiKey: "test-key",
+        fetchImpl: async () => ({ ok: false, status: 401, text: async () => "No auth credentials found" }),
+      });
+      await assert.rejects(() => client.complete("hello"), /401/);
+    });
+
+    it("reports a response carrying no message content", async () => {
+      const client = createVerifierClient({
+        apiKey: "test-key",
+        fetchImpl: async () => ({ ok: true, json: async () => ({ choices: [] }) }),
+      });
+      await assert.rejects(() => client.complete("hello"), /no message content/);
     });
   });
 
@@ -198,7 +278,7 @@ describe("verify-freshness", () => {
       writeFileSync(indexPath, JSON.stringify(data));
       const before = readFileSync(indexPath, "utf-8");
 
-      await verifyFreshness({ thresholdDays: 25, dryRun: true, indexPath, now });
+      await verifyFreshness({ thresholdDays: 25, dryRun: true, indexPath, now, client: stubClient('{"status":"confirmed"}') });
       const after = readFileSync(indexPath, "utf-8");
       assert.strictEqual(before, after);
     });
@@ -214,7 +294,7 @@ describe("verify-freshness", () => {
       }));
       writeFileSync(indexPath, JSON.stringify({ offers }));
 
-      const result = await verifyFreshness({ thresholdDays: 25, dryRun: true, limit: 3, indexPath, now });
+      const result = await verifyFreshness({ thresholdDays: 25, dryRun: true, limit: 3, indexPath, now, client: stubClient('{"status":"confirmed"}') });
       // Should attempt at most 3, skip the rest
       assert.strictEqual(result.skipped, 7);
       assert.ok(result.failed <= 3);
