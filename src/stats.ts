@@ -1,7 +1,7 @@
 // In-memory telemetry counters with persistent storage.
 // Cumulative stats survive deploys via Upstash Redis (preferred) or data/telemetry.json (fallback).
 // Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN env vars to enable Redis persistence.
-// No PII collected — only aggregate counts and tool-level metrics.
+// Aggregate counts and tool-level metrics, except the request log below, which retains and publishes the user agent. See /privacy.
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
@@ -2610,7 +2610,7 @@ const TRAFFIC_NOTES = [
   "`internal` covers requests to observability endpoints (/api/pageviews, /api/query-log, /api/traffic, /api/metrics, /health) plus anything carrying an agentdeals-internal user agent. Excluded from hits_excluding_internal and from web_vs_mcp.",
   "A maintainer running a bare `curl` against a normal page is indistinguishable from any other scripted client and is counted as `sdk_client`, not `internal`. It can therefore inflate web_hits but never ai_agent_hits.",
   "`sdk_client` is deliberately not folded into `ai_agent`: undici/python-httpx traffic may be an agent or a scraper, and overclaiming it would make the headline number unquotable.",
-  "No PII. Only the class and a bounded family label from a fixed table are stored; user agents and IPs are never persisted.",
+  "These counters store only the class and a bounded family label from a fixed table: the user agent and the address a request arrived with are read to derive them and are not persisted into these counters. That is a statement about this endpoint, not about the site — /api/query-log persists and publishes the user agent string itself, and /privacy is the document that describes the whole service.",
   "Attribution starts from the deploy that introduced it — windows longer than that are short by however much history predates it, not wrong.",
   "Class totals are retained for 30 days; the per-family and per-route breakdowns only for 7. Each window states its own detail_days rather than presenting 7 days of detail as 30.",
   "hits_total, hits_excluding_internal, by_class and top_routes_by_class count requests we answered with content (2xx). Requests that did not resolve are in not_found_*, and 3xx answers are in redirect_* — a client that only ever 404s is not a client that read our pages (#1029).",

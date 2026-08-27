@@ -2003,7 +2003,7 @@ ${globalNavCss()}
 
 # if your user signs up with them
 {"event":"converted","vendor":"neon"}</pre>
-  <p>No authentication, no API key, no signup, nothing expected in return. Optional fields: <code>source</code> (the page or tool that informed it), <code>agent</code> (a name you choose for yourself), <code>note</code> (short free text, scrubbed of anything resembling a credential, and never published).</p>
+  <p>No authentication, no API key, no signup, nothing expected in return. Optional fields: <code>source</code> (the page or tool that informed it), <code>agent</code> (a name you choose for yourself), <code>note</code> (short free text, scrubbed of anything resembling a credential). <strong style="color:var(--text)">Notes may be shared verbatim with the vendor you name</strong>, so send nothing about your user.</p>
   <p>Unknown <code>event</code> values are <strong style="color:var(--text)">not rejected</strong>. They are bucketed under their own name and published below. If you want to tell us something we did not think to ask for &mdash; that a listed free tier is out of date, say &mdash; send it, and we will see it.</p>
   <p>A vendor name we do not index is not rejected either. It goes to a separate list, published below, which is how we learn what agents are looking for that we do not carry.</p>
 
@@ -52107,7 +52107,7 @@ ${globalNavCss()}
 </html>`;
 }
 
-const PRIVACY_LAST_UPDATED = "2026-03-20";
+const PRIVACY_LAST_UPDATED = "2026-08-26";
 
 function privacyLastUpdatedLabel(): string {
   const [y, m, d] = PRIVACY_LAST_UPDATED.split("-");
@@ -52117,7 +52117,7 @@ function privacyLastUpdatedLabel(): string {
 
 function buildPrivacyPage(): string {
   const title = "Privacy Policy — AgentDeals";
-  const metaDesc = "AgentDeals privacy policy. We are a read-only data server — no accounts, no cookies, no personal data collected.";
+  const metaDesc = "AgentDeals privacy policy — what we collect when you use our website, API, or hosted MCP server, how we use it, and who we share it with.";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -52173,53 +52173,67 @@ ${globalNavCss()}
   ${buildGlobalNav("home")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Privacy Policy</div>
   <h1>Privacy Policy</h1>
-  <p class="page-intro">AgentDeals is a read-only data server that provides publicly available vendor pricing information. We have no user accounts, no cookies, and collect no personal data.</p>
-
-  <h2>What We Collect</h2>
-  <div class="section">
-    <p><strong>Nothing personal.</strong> AgentDeals does not collect, store, or process any personal data. There are no user accounts, no login forms, no email collection, and no cookies.</p>
+  <div class="page-intro">
+    <p style="margin-bottom:.75rem">AgentDeals publishes vendor pricing information collected from vendors\u2019 public pages. This policy describes the information we collect when you use our website, API, or hosted MCP server, how we use it, and who we share it with.</p>
+    <p>We do not ask you for personal information, and we do not sell personal information.</p>
   </div>
 
-  <h2>Server-Side Request Counting</h2>
+  <h2>Information We Collect</h2>
   <div class="section">
-    <p>We maintain basic, anonymous server-side request counters (page views per path) for operational monitoring. These counters:</p>
-    <ul>
-      <li>Contain no personally identifiable information</li>
-      <li>Do not track individual users or sessions</li>
-      <li>Do not use cookies, fingerprinting, or any client-side tracking</li>
-      <li>Filter out known bot traffic</li>
-    </ul>
+    <p><strong>Usage and technical information.</strong> When you make a request to our services, we record information about that request &mdash; what was requested, when, what was returned, and technical details your client sends about itself.</p>
+    <p><strong>Identifiers we assign.</strong> We assign identifiers to connections and to accounts on our hosted services so that we can operate, secure, and measure them.</p>
+    <p><strong>Information you choose to provide.</strong> Some of our features accept free text &mdash; search terms, a name you choose for your client, and reports about vendors. We receive whatever you put in those fields.</p>
+    <p>We do not request an email address, postal address, phone number, payment details, or precise location in order to use our services.</p>
   </div>
 
-  <h2>What We Serve</h2>
+  <h2>Personal Information</h2>
   <div class="section">
-    <p>AgentDeals serves publicly available information about vendor pricing, free tiers, and developer tool offers. All data is sourced from vendors\u2019 public pricing pages.</p>
+    <p>The free-text fields described above are chosen entirely by you. Please do not enter personal information into them.</p>
+    <p>We do not sell personal information. If you believe personal information about you has reached us, email us at <a href="mailto:info@robbobobbo.com">info@robbobobbo.com</a> and we will remove it.</p>
   </div>
 
-  <h2>MCP Server</h2>
+  <h2>How We Use Information</h2>
   <div class="section">
-    <p>When used as an MCP (Model Context Protocol) server, AgentDeals operates in read-only mode. All MCP tools are annotated with <code>readOnlyHint: true</code> and <code>destructiveHint: false</code>. The server:</p>
-    <ul>
-      <li>Only returns publicly available pricing data</li>
-      <li>Does not write to or modify any external systems</li>
-      <li>Does not collect or transmit data about the client or user</li>
-      <li>Does not require authentication</li>
-    </ul>
+    <p>We use the information we collect to operate, secure, maintain, and improve our services; to measure and understand how they are used; to detect abuse; and to develop new features and products.</p>
   </div>
 
-  <h2>Third-Party Services</h2>
+  <h2>Publishing and Sharing</h2>
   <div class="section">
-    <p>AgentDeals does not embed third-party analytics, advertising, or tracking scripts. We do not share data with third parties because we do not collect data to share.</p>
+    <p>We publish and share aggregated and statistical information about our services, including traffic, demand, and recommendation data. We may sell such information. Before we publish or share data, we take reasonable measures to aggregate it or remove identifiers from it. No such measure is perfect, and we do not guarantee that data prepared this way can never be re-identified.</p>
+    <p>We do not publish account identifiers, credentials, or the identifiers we assign to individual connections.</p>
+    <p>If you send us a report about a vendor, we may share that report &mdash; including the free text and the name you chose &mdash; with the vendor it names. You are told this at the point of submission.</p>
+    <p>We use third-party providers for functions such as hosting, content delivery, storage, security, and analytics. Those providers process request and usage information on our behalf in order to deliver our services. We may also disclose information where required by law, or to protect our rights, our users, or the security of our services.</p>
   </div>
 
-  <h2>Open Source</h2>
+  <h2>Cookies and Similar Technologies</h2>
   <div class="section">
-    <p>AgentDeals is open source. You can inspect our entire codebase to verify these claims at <a href="https://github.com/robhunter/agentdeals">github.com/robhunter/agentdeals</a>.</p>
+    <p>We may use cookies and similar technologies to operate, secure, measure, and market our services, and to understand how our services are used. Where the law requires your consent for a particular use, we will ask for it and give you a way to withdraw it.</p>
+  </div>
+
+  <h2>IP Addresses</h2>
+  <div class="section">
+    <p>We process IP addresses to route, secure, rate-limit, and measure requests. Where we measure, an address is reduced to a short-lived hash that is held in memory, used to tell one client from another, and discarded when the server restarts. We keep the resulting counts, not the addresses.</p>
+    <p>Our hosting and network providers process IP addresses to deliver the service.</p>
+  </div>
+
+  <h2>Automated Traffic</h2>
+  <div class="section">
+    <p>Our services are designed to be used by software agents as well as by people. We do not exclude automated clients from the information we collect or from what we publish.</p>
+  </div>
+
+  <h2>Retention</h2>
+  <div class="section">
+    <p>We retain the information described in this policy for as long as it is useful for the purposes described, and longer where we are required to.</p>
+  </div>
+
+  <h2>Changes</h2>
+  <div class="section">
+    <p>We may update this policy. When we do, we will change the date below.</p>
   </div>
 
   <h2>Contact</h2>
   <div class="section">
-    <p>Questions about this policy? Open an issue on our <a href="https://github.com/robhunter/agentdeals/issues">GitHub repository</a>.</p>
+    <p>Questions about this policy: <a href="mailto:info@robbobobbo.com">info@robbobobbo.com</a></p>
   </div>
 
   <p class="updated">Last updated: ${privacyLastUpdatedLabel()}</p>
