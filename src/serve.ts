@@ -28,6 +28,7 @@ import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscri
 import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
 import { linkifyVerdictBlocks, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
+import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
@@ -23586,7 +23587,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Azure OpenAI users:</strong> Azure follows OpenAI\u2019s deprecation timeline. If you\u2019re using Azure OpenAI Assistants API, you\u2019ll also need to migrate by August 26, 2026. The Azure Responses API mirrors OpenAI\u2019s implementation.
+    <strong>Azure OpenAI users:</strong> Azure follows OpenAI\u2019s deprecation timeline. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date} as well, so an Azure deployment does not extend the deadline. Move agents to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}; the ${ASSISTANTS_API_SHUTDOWN.azureInferenceApi} mirrors OpenAI\u2019s implementation for inference only.
   </div>
 
   <h2 id="migration-paths">Migration Paths</h2>
@@ -24071,7 +24072,7 @@ ${mcpCtaCss()}
   </div>
   <div class="timeline-event" style="border-bottom:none">
     <div class="timeline-date" style="color:#f85149">Aug 26, 2026</div>
-    <div class="timeline-content"><strong>Full shutdown.</strong> All Assistants, Threads, Runs, and Messages endpoints cease functioning. No grace period announced. Azure OpenAI follows the same timeline.</div>
+    <div class="timeline-content"><strong>Full shutdown.</strong> All Assistants, Threads, Runs, and Messages endpoints cease functioning. No grace period announced. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date} too and directs Azure agents to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}.</div>
   </div>
 
   <div class="context-box">
@@ -25314,9 +25315,9 @@ function buildOpenAIAssistantsMigrationPage(): string {
       monthlyCostMid: "$100\u2013300",
       monthlyCostHigh: "$1,000\u20135,000",
       migrationEffort: "Low\u2013Medium",
-      freeOption: "$200 trial credits",
+      freeOption: "$200 Azure credit, 30 days",
       bestFor: "Enterprise users, teams already on Azure, compliance requirements",
-      details: "Same GPT models via Azure. Assistants API on Azure has NOT been deprecated \u2014 Azure may maintain it independently. Enterprise SLAs, data residency, and private endpoints included.",
+      details: `Same GPT models via Azure, but Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date} \u2014 the same date as OpenAI's. Azure workloads move to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor} for agents, or the ${ASSISTANTS_API_SHUTDOWN.azureInferenceApi} for inference only. Enterprise SLAs, data residency, and private endpoints included.`,
     },
     {
       name: "Anthropic Claude API",
@@ -25450,7 +25451,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
   const faqEntries = [
     { q: "When does the OpenAI Assistants API shut down?", a: "The Assistants API will be fully shut down on August 26, 2026. After this date, all Assistants API calls will return errors. OpenAI recommends migrating to the Responses API (for prompts and tool use) and Conversations API (for thread/session management)." },
     { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API offers the most generous free tier with 1,500 free requests/day (Flash model). For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic Claude also offers a free tier with rate limits." },
-    { q: "Can I keep using the Assistants API on Azure OpenAI?", a: "Azure OpenAI has NOT announced deprecation of its Assistants API implementation. Azure may maintain the Assistants API independently of OpenAI's decision. However, there is no guarantee \u2014 monitor Azure announcements. If you're on Azure, this may buy you time to plan a more careful migration." },
+    { q: "Can I keep using the Assistants API on Azure OpenAI?", a: `No. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date}, the same date OpenAI retired its own. Microsoft's documentation states that the Assistants API is retired and directs Azure workloads to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}, which is generally available; inference-only workloads can use the ${ASSISTANTS_API_SHUTDOWN.azureInferenceApi} instead. Running on Azure does not extend the deadline.` },
     { q: "What replaces Threads in the new Responses API?", a: "OpenAI's Conversations API replaces the Threads functionality from the Assistants API. It provides session management, message history, and context handling. The migration is not automated \u2014 you need to manually update your code to use the new Conversations API endpoints." },
     { q: "How much will migration cost in developer time?", a: "For a small project (single assistant), expect 1\u20132 days of developer time for the Responses API migration. For complex multi-assistant systems, budget 1\u20132 weeks. Switching to a different provider (Anthropic, Gemini, LangChain) adds additional time for API differences and testing. See our cost comparison table for per-path estimates." },
   ];
@@ -25578,7 +25579,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '\n' +
     // Executive summary
     '  <div class="executive-summary">\n' +
-    '    <p><strong>What\'s happening:</strong> OpenAI is sunsetting the Assistants API on August 26, 2026. All Assistants, Threads, and associated API calls will stop working. Developers must migrate to the Responses API + Conversations API, switch to Azure OpenAI (which has not announced deprecation), or move to an alternative platform entirely.</p>\n' +
+    '    <p><strong>What\'s happening:</strong> OpenAI is sunsetting the Assistants API on ' + ASSISTANTS_API_SHUTDOWN.date + '. All Assistants, Threads, and associated API calls will stop working. Developers must migrate to the Responses API + Conversations API, or move to an alternative platform entirely. Azure is not a way out: Microsoft retired the Azure OpenAI Assistants API on the same date, ' + ASSISTANTS_API_SHUTDOWN.date + ', and points agentic workloads at ' + ASSISTANTS_API_SHUTDOWN.azureSuccessor + '.</p>\n' +
     '    <p><strong>The cost question:</strong> Migration isn\'t just about code changes \u2014 it\'s about ongoing costs. Staying with OpenAI means the same token pricing but new API patterns. Switching providers can reduce costs 30\u201370% (Gemini\'s free tier) or increase them (Azure\'s enterprise overhead). Open-source frameworks (LangChain, CrewAI) eliminate platform lock-in but require more engineering investment.</p>\n' +
     '    <p><strong>This guide covers:</strong> cost comparison at 3 usage tiers (hobby, production, scale), migration effort estimates, free tier options, and a recommended timeline \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
@@ -25619,7 +25620,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Cost insight:</strong> If cost is your primary concern, <a href="/vendor/google-gemini-api">Google Gemini API</a> offers the best free tier (1,500 requests/day on Flash). If migration speed is the priority, the Responses API is the path of least resistance. For teams already on Azure, the Assistants API may continue working \u2014 monitor Azure announcements.\n' +
+    '    <strong>Cost insight:</strong> If cost is your primary concern, <a href="/vendor/google-gemini-api">Google Gemini API</a> offers the best free tier (1,500 requests/day on Flash). If migration speed is the priority, the Responses API is the path of least resistance. Teams already on Azure face the same deadline: Microsoft retired the Azure OpenAI Assistants API on ' + ASSISTANTS_API_SHUTDOWN.date + ' and directs agents to ' + ASSISTANTS_API_SHUTDOWN.azureSuccessor + '.\n' +
     '  </div>\n' +
     '\n' +
     // Section 2: Migration Paths Detailed
@@ -25648,7 +25649,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '      <tr><td style="font-weight:600">Anthropic Claude</td><td style="color:#3fb950;font-weight:600">Free tier available</td><td style="font-size:.85rem">Rate-limited</td><td style="font-size:.85rem">Tool use, 200K\u20131M context</td></tr>\n' +
     '      <tr><td style="font-weight:600">LangChain</td><td style="color:#3fb950;font-weight:600">Fully free (MIT)</td><td style="font-size:.85rem">LLM API costs only</td><td style="font-size:.85rem">LangGraph agents, tool calling</td></tr>\n' +
     '      <tr><td style="font-weight:600">CrewAI</td><td style="color:#3fb950;font-weight:600">Fully free (MIT)</td><td style="font-size:.85rem">LLM API costs only</td><td style="font-size:.85rem">Multi-agent orchestration</td></tr>\n' +
-    '      <tr><td style="font-weight:600"><a href="/vendor/azure" style="color:var(--text)">Azure OpenAI</a></td><td style="color:#d29922;font-weight:600">$200 trial credits</td><td style="font-size:.85rem">Credits expire</td><td style="font-size:.85rem">Assistants API (not deprecated)</td></tr>\n' +
+    '      <tr><td style="font-weight:600"><a href="/vendor/azure" style="color:var(--text)">Azure OpenAI</a></td><td style="color:#d29922;font-weight:600">$200 credit, 30 days</td><td style="font-size:.85rem">General Azure trial credit, not an agent entitlement</td><td style="font-size:.85rem">' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.azureSuccessor) + ' — Assistants API retired ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.date) + '</td></tr>\n' +
     '    </tbody>\n' +
     '  </table>\n' +
     '  </div>\n' +
@@ -25679,7 +25680,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    <h3>Which migration path is right for you?</h3>\n' +
     '    <div class="verdict-item"><strong>Fastest migration:</strong><p>OpenAI Responses API \u2014 same provider, same models, just new API patterns. Minimal code changes.</p></div>\n' +
     '    <div class="verdict-item"><strong>Lowest cost:</strong><p>Google Gemini API \u2014 1,500 free requests/day on Flash, competitive paid pricing. OpenAI-compatible endpoint eases migration.</p></div>\n' +
-    '    <div class="verdict-item"><strong>Enterprise / compliance:</strong><p>Azure OpenAI \u2014 same GPT models, enterprise SLAs, data residency. Assistants API may not be deprecated on Azure.</p></div>\n' +
+    '    <div class="verdict-item"><strong>Enterprise / compliance:</strong><p>Azure OpenAI \u2014 same GPT models, enterprise SLAs, data residency. Rebuild on ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.azureSuccessor) + ': Microsoft retired the Azure Assistants API on ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.date) + ' too, so this path is a change of platform, not a way to keep the old API.</p></div>\n' +
     '    <div class="verdict-item"><strong>Best reasoning quality:</strong><p>Anthropic Claude \u2014 Claude 4 Opus for complex tasks. Tool use built in. Prompt caching reduces costs 90% for repeated context.</p></div>\n' +
     '    <div class="verdict-item"><strong>Maximum flexibility:</strong><p>LangChain + BYO LLM \u2014 swap models anytime, no platform lock-in. More work upfront but full control.</p></div>\n' +
     '    <div class="verdict-item"><strong>Multi-agent workflows:</strong><p>CrewAI \u2014 if your Assistants setup used multiple coordinating agents, CrewAI\'s role-based agent model is a natural fit.</p></div>\n' +
