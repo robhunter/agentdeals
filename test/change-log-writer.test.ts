@@ -561,6 +561,61 @@ describe("reading the detector's schedule out of the workflow", () => {
     assert.deepStrictEqual({ known: off.known, scheduled: off.scheduled }, { known: true, scheduled: false });
   });
 
+  it("reads a quoted flag by what the shell passes, not by the quotes around it", () => {
+    for (const cmd of [
+      "node scripts/reverify-rolling.js --limit 50 '--ai'",
+      'node scripts/reverify-rolling.js --limit 50 "--ai"',
+    ]) {
+      const schedule = detectorSchedule(withCommand(cmd));
+      assert.deepStrictEqual(
+        { known: schedule.known, scheduled: schedule.scheduled },
+        { known: true, scheduled: true },
+        cmd
+      );
+    }
+  });
+
+  it("reads a quoted option name too, so the expansion after it is still a value", () => {
+    const schedule = detectorSchedule(withCommand("node scripts/reverify-rolling.js '--limit' \"$LIMIT\""));
+    assert.deepStrictEqual(
+      { known: schedule.known, scheduled: schedule.scheduled },
+      { known: true, scheduled: false }
+    );
+  });
+
+  it("sees a literal flag standing where a value would go, because the detector scans every argument", () => {
+    const source = readFileSync(path.join(REPO, "scripts", "reverify-rolling.js"), "utf-8");
+    assert.match(
+      source,
+      /args\.includes\("--ai"\)/,
+      "the detector no longer scans every argument for --ai, so this expectation needs rewriting"
+    );
+    const schedule = detectorSchedule(withCommand("node scripts/reverify-rolling.js --limit --ai"));
+    assert.deepStrictEqual(
+      { known: schedule.known, scheduled: schedule.scheduled },
+      { known: true, scheduled: true }
+    );
+  });
+
+  it("refuses on an unquoted expansion in value position, which the shell can split into two arguments", () => {
+    for (const cmd of [
+      "node scripts/reverify-rolling.js --limit $AI_FLAG",
+      "node scripts/reverify-rolling.js --limit ${{ inputs.limit }}",
+    ]) {
+      assert.strictEqual(detectorSchedule(withCommand(cmd)).known, false, cmd);
+    }
+  });
+
+  it("keeps answering for a quoted expansion in value position, which cannot split", () => {
+    const schedule = detectorSchedule(
+      withCommand('node scripts/reverify-rolling.js --limit "${{ inputs.limit }}"')
+    );
+    assert.deepStrictEqual(
+      { known: schedule.known, scheduled: schedule.scheduled },
+      { known: true, scheduled: false }
+    );
+  });
+
   it("stops reading at the pipe, so what the log is written to cannot decide this", () => {
     const schedule = detectorSchedule(
       withCommand('node scripts/reverify-rolling.js --limit "$LIMIT" | tee "$LOGFILE"')
@@ -571,10 +626,18 @@ describe("reading the detector's schedule out of the workflow", () => {
     );
   });
 
-  it("treats an option's value as a value and everything else as a possible flag", () => {
+  it("drops an option's value only when it is an expansion that cannot split", () => {
     assert.deepStrictEqual(
       flagTokens(' --limit "$LIMIT" --ai').map((t: { text: string }) => t.text),
       ["--limit", "--ai"]
+    );
+    assert.deepStrictEqual(
+      flagTokens(" --limit 50 --ai").map((t: { text: string }) => t.text),
+      ["--limit", "50", "--ai"]
+    );
+    assert.deepStrictEqual(
+      flagTokens(" --limit $AI_FLAG").map((t: { text: string }) => t.text),
+      ["--limit", "$AI_FLAG"]
     );
   });
 

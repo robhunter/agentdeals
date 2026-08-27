@@ -13,6 +13,7 @@ import {
   EVENT_DATED_SOURCES,
 } from "../dist/data.js";
 import {
+  capListSections,
   changeDateLabel,
   changeDatePublished,
   undatedGroupHeading,
@@ -445,5 +446,32 @@ describe("no surface renders a discovery date as the date the vendor changed som
       !deadlines.some((d: any) => d.vendor === SUBJECT),
       "a change with no known effective date was published as an upcoming deadline"
     );
+  });
+});
+
+describe("capping a list built from several sections", () => {
+  const big = (prefix: string, n: number) => Array.from({ length: n }, (_, i) => `${prefix}${i}`);
+
+  it("keeps every section in the order the page renders them when everything fits", () => {
+    assert.deepStrictEqual(capListSections([["a"], ["b", "c"], ["d"]], 50), ["a", "b", "c", "d"]);
+  });
+
+  it("leaves no non-empty section unrepresented once the cap bites", () => {
+    const capped = capListSections([big("up", 60), big("recent", 40), ["discovery"]], 50);
+    assert.strictEqual(capped.length, 50);
+    assert.ok(capped.includes("recent0"), "a whole section was crowded out of the capped list");
+    assert.ok(capped.includes("discovery"), "the last section was crowded out of the capped list");
+  });
+
+  it("skips empty sections rather than reserving them a slot", () => {
+    assert.deepStrictEqual(capListSections([["a", "b"], [], ["c"]], 2), ["a", "c"]);
+  });
+
+  it("spends the whole cap when the sections fit inside it exactly", () => {
+    assert.deepStrictEqual(capListSections([["a", "b"], ["c", "d"]], 4), ["a", "b", "c", "d"]);
+  });
+
+  it("fills the earlier sections first with whatever the reservations leave", () => {
+    assert.deepStrictEqual(capListSections([big("up", 5), big("recent", 5)], 4), ["up0", "up1", "up2", "recent0"]);
   });
 });

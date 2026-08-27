@@ -15,6 +15,8 @@ const dayOffset = (days: number) =>
 
 const UPCOMING = "Fauna";
 const UPCOMING_DATE = dayOffset(20);
+const RECENT = "Neon";
+const RECENT_DATE = dayOffset(-5);
 const DISCOVERY = "Xata";
 const BACKLOG_SIZE = 60;
 const LIST_CAP = 50;
@@ -44,6 +46,7 @@ function fixtureChanges() {
   return [
     ...backlog,
     change(UPCOMING, UPCOMING_DATE, "vendor_page"),
+    change(RECENT, RECENT_DATE, "vendor_page"),
     { ...change(DISCOVERY, TODAY, "discovered"), detected_by: "reverify-ai" },
   ];
 }
@@ -138,8 +141,17 @@ describe("the machine-readable change lists carry the entries the pages carry", 
 
   it("counts the entry it could not date in the total it advertises", () => {
     const list = changeList(bodies.get("/expiring")!, "/expiring");
-    assert.strictEqual(list.items.length, 2);
-    assert.strictEqual(list.numberOfItems, 2);
+    assert.strictEqual(list.items.length, 3);
+    assert.strictEqual(list.numberOfItems, 3);
+  });
+
+  it("gives /expiring's structured data every section its page renders, not only the two it listed", () => {
+    const body = bodies.get("/expiring")!;
+    for (const heading of ["Recently Changed", "Recently Discovered"]) {
+      assert.ok(body.includes(heading), `/expiring did not render its ${heading} section, so the list below proves nothing`);
+    }
+    const list = changeList(body, "/expiring");
+    for (const vendor of [UPCOMING, RECENT, DISCOVERY]) itemFor(list, vendor, "/expiring");
   });
 
   it("does not let a backlog of dated entries crowd a new discovery out of the list", () => {

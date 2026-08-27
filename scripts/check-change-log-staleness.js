@@ -31,10 +31,12 @@ export function tokenizeArgs(argText) {
     if (current) tokens.push(current);
     current = null;
   };
-  const add = (text, expands = false) => {
-    if (!current) current = { text: "", expands: false };
+  const add = (text, { expands = false, splittable = false, word = text } = {}) => {
+    if (!current) current = { text: "", word: "", expands: false, splittable: false };
     current.text += text;
+    current.word += word;
     if (expands) current.expands = true;
+    if (splittable) current.splittable = true;
   };
 
   let i = 0;
@@ -49,27 +51,27 @@ export function tokenizeArgs(argText) {
     } else if (argText.startsWith("${{", i)) {
       const end = argText.indexOf("}}", i + 3);
       const raw = end === -1 ? argText.slice(i) : argText.slice(i, end + 2);
-      add(raw, true);
+      add(raw, { expands: true, splittable: true });
       i += raw.length;
     } else if (ch === "'") {
       const end = argText.indexOf("'", i + 1);
       const raw = end === -1 ? argText.slice(i) : argText.slice(i, end + 1);
-      add(raw);
+      add(raw, { word: raw.slice(1, end === -1 ? undefined : -1) });
       i += raw.length;
     } else if (ch === '"') {
       let j = i + 1;
-      let raw = '"';
+      let inner = "";
       let expands = false;
       while (j < argText.length && argText[j] !== '"') {
         if (argText[j] === "$") expands = true;
-        raw += argText[j];
+        inner += argText[j];
         j += 1;
       }
-      if (j < argText.length) raw += '"';
-      add(raw, expands);
+      const closed = j < argText.length;
+      add(closed ? `"${inner}"` : `"${inner}`, { expands, word: inner });
       i = j + 1;
     } else if (ch === "$") {
-      add(ch, true);
+      add(ch, { expands: true, splittable: true });
       i += 1;
     } else {
       add(ch);
@@ -86,9 +88,9 @@ export function flagTokens(argText) {
   for (const token of tokenizeArgs(argText)) {
     if (consumingValue) {
       consumingValue = false;
-      continue;
+      if (token.expands && !token.splittable) continue;
     }
-    if (DETECTOR_CLI_OPTIONS.takesValue.includes(token.text)) consumingValue = true;
+    if (DETECTOR_CLI_OPTIONS.takesValue.includes(token.word)) consumingValue = true;
     flags.push(token);
   }
   return flags;
@@ -109,7 +111,9 @@ export function detectorSchedule(workflowYaml) {
         .join(", ")}`,
     };
   }
-  const withAi = invocations.filter((tokens) => tokens.some((token) => token.text === AI_FLAG));
+  const withAi = invocations.filter((tokens) =>
+    tokens.some((token) => !token.expands && token.word === AI_FLAG)
+  );
   if (withAi.length > 0 && withAi.length < invocations.length) {
     return {
       known: false,

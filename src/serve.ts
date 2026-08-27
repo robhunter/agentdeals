@@ -31,7 +31,7 @@ import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMO
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable } from "./types.js";
-import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, latestEventDate, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
+import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -50470,7 +50470,7 @@ ${entriesHtml}
     description: metaDesc,
     numberOfItems: totalUpcoming + recent.length + recentlyDiscovered.length,
     url: `${BASE_URL}/expiring`,
-    itemListElement: [...upcoming, ...recentlyDiscovered].slice(0, 50).map((c, i) => ({
+    itemListElement: capListSections([upcoming, recent, recentlyDiscovered], 50).map((c, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
