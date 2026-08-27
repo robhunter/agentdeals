@@ -540,7 +540,8 @@ export const openapiSpec = {
                         properties: {
                           vendor: { type: "string" },
                           change_type: { type: "string" },
-                          date: { type: "string", format: "date" },
+                          date: { type: "string", format: "date", description: "When the change took effect, unless date_source is \"discovered\" — then it is the day we found it and the effective date is unknown." },
+                          date_source: { type: "string", enum: ["vendor_page", "hand_written", "discovered"], description: "Where date came from. \"vendor_page\": the vendor's page stated it. \"hand_written\": a person recorded it before this field existed. \"discovered\": the page stated no effective date, so date is the day we read the page — do not present it as the date the vendor changed anything." },
                           summary: { type: "string" },
                           impact: { type: "string", enum: ["high", "medium", "low"] }
                         }

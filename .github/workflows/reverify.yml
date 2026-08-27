@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: reverify-rolling
@@ -60,6 +61,26 @@ jobs:
           git commit -m "data(auto): rolling re-verification — ${VERIFIED} verified, ${FLAGGED} flagged, ${RECORDED} changes recorded"
           git push origin HEAD:main
 
-      - name: Fail if the change log has gone stale
+      - name: Check the change log is still being written to
+        id: staleness
         if: always()
         run: node scripts/check-change-log-staleness.js
+
+      - name: Signal that no change detector is scheduled
+        if: always() && steps.staleness.outputs.open_absence_issue == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MARKER: reverify-detector-not-scheduled
+        run: |
+          set -euo pipefail
+          EXISTING=$(gh issue list --state open --search "$MARKER in:body" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "Absence already signalled by issue #$EXISTING — not opening another."
+            exit 0
+          fi
+          node scripts/detector-absence-issue-body.js "$MARKER" > /tmp/absence-issue.md
+          gh issue create \
+            --title "No change detector is scheduled — the daily job cannot notice a pricing change" \
+            --label "priority/high" \
+            --label "type: bug" \
+            --body-file /tmp/absence-issue.md

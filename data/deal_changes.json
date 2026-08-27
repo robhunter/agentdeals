@@ -11,7 +11,8 @@
       "source_url": "https://hyperping.com/pricing",
       "category": "Monitoring",
       "alternatives": [],
-      "recorded_date": "2026-04-21"
+      "recorded_date": "2026-04-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon SP-API",
@@ -24,7 +25,8 @@
       "source_url": "https://developer.amazonservices.com/",
       "category": "API Development",
       "alternatives": [],
-      "recorded_date": "2026-04-19"
+      "recorded_date": "2026-04-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Xata",
@@ -41,7 +43,8 @@
         "Supabase",
         "CockroachDB"
       ],
-      "recorded_date": "2026-04-19"
+      "recorded_date": "2026-04-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Hasura Cloud",
@@ -54,7 +57,8 @@
       "source_url": "https://hasura.io/pricing",
       "category": "Databases",
       "alternatives": [],
-      "recorded_date": "2026-04-19"
+      "recorded_date": "2026-04-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Applitools Eyes",
@@ -71,7 +75,8 @@
         "Chromatic",
         "Argos"
       ],
-      "recorded_date": "2026-04-18"
+      "recorded_date": "2026-04-18",
+      "date_source": "hand_written"
     },
     {
       "vendor": "everystep-automation.com",
@@ -87,7 +92,8 @@
         "Selenium IDE",
         "Playwright"
       ],
-      "recorded_date": "2026-04-18"
+      "recorded_date": "2026-04-18",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OpenAI Codex",
@@ -104,7 +110,8 @@
         "Claude Code",
         "Devin"
       ],
-      "recorded_date": "2026-04-15"
+      "recorded_date": "2026-04-15",
+      "date_source": "hand_written"
     },
     {
       "vendor": "GitHub Copilot",
@@ -122,7 +129,8 @@
         "Claude Code",
         "Cline"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Windsurf",
@@ -135,7 +143,8 @@
       "source_url": "https://windsurf.com/pricing",
       "category": "AI Coding",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Brave Search API",
@@ -151,7 +160,8 @@
         "SerpAPI",
         "Google Custom Search"
       ],
-      "recorded_date": "2026-04-15"
+      "recorded_date": "2026-04-15",
+      "date_source": "hand_written"
     },
     {
       "vendor": "X API (Twitter)",
@@ -167,7 +177,8 @@
         "Bluesky API",
         "Mastodon API"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Spotify API",
@@ -183,7 +194,8 @@
         "Last.fm API",
         "MusicBrainz API"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon SP-API",
@@ -200,7 +212,8 @@
         "WooCommerce API",
         "BigCommerce API"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "PythonAnywhere",
@@ -217,7 +230,8 @@
         "Railway",
         "Replit"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Gemini",
@@ -234,7 +248,8 @@
         "Groq",
         "Together AI"
       ],
-      "recorded_date": "2026-03-09"
+      "recorded_date": "2026-03-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Netlify",
@@ -251,7 +266,8 @@
         "Cloudflare Pages",
         "GitHub Pages"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Netlify",
@@ -268,7 +284,8 @@
         "Cloudflare Pages",
         "GitHub Pages"
       ],
-      "recorded_date": "2026-03-31"
+      "recorded_date": "2026-03-31",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Supabase",
@@ -285,7 +302,8 @@
         "PlanetScale",
         "CockroachDB"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Cloudflare",
@@ -298,7 +316,8 @@
       "source_url": "https://developers.cloudflare.com/queues/",
       "category": "Cloud IaaS",
       "alternatives": [],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "GitHub Actions",
@@ -315,7 +334,8 @@
         "CircleCI",
         "Buildkite"
       ],
-      "recorded_date": "2026-03-14"
+      "recorded_date": "2026-03-14",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Bright Data MCP",
@@ -331,7 +351,8 @@
         "Firecrawl",
         "Apify"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Stripe",
@@ -347,7 +368,8 @@
         "Paddle",
         "Lemon Squeezy"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Postman",
@@ -366,7 +388,8 @@
         "Apidog",
         "Thunder Client"
       ],
-      "recorded_date": "2026-03-17"
+      "recorded_date": "2026-03-17",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Atlassian Forge",
@@ -382,7 +405,8 @@
         "AWS Lambda",
         "Self-hosted Connect apps"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Fly.io",
@@ -399,7 +423,8 @@
         "Railway",
         "Koyeb"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Cloudflare Durable Objects",
@@ -416,7 +441,8 @@
         "Cloudflare KV",
         "Neon"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Sentry",
@@ -433,7 +459,8 @@
         "New Relic",
         "BetterStack"
       ],
-      "recorded_date": "2026-02-25"
+      "recorded_date": "2026-02-25",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Neon",
@@ -450,7 +477,8 @@
         "CockroachDB",
         "Turso"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Vercel",
@@ -467,7 +495,8 @@
         "Cloudflare Pages",
         "Render"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Atlassian",
@@ -484,7 +513,8 @@
         "Jira Cloud",
         "Shortcut"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Docker Hub",
@@ -501,7 +531,8 @@
         "Quay.io",
         "Podman"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "DigitalOcean",
@@ -518,7 +549,8 @@
         "Google Cloud for Startups",
         "Azure for Startups"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Cloud",
@@ -535,7 +567,8 @@
         "Azure for Startups",
         "DigitalOcean Hatch"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "AWS",
@@ -552,7 +585,8 @@
         "Azure GPU VMs",
         "Lambda Cloud"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google",
@@ -568,7 +602,8 @@
         "GitHub Copilot",
         "JetBrains AI"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OpenAI",
@@ -585,7 +620,8 @@
         "Google Gemini API",
         "Cohere API"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Hetzner",
@@ -602,7 +638,8 @@
         "Vultr",
         "OVHcloud"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Anthropic",
@@ -619,7 +656,8 @@
         "Google Gemini",
         "Mistral"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OpenAI",
@@ -636,7 +674,8 @@
         "Google Gemini",
         "Perplexity"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Programmable Search Engine",
@@ -654,7 +693,8 @@
         "Bing Web Search API",
         "Meilisearch"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "odrive",
@@ -671,7 +711,8 @@
         "Cyberduck",
         "MultCloud"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "MinIO",
@@ -689,7 +730,8 @@
         "GarageHQ",
         "Apache Ozone"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Microsoft Partner Developer Benefits",
@@ -705,7 +747,8 @@
         "AWS Partner Network",
         "Google Cloud Partner Advantage"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Cloudflare Startup Program",
@@ -722,7 +765,8 @@
         "Google for Startups Cloud Program",
         "Azure for Startups"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Gemini 2.0 Flash",
@@ -740,7 +784,8 @@
         "OpenRouter",
         "Groq"
       ],
-      "recorded_date": "2026-02-26"
+      "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Logz.io",
@@ -758,7 +803,8 @@
         "Axiom",
         "New Relic"
       ],
-      "recorded_date": "2026-03-02"
+      "recorded_date": "2026-03-02",
+      "date_source": "hand_written"
     },
     {
       "vendor": "X (Twitter)",
@@ -775,7 +821,8 @@
         "Mastodon API",
         "Reddit API"
       ],
-      "recorded_date": "2026-03-02"
+      "recorded_date": "2026-03-02",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OpenAI",
@@ -793,7 +840,8 @@
         "Mistral API",
         "Groq"
       ],
-      "recorded_date": "2026-03-11"
+      "recorded_date": "2026-03-11",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Xero Developer API",
@@ -810,7 +858,8 @@
         "FreshBooks API",
         "Wave API"
       ],
-      "recorded_date": "2026-03-14"
+      "recorded_date": "2026-03-14",
+      "date_source": "hand_written"
     },
     {
       "vendor": "SendGrid",
@@ -828,7 +877,8 @@
         "Mailgun",
         "Amazon SES"
       ],
-      "recorded_date": "2026-03-02"
+      "recorded_date": "2026-03-02",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Firebase",
@@ -846,7 +896,8 @@
         "AWS S3",
         "Backblaze B2"
       ],
-      "recorded_date": "2026-03-02"
+      "recorded_date": "2026-03-02",
+      "date_source": "hand_written"
     },
     {
       "vendor": "PlanetScale",
@@ -864,7 +915,8 @@
         "Supabase",
         "CockroachDB"
       ],
-      "recorded_date": "2026-03-02"
+      "recorded_date": "2026-03-02",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Fauna",
@@ -882,7 +934,8 @@
         "CockroachDB",
         "DynamoDB"
       ],
-      "recorded_date": "2026-03-11"
+      "recorded_date": "2026-03-11",
+      "date_source": "hand_written"
     },
     {
       "vendor": "LocalStack",
@@ -899,7 +952,8 @@
         "AWS Free Tier",
         "Testcontainers"
       ],
-      "recorded_date": "2026-03-02"
+      "recorded_date": "2026-03-02",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google",
@@ -917,7 +971,8 @@
         "Google for Startups Cloud"
       ],
       "verified_date": "2026-03-04",
-      "recorded_date": "2026-03-11"
+      "recorded_date": "2026-03-11",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Terragrunt Scale",
@@ -934,7 +989,8 @@
         "env0",
         "Scalr"
       ],
-      "recorded_date": "2026-03-04"
+      "recorded_date": "2026-03-04",
+      "date_source": "hand_written"
     },
     {
       "vendor": "HCP Terraform",
@@ -952,7 +1008,8 @@
         "Scalr",
         "Terragrunt Scale"
       ],
-      "recorded_date": "2026-03-09"
+      "recorded_date": "2026-03-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "X (Twitter)",
@@ -968,7 +1025,8 @@
         "Bluesky AT Protocol",
         "Mastodon API"
       ],
-      "recorded_date": "2026-03-09"
+      "recorded_date": "2026-03-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Cognition Devin",
@@ -985,7 +1043,8 @@
         "Cline",
         "Aider"
       ],
-      "recorded_date": "2026-03-13"
+      "recorded_date": "2026-03-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Cursor",
@@ -1001,7 +1060,8 @@
         "Windsurf",
         "GitHub Copilot"
       ],
-      "recorded_date": "2026-03-13"
+      "recorded_date": "2026-03-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Augment Code",
@@ -1017,7 +1077,8 @@
         "GitHub Copilot",
         "Cursor"
       ],
-      "recorded_date": "2026-03-13"
+      "recorded_date": "2026-03-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Tenor API",
@@ -1033,7 +1094,8 @@
         "Giphy API",
         "Imgur API"
       ],
-      "recorded_date": "2026-03-14"
+      "recorded_date": "2026-03-14",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Testcontainers Cloud",
@@ -1050,7 +1112,8 @@
         "Docker Desktop",
         "Podman"
       ],
-      "recorded_date": "2026-03-14"
+      "recorded_date": "2026-03-14",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Docker Desktop",
@@ -1067,7 +1130,8 @@
         "Rancher Desktop",
         "OrbStack"
       ],
-      "recorded_date": "2026-03-15"
+      "recorded_date": "2026-03-15",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Unity DevOps",
@@ -1084,7 +1148,8 @@
         "Perforce",
         "GitHub"
       ],
-      "recorded_date": "2026-03-15"
+      "recorded_date": "2026-03-15",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Anthropic Claude",
@@ -1100,7 +1165,8 @@
         "OpenAI ChatGPT Plus",
         "Google Gemini Advanced"
       ],
-      "recorded_date": "2026-03-15"
+      "recorded_date": "2026-03-15",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Heroku",
@@ -1118,7 +1184,8 @@
         "Fly.io",
         "Koyeb"
       ],
-      "recorded_date": "2026-03-19"
+      "recorded_date": "2026-03-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "GitHub Copilot",
@@ -1135,7 +1202,8 @@
         "Cody",
         "Cursor"
       ],
-      "recorded_date": "2026-03-19"
+      "recorded_date": "2026-03-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Auth0",
@@ -1152,7 +1220,8 @@
         "Firebase Auth",
         "Supabase Auth"
       ],
-      "recorded_date": "2026-03-19"
+      "recorded_date": "2026-03-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Railway",
@@ -1169,7 +1238,8 @@
         "Fly.io",
         "Koyeb"
       ],
-      "recorded_date": "2026-03-19"
+      "recorded_date": "2026-03-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Render",
@@ -1186,7 +1256,8 @@
         "Fly.io",
         "Koyeb"
       ],
-      "recorded_date": "2026-03-19"
+      "recorded_date": "2026-03-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Redis",
@@ -1204,7 +1275,8 @@
         "DragonflyDB",
         "Upstash"
       ],
-      "recorded_date": "2026-03-19"
+      "recorded_date": "2026-03-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "HashiCorp",
@@ -1221,7 +1293,8 @@
         "Pulumi",
         "Crossplane"
       ],
-      "recorded_date": "2026-03-19"
+      "recorded_date": "2026-03-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "DigitalOcean",
@@ -1238,7 +1311,8 @@
         "Vultr",
         "Linode"
       ],
-      "recorded_date": "2026-03-31"
+      "recorded_date": "2026-03-31",
+      "date_source": "hand_written"
     },
     {
       "vendor": "DigitalOcean",
@@ -1255,7 +1329,8 @@
         "PlanetScale",
         "Supabase"
       ],
-      "recorded_date": "2026-03-21"
+      "recorded_date": "2026-03-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Freshping",
@@ -1276,7 +1351,8 @@
         "Cronitor",
         "Upptime"
       ],
-      "recorded_date": "2026-03-21"
+      "recorded_date": "2026-03-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Firebase",
@@ -1295,7 +1371,8 @@
         "Nhost",
         "Convex"
       ],
-      "recorded_date": "2026-03-21"
+      "recorded_date": "2026-03-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Firebase",
@@ -1314,7 +1391,8 @@
         "Nhost",
         "Convex"
       ],
-      "recorded_date": "2026-03-21"
+      "recorded_date": "2026-03-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Dub.co",
@@ -1330,7 +1408,8 @@
         "Bitly",
         "Short.io"
       ],
-      "recorded_date": "2026-03-22"
+      "recorded_date": "2026-03-22",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Uploadthing",
@@ -1347,7 +1426,8 @@
         "Vercel Blob",
         "AWS S3"
       ],
-      "recorded_date": "2026-03-22"
+      "recorded_date": "2026-03-22",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Neo4j AuraDB",
@@ -1363,7 +1443,8 @@
         "Dgraph Cloud",
         "Amazon Neptune"
       ],
-      "recorded_date": "2026-03-22"
+      "recorded_date": "2026-03-22",
+      "date_source": "hand_written"
     },
     {
       "vendor": "xAI (Grok)",
@@ -1380,7 +1461,8 @@
         "Stable Diffusion (self-hosted)",
         "Pollinations.AI"
       ],
-      "recorded_date": "2026-03-24"
+      "recorded_date": "2026-03-24",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Gemini API",
@@ -1397,7 +1479,8 @@
         "Anthropic Claude API",
         "OpenAI API"
       ],
-      "recorded_date": "2026-03-26"
+      "recorded_date": "2026-03-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Windsurf",
@@ -1414,7 +1497,8 @@
         "GitHub Copilot",
         "Cline"
       ],
-      "recorded_date": "2026-03-31"
+      "recorded_date": "2026-03-31",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Gemini Code Assist",
@@ -1431,7 +1515,8 @@
         "Cursor",
         "Cline"
       ],
-      "recorded_date": "2026-03-27"
+      "recorded_date": "2026-03-27",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon Aurora PostgreSQL",
@@ -1449,7 +1534,8 @@
         "CockroachDB",
         "PlanetScale"
       ],
-      "recorded_date": "2026-03-27"
+      "recorded_date": "2026-03-27",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon Kiro",
@@ -1467,7 +1553,8 @@
         "GitHub Copilot",
         "Claude Code"
       ],
-      "recorded_date": "2026-04-08"
+      "recorded_date": "2026-04-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Replit",
@@ -1484,7 +1571,8 @@
         "Gitpod",
         "CodeSandbox"
       ],
-      "recorded_date": "2026-04-08"
+      "recorded_date": "2026-04-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "SonarQube Cloud",
@@ -1501,7 +1589,8 @@
         "Codacy",
         "DeepSource"
       ],
-      "recorded_date": "2026-04-08"
+      "recorded_date": "2026-04-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Cursor",
@@ -1519,7 +1608,8 @@
         "Cline",
         "Claude Code"
       ],
-      "recorded_date": "2026-04-08"
+      "recorded_date": "2026-04-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Gemini API",
@@ -1537,7 +1627,8 @@
         "Together AI",
         "Anthropic Claude API"
       ],
-      "recorded_date": "2026-04-08"
+      "recorded_date": "2026-04-08",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OVHcloud",
@@ -1555,7 +1646,8 @@
         "Vultr",
         "Linode"
       ],
-      "recorded_date": "2026-04-09"
+      "recorded_date": "2026-04-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon SP-API",
@@ -1572,7 +1664,8 @@
         "WooCommerce API",
         "BigCommerce API"
       ],
-      "recorded_date": "2026-04-14"
+      "recorded_date": "2026-04-14",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon Kiro",
@@ -1590,7 +1683,8 @@
         "Windsurf",
         "Claude Code"
       ],
-      "recorded_date": "2026-04-09"
+      "recorded_date": "2026-04-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OpenAI",
@@ -1610,7 +1704,8 @@
         "Stability AI",
         "Replicate"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OpenAI",
@@ -1630,7 +1725,8 @@
         "ElevenLabs",
         "Google Cloud Speech-to-Text"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "AWS",
@@ -1652,7 +1748,8 @@
         "Fly.io",
         "DigitalOcean App Platform"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "AWS",
@@ -1670,7 +1767,8 @@
         "Mac client",
         "Web client"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "AWS",
@@ -1685,7 +1783,8 @@
       "alternatives": [
         "Node.js 22 Lambda runtime"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Maps",
@@ -1700,7 +1799,8 @@
       "alternatives": [
         "Google Maps API key authentication"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "AWS",
@@ -1715,7 +1815,8 @@
       "alternatives": [
         "Fargate Platform Version 1.4.0+"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "AWS",
@@ -1732,7 +1833,8 @@
         "Linkerd",
         "Amazon EKS native service mesh"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "AWS",
@@ -1749,7 +1851,8 @@
         "Terraform",
         "Pulumi"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Vercel",
@@ -1767,7 +1870,8 @@
         "Render",
         "Railway"
       ],
-      "recorded_date": "2026-04-10"
+      "recorded_date": "2026-04-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Augment Code",
@@ -1784,7 +1888,8 @@
         "Cline",
         "Aider"
       ],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Socket.dev",
@@ -1797,7 +1902,8 @@
       "source_url": "https://socket.dev/pricing",
       "category": "Security",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "LocalStack",
@@ -1810,7 +1916,8 @@
       "source_url": "https://www.localstack.cloud/pricing",
       "category": "Testing",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Xata Lite",
@@ -1827,7 +1934,8 @@
         "PlanetScale",
         "Neon"
       ],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "stathat.com",
@@ -1843,7 +1951,8 @@
         "Prometheus",
         "Grafana Cloud"
       ],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Prisma Accelerate",
@@ -1856,7 +1965,8 @@
       "source_url": "https://www.prisma.io/pricing",
       "category": "Databases",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "SurrealDB Cloud",
@@ -1869,7 +1979,8 @@
       "source_url": "https://surrealdb.com/pricing",
       "category": "Databases",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "codehooks.io",
@@ -1882,7 +1993,8 @@
       "source_url": "https://codehooks.io/",
       "category": "Databases",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "SeaTable",
@@ -1895,7 +2007,8 @@
       "source_url": "https://seatable.io/",
       "category": "Databases",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Phase Two",
@@ -1912,7 +2025,8 @@
         "ZITADEL",
         "SuperTokens"
       ],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Nx Cloud",
@@ -1925,7 +2039,8 @@
       "source_url": "https://nx.dev/ci",
       "category": "CI/CD",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "incidenthub.cloud",
@@ -1938,7 +2053,8 @@
       "source_url": "https://incidenthub.cloud/",
       "category": "Monitoring",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Servervana",
@@ -1954,7 +2070,8 @@
         "UptimeObserver",
         "Xitoring"
       ],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "economize.cloud",
@@ -1967,7 +2084,8 @@
       "source_url": "https://economize.cloud",
       "category": "Monitoring",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "deployhq.com",
@@ -1980,7 +2098,8 @@
       "source_url": "https://www.deployhq.com/",
       "category": "CI/CD",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Commerce Layer",
@@ -1993,7 +2112,8 @@
       "source_url": "https://commercelayer.io",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Kiter.app",
@@ -2006,7 +2126,8 @@
       "source_url": "https://www.kiter.app/",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Snap Accelerate",
@@ -2019,7 +2140,8 @@
       "source_url": "https://developers.snapchat.com/accelerate/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "ActiveCampaign",
@@ -2032,7 +2154,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Adjust",
@@ -2045,7 +2168,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Apptimize",
@@ -2058,7 +2182,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Attribution App",
@@ -2071,7 +2196,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Branch",
@@ -2084,7 +2210,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Chartio",
@@ -2097,7 +2224,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "ClearBrain",
@@ -2110,7 +2238,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Commando.io",
@@ -2123,7 +2252,8 @@
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "CrazyEgg",
@@ -2136,7 +2266,8 @@
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Cyfe",
@@ -2149,7 +2280,8 @@
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Drift",
@@ -2162,7 +2294,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "FullContact",
@@ -2175,7 +2308,8 @@
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Gem",
@@ -2188,7 +2322,8 @@
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google BigQuery",
@@ -2201,7 +2336,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Guideline",
@@ -2214,7 +2350,8 @@
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Gusto",
@@ -2227,7 +2364,8 @@
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Kasa",
@@ -2240,7 +2378,8 @@
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Lester Lee",
@@ -2253,7 +2392,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Looker",
@@ -2266,7 +2406,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Mode",
@@ -2279,7 +2420,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "MoEngage",
@@ -2292,7 +2434,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Monday",
@@ -2305,7 +2448,8 @@
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "PersistIQ",
@@ -2318,7 +2462,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Pilot",
@@ -2331,7 +2476,8 @@
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Polymail",
@@ -2344,7 +2490,8 @@
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "ProofHub",
@@ -2357,7 +2504,8 @@
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Seekwell",
@@ -2370,7 +2518,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Shopify",
@@ -2383,7 +2532,8 @@
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Split",
@@ -2396,7 +2546,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Userlike",
@@ -2409,7 +2560,8 @@
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Vero",
@@ -2422,7 +2574,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Vervoe",
@@ -2435,7 +2588,8 @@
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "APITemplate.io",
@@ -2448,7 +2602,8 @@
       "source_url": "https://apitemplate.io",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Conversion Tools",
@@ -2461,7 +2616,8 @@
       "source_url": "https://conversiontools.io/",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "CraftMyPDF",
@@ -2474,7 +2630,8 @@
       "source_url": "https://craftmypdf.com",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "CurrencyScoop",
@@ -2487,7 +2644,8 @@
       "source_url": "https://currencybeacon.com/",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "CustomJS",
@@ -2500,7 +2658,8 @@
       "source_url": "https://customjs.space/",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "DiffJSON",
@@ -2513,7 +2672,8 @@
       "source_url": "https://comparejson.com/",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "UniRateAPI",
@@ -2526,7 +2686,8 @@
       "source_url": "https://unirateapi.com",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "PDFMonkey",
@@ -2539,7 +2700,8 @@
       "source_url": "https://www.pdfmonkey.io/",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "redirect.pizza",
@@ -2552,7 +2714,8 @@
       "source_url": "https://redirect.pizza/",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Renamer.ai",
@@ -2565,7 +2728,8 @@
       "source_url": "https://renamer.ai",
       "category": "Dev Utilities",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "FeedBear",
@@ -2578,7 +2742,8 @@
       "source_url": "https://www.feedbear.com/early-stage",
       "category": "Startup Perks",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Backlight",
@@ -2591,7 +2756,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Branition Colors",
@@ -2604,7 +2770,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "MovingPencils",
@@ -2617,7 +2784,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Free For Commercial Use",
@@ -2630,7 +2798,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Pixelixe",
@@ -2643,7 +2812,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "WalkMe",
@@ -2656,7 +2826,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "NextUI",
@@ -2669,7 +2840,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Landen",
@@ -2682,7 +2854,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Whimsical",
@@ -2695,7 +2868,8 @@
       "source_url": "",
       "category": "Design",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Contact.do",
@@ -2708,7 +2882,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "MailerLite",
@@ -2721,7 +2896,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "MailerSend",
@@ -2734,7 +2910,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Plunk",
@@ -2747,7 +2924,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Maileroo",
@@ -2760,7 +2938,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Mailtrap",
@@ -2773,7 +2952,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "AnonAddy",
@@ -2786,7 +2966,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Bump Email",
@@ -2799,7 +2980,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Parsio",
@@ -2812,7 +2994,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Maildroppa",
@@ -2825,7 +3008,8 @@
       "source_url": "",
       "category": "Email",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Kitemaker",
@@ -2838,7 +3022,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "sflow.io",
@@ -2851,7 +3036,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Quidlo",
@@ -2864,7 +3050,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Teamhood",
@@ -2877,7 +3064,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Zenkit",
@@ -2890,7 +3078,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "HeySpace",
@@ -2903,7 +3092,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Wikifactory",
@@ -2916,7 +3106,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Teleretro",
@@ -2929,7 +3120,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "MeScrum",
@@ -2942,7 +3134,8 @@
       "source_url": "",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Protectumus",
@@ -2955,7 +3148,8 @@
       "source_url": "",
       "category": "Security",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "HostedScan",
@@ -2968,7 +3162,8 @@
       "source_url": "",
       "category": "Security",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "StackHawk",
@@ -2981,7 +3176,8 @@
       "source_url": "",
       "category": "Security",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "CookieFirst",
@@ -2994,7 +3190,8 @@
       "source_url": "",
       "category": "Security",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Tailscale",
@@ -3007,7 +3204,8 @@
       "source_url": "",
       "category": "Security",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "PyUp",
@@ -3020,7 +3218,8 @@
       "source_url": "",
       "category": "Security",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "LibreQR",
@@ -3033,7 +3232,8 @@
       "source_url": "",
       "category": "Storage",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Redbooth",
@@ -3046,7 +3246,8 @@
       "source_url": "",
       "category": "Storage",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Kraken.io",
@@ -3059,7 +3260,8 @@
       "source_url": "",
       "category": "Storage",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Otixo",
@@ -3072,7 +3274,8 @@
       "source_url": "",
       "category": "Storage",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Userbird",
@@ -3085,7 +3288,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Seline",
@@ -3098,7 +3302,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Segment Startups",
@@ -3111,7 +3316,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Census",
@@ -3124,7 +3330,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "UsabilityHub",
@@ -3137,7 +3344,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Hotjar",
@@ -3150,7 +3358,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "FullStory",
@@ -3163,7 +3372,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Smartlook",
@@ -3176,7 +3386,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "UXtweak",
@@ -3189,7 +3400,8 @@
       "source_url": "",
       "category": "Analytics",
       "alternatives": [],
-      "recorded_date": "2026-04-12"
+      "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Zoho Subscriptions",
@@ -3202,7 +3414,8 @@
       "source_url": "",
       "category": "Cloud IaaS",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "API-Ninjas",
@@ -3215,7 +3428,8 @@
       "source_url": "",
       "category": "API Development",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "HeyForm",
@@ -3228,7 +3442,8 @@
       "source_url": "",
       "category": "Forms",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Codiga",
@@ -3241,7 +3456,8 @@
       "source_url": "",
       "category": "IDE & Code Editors",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "xAI",
@@ -3254,7 +3470,8 @@
       "source_url": "",
       "category": "AI / ML",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Clarifai",
@@ -3267,7 +3484,8 @@
       "source_url": "",
       "category": "AI / ML",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Typeform",
@@ -3280,7 +3498,8 @@
       "source_url": "",
       "category": "Forms",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "CodeRabbit",
@@ -3293,7 +3512,8 @@
       "source_url": "",
       "category": "Code Quality",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "SwaggerHub",
@@ -3306,7 +3526,8 @@
       "source_url": "",
       "category": "API Development",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Stickies.app",
@@ -3319,7 +3540,8 @@
       "source_url": "",
       "category": "Team Collaboration",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Katalon",
@@ -3332,7 +3554,8 @@
       "source_url": "",
       "category": "Testing",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "TestingBot",
@@ -3345,7 +3568,8 @@
       "source_url": "",
       "category": "Testing",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Knowlarity",
@@ -3358,7 +3582,8 @@
       "source_url": "",
       "category": "Communication",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "microlink.io",
@@ -3371,7 +3596,8 @@
       "source_url": "",
       "category": "Web Scraping",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Firecrawl",
@@ -3384,7 +3610,8 @@
       "source_url": "",
       "category": "Web Scraping",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "filebase.com",
@@ -3397,7 +3624,8 @@
       "source_url": "",
       "category": "Cloud IaaS",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Pocket Alert",
@@ -3410,7 +3638,8 @@
       "source_url": "",
       "category": "Messaging",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Stoplight",
@@ -3423,7 +3652,8 @@
       "source_url": "",
       "category": "API Development",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Maps Platform",
@@ -3436,7 +3666,8 @@
       "source_url": "",
       "category": "Maps/Geolocation",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "PubNub",
@@ -3449,7 +3680,8 @@
       "source_url": "",
       "category": "Messaging",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Zoho Meeting",
@@ -3462,7 +3694,8 @@
       "source_url": "",
       "category": "Cloud IaaS",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OneSignal",
@@ -3475,7 +3708,8 @@
       "source_url": "",
       "category": "Messaging",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Stadia Maps",
@@ -3488,7 +3722,8 @@
       "source_url": "",
       "category": "Maps/Geolocation",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Keywords AI",
@@ -3501,7 +3736,8 @@
       "source_url": "",
       "category": "AI / ML",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Revolt",
@@ -3514,7 +3750,8 @@
       "source_url": "",
       "category": "Team Collaboration",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "GoSquared",
@@ -3527,7 +3764,8 @@
       "source_url": "",
       "category": "Communication",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Drift",
@@ -3540,7 +3778,8 @@
       "source_url": "",
       "category": "Communication",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Synadia NGS",
@@ -3553,7 +3792,8 @@
       "source_url": "",
       "category": "Messaging",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Pingram.io",
@@ -3566,7 +3806,8 @@
       "source_url": "",
       "category": "Messaging",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "LambdaTest",
@@ -3579,7 +3820,8 @@
       "source_url": "",
       "category": "Testing",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "DhiWise",
@@ -3592,7 +3834,8 @@
       "source_url": "",
       "category": "IDE & Code Editors",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Brackets",
@@ -3605,7 +3848,8 @@
       "source_url": "",
       "category": "IDE & Code Editors",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Apiary",
@@ -3618,7 +3862,8 @@
       "source_url": "",
       "category": "API Development",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Stamen Maps",
@@ -3631,7 +3876,8 @@
       "source_url": "",
       "category": "Maps/Geolocation",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Clever Cloud",
@@ -3644,7 +3890,8 @@
       "source_url": "",
       "category": "Cloud IaaS",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Alibaba Cloud Startups",
@@ -3657,7 +3904,8 @@
       "source_url": "",
       "category": "Cloud IaaS",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Logz.io",
@@ -3670,7 +3918,8 @@
       "source_url": "",
       "category": "Logging",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Papertrail",
@@ -3683,7 +3932,8 @@
       "source_url": "",
       "category": "Logging",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "LogZab",
@@ -3696,7 +3946,8 @@
       "source_url": "",
       "category": "Logging",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Elmah.io",
@@ -3709,7 +3960,8 @@
       "source_url": "",
       "category": "Error Tracking",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Beanstalk",
@@ -3722,7 +3974,8 @@
       "source_url": "",
       "category": "Source Control",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Storyblok",
@@ -3735,7 +3988,8 @@
       "source_url": "",
       "category": "Headless CMS",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Imgix",
@@ -3748,7 +4002,8 @@
       "source_url": "",
       "category": "CDN",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Toran Proxy",
@@ -3761,7 +4016,8 @@
       "source_url": "",
       "category": "CDN",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Shotstack",
@@ -3774,7 +4030,8 @@
       "source_url": "",
       "category": "Video",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "CommandBar",
@@ -3787,7 +4044,8 @@
       "source_url": "",
       "category": "Search",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "LingoHub",
@@ -3800,7 +4058,8 @@
       "source_url": "",
       "category": "Localization",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Transifex",
@@ -3813,7 +4072,8 @@
       "source_url": "",
       "category": "Localization",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "RunCloud",
@@ -3826,7 +4086,8 @@
       "source_url": "",
       "category": "Server Management",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Pipedream",
@@ -3839,7 +4100,8 @@
       "source_url": "",
       "category": "Workflow Automation",
       "alternatives": [],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Claude Code",
@@ -3857,7 +4119,8 @@
         "Amazon Kiro",
         "Windsurf"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon Kiro",
@@ -3875,7 +4138,8 @@
         "Windsurf",
         "Claude Code"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon Kiro (AWS Startups)",
@@ -3892,7 +4156,8 @@
         "Cursor",
         "Windsurf"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Windsurf",
@@ -3909,7 +4174,8 @@
         "GitHub Copilot",
         "Claude Code"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "GitHub Copilot",
@@ -3926,7 +4192,8 @@
         "Windsurf",
         "Gemini Code Assist"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Cursor",
@@ -3943,7 +4210,8 @@
         "GitHub Copilot",
         "Claude Code"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "n8n",
@@ -3961,7 +4229,8 @@
         "Make",
         "Zapier"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Microsoft",
@@ -3978,7 +4247,8 @@
         "Azure Virtual Desktop",
         "Citrix DaaS"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Microsoft",
@@ -3994,7 +4264,8 @@
         "Google Workspace Enterprise Plus",
         "Zoho Workplace"
       ],
-      "recorded_date": "2026-04-13"
+      "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
     },
     {
       "vendor": "OVHcloud",
@@ -4012,7 +4283,8 @@
         "Vultr",
         "AWS"
       ],
-      "recorded_date": "2026-04-09"
+      "recorded_date": "2026-04-09",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Content API for Shopping",
@@ -4029,7 +4301,8 @@
         "Shopify API",
         "BigCommerce API"
       ],
-      "recorded_date": "2026-04-15"
+      "recorded_date": "2026-04-15",
+      "date_source": "hand_written"
     },
     {
       "vendor": "DeepSeek",
@@ -4046,7 +4319,8 @@
         "Anthropic Claude API",
         "Google Gemini API"
       ],
-      "recorded_date": "2026-04-16"
+      "recorded_date": "2026-04-16",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Netlify",
@@ -4063,7 +4337,8 @@
         "Cloudflare Pages",
         "Railway"
       ],
-      "recorded_date": "2026-04-16"
+      "recorded_date": "2026-04-16",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Alibaba Cloud Qwen Code",
@@ -4080,7 +4355,8 @@
         "Cursor",
         "Codeium"
       ],
-      "recorded_date": "2026-04-16"
+      "recorded_date": "2026-04-16",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Google Gemini API",
@@ -4098,7 +4374,8 @@
         "OpenRouter",
         "Groq"
       ],
-      "recorded_date": "2026-04-17"
+      "recorded_date": "2026-04-17",
+      "date_source": "hand_written"
     },
     {
       "vendor": "SendGrid Accelerate",
@@ -4115,7 +4392,8 @@
         "Mailgun",
         "Postmark"
       ],
-      "recorded_date": "2026-04-17"
+      "recorded_date": "2026-04-17",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Prospect.io",
@@ -4132,7 +4410,8 @@
         "Hunter.io",
         "Lemlist"
       ],
-      "recorded_date": "2026-04-17"
+      "recorded_date": "2026-04-17",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Kluster AI",
@@ -4149,7 +4428,8 @@
         "SiliconFlow",
         "OpenRouter"
       ],
-      "recorded_date": "2026-04-17"
+      "recorded_date": "2026-04-17",
+      "date_source": "hand_written"
     },
     {
       "vendor": "searchly.com",
@@ -4166,7 +4446,8 @@
         "Algolia",
         "Elastic Cloud"
       ],
-      "recorded_date": "2026-04-19"
+      "recorded_date": "2026-04-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "ImageEngine",
@@ -4184,7 +4465,8 @@
         "Uploadcare",
         "imgix"
       ],
-      "recorded_date": "2026-04-19"
+      "recorded_date": "2026-04-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "DBOS",
@@ -4201,7 +4483,8 @@
         "Inngest",
         "Trigger.dev"
       ],
-      "recorded_date": "2026-04-19"
+      "recorded_date": "2026-04-19",
+      "date_source": "hand_written"
     },
     {
       "vendor": "X (Twitter)",
@@ -4218,7 +4501,8 @@
         "Mastodon API",
         "Reddit API"
       ],
-      "recorded_date": "2026-04-21"
+      "recorded_date": "2026-04-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Netlify",
@@ -4235,7 +4519,8 @@
         "Cloudflare Pages",
         "Railway"
       ],
-      "recorded_date": "2026-04-21"
+      "recorded_date": "2026-04-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "GitHub Copilot",
@@ -4253,7 +4538,8 @@
         "Gemini Code Assist",
         "Claude Code"
       ],
-      "recorded_date": "2026-04-21"
+      "recorded_date": "2026-04-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "GitHub Copilot",
@@ -4272,7 +4558,8 @@
         "Claude Code",
         "Cline"
       ],
-      "recorded_date": "2026-04-21"
+      "recorded_date": "2026-04-21",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Amazon SES",
@@ -4291,7 +4578,8 @@
         "Brevo",
         "Postal"
       ],
-      "recorded_date": "2026-08-26"
+      "recorded_date": "2026-08-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Storj",
@@ -4309,7 +4597,8 @@
         "Tigris",
         "MinIO"
       ],
-      "recorded_date": "2026-08-26"
+      "recorded_date": "2026-08-26",
+      "date_source": "hand_written"
     }
   ]
 }

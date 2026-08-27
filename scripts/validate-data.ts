@@ -133,7 +133,10 @@ const REQUIRED_CHANGE_FIELDS = [
   "source_url",
   "category",
   "alternatives",
+  "date_source",
 ];
+
+const VALID_DATE_SOURCES = ["vendor_page", "hand_written", "discovered"];
 
 function validateOffers(offers: Offer[]): ValidationError[] {
   const errors: ValidationError[] = [];
@@ -274,6 +277,16 @@ function validateDealChanges(changes: DealChange[]): ValidationError[] {
         vendor,
         field: "source_url",
         message: `Invalid URL format: ${change.source_url}`,
+      });
+    }
+
+    if (change.date_source && !VALID_DATE_SOURCES.includes(change.date_source)) {
+      errors.push({
+        file: "data/deal_changes.json",
+        index: i,
+        vendor,
+        field: "date_source",
+        message: `Unknown date_source "${change.date_source}". Valid: ${VALID_DATE_SOURCES.join(", ")}`,
       });
     }
   }

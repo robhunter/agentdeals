@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, StabilityClass, Referral, RiskCause, LinkUnreachable } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, LinkUnreachable } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
@@ -9,7 +9,8 @@ import { filterAlternatives } from "./product-role.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
-const CHANGES_PATH = path.join(__dirname, "..", "data", "deal_changes.json");
+const CHANGES_PATH =
+  process.env.AGENTDEALS_CHANGES_PATH || path.join(__dirname, "..", "data", "deal_changes.json");
 
 let cachedOffers: Offer[] | null = null;
 let cachedChanges: DealChange[] | null = null;
@@ -433,6 +434,23 @@ export function loadDealChanges(): DealChange[] {
   return cachedChanges;
 }
 
+export const DATE_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written", "discovered"];
+
+export const EVENT_DATED_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written"];
+
+export function isEventDated(change: Pick<DealChange, "date_source">): boolean {
+  return EVENT_DATED_SOURCES.includes(change.date_source as ChangeDateSource);
+}
+
+export function partitionByDateProvenance<T extends Pick<DealChange, "date_source">>(
+  changes: T[]
+): { dated: T[]; discovered: T[] } {
+  const dated: T[] = [];
+  const discovered: T[] = [];
+  for (const change of changes) (isEventDated(change) ? dated : discovered).push(change);
+  return { dated, discovered };
+}
+
 export interface ChangeLogFreshness {
   total: number;
   last_recorded_date: string | null;
@@ -442,6 +460,8 @@ export interface ChangeLogFreshness {
   recorded_last_30_days: number;
   machine_detected_total: number;
   entries_without_recorded_date: number;
+  discovered_date_total: number;
+  entries_without_date_source: number;
 }
 
 export function changeLogFreshness(changes: DealChange[], now: Date = new Date()): ChangeLogFreshness {
@@ -467,6 +487,10 @@ export function changeLogFreshness(changes: DealChange[], now: Date = new Date()
     recorded_last_30_days: recorded.filter((d) => d >= thirtyDaysAgo).length,
     machine_detected_total: changes.filter((c) => c.detected_by).length,
     entries_without_recorded_date: changes.length - recorded.length,
+    discovered_date_total: changes.filter((c) => !isEventDated(c)).length,
+    entries_without_date_source: changes.filter(
+      (c) => !DATE_SOURCES.includes(c.date_source as ChangeDateSource)
+    ).length,
   };
 }
 
@@ -1114,7 +1138,7 @@ export function getWeeklyDigest(): {
   // Upcoming deadlines from deal changes with future dates (next 30 days)
   const allChanges = loadDealChanges();
   const changeDeadlines = allChanges
-    .filter((c) => c.date >= today && c.date <= thirtyDaysFromNow)
+    .filter((c) => isEventDated(c) && c.date >= today && c.date <= thirtyDaysFromNow)
     .map((c) => ({
       vendor: c.vendor,
       date: c.date,

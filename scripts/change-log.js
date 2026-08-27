@@ -30,6 +30,22 @@ const DEFAULT_IMPACT = "medium";
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const DEFAULT_REPICK_WINDOW_DAYS = 21;
 
+export const DATE_SOURCE_VENDOR_PAGE = "vendor_page";
+export const DATE_SOURCE_HAND_WRITTEN = "hand_written";
+export const DATE_SOURCE_DISCOVERED = "discovered";
+
+export const DATE_SOURCES = [
+  DATE_SOURCE_VENDOR_PAGE,
+  DATE_SOURCE_HAND_WRITTEN,
+  DATE_SOURCE_DISCOVERED,
+];
+
+export const EVENT_DATED_SOURCES = [DATE_SOURCE_VENDOR_PAGE, DATE_SOURCE_HAND_WRITTEN];
+
+export function isEventDated(change) {
+  return EVENT_DATED_SOURCES.includes(change?.date_source);
+}
+
 export function changeKey(change) {
   return [change.vendor, change.change_type, change.date, change.source_url].join("|");
 }
@@ -54,10 +70,10 @@ export function buildChangeEntry(offer, result, options = {}) {
 
   if (missing.length > 0) return { entry: null, missing };
 
-  const effectiveDate =
+  const statedDate =
     typeof result.effective_date === "string" && ISO_DATE.test(result.effective_date.trim())
       ? result.effective_date.trim()
-      : recordedDate;
+      : null;
 
   const impact = IMPACTS.includes(result.impact) ? result.impact : DEFAULT_IMPACT;
 
@@ -65,7 +81,8 @@ export function buildChangeEntry(offer, result, options = {}) {
     entry: {
       vendor: offer.vendor,
       change_type: changeType,
-      date: effectiveDate,
+      date: statedDate ?? recordedDate,
+      date_source: statedDate ? DATE_SOURCE_VENDOR_PAGE : DATE_SOURCE_DISCOVERED,
       summary,
       previous_state: offer.description,
       current_state: currentState,
@@ -154,5 +171,7 @@ export function changeLogFreshness(changes, now = new Date()) {
     recorded_last_30_days: recorded.filter((d) => d >= thirtyDaysAgo).length,
     machine_detected_total: changes.filter((c) => c.detected_by).length,
     entries_without_recorded_date: changes.length - recorded.length,
+    discovered_date_total: changes.filter((c) => !isEventDated(c)).length,
+    entries_without_date_source: changes.filter((c) => !DATE_SOURCES.includes(c.date_source)).length,
   };
 }
