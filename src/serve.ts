@@ -27,6 +27,7 @@ import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from ".
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
 import { linkifyVerdictBlocks, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
@@ -1081,24 +1082,12 @@ function buildCategoryPage(slug: string): string | null {
     : "";
 
   // Category FAQ
-  const enrichedOffers = enrichOffers(catOffers);
-  const stableCount = enrichedOffers.filter(o => o.stability === "stable").length;
-  const stablePct = catCount > 0 ? Math.round((stableCount / catCount) * 100) : 0;
   const topAlts = catOffers.slice(0, 5).map(o => escHtmlServer(o.vendor)).join(", ");
-  const productionAnswer = stablePct >= 80
-    ? `Many free ${categoryName.toLowerCase()} tiers are suitable for small production workloads. ${stablePct}% of vendors in this category have stable pricing with no recorded changes. Always monitor your usage against free tier limits and have an upgrade plan.`
-    : stablePct >= 50
-    ? `Some free ${categoryName.toLowerCase()} tiers can work for production, but evaluate stability carefully. ${stablePct}% of vendors have stable pricing. For critical services, prefer vendors with no pricing changes in their history.`
-    : `Free ${categoryName.toLowerCase()} tiers should be used cautiously in production. Only ${stablePct}% of vendors have fully stable pricing. Consider self-hosted options or vendors with strong stability records for critical workloads.`;
 
   const faqItems = [
     {
       q: `What is the best free ${categoryName.toLowerCase()} service?`,
       a: `Based on our data, the most popular free ${categoryName.toLowerCase()} services include ${topAlts}. ${topVendor ? `${escHtmlServer(topVendor.vendor)} offers ${escHtmlServer(keyLimit)} on their ${escHtmlServer(topVendor.tier)} plan.` : ""} The best choice depends on your specific requirements.`,
-    },
-    {
-      q: `Are free ${categoryName.toLowerCase()} tiers good for production?`,
-      a: productionAnswer,
     },
     {
       q: `How many free ${categoryName.toLowerCase()} tools are there?`,
@@ -1107,8 +1096,8 @@ function buildCategoryPage(slug: string): string | null {
     {
       q: `How stable are ${categoryName.toLowerCase()} free tiers?`,
       a: catChangeCount === 0
-        ? `Very stable. No pricing changes have been recorded for any ${categoryName.toLowerCase()} vendor we track. This is one of the most stable categories.`
-        : `${catChangeCount} pricing change${catChangeCount > 1 ? "s have" : " has"} been recorded across ${categoryName.toLowerCase()} vendors. ${stablePct}% of vendors have had no changes at all. Check our <a href="/stability">Stability Dashboard</a> for per-vendor details.`,
+        ? `No pricing changes have been recorded for any ${categoryName.toLowerCase()} vendor we track.`
+        : `${catChangeCount} pricing change${catChangeCount > 1 ? "s have" : " has"} been recorded across ${categoryName.toLowerCase()} vendors. Check our <a href="/stability">Stability Dashboard</a> for per-vendor details.`,
     },
   ];
 
@@ -1121,18 +1110,7 @@ function buildCategoryPage(slug: string): string | null {
   </div>`;
 
   // FAQ JSON-LD
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: f.a.replace(/<[^>]*>/g, ""),
-      },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/category/" + slug, faqItems);
 
   // JSON-LD structured data (ItemList + FAQPage)
   const jsonLd = {
@@ -2417,15 +2395,7 @@ function buildComparisonPage(slug: string): string | null {
     },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map(item => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/" + slug, faqItems);
 
   // Related comparisons (share a vendor with this pair)
   const relatedComparisons = Array.from(comparisonMap.entries())
@@ -2919,15 +2889,7 @@ ${editorialVs.map(p => `      <a href="/${p.slug}" class="related-card">${escHtm
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/" + slug, faqItems);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -4181,18 +4143,7 @@ ${allCompareLinks.join("\n")}
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: vendorFaqItems.map(item => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.a,
-      },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/vendor/" + slug, vendorFaqItems);
 
   const faqHtml = `
   <div class="section faq-section">
@@ -4558,18 +4509,7 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
     { q: `Has ${vendorName} changed their pricing recently?`, a: faqChangesAnswer },
   ];
 
-  const altFaqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: altFaqItems.map(item => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.a,
-      },
-    })),
-  };
+  const altFaqJsonLd = faqPageJsonLd("/alternative-to/" + slug, altFaqItems);
 
   const altFaqHtml = `
   <div class="section faq-section">
@@ -15642,32 +15582,12 @@ function buildFreeNextjsStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Is Vercel free for Next.js?",
-        acceptedAnswer: { "@type": "Answer", text: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5/month free credit) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
-      },
-      {
-        "@type": "Question",
-        name: "What's the best free database for Next.js?",
-        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) is the best fit for Next.js. Its serverless driver works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (9 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
-      },
-      {
-        "@type": "Question",
-        name: "Can I build a SaaS for free with Next.js?",
-        acceptedAnswer: { "@type": "Answer", text: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
-      },
-      {
-        "@type": "Question",
-        name: "What's the first thing to spend money on when scaling a Next.js app?",
-        acceptedAnswer: { "@type": "Answer", text: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. The Neon Launch plan at $19/month gets you 10 GiB storage, 300 compute hours, and autoscaling. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
-      },
-    ],
-  };
+  const faqJsonLd = faqPageJsonLd("/free-nextjs-stack", [
+    { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5/month free credit) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
+    { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) is the best fit for Next.js. Its serverless driver works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (9 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
+    { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
+    { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. The Neon Launch plan at $19/month gets you 10 GiB storage, 300 compute hours, and autoscaling. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
+  ]);
 
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
@@ -16062,32 +15982,12 @@ function buildFreeDjangoStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Can I host Django for free in 2026?",
-        acceptedAnswer: { "@type": "Answer", text: "Yes. Railway offers a $5/month free credit that covers a small Django app with Gunicorn, auto-deploy from GitHub, and managed Postgres. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io gives 3 shared-CPU VMs free with 256 MB RAM." },
-      },
-      {
-        "@type": "Question",
-        name: "What's the best free database for Django?",
-        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month, scales to zero. Django's ORM is built for Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search, and range types. Supabase (500 MB) is a good alternative with built-in auth. CockroachDB offers 10 GiB free with distributed Postgres-compatible SQL." },
-      },
-      {
-        "@type": "Question",
-        name: "Does Django need Redis?",
-        acceptedAnswer: { "@type": "Answer", text: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash offers 10,000 Redis commands/day free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
-      },
-      {
-        "@type": "Question",
-        name: "PythonAnywhere vs Railway vs Render for Django?",
-        acceptedAnswer: { "@type": "Answer", text: "Railway is the best overall — $5/month credit, no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
-      },
-    ],
-  };
+  const faqJsonLd = faqPageJsonLd("/free-django-stack", [
+    { q: "Can I host Django for free in 2026?", a: "Yes. Railway offers a $5/month free credit that covers a small Django app with Gunicorn, auto-deploy from GitHub, and managed Postgres. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io gives 3 shared-CPU VMs free with 256 MB RAM." },
+    { q: "What's the best free database for Django?", a: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month, scales to zero. Django's ORM is built for Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search, and range types. Supabase (500 MB) is a good alternative with built-in auth. CockroachDB offers 10 GiB free with distributed Postgres-compatible SQL." },
+    { q: "Does Django need Redis?", a: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash offers 10,000 Redis commands/day free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
+    { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway is the best overall — $5/month credit, no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
+  ]);
 
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
@@ -16521,32 +16421,12 @@ function buildFreeFastapiStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Can I host FastAPI for free in 2026?",
-        acceptedAnswer: { "@type": "Answer", text: "Yes. Railway offers a $5/month free credit that covers a small FastAPI app with uvicorn, auto-deploy from GitHub, and no sleep timer. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). Fly.io gives 3 shared-CPU VMs free with 256 MB RAM. Koyeb offers 1 nano service free with edge deployment. Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
-      },
-      {
-        "@type": "Question",
-        name: "What database should I use with FastAPI?",
-        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month, scales to zero. Use with SQLAlchemy 2.0 async engine + asyncpg for async queries, or Tortoise ORM for an async-native alternative. FastAPI has no built-in ORM, so you choose your own — SQLAlchemy is the most popular choice. Supabase (500 MB) is an alternative with built-in auth and realtime." },
-      },
-      {
-        "@type": "Question",
-        name: "Does Vercel support FastAPI?",
-        acceptedAnswer: { "@type": "Answer", text: "Technically yes, via the Mangum adapter that wraps ASGI apps for AWS Lambda-style serverless functions. But you lose WebSocket support, FastAPI's startup/shutdown lifespan events, background tasks, and long-running connections. For API-only services, this may be acceptable. For anything using FastAPI's async features fully, use Railway, Render, or Fly.io instead." },
-      },
-      {
-        "@type": "Question",
-        name: "FastAPI vs Django for free hosting?",
-        acceptedAnswer: { "@type": "Answer", text: "FastAPI is lighter weight and async-native — ideal for APIs, microservices, and AI/ML serving. Django is batteries-included with built-in ORM, admin, auth, and forms — better for full web applications. Both host free on Railway ($5 credit) or Render. FastAPI needs you to choose every component (ORM, auth, admin) separately. Django includes them. If you're building a REST/GraphQL API or serving ML models, FastAPI. If you're building a web app with admin panel and user accounts, Django." },
-      },
-    ],
-  };
+  const faqJsonLd = faqPageJsonLd("/free-fastapi-stack", [
+    { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway offers a $5/month free credit that covers a small FastAPI app with uvicorn, auto-deploy from GitHub, and no sleep timer. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). Fly.io gives 3 shared-CPU VMs free with 256 MB RAM. Koyeb offers 1 nano service free with edge deployment. Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
+    { q: "What database should I use with FastAPI?", a: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month, scales to zero. Use with SQLAlchemy 2.0 async engine + asyncpg for async queries, or Tortoise ORM for an async-native alternative. FastAPI has no built-in ORM, so you choose your own — SQLAlchemy is the most popular choice. Supabase (500 MB) is an alternative with built-in auth and realtime." },
+    { q: "Does Vercel support FastAPI?", a: "Technically yes, via the Mangum adapter that wraps ASGI apps for AWS Lambda-style serverless functions. But you lose WebSocket support, FastAPI's startup/shutdown lifespan events, background tasks, and long-running connections. For API-only services, this may be acceptable. For anything using FastAPI's async features fully, use Railway, Render, or Fly.io instead." },
+    { q: "FastAPI vs Django for free hosting?", a: "FastAPI is lighter weight and async-native — ideal for APIs, microservices, and AI/ML serving. Django is batteries-included with built-in ORM, admin, auth, and forms — better for full web applications. Both host free on Railway ($5 credit) or Render. FastAPI needs you to choose every component (ORM, auth, admin) separately. Django includes them. If you're building a REST/GraphQL API or serving ML models, FastAPI. If you're building a web app with admin panel and user accounts, Django." },
+  ]);
 
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
@@ -16997,32 +16877,12 @@ function buildFreeGoStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Can I host Go for free in 2026?",
-        acceptedAnswer: { "@type": "Answer", text: "Yes. Railway offers a $5/month free credit that covers a Go binary — Go's tiny memory footprint (~10 MB Docker images from scratch) maximizes the credit. Render has a free tier but spins down after 15 minutes; Go's instant cold starts (~50ms) make this tolerable. Fly.io gives 3 shared-CPU VMs free. Google Cloud Run's free tier (2M requests/month) is excellent for Go — near-instant cold starts and true scale-to-zero." },
-      },
-      {
-        "@type": "Question",
-        name: "What database should I use with Go?",
-        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month. Use with pgx, the fastest Go Postgres driver (pure Go, no CGo). For type-safe SQL without an ORM, use sqlc — it generates Go code from SQL queries at compile time. Go developers typically prefer raw SQL + pgx or sqlc over ORMs like GORM." },
-      },
-      {
-        "@type": "Question",
-        name: "Go vs Node.js for free hosting?",
-        acceptedAnswer: { "@type": "Answer", text: "Go compiles to a single binary with no runtime dependencies — Docker images are 5-15 MB vs 100+ MB for Node.js. This means lower memory usage (more headroom on free tiers), instant cold starts (better for serverless), and simpler deploys (no node_modules, no npm install). Go's goroutines handle concurrency without async/await complexity. Trade-off: Go's ecosystem for web frameworks is smaller, and there's no equivalent to npm's package breadth." },
-      },
-      {
-        "@type": "Question",
-        name: "Do I need a framework for Go web apps?",
-        acceptedAnswer: { "@type": "Answer", text: "No. Go's net/http standard library is production-ready — it powers many of the world's largest services. Add a router (chi or gorilla/mux) for path parameters and middleware chaining. Frameworks like Gin, Echo, and Fiber add convenience (binding, validation, structured logging) but aren't required. The stdlib-first approach means fewer dependencies, smaller binaries, and no framework lock-in." },
-      },
-    ],
-  };
+  const faqJsonLd = faqPageJsonLd("/free-go-stack", [
+    { q: "Can I host Go for free in 2026?", a: "Yes. Railway offers a $5/month free credit that covers a Go binary — Go's tiny memory footprint (~10 MB Docker images from scratch) maximizes the credit. Render has a free tier but spins down after 15 minutes; Go's instant cold starts (~50ms) make this tolerable. Fly.io gives 3 shared-CPU VMs free. Google Cloud Run's free tier (2M requests/month) is excellent for Go — near-instant cold starts and true scale-to-zero." },
+    { q: "What database should I use with Go?", a: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month. Use with pgx, the fastest Go Postgres driver (pure Go, no CGo). For type-safe SQL without an ORM, use sqlc — it generates Go code from SQL queries at compile time. Go developers typically prefer raw SQL + pgx or sqlc over ORMs like GORM." },
+    { q: "Go vs Node.js for free hosting?", a: "Go compiles to a single binary with no runtime dependencies — Docker images are 5-15 MB vs 100+ MB for Node.js. This means lower memory usage (more headroom on free tiers), instant cold starts (better for serverless), and simpler deploys (no node_modules, no npm install). Go's goroutines handle concurrency without async/await complexity. Trade-off: Go's ecosystem for web frameworks is smaller, and there's no equivalent to npm's package breadth." },
+    { q: "Do I need a framework for Go web apps?", a: "No. Go's net/http standard library is production-ready — it powers many of the world's largest services. Add a router (chi or gorilla/mux) for path parameters and middleware chaining. Frameworks like Gin, Echo, and Fiber add convenience (binding, validation, structured logging) but aren't required. The stdlib-first approach means fewer dependencies, smaller binaries, and no framework lock-in." },
+  ]);
 
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
@@ -17479,32 +17339,12 @@ function buildFreeSaasStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "What's the cheapest way to launch a SaaS in 2026?",
-        acceptedAnswer: { "@type": "Answer", text: "You can launch a complete SaaS for $0/month using free tiers: Railway or Render (hosting), Neon (Postgres database), Clerk (auth with 50K users free), Stripe (payments \u2014 no monthly fee, only per-transaction), Resend (3K emails/month), Cloudflare R2 (10 GB storage, zero egress), Sentry (error tracking), GitHub Actions (CI/CD), PostHog (1M analytics events), and Inngest (25K background job runs). Total monthly cost at launch: $0. You'll hit your first paid tier around 1,000-5,000 users." },
-      },
-      {
-        "@type": "Question",
-        name: "Can I build a SaaS for free?",
-        acceptedAnswer: { "@type": "Answer", text: "Yes. Every layer of SaaS infrastructure \u2014 hosting, database, authentication, email, storage, monitoring, CI/CD, and analytics \u2014 has a viable free tier in 2026. The only category without a free option is payment processing (Stripe charges 2.9% + 30\u00a2 per transaction but has no monthly fee). Most free tiers support 1,000-5,000 active users before you need to upgrade. The first paid tier is typically database storage \u2014 Neon's Launch plan ($19/month) is usually the first upgrade." },
-      },
-      {
-        "@type": "Question",
-        name: "What's the best free database for SaaS?",
-        acceptedAnswer: { "@type": "Answer", text: "Neon (serverless Postgres) \u2014 0.5 GiB storage, 190+ compute hours/month, scales to zero. Works with every ORM and framework. For bundled BaaS: Supabase gives 500 MB Postgres + auth + storage + realtime (but pauses after 1 week inactive). For distributed SQL: CockroachDB offers 10 GiB free. For edge SQLite: Turso provides 9 GB. Postgres is the default SaaS database \u2014 95% of SaaS apps use it." },
-      },
-      {
-        "@type": "Question",
-        name: "When should I start paying for infrastructure?",
-        acceptedAnswer: { "@type": "Answer", text: "Most SaaS products can run entirely on free tiers through their first 1,000-5,000 users. Database storage (Neon 0.5 GiB) is typically the first limit you'll hit, followed by email volume (Resend 3K/month) and hosting compute. The jump from free to first paid tier is $19-25/month. By the time you need to pay, you should have paying customers. Plan your growth path: at 10K users expect ~$150-300/month total infrastructure, at 100K users ~$1,500-3,000/month." },
-      },
-    ],
-  };
+  const faqJsonLd = faqPageJsonLd("/free-saas-stack", [
+    { q: "What's the cheapest way to launch a SaaS in 2026?", a: "You can launch a complete SaaS for $0/month using free tiers: Railway or Render (hosting), Neon (Postgres database), Clerk (auth with 50K users free), Stripe (payments \u2014 no monthly fee, only per-transaction), Resend (3K emails/month), Cloudflare R2 (10 GB storage, zero egress), Sentry (error tracking), GitHub Actions (CI/CD), PostHog (1M analytics events), and Inngest (25K background job runs). Total monthly cost at launch: $0. You'll hit your first paid tier around 1,000-5,000 users." },
+    { q: "Can I build a SaaS for free?", a: "Yes. Every layer of SaaS infrastructure \u2014 hosting, database, authentication, email, storage, monitoring, CI/CD, and analytics \u2014 has a viable free tier in 2026. The only category without a free option is payment processing (Stripe charges 2.9% + 30\u00a2 per transaction but has no monthly fee). Most free tiers support 1,000-5,000 active users before you need to upgrade. The first paid tier is typically database storage \u2014 Neon's Launch plan ($19/month) is usually the first upgrade." },
+    { q: "What's the best free database for SaaS?", a: "Neon (serverless Postgres) \u2014 0.5 GiB storage, 190+ compute hours/month, scales to zero. Works with every ORM and framework. For bundled BaaS: Supabase gives 500 MB Postgres + auth + storage + realtime (but pauses after 1 week inactive). For distributed SQL: CockroachDB offers 10 GiB free. For edge SQLite: Turso provides 9 GB. Postgres is the default SaaS database \u2014 95% of SaaS apps use it." },
+    { q: "When should I start paying for infrastructure?", a: "Most SaaS products can run entirely on free tiers through their first 1,000-5,000 users. Database storage (Neon 0.5 GiB) is typically the first limit you'll hit, followed by email volume (Resend 3K/month) and hosting compute. The jump from free to first paid tier is $19-25/month. By the time you need to pay, you should have paying customers. Plan your growth path: at 10K users expect ~$150-300/month total infrastructure, at 100K users ~$1,500-3,000/month." },
+  ]);
 
   const categorySections = stackCategories.map(cat => {
     if (cat.isFrameworkSection) {
@@ -21498,15 +21338,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     { q: "Is the Terraform BSL license change related to the free tier removal?", a: "Indirectly. HashiCorp switched Terraform from MPL 2.0 to BSL 1.1 in August 2023, which triggered the OpenTofu fork. The free tier restructuring in March 2026 is part of HashiCorp's broader shift to monetize their ecosystem after the IBM acquisition ($6.4B in 2024). Both changes signal increased commercial pressure on free-tier and open-source users." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/terraform-cloud-free-tier-removed", faqItems);
 
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
     + '<title>' + escHtmlServer(title) + ' — AgentDeals</title>\n'
@@ -22261,15 +22093,7 @@ function buildGeminiApiPricingChangesPage(): string {
     { q: "Should I migrate away from Gemini API?", a: "It depends on your use case. If you need the 1M token context window, Gemini Flash is still the best free option. For general chat/code tasks at higher volumes, Groq and Cerebras offer better free tiers. For production workloads, evaluate DeepSeek (cheapest) or Anthropic/OpenAI (most established)." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/gemini-api-pricing-changes", faqItems);
 
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
     + '<title>' + escHtmlServer(title) + ' — AgentDeals</title>\n'
@@ -22788,15 +22612,7 @@ function buildFreeTierRiskPage(): string {
   );
 
   // JSON-LD — Article + FAQPage
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/free-tier-risk", faqs);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -25652,15 +25468,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqEntries.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/openai-assistants-migration", faqEntries);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -27032,15 +26840,7 @@ function buildStartupCreditsPage(): string {
     about: programs.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqEntries.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/startup-credits", faqEntries);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -28103,15 +27903,7 @@ function buildAiCodingToolsPricingPage(): string {
     { q: "What is Amazon Kiro and how does it compare to Cursor?", a: "Amazon Kiro is a Claude-powered IDE that launched GA in April 2026. It focuses on spec-driven development — automated requirements, design docs, and test generation. Free tier: 50 credits/month. Pro: $20/month (1,000 credits), matching Cursor's price. Credits are metered to 0.01 increments with model-dependent rates (Sonnet 4 costs 1.3x more). $0.04/credit overage available. Enterprise tier with SAML/SCIM SSO for larger teams." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqEntries.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/ai-coding-tools-pricing", faqEntries);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -28888,15 +28680,7 @@ function buildCiCdPricingPage(): string {
     { q: "Which CI/CD tools support Docker and Kubernetes natively?", a: "CircleCI, Codefresh, and Drone CI are container-native — every build step runs in Docker. Google Cloud Build uses containerized build steps. Buildkite supports Docker and Kubernetes agents. GitLab CI has strong Kubernetes integration with Auto DevOps." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqEntries.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/ci-cd-pricing", faqEntries);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -29791,15 +29575,7 @@ function buildDatabasePricingPage(): string {
     { q: "How do I migrate away from a database if pricing changes?", a: "PostgreSQL-compatible databases (Supabase, Neon, CockroachDB, Aurora) offer the easiest migration path — pg_dump works across all of them. MongoDB Atlas data can be exported via mongodump. For serverless databases (Turso, D1, Convex), migration is harder due to proprietary APIs. Choose PostgreSQL-compatible databases to minimize lock-in risk." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqEntries.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/database-pricing", faqEntries);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -30456,15 +30232,7 @@ function buildVectorDatabasePricingPage(): string {
     "about": { "@type": "SoftwareApplication", "applicationCategory": "Vector Database", "name": "Vector Database Pricing Comparison" },
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqEntries.map(f => ({
-      "@type": "Question",
-      "name": f.q,
-      "acceptedAnswer": { "@type": "Answer", "text": f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/vector-database-pricing", faqEntries);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -31183,15 +30951,7 @@ function buildHostingPricingPage(): string {
     about: services.map(s => ({ "@type": "SoftwareApplication", name: s.name })),
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqEntries.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/hosting-pricing", faqEntries);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -31941,15 +31701,7 @@ function buildLlmApiPricingPage(): string {
     about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqEntries.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/llm-api-pricing", faqEntries);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -32316,15 +32068,7 @@ function buildAgentPaymentsPage(): string {
     { q: "Do x402 services still have free tiers?", a: `Yes. All ${x402Offers.length} x402-enabled services indexed here also offer traditional free tiers. x402 is an additional payment option — it doesn't replace free tier access. Agents can use free tiers first and fall back to x402 when limits are exceeded.` },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/agent-payments", faqItems);
 
   // Group MPP offers by category
   const mppByCategory = new Map<string, typeof mppOffers>();
@@ -32614,15 +32358,7 @@ function buildX402ServicesPage(): string {
     { q: "What are the costs of using x402?", a: "Most x402 API calls cost $0.001-$0.01. Base L2 gas fees are typically under $0.001 per transaction. There are no monthly minimums, no commitments, and no signup fees. You only pay for what you use, per-request." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/x402-services", faqItems);
 
   const serviceRows = x402Offers.map(o => {
     const vendorSlug = toSlug(o.vendor);
@@ -32918,15 +32654,7 @@ function buildDallEShutdownPage(): string {
   };
 
   // JSON-LD \u2014 FAQPage
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/dall-e-shutdown", faqs);
 
   // JSON-LD \u2014 BreadcrumbList
   const breadcrumbJsonLd = {
@@ -33439,15 +33167,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
   };
 
   // JSON-LD \u2014 FAQPage
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/openai-realtime-migration", faqs);
 
   // JSON-LD \u2014 BreadcrumbList
   const breadcrumbJsonLd = {
@@ -33582,15 +33302,7 @@ function buildAppRunnerMigrationPage(): string {
   };
 
   // JSON-LD — FAQPage
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/aws-app-runner-migration", faqs);
 
   // JSON-LD — BreadcrumbList
   const breadcrumbJsonLd = {
@@ -35889,21 +35601,18 @@ function buildComparisonRelatedComparisons(slug: string): string {
   </div>`;
 }
 
-function buildComparisonFaq(slug: string, title: string): string {
+export function comparisonFaqItems(slug: string): FaqItem[] {
   const meta = comparisonMetaBySlug.get(slug);
-  if (!meta) return "";
+  if (!meta) return [];
   const catName = meta.categoryName;
   const catOffers = offers.filter(o => {
     const norm = o.category?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     return norm === meta.categorySlug || o.category === catName;
   });
   const count = catOffers.length;
-  const enriched = enrichOffers(catOffers);
-  const stableCount = enriched.filter((o: any) => o.stability === "stable").length;
-  const stablePct = count > 0 ? Math.round((stableCount / count) * 100) : 0;
   const topVendor = catOffers[0]?.vendor || catName;
 
-  const faqs = [
+  return [
     {
       q: `What is the best free ${catName.toLowerCase()} service in 2026?`,
       a: `Based on our comparison of ${count} ${catName.toLowerCase()} services, ${topVendor} stands out for its free tier generosity. However, the best choice depends on your specific requirements — this comparison breaks down limits, scaling costs, and lock-in risk for each provider.`,
@@ -35913,14 +35622,15 @@ function buildComparisonFaq(slug: string, title: string): string {
       a: `Free tier generosity varies by use case. Some providers offer more storage, others more compute or API calls. Our comparison table above shows exact limits side-by-side so you can evaluate based on what matters most for your workload.`,
     },
     {
-      q: `Are free ${catName.toLowerCase()} services reliable enough for production?`,
-      a: `${stablePct}% of the ${count} ${catName.toLowerCase()} services we track have stable pricing histories. For production use, prioritize providers rated "stable" in our analysis and review the hidden costs section to avoid surprises at scale.`,
-    },
-    {
       q: `How do ${catName.toLowerCase()} free tiers compare on limits?`,
       a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. Our comparison table provides exact numbers for each provider. Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits.`,
     },
   ];
+}
+
+function buildComparisonFaq(slug: string, title: string): string {
+  const faqs = comparisonFaqItems(slug);
+  if (faqs.length === 0) return "";
 
   const faqHtml = faqs.map(f => `<div style="margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)">
       <h3 style="margin:0 0 .5rem;font-size:1rem;color:var(--text)">${escHtmlServer(f.q)}</h3>
@@ -35934,49 +35644,9 @@ function buildComparisonFaq(slug: string, title: string): string {
 }
 
 function buildComparisonFaqJsonLd(slug: string): string {
-  const meta = comparisonMetaBySlug.get(slug);
-  if (!meta) return "";
-  const catName = meta.categoryName;
-  const catOffers = offers.filter(o => {
-    const norm = o.category?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    return norm === meta.categorySlug || o.category === catName;
-  });
-  const count = catOffers.length;
-  const enriched = enrichOffers(catOffers);
-  const stableCount = enriched.filter((o: any) => o.stability === "stable").length;
-  const stablePct = count > 0 ? Math.round((stableCount / count) * 100) : 0;
-  const topVendor = catOffers[0]?.vendor || catName;
-
-  const faqs = [
-    {
-      q: `What is the best free ${catName.toLowerCase()} service in 2026?`,
-      a: `Based on our comparison of ${count} ${catName.toLowerCase()} services, ${topVendor} stands out for its free tier generosity. However, the best choice depends on your specific requirements — this comparison breaks down limits, scaling costs, and lock-in risk for each provider.`,
-    },
-    {
-      q: `Which ${catName.toLowerCase()} free tier is most generous?`,
-      a: `Free tier generosity varies by use case. Some providers offer more storage, others more compute or API calls. Our comparison table above shows exact limits side-by-side so you can evaluate based on what matters most for your workload.`,
-    },
-    {
-      q: `Are free ${catName.toLowerCase()} services reliable enough for production?`,
-      a: `${stablePct}% of the ${count} ${catName.toLowerCase()} services we track have stable pricing histories. For production use, prioritize providers rated "stable" in our analysis and review the hidden costs section to avoid surprises at scale.`,
-    },
-    {
-      q: `How do ${catName.toLowerCase()} free tiers compare on limits?`,
-      a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. Our comparison table provides exact numbers for each provider. Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits.`,
-    },
-  ];
-
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-
-  return `<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>`;
+  const faqs = comparisonFaqItems(slug);
+  if (faqs.length === 0) return "";
+  return `<script type="application/ld+json">${JSON.stringify(faqPageJsonLd("/" + slug, faqs))}</script>`;
 }
 
 function buildComparisonBreadcrumbJsonLd(slug: string, title: string): string {
@@ -47321,15 +46991,7 @@ function buildStackCheckPage(): string {
     { q: "What should I do if my stack scores poorly?", a: "Click the alternatives link on any high-risk service card to find stable replacements. Our risk index tracks which free tiers are expanding vs contracting — prioritize services with a 'stable' or 'improving' stability rating." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqItems.map(f => ({
-      "@type": "Question",
-      "name": f.q,
-      "acceptedAnswer": { "@type": "Answer", "text": f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/stack-check", faqItems);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -47766,15 +47428,7 @@ function buildCompareToolPage(): string {
     { q: "What if a vendor isn't found?", a: "The tool will show an error with suggestions for similar vendor names. Try searching with a different spelling or check the vendor page for the full list." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqItems.map(f => ({
-      "@type": "Question",
-      "name": f.q,
-      "acceptedAnswer": { "@type": "Answer", "text": f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/compare-tool", faqItems);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -48473,15 +48127,7 @@ function buildBudgetBuilderPage(): string {
     { q: "How do the risk badges work?", a: "Low risk means the vendor\\'s free tier has been stable with no recent changes. Medium risk means some limits have been reduced recently. High risk means the free tier was removed or significantly restricted — consider alternatives." },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqItems.map(f => ({
-      "@type": "Question",
-      "name": f.q,
-      "acceptedAnswer": { "@type": "Answer", "text": f.a },
-    })),
-  };
+  const faqJsonLd = faqPageJsonLd("/budget-builder", faqItems);
 
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
     + '  <meta charset="utf-8">\n'
@@ -50928,28 +50574,10 @@ ${altHtml}${guideHtml}
     })),
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "What developer APIs are shutting down in 2026?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `We're tracking ${deadlines.length} upcoming developer tool deadlines including API shutdowns, free tier removals, and pricing changes across cloud infrastructure, databases, CI/CD, monitoring, and more. Major shutdowns include Google Tenor API (June 2026), OpenAI Assistants API (August 2026), and several AWS service deprecations.`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Which free tiers are being removed?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Multiple developer tools are removing or restructuring their free tiers. We track all changes with deadlines, countdown timers, and migration guides so you can plan ahead.`,
-        },
-      },
-    ],
-  };
+  const faqJsonLd = faqPageJsonLd("/deadlines", [
+    { q: "What developer APIs are shutting down in 2026?", a: `We're tracking ${deadlines.length} upcoming developer tool deadlines including API shutdowns, free tier removals, and pricing changes across cloud infrastructure, databases, CI/CD, monitoring, and more. Major shutdowns include Google Tenor API (June 2026), OpenAI Assistants API (August 2026), and several AWS service deprecations.`, },
+    { q: "Which free tiers are being removed?", a: `Multiple developer tools are removing or restructuring their free tiers. We track all changes with deadlines, countdown timers, and migration guides so you can plan ahead.`, },
+  ]);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -51370,27 +50998,20 @@ function buildReferralProgramsPage(): string {
     })),
   };
 
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Which developer tools have referral programs?",
-        acceptedAnswer: { "@type": "Answer", text: `We track ${programVendors.length} developer tools with active referral programs across ${categoryGroups.size} categories, including ${programVendors.slice(0, 5).map(v => v.vendor).join(", ")}, and more.` },
-      },
-      {
-        "@type": "Question",
-        name: "How do I earn money from developer tool referrals?",
-        acceptedAnswer: { "@type": "Answer", text: "Sign up for a vendor's referral program, get your referral link, and share it. When someone signs up through your link, you earn the referrer benefit (credits, cash, or commission). You can also submit your referral codes to our marketplace for broader distribution." },
-      },
-      {
-        "@type": "Question",
-        name: "Can AI agents participate in referral programs?",
-        acceptedAnswer: { "@type": "Answer", text: "Yes. Register your AI agent on our marketplace, submit referral codes for vendors with programs, and earn revenue share when your codes convert. Agents are ranked by trust tier and conversion performance." },
-      },
-    ],
-  };
+  const faqLd = faqPageJsonLd("/referral-programs", [
+    {
+      q: "Which developer tools have referral programs?",
+      a: `We track ${programVendors.length} developer tools with active referral programs across ${categoryGroups.size} categories, including ${programVendors.slice(0, 5).map(v => v.vendor).join(", ")}, and more.`,
+    },
+    {
+      q: "How do I earn money from developer tool referrals?",
+      a: "Sign up for a vendor's referral program, get your referral link, and share it. When someone signs up through your link, you earn the referrer benefit (credits, cash, or commission). You can also submit your referral codes to our marketplace for broader distribution.",
+    },
+    {
+      q: "Can AI agents participate in referral programs?",
+      a: "Yes. Register your AI agent on our marketplace, submit referral codes for vendors with programs, and earn revenue share when your codes convert. Agents are ranked by trust tier and conversion performance.",
+    },
+  ]);
 
   const typeLabel = (t: string) => t === "self-service" ? "Self-service" : t === "affiliate-network" ? "Affiliate network" : t === "partner" ? "Partner" : "Application";
   const commLabel = (c?: string) => c === "recurring" ? "Recurring" : c === "credits" ? "Credits" : c === "one-time" ? "One-time" : "";
