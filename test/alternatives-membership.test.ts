@@ -15,6 +15,22 @@ const SUBJECT = "Neon";
 const GATED_ADDON = "Prisma Accelerate";
 const GATED_LOCAL = "DynamoDB Local";
 
+type GateName = "local_dev_only" | "addon";
+
+function gatesOf(vendor: string): Set<GateName> {
+  const gates = new Set<GateName>();
+  const role = offers.find((o) => o.vendor === vendor)?.product_role;
+  if (!role) return gates;
+  if (role.deployment_model === "local_dev_only") gates.add("local_dev_only");
+  if (role.is_addon) gates.add("addon");
+  return gates;
+}
+
+function gateAppliesFor(gated: string, subject: string): boolean {
+  const subjectGates = gatesOf(subject);
+  return [...gatesOf(gated)].some((gate) => !subjectGates.has(gate));
+}
+
 function slugOf(vendor: string): string {
   return vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
@@ -258,6 +274,7 @@ describe("#1032 the other recommendation surfaces", () => {
     const category = offers.find((o) => o.vendor === GATED_ADDON)!.category;
     const subjects = offers.filter((o) => o.category === category && o.vendor !== GATED_ADDON && o.vendor !== GATED_LOCAL);
     let answered = 0;
+    let gateChecks = 0;
     const offenders: string[] = [];
     for (const subject of subjects) {
       const { status, body } = await get(`/api/vendor-risk/${encodeURIComponent(subject.vendor)}`);
@@ -266,10 +283,13 @@ describe("#1032 the other recommendation surfaces", () => {
       if (!parsed.alternatives?.length) continue;
       answered += 1;
       for (const gated of [GATED_ADDON, GATED_LOCAL]) {
+        if (!gateAppliesFor(gated, subject.vendor)) continue;
+        gateChecks += 1;
         if (parsed.alternatives.some((a) => a.vendor === gated)) offenders.push(`${gated} offered as an alternative to ${subject.vendor}`);
       }
     }
     assert.ok(answered > 10, `the sweep must actually read risk results, read ${answered}`);
+    assert.ok(gateChecks > 10, `the sweep must actually apply the gate, applied it ${gateChecks} times`);
     assert.deepStrictEqual(offenders, [], `these products cannot replace the vendor they are offered against: ${offenders.join("; ")}`);
   });
 
@@ -277,6 +297,7 @@ describe("#1032 the other recommendation surfaces", () => {
     const category = offers.find((o) => o.vendor === GATED_ADDON)!.category;
     const subjects = offers.filter((o) => o.category === category && o.vendor !== GATED_ADDON && o.vendor !== GATED_LOCAL);
     let answered = 0;
+    let gateChecks = 0;
     const offenders: string[] = [];
     for (const subject of subjects) {
       const { status, body } = await get(`/api/details/${encodeURIComponent(subject.vendor)}?alternatives=true`);
@@ -286,11 +307,14 @@ describe("#1032 the other recommendation surfaces", () => {
       if (!related?.length) continue;
       answered += 1;
       for (const gated of [GATED_ADDON, GATED_LOCAL]) {
+        if (!gateAppliesFor(gated, subject.vendor)) continue;
+        gateChecks += 1;
         if (related.includes(gated)) offenders.push(`${gated} related to ${subject.vendor}`);
         if (parsed.offer?.alternatives?.some((a) => a.vendor === gated)) offenders.push(`${gated} listed as an alternative to ${subject.vendor}`);
       }
     }
     assert.ok(answered > 10, `the sweep must actually read detail results, read ${answered}`);
+    assert.ok(gateChecks > 10, `the sweep must actually apply the gate, applied it ${gateChecks} times`);
     assert.deepStrictEqual(offenders, [], `these products cannot replace the vendor they are returned against: ${offenders.join("; ")}`);
   });
 });
