@@ -244,10 +244,15 @@ export function pageCompiledClause(pagePath: string, today = utcToday()): string
   return compiledClause(getPageReview(pagePath), today);
 }
 
-export function pageDateModified(pagePath: string, fallbackPublished: string, today = utcToday()): string {
-  const record = getPageReview(pagePath);
+export function dateModifiedFor(record: PageReviewRecord | null, fallbackPublished: string, today: string): string {
   if (!record) return fallbackPublished;
-  return reviewStatus(record, today).reviewed_at ?? record.published;
+  const status = reviewStatus(record, today);
+  if (status.review_outcome === "fail") return record.published;
+  return status.reviewed_at ?? record.published;
+}
+
+export function pageDateModified(pagePath: string, fallbackPublished: string, today = utcToday()): string {
+  return dateModifiedFor(getPageReview(pagePath), fallbackPublished, today);
 }
 
 export function pagePublished(pagePath: string, fallbackPublished: string): string {

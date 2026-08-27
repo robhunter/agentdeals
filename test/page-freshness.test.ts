@@ -357,11 +357,21 @@ describe("#1061 what a reader sees instead", () => {
   });
 
   it("dates a page by its review once one is on record", async () => {
-    const reviewed = REGISTRY.pages.find((p: any) => p.reviewed_at !== null);
-    assert.ok(reviewed, "at least one page must carry a review for this assertion to have a subject");
+    const reviewed = REGISTRY.pages.find((p: any) => p.reviewed_at !== null && p.review_outcome !== "fail");
+    assert.ok(reviewed, "at least one page must carry a review that found nothing for this assertion to have a subject");
     const html = await get(reviewed.path);
-    assert.ok(html.includes(`Reviewed ${reviewed.reviewed_at}`), `${reviewed.path} does not render its review date`);
     assert.strictEqual(jsonLdOf(html)?.dateModified, reviewed.reviewed_at);
+  });
+
+  it("does not date a page by a review that found defects", async () => {
+    const failed = REGISTRY.pages.find((p: any) => p.review_outcome === "fail");
+    assert.ok(failed, "no review on the register recorded a failure, so this assertion has no subject");
+    const html = await get(failed.path);
+    assert.ok(
+      html.includes(`Reviewed ${failed.reviewed_at}, corrections outstanding`),
+      `${failed.path} does not tell a reader corrections are outstanding`
+    );
+    assert.strictEqual(jsonLdOf(html)?.dateModified, failed.published);
   });
 
   it("resolves the vendors its headline names to their vendor pages", async () => {

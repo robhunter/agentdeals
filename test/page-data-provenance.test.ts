@@ -56,10 +56,14 @@ function startServer(env: NodeJS.ProcessEnv): Promise<{ proc: ChildProcess; port
   });
 }
 
-function visibleSentences(html: string): string[] {
-  const text = html
+function visibleBody(html: string): string {
+  return html
     .replace(/<script[\s\S]*?<\/script>/g, " ")
-    .replace(/<style[\s\S]*?<\/style>/g, " ")
+    .replace(/<style[\s\S]*?<\/style>/g, " ");
+}
+
+function visibleSentences(html: string): string[] {
+  const text = visibleBody(html)
     .replace(/<[^>]+>/g, " ")
     .replace(/&[a-z]+;/g, " ")
     .replace(/\s+/g, " ");
@@ -223,7 +227,7 @@ describe("a page may only name the source it actually reads", () => {
     const wrong: string[] = [];
     for (const page of pages) {
       if (page.reads_index || page.tier !== "A") continue;
-      const found = bodies.get(page.path)!.match(COMPILED_NOTICE);
+      const found = visibleBody(bodies.get(page.path)!).match(COMPILED_NOTICE);
       if (!found) wrong.push(`${page.path}: no compiled notice`);
       else if (found[1] !== page.published) wrong.push(`${page.path}: notice says ${found[1]}, compiled ${page.published}`);
     }
@@ -235,7 +239,7 @@ describe("a page may only name the source it actually reads", () => {
     let checked = 0;
     for (const page of pages) {
       if (page.reads_index || page.tier !== "A") continue;
-      const found = bodies.get(page.path)!.match(COMPILED_NOTICE)!;
+      const found = visibleBody(bodies.get(page.path)!).match(COMPILED_NOTICE)!;
       const claimed = found[2] ?? null;
       const expected = page.reviewed_at;
       if (claimed !== expected) wrong.push(`${page.path}: notice says last checked ${claimed}, register says ${expected}`);
@@ -249,7 +253,7 @@ describe("a page may only name the source it actually reads", () => {
     const offenders: string[] = [];
     let claiming = 0;
     for (const page of pages) {
-      const body = bodies.get(page.path)!;
+      const body = visibleBody(bodies.get(page.path)!);
       const saysNever = /not re-checked since/.test(body);
       const saysChecked = /last checked (\d{4}-\d{2}-\d{2})/.exec(body);
       if (saysNever || saysChecked) claiming += 1;
@@ -266,12 +270,12 @@ describe("a page may only name the source it actually reads", () => {
 
   it("says corrections are outstanding wherever a review recorded a failure, and nowhere else", () => {
     const failing = pages.filter((p) => p.review_outcome === "fail").map((p) => p.path);
-    const saying = pages.filter((p) => /corrections outstanding/.test(bodies.get(p.path)!)).map((p) => p.path);
+    const saying = pages.filter((p) => /corrections outstanding/.test(visibleBody(bodies.get(p.path)!))).map((p) => p.path);
     assert.deepStrictEqual(saying.sort(), failing.sort());
   });
 
   it("does not put the compiled notice on a page that reads the catalogue", () => {
-    const wrong = pages.filter((p) => p.reads_index && COMPILED_NOTICE.test(bodies.get(p.path)!));
+    const wrong = pages.filter((p) => p.reads_index && COMPILED_NOTICE.test(visibleBody(bodies.get(p.path)!)));
     assert.deepStrictEqual(wrong.map((p) => p.path), []);
   });
 });
