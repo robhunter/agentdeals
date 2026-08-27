@@ -37,6 +37,7 @@
     "check:liveness": "node scripts/check-liveness.js",
     "lint:duplicates": "node scripts/lint-duplicates.js",
     "check:pricing": "node scripts/check-pricing-changes.js",
+    "check:change-log": "node scripts/check-change-log-staleness.js",
     "monitor:pricing": "node scripts/monitor-pricing.js",
     "ingest:free-for-dev": "node scripts/parse-free-for-dev.ts",
     "ingest:startup-deals": "node scripts/ingest-startup-deals.ts",

@@ -18,7 +18,9 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import Anthropic from "@anthropic-ai/sdk";
+import { CHANGE_TYPES } from "./change-log.js";
 
+const CHANGE_TYPE_VALUES = CHANGE_TYPES.join(", ");
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
 const DEFAULT_THRESHOLD_DAYS = 25;
@@ -119,12 +121,17 @@ Compare the stored deal info against the pricing page text. Focus on:
 
 Respond with EXACTLY one of these JSON objects (no other text):
 - If the deal info is still accurate: {"status":"confirmed"}
-- If you found a discrepancy: {"status":"changed","summary":"<brief description of what changed>"}
-- If the page doesn't contain enough info to verify: {"status":"unclear","summary":"<reason>"}`;
+- If the page doesn't contain enough info to verify: {"status":"unclear","summary":"<reason>"}
+- If you found a discrepancy: {"status":"changed","summary":"<what changed>","change_type":"<one of: ${CHANGE_TYPE_VALUES}>","current_state":"<what the page says the terms are now>","impact":"<high|medium|low>","effective_date":"<YYYY-MM-DD, only if the page states when this took effect>"}
+
+Rules for a "changed" response:
+- current_state must describe only what the page text above says. Do not restate the stored deal info and do not infer terms the page does not state.
+- Omit effective_date entirely unless the page gives a date.
+- If you cannot pick a change_type from that list, or cannot state current_state from the page, answer "unclear" instead.`;
 
   const response = await client.messages.create({
     model: HAIKU_MODEL,
-    max_tokens: 200,
+    max_tokens: 400,
     messages: [{ role: "user", content: prompt }],
   });
 

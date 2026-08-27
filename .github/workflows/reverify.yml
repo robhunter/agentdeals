@@ -39,20 +39,27 @@ jobs:
           node scripts/reverify-rolling.js --limit "$LIMIT" | tee /tmp/reverify.log
           VERIFIED=$(grep -oE '^Verified \(date bumped\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           FLAGGED=$(grep -oE '^Flagged \(URL/AI failure\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
+          RECORDED=$(grep -oE '^Recorded to data/deal_changes.json: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           echo "verified=$VERIFIED" >> "$GITHUB_OUTPUT"
           echo "flagged=$FLAGGED" >> "$GITHUB_OUTPUT"
+          echo "recorded=$RECORDED" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push if changed
         env:
           VERIFIED: ${{ steps.reverify.outputs.verified }}
           FLAGGED: ${{ steps.reverify.outputs.flagged }}
+          RECORDED: ${{ steps.reverify.outputs.recorded }}
         run: |
-          if git diff --quiet -- data/index.json; then
-            echo "No changes to data/index.json — skipping commit."
+          if git diff --quiet -- data/index.json data/deal_changes.json; then
+            echo "No changes to data/index.json or data/deal_changes.json — skipping commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/index.json
-          git commit -m "data(auto): rolling re-verification — ${VERIFIED} verified, ${FLAGGED} flagged"
+          git add data/index.json data/deal_changes.json
+          git commit -m "data(auto): rolling re-verification — ${VERIFIED} verified, ${FLAGGED} flagged, ${RECORDED} changes recorded"
           git push origin HEAD:main
+
+      - name: Fail if the change log has gone stale
+        if: always()
+        run: node scripts/check-change-log-staleness.js

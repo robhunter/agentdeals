@@ -10,7 +10,8 @@
       "impact": "medium",
       "source_url": "https://hyperping.com/pricing",
       "category": "Monitoring",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-21"
     },
     {
       "vendor": "Amazon SP-API",
@@ -22,7 +23,8 @@
       "impact": "high",
       "source_url": "https://developer.amazonservices.com/",
       "category": "API Development",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-19"
     },
     {
       "vendor": "Xata",
@@ -38,7 +40,8 @@
         "Neon",
         "Supabase",
         "CockroachDB"
-      ]
+      ],
+      "recorded_date": "2026-04-19"
     },
     {
       "vendor": "Hasura Cloud",
@@ -50,7 +53,8 @@
       "impact": "high",
       "source_url": "https://hasura.io/pricing",
       "category": "Databases",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-19"
     },
     {
       "vendor": "Applitools Eyes",
@@ -66,7 +70,8 @@
         "BrowserStack Percy",
         "Chromatic",
         "Argos"
-      ]
+      ],
+      "recorded_date": "2026-04-18"
     },
     {
       "vendor": "everystep-automation.com",
@@ -81,7 +86,8 @@
       "alternatives": [
         "Selenium IDE",
         "Playwright"
-      ]
+      ],
+      "recorded_date": "2026-04-18"
     },
     {
       "vendor": "OpenAI Codex",
@@ -97,7 +103,8 @@
         "GitHub Copilot",
         "Claude Code",
         "Devin"
-      ]
+      ],
+      "recorded_date": "2026-04-15"
     },
     {
       "vendor": "GitHub Copilot",
@@ -114,19 +121,21 @@
         "Windsurf",
         "Claude Code",
         "Cline"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Windsurf",
       "change_type": "pricing_restructured",
       "date": "2026-04-01",
-      "summary": "Grandfathered Pro pricing ($15/mo) confirmed indefinite \u2014 not expiring end of April as previously noted. Credit system fully replaced by daily/weekly quotas for all plans",
+      "summary": "Grandfathered Pro pricing ($15/mo) confirmed indefinite — not expiring end of April as previously noted. Credit system fully replaced by daily/weekly quotas for all plans",
       "previous_state": "Grandfathered Pro at $15/mo 'through April 2026' (implied expiration)",
       "current_state": "Grandfathered Pro at $15/mo indefinitely. All plans use daily/weekly quota system",
       "impact": "low",
       "source_url": "https://windsurf.com/pricing",
       "category": "AI Coding",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Brave Search API",
@@ -141,7 +150,8 @@
       "alternatives": [
         "SerpAPI",
         "Google Custom Search"
-      ]
+      ],
+      "recorded_date": "2026-04-15"
     },
     {
       "vendor": "X API (Twitter)",
@@ -156,7 +166,8 @@
       "alternatives": [
         "Bluesky API",
         "Mastodon API"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Spotify API",
@@ -171,7 +182,8 @@
       "alternatives": [
         "Last.fm API",
         "MusicBrainz API"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Amazon SP-API",
@@ -187,7 +199,8 @@
         "Shopify API",
         "WooCommerce API",
         "BigCommerce API"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "PythonAnywhere",
@@ -203,7 +216,8 @@
         "Render",
         "Railway",
         "Replit"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Google Gemini",
@@ -219,7 +233,8 @@
         "OpenRouter",
         "Groq",
         "Together AI"
-      ]
+      ],
+      "recorded_date": "2026-03-09"
     },
     {
       "vendor": "Netlify",
@@ -235,7 +250,8 @@
         "Vercel",
         "Cloudflare Pages",
         "GitHub Pages"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Netlify",
@@ -251,13 +267,14 @@
         "Vercel",
         "Cloudflare Pages",
         "GitHub Pages"
-      ]
+      ],
+      "recorded_date": "2026-03-31"
     },
     {
       "vendor": "Supabase",
       "change_type": "limits_reduced",
       "date": "2026-02-01",
-      "summary": "Project pause policy tightened \u2014 inactive projects now pause after 1 week",
+      "summary": "Project pause policy tightened — inactive projects now pause after 1 week",
       "previous_state": "Longer inactivity window before project pause",
       "current_state": "Projects pause after 1 week of inactivity on free tier",
       "impact": "medium",
@@ -267,19 +284,21 @@
         "Neon",
         "PlanetScale",
         "CockroachDB"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Cloudflare",
       "change_type": "new_free_tier",
       "date": "2026-02-04",
-      "summary": "Queues added to Workers free plan \u2014 message queuing now free",
+      "summary": "Queues added to Workers free plan — message queuing now free",
       "previous_state": "Queues was paid-only",
       "current_state": "Queues included in free Workers plan",
       "impact": "medium",
       "source_url": "https://developers.cloudflare.com/queues/",
       "category": "Cloud IaaS",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "GitHub Actions",
@@ -287,7 +306,7 @@
       "date": "2026-01-01",
       "summary": "Self-hosted runner per-minute fee ($0.002/min) announced for March 2026 was postponed indefinitely after community backlash. Self-hosted runners remain free. Separately, hosted runner prices were reduced up to 39% (Jan 2026)",
       "previous_state": "Self-hosted runners free. Previous per-minute pricing for hosted runners",
-      "current_state": "Self-hosted runners remain free \u2014 no orchestration fees. Hosted runners 39% cheaper. GitHub re-evaluating self-hosted pricing approach",
+      "current_state": "Self-hosted runners remain free — no orchestration fees. Hosted runners 39% cheaper. GitHub re-evaluating self-hosted pricing approach",
       "impact": "low",
       "source_url": "https://github.com/orgs/community/discussions/182089",
       "category": "CI/CD",
@@ -295,13 +314,14 @@
         "GitLab CI",
         "CircleCI",
         "Buildkite"
-      ]
+      ],
+      "recorded_date": "2026-03-14"
     },
     {
       "vendor": "Bright Data MCP",
       "change_type": "new_free_tier",
       "date": "2025-08-14",
-      "summary": "Launched free tier for MCP Web Server \u2014 5,000 requests/month for agent developers",
+      "summary": "Launched free tier for MCP Web Server — 5,000 requests/month for agent developers",
       "previous_state": "Paid-only web scraping API",
       "current_state": "5,000 free monthly requests on Rapid mode, includes search_engine and scrape_as_markdown tools, handles JS rendering and CAPTCHAs",
       "impact": "medium",
@@ -310,14 +330,15 @@
       "alternatives": [
         "Firecrawl",
         "Apify"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Stripe",
       "change_type": "pricing_restructured",
       "date": "2026-02-01",
-      "summary": "Managed Payments (Merchant of Record) service entering general availability \u2014 Stripe handles tax, billing, fraud, and disputes",
-      "previous_state": "Payment processing only \u2014 developers handled tax compliance, fraud, and disputes separately",
+      "summary": "Managed Payments (Merchant of Record) service entering general availability — Stripe handles tax, billing, fraud, and disputes",
+      "previous_state": "Payment processing only — developers handled tax compliance, fraud, and disputes separately",
       "current_state": "Managed Payments acts as Merchant of Record in 75+ countries, handling sales tax/VAT/GST, fraud prevention, dispute resolution, and transaction-level support",
       "impact": "high",
       "source_url": "https://docs.stripe.com/payments/managed-payments",
@@ -325,7 +346,8 @@
       "alternatives": [
         "Paddle",
         "Lemon Squeezy"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Postman",
@@ -343,14 +365,15 @@
         "Hoppscotch",
         "Apidog",
         "Thunder Client"
-      ]
+      ],
+      "recorded_date": "2026-03-17"
     },
     {
       "vendor": "Atlassian Forge",
       "change_type": "pricing_restructured",
       "date": "2026-01-01",
       "summary": "Forge platform moved from free to consumption-based billing for compute and storage",
-      "previous_state": "Entirely free \u2014 no charges for compute, storage, or KV operations",
+      "previous_state": "Entirely free — no charges for compute, storage, or KV operations",
       "current_state": "Free monthly allowances per app (100K GB-sec compute, 0.1 GB KVS, 1 GB logs, 1 hr SQL), usage above thresholds billed",
       "impact": "medium",
       "source_url": "https://www.atlassian.com/blog/developer/updates-to-forge-pricing-effective-january-2026",
@@ -358,13 +381,14 @@
       "alternatives": [
         "AWS Lambda",
         "Self-hosted Connect apps"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Fly.io",
       "change_type": "pricing_restructured",
       "date": "2026-01-01",
-      "summary": "Volume snapshots now billed \u2014 previously free automatic snapshots now cost $0.08/GB-month",
+      "summary": "Volume snapshots now billed — previously free automatic snapshots now cost $0.08/GB-month",
       "previous_state": "Automatic volume snapshots included at no cost, enabled by default",
       "current_state": "$0.08/GB-month for snapshot storage, first 10 GB free. Snapshots can be disabled to avoid charges",
       "impact": "medium",
@@ -374,13 +398,14 @@
         "Render",
         "Railway",
         "Koyeb"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Cloudflare Durable Objects",
       "change_type": "pricing_restructured",
       "date": "2026-01-07",
-      "summary": "SQLite storage billing began for Durable Objects \u2014 previously free during beta",
+      "summary": "SQLite storage billing began for Durable Objects — previously free during beta",
       "previous_state": "SQLite storage in Durable Objects was free during public beta (compute already billed)",
       "current_state": "Storage charged per GB-hour on Workers Paid plan, first 10 GB included. Free plan users unaffected",
       "impact": "low",
@@ -390,7 +415,8 @@
         "Upstash Redis",
         "Cloudflare KV",
         "Neon"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Sentry",
@@ -406,13 +432,14 @@
         "Datadog",
         "New Relic",
         "BetterStack"
-      ]
+      ],
+      "recorded_date": "2026-02-25"
     },
     {
       "vendor": "Neon",
       "change_type": "pricing_restructured",
       "date": "2026-01-15",
-      "summary": "Moved to fully usage-based pricing model post-Databricks acquisition \u2014 free tier storage now per-project, projects increased 10\u2192100, branches capped at 10 per project, Neon Auth added",
+      "summary": "Moved to fully usage-based pricing model post-Databricks acquisition — free tier storage now per-project, projects increased 10→100, branches capped at 10 per project, Neon Auth added",
       "previous_state": "Free tier: 0.5 GB total storage, 191.9 compute hours, 10 projects, unlimited branches",
       "current_state": "Free tier: 0.5 GB per project (up to 5 GB across 100 projects), 100 CU-hours/month per project, 10 branches/project, Neon Auth 60K MAU, auto-scaling up to 2 CU, scale-to-zero",
       "impact": "medium",
@@ -422,13 +449,14 @@
         "Supabase",
         "CockroachDB",
         "Turso"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Vercel",
       "change_type": "pricing_restructured",
       "date": "2026-01-01",
-      "summary": "Pro plan moved to credit-based model ($20/mo credit pool), Hobby plan metrics renamed and restructured \u2014 bandwidth\u2192Fast Data Transfer, serverless split into Active CPU + Provisioned Memory, Blob Storage and Image Transformations added",
+      "summary": "Pro plan moved to credit-based model ($20/mo credit pool), Hobby plan metrics renamed and restructured — bandwidth→Fast Data Transfer, serverless split into Active CPU + Provisioned Memory, Blob Storage and Image Transformations added",
       "previous_state": "Hobby: 100 GB bandwidth, 100 GB-hours serverless. Pro: fixed per-resource allocations",
       "current_state": "Hobby: 100 GB/mo Fast Data Transfer, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage, 5K image transformations. Pro: $20/mo credit pool across all resources, SAML SSO and HIPAA included",
       "impact": "medium",
@@ -438,13 +466,14 @@
         "Netlify",
         "Cloudflare Pages",
         "Render"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Atlassian",
       "change_type": "pricing_restructured",
       "date": "2026-02-17",
-      "summary": "Data Center pricing increased 15-40% across Jira, Confluence, and JSM. New DC licenses end March 30 \u2014 cloud mandatory for new customers",
+      "summary": "Data Center pricing increased 15-40% across Jira, Confluence, and JSM. New DC licenses end March 30 — cloud mandatory for new customers",
       "previous_state": "Standard Data Center pricing with Advantaged/legacy discounts",
       "current_state": "15% standard list increase, 18-40% for legacy Advantaged pricing tiers. No new DC licenses after March 30, 2026. Full DC end-of-life March 2029",
       "impact": "high",
@@ -454,13 +483,14 @@
         "Linear",
         "Jira Cloud",
         "Shortcut"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Docker Hub",
       "change_type": "pricing_restructured",
       "date": "2024-12-10",
-      "summary": "Docker Pro +80% ($5\u2192$9/mo), Team +67% ($9\u2192$15/mo). Free tier: Build Cloud minutes removed, Scout repos cut 3\u21921, private repos limited to 1 with 2GB storage",
+      "summary": "Docker Pro +80% ($5→$9/mo), Team +67% ($9→$15/mo). Free tier: Build Cloud minutes removed, Scout repos cut 3→1, private repos limited to 1 with 2GB storage",
       "previous_state": "Pro $5/user/month, Team $9/user/month. Free tier included Build Cloud minutes, 3 Scout repos",
       "current_state": "Pro $9/user/month, Team $15/user/month. Free: 1 private repo (2GB), 1 Scout repo, no Build Cloud minutes, 40 pulls/hour",
       "impact": "high",
@@ -470,7 +500,8 @@
         "GitHub Container Registry",
         "Quay.io",
         "Podman"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "DigitalOcean",
@@ -486,7 +517,8 @@
         "AWS Activate",
         "Google Cloud for Startups",
         "Azure for Startups"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Google Cloud",
@@ -502,7 +534,8 @@
         "AWS Activate",
         "Azure for Startups",
         "DigitalOcean Hatch"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "AWS",
@@ -518,7 +551,8 @@
         "Google Cloud GPUs",
         "Azure GPU VMs",
         "Lambda Cloud"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Google",
@@ -533,7 +567,8 @@
       "alternatives": [
         "GitHub Copilot",
         "JetBrains AI"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "OpenAI",
@@ -541,7 +576,7 @@
       "date": "2026-08-26",
       "summary": "Assistants API deprecated, full shutdown August 26, 2026. Developers must migrate to Responses API + Conversations API",
       "previous_state": "Assistants API available with code interpreter, file search, function calling, and Threads for conversation management",
-      "current_state": "Deprecated. Full shutdown Aug 26, 2026. Migration required: Assistants \u2192 Prompts + Responses API, Threads \u2192 Conversations API. No automated migration tool provided",
+      "current_state": "Deprecated. Full shutdown Aug 26, 2026. Migration required: Assistants → Prompts + Responses API, Threads → Conversations API. No automated migration tool provided",
       "impact": "high",
       "source_url": "https://community.openai.com/t/assistants-api-beta-deprecation-august-26-2026-sunset/1354666",
       "category": "AI/ML",
@@ -549,14 +584,15 @@
         "Anthropic Claude API",
         "Google Gemini API",
         "Cohere API"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Hetzner",
       "change_type": "pricing_restructured",
       "date": "2026-04-01",
-      "summary": "Cloud & dedicated server prices increasing 30-50%. Entry-level CX23: \u20ac2.99\u2192\u20ac3.99/mo (+33%). Applies to new and existing customers. Driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand",
-      "previous_state": "Lower cloud server pricing across Germany, Finland, US, and Singapore data centers (e.g., CX23 at \u20ac2.99/mo)",
+      "summary": "Cloud & dedicated server prices increasing 30-50%. Entry-level CX23: €2.99→€3.99/mo (+33%). Applies to new and existing customers. Driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand",
+      "previous_state": "Lower cloud server pricing across Germany, Finland, US, and Singapore data centers (e.g., CX23 at €2.99/mo)",
       "current_state": "30-37% increase on cloud servers, up to 50% on select dedicated/storage products. All regions and all customers (new and existing) affected. Announced Feb 23, 2026",
       "impact": "high",
       "source_url": "https://www.hetzner.com/pressroom/statement-price-adjustment/",
@@ -565,13 +601,14 @@
         "DigitalOcean",
         "Vultr",
         "OVHcloud"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Anthropic",
       "change_type": "limits_increased",
       "date": "2026-02-05",
-      "summary": "Claude Opus 4.6 API pricing at $5/$25 per MTok (input/output) \u2014 67% below previous Opus 4/4.1 pricing of $15/$75. Frontier AI model at mid-tier prices",
+      "summary": "Claude Opus 4.6 API pricing at $5/$25 per MTok (input/output) — 67% below previous Opus 4/4.1 pricing of $15/$75. Frontier AI model at mid-tier prices",
       "previous_state": "Opus 4/4.1 priced at $15/$75 per million tokens (input/output)",
       "current_state": "Opus 4.6 at $5/$25 per MTok. Extended context (>200K tokens): $10/$37.50. Batch API: $2.50/$12.50. Price reduction began with Opus 4.5 generation",
       "impact": "high",
@@ -581,7 +618,8 @@
         "OpenAI GPT-4o",
         "Google Gemini",
         "Mistral"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "OpenAI",
@@ -597,7 +635,8 @@
         "Anthropic Claude",
         "Google Gemini",
         "Perplexity"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Google Programmable Search Engine",
@@ -614,7 +653,8 @@
         "SerpAPI",
         "Bing Web Search API",
         "Meilisearch"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "odrive",
@@ -630,7 +670,8 @@
         "rclone",
         "Cyberduck",
         "MultCloud"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "MinIO",
@@ -647,7 +688,8 @@
         "SeaweedFS",
         "GarageHQ",
         "Apache Ozone"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Microsoft Partner Developer Benefits",
@@ -662,7 +704,8 @@
       "alternatives": [
         "AWS Partner Network",
         "Google Cloud Partner Advantage"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Cloudflare Startup Program",
@@ -678,7 +721,8 @@
         "AWS Activate",
         "Google for Startups Cloud Program",
         "Azure for Startups"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Google Gemini 2.0 Flash",
@@ -695,7 +739,8 @@
         "Google Gemini 2.5 Pro",
         "OpenRouter",
         "Groq"
-      ]
+      ],
+      "recorded_date": "2026-02-26"
     },
     {
       "vendor": "Logz.io",
@@ -712,7 +757,8 @@
         "BetterStack",
         "Axiom",
         "New Relic"
-      ]
+      ],
+      "recorded_date": "2026-03-02"
     },
     {
       "vendor": "X (Twitter)",
@@ -728,7 +774,8 @@
         "Bluesky API",
         "Mastodon API",
         "Reddit API"
-      ]
+      ],
+      "recorded_date": "2026-03-02"
     },
     {
       "vendor": "OpenAI",
@@ -745,7 +792,8 @@
         "Anthropic Claude API",
         "Mistral API",
         "Groq"
-      ]
+      ],
+      "recorded_date": "2026-03-11"
     },
     {
       "vendor": "Xero Developer API",
@@ -761,7 +809,8 @@
         "QuickBooks API",
         "FreshBooks API",
         "Wave API"
-      ]
+      ],
+      "recorded_date": "2026-03-14"
     },
     {
       "vendor": "SendGrid",
@@ -778,7 +827,8 @@
         "Postmark",
         "Mailgun",
         "Amazon SES"
-      ]
+      ],
+      "recorded_date": "2026-03-02"
     },
     {
       "vendor": "Firebase",
@@ -795,7 +845,8 @@
         "Cloudflare R2",
         "AWS S3",
         "Backblaze B2"
-      ]
+      ],
+      "recorded_date": "2026-03-02"
     },
     {
       "vendor": "PlanetScale",
@@ -812,7 +863,8 @@
         "Turso",
         "Supabase",
         "CockroachDB"
-      ]
+      ],
+      "recorded_date": "2026-03-02"
     },
     {
       "vendor": "Fauna",
@@ -829,7 +881,8 @@
         "MongoDB Atlas",
         "CockroachDB",
         "DynamoDB"
-      ]
+      ],
+      "recorded_date": "2026-03-11"
     },
     {
       "vendor": "LocalStack",
@@ -845,7 +898,8 @@
         "Moto (open-source AWS mock)",
         "AWS Free Tier",
         "Testcontainers"
-      ]
+      ],
+      "recorded_date": "2026-03-02"
     },
     {
       "vendor": "Google",
@@ -862,14 +916,15 @@
         "Microsoft for Startups",
         "Google for Startups Cloud"
       ],
-      "verified_date": "2026-03-04"
+      "verified_date": "2026-03-04",
+      "recorded_date": "2026-03-11"
     },
     {
       "vendor": "Terragrunt Scale",
       "change_type": "new_free_tier",
       "date": "2025-12-15",
       "summary": "Gruntwork launches free tier for Terragrunt Scale IaC orchestration platform, positioned as HCP Terraform free tier alternative ahead of HashiCorp March 31, 2026 EOL. Includes GitOps, drift detection, and module update automation",
-      "previous_state": "No free tier \u2014 Team plan at $500/month",
+      "previous_state": "No free tier — Team plan at $500/month",
       "current_state": "Free tier with limits matching or exceeding HCP Terraform (500+ managed resources, GitOps, drift detection, Patcher)",
       "impact": "medium",
       "source_url": "https://www.gruntwork.io/blog/announcing-the-terragrunt-scale-free-tier",
@@ -878,7 +933,8 @@
         "Spacelift",
         "env0",
         "Scalr"
-      ]
+      ],
+      "recorded_date": "2026-03-04"
     },
     {
       "vendor": "HCP Terraform",
@@ -895,7 +951,8 @@
         "env0",
         "Scalr",
         "Terragrunt Scale"
-      ]
+      ],
+      "recorded_date": "2026-03-09"
     },
     {
       "vendor": "X (Twitter)",
@@ -910,7 +967,8 @@
       "alternatives": [
         "Bluesky AT Protocol",
         "Mastodon API"
-      ]
+      ],
+      "recorded_date": "2026-03-09"
     },
     {
       "vendor": "Cognition Devin",
@@ -926,7 +984,8 @@
         "GitHub Copilot",
         "Cline",
         "Aider"
-      ]
+      ],
+      "recorded_date": "2026-03-13"
     },
     {
       "vendor": "Cursor",
@@ -941,7 +1000,8 @@
       "alternatives": [
         "Windsurf",
         "GitHub Copilot"
-      ]
+      ],
+      "recorded_date": "2026-03-13"
     },
     {
       "vendor": "Augment Code",
@@ -956,13 +1016,14 @@
       "alternatives": [
         "GitHub Copilot",
         "Cursor"
-      ]
+      ],
+      "recorded_date": "2026-03-13"
     },
     {
       "vendor": "Google Tenor API",
       "change_type": "product_deprecated",
       "date": "2026-06-30",
-      "summary": "Google Tenor public API shutting down June 30, 2026. New API key signups halted January 13, 2026. Only the public GIF search API is affected \u2014 Tenor website and app continue operating. Developers must migrate to alternative GIF APIs",
+      "summary": "Google Tenor public API shutting down June 30, 2026. New API key signups halted January 13, 2026. Only the public GIF search API is affected — Tenor website and app continue operating. Developers must migrate to alternative GIF APIs",
       "previous_state": "Free public API for GIF search, trending GIFs, and autocomplete. No rate limits for reasonable use. Used by messaging apps and social platforms",
       "current_state": "API shutdown June 30, 2026. No new API keys issued since Jan 13, 2026. Existing keys work until shutdown date. No replacement API from Google",
       "impact": "high",
@@ -971,13 +1032,14 @@
       "alternatives": [
         "Giphy API",
         "Imgur API"
-      ]
+      ],
+      "recorded_date": "2026-03-14"
     },
     {
       "vendor": "Testcontainers Cloud",
       "change_type": "pricing_restructured",
       "date": "2024-06-01",
-      "summary": "Docker acquired AtomicJar (creators of Testcontainers Cloud). Standalone Testcontainers Cloud free tier retired \u2014 now bundled into Docker subscriptions. Docker Pro gets 100 min/month, Team 500 min/month, Business 1,500 min/month",
+      "summary": "Docker acquired AtomicJar (creators of Testcontainers Cloud). Standalone Testcontainers Cloud free tier retired — now bundled into Docker subscriptions. Docker Pro gets 100 min/month, Team 500 min/month, Business 1,500 min/month",
       "previous_state": "Standalone Testcontainers Cloud with independent free tier (100 min/month)",
       "current_state": "Bundled with Docker subscriptions. No standalone free tier. Open-source Testcontainers libraries remain MIT-licensed and fully free",
       "impact": "medium",
@@ -987,13 +1049,14 @@
         "Testcontainers (open-source)",
         "Docker Desktop",
         "Podman"
-      ]
+      ],
+      "recorded_date": "2026-03-14"
     },
     {
       "vendor": "Docker Desktop",
       "change_type": "pricing_restructured",
       "date": "2026-01-01",
-      "summary": "Docker Desktop subscription prices increased 67-80% across all tiers. Personal $7\u2192$11, Pro $9\u2192$14, Team $15\u2192$24, Business $24\u2192$35 per user/month. Separate from Docker Hub registry pricing changes",
+      "summary": "Docker Desktop subscription prices increased 67-80% across all tiers. Personal $7→$11, Pro $9→$14, Team $15→$24, Business $24→$35 per user/month. Separate from Docker Hub registry pricing changes",
       "previous_state": "Personal $7/user/month, Pro $9/user/month, Team $15/user/month, Business $24/user/month",
       "current_state": "Personal $11/user/month (+57%), Pro $14/user/month (+56%), Team $24/user/month (+60%), Business $35/user/month (+46%). All tiers affected",
       "impact": "high",
@@ -1003,7 +1066,8 @@
         "Podman Desktop",
         "Rancher Desktop",
         "OrbStack"
-      ]
+      ],
+      "recorded_date": "2026-03-15"
     },
     {
       "vendor": "Unity DevOps",
@@ -1019,7 +1083,8 @@
         "Git LFS",
         "Perforce",
         "GitHub"
-      ]
+      ],
+      "recorded_date": "2026-03-15"
     },
     {
       "vendor": "Anthropic Claude",
@@ -1034,7 +1099,8 @@
       "alternatives": [
         "OpenAI ChatGPT Plus",
         "Google Gemini Advanced"
-      ]
+      ],
+      "recorded_date": "2026-03-15"
     },
     {
       "vendor": "Heroku",
@@ -1051,13 +1117,14 @@
         "Railway",
         "Fly.io",
         "Koyeb"
-      ]
+      ],
+      "recorded_date": "2026-03-19"
     },
     {
       "vendor": "GitHub Copilot",
       "change_type": "new_free_tier",
       "date": "2025-12-18",
-      "summary": "GitHub launched Copilot Free tier \u2014 AI code completion available to all GitHub users at no cost. 2,000 completions and 50 chat messages per month included",
+      "summary": "GitHub launched Copilot Free tier — AI code completion available to all GitHub users at no cost. 2,000 completions and 50 chat messages per month included",
       "previous_state": "Paid only: Individual $10/month, Business $19/user/month. Free for verified students, teachers, and OSS maintainers only",
       "current_state": "Free tier: 2,000 code completions/month, 50 chat messages/month. Individual $10/month, Business $19/month, Enterprise $39/month remain for higher limits",
       "impact": "high",
@@ -1067,7 +1134,8 @@
         "Cline",
         "Cody",
         "Cursor"
-      ]
+      ],
+      "recorded_date": "2026-03-19"
     },
     {
       "vendor": "Auth0",
@@ -1083,7 +1151,8 @@
         "Clerk",
         "Firebase Auth",
         "Supabase Auth"
-      ]
+      ],
+      "recorded_date": "2026-03-19"
     },
     {
       "vendor": "Railway",
@@ -1099,7 +1168,8 @@
         "Render",
         "Fly.io",
         "Koyeb"
-      ]
+      ],
+      "recorded_date": "2026-03-19"
     },
     {
       "vendor": "Render",
@@ -1115,7 +1185,8 @@
         "Railway",
         "Fly.io",
         "Koyeb"
-      ]
+      ],
+      "recorded_date": "2026-03-19"
     },
     {
       "vendor": "Redis",
@@ -1132,7 +1203,8 @@
         "KeyDB",
         "DragonflyDB",
         "Upstash"
-      ]
+      ],
+      "recorded_date": "2026-03-19"
     },
     {
       "vendor": "HashiCorp",
@@ -1148,7 +1220,8 @@
         "OpenTofu",
         "Pulumi",
         "Crossplane"
-      ]
+      ],
+      "recorded_date": "2026-03-19"
     },
     {
       "vendor": "DigitalOcean",
@@ -1164,7 +1237,8 @@
         "Hetzner",
         "Vultr",
         "Linode"
-      ]
+      ],
+      "recorded_date": "2026-03-31"
     },
     {
       "vendor": "DigitalOcean",
@@ -1180,7 +1254,8 @@
         "Neon",
         "PlanetScale",
         "Supabase"
-      ]
+      ],
+      "recorded_date": "2026-03-21"
     },
     {
       "vendor": "Freshping",
@@ -1200,7 +1275,8 @@
         "Pulsetic",
         "Cronitor",
         "Upptime"
-      ]
+      ],
+      "recorded_date": "2026-03-21"
     },
     {
       "vendor": "Firebase",
@@ -1218,13 +1294,14 @@
         "PocketBase",
         "Nhost",
         "Convex"
-      ]
+      ],
+      "recorded_date": "2026-03-21"
     },
     {
       "vendor": "Firebase",
       "change_type": "restriction",
       "date": "2026-02-01",
-      "summary": "Spark plan projects using legacy *.appspot.com Cloud Storage buckets forced to upgrade to Blaze (pay-as-you-go) plan or lose Cloud Storage access. No billing caps on Blaze plan \u2014 developers risk unexpected charges",
+      "summary": "Spark plan projects using legacy *.appspot.com Cloud Storage buckets forced to upgrade to Blaze (pay-as-you-go) plan or lose Cloud Storage access. No billing caps on Blaze plan — developers risk unexpected charges",
       "previous_state": "Spark plan: free Cloud Storage with *.appspot.com buckets, no credit card required",
       "current_state": "Legacy bucket projects must upgrade to Blaze (pay-as-you-go). No hard billing caps. New projects use Firebase Storage buckets on Spark plan",
       "impact": "high",
@@ -1236,7 +1313,8 @@
         "PocketBase",
         "Nhost",
         "Convex"
-      ]
+      ],
+      "recorded_date": "2026-03-21"
     },
     {
       "vendor": "Dub.co",
@@ -1251,7 +1329,8 @@
       "alternatives": [
         "Bitly",
         "Short.io"
-      ]
+      ],
+      "recorded_date": "2026-03-22"
     },
     {
       "vendor": "Uploadthing",
@@ -1267,13 +1346,14 @@
         "Cloudinary",
         "Vercel Blob",
         "AWS S3"
-      ]
+      ],
+      "recorded_date": "2026-03-22"
     },
     {
       "vendor": "Neo4j AuraDB",
       "change_type": "restriction",
       "date": "2026-03-22",
-      "summary": "Data correction \u2014 previous entry incorrectly reduced limits to 50K nodes/175K relationships. Actual free tier is 200,000 nodes and 400,000 relationships per Neo4j AuraDB FAQ",
+      "summary": "Data correction — previous entry incorrectly reduced limits to 50K nodes/175K relationships. Actual free tier is 200,000 nodes and 400,000 relationships per Neo4j AuraDB FAQ",
       "previous_state": "50,000 nodes, 175,000 relationships (incorrectly listed)",
       "current_state": "200,000 nodes, 400,000 relationships (restored to correct values)",
       "impact": "low",
@@ -1282,7 +1362,8 @@
       "alternatives": [
         "Dgraph Cloud",
         "Amazon Neptune"
-      ]
+      ],
+      "recorded_date": "2026-03-22"
     },
     {
       "vendor": "xAI (Grok)",
@@ -1298,14 +1379,15 @@
         "DALL-E (credits)",
         "Stable Diffusion (self-hosted)",
         "Pollinations.AI"
-      ]
+      ],
+      "recorded_date": "2026-03-24"
     },
     {
       "vendor": "Google Gemini API",
       "change_type": "restriction",
       "date": "2026-04-01",
       "summary": "Billing-account-level spend caps enforced starting April 1, 2026. When a tier's spend cap is reached, API requests pause until the next billing month. Affects pay-as-you-go developers who may see unexpected request pausing.",
-      "previous_state": "No hard spend caps \u2014 usage billed without automatic pausing",
+      "previous_state": "No hard spend caps — usage billed without automatic pausing",
       "current_state": "Tier-level spend caps enforced at billing account level. Requests pause when cap is hit until next month",
       "impact": "medium",
       "source_url": "https://ai.google.dev/gemini-api/docs/billing",
@@ -1314,7 +1396,8 @@
         "OpenRouter",
         "Anthropic Claude API",
         "OpenAI API"
-      ]
+      ],
+      "recorded_date": "2026-03-26"
     },
     {
       "vendor": "Windsurf",
@@ -1330,14 +1413,15 @@
         "Cursor",
         "GitHub Copilot",
         "Cline"
-      ]
+      ],
+      "recorded_date": "2026-03-31"
     },
     {
       "vendor": "Gemini Code Assist",
       "change_type": "new_free_tier",
       "date": "2025-12-18",
       "summary": "Google launched Gemini Code Assist free tier for individual developers. Includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro. Available in VS Code, JetBrains, and Cloud Shell",
-      "previous_state": "No free tier \u2014 enterprise-only at $19/user/month",
+      "previous_state": "No free tier — enterprise-only at $19/user/month",
       "current_state": "Free individual tier with code completions, chat, and multi-file editing. Enterprise tier remains at $19/user/month",
       "impact": "high",
       "source_url": "https://cloud.google.com/gemini/docs/codeassist/overview",
@@ -1346,15 +1430,16 @@
         "GitHub Copilot Free",
         "Cursor",
         "Cline"
-      ]
+      ],
+      "recorded_date": "2026-03-27"
     },
     {
       "vendor": "Amazon Aurora PostgreSQL",
       "change_type": "new_free_tier",
       "date": "2026-03-25",
-      "summary": "Aurora PostgreSQL Serverless added to AWS Free Tier \u2014 managed PostgreSQL-compatible database now available at no cost with up to 4 ACUs per cluster and 1 GB storage. Part of AWS Free Plan (6 months + credits)",
-      "previous_state": "No free tier \u2014 Aurora was paid-only, starting at ~$0.08/ACU-hour",
-      "current_state": "Free plan with up to 4 ACUs per cluster, 1 GB storage, $100\u2013200 in credits for new accounts",
+      "summary": "Aurora PostgreSQL Serverless added to AWS Free Tier — managed PostgreSQL-compatible database now available at no cost with up to 4 ACUs per cluster and 1 GB storage. Part of AWS Free Plan (6 months + credits)",
+      "previous_state": "No free tier — Aurora was paid-only, starting at ~$0.08/ACU-hour",
+      "current_state": "Free plan with up to 4 ACUs per cluster, 1 GB storage, $100–200 in credits for new accounts",
       "impact": "high",
       "source_url": "https://aws.amazon.com/rds/aurora/pricing/",
       "category": "Databases",
@@ -1363,7 +1448,8 @@
         "Supabase",
         "CockroachDB",
         "PlanetScale"
-      ]
+      ],
+      "recorded_date": "2026-03-27"
     },
     {
       "vendor": "Amazon Kiro",
@@ -1380,7 +1466,8 @@
         "Windsurf",
         "GitHub Copilot",
         "Claude Code"
-      ]
+      ],
+      "recorded_date": "2026-04-08"
     },
     {
       "vendor": "Replit",
@@ -1396,7 +1483,8 @@
         "GitHub Codespaces",
         "Gitpod",
         "CodeSandbox"
-      ]
+      ],
+      "recorded_date": "2026-04-08"
     },
     {
       "vendor": "SonarQube Cloud",
@@ -1412,7 +1500,8 @@
         "CodeClimate",
         "Codacy",
         "DeepSource"
-      ]
+      ],
+      "recorded_date": "2026-04-08"
     },
     {
       "vendor": "Cursor",
@@ -1429,7 +1518,8 @@
         "Windsurf",
         "Cline",
         "Claude Code"
-      ]
+      ],
+      "recorded_date": "2026-04-08"
     },
     {
       "vendor": "Google Gemini API",
@@ -1446,7 +1536,8 @@
         "Groq",
         "Together AI",
         "Anthropic Claude API"
-      ]
+      ],
+      "recorded_date": "2026-04-08"
     },
     {
       "vendor": "OVHcloud",
@@ -1463,7 +1554,8 @@
         "DigitalOcean",
         "Vultr",
         "Linode"
-      ]
+      ],
+      "recorded_date": "2026-04-09"
     },
     {
       "vendor": "Amazon SP-API",
@@ -1471,7 +1563,7 @@
       "date": "2026-04-14",
       "summary": "Amazon SP-API per-call fees (originally April 30, 2026) postponed indefinitely following widespread developer backlash. The $1,400/year annual fee (started Jan 31) remains in effect, but per-call GET fees ($0.40/1K calls above tier allowance) have no new implementation date. Amazon cited \"additional feedback\" from developer community as reason for delay.",
       "previous_state": "Free API access for registered Amazon developers with standard rate limits",
-      "current_state": "$1,400/year annual fee active (since Jan 31). Per-call fees postponed indefinitely \u2014 no new date announced. Basic/Pro/Plus/Enterprise tiers defined but overage charges not yet enforced. Private apps remain exempt",
+      "current_state": "$1,400/year annual fee active (since Jan 31). Per-call fees postponed indefinitely — no new date announced. Basic/Pro/Plus/Enterprise tiers defined but overage charges not yet enforced. Private apps remain exempt",
       "impact": "high",
       "source_url": "https://developer-docs.amazon.com/sp-api/",
       "category": "E-Commerce",
@@ -1479,7 +1571,8 @@
         "Shopify API",
         "WooCommerce API",
         "BigCommerce API"
-      ]
+      ],
+      "recorded_date": "2026-04-14"
     },
     {
       "vendor": "Amazon Kiro",
@@ -1496,7 +1589,8 @@
         "GitHub Copilot",
         "Windsurf",
         "Claude Code"
-      ]
+      ],
+      "recorded_date": "2026-04-09"
     },
     {
       "vendor": "OpenAI",
@@ -1515,7 +1609,8 @@
         "Cloudflare Workers AI",
         "Stability AI",
         "Replicate"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "OpenAI",
@@ -1534,7 +1629,8 @@
         "Azure OpenAI Realtime",
         "ElevenLabs",
         "Google Cloud Speech-to-Text"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "AWS",
@@ -1555,7 +1651,8 @@
         "Render",
         "Fly.io",
         "DigitalOcean App Platform"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "AWS",
@@ -1572,7 +1669,8 @@
         "Windows client",
         "Mac client",
         "Web client"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "AWS",
@@ -1586,7 +1684,8 @@
       "category": "Serverless",
       "alternatives": [
         "Node.js 22 Lambda runtime"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "Google Maps",
@@ -1600,7 +1699,8 @@
       "category": "APIs",
       "alternatives": [
         "Google Maps API key authentication"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "AWS",
@@ -1614,7 +1714,8 @@
       "category": "Cloud Hosting",
       "alternatives": [
         "Fargate Platform Version 1.4.0+"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "AWS",
@@ -1630,7 +1731,8 @@
         "Istio",
         "Linkerd",
         "Amazon EKS native service mesh"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "AWS",
@@ -1646,13 +1748,14 @@
         "AWS CDK",
         "Terraform",
         "Pulumi"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "Vercel",
       "change_type": "pricing_restructured",
       "date": "2026-02-01",
-      "summary": "New Pro projects now default to Turbo build machines (30 vCPUs, 60GB memory) at $0.126/minute \u2014 9x more expensive than Standard machines ($0.014/min). Pro plan still $20/seat/month with $20 usage credit, but real-world build costs for moderate teams can hit $400+/month. Standard machines still available but must be manually selected.",
+      "summary": "New Pro projects now default to Turbo build machines (30 vCPUs, 60GB memory) at $0.126/minute — 9x more expensive than Standard machines ($0.014/min). Pro plan still $20/seat/month with $20 usage credit, but real-world build costs for moderate teams can hit $400+/month. Standard machines still available but must be manually selected.",
       "previous_state": "Pro plan: Standard build machines at $0.014/min (default). Turbo available as opt-in upgrade",
       "current_state": "Pro plan: Turbo build machines at $0.126/min (default, 30 vCPUs, 60GB RAM). Standard still available via manual opt-out. 9x cost increase for builds if not changed",
       "impact": "medium",
@@ -1663,7 +1766,8 @@
         "Cloudflare Pages",
         "Render",
         "Railway"
-      ]
+      ],
+      "recorded_date": "2026-04-10"
     },
     {
       "vendor": "Augment Code",
@@ -1679,7 +1783,8 @@
         "GitHub Copilot",
         "Cline",
         "Aider"
-      ]
+      ],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Socket.dev",
@@ -1691,7 +1796,8 @@
       "impact": "low",
       "source_url": "https://socket.dev/pricing",
       "category": "Security",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "LocalStack",
@@ -1703,7 +1809,8 @@
       "impact": "low",
       "source_url": "https://www.localstack.cloud/pricing",
       "category": "Testing",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Xata Lite",
@@ -1719,7 +1826,8 @@
         "Supabase",
         "PlanetScale",
         "Neon"
-      ]
+      ],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "stathat.com",
@@ -1734,7 +1842,8 @@
       "alternatives": [
         "Prometheus",
         "Grafana Cloud"
-      ]
+      ],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Prisma Accelerate",
@@ -1746,7 +1855,8 @@
       "impact": "low",
       "source_url": "https://www.prisma.io/pricing",
       "category": "Databases",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "SurrealDB Cloud",
@@ -1758,7 +1868,8 @@
       "impact": "low",
       "source_url": "https://surrealdb.com/pricing",
       "category": "Databases",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "codehooks.io",
@@ -1770,7 +1881,8 @@
       "impact": "medium",
       "source_url": "https://codehooks.io/",
       "category": "Databases",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "SeaTable",
@@ -1782,7 +1894,8 @@
       "impact": "low",
       "source_url": "https://seatable.io/",
       "category": "Databases",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Phase Two",
@@ -1798,7 +1911,8 @@
         "Keycloak",
         "ZITADEL",
         "SuperTokens"
-      ]
+      ],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Nx Cloud",
@@ -1810,7 +1924,8 @@
       "impact": "medium",
       "source_url": "https://nx.dev/ci",
       "category": "CI/CD",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "incidenthub.cloud",
@@ -1822,7 +1937,8 @@
       "impact": "medium",
       "source_url": "https://incidenthub.cloud/",
       "category": "Monitoring",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Servervana",
@@ -1837,7 +1953,8 @@
       "alternatives": [
         "UptimeObserver",
         "Xitoring"
-      ]
+      ],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "economize.cloud",
@@ -1849,7 +1966,8 @@
       "impact": "low",
       "source_url": "https://economize.cloud",
       "category": "Monitoring",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "deployhq.com",
@@ -1861,7 +1979,8 @@
       "impact": "low",
       "source_url": "https://www.deployhq.com/",
       "category": "CI/CD",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Commerce Layer",
@@ -1873,7 +1992,8 @@
       "impact": "low",
       "source_url": "https://commercelayer.io",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Kiter.app",
@@ -1885,7 +2005,8 @@
       "impact": "low",
       "source_url": "https://www.kiter.app/",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Snap Accelerate",
@@ -1897,7 +2018,8 @@
       "impact": "low",
       "source_url": "https://developers.snapchat.com/accelerate/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "ActiveCampaign",
@@ -1909,7 +2031,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Adjust",
@@ -1921,7 +2044,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Apptimize",
@@ -1933,7 +2057,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Attribution App",
@@ -1945,7 +2070,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Branch",
@@ -1957,7 +2083,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Chartio",
@@ -1969,7 +2096,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "ClearBrain",
@@ -1981,7 +2109,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Commando.io",
@@ -1993,7 +2122,8 @@
       "impact": "low",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "CrazyEgg",
@@ -2005,7 +2135,8 @@
       "impact": "low",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Cyfe",
@@ -2017,7 +2148,8 @@
       "impact": "low",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Drift",
@@ -2029,7 +2161,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "FullContact",
@@ -2041,7 +2174,8 @@
       "impact": "low",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Gem",
@@ -2053,7 +2187,8 @@
       "impact": "low",
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Google BigQuery",
@@ -2065,7 +2200,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Guideline",
@@ -2077,7 +2213,8 @@
       "impact": "low",
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Gusto",
@@ -2089,7 +2226,8 @@
       "impact": "low",
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Kasa",
@@ -2101,7 +2239,8 @@
       "impact": "low",
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Lester Lee",
@@ -2113,7 +2252,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Looker",
@@ -2125,7 +2265,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Mode",
@@ -2137,7 +2278,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "MoEngage",
@@ -2149,7 +2291,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Monday",
@@ -2161,7 +2304,8 @@
       "impact": "low",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "PersistIQ",
@@ -2173,7 +2317,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Pilot",
@@ -2185,7 +2330,8 @@
       "impact": "low",
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Polymail",
@@ -2197,7 +2343,8 @@
       "impact": "low",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "ProofHub",
@@ -2209,7 +2356,8 @@
       "impact": "low",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Seekwell",
@@ -2221,7 +2369,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Shopify",
@@ -2233,7 +2382,8 @@
       "impact": "low",
       "source_url": "https://stripe.com/en-de/corporate-card",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Split",
@@ -2245,7 +2395,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Userlike",
@@ -2257,7 +2408,8 @@
       "impact": "low",
       "source_url": "https://www.userlike.com/en/blog/startup-deals",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Vero",
@@ -2269,7 +2421,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Vervoe",
@@ -2281,7 +2434,8 @@
       "impact": "low",
       "source_url": "https://segment.com/industry/startups/",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "APITemplate.io",
@@ -2293,7 +2447,8 @@
       "impact": "low",
       "source_url": "https://apitemplate.io",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Conversion Tools",
@@ -2305,7 +2460,8 @@
       "impact": "low",
       "source_url": "https://conversiontools.io/",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "CraftMyPDF",
@@ -2317,7 +2473,8 @@
       "impact": "low",
       "source_url": "https://craftmypdf.com",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "CurrencyScoop",
@@ -2329,7 +2486,8 @@
       "impact": "low",
       "source_url": "https://currencybeacon.com/",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "CustomJS",
@@ -2341,7 +2499,8 @@
       "impact": "low",
       "source_url": "https://customjs.space/",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "DiffJSON",
@@ -2353,7 +2512,8 @@
       "impact": "low",
       "source_url": "https://comparejson.com/",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "UniRateAPI",
@@ -2365,7 +2525,8 @@
       "impact": "low",
       "source_url": "https://unirateapi.com",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "PDFMonkey",
@@ -2377,19 +2538,21 @@
       "impact": "low",
       "source_url": "https://www.pdfmonkey.io/",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "redirect.pizza",
       "change_type": "pricing_restructured",
       "date": "2026-04-12",
-      "summary": "Free plan changed: sources reduced 10\u21925 domains, but hits increased 100K\u2192250K requests",
+      "summary": "Free plan changed: sources reduced 10→5 domains, but hits increased 100K→250K requests",
       "previous_state": "10 sources, 100,000 hits/month",
       "current_state": "5 domains, 250,000 requests/month",
       "impact": "low",
       "source_url": "https://redirect.pizza/",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Renamer.ai",
@@ -2401,7 +2564,8 @@
       "impact": "low",
       "source_url": "https://renamer.ai",
       "category": "Dev Utilities",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "FeedBear",
@@ -2413,7 +2577,8 @@
       "impact": "low",
       "source_url": "https://www.feedbear.com/early-stage",
       "category": "Startup Perks",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Backlight",
@@ -2425,7 +2590,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Branition Colors",
@@ -2437,7 +2603,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "MovingPencils",
@@ -2449,7 +2616,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Free For Commercial Use",
@@ -2461,19 +2629,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Pixelixe",
       "change_type": "free_tier_removed",
       "date": "2026-04-12",
-      "summary": "No longer free \u2014 paid plans start at $12/mo",
+      "summary": "No longer free — paid plans start at $12/mo",
       "previous_state": "",
-      "current_state": "No longer free \u2014 paid plans start at $12/mo",
+      "current_state": "No longer free — paid plans start at $12/mo",
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "WalkMe",
@@ -2485,7 +2655,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "NextUI",
@@ -2497,7 +2668,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Landen",
@@ -2509,7 +2681,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Whimsical",
@@ -2521,19 +2694,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Design",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Contact.do",
       "change_type": "free_tier_removed",
       "date": "2026-04-12",
-      "summary": "No longer free \u2014 $19 lifetime only",
+      "summary": "No longer free — $19 lifetime only",
       "previous_state": "",
-      "current_state": "No longer free \u2014 $19 lifetime only",
+      "current_state": "No longer free — $19 lifetime only",
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "MailerLite",
@@ -2545,7 +2720,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "MailerSend",
@@ -2557,7 +2733,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Plunk",
@@ -2569,7 +2746,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Maileroo",
@@ -2581,7 +2759,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Mailtrap",
@@ -2593,7 +2772,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "AnonAddy",
@@ -2605,7 +2785,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Bump Email",
@@ -2617,19 +2798,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Parsio",
       "change_type": "free_tier_removed",
       "date": "2026-04-12",
-      "summary": "No ongoing free tier \u2014 30 trial credits only",
+      "summary": "No ongoing free tier — 30 trial credits only",
       "previous_state": "",
-      "current_state": "No ongoing free tier \u2014 30 trial credits only",
+      "current_state": "No ongoing free tier — 30 trial credits only",
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Maildroppa",
@@ -2641,7 +2824,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Email",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Kitemaker",
@@ -2653,7 +2837,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "sflow.io",
@@ -2665,43 +2850,47 @@
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Quidlo",
       "change_type": "free_tier_removed",
       "date": "2026-04-12",
-      "summary": "No free tier \u2014 30-day trial only",
+      "summary": "No free tier — 30-day trial only",
       "previous_state": "",
-      "current_state": "No free tier \u2014 30-day trial only",
+      "current_state": "No free tier — 30-day trial only",
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Teamhood",
       "change_type": "free_tier_removed",
       "date": "2026-04-12",
-      "summary": "No free tier \u2014 14-day trial only",
+      "summary": "No free tier — 14-day trial only",
       "previous_state": "",
-      "current_state": "No free tier \u2014 14-day trial only",
+      "current_state": "No free tier — 14-day trial only",
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Zenkit",
       "change_type": "free_tier_removed",
       "date": "2026-04-12",
-      "summary": "No free tier \u2014 trial only, then data export only",
+      "summary": "No free tier — trial only, then data export only",
       "previous_state": "",
-      "current_state": "No free tier \u2014 trial only, then data export only",
+      "current_state": "No free tier — trial only, then data export only",
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "HeySpace",
@@ -2713,7 +2902,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Wikifactory",
@@ -2725,7 +2915,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Teleretro",
@@ -2737,7 +2928,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "MeScrum",
@@ -2749,7 +2941,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Project Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Protectumus",
@@ -2761,19 +2954,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Security",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "HostedScan",
       "change_type": "free_tier_removed",
       "date": "2026-04-12",
-      "summary": "No free tier \u2014 plans start at $49/mo",
+      "summary": "No free tier — plans start at $49/mo",
       "previous_state": "",
-      "current_state": "No free tier \u2014 plans start at $49/mo",
+      "current_state": "No free tier — plans start at $49/mo",
       "impact": "low",
       "source_url": "",
       "category": "Security",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "StackHawk",
@@ -2785,7 +2980,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Security",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "CookieFirst",
@@ -2797,19 +2993,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Security",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Tailscale",
       "change_type": "limits_increased",
       "date": "2026-04-12",
-      "summary": "Free tier expanded: 3\u21926 users, 100\u2192unlimited devices",
+      "summary": "Free tier expanded: 3→6 users, 100→unlimited devices",
       "previous_state": "",
-      "current_state": "Free tier expanded: 3\u21926 users, 100\u2192unlimited devices",
+      "current_state": "Free tier expanded: 3→6 users, 100→unlimited devices",
       "impact": "low",
       "source_url": "",
       "category": "Security",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "PyUp",
@@ -2821,7 +3019,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Security",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "LibreQR",
@@ -2833,19 +3032,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Storage",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Redbooth",
       "change_type": "product_deprecated",
       "date": "2026-04-12",
-      "summary": "Not a P2P file syncing service \u2014 mischaracterized (PM tool)",
+      "summary": "Not a P2P file syncing service — mischaracterized (PM tool)",
       "previous_state": "",
-      "current_state": "Not a P2P file syncing service \u2014 mischaracterized (PM tool)",
+      "current_state": "Not a P2P file syncing service — mischaracterized (PM tool)",
       "impact": "low",
       "source_url": "",
       "category": "Storage",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Kraken.io",
@@ -2857,7 +3058,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Storage",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Otixo",
@@ -2869,7 +3071,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Storage",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Userbird",
@@ -2881,7 +3084,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Seline",
@@ -2893,7 +3097,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Segment Startups",
@@ -2905,7 +3110,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Census",
@@ -2917,7 +3123,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "UsabilityHub",
@@ -2929,7 +3136,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Hotjar",
@@ -2941,19 +3149,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "FullStory",
       "change_type": "limits_increased",
       "date": "2026-04-12",
-      "summary": "Free tier increased from 1,000 to 30,000 sessions/month, retention 1\u219212 months",
+      "summary": "Free tier increased from 1,000 to 30,000 sessions/month, retention 1→12 months",
       "previous_state": "",
-      "current_state": "Free tier increased from 1,000 to 30,000 sessions/month, retention 1\u219212 months",
+      "current_state": "Free tier increased from 1,000 to 30,000 sessions/month, retention 1→12 months",
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Smartlook",
@@ -2965,7 +3175,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "UXtweak",
@@ -2977,19 +3188,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Analytics",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-12"
     },
     {
       "vendor": "Zoho Subscriptions",
       "change_type": "free_tier_removed",
       "date": "2026-04-13",
-      "summary": "Rebranded to Zoho Billing, free tier discontinued \u2014 paid-only with 14-day trial",
+      "summary": "Rebranded to Zoho Billing, free tier discontinued — paid-only with 14-day trial",
       "previous_state": "",
-      "current_state": "Rebranded to Zoho Billing, free tier discontinued \u2014 paid-only with 14-day trial",
+      "current_state": "Rebranded to Zoho Billing, free tier discontinued — paid-only with 14-day trial",
       "impact": "low",
       "source_url": "",
       "category": "Cloud IaaS",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "API-Ninjas",
@@ -3001,7 +3214,8 @@
       "impact": "low",
       "source_url": "",
       "category": "API Development",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "HeyForm",
@@ -3013,7 +3227,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Forms",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Codiga",
@@ -3025,19 +3240,21 @@
       "impact": "low",
       "source_url": "",
       "category": "IDE & Code Editors",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "xAI",
       "change_type": "free_tier_removed",
       "date": "2026-04-13",
-      "summary": "$25/month free API credits no longer offered \u2014 Grok API paid-only",
+      "summary": "$25/month free API credits no longer offered — Grok API paid-only",
       "previous_state": "",
-      "current_state": "$25/month free API credits no longer offered \u2014 Grok API paid-only",
+      "current_state": "$25/month free API credits no longer offered — Grok API paid-only",
       "impact": "low",
       "source_url": "",
       "category": "AI / ML",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Clarifai",
@@ -3049,7 +3266,8 @@
       "impact": "low",
       "source_url": "",
       "category": "AI / ML",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Typeform",
@@ -3061,7 +3279,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Forms",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "CodeRabbit",
@@ -3073,7 +3292,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Code Quality",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "SwaggerHub",
@@ -3085,7 +3305,8 @@
       "impact": "low",
       "source_url": "",
       "category": "API Development",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Stickies.app",
@@ -3097,7 +3318,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Team Collaboration",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Katalon",
@@ -3109,7 +3331,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Testing",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "TestingBot",
@@ -3121,19 +3344,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Testing",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Knowlarity",
       "change_type": "free_tier_removed",
       "date": "2026-04-13",
-      "summary": "Free startup credits no longer visible, paid from \u20b916,800/year",
+      "summary": "Free startup credits no longer visible, paid from ₹16,800/year",
       "previous_state": "",
-      "current_state": "Free startup credits no longer visible, paid from \u20b916,800/year",
+      "current_state": "Free startup credits no longer visible, paid from ₹16,800/year",
       "impact": "low",
       "source_url": "",
       "category": "Communication",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "microlink.io",
@@ -3145,7 +3370,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Web Scraping",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Firecrawl",
@@ -3157,7 +3383,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Web Scraping",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "filebase.com",
@@ -3169,7 +3396,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Cloud IaaS",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Pocket Alert",
@@ -3181,7 +3409,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Messaging",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Stoplight",
@@ -3193,7 +3422,8 @@
       "impact": "low",
       "source_url": "",
       "category": "API Development",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Google Maps Platform",
@@ -3205,7 +3435,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Maps/Geolocation",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "PubNub",
@@ -3217,19 +3448,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Messaging",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Zoho Meeting",
       "change_type": "pricing_restructured",
       "date": "2026-04-13",
-      "summary": "Participants increased 3\u2192100 but 60-minute duration limit added",
+      "summary": "Participants increased 3→100 but 60-minute duration limit added",
       "previous_state": "",
-      "current_state": "Participants increased 3\u2192100 but 60-minute duration limit added",
+      "current_state": "Participants increased 3→100 but 60-minute duration limit added",
       "impact": "low",
       "source_url": "",
       "category": "Cloud IaaS",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "OneSignal",
@@ -3241,7 +3474,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Messaging",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Stadia Maps",
@@ -3253,7 +3487,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Maps/Geolocation",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Keywords AI",
@@ -3265,19 +3500,21 @@
       "impact": "low",
       "source_url": "",
       "category": "AI / ML",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Revolt",
       "change_type": "rebranded",
       "date": "2026-04-13",
-      "summary": "revolt.chat \u2192 stoat.chat",
+      "summary": "revolt.chat → stoat.chat",
       "previous_state": "",
-      "current_state": "revolt.chat \u2192 stoat.chat",
+      "current_state": "revolt.chat → stoat.chat",
       "impact": "low",
       "source_url": "",
       "category": "Team Collaboration",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "GoSquared",
@@ -3289,7 +3526,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Communication",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Drift",
@@ -3301,7 +3539,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Communication",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Synadia NGS",
@@ -3313,7 +3552,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Messaging",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Pingram.io",
@@ -3325,7 +3565,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Messaging",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "LambdaTest",
@@ -3337,7 +3578,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Testing",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "DhiWise",
@@ -3349,7 +3591,8 @@
       "impact": "low",
       "source_url": "",
       "category": "IDE & Code Editors",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Brackets",
@@ -3361,7 +3604,8 @@
       "impact": "low",
       "source_url": "",
       "category": "IDE & Code Editors",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Apiary",
@@ -3373,7 +3617,8 @@
       "impact": "low",
       "source_url": "",
       "category": "API Development",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Stamen Maps",
@@ -3385,19 +3630,21 @@
       "impact": "low",
       "source_url": "",
       "category": "Maps/Geolocation",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Clever Cloud",
       "change_type": "rebranded",
       "date": "2026-04-13",
-      "summary": "Program renamed to UP, offers up to \u20ac10K credits",
+      "summary": "Program renamed to UP, offers up to €10K credits",
       "previous_state": "",
-      "current_state": "Program renamed to UP, offers up to \u20ac10K credits",
+      "current_state": "Program renamed to UP, offers up to €10K credits",
       "impact": "low",
       "source_url": "",
       "category": "Cloud IaaS",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Alibaba Cloud Startups",
@@ -3409,7 +3656,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Cloud IaaS",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Logz.io",
@@ -3421,7 +3669,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Logging",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Papertrail",
@@ -3433,7 +3682,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Logging",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "LogZab",
@@ -3445,7 +3695,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Logging",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Elmah.io",
@@ -3457,7 +3708,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Error Tracking",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Beanstalk",
@@ -3469,7 +3721,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Source Control",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Storyblok",
@@ -3481,7 +3734,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Headless CMS",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Imgix",
@@ -3493,7 +3747,8 @@
       "impact": "low",
       "source_url": "",
       "category": "CDN",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Toran Proxy",
@@ -3505,7 +3760,8 @@
       "impact": "low",
       "source_url": "",
       "category": "CDN",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Shotstack",
@@ -3517,7 +3773,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Video",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "CommandBar",
@@ -3529,7 +3786,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Search",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "LingoHub",
@@ -3541,7 +3799,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Localization",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Transifex",
@@ -3553,7 +3812,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Localization",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "RunCloud",
@@ -3565,7 +3825,8 @@
       "impact": "low",
       "source_url": "",
       "category": "Server Management",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Pipedream",
@@ -3577,13 +3838,14 @@
       "impact": "low",
       "source_url": "",
       "category": "Workflow Automation",
-      "alternatives": []
+      "alternatives": [],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Claude Code",
       "change_type": "pricing_restructured",
       "date": "2026-04-04",
-      "summary": "Three material policy changes: (1) Third-party tool restrictions \u2014 external tools like OpenClaw now billed separately on pay-as-you-go, can no longer apply standard usage limits. (2) Extra usage option \u2014 all paid plans (Pro, Max 5x, Max 20x) have pay-as-you-go overage at standard API rates. (3) Peak-hour throttling (acknowledged March 31) \u2014 5-hour session limits reduced during weekdays 5 AM\u201311 AM Pacific.",
+      "summary": "Three material policy changes: (1) Third-party tool restrictions — external tools like OpenClaw now billed separately on pay-as-you-go, can no longer apply standard usage limits. (2) Extra usage option — all paid plans (Pro, Max 5x, Max 20x) have pay-as-you-go overage at standard API rates. (3) Peak-hour throttling (acknowledged March 31) — 5-hour session limits reduced during weekdays 5 AM–11 AM Pacific.",
       "previous_state": "Flat subscription pricing with included usage limits. Third-party tools shared standard limits. No overage option.",
       "current_state": "Subscription + pay-as-you-go overage. Third-party tools billed separately. Peak-hour throttling during weekday mornings.",
       "impact": "high",
@@ -3594,7 +3856,8 @@
         "GitHub Copilot",
         "Amazon Kiro",
         "Windsurf"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Amazon Kiro",
@@ -3611,7 +3874,8 @@
         "GitHub Copilot",
         "Windsurf",
         "Claude Code"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Amazon Kiro (AWS Startups)",
@@ -3627,7 +3891,8 @@
         "GitHub Copilot",
         "Cursor",
         "Windsurf"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Windsurf",
@@ -3643,15 +3908,16 @@
         "Cursor",
         "GitHub Copilot",
         "Claude Code"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "GitHub Copilot",
       "change_type": "restriction",
       "date": "2026-03-12",
-      "summary": "Student plan now managed under dedicated 'GitHub Copilot Student' plan. Premium models (GPT-5.4, Claude Opus, Claude Sonnet) removed from manual self-selection \u2014 still available via Auto mode (system picks the model).",
+      "summary": "Student plan now managed under dedicated 'GitHub Copilot Student' plan. Premium models (GPT-5.4, Claude Opus, Claude Sonnet) removed from manual self-selection — still available via Auto mode (system picks the model).",
       "previous_state": "Students shared Copilot Free quotas with full model self-selection",
-      "current_state": "Dedicated Student plan \u2014 premium models only via Auto mode, no manual model selection",
+      "current_state": "Dedicated Student plan — premium models only via Auto mode, no manual model selection",
       "impact": "medium",
       "source_url": "https://github.com/features/copilot/plans",
       "category": "AI Coding",
@@ -3659,7 +3925,8 @@
         "Cursor",
         "Windsurf",
         "Gemini Code Assist"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Cursor",
@@ -3675,7 +3942,8 @@
         "Windsurf",
         "GitHub Copilot",
         "Claude Code"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "n8n",
@@ -3683,7 +3951,7 @@
       "date": "2026-04-14",
       "summary": "n8n Cloud free plan removed entirely. All Cloud plans now require payment (14-day free trial available). Unlimited active workflows across all paid plans. Self-hosted remains free under Sustainable Use License.",
       "previous_state": "Cloud had a free plan with limited executions",
-      "current_state": "No free Cloud plan. Starter \u20ac24/mo, Pro \u20ac60/mo, Enterprise custom. Self-hosted free (Sustainable Use License)",
+      "current_state": "No free Cloud plan. Starter €24/mo, Pro €60/mo, Enterprise custom. Self-hosted free (Sustainable Use License)",
       "impact": "medium",
       "source_url": "https://n8n.io/pricing/",
       "category": "Background Jobs",
@@ -3692,7 +3960,8 @@
         "Pipedream",
         "Make",
         "Zapier"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Microsoft",
@@ -3708,7 +3977,8 @@
         "Amazon WorkSpaces",
         "Azure Virtual Desktop",
         "Citrix DaaS"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "Microsoft",
@@ -3723,7 +3993,8 @@
       "alternatives": [
         "Google Workspace Enterprise Plus",
         "Zoho Workplace"
-      ]
+      ],
+      "recorded_date": "2026-04-13"
     },
     {
       "vendor": "OVHcloud",
@@ -3740,7 +4011,8 @@
         "DigitalOcean",
         "Vultr",
         "AWS"
-      ]
+      ],
+      "recorded_date": "2026-04-09"
     },
     {
       "vendor": "Google Content API for Shopping",
@@ -3748,7 +4020,7 @@
       "date": "2026-04-15",
       "summary": "Google Content API for Shopping being sunset August 18, 2026. Replaced by Merchant API, rolling out April 22, 2026. Developers must migrate before the sunset deadline.",
       "previous_state": "Active API for Google Merchant Center product data management",
-      "current_state": "Deprecated \u2014 sunset August 18, 2026. Replacement: Merchant API (available April 22, 2026)",
+      "current_state": "Deprecated — sunset August 18, 2026. Replacement: Merchant API (available April 22, 2026)",
       "impact": "high",
       "source_url": "https://ppc.land/merchant-api-comes-to-google-ads-scripts-april-22-as-content-api-nears-its-end/",
       "category": "API Development",
@@ -3756,13 +4028,14 @@
         "Google Merchant API",
         "Shopify API",
         "BigCommerce API"
-      ]
+      ],
+      "recorded_date": "2026-04-15"
     },
     {
       "vendor": "DeepSeek",
       "change_type": "pricing_restructured",
       "date": "2026-04-17",
-      "summary": "DeepSeek V3.2 replaces V4 branding. Pricing dropped: chat model $0.30\u2192$0.28/M input, $0.50\u2192$0.42/M output. Reasoner model pricing unified with chat at $0.28/$0.42 (was $0.55/$2.19). Free token welcome package appears removed.",
+      "summary": "DeepSeek V3.2 replaces V4 branding. Pricing dropped: chat model $0.30→$0.28/M input, $0.50→$0.42/M output. Reasoner model pricing unified with chat at $0.28/$0.42 (was $0.55/$2.19). Free token welcome package appears removed.",
       "previous_state": "DeepSeek V4: $0.30/M input, $0.50/M output. R1: $0.55/M input, $2.19/M output. 5M free tokens for new accounts.",
       "current_state": "DeepSeek V3.2 (chat + reasoner): $0.28/M input, $0.42/M output. Cache hits 90% cheaper. No free token mention on pricing page.",
       "impact": "medium",
@@ -3772,7 +4045,8 @@
         "OpenAI API",
         "Anthropic Claude API",
         "Google Gemini API"
-      ]
+      ],
+      "recorded_date": "2026-04-16"
     },
     {
       "vendor": "Netlify",
@@ -3788,7 +4062,8 @@
         "Vercel",
         "Cloudflare Pages",
         "Railway"
-      ]
+      ],
+      "recorded_date": "2026-04-16"
     },
     {
       "vendor": "Alibaba Cloud Qwen Code",
@@ -3804,7 +4079,8 @@
         "GitHub Copilot",
         "Cursor",
         "Codeium"
-      ]
+      ],
+      "recorded_date": "2026-04-16"
     },
     {
       "vendor": "Google Gemini API",
@@ -3821,7 +4097,8 @@
         "Gemini 3.0 Flash",
         "OpenRouter",
         "Groq"
-      ]
+      ],
+      "recorded_date": "2026-04-17"
     },
     {
       "vendor": "SendGrid Accelerate",
@@ -3837,7 +4114,8 @@
         "SendGrid",
         "Mailgun",
         "Postmark"
-      ]
+      ],
+      "recorded_date": "2026-04-17"
     },
     {
       "vendor": "Prospect.io",
@@ -3853,7 +4131,8 @@
         "Apollo.io",
         "Hunter.io",
         "Lemlist"
-      ]
+      ],
+      "recorded_date": "2026-04-17"
     },
     {
       "vendor": "Kluster AI",
@@ -3869,7 +4148,8 @@
         "Groq",
         "SiliconFlow",
         "OpenRouter"
-      ]
+      ],
+      "recorded_date": "2026-04-17"
     },
     {
       "vendor": "searchly.com",
@@ -3885,7 +4165,8 @@
         "bonsai.io",
         "Algolia",
         "Elastic Cloud"
-      ]
+      ],
+      "recorded_date": "2026-04-19"
     },
     {
       "vendor": "ImageEngine",
@@ -3902,7 +4183,8 @@
         "ImageKit",
         "Uploadcare",
         "imgix"
-      ]
+      ],
+      "recorded_date": "2026-04-19"
     },
     {
       "vendor": "DBOS",
@@ -3918,7 +4200,8 @@
         "Temporal",
         "Inngest",
         "Trigger.dev"
-      ]
+      ],
+      "recorded_date": "2026-04-19"
     },
     {
       "vendor": "X (Twitter)",
@@ -3934,7 +4217,8 @@
         "Bluesky AT Protocol",
         "Mastodon API",
         "Reddit API"
-      ]
+      ],
+      "recorded_date": "2026-04-21"
     },
     {
       "vendor": "Netlify",
@@ -3950,7 +4234,8 @@
         "Vercel",
         "Cloudflare Pages",
         "Railway"
-      ]
+      ],
+      "recorded_date": "2026-04-21"
     },
     {
       "vendor": "GitHub Copilot",
@@ -3967,7 +4252,8 @@
         "Windsurf",
         "Gemini Code Assist",
         "Claude Code"
-      ]
+      ],
+      "recorded_date": "2026-04-21"
     },
     {
       "vendor": "GitHub Copilot",
@@ -3985,7 +4271,8 @@
         "Gemini Code Assist",
         "Claude Code",
         "Cline"
-      ]
+      ],
+      "recorded_date": "2026-04-21"
     },
     {
       "vendor": "Amazon SES",
@@ -4003,7 +4290,8 @@
         "MailerSend",
         "Brevo",
         "Postal"
-      ]
+      ],
+      "recorded_date": "2026-08-26"
     },
     {
       "vendor": "Storj",
@@ -4020,7 +4308,8 @@
         "Backblaze B2",
         "Tigris",
         "MinIO"
-      ]
+      ],
+      "recorded_date": "2026-08-26"
     }
   ]
 }
