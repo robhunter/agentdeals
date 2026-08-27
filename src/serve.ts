@@ -30,8 +30,8 @@ import { linkifyVerdictBlocks, overdueReport, pageDateModified, pageFreshness, p
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
-import type { Agent, DealChange, RiskCause, LinkUnreachable } from "./types.js";
-import { changeDateLabel, changeDatePublished, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
+import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable } from "./types.js";
+import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, latestEventDate, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -56,8 +56,8 @@ function latestChangeDate(changes: Array<{ date?: string }>, notAfter = utcToday
   return latest;
 }
 
-function dataChangesSegment(changes: Array<{ date?: string }>): string {
-  const latest = latestChangeDate(changes);
+function dataChangesSegment(changes: Array<{ date: string; date_source?: ChangeDateSource }>): string {
+  const latest = latestEventDate(changes, utcToday());
   return latest ? ` Latest tracked change ${latest}.` : "";
 }
 
@@ -352,7 +352,7 @@ const RISK_COLORS: Record<string, string> = { stable: "#3fb950", caution: "#d299
 const STABILITY_COLORS: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
 
 function riskCauseLabel(cause: RiskCause): string {
-  return `${cause.date} ${changeTypeBadge[cause.change_type]?.label ?? cause.change_type.replace(/_/g, " ")}`;
+  return `${changeDateLabel(cause)} ${changeTypeBadge[cause.change_type]?.label ?? cause.change_type.replace(/_/g, " ")}`;
 }
 
 /**
@@ -1405,7 +1405,7 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
   // multiple times" off a count of records of any type, so a vendor that
   // *raised* its limits got the caveat. It now quotes the record itself.
   const caveat = offer.risk_level !== "stable" && offer.risk_cause
-    ? ` Note — ${offer.risk_cause.date}: ${escHtmlServer(offer.risk_cause.summary)}`
+    ? ` Note — ${changeDateLabel(offer.risk_cause)}: ${escHtmlServer(offer.risk_cause.summary)}`
     : "";
   return `${escHtmlServer(offer.description)}${bestForText}${caveat}`;
 }
@@ -1414,7 +1414,7 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
 function renderDisclosures(entry: RankedEntry<EnrichedOfferRow>): string {
   if (entry.disclosures.length === 0) return "";
   const items = entry.disclosures.map((d) =>
-    `<li><span style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(d.date)}</span> &mdash; <strong>${escHtmlServer(d.code.replace(/_/g, " "))}</strong>: ${escHtmlServer(d.summary)}</li>`
+    `<li><span style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(changeDateLabel(d))}</span> &mdash; <strong>${escHtmlServer(d.code.replace(/_/g, " "))}</strong>: ${escHtmlServer(d.summary)}</li>`
   ).join("");
   return `<div class="best-disclosure"><span class="best-disclosure-label">Recorded, but does not affect rank:</span><ul>${items}</ul></div>`;
 }
@@ -2319,7 +2319,7 @@ function buildComparisonPage(slug: string): string | null {
       return `<div style="margin-bottom:.75rem;padding:.6rem .75rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 6px 6px 0">
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
           <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
-          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${c.date}</span>
+          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
           <span style="font-size:.7rem;color:${c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e"}">${c.impact} impact</span>
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
@@ -2856,7 +2856,7 @@ function buildVsPage(slug: string): string | null {
       return `<div style="margin-bottom:.75rem;padding:.6rem .75rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 6px 6px 0">
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
           <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
-          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${c.date}</span>
+          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
           <span style="font-size:.7rem;color:${c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e"}">${c.impact} impact</span>
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
@@ -3210,7 +3210,7 @@ function buildDigestPage(weekKey: string): string | null {
       <div class="change-header">
         <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
         <span class="change-vendor">${escHtmlServer(c.vendor)}</span>
-        <span class="change-date">${c.date}</span>
+        <span class="change-date">${changeDateLabel(c)}</span>
         <span class="change-cat">${escHtmlServer(c.category)}</span>
       </div>
       <div class="change-summary">${escHtmlServer(c.summary)}</div>
@@ -3768,7 +3768,7 @@ function buildVendorPage(slug: string): string | null {
   // under it — not only in the history section further down, which for a cause
   // older than 90 days did not carry it at all (Neon, #1038).
   const riskCauseLine = riskLevel !== "stable" && riskCause
-    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(riskCause.date)}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
   const linkUnreachable = enriched.link_unreachable;
@@ -3921,7 +3921,7 @@ ${enrichedAlts.map(a => {
     return `<div class="change-item">
         <div class="change-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
-          <span class="change-date"><a href="/pricing-changes#${anchor}" style="color:var(--text-dim);text-decoration:none">${c.date}</a></span>
+          <span class="change-date"><a href="/pricing-changes#${anchor}" style="color:var(--text-dim);text-decoration:none">${changeDateLabel(c)}</a></span>
           <span class="impact impact-${c.impact}">${c.impact} impact</span>
         </div>
         <div class="change-summary">${escHtmlServer(c.summary)}</div>
@@ -4059,7 +4059,7 @@ ${allCompareLinks.join("\n")}
   </div>` : "";
 
   // Last updated timestamp
-  const lastPricingChange = vendorChanges.length > 0 ? vendorChanges[0].date : null;
+  const lastPricingChange = latestEventDate(vendorChanges);
   const lastUpdated = lastPricingChange && lastPricingChange > primary.verifiedDate ? lastPricingChange : primary.verifiedDate;
 
   // Watchlist CTA
@@ -4103,7 +4103,7 @@ ${allCompareLinks.join("\n")}
   const pricingEvents = vendorChanges.slice(0, 10).map(c => ({
     "@type": "Event",
     name: `${vendorName} pricing change: ${c.change_type.replace(/_/g, " ")}`,
-    startDate: c.date,
+    ...changeEventStartDate(c),
     description: c.summary,
   }));
   const jsonLd: Record<string, any> = {
@@ -4146,8 +4146,8 @@ ${allCompareLinks.join("\n")}
     : riskLevel === "stable"
     ? `${vendorName}'s free tier is considered stable: we hold no free tier removal, limit reduction or pricing restructure on record for this vendor.${vendorChanges.length > 0 ? ` We do hold ${vendorChanges.length === 1 ? "1 other recorded change" : `${vendorChanges.length} other recorded changes`} — see the pricing history below.` : ""}`
     : riskLevel === "caution"
-    ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."}`
-    : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."} Consider alternatives.`;
+    ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
+    : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
 
   // NEW: Additional FAQ items
@@ -4159,7 +4159,7 @@ ${allCompareLinks.join("\n")}
       : `${vendorName}'s free tier is usable for prototyping and development, but exercise caution for production workloads given its ${stabilityText} pricing history. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`;
   const faqChangedAnswer = vendorChanges.length > 0
-    ? `Yes, ${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${vendorChanges[0].date}).`
+    ? `Yes, ${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).`
     : linkUnreachable
     ? `We hold no recorded pricing changes for ${vendorName}, but its pricing page has not resolved for us${unconfirmableSince}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
@@ -4433,7 +4433,7 @@ function buildAlternativesPage(slug: string): string | null {
     const parts: string[] = [];
     parts.push(`<div class="risk-row"><span class="risk-label">Risk Level:</span> <span class="risk-badge-inline" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></div>`);
     if (riskLevel !== "stable" && riskCause) {
-      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(riskCause.date)}</span> &mdash; ${escHtmlServer(riskCause.summary)}</div>`);
+      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)}</div>`);
     }
     parts.push(`<div class="risk-row"><span class="risk-label">Category:</span> ${vendorCategories.map(c => `<a href="/category/${toSlug(c)}" class="cat-pill">${escHtmlServer(c)}</a>`).join(" ")}</div>`);
     parts.push(`<div class="risk-row"><span class="risk-label">Pricing Page:</span> <a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">${escHtmlServer(primary.url.replace(/^https?:\/\//, "").slice(0, 50))}${primary.url.replace(/^https?:\/\//, "").length > 50 ? "..." : ""}</a></div>`);
@@ -4444,7 +4444,7 @@ function buildAlternativesPage(slug: string): string | null {
         return `<div class="change-item">
           <div class="change-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
-            <span class="change-date">${c.date}</span>
+            <span class="change-date">${changeDateLabel(c)}</span>
             <span class="impact impact-${c.impact}">${c.impact} impact</span>
           </div>
           <div class="change-summary">${escHtmlServer(c.summary)}</div>
@@ -4544,11 +4544,11 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
   const faqFreeTierAnswer = riskLevel === "stable"
     ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : `We hold ${vendorChanges.length === 1 ? "1 recorded change" : `${vendorChanges.length} recorded changes`} for this vendor, none of them a free tier removal, limit reduction or pricing restructure.`}`
     : riskLevel === "caution"
-    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."}`
-    : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, on ${riskCause.date}: ${riskCause.summary}` : "."} Consider migrating to a more stable alternative.`;
+    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
+    : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider migrating to a more stable alternative.`;
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${vendorCategories.join(", ")} categor${vendorCategories.length > 1 ? "ies" : "y"}.`;
   const faqChangesAnswer = vendorChanges.length > 0
-    ? `Yes, ${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was on ${vendorChanges[0].date}: ${vendorChanges[0].summary}`
+    ? `Yes, ${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(vendorChanges[0])}: ${vendorChanges[0].summary}`
     : `No, ${vendorName} has no recorded pricing changes on AgentDeals. This indicates stable pricing.`;
 
   const altFaqItems = [
@@ -18270,7 +18270,7 @@ function buildQ1PricingReportPage(): string {
     return "<div class=\"change-card\" style=\"border-left-color:" + impactColor + "\">" +
       "<div class=\"change-header\">" +
         "<a href=\"/vendor/" + vendorSlug + "\" class=\"change-vendor\">" + escHtmlServer(c.vendor) + "</a>" +
-        "<span class=\"change-date\">" + c.date + "</span>" +
+        "<span class=\"change-date\">" + changeDateLabel(c) + "</span>" +
         "<span class=\"change-impact\" style=\"color:" + impactColor + "\">" + c.impact + "</span>" +
       "</div>" +
       "<span class=\"change-type-badge\" style=\"background:" + impactColor + "22;color:" + impactColor + "\">" + typeLabel + "</span>" + editorialLink +
@@ -18704,7 +18704,7 @@ function buildQ2PricingPreview2026Page(): string {
     return `<div class="change-card" style="border-left-color:${impactColor}">
       <div class="change-header">
         <a href="/vendor/${vendorSlug}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
-        <span class="change-date">${c.date}</span>
+        <span class="change-date">${changeDateLabel(c)}</span>
         <span class="change-impact" style="color:${impactColor}">${c.impact}</span>
       </div>
       <span class="change-type-badge" style="background:${impactColor}22;color:${impactColor}">${typeLabel}</span>${editorialLink}
@@ -18849,7 +18849,7 @@ ${mcpCtaCss()}
   ${timelineChanges.map(c => {
     const impactColor = impactColors[c.impact] ?? "#94a3b8";
     return `<div class="timeline-item">
-      <div class="timeline-date">${c.date}</div>
+      <div class="timeline-date">${changeDateLabel(c)}</div>
       <div class="timeline-content">
         <span class="timeline-vendor"><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></span>
         <span class="timeline-impact" style="background:${impactColor}22;color:${impactColor}">${c.impact}</span>
@@ -23260,7 +23260,7 @@ function buildStabilityDashboardPage(): string {
       <p class="vendor-summary">${escHtmlServer(latestChange?.summary?.substring(0, 200) ?? "")}</p>
       <div class="vendor-meta">
         <span class="change-type">${escHtmlServer(changeTypeLabel)}</span>
-        <span class="change-date">${escHtmlServer(latestChange?.date ?? "")}</span>
+        <span class="change-date">${escHtmlServer(latestChange ? changeDateLabel(latestChange) : "")}</span>
         ${entry.changes.length > 1 ? `<span class="change-count">${entry.changes.length} changes tracked</span>` : ""}
         ${editorialLink ? `<a href="/${editorialLink.slug}" class="alt-link">View alternatives &rarr;</a>` : ""}
       </div>
@@ -45755,7 +45755,7 @@ function buildStateOfFreeTiersPage(): string {
     return `<div style="margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 8px 8px 0">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">
         <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
-        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${c.date}</span>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
         <span style="font-size:.7rem;color:${impactColor};font-weight:600">${c.impact} impact</span>
         <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
       </div>
@@ -45769,7 +45769,7 @@ function buildStateOfFreeTiersPage(): string {
     return `<div style="margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 8px 8px 0">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">
         <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
-        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${c.date}</span>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
         <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
       </div>
       <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${escHtmlServer(c.summary)}</div>
@@ -47277,10 +47277,10 @@ function buildStackCheckPage(): string {
       slug,
       risk_level: assessment.level,
       risk_cause: assessment.cause
-        ? { date: assessment.cause.date, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
+        ? { date: changeDateLabel(assessment.cause), date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
         : null,
       stability,
-      recent_changes: vendorChanges.map(c => ({ date: c.date, change_type: c.change_type, summary: c.summary, impact: c.impact })),
+      recent_changes: vendorChanges.map(c => ({ date: changeDateLabel(c), change_type: c.change_type, summary: c.summary, impact: c.impact })),
     };
     // Also add by lowercase vendor name for easy matching
     vendorLookup[offer.vendor.toLowerCase()] = vendorLookup[slug];
@@ -50187,6 +50187,7 @@ function buildChangesPage(): string {
   // Sort all changes reverse chronological
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
   const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
+  const newestFirst = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
 
   // Group by month
   const byMonth = new Map<string, typeof sorted>();
@@ -50255,14 +50256,14 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     description: metaDesc,
     numberOfItems: allChanges.length,
     url: `${BASE_URL}/changes`,
-    itemListElement: sorted.slice(0, 50).map((c, i) => ({
+    itemListElement: newestFirst.slice(0, 50).map((c, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "NewsArticle",
         headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
-        datePublished: c.date,
+        ...changeDatePublished(c),
         url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
@@ -50467,16 +50468,16 @@ ${entriesHtml}
     "@type": "ItemList",
     name: title,
     description: metaDesc,
-    numberOfItems: totalUpcoming + recent.length,
+    numberOfItems: totalUpcoming + recent.length + recentlyDiscovered.length,
     url: `${BASE_URL}/expiring`,
-    itemListElement: upcoming.slice(0, 50).map((c, i) => ({
+    itemListElement: [...upcoming, ...recentlyDiscovered].slice(0, 50).map((c, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "NewsArticle",
         headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
-        datePublished: c.date,
+        ...changeDatePublished(c),
         url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
@@ -52722,7 +52723,7 @@ function buildTrendsPage(slug: string): string | null {
         <div class="timeline-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
           <a href="/vendor/${toSlug(c.vendor)}" class="timeline-vendor">${escHtmlServer(c.vendor)}</a>
-          <span class="timeline-date">${c.date}</span>
+          <span class="timeline-date">${changeDateLabel(c)}</span>
           <span class="impact impact-${c.impact}">${c.impact}</span>
         </div>
         <div class="timeline-summary">${escHtmlServer(c.summary)}</div>

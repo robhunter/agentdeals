@@ -6,6 +6,7 @@ import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { filterAlternatives } from "./product-role.js";
+import { DATE_SOURCES, isEventDated, changeDateClause } from "./change-dates.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
@@ -369,7 +370,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
     const link_unreachable = unreachableNoticeForUrl(offer.url, now.getTime());
     const risk_level = link_unreachable && assessment.level === "stable" ? null : assessment.level;
     const risk_cause = assessment.cause
-      ? { date: assessment.cause.date, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
+      ? { date: assessment.cause.date, date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
       : null;
 
     // stability: derived from change types, not just count
@@ -434,22 +435,8 @@ export function loadDealChanges(): DealChange[] {
   return cachedChanges;
 }
 
-export const DATE_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written", "discovered"];
-
-export const EVENT_DATED_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written"];
-
-export function isEventDated(change: Pick<DealChange, "date_source">): boolean {
-  return EVENT_DATED_SOURCES.includes(change.date_source as ChangeDateSource);
-}
-
-export function partitionByDateProvenance<T extends Pick<DealChange, "date_source">>(
-  changes: T[]
-): { dated: T[]; discovered: T[] } {
-  const dated: T[] = [];
-  const discovered: T[] = [];
-  for (const change of changes) (isEventDated(change) ? dated : discovered).push(change);
-  return { dated, discovered };
-}
+export { EVENT_DATED_SOURCES, partitionByDateProvenance } from "./change-dates.js";
+export { DATE_SOURCES, isEventDated };
 
 export interface ChangeLogFreshness {
   total: number;
@@ -769,7 +756,7 @@ export function checkVendorRisk(
       const unreachable = unreachableNoticeForUrl(e.offer.url);
       return {
         risk_level: unreachable && a.level === "stable" ? null : a.level,
-        risk_cause: a.cause ? { date: a.cause.date, change_type: a.cause.change_type, summary: a.cause.summary } : null,
+        risk_cause: a.cause ? { date: a.cause.date, date_source: a.cause.date_source, change_type: a.cause.change_type, summary: a.cause.summary } : null,
         link_unreachable: unreachable,
       };
     })(),
@@ -785,9 +772,9 @@ export function checkVendorRisk(
     ? ` Its pricing page has not resolved for us${linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : ""}, so we cannot confirm its current terms.`
     : "";
   if (riskLevel === "risky" && cause) {
-    summary = `${offer.vendor} is high risk — ${cause.date}: ${cause.summary} Consider alternatives.${unreachableClause}`;
+    summary = `${offer.vendor} is high risk — ${changeDateClause(cause)}: ${cause.summary} Consider alternatives.${unreachableClause}`;
   } else if (riskLevel === "caution" && cause) {
-    summary = `${offer.vendor} warrants caution — ${cause.date}: ${cause.summary} Monitor for further changes.${unreachableClause}`;
+    summary = `${offer.vendor} warrants caution — ${changeDateClause(cause)}: ${cause.summary} Monitor for further changes.${unreachableClause}`;
   } else if (linkUnreachable) {
     summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}.${unreachableClause} Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
@@ -799,7 +786,7 @@ export function checkVendorRisk(
       vendor: offer.vendor,
       category: offer.category,
       risk_level: linkUnreachable && riskLevel === "stable" ? null : riskLevel,
-      risk_cause: cause ? { date: cause.date, change_type: cause.change_type, summary: cause.summary } : null,
+      risk_cause: cause ? { date: cause.date, date_source: cause.date_source, change_type: cause.change_type, summary: cause.summary } : null,
       link_unreachable: linkUnreachable,
       free_tier_longevity_days: longevityDays,
       changes: vendorChanges,

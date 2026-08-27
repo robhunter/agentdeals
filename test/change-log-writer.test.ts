@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { spawn, type ChildProcess } from "node:child_process";
+import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -19,7 +19,7 @@ const {
 
 const { runUrlMode, runAiMode, summaryLines, repickWindowDays } = await import("../scripts/reverify-rolling.js");
 const { firstSeenDates } = await import("../scripts/backfill-change-recorded-dates.js");
-const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, WORKFLOW_PATH } = await import("../scripts/check-change-log-staleness.js");
+const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, flagTokens, DETECTOR_CLI_OPTIONS, WORKFLOW_PATH } = await import("../scripts/check-change-log-staleness.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -521,6 +521,87 @@ describe("reading the detector's schedule out of the workflow", () => {
 
   it("refuses when it cannot find the invocation at all", () => {
     assert.strictEqual(detectorSchedule("jobs:\n  reverify:\n    steps: []\n").known, false);
+  });
+
+  it("refuses when a shell variable stands where the flag would go", () => {
+    const schedule = detectorSchedule(
+      withCommand('node scripts/reverify-rolling.js --limit "$LIMIT" $AI_FLAG')
+    );
+    assert.strictEqual(schedule.known, false);
+    assert.match(schedule.reason, /\$AI_FLAG/);
+  });
+
+  it("refuses when a workflow expression stands where the flag would go", () => {
+    const schedule = detectorSchedule(
+      withCommand(
+        "node scripts/reverify-rolling.js --limit \"$LIMIT\" ${{ inputs.mode == 'ai' && '--ai' || '' }}"
+      )
+    );
+    assert.strictEqual(schedule.known, false);
+    assert.match(schedule.reason, /inputs\.mode/);
+  });
+
+  it("refuses on a quoted variable standing alone, which expands to one whole argument", () => {
+    const schedule = detectorSchedule(withCommand('node scripts/reverify-rolling.js "$AI_FLAG"'));
+    assert.strictEqual(schedule.known, false);
+    assert.match(schedule.reason, /AI_FLAG/);
+  });
+
+  it("refuses on a braced shell variable in the same position", () => {
+    assert.strictEqual(
+      detectorSchedule(withCommand("node scripts/reverify-rolling.js ${AI_FLAG}")).known,
+      false
+    );
+  });
+
+  it("still answers when the only variable is the value of an option that takes one", () => {
+    const on = detectorSchedule(withCommand('node scripts/reverify-rolling.js --ai --limit "$LIMIT"'));
+    assert.deepStrictEqual({ known: on.known, scheduled: on.scheduled }, { known: true, scheduled: true });
+    const off = detectorSchedule(withCommand('node scripts/reverify-rolling.js --limit "$LIMIT"'));
+    assert.deepStrictEqual({ known: off.known, scheduled: off.scheduled }, { known: true, scheduled: false });
+  });
+
+  it("stops reading at the pipe, so what the log is written to cannot decide this", () => {
+    const schedule = detectorSchedule(
+      withCommand('node scripts/reverify-rolling.js --limit "$LIMIT" | tee "$LOGFILE"')
+    );
+    assert.deepStrictEqual(
+      { known: schedule.known, scheduled: schedule.scheduled },
+      { known: true, scheduled: false }
+    );
+  });
+
+  it("treats an option's value as a value and everything else as a possible flag", () => {
+    assert.deepStrictEqual(
+      flagTokens(' --limit "$LIMIT" --ai').map((t: { text: string }) => t.text),
+      ["--limit", "--ai"]
+    );
+  });
+
+  it("knows the same option grammar the detector itself parses", () => {
+    const source = readFileSync(path.join(REPO, "scripts", "reverify-rolling.js"), "utf-8");
+    const parsed = [
+      ...new Set([...source.matchAll(/args\.(?:includes|indexOf)\("(--[a-z-]+)"\)/g)].map((m) => m[1])),
+    ].sort();
+    const declared = [...DETECTOR_CLI_OPTIONS.takesValue, ...DETECTOR_CLI_OPTIONS.boolean].sort();
+    assert.ok(parsed.length > 0, "found no option literals in the detector, so the comparison proves nothing");
+    assert.deepStrictEqual(parsed, declared);
+  });
+
+  it("exits 2 on a workflow whose schedule it cannot read", () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "detector-schedule-"));
+    try {
+      const workflow = path.join(dir, "reverify.yml");
+      writeFileSync(workflow, withCommand('node scripts/reverify-rolling.js --limit "$LIMIT" $AI_FLAG'));
+      const run = spawnSync("node", [path.join(REPO, "scripts", "check-change-log-staleness.js")], {
+        env: { ...process.env, AGENTDEALS_REVERIFY_WORKFLOW_PATH: workflow },
+        encoding: "utf-8",
+      });
+      assert.strictEqual(run.status, 2, run.stdout + run.stderr);
+      assert.match(run.stdout, /Refusing to guess/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it("refuses when only some invocations pass --ai", () => {

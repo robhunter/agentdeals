@@ -13,19 +13,108 @@ export const WORKFLOW_PATH =
   process.env.AGENTDEALS_REVERIFY_WORKFLOW_PATH ||
   resolve(__dirname, "..", ".github", "workflows", "reverify.yml");
 
-const INVOCATION = /node\s+scripts\/reverify-rolling\.js[^\n]*/g;
+const INVOCATION = /node\s+scripts\/reverify-rolling\.js([^\n]*)/g;
+
+const COMMAND_SEPARATORS = new Set(["|", ";", "&", ">", "<"]);
+
+export const AI_FLAG = "--ai";
+
+export const DETECTOR_CLI_OPTIONS = {
+  takesValue: ["--limit"],
+  boolean: ["--ai", "--dry-run"],
+};
+
+export function tokenizeArgs(argText) {
+  const tokens = [];
+  let current = null;
+  const flush = () => {
+    if (current) tokens.push(current);
+    current = null;
+  };
+  const add = (text, expands = false) => {
+    if (!current) current = { text: "", expands: false };
+    current.text += text;
+    if (expands) current.expands = true;
+  };
+
+  let i = 0;
+  while (i < argText.length) {
+    const ch = argText[i];
+    if (/\s/.test(ch)) {
+      flush();
+      i += 1;
+    } else if (COMMAND_SEPARATORS.has(ch)) {
+      flush();
+      return tokens;
+    } else if (argText.startsWith("${{", i)) {
+      const end = argText.indexOf("}}", i + 3);
+      const raw = end === -1 ? argText.slice(i) : argText.slice(i, end + 2);
+      add(raw, true);
+      i += raw.length;
+    } else if (ch === "'") {
+      const end = argText.indexOf("'", i + 1);
+      const raw = end === -1 ? argText.slice(i) : argText.slice(i, end + 1);
+      add(raw);
+      i += raw.length;
+    } else if (ch === '"') {
+      let j = i + 1;
+      let raw = '"';
+      let expands = false;
+      while (j < argText.length && argText[j] !== '"') {
+        if (argText[j] === "$") expands = true;
+        raw += argText[j];
+        j += 1;
+      }
+      if (j < argText.length) raw += '"';
+      add(raw, expands);
+      i = j + 1;
+    } else if (ch === "$") {
+      add(ch, true);
+      i += 1;
+    } else {
+      add(ch);
+      i += 1;
+    }
+  }
+  flush();
+  return tokens;
+}
+
+export function flagTokens(argText) {
+  const flags = [];
+  let consumingValue = false;
+  for (const token of tokenizeArgs(argText)) {
+    if (consumingValue) {
+      consumingValue = false;
+      continue;
+    }
+    if (DETECTOR_CLI_OPTIONS.takesValue.includes(token.text)) consumingValue = true;
+    flags.push(token);
+  }
+  return flags;
+}
 
 export function detectorSchedule(workflowYaml) {
-  const invocations = workflowYaml.match(INVOCATION) ?? [];
+  const invocations = [...workflowYaml.matchAll(INVOCATION)].map((m) => flagTokens(m[1]));
   if (invocations.length === 0) {
     return { known: false, scheduled: false, reason: "no reverify-rolling.js invocation found" };
   }
-  const withAi = invocations.filter((line) => /(^|\s)--ai(\s|$)/.test(line));
+  const unresolved = invocations.flat().filter((token) => token.expands);
+  if (unresolved.length > 0) {
+    return {
+      known: false,
+      scheduled: false,
+      reason: `an argument that could be the ${AI_FLAG} flag is not a literal: ${unresolved
+        .map((token) => token.text)
+        .join(", ")}`,
+    };
+  }
+  const withAi = invocations.filter((tokens) => tokens.some((token) => token.text === AI_FLAG));
   if (withAi.length > 0 && withAi.length < invocations.length) {
     return {
       known: false,
       scheduled: false,
-      reason: `${withAi.length} of ${invocations.length} invocations pass --ai`,
+      reason: `${withAi.length} of ${invocations.length} invocations pass ${AI_FLAG}`,
     };
   }
   return { known: true, scheduled: withAi.length > 0, reason: null };
