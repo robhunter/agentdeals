@@ -26,7 +26,7 @@ import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-h
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
-import { linkifyVerdictBlocks, overdueReport, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { linkifyVerdictBlocks, overdueReport, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
@@ -18051,7 +18051,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Hetzner April 2026</div>
   <h1>Hetzner April 2026 Pricing Analysis</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Effective April 1, 2026 &middot; All regions, all customers</p>
+  <p class="pub-date">Published ${pubDate} &middot; Effective April 1, 2026 &middot; All regions, all customers &middot; ${pageDataProvenance("/hetzner-pricing-2026", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">+43%</div><div class="stat-label">CPX11 Cloud (highest)</div></div>
@@ -18194,7 +18194,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Pricing data sourced from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's official press statement</a>, <a href="https://news.ycombinator.com/item?id=47120145" target="_blank" rel="noopener">community reports on Hacker News</a>, and third-party trackers. Competitor pricing verified against vendor pricing pages as of March 2026. Impact ratings based on workload size and percentage increase. Alternatives drawn from our index of ${offers.length.toLocaleString()} tracked developer tools. All data can be independently verified via the source links provided.
+    <strong>Methodology:</strong> Pricing data sourced from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's official press statement</a>, <a href="https://news.ycombinator.com/item?id=47120145" target="_blank" rel="noopener">community reports on Hacker News</a>, and third-party trackers. Competitor pricing verified against vendor pricing pages as of March 2026. Impact ratings based on workload size and percentage increase. The competitors compared here were chosen by hand. All data can be independently verified via the source links provided.
   </div>
 
   <div class="search-cta">
@@ -18480,7 +18480,7 @@ mcpCtaCss() + "\n" +
   "<div class=\"breadcrumb\"><a href=\"/\">AgentDeals</a> &rsaquo; <a href=\"/changes\">Changes</a> &rsaquo; Q1 2026 Report</div>\n" +
   "<h1>Q1 2026 Developer Pricing Report</h1>\n" +
   "<p class=\"subtitle\">The Great Free Tier Reckoning</p>\n" +
-  "<p class=\"pub-date\">Published " + pubDate + pageFreshness("/q1-2026-developer-pricing-report") + " &middot; " + q1Changes.length + " verified changes across " + uniqueVendors + " developer tools</p>\n" +
+  "<p class=\"pub-date\">Published " + pubDate + pageFreshness("/q1-2026-developer-pricing-report") + " &middot; " + q1Changes.length + " changes recorded across " + uniqueVendors + " developer tools &middot; " + pageDataProvenance("/q1-2026-developer-pricing-report", offers.length) + "</p>\n" +
 
   // --- Executive Summary ---
   "<h2>Executive Summary</h2>\n" +
@@ -18642,7 +18642,7 @@ mcpCtaCss() + "\n" +
 
   // --- Methodology ---
   "<div class=\"methodology\">\n" +
-    "<strong>Methodology:</strong> All " + q1Changes.length + " pricing changes were manually verified against vendor pricing pages, blog announcements, or official documentation. Each entry includes a source URL for independent verification. Changes are categorized by type (removal, restriction, restructure, expansion) and rated by impact (high, medium, low) based on the size of the affected developer community and the severity of the change. Impact ratings consider: (1) estimated user base, (2) magnitude of change, (3) availability of alternatives, and (4) migration difficulty. Data is continuously tracked at <a href=\"/changes\">/changes</a>.\n" +
+    "<strong>Methodology:</strong> All " + q1Changes.length + " pricing changes were read by hand from vendor pricing pages, blog announcements, or official documentation on " + pubDate + ". Each entry includes a source URL for independent verification. Changes are categorized by type (removal, restriction, restructure, expansion) and rated by impact (high, medium, low) based on the size of the affected developer community and the severity of the change. Impact ratings consider: (1) estimated user base, (2) magnitude of change, (3) availability of alternatives, and (4) migration difficulty. Data is continuously tracked at <a href=\"/changes\">/changes</a>.\n" +
   "</div>\n" +
 
   // --- Related Guides ---
@@ -18829,7 +18829,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Q2 2026 Preview</div>
   <h1>Q2 2026 Developer Pricing Preview</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${timelineChanges.length} confirmed changes + ${watchItems.length} signals to watch</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${timelineChanges.length} confirmed changes + ${watchItems.length} signals to watch &middot; ${pageDataProvenance("/q2-pricing-preview-2026", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${timelineChanges.length}</div><div class="stat-label">Confirmed Changes</div></div>
@@ -19099,7 +19099,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Google Developer Program 2026</div>
   <h1>Google Developer Program Premium — What's Ending &amp; What Replaces It</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Deadline: March 30, 2026 &middot; Affects all GDP Premium subscribers</p>
+  <p class="pub-date">Published ${pubDate} &middot; Deadline: March 30, 2026 &middot; Affects all GDP Premium subscribers &middot; ${pageDataProvenance("/google-developer-program-2026", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">Mar 30</div><div class="stat-label">Premium Ends</div></div>
@@ -19308,7 +19308,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Pricing data sourced from <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/" target="_blank" rel="noopener">Google's official blog post</a>, <a href="https://developers.google.com/profile/help/benefits" target="_blank" rel="noopener">Developer Program benefits page</a>, and <a href="https://ai.google.dev/pricing" target="_blank" rel="noopener">Google AI pricing page</a>. Alternative pricing verified against vendor pages as of March 2026. Cloud credit comparisons use official free tier limits from our index of ${offers.length.toLocaleString()} tracked developer tools.
+    <strong>Methodology:</strong> Pricing data sourced from <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/" target="_blank" rel="noopener">Google's official blog post</a>, <a href="https://developers.google.com/profile/help/benefits" target="_blank" rel="noopener">Developer Program benefits page</a>, and <a href="https://ai.google.dev/pricing" target="_blank" rel="noopener">Google AI pricing page</a>. Alternative pricing verified against vendor pages as of March 2026. Cloud credit comparisons use official free tier limits read from each provider's pricing page.
   </div>
 
   <div class="search-cta">
@@ -19504,7 +19504,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/database-alternatives">Databases</a> &rsaquo; Supabase vs Firebase</div>
   <h1>Supabase vs Firebase — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/supabase-vs-firebase")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/supabase-vs-firebase")} &middot; ${pageDataProvenance("/supabase-vs-firebase", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">500 MB</div><div class="stat-label">Supabase DB</div></div>
@@ -19837,7 +19837,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Hosting</a> &rsaquo; Vercel vs Netlify</div>
   <h1>Vercel vs Netlify — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/vercel-vs-netlify")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/vercel-vs-netlify")} &middot; ${pageDataProvenance("/vercel-vs-netlify", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">100 GB</div><div class="stat-label">Vercel Bandwidth</div></div>
@@ -20165,7 +20165,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/database-alternatives">Databases</a> &rsaquo; Neon vs Supabase</div>
   <h1>Neon vs Supabase — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/neon-vs-supabase")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/neon-vs-supabase")} &middot; ${pageDataProvenance("/neon-vs-supabase", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">100</div><div class="stat-label">Neon Projects</div></div>
@@ -20497,7 +20497,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Hosting</a> &rsaquo; Railway vs Render</div>
   <h1>Railway vs Render — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/railway-vs-render")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/railway-vs-render")} &middot; ${pageDataProvenance("/railway-vs-render", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">0.5 GB</div><div class="stat-label">Railway RAM</div></div>
@@ -20829,7 +20829,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/monitoring-alternatives">Monitoring</a> &rsaquo; Datadog vs New Relic</div>
   <h1>Datadog vs New Relic — Free Tier Comparison</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/datadog-vs-new-relic")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/datadog-vs-new-relic")} &middot; ${pageDataProvenance("/datadog-vs-new-relic", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">5 hosts</div><div class="stat-label">Datadog Free</div></div>
@@ -21271,7 +21271,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="migration-paths">3. Five Migration Paths</h2>
-  <p class="section-intro">Each path has trade-offs between migration effort, feature coverage, and long-term flexibility. All options listed have genuine free tiers verified against vendor pricing pages.</p>
+  <p class="section-intro">Each path has trade-offs between migration effort, feature coverage, and long-term flexibility.</p>
 
   ${migrationPaths.map((path, i) => `<div class="path-card">
     <div class="path-header">
@@ -21596,7 +21596,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + buildGlobalNav("changes") + '\n'
     + '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Terraform Cloud Free Tier Removed</div>\n'
     + '  <h1>Terraform Cloud Free Tier Removed</h1>\n'
-    + '  <p class="pub-date">Published ' + pubDate + ' &middot; Effective March 31, 2026 &middot; Legacy plan discontinued &middot; 500 resource cap &middot; ' + alternatives.length + ' alternatives compared</p>\n'
+    + '  <p class="pub-date">Published ' + pubDate + ' &middot; Effective March 31, 2026 &middot; Legacy plan discontinued &middot; 500 resource cap &middot; ' + alternatives.length + ' alternatives compared &middot; ' + pageDataProvenance("/terraform-cloud-free-tier-removed", offers.length) + '</p>\n'
     + '\n'
     // Summary stats
     + '  <div class="summary-stats">\n'
@@ -21817,7 +21817,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '  </div>\n'
     + '\n'
     + '  <div class="methodology">\n'
-    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp\'s pricing page</a> and verified against each alternative\'s pricing page as of April 2026. Cost estimates for self-hosted options assume a small cloud VM ($5-15/month for Atlantis/OpenTofu runners). Resource limits and features verified against each platform\'s free tier documentation. Stability indicators from our index of ' + offers.length.toLocaleString() + ' tracked developer tools. See also our <a href="/hcp-terraform-migration">pre-deadline migration guide</a> for step-by-step instructions.\n'
+    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp\'s pricing page</a> and verified against each alternative\'s pricing page as of April 2026. Cost estimates for self-hosted options assume a small cloud VM ($5-15/month for Atlantis/OpenTofu runners). Resource limits and features were read from each platform\'s free tier documentation on ' + pubDate + '. Stability indicators are computed from our tracked pricing changes. See also our <a href="/hcp-terraform-migration">pre-deadline migration guide</a> for step-by-step instructions.\n'
     + '  </div>\n'
     + '\n'
     + '  <div class="search-cta">\n'
@@ -21966,7 +21966,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing 2026</div>
   <h1>Gemini API Pricing 2026 — Free Tier Changes, Spend Caps &amp; Alternatives</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/gemini-api-pricing-2026")} &middot; Spend caps enforced April 1 &middot; 3.1 Pro paid-only &middot; Prepaid billing live</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/gemini-api-pricing-2026")} &middot; Spend caps enforced April 1 &middot; 3.1 Pro paid-only &middot; Prepaid billing live &middot; ${pageDataProvenance("/gemini-api-pricing-2026", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">$250</div><div class="stat-label">Tier 1 Spend Cap</div></div>
@@ -22167,7 +22167,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Gemini API pricing details sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google's Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. Rate limit reductions verified via our <a href="/changes">deal change tracker</a> (3 Gemini changes tracked since December 2025). Alternative provider limits verified against their pricing pages as of March 2026. Risk assessments based on pricing history and free tier stability from our index of ${offers.length.toLocaleString()} tracked developer tools.
+    <strong>Methodology:</strong> Gemini API pricing details sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google's Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. Rate limit reductions verified via our <a href="/changes">deal change tracker</a> (3 Gemini changes tracked since December 2025). Alternative provider limits verified against their pricing pages as of March 2026. Risk assessments are based on pricing history and free tier stability.
   </div>
 
   <div class="search-cta">
@@ -22364,7 +22364,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + buildGlobalNav("changes") + '\n'
     + '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Gemini API Pricing Overhaul</div>\n'
     + '  <h1>Google Gemini API Pricing Overhaul Guide</h1>\n'
-    + '  <p class="pub-date">Published ' + pubDate + ' &middot; Effective April 1, 2026 &middot; Free tier Flash-only &middot; Pro paid-only &middot; 11 alternatives compared</p>\n'
+    + '  <p class="pub-date">Published ' + pubDate + ' &middot; Effective April 1, 2026 &middot; Free tier Flash-only &middot; Pro paid-only &middot; 11 alternatives compared &middot; ' + pageDataProvenance("/gemini-api-pricing-changes", offers.length) + '</p>\n'
     + '\n'
     + '  <div class="summary-stats">\n'
     + '    <div class="stat-card"><div class="stat-number red">80%</div><div class="stat-label">Rate Limit Cut</div></div>\n'
@@ -22617,7 +22617,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '  </div>\n'
     + '\n'
     + '  <div class="methodology">\n'
-    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google\'s Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. Alternative provider limits verified against their respective pricing pages as of April 2026. Cost estimates assume average request sizes (~1K tokens in, ~500 tokens out) and may vary by use case. Risk assessments and stability indicators from our index of ' + offers.length.toLocaleString() + ' tracked developer tools. See also our <a href="/gemini-api-pricing-2026">Gemini billing deep-dive</a> for spend cap tier details.\n'
+    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google\'s Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. Alternative provider limits verified against their respective pricing pages as of April 2026. Cost estimates assume average request sizes (~1K tokens in, ~500 tokens out) and may vary by use case. Risk assessments and stability indicators are computed from our tracked pricing changes. See also our <a href="/gemini-api-pricing-2026">Gemini billing deep-dive</a> for spend cap tier details.\n'
     + '  </div>\n'
     + '\n'
     + '  <div class="search-cta">\n'
@@ -22891,7 +22891,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Free Tier Risk Index</div>
   <h1>Free Tier Risk Index</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Based on ${dealChanges.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate} &middot; Based on ${dealChanges.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-risk", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number" style="color:#3fb950">${lowRisk.length}</div><div class="stat-label">Low Risk (Safe)</div></div>
@@ -23160,7 +23160,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This risk index covers ${riskEntries.length} major developer tools as of April 2026. For full free tier details on any vendor, search our index of ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>. Track changes in real-time via our <a href="/feed.xml">Atom feed</a> or <a href="/setup">MCP server</a>.</p>
+    <p>This risk index covers ${riskEntries.length} major developer tools as of April 2026. For full free tier details on any vendor, search all ${offers.length.toLocaleString()} tracked developer tools at <a href="/search">/search</a>. Track changes in real-time via our <a href="/feed.xml">Atom feed</a> or <a href="/setup">MCP server</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -23689,7 +23689,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ai-ml-alternatives">AI / ML</a> &rsaquo; Assistants API Sunset Guide</div>
   <h1>OpenAI Assistants API Sunset: Migration Guide &amp; Free Alternatives</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/openai-assistants-alternatives")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/openai-assistants-alternatives")} &middot; ${pageDataProvenance("/openai-assistants-alternatives", offers.length)} &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -23887,7 +23887,7 @@ ${mcpCtaCss()}
 
   <div class="methodology">
     <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. Stability ratings are computed from our <a href="/changes">deal changes database</a> \u2014 OpenAI is classified as <strong style="color:${stabilityColor}">${openaiStability}</strong> based on ${openaiChanges.length} tracked changes including free tier removal, limit reductions, and API deprecation.</p>
-    <p><strong>Vendor data verification:</strong> Free tier details are verified against vendor pricing pages. Last full verification: March 2026. Provider capabilities (tool use, code execution) are verified against official API documentation.</p>
+    <p><strong>Vendor data verification:</strong> Free tier details were read from vendor pricing pages on ${pubDate}. Last full verification: March 2026. Provider capabilities (tool use, code execution) were read from official API documentation on ${pubDate}.</p>
     <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
   </div>
 
@@ -24203,7 +24203,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; <a href="/shutdowns">Shutdowns</a> &rsaquo; Assistants API Migration</div>
   <h1>OpenAI Assistants API Migration Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/openai-assistants-migration-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/openai-assistants-migration-2026")} &middot; ${pageDataProvenance("/openai-assistants-migration-2026", offers.length)} &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -24688,7 +24688,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Tenor API Shutdown Guide</div>
   <h1>Tenor API Shutdown: GIF API Alternatives &amp; Migration Guide</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/tenor-alternatives")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${tenorChanges.length} Tenor pricing change${tenorChanges.length !== 1 ? "s" : ""} tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/tenor-alternatives")} &middot; ${pageDataProvenance("/tenor-alternatives", offers.length)} &middot; ${tenorChanges.length} Tenor pricing change${tenorChanges.length !== 1 ? "s" : ""} tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -24935,7 +24935,7 @@ ${mcpCtaCss()}
 
   <div class="methodology">
     <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. The Tenor API shutdown is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>
-    <p><strong>Migration recommendations:</strong> Based on API documentation review, community reports (Discord, Bluesky GitHub issues), and platform migration announcements. Klipy\u2019s API compatibility was verified against Tenor\u2019s v2 API documentation.</p>
+    <p><strong>Migration recommendations:</strong> Based on API documentation review, community reports (Discord, Bluesky GitHub issues), and platform migration announcements. Klipy\u2019s API compatibility was read from Tenor\u2019s v2 API documentation on ${pubDate}.</p>
     <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
   </div>
 
@@ -25155,7 +25155,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">IDE &amp; Code Editors</a> &rsaquo; Firebase Studio Shutdown Guide</div>
   <h1>Firebase Studio Shutdown: Free Cloud IDE Alternatives &amp; Migration Paths</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/firebase-studio-shutdown")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${firebaseChanges.length} Firebase/Google pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/firebase-studio-shutdown")} &middot; ${pageDataProvenance("/firebase-studio-shutdown", offers.length)} &middot; ${firebaseChanges.length} Firebase/Google pricing changes tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysToFreeze} days</div>
@@ -25422,7 +25422,7 @@ ${mcpCtaCss()}
   <h2 id="methodology">Methodology</h2>
 
   <div class="methodology">
-    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. Cloud IDE and AI coding tool free tiers are verified against vendor pricing pages. Stability ratings are computed from our <a href="/changes">deal changes database</a> \u2014 Firebase is classified as <strong style="color:${stabilityColor}">${firebaseStability}</strong> based on ${firebaseChanges.length} tracked changes.</p>
+    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. Cloud IDE and AI coding tool free tiers were read from vendor pricing pages on ${pubDate} and have not been re-checked since. Stability ratings are computed from our <a href="/changes">deal changes database</a> \u2014 Firebase is classified as <strong style="color:${stabilityColor}">${firebaseStability}</strong> based on ${firebaseChanges.length} tracked changes.</p>
     <p><strong>Shutdown dates:</strong> June 22, 2026 (workspace freeze) and March 22, 2027 (data deletion) are sourced from Google\u2019s official Firebase Studio shutdown announcement. Countdown timers are computed dynamically.</p>
     <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
   </div>
@@ -25752,7 +25752,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/shutdowns">Shutdown Tracker</a> &rsaquo; OpenAI Assistants API</div>\n' +
     '  <h1>OpenAI Assistants API Sunset \u2014 Migration Cost Guide</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/openai-assistants-migration") + ' &middot; ' + migrationPaths.length + ' migration paths compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + openaiChanges.length + ' OpenAI pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/openai-assistants-migration") + ' &middot; ' + migrationPaths.length + ' migration paths compared &middot; ' + pageDataProvenance("/openai-assistants-migration", offers.length) + ' &middot; ' + openaiChanges.length + ' OpenAI pricing changes tracked</p>\n' +
     '\n' +
     // Deadline banner
     '  <div class="deadline-banner">\n' +
@@ -25772,7 +25772,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  <div class="executive-summary">\n' +
     '    <p><strong>What\'s happening:</strong> OpenAI is sunsetting the Assistants API on August 26, 2026. All Assistants, Threads, and associated API calls will stop working. Developers must migrate to the Responses API + Conversations API, switch to Azure OpenAI (which has not announced deprecation), or move to an alternative platform entirely.</p>\n' +
     '    <p><strong>The cost question:</strong> Migration isn\'t just about code changes \u2014 it\'s about ongoing costs. Staying with OpenAI means the same token pricing but new API patterns. Switching providers can reduce costs 30\u201370% (Gemini\'s free tier) or increase them (Azure\'s enterprise overhead). Open-source frameworks (LangChain, CrewAI) eliminate platform lock-in but require more engineering investment.</p>\n' +
-    '    <p><strong>This guide covers:</strong> cost comparison at 3 usage tiers (hobby, production, scale), migration effort estimates, free tier options, and a recommended timeline \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '    <p><strong>This guide covers:</strong> cost comparison at 3 usage tiers (hobby, production, scale), migration effort estimates, free tier options, and a recommended timeline \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     // Table of contents
@@ -25908,7 +25908,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '\n' +
     // Methodology
     '  <div class="methodology">\n' +
-    '    <strong>Methodology:</strong> Cost estimates are based on published API pricing as of April 2026, cross-referenced with our index of ' + offers.length.toLocaleString() + ' developer tools. "Hobby" assumes <1,000 requests/day with short prompts. "Production" assumes 1,000\u201310,000 requests/day with moderate context. "Scale" assumes 10,000+ requests/day with full context windows. Migration effort is estimated for a typical single-assistant application. Open-source framework costs reflect only the underlying LLM API charges.\n' +
+    '    <strong>Methodology:</strong> Cost estimates are based on published API pricing as of April 2026, and were not cross-referenced against our index. "Hobby" assumes <1,000 requests/day with short prompts. "Production" assumes 1,000\u201310,000 requests/day with moderate context. "Scale" assumes 10,000+ requests/day with full context windows. Migration effort is estimated for a typical single-assistant application. Open-source framework costs reflect only the underlying LLM API charges.\n' +
     '  </div>\n' +
     '\n' +
     // Related pages
@@ -26340,7 +26340,7 @@ ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">Home</a> / <a href="/guides">Guides</a> / Shutdown Tracker</div>
   <h1>${escHtmlServer(title)}</h1>
   <p class="subtitle">${escHtmlServer(subtitle)}</p>
-  <div class="pub-date">Published ${pubDate}${pageFreshness("/shutdowns")} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${nextDaysLeft} days` : ""}</div>
+  <div class="pub-date">Published ${pubDate}${pageFreshness("/shutdowns")} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${nextDaysLeft} days` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${activeCount}</div><div class="stat-label">Active Shutdowns</div></div>
@@ -26385,7 +26385,7 @@ ${buildGlobalNav("guides")}
 
   <h2 id="methodology">Methodology</h2>
   <div class="methodology">
-    <p><strong>How we track shutdowns:</strong> We monitor official vendor announcements, API changelogs, developer blogs, and community reports for service deprecation and shutdown notices. Each entry is verified against the vendor\u2019s official documentation before inclusion.</p>
+    <p><strong>How we track shutdowns:</strong> We monitor official vendor announcements, API changelogs, developer blogs, and community reports for service deprecation and shutdown notices. Each entry was read from the vendor\u2019s official documentation on the day it was added.</p>
     <p><strong>Urgency classification:</strong> <span style="color:#f85149;font-weight:600">Imminent</span> (&lt;30 days) \u2014 take action now. <span style="color:#d29922;font-weight:600">Upcoming</span> (30\u201390 days) \u2014 plan migration. <span style="color:#3fb950;font-weight:600">Later</span> (90+ days) \u2014 start planning when convenient.</p>
     <p><strong>Stability ratings</strong> are computed from our <a href="/changes">deal changes database</a> of ${dealChanges.length} tracked changes. <a href="/stability">View the full stability dashboard</a>.</p>
     <p><strong>Updates:</strong> This page is updated as new shutdowns are announced. Subscribe to our <a href="/feed.xml">Atom feed</a> for change notifications, or query via <a href="/setup">MCP server</a>.</p>
@@ -26769,7 +26769,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Free Tier Tracker</div>
   <h1>Free Tier Tracker &mdash; Q1 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Tracking ${dealChanges.length} pricing changes across ${offers.length.toLocaleString()} developer tools</p>
+  <p class="pub-date">Published ${pubDate} &middot; Tracking ${dealChanges.length} pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-tracker", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number" style="color:#f85149">${removedOrReduced.length}</div><div class="stat-label">Free Tiers Removed</div></div>
@@ -26852,7 +26852,7 @@ ${mcpCtaCss()}
 
   <div id="methodology" class="methodology">
     <p><strong>Data Source &amp; Methodology</strong></p>
-    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${dealChanges.length} verified pricing changes across ${offers.length.toLocaleString()} developer tools. Each change is manually verified against the vendor&rsquo;s pricing page or official announcement. Change types: <em>free_tier_removed</em>, <em>limits_reduced</em>, <em>restriction</em>, <em>open_source_killed</em>, <em>pricing_restructured</em>, <em>new_free_tier</em>, <em>limits_increased</em>, <em>startup_program_expanded</em>.</p>
+    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${dealChanges.length} verified pricing changes across ${offers.length.toLocaleString()} developer tools. Each change was read by hand from the vendor&rsquo;s pricing page or official announcement on the day it was recorded. Change types: <em>free_tier_removed</em>, <em>limits_reduced</em>, <em>restriction</em>, <em>open_source_killed</em>, <em>pricing_restructured</em>, <em>new_free_tier</em>, <em>limits_increased</em>, <em>startup_program_expanded</em>.</p>
     <p>Impact is scored as high (affects thousands of developers or eliminates a widely-used free tier), medium (meaningful change to limits or pricing structure), or low (minor adjustments). Sources linked for each entry.</p>
     <p>Missing a change? <a href="https://github.com/robhunter/agentdeals/issues">File an issue</a> and we&rsquo;ll add it.</p>
   </div>
@@ -27137,7 +27137,7 @@ function buildStartupCreditsPage(): string {
     '  ' + buildGlobalNav("alternatives") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Startup Programs</a> &rsaquo; Credits Comparison</div>\n' +
     '  <h1>Startup Credits Comparison \u2014 The 2026 Guide</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/startup-credits") + ' &middot; ' + programs.length + ' programs compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/startup-credits") + ' &middot; ' + programs.length + ' programs compared &middot; ' + pageDataProvenance("/startup-credits", offers.length) + '</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + programs.length + '</div><div class="stat-label">Programs Compared</div></div>\n' +
@@ -27149,7 +27149,7 @@ function buildStartupCreditsPage(): string {
     '  <div class="executive-summary">\n' +
     '    <p><strong>Startup credits in April 2026:</strong> ' + programs.length + ' programs across cloud infrastructure, fintech perks, developer tools, and AI \u2014 from $1K self-serve credits to $350K VC-backed packages. The cloud providers (AWS, Google, Microsoft, Cloudflare) offer the highest individual values, while fintech platforms (Brex, Mercury, Stripe Atlas) bundle credits from multiple providers into single sign-ups.</p>\n' +
     '    <p><strong>Key insight:</strong> A well-planned stacking strategy can unlock $500K+ in combined credits across platforms. The highest-value approach: apply to cloud providers directly (Google $200K, AWS $100K, Cloudflare $100K) then layer fintech banking perks for additional tool credits. Watch for overlapping perks \u2014 AWS credits from Brex and Stripe Atlas may be the same underlying allocation.</p>\n' +
-    '    <p><strong>This guide covers:</strong> credit values, eligibility requirements, vesting schedules, hidden constraints, application difficulty, and optimal stacking strategies \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '    <p><strong>This guide covers:</strong> credit values, eligibility requirements, vesting schedules, hidden constraints, application difficulty, and optimal stacking strategies \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="toc">\n' +
@@ -27262,7 +27262,7 @@ function buildStartupCreditsPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All credit values are sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor program pages. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as programs announce changes.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from official vendor program pages when this page was compiled on ' + pubDate + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/startup-credits">/api/startup-credits</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for startup programs, compare eligibility, or track changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -27545,7 +27545,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">AI Coding</a> &rsaquo; Pricing Guide 2026</div>
   <h1>AI Coding Tools Pricing — 2026 Comparison</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/ai-coding-pricing-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${aiCodingChanges.length} pricing changes tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/ai-coding-pricing-2026")} &middot; ${pageDataProvenance("/ai-coding-pricing-2026", offers.length)} &middot; ${aiCodingChanges.length} pricing changes tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${tools.length}</div><div class="stat-label">Tools Compared</div></div>
@@ -27656,7 +27656,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official vendor pricing pages. Pricing changes are tracked via our <a href="/changes">deal changes timeline</a> (${dealChanges.length} total changes tracked). Data is updated continuously as vendors announce changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/changes">deal changes timeline</a> (${dealChanges.length} total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for AI coding tools, compare vendors, or track pricing changes from your AI coding assistant.
   </div>
 
@@ -28207,7 +28207,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">AI Coding</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>AI Coding Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/ai-coding-tools-pricing") + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + aiCodingChanges.length + ' pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/ai-coding-tools-pricing") + ' &middot; ' + tools.length + ' tools compared &middot; ' + pageDataProvenance("/ai-coding-tools-pricing", offers.length) + ' &middot; ' + aiCodingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + tools.length + '</div><div class="stat-label">Tools Compared</div></div>\n' +
@@ -28219,7 +28219,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  <div class="executive-summary">\n' +
     '    <p><strong>The AI coding tools market in April 2026:</strong> 17 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Free tiers range from genuinely generous (Gemini Code Assist: 180K completions/month) to functionally absent (Devin: $20/mo minimum). The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
     '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a new category that didn\'t exist a year ago. Google is flooding the market with free options (Gemini Code Assist, Antigravity, Gemini CLI) while competitors charge $20/mo.</p>\n' +
-    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, what you actually get for free, cost analysis for solo devs and teams, hidden costs, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, what you actually get for free, cost analysis for solo devs and teams, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="toc">\n' +
@@ -28429,7 +28429,7 @@ function buildAiCodingToolsPricingPage(): string {
     // Data source
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/ai-coding-pricing">/api/ai-coding-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for AI coding tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -28992,7 +28992,7 @@ function buildCiCdPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ci-cd-alternatives">CI/CD</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>CI/CD Tools Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/ci-cd-pricing") + ' &middot; ' + tools.length + ' tools compared &middot; Data verified from our index of ' + cicdOffers.length + ' CI/CD tools &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/ci-cd-pricing") + ' &middot; ' + tools.length + ' tools compared &middot; ' + pageDataProvenance("/ci-cd-pricing", offers.length) + ' &middot; ' + cicdChanges.length + ' pricing change' + (cicdChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + tools.length + '</div><div class="stat-label">Tools Compared</div></div>\n' +
@@ -29004,7 +29004,7 @@ function buildCiCdPricingPage(): string {
     '  <div class="executive-summary">\n' +
     '    <p><strong>The CI/CD landscape in April 2026:</strong> ' + tools.length + ' tools across four categories \u2014 general-purpose platforms, cloud-native services, mobile CI/CD specialists, and self-hosted open-source solutions. Pricing models are fragmented: per-seat, per-minute, per-credit, and per-parallel-job all coexist. Free tiers range from Google Cloud Build\'s generous 120 min/day to Bitbucket Pipelines\' tight 50 min/month.</p>\n' +
     '    <p><strong>Key trends:</strong> Self-hosted runners are becoming the cost optimization strategy \u2014 GitHub Actions, GitLab CI, Buildkite, Harness CI, and Azure DevOps all offer free unlimited self-hosted execution. Cloud-native CI/CD (AWS CodeBuild, Google Cloud Build) charges per-minute with modest free tiers. Mobile CI/CD remains the most expensive category, with macOS build minutes costing 2\u201310x Linux minutes.</p>\n' +
-    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, build minute analysis, cost comparison for small teams and growing organizations, hidden costs, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, build minute analysis, cost comparison for small teams and growing organizations, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="toc">\n' +
@@ -29214,7 +29214,7 @@ function buildCiCdPricingPage(): string {
     // Data source
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for CI/CD tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -29897,7 +29897,7 @@ function buildDatabasePricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Definitive Pricing Comparison</div>\n' +
     '  <h1>Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/database-pricing") + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + dbOffers.length + ' database services &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/database-pricing") + ' &middot; ' + services.length + ' services compared &middot; ' + pageDataProvenance("/database-pricing", offers.length) + ' &middot; ' + dbChanges.length + ' pricing change' + (dbChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Services Compared</div></div>\n' +
@@ -29909,7 +29909,7 @@ function buildDatabasePricingPage(): string {
     '  <div class="executive-summary">\n' +
     '    <p><strong>The database landscape in April 2026:</strong> ' + services.length + ' services across five categories \u2014 managed PostgreSQL, serverless/edge, document/NoSQL, cloud provider, and specialized (vector, graph, time-series, cache). The market is volatile: PlanetScale killed its free tier (April 2024), Supabase tightened pause policies, Neon pivoted to usage-based pricing post-Databricks acquisition, and Aurora PostgreSQL joined the AWS free tier.</p>\n' +
     '    <p><strong>Key trends:</strong> PostgreSQL has won the developer database war \u2014 Supabase, Neon, CockroachDB, and Aurora all offer PostgreSQL-compatible free tiers. Edge/serverless databases (Turso, D1) are the fastest-growing category. Vector databases (Weaviate, Zilliz) are essential for AI applications but most only offer limited free tiers. The biggest shift: managed databases are converging on usage-based pricing, making costs harder to predict but scaling more efficient.</p>\n' +
-    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, storage and connection analysis, cost comparison for solo developers and teams, hidden costs, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, storage and connection analysis, cost comparison for solo developers and teams, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="toc">\n' +
@@ -30110,7 +30110,7 @@ function buildDatabasePricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for database services, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -30564,7 +30564,7 @@ function buildVectorDatabasePricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Vector Database Pricing</div>\n' +
     '  <h1>Vector Database Pricing \u2014 The Definitive 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/vector-database-pricing") + ' &middot; ' + services.length + ' services compared &middot; Data verified from our index of ' + vectorOffers.length + ' vector database entries &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/vector-database-pricing") + ' &middot; ' + services.length + ' services compared &middot; ' + pageDataProvenance("/vector-database-pricing", offers.length) + ' &middot; ' + vectorChanges.length + ' pricing change' + (vectorChanges.length !== 1 ? "s" : "") + ' tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Services Compared</div></div>\n' +
@@ -30576,7 +30576,7 @@ function buildVectorDatabasePricingPage(): string {
     '  <div class="executive-summary">\n' +
     '    <p><strong>The vector database landscape in April 2026:</strong> ' + services.length + ' services across five categories \u2014 dedicated cloud vector DBs, open-source self-hosted, PostgreSQL + pgvector, embedded/local, and serverless. Vector databases are the fastest-growing infrastructure category in developer tooling, driven by RAG pipelines and AI applications.</p>\n' +
     '    <p><strong>Key trends:</strong> pgvector has democratized vector search \u2014 Supabase, Neon, and any PostgreSQL instance now support similarity search with zero extra infrastructure. Dedicated vector DBs (Pinecone, Qdrant, Weaviate) differentiate on scale, performance, and advanced features like hybrid search and reranking. The open-source ecosystem is strong: Qdrant, Milvus, Chroma, and LanceDB are all fully free to self-host. Serverless options (Upstash Vector, Turbopuffer) offer pay-per-use with no infrastructure management.</p>\n' +
-    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, vector storage and dimension analysis, self-hosted vs managed cost comparison, cost analysis for solo developers and teams, hidden costs, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, vector storage and dimension analysis, self-hosted vs managed cost comparison, cost analysis for solo developers and teams, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="toc">\n' +
@@ -30769,7 +30769,7 @@ function buildVectorDatabasePricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for vector database services, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -31291,7 +31291,7 @@ function buildHostingPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/hosting-alternatives">Cloud Hosting</a> &rsaquo; Pricing Comparison</div>\n' +
     '  <h1>Cloud Hosting &amp; PaaS Pricing \u2014 The 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/hosting-pricing") + ' &middot; ' + services.length + ' platforms compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + hostingChanges.length + ' pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/hosting-pricing") + ' &middot; ' + services.length + ' platforms compared &middot; ' + pageDataProvenance("/hosting-pricing", offers.length) + ' &middot; ' + hostingChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + services.length + '</div><div class="stat-label">Platforms Compared</div></div>\n' +
@@ -31303,7 +31303,7 @@ function buildHostingPricingPage(): string {
     '  <div class="executive-summary">\n' +
     '    <p><strong>Cloud hosting in April 2026:</strong> ' + services.length + ' platforms across four categories \u2014 traditional PaaS, edge/serverless, full-featured platforms, and static/specialized hosts. $5/month has become the entry price for always-on compute (Railway Hobby, Heroku Eco). Cloudflare dominates the free tier with unlimited bandwidth and 100K requests/day. The big shift: credit-based pricing is replacing flat-rate plans (Vercel Jan 2026, Netlify Sep 2025).</p>\n' +
     '    <p><strong>Key trends:</strong> Heroku\'s free tier removal (2022) drove a migration wave to Railway, Render, and Fly.io. Netlify\'s per-committer billing (March 2026) is pushing teams to Vercel or Cloudflare Pages. Google is flooding the market with generous always-free tiers (Cloud Run: 2M requests/month). Edge computing is making traditional PaaS less necessary for many workloads.</p>\n' +
-    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, free tier analysis, cost comparison for solo devs and teams, hidden costs, pricing gotchas, and best-for-use-case recommendations \u2014 all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, free tier analysis, cost comparison for solo devs and teams, hidden costs, pricing gotchas, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     (hasRailwayReferral ? (
@@ -31507,7 +31507,7 @@ function buildHostingPricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/hosting-pricing">/api/hosting-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for hosting platforms, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -32048,7 +32048,7 @@ function buildLlmApiPricingPage(): string {
     '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ai-ml-alternatives">AI / ML</a> &rsaquo; LLM API Pricing</div>\n' +
     '  <h1>LLM API Pricing &mdash; The 2026 Comparison</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/llm-api-pricing") + ' &middot; ' + providers.length + ' providers compared &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + llmChanges.length + ' pricing changes tracked</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + pageFreshness("/llm-api-pricing") + ' &middot; ' + providers.length + ' providers compared &middot; ' + pageDataProvenance("/llm-api-pricing", offers.length) + ' &middot; ' + llmChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Providers Compared</div></div>\n' +
@@ -32060,7 +32060,7 @@ function buildLlmApiPricingPage(): string {
     '  <div class="executive-summary">\n' +
     '    <p><strong>LLM API pricing in April 2026:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. The biggest story: Claude Opus 4.6 pricing dropped 67% ($5/$25 per M tokens, down from $15/$75). Google restricted Gemini free tier to Flash-only models. DeepSeek V4 delivers 1M context at $0.30/M input — the cheapest long-context option. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
     '    <p><strong>Key trends:</strong> Inference providers (Groq, Cerebras, OpenRouter) are commoditizing open-source model access — free tiers with no credit card required. xAI Grok 4.1 is the cheapest frontier model at $0.20/M input. The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
-    '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations — all sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tools.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations — compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
@@ -32245,7 +32245,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our verified index of ' + offers.length.toLocaleString() + ' developer tool free tiers, cross-referenced against official vendor pricing pages. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). Data updated continuously as vendors announce changes.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/llm-pricing">/api/llm-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> — search for LLM providers, compare pricing, or track changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -33040,7 +33040,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; DALL-E Shutdown Guide</div>
   <h1>DALL-E API Shutdown: Migration Guide &amp; Free Image Generation Alternatives</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/dall-e-shutdown")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${dalleChanges.length} OpenAI pricing change${dalleChanges.length !== 1 ? "s" : ""} tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/dall-e-shutdown")} &middot; ${pageDataProvenance("/dall-e-shutdown", offers.length)} &middot; ${dalleChanges.length} OpenAI pricing change${dalleChanges.length !== 1 ? "s" : ""} tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -33460,7 +33460,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + pageFreshness("/openai-realtime-migration") + ' &middot; Data verified from our index of ' + offers.length.toLocaleString() + ' developer tools &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data verified against official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + pageFreshness("/openai-realtime-migration") + ' &middot; ' + pageDataProvenance("/openai-realtime-migration", offers.length) + ' &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data verified against official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
 }
 
 // --- AWS App Runner Migration Guide page ---
@@ -33704,7 +33704,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; App Runner Migration Guide</div>
   <h1>AWS App Runner Migration Guide: Alternatives with Free Tiers &amp; Pricing</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/aws-app-runner-migration")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${awsChanges.length} AWS pricing change${awsChanges.length !== 1 ? "s" : ""} tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/aws-app-runner-migration")} &middot; ${pageDataProvenance("/aws-app-runner-migration", offers.length)} &middot; ${awsChanges.length} AWS pricing change${awsChanges.length !== 1 ? "s" : ""} tracked</p>
 
   <div class="deadline-banner">
     <div class="deadline-days">${daysLeft} days</div>
@@ -34283,7 +34283,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier 2026</div>
   <h1>AWS Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/aws-free-tier-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${awsOffers.length} AWS entries tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/aws-free-tier-2026")} &middot; ${pageDataProvenance("/aws-free-tier-2026", offers.length)} &middot; ${awsOffers.length} AWS entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
@@ -34459,7 +34459,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All free tier data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official AWS pricing pages. We track ${awsOffers.length} AWS-related entries and ${awsChanges.length} AWS pricing changes. Data is updated continuously as AWS announces changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official AWS pricing pages and have not been re-checked since. We track ${awsOffers.length} AWS-related entries and ${awsChanges.length} AWS pricing changes. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Query AWS data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for AWS services, compare with alternatives, or track pricing changes from your AI coding assistant.
   </div>
 
@@ -34728,7 +34728,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCP Free Tier 2026</div>
   <h1>GCP Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/gcp-free-tier-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${gcpOffers.length} GCP entries tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/gcp-free-tier-2026")} &middot; ${pageDataProvenance("/gcp-free-tier-2026", offers.length)} &middot; ${gcpOffers.length} GCP entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
@@ -34885,7 +34885,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All free tier data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official GCP pricing pages. We track ${gcpOffers.length} Google Cloud-related entries and ${gcpChanges.length} GCP/Google pricing changes. Data is updated continuously as Google announces changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official GCP pricing pages and have not been re-checked since. We track ${gcpOffers.length} Google Cloud-related entries and ${gcpChanges.length} GCP/Google pricing changes. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Query GCP data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for GCP services, compare with alternatives, or track pricing changes from your AI coding assistant.
   </div>
 
@@ -35155,7 +35155,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier 2026</div>
   <h1>Azure Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/azure-free-tier-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${azureOffers.length} Azure entries tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/azure-free-tier-2026")} &middot; ${pageDataProvenance("/azure-free-tier-2026", offers.length)} &middot; ${azureOffers.length} Azure entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
@@ -35354,7 +35354,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All free tier data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official Azure pricing pages. We track ${azureOffers.length} Azure-related entries and ${azureChanges.length} Azure pricing changes. Data is updated continuously as Microsoft announces changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official Azure pricing pages and have not been re-checked since. We track ${azureOffers.length} Azure-related entries and ${azureChanges.length} Azure pricing changes. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Query Azure data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for Azure services, compare with alternatives, or track pricing changes from your AI coding assistant.
   </div>
 
@@ -35609,7 +35609,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; DigitalOcean Free Tier 2026</div>
   <h1>DigitalOcean Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/digitalocean-free-tier-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; ${doOffers.length} DigitalOcean entries tracked</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/digitalocean-free-tier-2026")} &middot; ${pageDataProvenance("/digitalocean-free-tier-2026", offers.length)} &middot; ${doOffers.length} DigitalOcean entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number green">$200</div><div class="stat-label">Free Credits (60 days)</div></div>
@@ -35803,7 +35803,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official DigitalOcean pricing pages. We track ${doOffers.length} DigitalOcean-related entries and ${doChanges.length} DigitalOcean pricing changes. Data is updated continuously as DigitalOcean announces changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official DigitalOcean pricing pages and have not been re-checked since. We track ${doOffers.length} DigitalOcean-related entries and ${doChanges.length} DigitalOcean pricing changes. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Query DigitalOcean data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for DigitalOcean services, compare with alternatives, or track pricing changes from your AI coding assistant.
   </div>
 
@@ -36124,7 +36124,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Cloud Free Tier Comparison</div>
   <h1>Cloud Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/cloud-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 4 cloud providers compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/cloud-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/cloud-free-tier-comparison-2026", offers.length)} &middot; 4 cloud providers compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -36564,7 +36564,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official cloud provider pricing pages. We track pricing changes across all 4 major clouds. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official cloud provider pricing pages and have not been re-checked since. We track pricing changes across all 4 major clouds. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Deep-dive guides:</strong> <a href="/aws-free-tier-2026">AWS</a> &middot; <a href="/gcp-free-tier-2026">GCP</a> &middot; <a href="/azure-free-tier-2026">Azure</a> &middot; <a href="/digitalocean-free-tier-2026">DigitalOcean</a> &middot; <a href="/database-free-tier-comparison-2026">Databases</a><br><br>
     <strong>Query cloud pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare cloud services, track pricing changes, or plan your infrastructure stack from your AI coding assistant.
   </div>
@@ -36754,7 +36754,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Database Free Tier Comparison</div>
   <h1>Database Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/database-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 44 database services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/database-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/database-free-tier-comparison-2026", offers.length)} &middot; 44 database services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -36787,7 +36787,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top 10 database free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top 10 database free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -37253,7 +37253,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers across 44 database services, verified against official pricing pages. We track pricing changes across all major database providers. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official pricing pages and have not been re-checked since. We track pricing changes across all major database providers. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Related guides:</strong> <a href="/database-alternatives">Database Alternatives</a> &middot; <a href="/neon-vs-supabase">Neon vs Supabase</a> &middot; <a href="/supabase-vs-firebase">Supabase vs Firebase</a> &middot; <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a><br><br>
     <strong>Query database pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare databases, track pricing changes, or plan your data stack from your AI coding assistant.
   </div>
@@ -37438,7 +37438,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/ci-cd">CI/CD</a> &rsaquo; CI/CD Free Tier Comparison</div>
   <h1>CI/CD Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/cicd-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 37 CI/CD services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/cicd-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/cicd-free-tier-comparison-2026", offers.length)} &middot; 37 CI/CD services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -37471,7 +37471,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top 10 CI/CD free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top 10 CI/CD free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -37924,7 +37924,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers across 37 CI/CD services, verified against official pricing pages. We track pricing changes across all major CI/CD providers. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official pricing pages and have not been re-checked since. We track pricing changes across all major CI/CD providers. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Related guides:</strong> <a href="/ci-cd-alternatives">CI/CD Alternatives</a> &middot; <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> &middot; <a href="/free-devops-stack">Free DevOps Stack</a> &middot; <a href="/free-tier-risk">Free Tier Risk Index</a><br><br>
     <strong>Query CI/CD pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare CI/CD providers, track pricing changes, or plan your DevOps stack from your AI coding assistant.
   </div>
@@ -38110,7 +38110,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/serverless">Serverless</a> &rsaquo; Serverless Free Tier Comparison</div>
   <h1>Serverless Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/serverless-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 10+ serverless platforms compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/serverless-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/serverless-free-tier-comparison-2026", offers.length)} &middot; 10+ serverless platforms compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -38143,7 +38143,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top serverless free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top serverless free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -38573,7 +38573,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official pricing pages. We track pricing changes across all major serverless providers. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official pricing pages and have not been re-checked since. We track pricing changes across all major serverless providers. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Related guides:</strong> <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> &middot; <a href="/hosting-alternatives">Hosting Alternatives</a> &middot; <a href="/free-devops-stack">Free DevOps Stack</a> &middot; <a href="/free-tier-risk">Free Tier Risk Index</a><br><br>
     <strong>Query serverless pricing programmatically</strong> via our <a href="/setup">MCP tools</a> — compare serverless providers, track pricing changes, or plan your infrastructure stack from your AI coding assistant.
   </div>
@@ -38767,7 +38767,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/auth">Auth</a> &rsaquo; Auth &amp; Identity Comparison</div>
   <h1>Auth &amp; Identity Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/auth-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ auth services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/auth-comparison-2026")} &middot; ${pageDataProvenance("/auth-comparison-2026", offers.length)} &middot; 20+ auth services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -38801,7 +38801,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of 20+ auth service free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of 20+ auth service free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -39519,7 +39519,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> All pricing data is sourced from our index of ${offers.length.toLocaleString()} developer tool free tiers, verified against official pricing pages. We track pricing changes across all major auth providers. Data is updated continuously as providers announce changes.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official pricing pages and have not been re-checked since. We track pricing changes across all major auth providers. The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Related guides:</strong> <a href="/supabase-vs-firebase">Supabase vs Firebase</a> &middot; <a href="/security-alternatives">Security Alternatives</a> &middot; <a href="/free-startup-stack">Free Startup Stack</a> &middot; <a href="/free-tier-risk">Free Tier Risk Index</a> &middot; <a href="/stability">Vendor Stability</a> &middot; <a href="/changes">Pricing Changes</a><br><br>
     <strong>Query auth pricing programmatically</strong> via our <a href="/setup">MCP tools</a> &mdash; compare auth providers, track pricing changes, or plan your infrastructure stack from your AI coding assistant.
   </div>
@@ -39713,7 +39713,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/email">Email</a> &rsaquo; Email Comparison</div>
   <h1>Email &amp; Transactional Messaging Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/email-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ email services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/email-comparison-2026")} &middot; ${pageDataProvenance("/email-comparison-2026", offers.length)} &middot; 20+ email services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -39753,7 +39753,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of 20+ email service free tiers. All data verified against official pricing pages. Organized by type: transactional APIs, all-in-one platforms, marketing, and infrastructure.</p>
+  <p class="section-intro">Side-by-side comparison of 20+ email service free tiers. Organized by type: transactional APIs, all-in-one platforms, marketing, and infrastructure.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -40500,7 +40500,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All email service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -40692,7 +40692,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/monitoring">Monitoring</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
   <h1>Monitoring &amp; Observability Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/monitoring-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 25+ monitoring services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/monitoring-comparison-2026")} &middot; ${pageDataProvenance("/monitoring-comparison-2026", offers.length)} &middot; 25+ monitoring services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -40727,7 +40727,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top monitoring service free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top monitoring service free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -41502,7 +41502,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier tools and tracks ${dealChanges.length} historical pricing changes. All monitoring service data on this page is verified against official pricing pages. Paid tier cost estimates use publicly available list prices as of ${pubDate}. Actual costs vary with usage, commitment discounts, and enterprise negotiations. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Paid tier cost estimates use publicly available list prices as of ${pubDate}. Actual costs vary with usage, commitment discounts, and enterprise negotiations. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -41694,7 +41694,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/storage">Storage</a> &rsaquo; Storage &amp; CDN Comparison</div>
   <h1>Storage &amp; CDN Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/storage-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ storage &amp; CDN services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/storage-comparison-2026")} &middot; ${pageDataProvenance("/storage-comparison-2026", offers.length)} &middot; 15+ storage &amp; CDN services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -41730,7 +41730,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of 15+ storage and CDN free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of 15+ storage and CDN free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -42311,7 +42311,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All storage service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -42501,7 +42501,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/testing">Testing</a> &rsaquo; Testing Free Tier Comparison</div>
   <h1>Testing &amp; QA Tools Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/testing-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ testing services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/testing-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/testing-free-tier-comparison-2026", offers.length)} &middot; 15+ testing services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -42536,7 +42536,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top testing tool free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top testing tool free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -42983,7 +42983,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All testing service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -43173,7 +43173,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/analytics">Analytics</a> &rsaquo; Analytics Free Tier Comparison</div>
   <h1>Analytics &amp; Product Analytics Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/analytics-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 15+ analytics services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/analytics-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/analytics-free-tier-comparison-2026", offers.length)} &middot; 15+ analytics services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -43207,7 +43207,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top analytics free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top analytics free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -43669,7 +43669,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All analytics service data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -43859,7 +43859,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/api-development">API Development</a> &rsaquo; API Development Free Tier Comparison</div>
   <h1>API Development Tools Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/api-development-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ API development tools compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/api-development-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/api-development-free-tier-comparison-2026", offers.length)} &middot; 12+ API development tools compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -43894,7 +43894,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top API development tool free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top API development tool free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -44269,7 +44269,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All API development tool data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -44459,7 +44459,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/security">Security</a> &rsaquo; Security Free Tier Comparison</div>
   <h1>Developer Security Tools Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/security-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 20+ security tools compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/security-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/security-free-tier-comparison-2026", offers.length)} &middot; 20+ security tools compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -44494,7 +44494,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top developer security tool free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top developer security tool free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -44990,7 +44990,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All security tool data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -45182,7 +45182,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/cloud-hosting">Cloud Hosting</a> &rsaquo; Hosting Free Tier Comparison</div>
   <h1>Hosting &amp; PaaS Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/hosting-free-tier-comparison-2026")} &middot; Data verified from our index of ${offers.length.toLocaleString()} developer tools &middot; 12+ hosting platforms compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/hosting-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/hosting-free-tier-comparison-2026", offers.length)} &middot; 12+ hosting platforms compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -45215,7 +45215,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of the top developer hosting free tiers. All data verified against official pricing pages.</p>
+  <p class="section-intro">Side-by-side comparison of the top developer hosting free tiers.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -45618,7 +45618,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>How we track this data:</strong> AgentDeals indexes ${offers.length.toLocaleString()} free tier developer tools and tracks ${dealChanges.length} historical pricing changes. All hosting platform data on this page is verified against official pricing pages. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Last verified: ${pubDate}. <a href="/freshness">Check data freshness</a>.
+    <strong>How we track this data:</strong> the tables on this page were compiled by hand from vendor pricing pages. They do not come from the catalogue behind our search and MCP tools. Prices and limits are for free tiers only &mdash; paid tier comparisons use publicly available list prices. Compiled ${pubDate}, not re-checked since. <a href="/freshness">Check data freshness</a>.
   </div>
 
 
@@ -47760,7 +47760,7 @@ function buildCompareToolPage(): string {
   };
 
   const faqItems = [
-    { q: "How does the comparison tool work?", a: `Enter any two vendor names from our index of ${totalOffers}+ services. The tool pulls verified free tier details, risk assessments based on pricing change history, and recent changes for both vendors side by side.` },
+    { q: "How does the comparison tool work?", a: `Enter any two vendor names from our catalogue of ${totalOffers}+ services. The tool pulls verified free tier details, risk assessments based on pricing change history, and recent changes for both vendors side by side.` },
     { q: "What data is included in comparisons?", a: "Each comparison shows free tier descriptions, category, verification date, risk level (stable/caution/risky based on pricing change history), and a timeline of recent pricing changes for both vendors." },
     { q: "Can I share a comparison?", a: "Yes. Every comparison generates a shareable URL with both vendor names encoded in query parameters. Copy the link to share or bookmark it." },
     { q: "What if a vendor isn't found?", a: "The tool will show an error with suggestions for similar vendor names. Try searching with a different spelling or check the vendor page for the full list." },

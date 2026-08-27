@@ -29,6 +29,7 @@ export interface PageReviewRecord {
   badge_subjects_unresolved: string[];
   reviewed_at: string | null;
   reviewer: string | null;
+  reads_index: boolean;
 }
 
 export interface PageReviewIndex {
@@ -78,6 +79,7 @@ function normalizeRecord(raw: any): PageReviewRecord | null {
     badge_subjects_unresolved: Array.isArray(raw.badge_subjects_unresolved) ? raw.badge_subjects_unresolved.filter((s: unknown) => typeof s === "string") : [],
     reviewed_at: isReviewDate(raw.reviewed_at) ? raw.reviewed_at : null,
     reviewer: typeof raw.reviewer === "string" && raw.reviewer ? raw.reviewer : null,
+    reads_index: raw.reads_index === true,
   };
 }
 
@@ -174,6 +176,23 @@ export function freshnessSentenceFor(record: PageReviewRecord | null, today: str
 
 export function pageFreshnessSentence(pagePath: string, today = utcToday()): string {
   return freshnessSentenceFor(getPageReview(pagePath), today);
+}
+
+export function indexCitation(indexSize: number): string {
+  return `Data verified from our index of ${indexSize.toLocaleString()} developer tools`;
+}
+
+export function compiledNotice(compiledOn: string): string {
+  return `Figures compiled ${compiledOn}, not re-checked since`;
+}
+
+export function dataProvenanceFor(record: PageReviewRecord | null, indexSize: number): string {
+  if (!record) return "";
+  return record.reads_index ? indexCitation(indexSize) : compiledNotice(record.published);
+}
+
+export function pageDataProvenance(pagePath: string, indexSize: number): string {
+  return dataProvenanceFor(getPageReview(pagePath), indexSize);
 }
 
 export function pageDateModified(pagePath: string, fallbackPublished: string, today = utcToday()): string {

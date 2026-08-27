@@ -12,7 +12,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/agent-stack",
@@ -21,7 +22,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/ai-coding-pricing-2026",
@@ -38,7 +40,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/ai-coding-tools-pricing",
@@ -60,7 +63,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/analytics-free-tier-comparison-2026",
@@ -76,7 +80,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/api-development-free-tier-comparison-2026",
@@ -91,7 +96,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/auth-comparison-2026",
@@ -112,7 +118,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/aws-app-runner-migration",
@@ -129,7 +136,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/aws-free-tier-2026",
@@ -144,7 +152,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/azure-free-tier-2026",
@@ -156,7 +165,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/budget-builder",
@@ -165,7 +175,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/ci-cd-pricing",
@@ -189,7 +200,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/cicd-free-tier-comparison-2026",
@@ -206,7 +218,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/cloud-free-tier-comparison-2026",
@@ -220,7 +233,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/compare-tool",
@@ -229,7 +243,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/dall-e-shutdown",
@@ -244,7 +259,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/database-free-tier-comparison-2026",
@@ -261,7 +277,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/database-pricing",
@@ -283,7 +300,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/datadog-vs-new-relic",
@@ -296,7 +314,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/digitalocean-free-tier-2026",
@@ -311,7 +330,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/disclosure",
@@ -320,7 +340,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/email-comparison-2026",
@@ -338,7 +359,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": "2026-08-26",
-      "reviewer": "coder"
+      "reviewer": "coder",
+      "reads_index": false
     },
     {
       "path": "/firebase-studio-shutdown",
@@ -354,7 +376,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/free-ai-stack",
@@ -374,7 +397,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-devops-stack",
@@ -394,7 +418,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-django-stack",
@@ -413,7 +438,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-fastapi-stack",
@@ -431,7 +457,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-frontend-stack",
@@ -450,7 +477,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-go-stack",
@@ -468,7 +496,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-nextjs-stack",
@@ -488,7 +517,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-saas-stack",
@@ -507,7 +537,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-startup-stack",
@@ -527,7 +558,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/free-tier-risk",
@@ -546,7 +578,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": "2026-04-08",
-      "reviewer": "content revision"
+      "reviewer": "content revision",
+      "reads_index": false
     },
     {
       "path": "/free-tier-tracker",
@@ -569,7 +602,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/gcp-free-tier-2026",
@@ -582,7 +616,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/gemini-api-pricing-2026",
@@ -594,7 +629,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": "2026-04-02",
-      "reviewer": "content revision"
+      "reviewer": "content revision",
+      "reads_index": false
     },
     {
       "path": "/gemini-api-pricing-changes",
@@ -605,7 +641,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/google-developer-program-2026",
@@ -622,7 +659,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/hcp-terraform-migration",
@@ -635,7 +673,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/hetzner-pricing-2026",
@@ -647,7 +686,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/hosting-free-tier-comparison-2026",
@@ -667,7 +707,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/hosting-pricing",
@@ -687,7 +728,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/llm-api-pricing",
@@ -710,7 +752,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/marketplace",
@@ -719,7 +762,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/monitoring-comparison-2026",
@@ -741,7 +785,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/neon-vs-supabase",
@@ -757,7 +802,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/openai-assistants-alternatives",
@@ -775,7 +821,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/openai-assistants-migration",
@@ -788,7 +835,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/openai-assistants-migration-2026",
@@ -800,7 +848,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/openai-realtime-migration",
@@ -815,7 +864,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/q1-2026-developer-pricing-report",
@@ -826,7 +876,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/q2-pricing-preview-2026",
@@ -841,7 +892,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/railway-vs-render",
@@ -854,7 +906,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/security-free-tier-comparison-2026",
@@ -869,7 +922,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/serverless-free-tier-comparison-2026",
@@ -888,7 +942,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/shutdowns",
@@ -897,7 +952,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/stack-check",
@@ -906,7 +962,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/startup-credits",
@@ -915,7 +972,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": "2026-04-13",
-      "reviewer": "content revision"
+      "reviewer": "content revision",
+      "reads_index": false
     },
     {
       "path": "/state-of-free-tiers",
@@ -924,7 +982,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/storage-comparison-2026",
@@ -940,7 +999,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/supabase-vs-firebase",
@@ -954,7 +1014,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/tenor-alternatives",
@@ -963,7 +1024,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/terraform-cloud-free-tier-removed",
@@ -977,7 +1039,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/testing-free-tier-comparison-2026",
@@ -992,7 +1055,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/vector-database-pricing",
@@ -1013,7 +1077,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": false
     },
     {
       "path": "/vercel-vs-netlify",
@@ -1028,7 +1093,8 @@
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     },
     {
       "path": "/x402-services",
@@ -1037,7 +1103,8 @@
       "vendors_asserted": [],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
-      "reviewer": null
+      "reviewer": null,
+      "reads_index": true
     }
   ]
 }
