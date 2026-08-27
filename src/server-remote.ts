@@ -302,7 +302,7 @@ export function createServer(): McpServer {
         if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined) {
           const data = await fetchWeeklyDigest() as Record<string, unknown>;
           if (response_format === "concise" && Array.isArray(data.deal_changes)) {
-            const conciseDigest = { ...data, deal_changes: (data.deal_changes as Record<string, unknown>[]).map((c) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
+            const conciseDigest = { ...data, deal_changes: (data.deal_changes as Record<string, unknown>[]).map((c) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, date_source: c.date_source, summary: c.summary })) };
             return mcpText(conciseDigest);
           }
           return mcpText(data);

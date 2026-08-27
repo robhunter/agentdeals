@@ -119,7 +119,7 @@ mutate "an unmeasurable age is treated as healthy" \
 mutate "the threshold is loosened past the gap we already had" \
   scripts/check-change-log-staleness.js "export const DEFAULT_THRESHOLD_DAYS = 14;" "export const DEFAULT_THRESHOLD_DAYS = 200;"
 mutate "the alarm stops saying the daily job cannot clear it" \
-  scripts/check-change-log-staleness.js "\"The daily job runs URL mode, which cannot detect a change. Nothing else writes to this log.\"" "\"\""
+  scripts/check-change-log-staleness.js "\"The daily workflow does not pass --ai, so nothing is scheduled to detect a change.\"" "\"\""
 
 echo "── Mutating the backfill ──"
 mutate "the backfill dates an entry from the last commit that held it" \
@@ -135,7 +135,9 @@ mutate "the age is dropped from /api/metrics" \
   src/serve.ts "change_log_freshness: getChangeLogFreshness()," "//"
 mutate "the freshness line is dropped from the change timeline" \
   src/serve.ts "\${changeLogFreshnessNote()}
-\${monthsHtml}" "\${monthsHtml}"
+\${undatedHtml}
+\${monthsHtml}" "\${undatedHtml}
+\${monthsHtml}"
 mutate "the freshness line is dropped from the expiring page" \
   src/serve.ts "\${changeLogFreshnessNote()}
 \${totalUpcoming > 0" "\${totalUpcoming > 0"

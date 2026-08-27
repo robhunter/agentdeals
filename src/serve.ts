@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness } from "./data.js";
+import { vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -30,7 +30,8 @@ import { linkifyVerdictBlocks, overdueReport, pageDateModified, pageFreshness, p
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
-import type { Agent, RiskCause, LinkUnreachable } from "./types.js";
+import type { Agent, DealChange, RiskCause, LinkUnreachable } from "./types.js";
+import { changeDateLabel, changeDatePublished, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -411,7 +412,7 @@ function buildChangesHtml(): string {
         <div class="change-header">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
           <span class="change-vendor">${c.vendor}</span>
-          <span class="change-date">${c.date}</span>
+          <span class="change-date">${changeDateLabel(c)}</span>
         </div>
         <div class="change-summary">${c.summary}</div>
       </div>`;
@@ -488,7 +489,7 @@ function buildRecentChangesSection(): string {
         <div class="rc-head">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
           <a href="/vendor/${vendorSlug}" class="rc-vendor">${c.vendor}</a>
-          <span class="rc-date">${c.date}</span>
+          <span class="rc-date">${changeDateLabel(c)}</span>
         </div>
         <div class="rc-summary">${c.summary}</div>
       </div>`;
@@ -507,7 +508,7 @@ function buildRecentChangesSection(): string {
         "@type": "Article",
         headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
-        datePublished: c.date,
+        ...changeDatePublished(c),
         url: `${BASE_URL}/vendor/${c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
       },
     })),
@@ -4043,7 +4044,7 @@ ${allCompareLinks.join("\n")}
   // Monthly report appearances
   const reportMonths = getAvailableReportMonths();
   const vendorReportMonths = reportMonths.filter(m => {
-    return dealChanges.some((c: any) => c.vendor.toLowerCase() === vendorName.toLowerCase() && c.date.startsWith(m));
+    return changesEffectiveIn(dealChanges, m).some((c) => c.vendor.toLowerCase() === vendorName.toLowerCase());
   });
   const reportAppearancesHtml = vendorReportMonths.length > 0 ? `
   <div class="section">
@@ -8149,8 +8150,12 @@ function getMonthName(monthNum: number): string {
 function getAvailableReportMonths(): string[] {
   const allChanges = loadDealChanges();
   const months = new Set<string>();
-  for (const c of allChanges) months.add(c.date.slice(0, 7));
+  for (const c of allChanges) if (isEventDated(c)) months.add(c.date.slice(0, 7));
   return [...months].sort().reverse();
+}
+
+function changesEffectiveIn(changes: DealChange[], yearMonthPrefix: string): DealChange[] {
+  return changes.filter((c) => isEventDated(c) && c.date.startsWith(yearMonthPrefix));
 }
 
 function buildReportsIndexPage(): string {
@@ -8180,7 +8185,7 @@ function buildReportsIndexPage(): string {
 
   const monthCards = months.map(m => {
     const [y, mo] = m.split("-");
-    const monthChanges = allChanges.filter(c => c.date.startsWith(m));
+    const monthChanges = changesEffectiveIn(allChanges, m);
     const negative = monthChanges.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
     const positive = monthChanges.filter(c => ["new_free_tier","limits_increased","startup_program_expanded","new_tier"].includes(c.change_type)).length;
     const neutral = monthChanges.length - negative - positive;
@@ -8250,7 +8255,7 @@ function buildReportsIndexPage(): string {
 
 function buildMonthlyReportPage(yearMonth: string): string | null {
   const allChanges = loadDealChanges();
-  const monthChanges = allChanges.filter(c => c.date.startsWith(yearMonth));
+  const monthChanges = changesEffectiveIn(allChanges, yearMonth);
   if (monthChanges.length === 0) return null;
 
   const [yearStr, moStr] = yearMonth.split("-");
@@ -8282,7 +8287,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
 
   // Previous month comparison
   const prevMonth = monthNum === 1 ? (parseInt(yearStr) - 1) + "-12" : yearStr + "-" + String(monthNum - 1).padStart(2, "0");
-  const prevChanges = allChanges.filter(c => c.date.startsWith(prevMonth));
+  const prevChanges = changesEffectiveIn(allChanges, prevMonth);
   const prevNeg = prevChanges.filter(c => negativeTypes.has(c.change_type)).length;
   const prevPos = prevChanges.filter(c => positiveTypes.has(c.change_type)).length;
 
@@ -49682,11 +49687,13 @@ function buildDeveloperHubPage(): string {
 
 function buildPricingChangesPage(): string {
   const allChanges = loadDealChanges();
+  const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const currentYear = new Date().getFullYear();
 
   // Sort all changes reverse chronological
-  const sorted = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
+  const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
 
   // Group by month
   const byMonth = new Map<string, typeof sorted>();
@@ -49726,7 +49733,8 @@ function buildPricingChangesPage(): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
     const vendorSlug = toSlug(c.vendor);
-    const isUpcoming = c.date >= today;
+    const dated = isEventDated(c);
+    const isUpcoming = dated && c.date >= today;
     const category = filterCategory[c.change_type] ?? "neutral";
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
@@ -49738,10 +49746,10 @@ function buildPricingChangesPage(): string {
         </div>`
       : "";
     const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    const changeYear = c.date.slice(0, 4);
-    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
+    const changeYear = dated ? c.date.slice(0, 4) : "";
+    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
-          <div class="pc-date">${c.date}</div>
+          <div class="pc-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
           <a href="#${changeAnchor(c)}" class="pc-anchor" title="Link to this change">#</a>
         </div>
@@ -49834,6 +49842,12 @@ ${altHtml}
 ${entriesHtml}
     </div>`;
   }).join("\n");
+
+  const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
+      <h2 class="month-heading" id="month-undated">${undatedGroupHeading(undatedSorted.length)}</h2>
+      <p class="month-note">${UNDATED_GROUP_NOTE}</p>
+${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
+    </div>`;
 
   const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
   const metaDesc = `Track ${allChanges.length}+ developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Interactive timeline filterable by type, impact, year, and category.`;
@@ -49988,6 +50002,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .pc-entry:hover{border-color:var(--accent)}
 .pc-entry:target{border-color:var(--accent);background:var(--accent-glow)}
 .pc-upcoming{border-color:rgba(88,166,255,0.3)}
+.pc-undated{border-style:dashed}
 .pc-left{flex-shrink:0;min-width:100px;text-align:right;position:relative}
 .pc-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
 .pc-upcoming-badge{font-family:var(--mono);font-size:.65rem;color:#58a6ff;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
@@ -50084,6 +50099,7 @@ ${upcomingChanges.map(c => buildChangeEntry(c)).join("\n")}
 ` : ""}
 ${filterButtonsHtml}
 
+${undatedHtml}
 ${monthsHtml}
 
   <div class="cross-links">
@@ -50163,12 +50179,14 @@ ${entries}
 
 function buildChangesPage(): string {
   const allChanges = loadDealChanges();
+  const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const last30DaysCount = allChanges.filter(c => c.date >= thirtyDaysAgo).length;
+  const last30DaysCount = eventDated.filter(c => c.date >= thirtyDaysAgo).length;
 
   // Sort all changes reverse chronological
-  const sorted = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
+  const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
 
   // Group by month
   const byMonth = new Map<string, typeof sorted>();
@@ -50188,13 +50206,14 @@ function buildChangesPage(): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
     const vendorSlug = toSlug(c.vendor);
-    const isUpcoming = c.date >= today;
+    const dated = isEventDated(c);
+    const isUpcoming = dated && c.date >= today;
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
       : "";
-    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}">
+    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}">
         <div class="chg-left">
-          <div class="chg-date">${c.date}</div>
+          <div class="chg-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}
         </div>
         <div class="chg-right">
@@ -50210,7 +50229,7 @@ ${altHtml}
   }
 
   const upcomingCount = sorted.filter(c => c.date >= today).length;
-  const removedCount = sorted.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const removedCount = allChanges.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
 
   const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {
     const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
@@ -50219,6 +50238,12 @@ ${altHtml}
 ${entriesHtml}
     </div>`;
   }).join("\n");
+
+  const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
+      <h2 class="month-heading">${undatedGroupHeading(undatedSorted.length)}</h2>
+      <p class="month-note">${UNDATED_GROUP_NOTE}</p>
+${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
+    </div>`;
 
   const title = "Deal Change Timeline \u2014 AgentDeals";
   const metaDesc = `${allChanges.length} developer infrastructure pricing changes tracked since launch \u2014 ${last30DaysCount} in the last 30 days. Free tier removals, price increases, product shutdowns, and new deals.`;
@@ -50278,9 +50303,11 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .stat-label{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
 .month-group{margin-bottom:2rem}
 .month-heading{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.month-note{font-size:.8rem;color:var(--text-muted);margin:-.25rem 0 .75rem;line-height:1.5}
 .chg-entry{display:flex;gap:1rem;padding:.75rem;margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s}
 .chg-entry:hover{border-color:var(--accent)}
 .chg-upcoming{border-color:rgba(88,166,255,0.3)}
+.chg-undated{border-style:dashed}
 .chg-left{flex-shrink:0;min-width:100px;text-align:right}
 .chg-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
 .chg-upcoming-badge{font-family:var(--mono);font-size:.65rem;color:#58a6ff;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
@@ -50332,9 +50359,14 @@ ${globalNavCss()}
       <div class="stat-value">${byMonth.size}</div>
       <div class="stat-label">Months Tracked</div>
     </div>
+${undatedSorted.length === 0 ? "" : `    <div class="stat-card">
+      <div class="stat-value">${undatedSorted.length}</div>
+      <div class="stat-label">Effective Date Unknown</div>
+    </div>`}
   </div>
 
 ${changeLogFreshnessNote()}
+${undatedHtml}
 ${monthsHtml}
 
   <div class="mcp-cta">
@@ -50352,13 +50384,15 @@ ${monthsHtml}
 
 function buildExpiringPage(): string {
   const allChanges = loadDealChanges();
+  const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
   // Split into upcoming (future) and recent (past 30 days)
   const thirtyDaysAgo = new Date(todayMs - 30 * 86400000).toISOString().slice(0, 10);
-  const upcoming = allChanges.filter(c => c.date >= today).sort((a, b) => a.date.localeCompare(b.date));
-  const recent = allChanges.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
+  const upcoming = eventDated.filter(c => c.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  const recent = eventDated.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
+  const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
 
   // Group upcoming by month
   const upcomingByMonth = new Map<string, typeof upcoming>();
@@ -50388,12 +50422,13 @@ function buildExpiringPage(): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
     const vendorSlug = toSlug(c.vendor);
-    const countdown = showCountdown ? countdownLabel(c.date) : null;
+    const dated = isEventDated(c);
+    const countdown = showCountdown && dated ? countdownLabel(c.date) : null;
     const urgentClass = countdown?.urgent ? " entry-urgent" : "";
-    return `      <div class="exp-entry${urgentClass}">
+    return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date">${c.date}</div>
+          <div class="exp-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">
@@ -50502,6 +50537,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .recent-toggle:hover{border-color:var(--accent);background:var(--accent-glow)}
 .recent-entries{display:none}
 .recent-entries.show{display:block}
+.exp-undated{border-style:dashed}
 .no-upcoming{color:var(--text-dim);font-style:italic;padding:2rem;text-align:center;border:1px dashed var(--border);border-radius:8px}
 .mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
 .mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
@@ -50547,6 +50583,12 @@ ${recent.length > 0 ? `  <div class="recent-section">
     <div class="recent-entries">
 ${recent.map(c => buildEntry(c, false)).join("\n")}
     </div>
+  </div>` : ""}
+
+${recentlyDiscovered.length > 0 ? `  <div class="recent-section">
+    <h2>Recently Discovered</h2>
+    <p class="recent-desc">${recentlyDiscovered.length} ${recentlyDiscovered.length === 1 ? "change" : "changes"} we found in the last 30 days whose effective date the vendor’s page does not state. They are dated by discovery and are not counted as upcoming or as recently changed.</p>
+${recentlyDiscovered.map(c => buildEntry(c, false)).join("\n")}
   </div>` : ""}
 
   <div class="mcp-cta">

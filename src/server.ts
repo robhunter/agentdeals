@@ -45,7 +45,7 @@ function toConciseOffer(offer: Offer | EnrichedOffer) {
 }
 
 function toConciseDealChange(change: DealChange) {
-  return { vendor: change.vendor, change_type: change.change_type, date: change.date, summary: change.summary };
+  return { vendor: change.vendor, change_type: change.change_type, date: change.date, date_source: change.date_source, summary: change.summary };
 }
 
 export function createServer(getSessionId?: () => string | undefined, getClientName?: () => string | undefined): McpServer {

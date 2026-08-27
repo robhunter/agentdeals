@@ -19,7 +19,7 @@ const {
 
 const { runUrlMode, runAiMode, summaryLines, repickWindowDays } = await import("../scripts/reverify-rolling.js");
 const { firstSeenDates } = await import("../scripts/backfill-change-recorded-dates.js");
-const { report, DEFAULT_THRESHOLD_DAYS } = await import("../scripts/check-change-log-staleness.js");
+const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, WORKFLOW_PATH } = await import("../scripts/check-change-log-staleness.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -381,10 +381,29 @@ describe("change log writer", () => {
 
 describe("change log freshness", () => {
   const changes = [
-    { vendor: "A", change_type: "restriction", date: "2026-01-01", recorded_date: "2026-08-01" },
-    { vendor: "B", change_type: "restriction", date: "2026-02-01", recorded_date: "2026-08-20", detected_by: DETECTED_BY_AI },
-    { vendor: "C", change_type: "restriction", date: "2026-03-01", recorded_date: "2026-06-01" },
+    { vendor: "A", change_type: "restriction", date: "2026-01-01", recorded_date: "2026-08-01", date_source: "hand_written" },
+    { vendor: "B", change_type: "restriction", date: "2026-02-01", recorded_date: "2026-08-20", detected_by: DETECTED_BY_AI, date_source: "vendor_page" },
+    { vendor: "C", change_type: "restriction", date: "2026-03-01", recorded_date: "2026-06-01", date_source: "discovered" },
   ];
+
+  it("carries every provenance the field can hold, so agreement is not agreement on an empty field", () => {
+    assert.deepStrictEqual(
+      [...new Set(changes.map((c) => c.date_source))].sort(),
+      ["discovered", "hand_written", "vendor_page"]
+    );
+  });
+
+  it("counts an entry whose date is only a discovery", () => {
+    const freshness = changeLogFreshness(changes, NOW);
+    assert.strictEqual(freshness.discovered_date_total, 1);
+    assert.strictEqual(freshness.entries_without_date_source, 0);
+  });
+
+  it("treats an entry with no provenance as one whose date it cannot vouch for", () => {
+    const freshness = changeLogFreshness([{ vendor: "A", change_type: "restriction", date: "2026-01-01" }], NOW);
+    assert.strictEqual(freshness.discovered_date_total, 1);
+    assert.strictEqual(freshness.entries_without_date_source, 1);
+  });
 
   it("counts days since anything was added, not days since the newest change date", () => {
     const freshness = changeLogFreshness(changes, NOW);
@@ -417,39 +436,125 @@ describe("change log freshness", () => {
 });
 
 describe("the staleness alarm", () => {
-  const freshnessAt = (days: number) => ({
+  const freshnessAt = (detectedDaysAgo: number | null, recordedDaysAgo = 1) => ({
     total: 289,
     last_recorded_date: "2026-08-01",
-    days_since_last_recorded: days,
-    last_detected_date: null,
-    days_since_last_detected: null,
+    days_since_last_recorded: recordedDaysAgo,
+    last_detected_date: detectedDaysAgo === null ? null : "2026-08-01",
+    days_since_last_detected: detectedDaysAgo,
     recorded_last_30_days: 1,
-    machine_detected_total: 0,
+    machine_detected_total: detectedDaysAgo === null ? 0 : 1,
     entries_without_recorded_date: 0,
+    discovered_date_total: 0,
+    entries_without_date_source: 0,
   });
 
-  it("stays quiet inside the threshold", () => {
-    assert.strictEqual(report(freshnessAt(DEFAULT_THRESHOLD_DAYS), DEFAULT_THRESHOLD_DAYS).stale, false);
+  const SCHEDULED = { known: true, scheduled: true, reason: null };
+  const NOT_SCHEDULED = { known: true, scheduled: false, reason: null };
+
+  it("stays quiet inside the threshold once the detector is scheduled", () => {
+    const r = report(freshnessAt(DEFAULT_THRESHOLD_DAYS), DEFAULT_THRESHOLD_DAYS, SCHEDULED);
+    assert.strictEqual(r.failJob, false);
   });
 
-  it("fires one day past the threshold", () => {
-    assert.strictEqual(report(freshnessAt(DEFAULT_THRESHOLD_DAYS + 1), DEFAULT_THRESHOLD_DAYS).stale, true);
+  it("fires one day past the threshold once the detector is scheduled", () => {
+    const r = report(freshnessAt(DEFAULT_THRESHOLD_DAYS + 1), DEFAULT_THRESHOLD_DAYS, SCHEDULED);
+    assert.strictEqual(r.failJob, true);
   });
 
   it("would have fired long before the gap the log actually had", () => {
     assert.ok(DEFAULT_THRESHOLD_DAYS < 127);
-    assert.strictEqual(report(freshnessAt(127), DEFAULT_THRESHOLD_DAYS).stale, true);
+    assert.strictEqual(report(freshnessAt(127), DEFAULT_THRESHOLD_DAYS, SCHEDULED).failJob, true);
   });
 
-  it("fires when the age cannot be measured at all", () => {
-    const unmeasurable = { ...freshnessAt(0), last_recorded_date: null, days_since_last_recorded: null };
-    assert.strictEqual(report(unmeasurable, DEFAULT_THRESHOLD_DAYS).stale, true);
+  it("fires when a scheduled detector has never recorded anything", () => {
+    assert.strictEqual(report(freshnessAt(null), DEFAULT_THRESHOLD_DAYS, SCHEDULED).failJob, true);
   });
 
-  it("says the daily job cannot clear the alarm on its own", () => {
-    const { text } = report(freshnessAt(30), DEFAULT_THRESHOLD_DAYS);
-    assert.match(text, /URL mode, which cannot detect a change/);
+  it("cannot be silenced by a hand-written entry", () => {
+    const handWrittenToday = freshnessAt(127, 0);
+    const r = report(handWrittenToday, DEFAULT_THRESHOLD_DAYS, SCHEDULED);
+    assert.strictEqual(r.failJob, true, "a fresh recorded_date must not clear a stale detector");
+    assert.match(r.text, /hand-written entry does not clear this/);
   });
+
+  it("does not fail the daily run while no detector is scheduled", () => {
+    const r = report(freshnessAt(null, 127), DEFAULT_THRESHOLD_DAYS, NOT_SCHEDULED);
+    assert.strictEqual(r.failJob, false, "a day counter cannot measure a detector that is off");
+    assert.strictEqual(r.openAbsenceIssue, true);
+  });
+
+  it("signals the absence exactly once rather than every day", () => {
+    const scheduled = report(freshnessAt(1), DEFAULT_THRESHOLD_DAYS, SCHEDULED);
+    assert.strictEqual(scheduled.openAbsenceIssue, false);
+  });
+
+  it("refuses to pick an alarm when it cannot read the schedule", () => {
+    const undecidable = { known: false, scheduled: false, reason: "no invocation found" };
+    const r = report(freshnessAt(1), DEFAULT_THRESHOLD_DAYS, undecidable);
+    assert.strictEqual(r.undecidable, true);
+    assert.strictEqual(r.failJob, false);
+    assert.strictEqual(r.openAbsenceIssue, false);
+    assert.match(r.text, /Refusing to guess/);
+  });
+});
+
+describe("reading the detector's schedule out of the workflow", () => {
+  const withCommand = (cmd: string) => `jobs:\n  reverify:\n    steps:\n      - run: |\n          ${cmd}\n`;
+
+  it("reads the shipped workflow rather than a flag someone must remember to set", () => {
+    const yaml = readFileSync(WORKFLOW_PATH, "utf-8");
+    const schedule = detectorSchedule(yaml);
+    assert.strictEqual(schedule.known, true);
+    assert.strictEqual(schedule.scheduled, false, "the shipped workflow does not pass --ai yet");
+  });
+
+  it("sees a scheduled detector when the invocation passes --ai", () => {
+    const schedule = detectorSchedule(withCommand('node scripts/reverify-rolling.js --ai --limit "$LIMIT"'));
+    assert.deepStrictEqual({ known: schedule.known, scheduled: schedule.scheduled }, { known: true, scheduled: true });
+  });
+
+  it("does not mistake a longer flag for --ai", () => {
+    const schedule = detectorSchedule(withCommand('node scripts/reverify-rolling.js --ai-dry-run --limit "5"'));
+    assert.strictEqual(schedule.scheduled, false);
+  });
+
+  it("refuses when it cannot find the invocation at all", () => {
+    assert.strictEqual(detectorSchedule("jobs:\n  reverify:\n    steps: []\n").known, false);
+  });
+
+  it("refuses when only some invocations pass --ai", () => {
+    const yaml =
+      withCommand('node scripts/reverify-rolling.js --limit "5"') +
+      withCommand('node scripts/reverify-rolling.js --ai --limit "5"');
+    const schedule = detectorSchedule(yaml);
+    assert.strictEqual(schedule.known, false);
+    assert.match(schedule.reason, /1 of 2/);
+  });
+
+  it("changes meaning at the same commit that changes the behaviour", () => {
+    const off = readFileSync(WORKFLOW_PATH, "utf-8");
+    const on = off.replace("reverify-rolling.js --limit", "reverify-rolling.js --ai --limit");
+    assert.notStrictEqual(on, off, "expected the shipped invocation to be rewritable");
+    const stale = freshnessNeverDetected();
+    assert.strictEqual(report(stale, DEFAULT_THRESHOLD_DAYS, detectorSchedule(off)).failJob, false);
+    assert.strictEqual(report(stale, DEFAULT_THRESHOLD_DAYS, detectorSchedule(on)).failJob, true);
+  });
+
+  function freshnessNeverDetected() {
+    return {
+      total: 289,
+      last_recorded_date: "2026-08-01",
+      days_since_last_recorded: 1,
+      last_detected_date: null,
+      days_since_last_detected: null,
+      recorded_last_30_days: 1,
+      machine_detected_total: 0,
+      entries_without_recorded_date: 0,
+      discovered_date_total: 0,
+      entries_without_date_source: 0,
+    };
+  }
 });
 
 describe("recovering when each entry was first written", () => {
