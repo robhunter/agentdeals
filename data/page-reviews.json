@@ -74,13 +74,14 @@
         "windsurf"
       ],
       "badge_subjects_unresolved": [],
-      "reviewed_at": null,
-      "reviewer": null,
-      "review_outcome": null,
+      "reviewed_at": "2026-08-27",
+      "reviewer": "pm",
+      "review_outcome": "fail",
       "reads_index": false,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "review_note": "Recommends GitHub Copilot Pro and Copilot Student to two reader segments while its own change table renders a HIGH-impact 2026-04-20 record saying new signups for both are paused. GitHub reopened them in June 2026 and our change log holds no reopening record, so the table is stale and the recommendation was wrong for the two months it was true. Also names Gemini 2.5 Pro and 'Claude Opus 4 and o3' as current models, and omits the Copilot Business signup pause of 2026-04-22 while recommending Copilot Business to enterprise readers."
     },
     {
       "path": "/analytics-free-tier-comparison-2026",
