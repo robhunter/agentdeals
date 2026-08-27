@@ -135,6 +135,7 @@ const OG_IMAGE_META = `<meta property="og:image" content="${BASE_URL}/og-image.p
 `;
 
 const SEARCH_QUERY_DISALLOW = "Disallow: /search?";
+const ROBOTS_MAX_AGE_SECONDS = 3600;
 const SEARCH_PAGE_ROBOTS_META = '<meta name="robots" content="noindex,follow">';
 const NOFOLLOW_ATTR = ' rel="nofollow"';
 
@@ -54595,7 +54596,7 @@ ${weekEntries.join("\n")}
     res.end(INDEXNOW_KEY);
   } else if (url.pathname === "/robots.txt" && isGetOrHead) {
     const robotsTxt = `User-agent: *\n${SEARCH_QUERY_DISALLOW}\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
-    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": `public, max-age=${ROBOTS_MAX_AGE_SECONDS}` });
     res.end(robotsTxt);
   } else if (url.pathname === "/impact-verification" && isGetOrHead) {
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });

@@ -88,6 +88,16 @@ describe("search facet space is closed to crawlers", () => {
     assert.match(body, /^Sitemap: https?:\/\/\S+\/sitemap\.xml$/m);
   });
 
+  it("robots.txt is not cacheable for longer than an hour", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/robots.txt`);
+    const maxAge = res.headers.get("cache-control")?.match(/max-age=(\d+)/);
+    assert.ok(maxAge, `robots.txt should still declare a max-age, got ${res.headers.get("cache-control")}`);
+    assert.ok(
+      Number(maxAge![1]) <= 3600,
+      `a rule a crawler cannot see is not in force: an edge cache would serve the previous robots.txt for ${maxAge![1]} seconds`
+    );
+  });
+
   for (const variant of SEARCH_VARIANTS) {
     it(`${variant} asks not to be indexed`, async () => {
       const html = await get(variant);
