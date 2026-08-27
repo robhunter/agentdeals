@@ -28,6 +28,7 @@ import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscri
 import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
 import { linkifyVerdictBlocks, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
+import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
@@ -254,15 +255,88 @@ interface ClientInfo {
   version: string;
 }
 
+interface StandaloneStream {
+  res: import("node:http").ServerResponse;
+  timer: NodeJS.Timeout;
+  openedAt: number;
+}
+
 interface SessionEntry {
   transport: StreamableHTTPServerTransport;
   lastActivity: number;
   createdAt: number;
   clientInfo?: ClientInfo;
+  sse?: StandaloneStream;
 }
 
 // Map of session ID → transport + last activity for multi-session support
 const sessions = new Map<string, SessionEntry>();
+
+const SSE_KEEPALIVE_INTERVAL_MS = keepaliveIntervalMs();
+const STREAM_PRIME_POLL_MS = 25;
+const STREAM_PRIME_ATTEMPTS = 40;
+
+function releaseStandaloneStream(
+  sessionId: string,
+  entry: SessionEntry,
+  reason: string,
+  only?: import("node:http").ServerResponse,
+): void {
+  const stream = entry.sse;
+  if (!stream) return;
+  if (only && stream.res !== only) return;
+  clearInterval(stream.timer);
+  entry.sse = undefined;
+  entry.transport.closeStandaloneSSEStream?.();
+  if (!stream.res.writableEnded) {
+    stream.res.end();
+  }
+  console.log(JSON.stringify({
+    event: "stream_close",
+    ts: new Date().toISOString(),
+    sessionId,
+    durationMs: Date.now() - stream.openedAt,
+    reason,
+  }));
+}
+
+function writableEventStream(res: import("node:http").ServerResponse): boolean {
+  if (!res.headersSent || res.writableEnded || res.destroyed) return false;
+  return res.statusCode === 200;
+}
+
+function primeStandaloneStream(res: import("node:http").ServerResponse, attempt = 0): void {
+  if (res.writableEnded || res.destroyed) return;
+  if (writableEventStream(res)) {
+    try {
+      res.write(SSE_KEEPALIVE_FRAME);
+    } catch {
+      return;
+    }
+    return;
+  }
+  if (attempt >= STREAM_PRIME_ATTEMPTS) return;
+  setTimeout(() => primeStandaloneStream(res, attempt + 1), STREAM_PRIME_POLL_MS).unref();
+}
+
+function attachStandaloneStream(
+  sessionId: string,
+  entry: SessionEntry,
+  res: import("node:http").ServerResponse,
+): void {
+  const timer = setInterval(() => {
+    if (!writableEventStream(res)) return;
+    try {
+      res.write(SSE_KEEPALIVE_FRAME);
+    } catch {
+      releaseStandaloneStream(sessionId, entry, "keepalive_write_failed", res);
+    }
+  }, SSE_KEEPALIVE_INTERVAL_MS);
+  timer.unref();
+  entry.sse = { res, timer, openedAt: Date.now() };
+  res.on("close", () => releaseStandaloneStream(sessionId, entry, "client_disconnect", res));
+  primeStandaloneStream(res);
+}
 
 function getClientIp(req: import("node:http").IncomingMessage): string {
   const forwarded = req.headers["x-forwarded-for"];
@@ -292,6 +366,7 @@ setInterval(() => {
         durationMs: now - entry.createdAt,
         reason: "idle_timeout",
       }));
+      releaseStandaloneStream(sid, entry, "session_idle_timeout");
       entry.transport.close?.();
       sessions.delete(sid);
       recordSessionDisconnect();
@@ -53815,6 +53890,7 @@ const httpServer = createHttpServer(async (req, res) => {
           const sid = transport.sessionId;
           if (sid && sessions.has(sid)) {
             const entry = sessions.get(sid)!;
+            releaseStandaloneStream(sid, entry, "session_closed");
             const now = Date.now();
             console.log(JSON.stringify({
               event: "session_close",
@@ -53840,27 +53916,30 @@ const httpServer = createHttpServer(async (req, res) => {
       } else {
         // Invalid: has session ID but unknown, or missing session ID on non-init request
         res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({
-          jsonrpc: "2.0",
-          error: { code: -32600, message: "Bad Request: No valid session. Send an initialize request first." },
-          id: null,
-        }));
+        res.end(JSON.stringify(sessionRecoveryBody(sessionId ? "unknown_session" : "no_session")));
       }
     } else if (req.method === "GET") {
       // SSE stream — route to existing session
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
-      if (sessionId && sessions.has(sessionId)) {
+      const entry = sessionId ? sessions.get(sessionId) : undefined;
+      if (sessionId && entry) {
         touchSession(sessionId);
-        await sessions.get(sessionId)!.transport.handleRequest(req, res);
+        if (entry.sse) {
+          releaseStandaloneStream(sessionId, entry, "replaced_by_reconnect");
+          await new Promise<void>(resolve => setImmediate(resolve));
+        }
+        attachStandaloneStream(sessionId, entry, res);
+        await entry.transport.handleRequest(req, res);
       } else {
         res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Invalid or missing session ID" }));
+        res.end(JSON.stringify(sessionRecoveryBody(sessionId ? "unknown_session" : "no_session")));
       }
     } else if (req.method === "DELETE") {
       // Session termination
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
       if (sessionId && sessions.has(sessionId)) {
         const entry = sessions.get(sessionId)!;
+        releaseStandaloneStream(sessionId, entry, "session_deleted");
         await entry.transport.handleRequest(req, res);
         const now = Date.now();
         console.log(JSON.stringify({
