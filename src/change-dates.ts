@@ -44,6 +44,22 @@ export function changeEventStartDate(c: DatedChange): { startDate: string } | Re
   return isEventDated(c) ? { startDate: c.date } : {};
 }
 
+export function capListSections<T>(sections: T[][], cap: number): T[] {
+  const allotted = sections.map(() => 0);
+  let budget = cap;
+  for (let i = 0; i < sections.length && budget > 0; i++) {
+    if (sections[i].length === 0) continue;
+    allotted[i] = 1;
+    budget -= 1;
+  }
+  for (let i = 0; i < sections.length && budget > 0; i++) {
+    const take = Math.min(budget, sections[i].length - allotted[i]);
+    allotted[i] += take;
+    budget -= take;
+  }
+  return sections.flatMap((section, i) => section.slice(0, allotted[i]));
+}
+
 export function latestEventDate(changes: DatedChange[], notAfter?: string): string | null {
   let latest: string | null = null;
   for (const c of changes) {
