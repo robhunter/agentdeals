@@ -4,7 +4,9 @@ import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const REQUESTS_PATH = path.join(__dirname, "..", "data", "referral_requests.json");
+const REQUESTS_PATH =
+  process.env.AGENTDEALS_REFERRAL_REQUESTS_PATH ||
+  path.join(__dirname, "..", "data", "referral_requests.json");
 
 export interface ReferralRequest {
   id: string;
