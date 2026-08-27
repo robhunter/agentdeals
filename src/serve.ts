@@ -134,6 +134,23 @@ const OG_IMAGE_META = `<meta property="og:image" content="${BASE_URL}/og-image.p
 <meta name="twitter:image" content="${BASE_URL}/og-image.png">
 `;
 
+const SEARCH_QUERY_DISALLOW = "Disallow: /search?";
+const SEARCH_PAGE_ROBOTS_META = '<meta name="robots" content="noindex,follow">';
+const NOFOLLOW_ATTR = ' rel="nofollow"';
+
+function searchQueryHref(params: URLSearchParams | string): string {
+  const qs = typeof params === "string" ? params : params.toString();
+  return "/search" + (qs ? "?" + qs : "");
+}
+
+function crawlRel(href: string): string {
+  return href.startsWith("/search?") ? NOFOLLOW_ATTR : "";
+}
+
+function searchQueryAnchor(href: string, inner: string, attrs = ""): string {
+  return '<a href="' + escHtmlServer(href) + '"' + crawlRel(href) + attrs + '>' + inner + '</a>';
+}
+
 // Swagger UI dist path
 const swaggerUiDistPath = join(__dirname, "..", "node_modules", "swagger-ui-dist");
 
@@ -6961,7 +6978,7 @@ ${tableRows}
 
   <div class="search-cta">
     ${vendorSlugMap.has(toSlug(config.primaryVendor)) ? `<p>Looking for more? <a href="/alternative-to/${toSlug(config.primaryVendor)}">Browse all free alternatives to ${config.primaryVendor} &rarr;</a></p>
-    <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">Or <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>` : `<p>Looking for more? <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}">Search all ${config.primaryVendor} alternatives</a> in our index of ${offers.length.toLocaleString()}+ developer deals.</p>`}
+    <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">Or <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}" rel="nofollow">search</a> our full index of ${offers.length.toLocaleString()}+ developer deals.</p>` : `<p>Looking for more? <a href="/search?q=${encodeURIComponent(config.primaryVendor.toLowerCase() + " alternative")}" rel="nofollow">Search all ${config.primaryVendor} alternatives</a> in our index of ${offers.length.toLocaleString()}+ developer deals.</p>`}
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -18797,7 +18814,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   ];
 
   const creditAltRows = creditAlternatives.map(c => `<tr>
-      <td style="font-weight:600"><a href="${c.link}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+      <td style="font-weight:600"><a href="${c.link}"${crawlRel(c.link)} style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.credits)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}</td>
     </tr>`).join("\n        ");
@@ -18813,7 +18830,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   ];
 
   const llmAltRows = llmAlternatives.map(c => `<tr>
-      <td style="font-weight:600"><a href="${c.link}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+      <td style="font-weight:600"><a href="${c.link}"${crawlRel(c.link)} style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.free)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.models)}</td>
     </tr>`).join("\n        ");
@@ -18827,7 +18844,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   ];
 
   const firebaseAltRows = firebaseAlternatives.map(c => `<tr>
-      <td style="font-weight:600"><a href="${c.link}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+      <td style="font-weight:600"><a href="${c.link}"${crawlRel(c.link)} style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.free)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}</td>
     </tr>`).join("\n        ");
@@ -21092,7 +21109,7 @@ ${mcpCtaCss()}
 
   <div class="context-box">
     <strong>Key takeaway:</strong> The enhanced free tier is actually <em>better</em> for teams that need SSO and policy — but the 500 resource cap is the critical constraint. If your Terraform state manages more than 500 resources, you will need a paid plan or an alternative.
-    ${hcpLicense ? `<br><br><strong>License context:</strong> HashiCorp switched from MPL 2.0 to BSL 1.1 in 2023, which restricts competitive commercial use. This triggered the <a href="/search?q=opentofu">OpenTofu</a> fork under the Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024.` : ""}
+    ${hcpLicense ? `<br><br><strong>License context:</strong> HashiCorp switched from MPL 2.0 to BSL 1.1 in 2023, which restricts competitive commercial use. This triggered the <a href="/search?q=opentofu" rel="nofollow">OpenTofu</a> fork under the Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024.` : ""}
   </div>
 
   <h2 id="who-affected">2. Who's Affected</h2>
@@ -21131,7 +21148,7 @@ ${mcpCtaCss()}
       <div><strong style="color:#3fb950">Pros:</strong> ${escHtmlServer(path.pros)}</div>
       <div><strong style="color:#f85149">Cons:</strong> ${escHtmlServer(path.cons)}</div>
     </div>
-    <div style="margin-top:.75rem"><a href="${path.link}" style="font-size:.85rem">View details &rarr;</a></div>
+    <div style="margin-top:.75rem"><a href="${path.link}"${crawlRel(path.link)} style="font-size:.85rem">View details &rarr;</a></div>
   </div>`).join("\n  ")}
 
   <h2 id="decision-matrix">4. Decision Matrix</h2>
@@ -21221,7 +21238,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>If you're over 500 resources:</strong>
-      <p><a href="/vendor/scalr">Scalr</a> offers the most generous free tier (unlimited resources, users, and workspaces). <a href="/vendor/spacelift">Spacelift</a> is strong on cloud integration. For zero vendor lock-in, self-host with <a href="/search?q=opentofu">OpenTofu</a>.</p>
+      <p><a href="/vendor/scalr">Scalr</a> offers the most generous free tier (unlimited resources, users, and workspaces). <a href="/vendor/spacelift">Spacelift</a> is strong on cloud integration. For zero vendor lock-in, self-host with <a href="/search?q=opentofu" rel="nofollow">OpenTofu</a>.</p>
     </div>
     <div class="verdict-item">
       <strong>If you're concerned about BSL lock-in:</strong>
@@ -21480,7 +21497,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '  </table>\n'
     + '\n'
     + '  <div class="context-box">\n'
-    + '    <strong>Context:</strong> HashiCorp switched Terraform from MPL 2.0 to BSL 1.1 in August 2023, triggering the <a href="/search?q=opentofu">OpenTofu</a> fork under the Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024. The free tier restructuring continues the trend of monetizing the Terraform ecosystem. The enhanced free tier adds SSO and policy features but imposes the 500-resource hard cap that affects growing teams.\n'
+    + '    <strong>Context:</strong> HashiCorp switched Terraform from MPL 2.0 to BSL 1.1 in August 2023, triggering the <a href="/search?q=opentofu" rel="nofollow">OpenTofu</a> fork under the Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024. The free tier restructuring continues the trend of monetizing the Terraform ecosystem. The enhanced free tier adds SSO and policy features but imposes the 500-resource hard cap that affects growing teams.\n'
     + '  </div>\n'
     + '\n'
     // Section 2: Who's Affected
@@ -21552,7 +21569,10 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
       const stability = stabilityMap.get(a.slug) ?? "stable";
       const stabilityColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "#3fb950";
       const stabilityLabel = stability === "volatile" ? "Volatile" : stability === "watch" ? "Watch" : stability === "improving" ? "Improving" : "Stable";
-      return '      <tr><td style="font-weight:600"><a href="/' + (a.slug === "terraform-ce" || a.slug === "atlantis" || a.slug === "env0" || a.slug === "opentofu" ? "search?q=" + encodeURIComponent(a.name) : "vendor/" + a.slug) + '">' + escHtmlServer(a.name) + '</a></td>'
+      const altHref = a.slug === "terraform-ce" || a.slug === "atlantis" || a.slug === "env0" || a.slug === "opentofu"
+        ? searchQueryHref("q=" + encodeURIComponent(a.name))
+        : "/vendor/" + a.slug;
+      return '      <tr><td style="font-weight:600"><a href="' + altHref + '"' + crawlRel(altHref) + '>' + escHtmlServer(a.name) + '</a></td>'
         + '<td>' + escHtmlServer(a.type) + '</td>'
         + '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(a.freeResources) + '</td>'
         + '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(a.freeUsers) + '</td>'
@@ -21576,14 +21596,14 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    <tbody>\n'
     + '      <tr><td style="font-weight:600"><a href="/vendor/hcp-terraform">HCP Terraform</a></td><td class="cost-free">500 resources, unlimited users</td><td>1 concurrent run, 500 cap</td><td>BSL 1.1</td></tr>\n'
     + '      <tr><td style="font-weight:600"><a href="/vendor/scalr">Scalr</a></td><td class="cost-free">Unlimited resources + users</td><td>50 runs/month, 5 environments</td><td>Proprietary</td></tr>\n'
-    + '      <tr><td style="font-weight:600"><a href="/search?q=env0">env0</a></td><td class="cost-free">Unlimited resources, 5 users</td><td>Limited deployments/month</td><td>Proprietary</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=env0" rel="nofollow">env0</a></td><td class="cost-free">Unlimited resources, 5 users</td><td>Limited deployments/month</td><td>Proprietary</td></tr>\n'
     + '      <tr><td style="font-weight:600"><a href="/vendor/spacelift">Spacelift</a></td><td class="cost-free">Unlimited resources (1 stack)</td><td>2 users, 1 public worker, 1 stack</td><td>Proprietary</td></tr>\n'
     + '      <tr><td style="font-weight:600"><a href="/vendor/terragrunt-scale">Terragrunt Scale</a></td><td class="cost-free">500+ resources</td><td>Requires Terragrunt adoption</td><td>Proprietary</td></tr>\n'
-    + '      <tr><td style="font-weight:600"><a href="/search?q=terramate">Terramate</a></td><td class="cost-free">2 users, all features</td><td>2 user limit</td><td>Proprietary</td></tr>\n'
-    + '      <tr><td style="font-weight:600"><a href="/search?q=digger">Digger</a></td><td class="cost-free">3 users, PR-driven workflows</td><td>3 user limit</td><td>Apache 2.0</td></tr>\n'
-    + '      <tr><td style="font-weight:600"><a href="/search?q=opentofu">OpenTofu</a></td><td class="cost-free">Unlimited everything</td><td>Self-hosted, manage own state</td><td>MPL 2.0</td></tr>\n'
-    + '      <tr><td style="font-weight:600"><a href="/search?q=atlantis">Atlantis</a></td><td class="cost-free">Unlimited everything</td><td>Self-hosted, no UI</td><td>Apache 2.0</td></tr>\n'
-    + '      <tr><td style="font-weight:600"><a href="/search?q=terraform">Terraform CE</a></td><td class="cost-free">Unlimited, CLI only</td><td>No remote state, no collaboration</td><td>BSL 1.1</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=terramate" rel="nofollow">Terramate</a></td><td class="cost-free">2 users, all features</td><td>2 user limit</td><td>Proprietary</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=digger" rel="nofollow">Digger</a></td><td class="cost-free">3 users, PR-driven workflows</td><td>3 user limit</td><td>Apache 2.0</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=opentofu" rel="nofollow">OpenTofu</a></td><td class="cost-free">Unlimited everything</td><td>Self-hosted, manage own state</td><td>MPL 2.0</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=atlantis" rel="nofollow">Atlantis</a></td><td class="cost-free">Unlimited everything</td><td>Self-hosted, no UI</td><td>Apache 2.0</td></tr>\n'
+    + '      <tr><td style="font-weight:600"><a href="/search?q=terraform" rel="nofollow">Terraform CE</a></td><td class="cost-free">Unlimited, CLI only</td><td>No remote state, no collaboration</td><td>BSL 1.1</td></tr>\n'
     + '    </tbody>\n'
     + '  </table>\n'
     + '\n'
@@ -51967,21 +51987,22 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     if (cat) params.set("category", cat);
     if (typ) params.set("type", typ);
     if (srt) params.set("sort", srt);
-    return "/search" + (params.toString() ? "?" + params.toString() : "");
+    if (overrides.page) params.set("page", overrides.page);
+    return searchQueryHref(params);
   }
 
   // Category pills
   const catPillsHtml = categories.map(c => {
     const isActive = categoryFilter.toLowerCase() === c.name.toLowerCase();
     const href = buildFilterUrl({ category: isActive ? "" : c.name });
-    return '<a href="' + escHtmlServer(href) + '" class="cat-filter' + (isActive ? " active" : "") + '">' + escHtmlServer(c.name) + ' <span class="cat-count">' + c.count + '</span></a>';
+    return searchQueryAnchor(href, escHtmlServer(c.name) + ' <span class="cat-count">' + c.count + '</span>', ' class="cat-filter' + (isActive ? " active" : "") + '"');
   }).join("\n");
 
   // Type filter pills
   const typePillsHtml = eligibilityTypes.map(t => {
     const isActive = typeFilter.toLowerCase() === t.value.toLowerCase();
     const href = buildFilterUrl({ type: isActive ? "" : t.value });
-    return '<a href="' + escHtmlServer(href) + '" class="type-filter' + (isActive ? " active" : "") + '">' + escHtmlServer(t.label) + '</a>';
+    return searchQueryAnchor(href, escHtmlServer(t.label), ' class="type-filter' + (isActive ? " active" : "") + '"');
   }).join("\n");
 
   // Sort options
@@ -52030,13 +52051,13 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     emptyStateHtml = '<div class="empty-state">'
       + '<p>No results found' + (hasQuery ? ' for &ldquo;<strong>' + escHtmlServer(query) + '</strong>&rdquo;' : '') + (categoryFilter ? ' in ' + escHtmlServer(categoryFilter) : '') + (typeFilter ? ' (' + escHtmlServer(typeFilter) + ')' : '') + '.</p>'
       + '<p>Try a different search or browse categories above.</p>'
-      + '<div class="suggested">' + suggestedSearches.map(function(s) { return '<a href="/search?q=' + encodeURIComponent(s) + '" class="suggest-pill">' + escHtmlServer(s) + '</a>'; }).join(" ") + '</div>'
+      + '<div class="suggested">' + suggestedSearches.map(function(s) { return searchQueryAnchor(searchQueryHref("q=" + encodeURIComponent(s)), escHtmlServer(s), ' class="suggest-pill"'); }).join(" ") + '</div>'
       + '</div>';
   } else {
     emptyStateHtml = '<div class="empty-state">'
       + '<p>Search ' + offers.length.toLocaleString() + ' free developer tools and services.</p>'
       + '<p class="suggested-label">Popular searches:</p>'
-      + '<div class="suggested">' + suggestedSearches.map(function(s) { return '<a href="/search?q=' + encodeURIComponent(s) + '" class="suggest-pill">' + escHtmlServer(s) + '</a>'; }).join(" ") + '</div>'
+      + '<div class="suggested">' + suggestedSearches.map(function(s) { return searchQueryAnchor(searchQueryHref("q=" + encodeURIComponent(s)), escHtmlServer(s), ' class="suggest-pill"'); }).join(" ") + '</div>'
       + '</div>';
   }
 
@@ -52044,11 +52065,11 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
   const paginationHtml = totalPages > 1 ? (() => {
     const links: string[] = [];
     if (page > 1) {
-      links.push('<a href="' + escHtmlServer(buildFilterUrl({})) + '&page=' + (page - 1) + '" class="page-link">&larr; Prev</a>');
+      links.push(searchQueryAnchor(buildFilterUrl({ page: String(page - 1) }), '&larr; Prev', ' class="page-link"'));
     }
     links.push('<span class="page-info">Page ' + page + ' of ' + totalPages + ' (' + totalResults + ' results)</span>');
     if (page < totalPages) {
-      links.push('<a href="' + escHtmlServer(buildFilterUrl({})) + '&page=' + (page + 1) + '" class="page-link">Next &rarr;</a>');
+      links.push(searchQueryAnchor(buildFilterUrl({ page: String(page + 1) }), 'Next &rarr;', ' class="page-link"'));
     }
     return '<div class="pagination">' + links.join("") + '</div>';
   })() : totalResults > 0 ? '<div class="pagination"><span class="page-info">' + totalResults + ' result' + (totalResults !== 1 ? 's' : '') + '</span></div>' : "";
@@ -52069,6 +52090,7 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
     + '<title>' + titleText + '</title>\n'
     + '<meta name="description" content="' + escHtmlServer(metaDescText) + '">\n'
+    + SEARCH_PAGE_ROBOTS_META + '\n'
     + '<link rel="canonical" href="' + BASE_URL + '/search">\n'
     + '<meta property="og:title" content="' + titleText + '">\n'
     + '<meta property="og:description" content="' + escHtmlServer(metaDescText) + '">\n'
@@ -54572,7 +54594,7 @@ ${weekEntries.join("\n")}
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
     res.end(INDEXNOW_KEY);
   } else if (url.pathname === "/robots.txt" && isGetOrHead) {
-    const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
+    const robotsTxt = `User-agent: *\n${SEARCH_QUERY_DISALLOW}\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
     res.end(robotsTxt);
   } else if (url.pathname === "/impact-verification" && isGetOrHead) {
@@ -54818,7 +54840,6 @@ ${catList}
       + '  <url>\n    <loc>' + BASE_URL + '/pricing-changes</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/freshness</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + CRITERIA_PATH + '</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
-      + '  <url>\n    <loc>' + BASE_URL + '/search</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/stacks</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
     for (const t of STACK_TEMPLATES) {
       xml += '  <url>\n    <loc>' + BASE_URL + '/stacks/' + t.slug + '</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
