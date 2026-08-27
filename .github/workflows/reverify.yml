@@ -34,10 +34,12 @@ jobs:
 
       - name: Run rolling re-verification
         id: reverify
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           set -o pipefail
           LIMIT="${{ github.event.inputs.limit || '75' }}"
-          node scripts/reverify-rolling.js --limit "$LIMIT" | tee /tmp/reverify.log
+          node scripts/reverify-rolling.js --ai --limit "$LIMIT" | tee /tmp/reverify.log
           VERIFIED=$(grep -oE '^Verified \(date bumped\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           FLAGGED=$(grep -oE '^Flagged \(URL/AI failure\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           RECORDED=$(grep -oE '^Recorded to data/deal_changes.json: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)

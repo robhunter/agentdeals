@@ -11,7 +11,7 @@
  * Usage:
  *   npm run reverify:rolling                    # 100 oldest, URL-only
  *   npm run reverify:rolling -- --limit 50      # 50 oldest
- *   npm run reverify:rolling -- --ai            # Haiku-based verification
+ *   npm run reverify:rolling -- --ai            # read the vendor's terms and detect changes
  *   npm run reverify:rolling -- --dry-run       # report only
  */
 
@@ -19,7 +19,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { reverifyBatch } from "./reverify.js";
-import { fetchPageText, verifyWithHaiku } from "./verify-freshness.js";
+import { fetchPageText, verifyOfferAgainstPage, createVerifierClient, VERIFIER_MODEL } from "./verify-freshness.js";
 import { buildChangeEntry, appendChangeEntries } from "./change-log.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -82,12 +82,8 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const rateLimitMs = options.rateLimitMs ?? AI_RATE_LIMIT_MS;
   let verifyFn = options.verifyFn;
   if (!verifyFn) {
-    const Anthropic = (await import("@anthropic-ai/sdk")).default;
-    if (!process.env.ANTHROPIC_API_KEY) {
-      throw new Error("ANTHROPIC_API_KEY required for --ai mode");
-    }
-    const client = new Anthropic();
-    verifyFn = (offer, pageText) => verifyWithHaiku(client, offer, pageText);
+    const client = createVerifierClient();
+    verifyFn = (offer, pageText) => verifyOfferAgainstPage(client, offer, pageText);
   }
 
   let verified = 0;
@@ -200,7 +196,7 @@ async function main() {
 
   console.log(
     `Rolling re-verification — ${picked.length} oldest entries` +
-      (useAi ? " (Haiku)" : " (URL-only)") +
+      (useAi ? ` (${VERIFIER_MODEL})` : " (URL-only)") +
       (dryRun ? " (dry-run)" : "")
   );
   console.log("");

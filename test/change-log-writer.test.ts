@@ -20,6 +20,7 @@ const {
 const { runUrlMode, runAiMode, summaryLines, repickWindowDays } = await import("../scripts/reverify-rolling.js");
 const { firstSeenDates } = await import("../scripts/backfill-change-recorded-dates.js");
 const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, flagTokens, DETECTOR_CLI_OPTIONS, WORKFLOW_PATH } = await import("../scripts/check-change-log-staleness.js");
+const { VERIFIER_API_KEY_ENV, VERIFIER_MODEL } = await import("../scripts/verify-freshness.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -506,7 +507,16 @@ describe("reading the detector's schedule out of the workflow", () => {
     const yaml = readFileSync(WORKFLOW_PATH, "utf-8");
     const schedule = detectorSchedule(yaml);
     assert.strictEqual(schedule.known, true);
-    assert.strictEqual(schedule.scheduled, false, "the shipped workflow does not pass --ai yet");
+    assert.strictEqual(schedule.scheduled, true, "the shipped workflow passes --ai to the daily run");
+  });
+
+  it("hands the detector the credential the same step needs to use it", () => {
+    const yaml = readFileSync(WORKFLOW_PATH, "utf-8");
+    assert.match(
+      yaml,
+      new RegExp(`${VERIFIER_API_KEY_ENV}: \\$\\{\\{ secrets\\.${VERIFIER_API_KEY_ENV} \\}\\}`),
+      `the step that passes --ai must also receive ${VERIFIER_API_KEY_ENV}`
+    );
   });
 
   it("sees a scheduled detector when the invocation passes --ai", () => {
@@ -677,12 +687,34 @@ describe("reading the detector's schedule out of the workflow", () => {
   });
 
   it("changes meaning at the same commit that changes the behaviour", () => {
-    const off = readFileSync(WORKFLOW_PATH, "utf-8");
-    const on = off.replace("reverify-rolling.js --limit", "reverify-rolling.js --ai --limit");
+    const on = readFileSync(WORKFLOW_PATH, "utf-8");
+    const off = on.replace("reverify-rolling.js --ai --limit", "reverify-rolling.js --limit");
     assert.notStrictEqual(on, off, "expected the shipped invocation to be rewritable");
     const stale = freshnessNeverDetected();
     assert.strictEqual(report(stale, DEFAULT_THRESHOLD_DAYS, detectorSchedule(off)).failJob, false);
     assert.strictEqual(report(stale, DEFAULT_THRESHOLD_DAYS, detectorSchedule(on)).failJob, true);
+  });
+
+  it("refuses to start the detector without the credential, before fetching anything", async () => {
+    const saved = process.env[VERIFIER_API_KEY_ENV];
+    delete process.env[VERIFIER_API_KEY_ENV];
+    let fetched = 0;
+    try {
+      await assert.rejects(
+        () =>
+          runAiMode(
+            [{ index: 0, offer: { vendor: "V", category: "Hosting", url: "http://localhost:19999/x", tier: "Free", description: "d" } }],
+            { offers: [{ vendor: "V" }] },
+            true,
+            NOW,
+            { fetchFn: async () => { fetched += 1; return { ok: true, text: "text" }; } }
+          ),
+        new RegExp(VERIFIER_API_KEY_ENV)
+      );
+    } finally {
+      if (saved !== undefined) process.env[VERIFIER_API_KEY_ENV] = saved;
+    }
+    assert.strictEqual(fetched, 0, "a run that cannot read a vendor's terms should not fetch any");
   });
 
   function freshnessNeverDetected() {

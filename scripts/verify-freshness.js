@@ -3,9 +3,9 @@
 /**
  * AI-powered data freshness verification.
  *
- * Finds stale entries, fetches vendor pricing pages, and uses Claude Haiku
- * to verify whether stored deal information is still accurate. Updates
- * verifiedDate for confirmed entries; flags discrepancies for PM review.
+ * Finds stale entries, fetches vendor pricing pages, and asks a model over an
+ * OpenAI-compatible endpoint whether stored deal information is still accurate.
+ * Updates verifiedDate for confirmed entries; flags discrepancies for review.
  *
  * Usage:
  *   npm run verify-freshness                       # verify entries older than 25 days
@@ -17,7 +17,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import Anthropic from "@anthropic-ai/sdk";
 import { CHANGE_TYPES } from "./change-log.js";
 
 const CHANGE_TYPE_VALUES = CHANGE_TYPES.join(", ");
@@ -26,8 +25,12 @@ const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
 const DEFAULT_THRESHOLD_DAYS = 25;
 const FETCH_TIMEOUT_MS = 15_000;
 const RATE_LIMIT_MS = 500; // 2 requests per second
-const MAX_PAGE_TEXT_LENGTH = 12_000; // chars sent to Haiku
-const HAIKU_MODEL = "claude-haiku-4-5-20251001";
+const MAX_PAGE_TEXT_LENGTH = 12_000; // chars of page text sent to the model
+const MAX_RESPONSE_TOKENS = 400;
+
+export const VERIFIER_MODEL = "google/gemma-3-27b-it";
+export const VERIFIER_API_KEY_ENV = "OPENROUTER_API_KEY";
+export const VERIFIER_BASE_URL = "https://openrouter.ai/api/v1";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -102,7 +105,71 @@ export async function fetchPageText(url) {
   }
 }
 
-export async function verifyWithHaiku(client, offer, pageText) {
+export function createVerifierClient(options = {}) {
+  const apiKey = options.apiKey ?? process.env[VERIFIER_API_KEY_ENV];
+  if (!apiKey) {
+    throw new Error(
+      `${VERIFIER_API_KEY_ENV} is required for --ai mode. Without it nothing can read a vendor's terms, ` +
+        `so the run would report zero changes without having looked. No entry was re-verified and no ` +
+        `verifiedDate was advanced by this run.`
+    );
+  }
+  const baseUrl = (options.baseUrl ?? process.env.OPENROUTER_BASE_URL ?? VERIFIER_BASE_URL).replace(/\/$/, "");
+  const model = options.model ?? VERIFIER_MODEL;
+  const fetchImpl = options.fetchImpl ?? fetch;
+  return {
+    model,
+    baseUrl,
+    async complete(prompt) {
+      const res = await fetchImpl(`${baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://agentdeals.dev",
+          "X-Title": "AgentDeals re-verification",
+        },
+        body: JSON.stringify({
+          model,
+          max_tokens: MAX_RESPONSE_TOKENS,
+          temperature: 0,
+          messages: [{ role: "user", content: prompt }],
+        }),
+      });
+      if (!res.ok) {
+        const detail = await res.text().catch(() => "");
+        throw new Error(`${model} request failed: HTTP ${res.status}${detail ? ` — ${detail.slice(0, 200)}` : ""}`);
+      }
+      const body = await res.json();
+      const content = body?.choices?.[0]?.message?.content;
+      if (typeof content !== "string") {
+        throw new Error(`${model} returned no message content`);
+      }
+      return content;
+    },
+  };
+}
+
+export function parseVerifierResponse(raw) {
+  const text = typeof raw === "string" ? raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/```$/, "").trim() : "";
+  const accept = (parsed) =>
+    parsed && ["confirmed", "changed", "unclear"].includes(parsed.status) ? parsed : null;
+  try {
+    const parsed = accept(JSON.parse(text));
+    if (parsed) return parsed;
+  } catch {
+    const match = text.match(/\{[^}]+\}/);
+    if (match) {
+      try {
+        const parsed = accept(JSON.parse(match[0]));
+        if (parsed) return parsed;
+      } catch { /* fall through */ }
+    }
+  }
+  return { status: "unclear", summary: "Could not parse AI response" };
+}
+
+export async function verifyOfferAgainstPage(client, offer, pageText) {
   const prompt = `You are verifying whether a vendor's deal/free-tier information is still accurate.
 
 STORED DEAL INFO:
@@ -129,31 +196,7 @@ Rules for a "changed" response:
 - Omit effective_date entirely unless the page gives a date.
 - If you cannot pick a change_type from that list, or cannot state current_state from the page, answer "unclear" instead.`;
 
-  const response = await client.messages.create({
-    model: HAIKU_MODEL,
-    max_tokens: 400,
-    messages: [{ role: "user", content: prompt }],
-  });
-
-  const text = response.content[0]?.text?.trim();
-  try {
-    const parsed = JSON.parse(text);
-    if (["confirmed", "changed", "unclear"].includes(parsed.status)) {
-      return parsed;
-    }
-  } catch {
-    // Try to extract JSON from response
-    const match = text?.match(/\{[^}]+\}/);
-    if (match) {
-      try {
-        const parsed = JSON.parse(match[0]);
-        if (["confirmed", "changed", "unclear"].includes(parsed.status)) {
-          return parsed;
-        }
-      } catch { /* fall through */ }
-    }
-  }
-  return { status: "unclear", summary: "Could not parse AI response" };
+  return parseVerifierResponse(await client.complete(prompt));
 }
 
 function sleep(ms) {
@@ -162,7 +205,7 @@ function sleep(ms) {
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
-export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath, now = new Date() }) {
+export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath, now = new Date(), client: injectedClient }) {
   const data = JSON.parse(readFileSync(indexPath || INDEX_PATH, "utf-8"));
   const offers = data.offers || [];
   const { stale, freshCount } = findStaleOffers(offers, thresholdDays, now);
@@ -183,16 +226,7 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath,
   const toVerify = limit ? stale.slice(0, limit) : stale;
   const skipped = stale.length - toVerify.length;
 
-  let client;
-  function getClient() {
-    if (!client) {
-      if (!process.env.ANTHROPIC_API_KEY) {
-        throw new Error("ANTHROPIC_API_KEY environment variable is required");
-      }
-      client = new Anthropic();
-    }
-    return client;
-  }
+  const client = injectedClient ?? createVerifierClient();
   const today = now.toISOString().split("T")[0];
 
   let verified = 0;
@@ -213,10 +247,9 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath,
       continue;
     }
 
-    // Verify with Haiku
     let result;
     try {
-      result = await verifyWithHaiku(getClient(), offer, page.text);
+      result = await verifyOfferAgainstPage(client, offer, page.text);
     } catch (err) {
       failed++;
       failures.push({ vendor: offer.vendor, category: offer.category, url: offer.url, error: `AI error: ${err.message}` });
