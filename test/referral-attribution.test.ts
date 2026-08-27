@@ -3,10 +3,13 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const REQUESTS_PATH = path.join(__dirname, "..", "data", "referral_requests.json");
+const SCRATCH = fs.mkdtempSync(path.join(os.tmpdir(), "referral-attribution-"));
+const REQUESTS_PATH = path.join(SCRATCH, "referral_requests.json");
+process.env.AGENTDEALS_REFERRAL_REQUESTS_PATH = REQUESTS_PATH;
 const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
 
 // Unit tests for referral-requests module
