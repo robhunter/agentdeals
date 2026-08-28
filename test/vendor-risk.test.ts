@@ -57,25 +57,29 @@ describe("checkVendorRisk logic", () => {
     }
   });
 
-  it("alternatives are sorted by risk level", async () => {
+  it("alternatives are ordered by the demerits the ranking recorded, not by risk label", async () => {
     const { checkVendorRisk } = await import("../dist/data.js");
     const result = checkVendorRisk("Vercel");
     assert.ok(!("error" in result));
-    const riskOrder: Record<string, number> = { stable: 0, caution: 1, risky: 2 };
+    const total = (alt: { demerits: { points: number }[] }) =>
+      alt.demerits.reduce((sum, d) => sum + d.points, 0);
     for (let i = 1; i < result.result.alternatives.length; i++) {
       assert.ok(
-        riskOrder[result.result.alternatives[i].risk_level] >= riskOrder[result.result.alternatives[i - 1].risk_level],
-        "Alternatives should be sorted by risk level (stable first)"
+        total(result.result.alternatives[i]) >= total(result.result.alternatives[i - 1]),
+        `${result.result.alternatives[i].vendor} carries fewer demerits than the entry above it`
       );
     }
   });
 
-  it("alternatives include risk_level field", async () => {
+  it("alternatives carry a risk level we can publish, or null where we cannot vouch for one", async () => {
     const { checkVendorRisk } = await import("../dist/data.js");
     const result = checkVendorRisk("Supabase");
     assert.ok(!("error" in result));
     for (const alt of result.result.alternatives) {
-      assert.ok(["stable", "caution", "risky"].includes(alt.risk_level), `Alternative ${alt.vendor} should have valid risk_level`);
+      assert.ok(
+        ["stable", "caution", "risky", null].includes(alt.risk_level),
+        `Alternative ${alt.vendor} should have valid risk_level`
+      );
       assert.ok(alt.vendor);
       assert.ok(alt.category);
       assert.ok(alt.tier);

@@ -196,7 +196,7 @@ m_verified_date_advances_anyway() {
   py <<'PY'
 p = "scripts/reverify-rolling.js"
 s = open(p).read()
-s = s.replace("  return check.outcome === SOURCE_CHECK_OK;", "  return true;")
+s = s.replace("    const sourceOk = check.outcome === SOURCE_CHECK_OK;", "    const sourceOk = true;")
 open(p, "w").write(s)
 PY
 }

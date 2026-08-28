@@ -16,7 +16,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS } from "./link-health.js";
-import { levelWithheldReason, type LevelWithheldReason } from "./source-check.js";
+import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
@@ -477,18 +477,6 @@ function riskBadgeHtml(
   const badge = `<span style="display:inline-block;${margin}font-size:${size};padding:.15rem .5rem;border-radius:10px;background:${color}22;color:${color};font-weight:600">${level}</span>`;
   if (level === "stable" || !cause) return badge;
   return `${badge} <span style="font-size:${size};color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`;
-}
-
-function withheldLevelClause(reason: LevelWithheldReason, since: string): string {
-  if (reason === "link_unreachable") return `its pricing page has not resolved for us${since}`;
-  if (reason === "does_not_name_vendor") return `the page we cite for this offer does not name it`;
-  return `we could not read the page we cite for this offer`;
-}
-
-function withheldLevelSentence(reason: LevelWithheldReason, vendorName: string, since: string): string {
-  if (reason === "link_unreachable") return `${vendorName}'s pricing page has not resolved for us${since}.`;
-  if (reason === "does_not_name_vendor") return `The page we cite for ${vendorName} does not name it.`;
-  return `We could not read the page we cite for ${vendorName}.`;
 }
 
 function stabilityCellHtml(stability: string, linkUnreachable: LinkUnreachable | null | undefined, offer?: Pick<Offer, "source_check">): string {
@@ -4213,8 +4201,18 @@ ${allCompareLinks.join("\n")}
   }
 
   // FAQ data for vendor pages — expanded to 6-8 questions
-  const faqFreeAnswer = `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${primary.description.slice(0, 200)}${primary.description.length > 200 ? "..." : ""}`;
-  const faqTierAnswer = `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`;
+  const storedTerms = `${primary.description.slice(0, 200)}${primary.description.length > 200 ? "..." : ""}`;
+  const unconfirmedTermsPreamble = levelWithheld
+    ? `We cannot confirm that today. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} `
+    : "";
+  const withUnconfirmedTermsCaveat = (terms: string) =>
+    `${terms}${/[.!?…]$/.test(terms.trim()) ? "" : "."} We have not confirmed these terms against the source we cite, so treat them as unverified.`;
+  const faqFreeAnswer = levelWithheld
+    ? `${unconfirmedTermsPreamble}Our stored record says ${vendorName} offers a free tier: ${primary.tier}. ${withUnconfirmedTermsCaveat(storedTerms)}`
+    : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
+  const faqTierAnswer = levelWithheld
+    ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
+    : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`;
   // #1038: these answers ship inside FAQPage JSON-LD, which is the version of
   // this page an AI search engine quotes. They used to reach for the *count* of
   // recorded changes and for `vendorChanges[0]` — the most recent record of any
@@ -4449,6 +4447,16 @@ function buildAlternativesPage(slug: string): string | null {
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskCause = enriched.risk_cause;
+  const altLevelWithheld = levelWithheldReason(primary, enriched.link_unreachable);
+  const altUnconfirmableSince = enriched.link_unreachable?.last_reachable
+    ? ` since ${enriched.link_unreachable.last_reachable}`
+    : "";
+  const altWithheldSentence = altLevelWithheld
+    ? withheldLevelSentence(altLevelWithheld, vendorName, altUnconfirmableSince)
+    : "";
+  const altWithheldClause = altLevelWithheld
+    ? withheldLevelClause(altLevelWithheld, altUnconfirmableSince)
+    : "";
   // #1038: no publishable cause, no warning.
   const riskLevel = enriched.risk_level && (enriched.risk_level === "stable" || riskCause) ? enriched.risk_level : "stable";
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
@@ -4500,7 +4508,14 @@ function buildAlternativesPage(slug: string): string | null {
   // Situation section: why look for alternatives
   const situationHtml = (() => {
     const parts: string[] = [];
-    parts.push(`<div class="risk-row"><span class="risk-label">Risk Level:</span> <span class="risk-badge-inline" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></div>`);
+    parts.push(
+      enriched.risk_level === null
+        ? `<div class="risk-row"><span class="risk-label">Risk Level:</span> <span class="risk-badge-inline" style="background:#8b949e20;color:var(--text-dim);border:1px solid #8b949e40" title="${escHtmlServer(altWithheldClause.charAt(0).toUpperCase() + altWithheldClause.slice(1))}">source unconfirmed</span></div>`
+        : `<div class="risk-row"><span class="risk-label">Risk Level:</span> <span class="risk-badge-inline" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></div>`
+    );
+    if (enriched.risk_level === null) {
+      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> ${escHtmlServer(altWithheldSentence)} We are not publishing a stability judgement for it until that is fixed.</div>`);
+    }
     if (riskLevel !== "stable" && riskCause) {
       parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)}</div>`);
     }
@@ -4610,7 +4625,9 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
   // #1038: "flagged due to N recorded pricing changes" then quoting
   // vendorChanges[0] could hand the reader a limits_increased record as the
   // reason for a warning. The flag has exactly one cause and this names it.
-  const faqFreeTierAnswer = riskLevel === "stable"
+  const faqFreeTierAnswer = altLevelWithheld
+    ? `We cannot confirm that today. ${altWithheldSentence} Our stored record says ${vendorName} offers a free tier (${primary.tier}), but we have not confirmed those terms against the source we cite.`
+    : riskLevel === "stable"
     ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : `We hold ${vendorChanges.length === 1 ? "1 recorded change" : `${vendorChanges.length} recorded changes`} for this vendor, none of them a free tier removal, limit reduction or pricing restructure.`}`
     : riskLevel === "caution"
     ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
@@ -4618,6 +4635,8 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${vendorCategories.join(", ")} categor${vendorCategories.length > 1 ? "ies" : "y"}.`;
   const faqChangesAnswer = vendorChanges.length > 0
     ? `Yes, ${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(vendorChanges[0])}: ${vendorChanges[0].summary}`
+    : altLevelWithheld
+    ? `We hold no recorded pricing changes for ${vendorName}, but ${altWithheldClause}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has no recorded pricing changes on AgentDeals. This indicates stable pricing.`;
 
   const altFaqItems = [
