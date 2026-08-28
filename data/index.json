@@ -1708,7 +1708,7 @@
         "scheduling",
         "free tier"
       ],
-      "verifiedDate": "2026-07-29",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -2230,7 +2230,7 @@
         "tax",
         "free tier"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -3279,7 +3279,7 @@
         "ab-testing",
         "open-source"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -3298,7 +3298,7 @@
         "ab-testing",
         "analytics"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -3364,7 +3364,7 @@
         "event-gateway",
         "reliability"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -3566,7 +3566,7 @@
         "multi-channel",
         "workflow"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -3708,7 +3708,7 @@
         "background-jobs",
         "automation"
       ],
-      "verifiedDate": "2026-07-31",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -4035,7 +4035,7 @@
         "scraping",
         "free tier"
       ],
-      "verifiedDate": "2026-07-31",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -4090,7 +4090,7 @@
         "bots",
         "free"
       ],
-      "verifiedDate": "2026-07-31",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -4150,7 +4150,7 @@
         "session-replay",
         "free tier"
       ],
-      "verifiedDate": "2026-07-29",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -4261,7 +4261,7 @@
         "sentry-compatible",
         "free tier"
       ],
-      "verifiedDate": "2026-07-27",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -4360,7 +4360,7 @@
         "regression",
         "free tier"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -4484,7 +4484,7 @@
         "in-app",
         "workflows"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -4547,7 +4547,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -4567,7 +4567,7 @@
         "no-code",
         "data collection"
       ],
-      "verifiedDate": "2026-07-29",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -5074,7 +5074,7 @@
         "open source",
         "incident management"
       ],
-      "verifiedDate": "2026-07-27",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -5112,7 +5112,7 @@
         "api",
         "conferencing"
       ],
-      "verifiedDate": "2026-07-27",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -5131,7 +5131,7 @@
         "embedded",
         "conferencing"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -5697,7 +5697,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -5758,7 +5758,7 @@
         "nodejs",
         "open source"
       ],
-      "verifiedDate": "2026-07-31",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -6821,7 +6821,7 @@
         "real-time",
         "cloud"
       ],
-      "verifiedDate": "2026-07-27",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -6882,7 +6882,7 @@
         "exchange-rates",
         "ip-geolocation"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -8206,7 +8206,7 @@
         "iaas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -8332,7 +8332,7 @@
         "workflow",
         "zoho"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -8845,7 +8845,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-08-26",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -10258,7 +10258,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -27997,7 +27997,7 @@
         "automation",
         "open-source"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -28017,7 +28017,7 @@
         "api",
         "scanning"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -28476,7 +28476,7 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-07-29",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",

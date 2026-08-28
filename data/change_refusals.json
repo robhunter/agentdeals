@@ -25,6 +25,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "AbstractAPI",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (15 rest, 1,000 request, 1 request)",
+      "summary": "The free tier is still offered, but the description is different. The page states each API has a free tier with a 'generous usage allowance' but does not specify 1,000 requests/month per API or a 1 request/second rate limit. The page also explicitly states that the free tiers may not be used in commercial projects, while the stored info states non-commercial use only.",
+      "previous_state": "Suite of 15 REST APIs (IP geolocation, email validation, screenshots, exchange rates, phone validation, etc.) — free tier: 1,000 requests/month per API, 1 request/second rate limit. Non-commercial use only on free tier",
+      "current_state": "Each of our API’s has a free tier with a generous usage allowance for you to try the product out and verify that the speed and data quality work for you. The free tiers of our API’s may not be used in commercial projects.",
+      "source_url": "https://www.abstractapi.com/api",
+      "category": "API Development",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Amazon Q Developer",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report simply clarifies the existing tiers and details the Pro tier limits, which were already alluded to. The free tier limits (50 requests, 1000 lines) remain the same.",
+      "summary": "The pricing structure has been updated. There is now a clear distinction between a Free Tier and a Pro Tier at $19/month per user. The Free Tier includes 50 agentic requests per month and 1,000 lines of code transformation. The Pro Tier offers increased limits for agentic requests and code transformation (4,000 lines pooled at the account level, with overages at $0.003/line), admin controls, and IP indemnity.",
+      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity)",
+      "current_state": "Amazon Q Developer offers two pricing tiers: Free Tier (advanced capabilities at zero cost, 50 agentic requests/month, 1,000 lines of code transformation/month) and Pro Tier ($19/mo. per user, increased limits, admin controls, IP indemnity).",
+      "source_url": "https://aws.amazon.com/q/developer/pricing/",
+      "category": "AI Coding",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "AppFit",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -58,6 +82,18 @@
       "current_state": "Free, incl. commercial use. Gets individuals continuity and security, swiftly. Free and fully unattended. feature-tooltip-traffic 0.3 Mqr",
       "source_url": "https://www.buddyns.com/services/",
       "category": "DNS & Domain Management",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Checkout",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (3 pag, 50 payment)",
+      "summary": "The free tier still exists, but the description is different. The stored information states 'Product Billing management with 3 pages & up to 50 payments', while the current pricing page states 'Start creating checkout pages for free'.",
+      "previous_state": "Product Billing management with 3 pages & up to 50 payments.",
+      "current_state": "The free tier allows you to 'Start creating checkout pages for free'. There is a paid 'Professional' tier at $29/month.",
+      "source_url": "https://zoho.com/checkout",
+      "category": "Cloud IaaS",
       "refused_date": "2026-08-28"
     },
     {
@@ -106,6 +142,18 @@
       "current_state": "Free $ 0 USD / year 10 projects Get started All core features Release snapshotting, build server integrations, and config variables (secrets management). 10 projects Project: A container for a single deployable component like an application, microservice, API, or database that holds your deployment process, variables, releases, and configurations. 10 tenants Tenant: An entity that represents a customer, a physical location, a customer’s physical location, or something else that has its own variables and deployment settings, allowing the same project to be deployed multiple times without duplicating configuration. 10 machines Machines: A Windows, Linux, or macOS application host registered as a deployment target. 1 space Spaces: The highest-level container within Octopus that provides complete isolation of projects, environments, and resources for different teams, departments, or business units. 10 users 5 concurrent tasks Task: A unit of work, like a deployment, runbook, health check, or other operation, that is executed in order and tracked with progress and logs.",
       "source_url": "https://codefresh.io/pricing/",
       "category": "CI/CD",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Crisp",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The report details many features not previously mentioned, but the core limits (seats, contacts, conversations) are identical. The 'customer profiles' limit is likely equivalent to the 'contacts' limit already stated.",
+      "summary": "The free tier still exists, but the description is different. The free tier now includes a limit of 100 customer profiles, whereas the stored information does not mention a customer profile limit. The free tier also includes features like mobile apps, real-time notifications, developer APIs, live geolocation map, conversation transcript, working hours settings, unlimited conversations, custom email domain, full conversations' history, internal notes, visitor banning, file sharing, canned responses, conversation ratings, follow-up reminders, round-robin routing, customer portal, chat widget, contact form, email, telegram, messenger, X (Twitter), Instagram, SMS, Viber, phone, Line, WhatsApp Business, WordPress, Shopify, WooCommerce, Adobe Commerce, Prestashop, Slack, HubSpot, Pipedrive, Zoho CRM, Segment, Zapier, Make, n8n, Stripe, Salesforce, Chat SDKs, live typing preview, typing status indicator, widget customization, proactive chat messages, MagicBrowse, video & audio chat, help widget, white label, AI Agent, AI Knowledge training, Internal AI Copilot, voice-to-text, LiveTranslate.",
+      "previous_state": "Customer messaging platform — 2 seats, 100 contacts, unlimited conversations. Website chat widget, shared inbox, desktop/mobile apps",
+      "current_state": "Free Forever Use Crisp for free Key features included: Website chat widget, 2 seats included, 100 contacts, Unlimited conversations.",
+      "source_url": "https://crisp.chat/en/pricing/",
+      "category": "Messaging",
       "refused_date": "2026-08-28"
     },
     {
@@ -193,6 +241,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Gitea",
+      "change_type": "new_tier",
+      "reason": "confirmed_unchanged",
+      "detail": "The addition of paid tiers doesn't change the free tier's existence or terms.",
+      "summary": "The free OSS tier still exists, but the page now highlights Gitea Cloud and Gitea Enterprise as paid options with 30-day free trials. The original deal info didn't mention these.",
+      "previous_state": "Free OSS (MIT). Lightweight self-hosted Git service. Repository hosting, issue tracking, pull requests, CI/CD (Gitea Actions), packages registry. Low resource usage",
+      "current_state": "Gitea offers a free, self-hosted Git service under the MIT license with unlimited users and repositories. Gitea Cloud and Gitea Enterprise are available as paid options with 30-day free trials.",
+      "source_url": "https://about.gitea.com/",
+      "category": "Source Control",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "GitHub",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -253,6 +313,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "JotForm",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 form, 100 submission, 100 upload, 1,000 form, 10,000 templat)",
+      "summary": "The free plan (Starter) still exists, but the description of its limits is incomplete. The page states the Starter plan includes 'all standard features, such as form templates, payment integrations, and widgets' and that forms will have Jotform branding. It also mentions limits on forms, submissions, storage, and views, but does not specify the exact numbers (5 forms, 100 submissions, 100 MB, 1000 views) as stated in the stored deal info.",
+      "previous_state": "Online form builder. Free plan: 5 forms, 100 monthly submissions, 100 MB upload space, 1,000 form views/month. Drag-and-drop builder with 10,000+ templates",
+      "current_state": "The Starter plan is available and includes standard features, but specific limits are not detailed on the provided text.",
+      "source_url": "https://www.jotform.com/pricing/",
+      "category": "Forms",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "leapcell",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -265,6 +337,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "LiveKit",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The core limits (WebRTC minutes, agent session minutes, concurrent sessions/connections, phone number) are identical. The current page adds details and features not previously mentioned, but doesn't alter the original free tier's specifications.",
+      "summary": "The 'Build' tier is still offered as a free tier, but the details have been significantly expanded and restructured. The original stored information only mentioned 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, and 1 free US phone number. The current pricing page details many more features and limits, including different pricing for STT, TTS, and LLM models, agent observability, and telephony options. The free tier now includes 5,000 WebRTC minutes, 1,000 agent session minutes, 5 concurrent agent sessions, 100 concurrent connections, and 1 free US phone number, but also includes access to other features with varying limits.",
+      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "current_state": "The 'Build' plan is $0/mo and includes: Agent deployment, Agent observability, Inference credits, Global edge network, Telephony (1 free number), Session metrics and analytics, Community support. Specific limits include: 5,000 WebRTC minutes, 1,000 agent session minutes, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Additional costs apply for exceeding limits or using paid features like STT, TTS, and LLM models.",
+      "source_url": "https://livekit.io/pricing",
+      "category": "Communication",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "LocalOps",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -274,6 +358,18 @@
       "current_state": "The free tier provides 12 vCPU and 24 GB of resources.",
       "source_url": "https://localops.co/",
       "category": "CI/CD",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "LocationIQ",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The report restates the stored description; both state 5000 requests/day, limited commercial use with attribution, and the 60 requests/minute is consistent with 5000/day.",
+      "summary": "The free tier now has a limit of 5000 requests/day and 60 requests per minute, with limited commercial use requiring attribution.",
+      "previous_state": "Geocoding, reverse geocoding, and routing API. Free plan: 5,000 requests/day, commercial use allowed with attribution",
+      "current_state": "Free $0 €0 R$0 ₹0 FREE sign up 5000 requests /day 2 requests /second Geocoding APIs Routing APIs Street & Static Maps 60 requests per minute Limited Commercial Use You can use our free plan in commercial projects if you spread the love by adding a prominent link back to us on your website or app in this format: <a href=&#x27;https://locationiq.com&#x27;>Search by LocationIQ.com</a> 1 Access Token IP and HTTP Restrictions Best-effort Email Support US & EU Datacenters",
+      "source_url": "https://locationiq.com/pricing",
+      "category": "Maps/Geolocation",
       "refused_date": "2026-08-28"
     },
     {
@@ -361,6 +457,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "OpenStatus",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The addition of paid plan information doesn't change the free tier details.",
+      "summary": "The free plan includes one monitor, one status page (with three page components), and a minimum check interval of 10m. The stored information is still accurate, but the page also mentions paid plans starting from $30/mo.",
+      "previous_state": "Open-source status page and monitoring. Free plan: 1 monitor, 1 status page, 3 components, 10-minute check intervals, 6 global regions, 14-day data retention",
+      "current_state": "Free plan includes one monitor, one status page (with three page components), and a minimum check interval of 10m. Paid plans from $30/mo.",
+      "source_url": "https://www.openstatus.dev/",
+      "category": "Status Pages",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "pagecrawl.io",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -394,6 +502,30 @@
       "current_state": "The free plan includes 1 User, 1 Template, and 100 PDFs per month.",
       "source_url": "https://pdf-api.io",
       "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Pulumi",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "Both descriptions state 500 workflow minutes/month and the stored description did not claim unlimited workflow minutes.",
+      "summary": "The Individual tier exists, but the free workflow minutes have been reduced from unlimited to 500/month. The number of free Neo tokens has also changed from unlimited to 5M/month.",
+      "previous_state": "Infrastructure as Code platform — free for individuals with 1 user, unlimited projects/stacks/updates, 500 deployment minutes/mo, 25 secrets, 10K secret API calls/mo",
+      "current_state": "Individual: $0 forever, 1 user, Unlimited projects, stacks, and environments, Unlimited updates and history, Up to 500 workflow minutes, Pulumi Neo with 5M free tokens/month, Max # of secrets 25, Max # of API calls 10K / month",
+      "source_url": "https://www.pulumi.com/pricing/",
+      "category": "Infrastructure",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Qdrant",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 forever)",
+      "summary": "The free tier now offers 1GB RAM and 4GB disk, not 1GB cluster.",
+      "previous_state": "Vector database — 1 GB free forever cluster, fully managed on AWS/GCP/Azure. Unlimited users, backups included. No credit card required",
+      "current_state": "Free Tier: For testing, and prototypes Single Node Cluster 0.5 vCPU / 1GB RAM/ 4 GB Disk.",
+      "source_url": "https://qdrant.tech/pricing/",
+      "category": "AI / ML",
       "refused_date": "2026-08-28"
     },
     {
@@ -550,6 +682,18 @@
       "current_state": "Free for hobby projects & enough to get your professional project up and running. 100 Free Requests / Month",
       "source_url": "https://vatcheckapi.com",
       "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Zapier",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The descriptions are functionally equivalent. Both state 100 tasks/month, unlimited Zaps limited to 2 steps.",
+      "summary": "The free tier now includes unlimited Zaps and Forms, but limits tasks to 100/month and 2-step Zaps. The stored information stated 2-step Zaps were the limit, but the current pricing page indicates multi-step Zaps are available on paid plans.",
+      "previous_state": "Workflow automation — 100 tasks/month, unlimited Zaps but limited to 2-step only (one trigger + one action), 2,500 table records, 10 form pages",
+      "current_state": "The free tier includes Zap workflows, Tables, and Forms with 100 tasks per month, unlimited Zap workflows, Tables, and Forms, and two-step Zap workflows.",
+      "source_url": "https://zapier.com/pricing",
+      "category": "Workflow Automation",
       "refused_date": "2026-08-28"
     }
   ]
