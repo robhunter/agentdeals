@@ -33,6 +33,32 @@ import {
 import { sourceCheckRecord, SOURCE_CHECK_OK, SOURCE_CHECK_OUTCOMES } from "./vendor-naming.js";
 import { isoDay } from "./change-log.js";
 import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
+import {
+  ATTEMPT_AI_ERROR,
+  ATTEMPT_CHANGED,
+  ATTEMPT_CONFIRMED,
+  ATTEMPT_FETCH_FAILED,
+  ATTEMPT_LINK_OK,
+  ATTEMPT_SOURCE_UNUSABLE,
+  ATTEMPT_UNCLEAR,
+  FAILURE_AI_EXTRACTION,
+  FAILURE_AI_UNDECIDED,
+  FAILURE_CATEGORIES,
+  FAILURE_SOURCE_UNUSABLE,
+  QUARANTINE_AFTER_FAILURES,
+  QUARANTINE_RETRY_DAYS,
+  backfillVerificationState,
+  classifyFetchError,
+  failureCategoryCounts,
+  isQuarantined,
+  pruneToOffers,
+  quarantineRetryDue,
+  quarantinedRecords,
+  readLinkHealth,
+  readVerificationState,
+  recordAttempts,
+  writeVerificationState,
+} from "./verification-state.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -41,28 +67,62 @@ const DEFAULT_LIMIT = 100;
 const URL_CONCURRENCY = 10;
 const AI_RATE_LIMIT_MS = 500;
 const STAGGER_WINDOW_DAYS = 3;
+const QUARANTINE_RETRY_SHARE = 0.2;
 
-export function lastAttemptedDate(offer, refusedOn = null) {
+export function lastAttemptedDate(offer, refusedOn = null, verificationRecord = null) {
   const check = offer?.source_check;
   const held = check && check.outcome !== SOURCE_CHECK_OK ? check.checked : null;
-  const dates = [offer?.verifiedDate, held, refusedOn].filter(Boolean);
+  const dates = [offer?.verifiedDate, held, refusedOn, verificationRecord?.last_attempt_at].filter(Boolean);
   return dates.length > 0 ? dates.sort().pop() : null;
+}
+
+export function quarantineRetryBudget(limit) {
+  return Math.max(1, Math.round(limit * QUARANTINE_RETRY_SHARE));
 }
 
 export function pickOldestEntries(offers, limit, now = new Date(), options = {}) {
   const holds = options.refusalHolds ?? new Map();
+  const state = options.verificationState ?? new Map();
+  const today = isoDay(now);
   const entries = offers.map((offer, index) => {
-    const attempted = lastAttemptedDate(offer, holds.get(offerKey(offer?.vendor, offer?.url)));
+    const key = offerKey(offer?.vendor, offer?.url);
+    const record = state.get(key) ?? null;
+    const attempted = lastAttemptedDate(offer, holds.get(key), record);
     const ts = attempted ? new Date(attempted).getTime() : 0; // never looked sorts oldest
-    return { index, offer, ts };
+    return { index, offer, record, ts };
   });
-  entries.sort((a, b) => a.ts - b.ts);
-  const picked = entries.slice(0, limit).map(({ index, offer }) => ({ index, offer }));
-  const remaining = entries.slice(limit);
+  const byAge = (a, b) => a.ts - b.ts;
+  const active = entries.filter((entry) => !isQuarantined(entry.record)).sort(byAge);
+  const dueRetries = entries
+    .filter((entry) => isQuarantined(entry.record) && quarantineRetryDue(entry.record, today))
+    .sort(byAge);
+
+  const retries = dueRetries.slice(0, Math.min(dueRetries.length, quarantineRetryBudget(limit)));
+  const fromActive = active.slice(0, Math.max(0, limit - retries.length));
+  const spare = limit - retries.length - fromActive.length;
+  const extraRetries = spare > 0 ? dueRetries.slice(retries.length, retries.length + spare) : [];
+
+  const picked = [...retries, ...extraRetries, ...fromActive]
+    .sort(byAge)
+    .map(({ index, offer }) => ({ index, offer }));
+  const remaining = active.slice(fromActive.length);
   const oldestRemaining = remaining.length > 0
     ? (remaining[0].offer.verifiedDate || null)
     : null;
-  return { picked, oldestRemaining };
+  return {
+    picked,
+    oldestRemaining,
+    retriedFromQuarantine: retries.length + extraRetries.length,
+    quarantineDue: dueRetries.length,
+    quarantineHeld: entries.filter((entry) => isQuarantined(entry.record)).length,
+  };
+}
+
+export function repickedNextRun(picked, offers, limit, now, options = {}) {
+  const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+  const { picked: next } = pickOldestEntries(offers, limit, tomorrow, options);
+  const checked = new Set(picked.map(({ offer }) => offerKey(offer?.vendor, offer?.url)));
+  return next.filter(({ offer }) => checked.has(offerKey(offer?.vendor, offer?.url))).length;
 }
 
 export function staggeredDate(now, rand = Math.random) {
@@ -83,11 +143,21 @@ function applySourceCheck(offer, index, page, data, dryRun, now, counters) {
   if (check.outcome !== SOURCE_CHECK_OK) {
     console.log(`  ⊘ ${offer.vendor} — verifiedDate held at ${offer.verifiedDate}: ${check.detail} (${offer.url})`);
   }
-  return check.outcome === SOURCE_CHECK_OK;
+  return check;
 }
 
 function emptySourceCounters() {
   return new Map(SOURCE_CHECK_OUTCOMES.map((outcome) => [outcome, 0]));
+}
+
+function attemptRecorder() {
+  const attempts = [];
+  return {
+    attempts,
+    note(offer, outcome, detail = null, category = null) {
+      attempts.push({ vendor: offer?.vendor, url: offer?.url, outcome, detail, category });
+    },
+  };
 }
 
 export async function runUrlMode(picked, data, dryRun, now, options = {}) {
@@ -96,6 +166,7 @@ export async function runUrlMode(picked, data, dryRun, now, options = {}) {
   let verified = 0;
   let flagged = 0;
   const sourceChecks = emptySourceCounters();
+  const recorder = attemptRecorder();
   for (let i = 0; i < picked.length; i += URL_CONCURRENCY) {
     const batch = picked.slice(i, i + URL_CONCURRENCY);
     const results = await batchFn(batch);
@@ -103,18 +174,24 @@ export async function runUrlMode(picked, data, dryRun, now, options = {}) {
     for (const v of results.verified) {
       const offer = byIndex.get(v.index);
       const page = await fetchFn(offer.url);
-      if (!applySourceCheck(offer, v.index, page, data, dryRun, now, sourceChecks)) continue;
+      const check = applySourceCheck(offer, v.index, page, data, dryRun, now, sourceChecks);
+      if (check.outcome !== SOURCE_CHECK_OK) {
+        recorder.note(offer, ATTEMPT_SOURCE_UNUSABLE, check.detail, FAILURE_SOURCE_UNUSABLE);
+        continue;
+      }
       if (!dryRun) {
         data.offers[v.index].verifiedDate = staggeredDate(now);
       }
+      recorder.note(offer, ATTEMPT_LINK_OK);
       verified++;
     }
     for (const f of results.flagged) {
       console.log(`  ⚠ ${f.vendor} — ${f.error} (${f.url})`);
+      recorder.note(f, ATTEMPT_FETCH_FAILED, f.error, classifyFetchError(f.error));
       flagged++;
     }
   }
-  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], reclassified: [], overruled: [], sourceChecks };
+  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], reclassified: [], overruled: [], sourceChecks, attempts: recorder.attempts };
 }
 
 export async function runAiMode(picked, data, dryRun, now, options = {}) {
@@ -137,13 +214,16 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const pageTexts = new Map();
   const wholePages = new Set();
   const sourceChecks = emptySourceCounters();
+  const recorder = attemptRecorder();
 
   for (const entry of picked) {
     const { offer, index } = entry;
     const page = await fetchFn(offer.url);
-    const sourceOk = applySourceCheck(offer, index, page, data, dryRun, now, sourceChecks);
+    const check = applySourceCheck(offer, index, page, data, dryRun, now, sourceChecks);
+    const sourceOk = check.outcome === SOURCE_CHECK_OK;
     if (!page.ok) {
       console.log(`  ⚠ ${offer.vendor} — ${page.error} (${offer.url})`);
+      recorder.note(offer, ATTEMPT_FETCH_FAILED, page.error, classifyFetchError(page.error));
       flagged++;
       await sleep(rateLimitMs);
       continue;
@@ -153,9 +233,19 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
       result = await verifyFn(offer, page.text);
     } catch (err) {
       console.log(`  ⚠ ${offer.vendor} — AI error: ${err.message}`);
+      recorder.note(offer, ATTEMPT_AI_ERROR, err.message, FAILURE_AI_EXTRACTION);
       flagged++;
       await sleep(rateLimitMs);
       continue;
+    }
+    if (!sourceOk) {
+      recorder.note(offer, ATTEMPT_SOURCE_UNUSABLE, check.detail, FAILURE_SOURCE_UNUSABLE);
+    } else if (result.status === "confirmed") {
+      recorder.note(offer, ATTEMPT_CONFIRMED);
+    } else if (result.status === "changed") {
+      recorder.note(offer, ATTEMPT_CHANGED);
+    } else {
+      recorder.note(offer, ATTEMPT_UNCLEAR, result.summary ?? null, FAILURE_AI_UNDECIDED);
     }
     if (result.status === "confirmed") {
       if (!sourceOk) {
@@ -221,7 +311,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}`);
   }
 
-  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, reclassified, overruled, sourceChecks };
+  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, reclassified, overruled, sourceChecks, attempts: recorder.attempts };
 }
 
 export function repickWindowDays(total, batchSize) {
@@ -238,7 +328,22 @@ export function refusedVendorLines(rejected) {
   return [...byReason.entries()].map(([reason, vendors]) => `  refused as ${reason}: ${vendors.join(", ")}`);
 }
 
-export function summaryLines(result, { useAi, checked, oldestRemaining, total }) {
+export function quarantineLines(quarantine) {
+  if (!quarantine) return [];
+  const lines = [
+    `Retried from quarantine: ${quarantine.retried}`,
+    `Left quarantine (checked successfully): ${quarantine.left}`,
+    `Entered quarantine (${QUARANTINE_AFTER_FAILURES} consecutive failures): ${quarantine.entered}`,
+    `In quarantine, retried every ${QUARANTINE_RETRY_DAYS} days: ${quarantine.total}`,
+  ];
+  for (const category of FAILURE_CATEGORIES) {
+    const count = quarantine.byCategory?.get(category) ?? 0;
+    if (count > 0) lines.push(`  ${category}: ${count}`);
+  }
+  return lines;
+}
+
+export function summaryLines(result, { useAi, checked, oldestRemaining, total, quarantine, repicked }) {
   const lines = ["", "── Summary ──", `Checked: ${checked}`, `Verified (date bumped): ${result.verified}`];
   if (useAi) {
     lines.push(`Changed (PM review needed): ${result.changed}`);
@@ -269,6 +374,10 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total })
     lines.push(`Held back (source ${outcome}): ${sourceChecks.get(outcome) ?? 0}`);
   }
   lines.push(`Flagged (URL/AI failure): ${result.flagged}`);
+  for (const line of quarantineLines(quarantine)) lines.push(line);
+  if (repicked !== undefined) {
+    lines.push(`Checked again on the next run: ${repicked} of ${checked}`);
+  }
   lines.push(`Next in queue, last verified: ${oldestRemaining ?? "n/a"}`);
   lines.push(`Total entries: ${total}`);
   return lines;
@@ -300,19 +409,42 @@ async function main() {
   const offers = data.offers || [];
   const now = new Date();
   const holds = refusalHolds(readRefusals(), offers);
-  const { picked, oldestRemaining } = pickOldestEntries(offers, limit, now, {
-    refusalHolds: holds,
-  });
+  const state = pruneToOffers(readVerificationState(), offers);
+  const seeded = backfillVerificationState(state, offers, { linkHealth: readLinkHealth() });
+  if (seeded.length > 0) {
+    console.log(`Seeded verification state for ${seeded.length} offer(s) from their recorded source check.`);
+  }
+  if (args.includes("--seed-state")) {
+    const written = writeVerificationState(state, { dryRun, now });
+    const held = quarantinedRecords(state);
+    console.log(`${state.size} record(s) in ${written.path}, ${held.length} quarantined`);
+    for (const [category, count] of failureCategoryCounts(held)) {
+      if (count > 0) console.log(`  ${category}: ${count}`);
+    }
+    process.exit(0);
+  }
+
+  const selection = { refusalHolds: holds, verificationState: state };
+  const { picked, oldestRemaining, retriedFromQuarantine } = pickOldestEntries(offers, limit, now, selection);
 
   console.log(
     `Rolling re-verification — ${picked.length} oldest entries` +
+      (retriedFromQuarantine > 0 ? `, ${retriedFromQuarantine} retried from quarantine` : "") +
       (useAi ? ` (${VERIFIER_MODEL})` : " (URL-only)") +
       (dryRun ? " (dry-run)" : "")
   );
   console.log("");
 
   if (picked.length === 0) {
-    console.log("No entries to process.");
+    const held = quarantinedRecords(state);
+    console.log(
+      held.length > 0
+        ? `No entries to process. ${held.length} record(s) are in quarantine and none is due for retry yet.`
+        : "No entries to process."
+    );
+    for (const line of quarantineLines({ retried: 0, entered: 0, left: 0, total: held.length, byCategory: failureCategoryCounts(held) })) {
+      console.log(line);
+    }
     process.exit(0);
   }
 
@@ -327,7 +459,27 @@ async function main() {
     writeFileSync(INDEX_PATH, JSON.stringify(data, null, 2) + "\n");
   }
 
-  for (const line of summaryLines(result, { useAi, checked: picked.length, oldestRemaining, total: offers.length })) {
+  const { entered, left } = recordAttempts(state, result.attempts ?? [], now);
+  const written = writeVerificationState(state, { dryRun, now });
+  console.log(`  → ${result.attempts?.length ?? 0} attempt(s) written to ${written.path}`);
+  const held = quarantinedRecords(state);
+  const quarantine = {
+    retried: retriedFromQuarantine,
+    entered: entered.length,
+    left: left.length,
+    total: held.length,
+    byCategory: failureCategoryCounts(held),
+  };
+  const repicked = repickedNextRun(picked, offers, limit, now, selection);
+
+  for (const line of summaryLines(result, {
+    useAi,
+    checked: picked.length,
+    oldestRemaining,
+    total: offers.length,
+    quarantine,
+    repicked,
+  })) {
     console.log(line);
   }
 

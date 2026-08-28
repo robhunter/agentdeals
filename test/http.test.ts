@@ -2204,6 +2204,9 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Freshness by Category"), "Should have category breakdown");
     assert.ok(html.includes("/api/freshness"), "Should link to API endpoint");
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
+    assert.ok(html.includes("Records we cannot currently check"), "The stalest list should say which entries are stuck and why");
+    assert.ok(!/<td>(bot_block|source_unusable|ai_undecided|empty_page|http_error|network_error)<\/td>/.test(html), "A reader should not have to decode our own failure codes");
+    assert.ok(html.includes("it is not evidence that the vendor changed anything"), "A failure of ours must not read as a fact about the vendor");
   });
 
   it("GET /api/freshness returns freshness metrics", async () => {
@@ -2230,6 +2233,15 @@ describe("HTTP transport", () => {
     assert.ok(body.by_category.length > 0, "Should have at least one category");
     assert.ok(body.by_category[0].category, "Category should have name");
     assert.ok(typeof body.by_category[0].freshness_score === "number", "Category should have freshness score");
+    assert.ok(body.quarantine, "Should report which records the re-verifier has stopped checking daily");
+    assert.strictEqual(body.quarantine.entries.length, body.quarantine.count, "Every quarantined record should be listed, not a sample");
+    assert.ok(typeof body.quarantine.retry_after_days === "number", "Quarantine should say when a held record is retried");
+    for (const entry of body.quarantine.entries) {
+      assert.ok(entry.vendor && entry.url, "A quarantined entry should name the record it is about");
+      assert.ok(entry.failure_category, "A quarantined entry should say why it is held");
+      assert.ok(entry.consecutive_failures >= 3, "A record is only held after repeated failures");
+      assert.ok(entry.next_retry, "A held record should carry the date it is next due");
+    }
   });
 
   it("GET /api/offers includes days_since_verified", async () => {

@@ -509,6 +509,32 @@ export const openapiSpec = {
                           freshness_score: { type: "integer" }
                         }
                       }
+                    },
+                    quarantine: {
+                      type: "object",
+                      description: "Offers the re-verification job has stopped checking daily because three consecutive checks failed. They are retried on a backoff; the entry says what failed and when it is next due.",
+                      properties: {
+                        count: { type: "integer" },
+                        retry_after_days: { type: "integer" },
+                        by_reason: { type: "object", additionalProperties: { type: "integer" } },
+                        entries: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              vendor: { type: "string" },
+                              url: { type: "string", format: "uri" },
+                              consecutive_failures: { type: "integer" },
+                              failure_category: { type: "string", nullable: true },
+                              last_error: { type: "string", nullable: true },
+                              last_attempt_at: { type: "string", format: "date", nullable: true },
+                              last_success: { type: "string", format: "date", nullable: true },
+                              quarantined_since: { type: "string", format: "date", nullable: true },
+                              next_retry: { type: "string", format: "date", nullable: true }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
