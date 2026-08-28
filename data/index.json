@@ -1236,7 +1236,7 @@
         "backup",
         "free tier"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-28",
       "referral_program": {
         "available": true,
         "referrer_benefit": "1 free month per referral",
@@ -4637,7 +4637,7 @@
         "open source",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "Grafana Loki",
@@ -5126,7 +5126,7 @@
         "key-value",
         "free tier"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "Pinecone",
@@ -5447,7 +5447,7 @@
         "geocoding",
         "network"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-27"
     },
     {
       "vendor": "ipapi",
@@ -6274,7 +6274,7 @@
         "distribution",
         "codepush"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-28"
     },
     {
       "vendor": "Buddy",
@@ -6835,7 +6835,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-28"
     },
     {
       "vendor": "Canopy",
@@ -6988,7 +6988,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "CustomJS",
@@ -7108,7 +7108,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-28"
     },
     {
       "vendor": "Disease.sh",
@@ -12851,7 +12851,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-04"
+      "verifiedDate": "2026-08-28"
     },
     {
       "vendor": "Stellate",
@@ -13804,7 +13804,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-21"
+      "verifiedDate": "2026-08-26"
     },
     {
       "vendor": "isroot.in",
