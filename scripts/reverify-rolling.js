@@ -21,6 +21,7 @@ import { fileURLToPath } from "node:url";
 import { reverifyBatch } from "./reverify.js";
 import { fetchPageText, verifyOfferAgainstPage, createVerifierClient, VERIFIER_MODEL } from "./verify-freshness.js";
 import { buildChangeEntry, appendChangeEntries } from "./change-log.js";
+import { gateCandidates, confirmDescribesChange } from "./change-gate.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -73,7 +74,7 @@ export async function runUrlMode(picked, data, dryRun, now, batchFn = reverifyBa
       flagged++;
     }
   }
-  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [] };
+  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [] };
 }
 
 export async function runAiMode(picked, data, dryRun, now, options = {}) {
@@ -81,9 +82,11 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const appendFn = options.appendFn ?? appendChangeEntries;
   const rateLimitMs = options.rateLimitMs ?? AI_RATE_LIMIT_MS;
   let verifyFn = options.verifyFn;
+  let confirmFn = options.confirmFn ?? null;
   if (!verifyFn) {
     const client = createVerifierClient();
     verifyFn = (offer, pageText) => verifyOfferAgainstPage(client, offer, pageText);
+    if (!confirmFn) confirmFn = (entry) => confirmDescribesChange(client, entry);
   }
 
   let verified = 0;
@@ -134,7 +137,15 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     await sleep(rateLimitMs);
   }
 
-  const { appended, suppressed } = appendFn(changes, {
+  const { accepted, rejected, unchecked } = await gateCandidates(changes, { confirmFn });
+  for (const { candidate, reason, detail } of rejected) {
+    console.log(`  ✗ ${candidate.vendor} (${candidate.change_type}) describes no change [${reason}]: ${detail}`);
+  }
+  for (const { candidate, error } of unchecked) {
+    console.log(`  ? ${candidate.vendor} (${candidate.change_type}) recorded without a second opinion: ${error}`);
+  }
+
+  const { appended, suppressed } = appendFn(accepted, {
     dryRun,
     windowDays: options.windowDays,
     path: options.changesPath,
@@ -143,7 +154,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}`);
   }
 
-  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified };
+  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked };
 }
 
 export function repickWindowDays(total, batchSize) {
@@ -155,6 +166,8 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total })
   const lines = ["", "── Summary ──", `Checked: ${checked}`, `Verified (date bumped): ${result.verified}`];
   if (useAi) {
     lines.push(`Changed (PM review needed): ${result.changed}`);
+    lines.push(`Rejected (no change described): ${(result.rejected ?? []).length}`);
+    lines.push(`Recorded without a second opinion: ${(result.unchecked ?? []).length}`);
     lines.push(`Recorded to data/deal_changes.json: ${result.recorded.length}`);
     lines.push(`Already recorded, not written again: ${result.suppressed.length}`);
     lines.push(`Detected but not recordable: ${result.unclassified.length}`);
