@@ -769,7 +769,7 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -2513,7 +2513,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-26",
       "expires_date": "2027-01-31",
       "source_check": {
         "checked": "2026-08-28",
@@ -3824,8 +3824,8 @@
       "expires_date": "2026-05-31",
       "source_check": {
         "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -4224,8 +4224,8 @@
       "verifiedDate": "2026-04-19",
       "source_check": {
         "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -6301,8 +6301,8 @@
       },
       "source_check": {
         "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -7019,7 +7019,7 @@
         "web-capture",
         "images"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -7629,8 +7629,8 @@
       "verifiedDate": "2026-07-07",
       "source_check": {
         "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "outcome": "states_no_terms",
+        "detail": "the page names CrateDB but states no amount, tier or rate we can read"
       }
     },
     {
@@ -7809,7 +7809,7 @@
         "status-page",
         "slack"
       ],
-      "verifiedDate": "2026-07-08",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -7874,7 +7874,7 @@
         "alerts",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -8794,7 +8794,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -8922,7 +8922,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-07",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9194,7 +9194,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9402,7 +9402,7 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9521,7 +9521,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-08",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9538,7 +9538,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-08",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9589,7 +9589,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-07",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9606,7 +9606,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9926,7 +9926,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10207,7 +10207,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10224,7 +10224,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10275,7 +10275,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-08",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10369,7 +10369,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-08",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10556,7 +10556,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -13286,7 +13286,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-07",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -14857,7 +14857,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-07",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -17174,7 +17174,7 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -18793,7 +18793,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -18844,7 +18844,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -23595,7 +23595,7 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
