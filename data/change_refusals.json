@@ -49,6 +49,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "APIVerve",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (120 api, 50 api)",
+      "summary": "The free tier now offers 100 free calls per month instead of 50 API Tokens.",
+      "previous_state": "Get instant access to over 120+ APIs for free, built with quality, consistency, and reliability in mind. The free plan covers up to 50 API Tokens per month. (Possibly taken down, 2025-06-25)",
+      "current_state": "Sign up free — 100 credits a month, no card required.",
+      "source_url": "https://apiverve.com",
+      "category": "API Development",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "AppFit",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -73,6 +85,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Baseten",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (30 currency, 0 currency)",
+      "summary": "The $30 free credit offer is no longer explicitly mentioned. The page states new accounts come with credits, but doesn't specify an amount.",
+      "previous_state": "ML model deployment platform — $30 in free credits for new accounts. Basic plan is $0/month with pay-as-you-go billing after credits. Per-minute GPU/CPU billing for custom deployments, per-token for Model APIs",
+      "current_state": "New Baseten accounts come with credits to experiment with deployments for free.",
+      "source_url": "https://www.baseten.co/pricing/",
+      "category": "AI / ML",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "BuddyNS",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -82,6 +106,18 @@
       "current_state": "Free, incl. commercial use. Gets individuals continuity and security, swiftly. Free and fully unattended. feature-tooltip-traffic 0.3 Mqr",
       "source_url": "https://www.buddyns.com/services/",
       "category": "DNS & Domain Management",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Calendly",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 calendar)",
+      "summary": "The free plan is still offered, but the description is significantly expanded. The current page highlights features like Callie (AI assistant), Notetaker, and Payments, which were not mentioned in the original description. The free plan now appears to be a fully featured product with add-ons available, rather than a limited version as previously described.",
+      "previous_state": "Calendly is the tool for connecting and scheduling meetings. The free plan provides 1 Calendar connection per user and Unlimited sessions. Desktop and Mobile apps are also offered.",
+      "current_state": "Calendly offers a free plan with features including scheduling, AI assistant (Callie), meeting recaps (Notetaker), and payment options. Users can connect calendars, set availability, and use mobile/browser apps.",
+      "source_url": "https://calendly.com",
+      "category": "Team Collaboration",
       "refused_date": "2026-08-28"
     },
     {
@@ -238,6 +274,30 @@
       "current_state": "The free plan covers 100 MTUs, no credit card required.",
       "source_url": "https://flows.sh/",
       "category": "Design",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "FormKeep.com",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The report simply restates information already present in the stored description.",
+      "summary": "The free tier now has a limit of 50 submissions per month, spam protection, a form designer, a branded thanks page, and daily notifications.",
+      "previous_state": "Unlimited forms with 50 monthly submissions, spam protection, email notification, and a drag-and-drop designer that can export HTML. Additional features include custom field rules, teams, and integrations to Google Sheets, Slack, ActiveCampaign, and Zapier.",
+      "current_state": "Free $0 / month Spam Protection 50 Submissions / month Form Designer Branded Thanks Page Daily Notifications 1 Month Retention Unlimited forms",
+      "source_url": "https://www.formkeep.com/",
+      "category": "Forms",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "GitDailies",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (3 alert)",
+      "summary": "The free tier now has limits of 50 PRs/month and 2 repos, instead of unlimited users, 3 repos, and 3 alert configs.",
+      "previous_state": "Daily reports of your team's Commit and Pull Request activity on GitHub. Includes Push visualizer, peer recognition system, and custom alert builder. The free tier has unlimited users, three repos, and 3 alert configs.",
+      "current_state": "Community $0 / month Free 50 PRs / month Unlimited users 2 repos 7 days history Daily digests PR metrics DORA · partial Shared alerts (2 rules)",
+      "source_url": "https://gitdailies.com",
+      "category": "Team Collaboration",
       "refused_date": "2026-08-28"
     },
     {
@@ -505,6 +565,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Projects",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report states 3 projects, but the current page doesn't mention any project limits. However, the stored description only claimed 2 projects, so the current page doesn't *add* functionality, it removes a stated limit. The job report is therefore inaccurate.",
+      "summary": "The free tier now allows for 3 users, 3 projects, and 10MB of storage.",
+      "previous_state": "Free for 3 users, 2 projects & 10 MB attachment limit. The same plan applies to [Bugtracker](https://zoho.com/bugtracker).",
+      "current_state": "Zoho Projects is a free project management platform that does not compromise on quality and functionality. With just the free version, you can break down your project activities, allocate resources, and schedule your work items using the Gantt chart.",
+      "source_url": "https://zoho.com/projects",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "pubnub.com",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 million)",
+      "summary": "The free tier now offers up to 200 Monthly Active Users (MAUs) instead of 1 million transactions.",
+      "previous_state": "Swift, Kotlin, and React messaging at 1 million transactions each month. Transactions may contain multiple messages.",
+      "current_state": "Always free for up to 200 MAUs. No Credit Card Required.",
+      "source_url": "https://www.pubnub.com/",
+      "category": "Messaging",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "Pulumi",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -694,6 +778,18 @@
       "current_state": "The free tier includes Zap workflows, Tables, and Forms with 100 tasks per month, unlimited Zap workflows, Tables, and Forms, and two-step Zap workflows.",
       "source_url": "https://zapier.com/pricing",
       "category": "Workflow Automation",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Zoho Survey",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (10 question, 100 respons)",
+      "summary": "The page does not explicitly state the limits of the free tier. It only mentions a free plan exists with 'essential features'.",
+      "previous_state": "Unlimited surveys with up to 10 questions and 100 responses per survey free",
+      "current_state": "Zoho Survey offers a free plan with essential features.",
+      "source_url": "https://zoho.com/surveys",
+      "category": "Forms",
       "refused_date": "2026-08-28"
     }
   ]

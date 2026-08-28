@@ -4110,7 +4110,7 @@
         "integrations",
         "free tier"
       ],
-      "verifiedDate": "2026-08-06",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -6446,7 +6446,7 @@
         "ingress",
         "developer-tools"
       ],
-      "verifiedDate": "2026-07-31",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -6640,7 +6640,7 @@
         "ecommerce",
         "subscriptions"
       ],
-      "verifiedDate": "2026-07-31",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -8777,7 +8777,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-01",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9245,7 +9245,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-02",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9381,7 +9381,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-01",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9623,7 +9623,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-31",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9708,7 +9708,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-01",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9827,7 +9827,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-02",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9977,7 +9977,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-02",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10292,7 +10292,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-02",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10488,7 +10488,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-03",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10777,7 +10777,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-04",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -11049,7 +11049,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-03",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -11185,7 +11185,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-06",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -11202,7 +11202,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-03",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -11579,8 +11579,8 @@
       "verifiedDate": "2026-08-02",
       "source_check": {
         "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -11807,7 +11807,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-04",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -11883,7 +11883,7 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-04",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -12274,7 +12274,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-06",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -13009,7 +13009,7 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-04",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -13871,7 +13871,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-04",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -13905,7 +13905,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-05",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -14077,7 +14077,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-05",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -14167,7 +14167,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-06",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -14221,7 +14221,7 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-05",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -14329,7 +14329,7 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-06",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -14454,7 +14454,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-06",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -28508,8 +28508,8 @@
       },
       "source_check": {
         "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "url"
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
