@@ -213,6 +213,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const unclassified = [];
   const pageTexts = new Map();
   const wholePages = new Set();
+  const finalUrls = new Map();
   const sourceChecks = emptySourceCounters();
   const recorder = attemptRecorder();
 
@@ -262,6 +263,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
       if (change) {
         changes.push(change);
         pageTexts.set(change, page.text);
+        if (page.finalUrl) finalUrls.set(change, page.finalUrl);
         if (!page.truncated) wholePages.add(change);
         console.log(`  ⚠ ${offer.vendor} (${offer.category}, ${change.change_type}): ${change.summary}`);
       } else {
@@ -277,11 +279,15 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     await sleep(rateLimitMs);
   }
 
-  const { accepted, rejected, unchecked, reclassified, overruled } = await gateCandidates(changes, {
+  const { accepted, rejected, unchecked, reclassified, rewritten, overruled } = await gateCandidates(changes, {
     confirmFn,
     pageTextFor: (candidate) => pageTexts.get(candidate),
     pageCompleteFor: (candidate) => wholePages.has(candidate),
+    finalUrlFor: (candidate) => finalUrls.get(candidate),
   });
+  for (const { candidate, was, now } of rewritten) {
+    console.log(`  ✎ ${candidate.vendor} summary rewritten to state the vendor's terms\n      was: ${was}\n      now: ${now}`);
+  }
   for (const { candidate, from, to, detail } of reclassified) {
     console.log(`  ↻ ${candidate.vendor} recorded as ${to} rather than ${from}: ${detail}`);
   }
@@ -311,7 +317,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}`);
   }
 
-  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, reclassified, overruled, sourceChecks, attempts: recorder.attempts };
+  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, reclassified, rewritten, overruled, sourceChecks, attempts: recorder.attempts };
 }
 
 export function repickWindowDays(total, batchSize) {

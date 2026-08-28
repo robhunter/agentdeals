@@ -1,0 +1,504 @@
+import { describe, it } from "node:test";
+import assert from "node:assert";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
+process.env.AGENTDEALS_REFUSALS_PATH = path.join(
+  mkdtempSync(path.join(tmpdir(), "refusals-summary-")),
+  "change_refusals.json"
+);
+
+const {
+  auditRecord,
+  applyAudit,
+  classifyClause,
+  clauseText,
+  describesChange,
+  isDomainRoot,
+  redirectedOffDomain,
+  reportsSomethingStillFree,
+  statesARemoval,
+  summaryClauses,
+  summaryEvidence,
+  summaryFromClauses,
+  CLAUSE_ABSENCE,
+  CLAUSE_BOOKKEEPING,
+  CLAUSE_HEDGE,
+  CLAUSE_NARRATION,
+  CLAUSE_RESTATEMENT,
+  CLAUSE_TERMS,
+  FREE_TIER_REMOVED,
+  OUTCOME_REFUSED,
+  OUTCOME_REWRITTEN,
+  OUTCOME_UNCHANGED,
+  REJECT_FREE_TIER_STILL_OFFERED,
+  REJECT_NO_REMOVAL_EVIDENCE,
+  REJECT_REMOVAL_READ_FROM_ROOT,
+  REJECT_STATES_NO_DIFFERENCE,
+  REJECT_STATES_NO_TERMS,
+} = await import("../scripts/change-gate.js");
+
+const { sweepRecords } = await import("../scripts/sweep-change-summaries.js");
+
+const THE_PAGE_DID_NOT_MENTION_IT = {
+  vendor: "Mergify",
+  change_type: "free_tier_removed",
+  summary:
+    "The pricing page does not explicitly mention a free tier for public GitHub repositories. It focuses on features and benefits without detailing specific pricing plans or free options. The page highlights features like Merge Queue, CI Insights, and Test Insights, and encourages users to 'Get started' or 'Talk to our team', suggesting a potential need for a paid plan.",
+  previous_state:
+    "workflow automation and merge queue for GitHub — Free for public GitHub repositories",
+  current_state:
+    "The pricing page does not mention a free tier. It highlights features and encourages users to contact the team or get started, implying a paid service.",
+  impact: "high",
+  source_url: "https://mergify.com",
+};
+
+const THE_SUMMARY_REPORTS_A_FREE_TIER_IT_CALLS_REMOVED = {
+  vendor: "Activepieces",
+  change_type: "free_tier_removed",
+  summary:
+    "The free tier information is no longer explicitly stated. The page highlights 'Start free' but does not specify any limits on tasks or usage. It mentions '0 per execution' for self-hosting, but this is different from the original free tier.",
+  previous_state: "Free up to 5,000 tasks per month",
+  current_state:
+    "The page promotes a 'Start free' option but does not detail any specific limits or features of a free tier.",
+  impact: "high",
+  source_url: "https://www.activepieces.com",
+};
+
+const A_REMOVAL_READ_FROM_A_HOMEPAGE = {
+  vendor: "Integrately",
+  change_type: "free_tier_removed",
+  summary:
+    "The page does not explicitly mention a free tier with 100 tasks and a 15-minute limit. It highlights a $5 premium plan for the first month, but doesn't detail the limitations of that free access.",
+  previous_state: "Automate tedious tasks with a single click. Free 100 Tasks, 15 Minute",
+  current_state: "The page promotes a $5 premium plan for the first month.",
+  impact: "high",
+  source_url: "https://integrately.com",
+};
+
+const A_REMOVAL_THAT_SAYS_WHAT_REPLACED_IT = {
+  vendor: "Segment",
+  change_type: "free_tier_removed",
+  summary:
+    "The Startup Program with $50,000 in credits is no longer listed. Instead, Segment offers a $120/month discount to non-profits.",
+  previous_state: "$50,000 in credits toward monthly Team plan for up to 2 years.",
+  current_state:
+    "Segment offers a $120 per month discount on the monthly Team plan to non-profits, which typically covers 10,000 MTUs per month.",
+  impact: "high",
+  source_url: "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
+};
+
+const A_REMOVAL_WHOSE_PRODUCT_MOVED_TO_ANOTHER_COMPANY = {
+  vendor: "Highlight.io",
+  change_type: "free_tier_removed",
+  summary:
+    "The page does not mention a free tier with the previously stated limits (500 sessions, 1K errors, 1M logs, 25M traces/month). It only mentions 'Free trial' and focuses on paid features.",
+  previous_state: "500 sessions, 1K errors, 1M logs, 25M traces/month",
+  current_state: "The page promotes a free trial and then paid plans.",
+  impact: "high",
+  source_url: "https://www.highlight.io/pricing",
+};
+
+const A_REAL_REDUCTION_WEARING_OUR_SUBJECT = {
+  vendor: "Basecamp",
+  change_type: "limits_reduced",
+  summary:
+    "The free tier now allows only 1 project and a maximum of 5 users, whereas the stored information stated 3 projects and 20 users.",
+  previous_state: "Up to 3 projects, 20 users, and 1GB of storage space.",
+  current_state: "Free plan includes 1 project, 1 GB of storage space, and a maximum of 5 users.",
+  impact: "high",
+  source_url: "https://basecamp.com/personal",
+};
+
+const ONE_WORD_OF_DIFFERENCE_ON_THE_SAME_FIGURE = {
+  vendor: "LaunchDarkly",
+  change_type: "limits_reduced",
+  summary:
+    "The Developer tier exists, but the limits have changed. The stored information states 1K client MAU, while the current pricing page states 1K client-side MAU. The stored information states 5K session replays/month, while the current pricing page states 5K session replays /mo.",
+  previous_state: "unlimited seats and flags, 1K client MAU, 5K session replays/month",
+  current_state: "Developer: $0 / mo, forever. 1K client-side MAU /mo, 5K session replays /mo.",
+  impact: "medium",
+  source_url: "https://launchdarkly.com/pricing/",
+};
+
+const THE_SUMMARY_STATES_AGREEMENT = {
+  vendor: "Paddle",
+  change_type: "restriction",
+  summary:
+    "The pricing is 5% + $0.50 per transaction, which matches the stored information. However, the page mentions custom pricing for products under $10 and for invoicing, suggesting the standard pricing may not apply in those cases.",
+  previous_state: "Merchant of record — no monthly fee, 5% + $0.50 per transaction.",
+  current_state:
+    "5% + 50¢ per Checkout transaction. Custom pricing is available for products under $10 or if invoicing is required.",
+  impact: "medium",
+  source_url: "https://www.paddle.com/pricing",
+};
+
+const A_FALSE_ABSENCE_BESIDE_TWO_REAL_MOVES = {
+  vendor: "Infisical",
+  change_type: "limits_reduced",
+  summary:
+    "The free tier now offers unlimited projects instead of 3. The number of secret syncs is now 10 instead of 100+. The number of third-party integrations is not specified in the free tier, but was previously 10.",
+  previous_state: "5 identities, 3 projects, 3 environments, 10 integrations",
+  current_state:
+    "Free tier includes 5 identities, unlimited projects, 10 secret syncs, and an unspecified number of third-party integrations.",
+  impact: "medium",
+  source_url: "https://infisical.com/pricing",
+};
+
+const A_DEPRECATION_THAT_NAMES_NO_FIGURE = {
+  vendor: "AWS",
+  change_type: "product_deprecated",
+  summary:
+    "AWS App Mesh end of support. Service mesh for ECS/EKS being fully retired. All configurations, virtual nodes, and routes will stop functioning.",
+  previous_state: "Service mesh for ECS and EKS.",
+  current_state: "AWS App Mesh reaches end of support.",
+  impact: "medium",
+  source_url: "https://docs.aws.amazon.com/app-mesh/",
+};
+
+describe("a change record must state a term the vendor's page carries now", () => {
+  describe("a summary is read one clause at a time", () => {
+    it("breaks a summary at its sentences and at its contrasting connectives", () => {
+      assert.deepStrictEqual(
+        summaryClauses("Free tier is now 5 GB, down from 10. The paid plan is unchanged.").map(clauseText),
+        ["Free tier is now 5 GB, down from 10.", "The paid plan is unchanged."]
+      );
+    });
+
+    it("splits the clause that compares the page against what we hold", () => {
+      const clauses = summaryClauses(A_REAL_REDUCTION_WEARING_OUR_SUBJECT.summary);
+      assert.strictEqual(clauses.length, 2);
+      assert.match(clauses[1], /whereas the stored information/);
+    });
+
+    it("splits a bookkeeping comparison the writer joined with 'compared to'", () => {
+      const clauses = summaryClauses(
+        "The free tier now has reduced API call limits (1/sec, 500/day) compared to the stored information (60/minute)."
+      );
+      assert.strictEqual(clauses.length, 2);
+      assert.match(clauses[0], /1\/sec, 500\/day/);
+    });
+
+    it("names each clause for what it is about", () => {
+      assert.strictEqual(
+        classifyClause("The page does not explicitly mention a free tier."),
+        CLAUSE_ABSENCE
+      );
+      assert.strictEqual(
+        classifyClause("whereas the stored information stated 3 projects"),
+        CLAUSE_BOOKKEEPING
+      );
+      assert.strictEqual(classifyClause("which equates to 200 requests/day"), CLAUSE_HEDGE);
+      assert.strictEqual(
+        classifyClause("The page highlights features and encourages users to get started"),
+        CLAUSE_NARRATION
+      );
+      assert.strictEqual(
+        classifyClause("The free tier now allows only 1 project"),
+        CLAUSE_TERMS
+      );
+    });
+
+    it("keeps a clause about the page that carries a figure the reader can use", () => {
+      assert.strictEqual(
+        classifyClause("The page now highlights a starting plan at €19/month"),
+        CLAUSE_TERMS
+      );
+    });
+
+    it("rebuilds a summary from the clauses that survive", () => {
+      assert.strictEqual(
+        summaryFromClauses(summaryEvidence(A_REAL_REDUCTION_WEARING_OUR_SUBJECT.summary).kept),
+        "The free tier now allows only 1 project and a maximum of 5 users."
+      );
+    });
+  });
+
+  describe("the page failed to mention it", () => {
+    it("refuses a record whose every clause reports the reading", () => {
+      const verdict = auditRecord(THE_PAGE_DID_NOT_MENTION_IT);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_STATES_NO_TERMS);
+    });
+
+    it("refuses the same record at the gate", () => {
+      const verdict = describesChange(THE_PAGE_DID_NOT_MENTION_IT);
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_STATES_NO_TERMS);
+    });
+
+    it("keeps a record that names a term with no figure in it at all", () => {
+      assert.strictEqual(auditRecord(A_DEPRECATION_THAT_NAMES_NO_FIGURE).outcome, OUTCOME_UNCHANGED);
+    });
+  });
+
+  describe("a free tier is not removed by a page that fails to mention it", () => {
+    it("reads a domain root as a URL with nothing on it but a homepage", () => {
+      assert.strictEqual(isDomainRoot("https://integrately.com"), true);
+      assert.strictEqual(isDomainRoot("https://integrately.com/pricing"), false);
+    });
+
+    it("refuses a removal read from a homepage that states no price in its place", () => {
+      const verdict = auditRecord(A_REMOVAL_READ_FROM_A_HOMEPAGE);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_REMOVAL_READ_FROM_ROOT);
+    });
+
+    it("refuses a removal on a pricing page whose only evidence is the silence", () => {
+      const onAPricingPage = {
+        ...A_REMOVAL_READ_FROM_A_HOMEPAGE,
+        source_url: "https://integrately.com/pricing",
+      };
+      const verdict = auditRecord(onAPricingPage);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_NO_REMOVAL_EVIDENCE);
+    });
+
+    it("refuses a removal whose own summary reports the page still offering one", () => {
+      const verdict = auditRecord(THE_SUMMARY_REPORTS_A_FREE_TIER_IT_CALLS_REMOVED);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_FREE_TIER_STILL_OFFERED);
+    });
+
+    it("does not read a free trial as a free tier still on offer", () => {
+      assert.strictEqual(reportsSomethingStillFree("The page now highlights a 14-day free trial"), false);
+      assert.strictEqual(reportsSomethingStillFree("The page highlights 'Start free'"), true);
+    });
+
+    it("reads the call to action for a trial as the trial and not as a free tier", () => {
+      assert.strictEqual(
+        reportsSomethingStillFree("The only call to action is 'Start free trial'"),
+        false,
+        "the words start and free either side of trial were read as an offer of a free tier"
+      );
+      assert.strictEqual(reportsSomethingStillFree("The only call to action is 'Start free'"), true);
+    });
+
+    it("keeps a removal that states what stands where the free tier was", () => {
+      assert.strictEqual(statesARemoval(A_REMOVAL_THAT_SAYS_WHAT_REPLACED_IT.summary), true);
+      assert.strictEqual(auditRecord(A_REMOVAL_THAT_SAYS_WHAT_REPLACED_IT).outcome, OUTCOME_UNCHANGED);
+    });
+
+    it("refuses a removal whose only price sat in a clause the rewrite drops", () => {
+      const theEvidenceIsHedged = {
+        vendor: "DatoCMS",
+        change_type: FREE_TIER_REMOVED,
+        summary:
+          "The free tier is no longer explicitly mentioned. The page states that agency partners get a 30% discount starting from €39/month, implying a paid model. It also mentions 5M API calls and 2TB traffic monthly, which suggests limits beyond a basic free tier.",
+        previous_state: "Offers free tier for small projects. On the lower tier, 100k/month calls.",
+        current_state: "Agency partners get a 30% discount starting from €39/month.",
+        impact: "high",
+        source_url: "https://www.datocms.com/",
+      };
+      const verdict = auditRecord(theEvidenceIsHedged);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(
+        verdict.reason,
+        REJECT_REMOVAL_READ_FROM_ROOT,
+        "the price that made this a removal was dropped as a hedge and the record was published without it"
+      );
+    });
+
+    it("keeps a removal read from a homepage that states a price in its place", () => {
+      const priced = {
+        ...A_REMOVAL_READ_FROM_A_HOMEPAGE,
+        summary:
+          "The free tier is no longer explicitly mentioned. The page now lists paid plans starting at $4.99/mo.",
+      };
+      assert.notStrictEqual(auditRecord(priced).outcome, OUTCOME_REFUSED);
+    });
+  });
+
+  describe("a product that moved to another company", () => {
+    it("reads a redirect onto a different registrable domain", () => {
+      assert.strictEqual(
+        redirectedOffDomain("https://www.highlight.io/pricing", "https://launchdarkly.com/"),
+        true
+      );
+      assert.strictEqual(
+        redirectedOffDomain("https://highlight.io/pricing", "https://www.highlight.io/plans"),
+        false
+      );
+    });
+
+    it("refuses a removal whose only evidence is silence when nothing redirected", () => {
+      const verdict = auditRecord(A_REMOVAL_WHOSE_PRODUCT_MOVED_TO_ANOTHER_COMPANY);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+    });
+
+    it("keeps the same removal when the page it read belongs to somebody else now", () => {
+      const verdict = auditRecord(A_REMOVAL_WHOSE_PRODUCT_MOVED_TO_ANOTHER_COMPANY, {
+        finalUrl: "https://launchdarkly.com/",
+      });
+      assert.notStrictEqual(verdict.outcome, OUTCOME_REFUSED);
+    });
+  });
+
+  describe("a summary states the vendor's terms, not our record", () => {
+    it("keeps the true clause of a real change wearing the wrong subject", () => {
+      const verdict = auditRecord(A_REAL_REDUCTION_WEARING_OUR_SUBJECT);
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.strictEqual(
+        verdict.summary,
+        "The free tier now allows only 1 project and a maximum of 5 users."
+      );
+    });
+
+    it("drops a false absence standing beside two real moves", () => {
+      const verdict = auditRecord(A_FALSE_ABSENCE_BESIDE_TWO_REAL_MOVES);
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.strictEqual(
+        verdict.summary,
+        "The free tier now offers unlimited projects instead of 3. The number of secret syncs is now 10 instead of 100+."
+      );
+    });
+
+    it("carries the rewrite onto the record", () => {
+      const verdict = auditRecord(A_REAL_REDUCTION_WEARING_OUR_SUBJECT);
+      const rewritten = applyAudit(A_REAL_REDUCTION_WEARING_OUR_SUBJECT, verdict);
+      assert.strictEqual(rewritten.summary, verdict.summary);
+      assert.strictEqual(rewritten.vendor, "Basecamp");
+      assert.strictEqual(
+        A_REAL_REDUCTION_WEARING_OUR_SUBJECT.summary.includes("stored information"),
+        true,
+        "the record the rewrite was built from was altered in place"
+      );
+    });
+
+    it("opens the rewritten sentence at the clause rather than at the connective it hung on", () => {
+      const theTrueClauseTrails = {
+        ...A_REAL_REDUCTION_WEARING_OUR_SUBJECT,
+        summary:
+          "The stored information stated 3 projects and 20 users, but the free tier now allows only 1 project.",
+      };
+      const verdict = auditRecord(theTrueClauseTrails);
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.strictEqual(verdict.summary, "The free tier now allows only 1 project.");
+    });
+
+    it("leaves a summary that already states the vendor's terms alone", () => {
+      const verdict = auditRecord(A_REMOVAL_THAT_SAYS_WHAT_REPLACED_IT);
+      assert.strictEqual(verdict.outcome, OUTCOME_UNCHANGED);
+      assert.strictEqual(verdict.summary, null);
+    });
+  });
+
+  describe("one word of difference on the same figure", () => {
+    it("drops the page half of a comparison against our record that restates its figure", () => {
+      const evidence = summaryEvidence(ONE_WORD_OF_DIFFERENCE_ON_THE_SAME_FIGURE.summary);
+      const restated = evidence.dropped.filter(({ kind }) => kind === CLAUSE_RESTATEMENT);
+      assert.strictEqual(restated.length, 2);
+      assert.match(restated[0].clause, /1K client-side MAU/);
+    });
+
+    it("refuses the record once every figure it carried was a restatement", () => {
+      const verdict = auditRecord(ONE_WORD_OF_DIFFERENCE_ON_THE_SAME_FIGURE);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_STATES_NO_DIFFERENCE);
+    });
+
+    it("keeps the page half when it states a figure our record did not", () => {
+      const evidence = summaryEvidence(
+        "The stored information states 1K client MAU, while the current pricing page states 2K client MAU."
+      );
+      assert.strictEqual(evidence.kept.length, 1);
+      assert.match(evidence.kept[0], /2K client MAU/);
+    });
+  });
+
+  describe("the summary asserts agreement", () => {
+    it("refuses a record that states the page agrees and names nothing new", () => {
+      const verdict = auditRecord(THE_SUMMARY_STATES_AGREEMENT);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_STATES_NO_DIFFERENCE);
+    });
+
+    it("reads agreement stated without naming our record at all", () => {
+      const saysTheTierStillExists = {
+        vendor: "Cal.com",
+        change_type: "limits_increased",
+        summary:
+          "The free tier still exists. The current pricing page details many features included in the free tier.",
+        previous_state: "Open-source scheduling — 1 user",
+        current_state: "Individuals Free. 1 user. Unlimited event types & calendars.",
+        impact: "medium",
+        source_url: "https://cal.com/pricing",
+      };
+      const verdict = auditRecord(saysTheTierStillExists);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_STATES_NO_DIFFERENCE);
+    });
+
+    it("keeps an agreeing record whose surviving clauses lift a cap off a limit", () => {
+      const nowUnlimited = {
+        vendor: "Notion",
+        change_type: "limits_increased",
+        summary:
+          "The free tier still exists. The free tier now includes unlimited file uploads, whereas it was previously limited to 5MB.",
+        previous_state: "Free plan — 5MB file uploads, 10 guest collaborators",
+        current_state: "Free plan includes unlimited file uploads and unlimited guests.",
+        impact: "high",
+        source_url: "https://www.notion.com/pricing",
+      };
+      assert.strictEqual(auditRecord(nowUnlimited).outcome, OUTCOME_REWRITTEN);
+      assert.strictEqual(
+        auditRecord(nowUnlimited).summary,
+        "The free tier still exists. The free tier now includes unlimited file uploads."
+      );
+    });
+
+    it("keeps a record that agrees on one figure and names another the record never held", () => {
+      const alsoNamesANewFigure = {
+        ...THE_SUMMARY_STATES_AGREEMENT,
+        summary:
+          "The pricing is 5% + $0.50 per transaction, which matches the stored information. The payout fee is now $2.50 per withdrawal.",
+      };
+      assert.notStrictEqual(auditRecord(alsoNamesANewFigure).outcome, OUTCOME_REFUSED);
+    });
+  });
+
+  describe("the records already written are swept the same way", () => {
+    it("moves a refused record out of the log and leaves a rewritten one in it", () => {
+      const { kept, refused, rewritten } = sweepRecords([
+        THE_PAGE_DID_NOT_MENTION_IT,
+        A_REAL_REDUCTION_WEARING_OUR_SUBJECT,
+        A_REMOVAL_THAT_SAYS_WHAT_REPLACED_IT,
+      ]);
+      assert.deepStrictEqual(
+        kept.map((record) => record.vendor),
+        ["Basecamp", "Segment"]
+      );
+      assert.deepStrictEqual(
+        refused.map(({ candidate }) => candidate.vendor),
+        ["Mergify"]
+      );
+      assert.strictEqual(refused[0].reason, REJECT_STATES_NO_TERMS);
+      assert.strictEqual(rewritten.length, 1);
+      assert.strictEqual(
+        kept[0].summary,
+        "The free tier now allows only 1 project and a maximum of 5 users."
+      );
+    });
+
+    it("has nothing left to do on a second pass over what it kept", () => {
+      const once = sweepRecords([
+        THE_PAGE_DID_NOT_MENTION_IT,
+        A_REAL_REDUCTION_WEARING_OUR_SUBJECT,
+        A_FALSE_ABSENCE_BESIDE_TWO_REAL_MOVES,
+        ONE_WORD_OF_DIFFERENCE_ON_THE_SAME_FIGURE,
+        A_REMOVAL_THAT_SAYS_WHAT_REPLACED_IT,
+        A_DEPRECATION_THAT_NAMES_NO_FIGURE,
+      ]);
+      const twice = sweepRecords(once.kept);
+      assert.strictEqual(twice.refused.length, 0, "a summary the sweep wrote was refused by the sweep");
+      assert.strictEqual(twice.rewritten.length, 0, "a summary the sweep wrote was rewritten again");
+    });
+
+    it("leaves the records it was given unaltered", () => {
+      const before = JSON.stringify(A_REAL_REDUCTION_WEARING_OUR_SUBJECT);
+      sweepRecords([A_REAL_REDUCTION_WEARING_OUR_SUBJECT]);
+      assert.strictEqual(JSON.stringify(A_REAL_REDUCTION_WEARING_OUR_SUBJECT), before);
+    });
+  });
+});
