@@ -8891,8 +8891,8 @@
       "verifiedDate": "2026-07-05",
       "source_check": {
         "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "outcome": "states_no_terms",
+        "detail": "the page names Country-State-City Microservice API but states no amount, tier or rate we can read"
       }
     },
     {
@@ -9725,7 +9725,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-11",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10096,7 +10096,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-09",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -10139,7 +10139,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-09",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -11559,7 +11559,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-09",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -13703,7 +13703,7 @@
         "identity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-11",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -15145,7 +15145,7 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-10",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
