@@ -118,11 +118,27 @@ describe("enrichOffers", () => {
     assert.strictEqual(uncaused.length, 0, `${uncaused.length} offers carry a warning with no cause`);
   });
 
-  it("withholds a level only where the link is confirmed unreachable, never for any other reason", async () => {
+  it("withholds a level only against a recorded reason, never for any other", async () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const { sourceDoesNotNameVendor } = await import("../dist/source-check.js");
     const withheld = enrichOffers(loadOffers()).filter((o: { risk_level: string | null }) => o.risk_level === null);
-    const unexplained = withheld.filter((o: { link_unreachable: unknown }) => !o.link_unreachable);
+    const unexplained = withheld.filter(
+      (o: { link_unreachable: unknown }) => !o.link_unreachable && !sourceDoesNotNameVendor(o as never)
+    );
     assert.strictEqual(unexplained.length, 0, `${unexplained.length} offers publish no level and no reason for withholding it`);
+  });
+
+  it("carries a dated reason on every withheld level", async () => {
+    const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const enriched = enrichOffers(loadOffers());
+    const withheld = enriched.filter((o: { risk_level: string | null }) => o.risk_level === null);
+    assert.ok(withheld.length > 0);
+    for (const offer of withheld) {
+      const reason = (offer as never as { link_unreachable: { checked: string } | null; source_check?: { checked: string } })
+        .link_unreachable ?? (offer as never as { source_check?: { checked: string } }).source_check;
+      assert.ok(reason, `${offer.vendor} withholds a level with nothing a reader can look at`);
+      assert.match(reason.checked, /^\d{4}-\d{2}-\d{2}$/);
+    }
   });
 
   it("preserves original offer fields in enriched result", async () => {

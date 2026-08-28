@@ -1,6 +1,9 @@
+import { pageNamesVendor } from "./vendor-naming.js";
+
 export const REJECT_NULL_COMPARISON = "null_comparison";
 export const REJECT_STATES_NO_DIFFERENCE = "states_no_difference";
 export const REJECT_NO_PRICE_SIGNAL = "no_price_signal";
+export const REJECT_PAGE_NOT_ABOUT_VENDOR = "page_does_not_name_vendor";
 export const REJECT_UNQUANTIFIED_LIMIT = "unquantified_limit";
 export const REJECT_CONFIRMED_UNCHANGED = "confirmed_unchanged";
 
@@ -8,6 +11,7 @@ export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
   REJECT_STATES_NO_DIFFERENCE,
   REJECT_NO_PRICE_SIGNAL,
+  REJECT_PAGE_NOT_ABOUT_VENDOR,
   REJECT_UNQUANTIFIED_LIMIT,
   REJECT_CONFIRMED_UNCHANGED,
 ];
@@ -163,6 +167,14 @@ export function describesChange(entry, context = {}) {
 
   const pageText = context.pageText;
   if (typeof pageText === "string") {
+    const naming = pageNamesVendor(pageText, entry?.vendor, { url: entry?.source_url });
+    if (!naming.named) {
+      return {
+        ok: false,
+        reason: REJECT_PAGE_NOT_ABOUT_VENDOR,
+        detail: `the page read never names ${entry?.vendor} and is not served from its domain, so any terms on it belong to somebody else`,
+      };
+    }
     const signals = priceSignals(pageText);
     if (signals.length < MIN_PRICE_SIGNALS) {
       return {

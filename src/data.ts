@@ -5,6 +5,7 @@ import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, Ch
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
+import { cannotVouchForLevel, sourceDoesNotNameVendor } from "./source-check.js";
 import { filterAlternatives } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause } from "./change-dates.js";
 
@@ -369,7 +370,10 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
     // warning without the dated fact behind it.
     const assessment = vendorRiskAssessment(vendorAllChangesList.get(key) ?? []);
     const link_unreachable = unreachableNoticeForUrl(offer.url, now.getTime());
-    const risk_level = link_unreachable && assessment.level === "stable" ? null : assessment.level;
+    const risk_level =
+      cannotVouchForLevel(offer, link_unreachable) && assessment.level === "stable"
+        ? null
+        : assessment.level;
     const risk_cause = assessment.cause
       ? { date: assessment.cause.date, date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
       : null;
@@ -756,7 +760,7 @@ export function checkVendorRisk(
       const a = vendorRiskAssessment(allChanges.filter((c) => c.vendor.toLowerCase() === e.offer.vendor.toLowerCase()));
       const unreachable = unreachableNoticeForUrl(e.offer.url);
       return {
-        risk_level: unreachable && a.level === "stable" ? null : a.level,
+        risk_level: cannotVouchForLevel(e.offer, unreachable) && a.level === "stable" ? null : a.level,
         risk_cause: a.cause ? { date: a.cause.date, date_source: a.cause.date_source, change_type: a.cause.change_type, summary: a.cause.summary } : null,
         link_unreachable: unreachable,
       };
@@ -778,6 +782,8 @@ export function checkVendorRisk(
     summary = `${offer.vendor} warrants caution — ${changeDateClause(cause)}: ${cause.summary} Monitor for further changes.${unreachableClause}`;
   } else if (linkUnreachable) {
     summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}.${unreachableClause} Treat that as a statement about our records, not as a stable pricing history.`;
+  } else if (sourceDoesNotNameVendor(offer)) {
+    summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}. The page we cite for it does not name it, so nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
     summary = `${offer.vendor} has a stable pricing history with no free tier removal, limit reduction or pricing restructure on record. Free tier verified for ${longevityDays} days.`;
   }
@@ -786,7 +792,7 @@ export function checkVendorRisk(
     result: {
       vendor: offer.vendor,
       category: offer.category,
-      risk_level: linkUnreachable && riskLevel === "stable" ? null : riskLevel,
+      risk_level: cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable" ? null : riskLevel,
       risk_cause: cause ? { date: cause.date, date_source: cause.date_source, change_type: cause.change_type, summary: cause.summary } : null,
       link_unreachable: linkUnreachable,
       free_tier_longevity_days: longevityDays,

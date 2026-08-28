@@ -25,9 +25,13 @@ import {
   gateCandidates,
   confirmDescribesChange,
   rejectionCounts,
+  priceSignals,
   REJECT_NO_PRICE_SIGNAL,
+  REJECT_PAGE_NOT_ABOUT_VENDOR,
   REJECT_UNQUANTIFIED_LIMIT,
 } from "./change-gate.js";
+import { sourceCheckRecord, SOURCE_CHECK_OK, SOURCE_CHECK_OUTCOMES } from "./vendor-naming.js";
+import { isoDay } from "./change-log.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -37,11 +41,17 @@ const URL_CONCURRENCY = 10;
 const AI_RATE_LIMIT_MS = 500;
 const STAGGER_WINDOW_DAYS = 3;
 
+export function lastAttemptedDate(offer) {
+  const check = offer?.source_check;
+  const held = check && check.outcome !== SOURCE_CHECK_OK ? check.checked : null;
+  const dates = [offer?.verifiedDate, held].filter(Boolean);
+  return dates.length > 0 ? dates.sort().pop() : null;
+}
+
 export function pickOldestEntries(offers, limit, now = new Date()) {
   const entries = offers.map((offer, index) => {
-    const ts = offer.verifiedDate
-      ? new Date(offer.verifiedDate).getTime()
-      : 0; // missing date sorts oldest
+    const attempted = lastAttemptedDate(offer);
+    const ts = attempted ? new Date(attempted).getTime() : 0; // never looked sorts oldest
     return { index, offer, ts };
   });
   entries.sort((a, b) => a.ts - b.ts);
@@ -63,13 +73,35 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-export async function runUrlMode(picked, data, dryRun, now, batchFn = reverifyBatch) {
+function applySourceCheck(offer, index, page, data, dryRun, now, counters) {
+  const signals = page?.ok ? priceSignals(page.text).length : 0;
+  const check = sourceCheckRecord(offer, page, signals, isoDay(now));
+  counters.set(check.outcome, (counters.get(check.outcome) ?? 0) + 1);
+  if (!dryRun) data.offers[index].source_check = check;
+  if (check.outcome !== SOURCE_CHECK_OK) {
+    console.log(`  ⊘ ${offer.vendor} — verifiedDate held at ${offer.verifiedDate}: ${check.detail} (${offer.url})`);
+  }
+  return check.outcome === SOURCE_CHECK_OK;
+}
+
+function emptySourceCounters() {
+  return new Map(SOURCE_CHECK_OUTCOMES.map((outcome) => [outcome, 0]));
+}
+
+export async function runUrlMode(picked, data, dryRun, now, options = {}) {
+  const batchFn = options.batchFn ?? reverifyBatch;
+  const fetchFn = options.fetchFn ?? fetchPageText;
   let verified = 0;
   let flagged = 0;
+  const sourceChecks = emptySourceCounters();
   for (let i = 0; i < picked.length; i += URL_CONCURRENCY) {
     const batch = picked.slice(i, i + URL_CONCURRENCY);
     const results = await batchFn(batch);
+    const byIndex = new Map(batch.map((entry) => [entry.index, entry.offer]));
     for (const v of results.verified) {
+      const offer = byIndex.get(v.index);
+      const page = await fetchFn(offer.url);
+      if (!applySourceCheck(offer, v.index, page, data, dryRun, now, sourceChecks)) continue;
       if (!dryRun) {
         data.offers[v.index].verifiedDate = staggeredDate(now);
       }
@@ -80,7 +112,7 @@ export async function runUrlMode(picked, data, dryRun, now, batchFn = reverifyBa
       flagged++;
     }
   }
-  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [] };
+  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], sourceChecks };
 }
 
 export async function runAiMode(picked, data, dryRun, now, options = {}) {
@@ -101,10 +133,12 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const changes = [];
   const unclassified = [];
   const pageTexts = new Map();
+  const sourceChecks = emptySourceCounters();
 
   for (const entry of picked) {
     const { offer, index } = entry;
     const page = await fetchFn(offer.url);
+    const sourceOk = applySourceCheck(offer, index, page, data, dryRun, now, sourceChecks);
     if (!page.ok) {
       console.log(`  ⚠ ${offer.vendor} — ${page.error} (${offer.url})`);
       flagged++;
@@ -121,6 +155,10 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
       continue;
     }
     if (result.status === "confirmed") {
+      if (!sourceOk) {
+        await sleep(rateLimitMs);
+        continue;
+      }
       if (!dryRun) {
         data.offers[index].verifiedDate = staggeredDate(now);
       }
@@ -165,7 +203,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}`);
   }
 
-  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked };
+  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, sourceChecks };
 }
 
 export function repickWindowDays(total, batchSize) {
@@ -180,6 +218,7 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total })
     const refusals = rejectionCounts(result.rejected ?? []);
     lines.push(`Rejected (no change described): ${(result.rejected ?? []).length}`);
     lines.push(`  of which the page carried no pricing: ${refusals.get(REJECT_NO_PRICE_SIGNAL) ?? 0}`);
+    lines.push(`Rejected (page does not name the vendor): ${refusals.get(REJECT_PAGE_NOT_ABOUT_VENDOR) ?? 0}`);
     lines.push(`  of which claimed a limit quantified on one side only: ${refusals.get(REJECT_UNQUANTIFIED_LIMIT) ?? 0}`);
     lines.push(`Recorded without a second opinion: ${(result.unchecked ?? []).length}`);
     lines.push(`Recorded to data/deal_changes.json: ${result.recorded.length}`);
@@ -188,8 +227,13 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total })
   } else {
     lines.push("Change detection: not run. URL mode compares nothing and cannot report a change.");
   }
+  const sourceChecks = result.sourceChecks ?? new Map();
+  for (const outcome of SOURCE_CHECK_OUTCOMES) {
+    if (outcome === SOURCE_CHECK_OK) continue;
+    lines.push(`Held back (source ${outcome}): ${sourceChecks.get(outcome) ?? 0}`);
+  }
   lines.push(`Flagged (URL/AI failure): ${result.flagged}`);
-  lines.push(`Oldest remaining verifiedDate: ${oldestRemaining ?? "n/a"}`);
+  lines.push(`Next in queue, last verified: ${oldestRemaining ?? "n/a"}`);
   lines.push(`Total entries: ${total}`);
   return lines;
 }
@@ -239,7 +283,8 @@ async function main() {
       })
     : await runUrlMode(picked, data, dryRun, now);
 
-  if (!dryRun && result.verified > 0) {
+  const sourceChecksWritten = [...(result.sourceChecks ?? new Map()).values()].reduce((a, b) => a + b, 0);
+  if (!dryRun && (result.verified > 0 || sourceChecksWritten > 0)) {
     writeFileSync(INDEX_PATH, JSON.stringify(data, null, 2) + "\n");
   }
 
