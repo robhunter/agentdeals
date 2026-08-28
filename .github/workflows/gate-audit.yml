@@ -1,0 +1,54 @@
+name: Change gate audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      on_date:
+        description: "Only audit records recorded on this date (YYYY-MM-DD); blank for all"
+        required: false
+        default: ""
+      confirm:
+        description: "Ask the second-opinion pass as well as the first layer"
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gate-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Report what the gate would do
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          set -o pipefail
+          ARGS=""
+          if [ -n "${{ github.event.inputs.on_date }}" ]; then
+            ARGS="$ARGS --on ${{ github.event.inputs.on_date }}"
+          fi
+          if [ "${{ github.event.inputs.confirm }}" = "true" ]; then
+            ARGS="$ARGS --confirm"
+          fi
+          node scripts/gate-report.js $ARGS | tee /tmp/gate-report.txt
+          {
+            echo '```'
+            cat /tmp/gate-report.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

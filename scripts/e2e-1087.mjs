@@ -15,9 +15,14 @@ const server = createServer((req, res) => {
   req.on("data", (c) => (body += c));
   req.on("end", () => {
     if (req.url === "/api/v1/chat/completions") {
-      requests.push({ headers: req.headers, body: JSON.parse(body) });
-      const mentionsShrunkTier = requests.length === 1;
-      const answer = mentionsShrunkTier
+      const parsed = JSON.parse(body);
+      requests.push({ headers: req.headers, body: parsed });
+      const prompt = parsed.messages[0].content;
+      const isSecondOpinion = prompt.includes("THE JOB'S REPORT:");
+      const mentionsShrunkTier = requests.filter((r) => !r.body.messages[0].content.includes("THE JOB'S REPORT:")).length === 1;
+      const answer = isSecondOpinion
+        ? '{"change":"yes"}'
+        : mentionsShrunkTier
         ? '```json\n{"status":"changed","summary":"Free tier cut from 10 GB to 5 GB","change_type":"limits_reduced","current_state":"Free plan includes 5 GB storage","impact":"medium"}\n```'
         : '{"status":"confirmed"}';
       res.writeHead(200, { "Content-Type": "application/json" });

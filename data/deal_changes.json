@@ -4616,21 +4616,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Abby",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now has 1 A/B test instead of 1, and the pricing is now explicitly stated as $12/month per project for the Starter tier (previously just 'scale at a fair price').",
-      "previous_state": "Open-Source feature flags & A/B testing. Configuration as Code & Fully Typed Typescript SDKs. Strong integration with Frameworks such as Next.js & React. Free plan: 1,000 events/month, 3 feature flags/remote configs, 1 A/B test, 5 environments.",
-      "current_state": "Free: 1,000 Events / month, 1 A/B Test, 3 Feature Flags / Remote Configs, 5 Environments. Starter: 1,000 Events / month, 1 A/B Test, 3 Feature Flags / Remote Configs, 5 Environments $12 /mo per Project",
-      "impact": "medium",
-      "source_url": "https://www.tryabby.com",
-      "category": "Feature Flags",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "AppFit",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
@@ -4686,21 +4671,6 @@
       "impact": "high",
       "source_url": "https://www.algolia.com/pricing",
       "category": "Search",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "Cloudflare DNS",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The page confirms a free plan exists, but states a records-per-zone cap of 200 for zones created on or after 2024-09-01, while zones created before that date retain the legacy 1,000-record cap. This matches the stored deal info. However, the page also promotes add-ons that are paid, and the free plan is described as a foundational offering with the option to upgrade.",
-      "previous_state": "Free authoritative DNS hosting — unlimited zones and queries, DDoS protection, free SSL/TLS. Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
-      "current_state": "The free plan offers foundational security and performance. Records-per-zone is capped at 200 for zones created on or after 2024-09-01, and 1,000 for zones created before that date.",
-      "impact": "medium",
-      "source_url": "https://www.cloudflare.com/plans/free/",
-      "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"
