@@ -301,7 +301,7 @@
     {
       "vendor": "Deno Deploy",
       "category": "Cloud Hosting",
-      "description": "Edge runtime — 1M requests/month, 100 GB egress, 1 GiB KV storage, 450K KV reads/month, 15 hours CPU time/month",
+      "description": "Edge runtime — 1M requests/month, 20 GiB egress, 10 hr active CPU/month, 150 GiB-hr memory time, 1 GiB KV storage, 1M KV read units/month, 500K KV write units/month",
       "tier": "Free",
       "url": "https://deno.com/deploy/pricing",
       "tags": [
@@ -314,7 +314,7 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-28",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -7130,7 +7130,7 @@
     {
       "vendor": "Weaviate",
       "category": "Databases",
-      "description": "Open-source vector database — self-hosted: free forever with full features (hybrid search, multi-tenancy, compression). Cloud: 14-day free sandbox with full access. Paid cloud from $45/mo (Flex)",
+      "description": "Open-source vector database — self-hosted free. Cloud: permanent free tier with 1 cluster, 100,000 objects, 1 GB memory, 10 GB disk, 1 collection, up to 3 tenants, 2,000 embedding requests/day and 1,000 Query Agent requests/month. Paid cloud from $45/mo (Flex)",
       "tier": "Open Source",
       "url": "https://weaviate.io/pricing",
       "tags": [
@@ -7140,7 +7140,7 @@
         "embeddings",
         "open-source"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",

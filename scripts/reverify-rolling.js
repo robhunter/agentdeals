@@ -32,6 +32,7 @@ import {
 } from "./change-gate.js";
 import { sourceCheckRecord, SOURCE_CHECK_OK, SOURCE_CHECK_OUTCOMES } from "./vendor-naming.js";
 import { isoDay } from "./change-log.js";
+import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -41,16 +42,17 @@ const URL_CONCURRENCY = 10;
 const AI_RATE_LIMIT_MS = 500;
 const STAGGER_WINDOW_DAYS = 3;
 
-export function lastAttemptedDate(offer) {
+export function lastAttemptedDate(offer, refusedOn = null) {
   const check = offer?.source_check;
   const held = check && check.outcome !== SOURCE_CHECK_OK ? check.checked : null;
-  const dates = [offer?.verifiedDate, held].filter(Boolean);
+  const dates = [offer?.verifiedDate, held, refusedOn].filter(Boolean);
   return dates.length > 0 ? dates.sort().pop() : null;
 }
 
-export function pickOldestEntries(offers, limit, now = new Date()) {
+export function pickOldestEntries(offers, limit, now = new Date(), options = {}) {
+  const holds = options.refusalHolds ?? new Map();
   const entries = offers.map((offer, index) => {
-    const attempted = lastAttemptedDate(offer);
+    const attempted = lastAttemptedDate(offer, holds.get(offerKey(offer?.vendor, offer?.url)));
     const ts = attempted ? new Date(attempted).getTime() : 0; // never looked sorts oldest
     return { index, offer, ts };
   });
@@ -112,7 +114,7 @@ export async function runUrlMode(picked, data, dryRun, now, options = {}) {
       flagged++;
     }
   }
-  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], sourceChecks };
+  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], reclassified: [], overruled: [], sourceChecks };
 }
 
 export async function runAiMode(picked, data, dryRun, now, options = {}) {
@@ -133,6 +135,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const changes = [];
   const unclassified = [];
   const pageTexts = new Map();
+  const wholePages = new Set();
   const sourceChecks = emptySourceCounters();
 
   for (const entry of picked) {
@@ -169,6 +172,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
       if (change) {
         changes.push(change);
         pageTexts.set(change, page.text);
+        if (!page.truncated) wholePages.add(change);
         console.log(`  ⚠ ${offer.vendor} (${offer.category}, ${change.change_type}): ${change.summary}`);
       } else {
         unclassified.push({ vendor: offer.vendor, url: offer.url, missing, summary: result.summary });
@@ -183,16 +187,30 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     await sleep(rateLimitMs);
   }
 
-  const { accepted, rejected, unchecked } = await gateCandidates(changes, {
+  const { accepted, rejected, unchecked, reclassified, overruled } = await gateCandidates(changes, {
     confirmFn,
     pageTextFor: (candidate) => pageTexts.get(candidate),
+    pageCompleteFor: (candidate) => wholePages.has(candidate),
   });
+  for (const { candidate, from, to, detail } of reclassified) {
+    console.log(`  ↻ ${candidate.vendor} recorded as ${to} rather than ${from}: ${detail}`);
+  }
+  for (const { candidate, opinion, detail } of overruled) {
+    console.log(`  ↑ ${candidate.vendor} (${candidate.change_type}) kept over a second opinion — ${detail}. The second opinion said: ${opinion}`);
+  }
   for (const { candidate, reason, detail } of rejected) {
     console.log(`  ✗ ${candidate.vendor} (${candidate.change_type}) describes no change [${reason}]: ${detail}`);
   }
   for (const { candidate, error } of unchecked) {
     console.log(`  ? ${candidate.vendor} (${candidate.change_type}) recorded without a second opinion: ${error}`);
   }
+
+  const refusals = (options.recordRefusalsFn ?? recordRefusals)(rejected, {
+    dryRun,
+    now,
+    path: options.refusalsPath,
+  });
+  console.log(`  → ${refusals.written.length} refusal(s) written to ${refusals.path}`);
 
   const { appended, suppressed } = appendFn(accepted, {
     dryRun,
@@ -203,12 +221,21 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}`);
   }
 
-  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, sourceChecks };
+  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, reclassified, overruled, sourceChecks };
 }
 
 export function repickWindowDays(total, batchSize) {
   if (!batchSize || batchSize < 1) return 1;
   return Math.max(1, Math.ceil(total / batchSize));
+}
+
+export function refusedVendorLines(rejected) {
+  const byReason = new Map();
+  for (const { candidate, reason } of rejected) {
+    if (!byReason.has(reason)) byReason.set(reason, []);
+    byReason.get(reason).push(candidate?.vendor ?? "(unnamed)");
+  }
+  return [...byReason.entries()].map(([reason, vendors]) => `  refused as ${reason}: ${vendors.join(", ")}`);
 }
 
 export function summaryLines(result, { useAi, checked, oldestRemaining, total }) {
@@ -220,6 +247,15 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total })
     lines.push(`  of which the page carried no pricing: ${refusals.get(REJECT_NO_PRICE_SIGNAL) ?? 0}`);
     lines.push(`Rejected (page does not name the vendor): ${refusals.get(REJECT_PAGE_NOT_ABOUT_VENDOR) ?? 0}`);
     lines.push(`  of which claimed a limit quantified on one side only: ${refusals.get(REJECT_UNQUANTIFIED_LIMIT) ?? 0}`);
+    for (const line of refusedVendorLines(result.rejected ?? [])) lines.push(line);
+    lines.push(`Recorded as a restructure rather than dropped: ${(result.reclassified ?? []).length}`);
+    for (const { candidate, from, to } of result.reclassified ?? []) {
+      lines.push(`  ${candidate.vendor}: ${from} → ${to}`);
+    }
+    lines.push(`Kept over a second opinion that measurement contradicts: ${(result.overruled ?? []).length}`);
+    for (const { candidate, difference } of result.overruled ?? []) {
+      lines.push(`  ${candidate.vendor}: ${difference.attribute} ${difference.previous} → ${difference.current}`);
+    }
     lines.push(`Recorded without a second opinion: ${(result.unchecked ?? []).length}`);
     lines.push(`Recorded to data/deal_changes.json: ${result.recorded.length}`);
     lines.push(`Already recorded, not written again: ${result.suppressed.length}`);
@@ -263,7 +299,10 @@ async function main() {
 
   const offers = data.offers || [];
   const now = new Date();
-  const { picked, oldestRemaining } = pickOldestEntries(offers, limit, now);
+  const holds = refusalHolds(readRefusals(), offers);
+  const { picked, oldestRemaining } = pickOldestEntries(offers, limit, now, {
+    refusalHolds: holds,
+  });
 
   console.log(
     `Rolling re-verification — ${picked.length} oldest entries` +

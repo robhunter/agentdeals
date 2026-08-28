@@ -179,8 +179,8 @@ m_gate_never_reads_the_page() {
 p = "scripts/change-gate.js"
 s = open(p).read()
 s = s.replace(
-  "    const verdict = describesChange(candidate, { pageText: pageTextFor(candidate) });",
-  "    const verdict = describesChange(candidate);")
+  "    const verdict = describesChange(original, {\n      pageText: pageTextFor(original),\n      pageComplete: pageCompleteFor(original),\n    });",
+  "    const verdict = describesChange(original);")
 open(p, "w").write(s)
 PY
 }

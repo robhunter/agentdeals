@@ -149,9 +149,12 @@ m_second_opinion_asked_before_the_first_layer() {
   python3 - <<'PY'
 p = "scripts/change-gate.js"
 s = open(p).read()
+before = s
 s = s.replace(
-  "    const verdict = describesChange(candidate, { pageText: pageTextFor(candidate) });\n    if (!verdict.ok) {\n      rejected.push({ candidate, reason: verdict.reason, detail: verdict.detail });\n      continue;\n    }\n    if (!confirmFn) {",
-  "    const verdict = describesChange(candidate, { pageText: pageTextFor(candidate) });\n    if (!confirmFn) {")
+  "    if (!verdict.ok) {\n      rejected.push({ candidate: original, reason: verdict.reason, detail: verdict.detail });\n      continue;\n    }\n    let candidate = original;",
+  "    let candidate = original;")
+if s == before:
+    raise SystemExit("the first layer's refusal block moved; retarget this mutation")
 s = s.replace(
   "    if (confirmation.verdict === \"no\") {",
   "    if (!verdict.ok) {\n      rejected.push({ candidate, reason: verdict.reason, detail: verdict.detail });\n      continue;\n    }\n    if (confirmation.verdict === \"no\") {")

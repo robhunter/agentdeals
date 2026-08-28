@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdtempSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
@@ -8,7 +8,13 @@ import {
   DOCZILLA_LANDING_PAGE,
   FREEIPAPI_LANDING_PAGE,
   JOINSECRET_OFFERS_PAGE,
+  WEAVIATE_PRICING_PAGE,
 } from "./vendor-page-fixture.ts";
+
+process.env.AGENTDEALS_REFUSALS_PATH = path.join(
+  mkdtempSync(path.join(tmpdir(), "refusals-gate-")),
+  "change_refusals.json"
+);
 
 const {
   describesChange,
@@ -18,9 +24,14 @@ const {
   quantities,
   priceSignals,
   quantifiedAttributes,
+  storedDimensionsAbsentFromPage,
+  measuredDifferences,
+  normalizedMagnitude,
   rejectionCounts,
   parseConfirmation,
   changeConfirmationPrompt,
+  BYTE_UNITS,
+  RECLASSIFIED_AS_RESTRUCTURE,
   MIN_PRICE_SIGNALS,
   REJECT_NULL_COMPARISON,
   REJECT_STATES_NO_DIFFERENCE,
@@ -31,6 +42,8 @@ const {
 } = await import("../scripts/change-gate.js");
 
 const { runAiMode, summaryLines } = await import("../scripts/reverify-rolling.js");
+const { fetchPageText, MAX_PAGE_TEXT_LENGTH } = await import("../scripts/verify-freshness.js");
+const { CHANGE_TYPES } = await import("../scripts/change-log.js");
 
 const NOW = new Date("2026-08-28T09:00:00Z");
 
@@ -211,6 +224,18 @@ const A_TRIAL_REPLACED_BY_A_CAPPED_FREE_PLAN = {
     "Open-source vector database — self-hosted: free forever with full features (hybrid search, multi-tenancy, compression). Cloud: 14-day free sandbox with full access. Paid cloud from $45/mo (Flex)",
   current_state:
     "Always free: $0 /mo. 1 cluster per user, upgrade to paid anytime. 100,000 objects, 1 GB memory, 10 GB disk, 1 collection, up to 3 tenants, 2,000 req/day Embeddings + Query Agent (1,000 req/mo).",
+  impact: "medium",
+};
+
+const A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE = {
+  vendor: "Weaviate",
+  change_type: "limits_reduced",
+  summary:
+    "The free tier now has specific limits: 100,000 objects, 1 GB memory, 10 GB disk, 1 collection, up to 3 tenants, 2,000 embeddings requests/day, and 1,000 Query Agent requests/month. The previous stored information stated 'free forever with full features' for self-hosted and a 14-day free sandbox for cloud. The cloud free tier is now 'Always free' with the above limits.",
+  previous_state:
+    "Open-source vector database — self-hosted: free forever with full features (hybrid search, multi-tenancy, compression). Cloud: 14-day free sandbox with full access. Paid cloud from $45/mo (Flex)",
+  current_state:
+    "The free tier now has specific limits: 100,000 objects, 1 GB memory, 10 GB disk, 1 collection, up to 3 tenants, 2,000 embeddings requests/day, and 1,000 Query Agent requests/month.",
   impact: "medium",
 };
 
@@ -438,6 +463,202 @@ describe("a recorded change must describe a change", () => {
       });
       assert.strictEqual(verdict.ok, true, `refused as ${verdict.reason}`);
     });
+
+    it("refuses the trial-replaced record when nothing but the two states is supplied", () => {
+      const verdict = describesChange(A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE);
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_UNQUANTIFIED_LIMIT);
+    });
+  });
+
+  describe("the whole page was read and the stored dimension is not on it", () => {
+    const WHOLE_PAGE = { pageText: WEAVIATE_PRICING_PAGE, pageComplete: true };
+
+    it("finds the word the stored figure measured missing from the page", () => {
+      const absent = storedDimensionsAbsentFromPage(
+        A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE,
+        WEAVIATE_PRICING_PAGE
+      );
+      assert.deepStrictEqual(
+        absent.map((a: any) => a.measured),
+        ["sandbox"]
+      );
+    });
+
+    it("does not call an amount missing from a page that states amounts", () => {
+      const absent = storedDimensionsAbsentFromPage(
+        A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE,
+        WEAVIATE_PRICING_PAGE
+      );
+      assert.ok(!absent.some((a: any) => a.measured === "currency"));
+    });
+
+    it("records the trial-replaced record as a restructure rather than dropping it", () => {
+      const verdict = describesChange(A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE, WHOLE_PAGE);
+      assert.strictEqual(verdict.ok, true, `refused as ${verdict.reason}`);
+      assert.strictEqual(verdict.reclassifyAs, RECLASSIFIED_AS_RESTRUCTURE);
+    });
+
+    it("keeps refusing when only part of the page was read", () => {
+      const verdict = describesChange(A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE, {
+        pageText: WEAVIATE_PRICING_PAGE,
+        pageComplete: false,
+      });
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_UNQUANTIFIED_LIMIT);
+    });
+
+    it("keeps refusing when the stored dimension is still on the page", () => {
+      const stillThere = {
+        ...A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE,
+        previous_state: "Cloud: 3 tenants per cluster. Paid cloud from $45/mo (Flex)",
+        current_state: "The free tier is described without naming how many of them are included.",
+      };
+      const verdict = describesChange(stillThere, WHOLE_PAGE);
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_UNQUANTIFIED_LIMIT);
+    });
+
+    it("carries the reclassification through the gate onto the accepted record", async () => {
+      const { accepted, rejected, reclassified } = await gateCandidates(
+        [A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE],
+        {
+          pageTextFor: () => WEAVIATE_PRICING_PAGE,
+          pageCompleteFor: () => true,
+        }
+      );
+      assert.strictEqual(rejected.length, 0);
+      assert.strictEqual(accepted[0].change_type, "pricing_restructured");
+      assert.strictEqual(reclassified[0].from, "limits_reduced");
+      assert.strictEqual(reclassified[0].to, "pricing_restructured");
+    });
+
+    it("reclassifies to a type that is not the one the record already had", () => {
+      assert.notStrictEqual(RECLASSIFIED_AS_RESTRUCTURE, "limits_reduced");
+      assert.notStrictEqual(RECLASSIFIED_AS_RESTRUCTURE, "limits_increased");
+      assert.ok(CHANGE_TYPES.includes(RECLASSIFIED_AS_RESTRUCTURE));
+    });
+
+    it("leaves the record it was built from unaltered", async () => {
+      const original = { ...A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE };
+      await gateCandidates([original], {
+        pageTextFor: () => WEAVIATE_PRICING_PAGE,
+        pageCompleteFor: () => true,
+      });
+      assert.strictEqual(original.change_type, "limits_reduced");
+    });
+  });
+
+  describe("the reader of the page says whether it read all of it", () => {
+    const html = (chars: number) => `<html><body><p>${"pricing detail ".repeat(chars)}</p></body></html>`;
+
+    async function readWith(body: string) {
+      const original = globalThis.fetch;
+      globalThis.fetch = (async () => new Response(body, { status: 200 })) as typeof fetch;
+      try {
+        return await fetchPageText("https://example.test/pricing");
+      } finally {
+        globalThis.fetch = original;
+      }
+    }
+
+    it("says a short page was read whole", async () => {
+      const page = await readWith(html(10));
+      assert.strictEqual(page.ok, true);
+      assert.strictEqual(page.truncated, false);
+    });
+
+    it("says a page longer than the fetch limit was cut", async () => {
+      const page = await readWith(html(2000));
+      assert.strictEqual(page.ok, true);
+      assert.strictEqual(page.truncated, true);
+      assert.strictEqual(page.text.length, MAX_PAGE_TEXT_LENGTH);
+    });
+  });
+
+  describe("a figure measured in binary units against one measured in decimal", () => {
+    it("reads the unit written against the figure", () => {
+      const [egress] = quantifiedAttributes("20GiB egress").filter((a: any) => a.unit);
+      assert.strictEqual(egress.unit, "gib");
+      assert.strictEqual(normalizedMagnitude(egress), 20 * 1024 ** 3);
+    });
+
+    it("scales each binary unit above its decimal namesake", () => {
+      for (const [binary, decimal] of [["kib", "kb"], ["mib", "mb"], ["gib", "gb"], ["tib", "tb"]]) {
+        const one = normalizedMagnitude({ value: "1", words: ["x"], unit: binary });
+        const other = normalizedMagnitude({ value: "1", words: ["x"], unit: decimal });
+        assert.ok(one > other, `${binary} did not exceed ${decimal}`);
+      }
+    });
+
+    it("reads 20 GiB as smaller than 100 GB and 200 GiB as larger", () => {
+      const twenty = normalizedMagnitude({ value: "20", words: ["x"], unit: "gib" });
+      const twoHundred = normalizedMagnitude({ value: "200", words: ["x"], unit: "gib" });
+      const hundred = normalizedMagnitude({ value: "100", words: ["x"], unit: "gb" });
+      assert.ok(twenty < hundred);
+      assert.ok(twoHundred > hundred);
+    });
+
+    it("reads 1 TiB as larger than 1,000 GB and 1 TB as exactly that", () => {
+      const tebibyte = normalizedMagnitude({ value: "1", words: ["x"], unit: "tib" });
+      const terabyte = normalizedMagnitude({ value: "1", words: ["x"], unit: "tb" });
+      const thousand = normalizedMagnitude({ value: "1,000", words: ["x"], unit: "gb" });
+      assert.ok(tebibyte > thousand);
+      assert.strictEqual(terabyte, thousand);
+    });
+
+    it("has no magnitude for a figure written without a size unit", () => {
+      assert.strictEqual(normalizedMagnitude({ value: "500", words: ["request"], unit: null }), null);
+    });
+
+    it("measures the egress the two states state in different units", () => {
+      const [difference, ...rest] = measuredDifferences(A_LIMIT_ACTUALLY_MOVED);
+      assert.strictEqual(rest.length, 0);
+      assert.strictEqual(difference.attribute, "egres");
+      assert.strictEqual(difference.direction, "decrease");
+      assert.strictEqual(difference.from, 100e9);
+      assert.strictEqual(difference.to, 20 * 1024 ** 3);
+    });
+
+    it("does not read the unit itself as the thing being measured", () => {
+      assert.ok(!measuredDifferences(A_LIMIT_ACTUALLY_MOVED).some((d: any) => BYTE_UNITS.has(d.attribute)));
+    });
+
+    it("measures no difference between two states that state the same size", () => {
+      assert.deepStrictEqual(
+        measuredDifferences({
+          previous_state: "1 GiB KV storage",
+          current_state: "1 GiB KV storage, plus new read units",
+        }),
+        []
+      );
+    });
+
+    it("measures nothing where only one state carries a size unit", () => {
+      assert.deepStrictEqual(measuredDifferences(A_RETENTION_WINDOW_SHRANK), []);
+    });
+
+    it("keeps a record whose figures the second opinion read backwards", async () => {
+      const { accepted, rejected, overruled } = await gateCandidates([A_LIMIT_ACTUALLY_MOVED], {
+        confirmFn: async () => ({
+          verdict: "no",
+          reason: "Egress increased from 100GB to 20GiB. It is actually an increase, not a decrease.",
+        }),
+      });
+      assert.strictEqual(rejected.length, 0);
+      assert.strictEqual(accepted.length, 1);
+      assert.strictEqual(overruled[0].difference.attribute, "egres");
+      assert.match(overruled[0].opinion, /increase/);
+    });
+
+    it("still refuses a record the second opinion calls unchanged and no figure contradicts", async () => {
+      const { accepted, rejected, overruled } = await gateCandidates([A_RETENTION_WINDOW_SHRANK], {
+        confirmFn: async () => ({ verdict: "no", reason: "the page restates the stored terms" }),
+      });
+      assert.strictEqual(accepted.length, 0);
+      assert.strictEqual(overruled.length, 0);
+      assert.strictEqual(rejected[0].reason, REJECT_CONFIRMED_UNCHANGED);
+    });
   });
 
   describe("the page it read is about a different company", () => {
@@ -557,7 +778,7 @@ describe("the second opinion on whether a report describes a change", () => {
   });
 
   it("refuses a record the second opinion calls unchanged", async () => {
-    const { accepted, rejected } = await gateCandidates([A_LIMIT_ACTUALLY_MOVED], {
+    const { accepted, rejected } = await gateCandidates([A_DAILY_CAP_WAS_HALVED], {
       confirmFn: async () => ({ verdict: "no", reason: "the page restates the stored terms" }),
     });
     assert.strictEqual(accepted.length, 0);
@@ -642,6 +863,107 @@ describe("the run does not write a change the gate refused", () => {
     rmSync(path.dirname(file), { recursive: true, force: true });
   });
 
+  it("writes the refusal where the next run and the next reader can find it", async () => {
+    const changes = tempLog([]);
+    const refusals = path.join(path.dirname(changes), "change_refusals.json");
+    const data = { offers: [{ ...offer }] };
+    await runAiMode(picked, data, false, NOW, {
+      fetchFn,
+      verifyFn: async () => detection,
+      rateLimitMs: 0,
+      changesPath: changes,
+      refusalsPath: refusals,
+    });
+    const [stored] = JSON.parse(readFileSync(refusals, "utf-8")).refusals;
+    assert.strictEqual(stored.vendor, "Abby");
+    assert.strictEqual(stored.reason, REJECT_NULL_COMPARISON);
+    assert.strictEqual(stored.source_url, "https://abby.example/pricing");
+    assert.strictEqual(stored.previous_state, SAME_TERMS_EITHER_SIDE.previous_state);
+    assert.strictEqual(stored.refused_date, "2026-08-28");
+    rmSync(path.dirname(changes), { recursive: true, force: true });
+  });
+
+  it("writes no refusal on a dry run", async () => {
+    const changes = tempLog([]);
+    const refusals = path.join(path.dirname(changes), "change_refusals.json");
+    const data = { offers: [{ ...offer }] };
+    await runAiMode(picked, data, true, NOW, {
+      fetchFn,
+      verifyFn: async () => detection,
+      rateLimitMs: 0,
+      changesPath: changes,
+      refusalsPath: refusals,
+    });
+    assert.strictEqual(existsSync(refusals), false);
+    rmSync(path.dirname(changes), { recursive: true, force: true });
+  });
+
+  it("names the refused vendor in the run summary", async () => {
+    const changes = tempLog([]);
+    const refusals = path.join(path.dirname(changes), "change_refusals.json");
+    const data = { offers: [{ ...offer }] };
+    const result = await runAiMode(picked, data, false, NOW, {
+      fetchFn,
+      verifyFn: async () => detection,
+      rateLimitMs: 0,
+      changesPath: changes,
+      refusalsPath: refusals,
+    });
+    const text = summaryLines(result, {
+      useAi: true,
+      checked: 1,
+      oldestRemaining: "2026-07-05",
+      total: 1580,
+    }).join("\n");
+    assert.match(text, new RegExp(`refused as ${REJECT_NULL_COMPARISON}: Abby`));
+    rmSync(path.dirname(changes), { recursive: true, force: true });
+  });
+
+  describe("the run tells the gate how much of the page it read", () => {
+    const weaviate = {
+      vendor: "Weaviate",
+      category: "Databases",
+      tier: "Free",
+      description: A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE.previous_state,
+      url: "https://weaviate.io/pricing",
+      verifiedDate: "2026-07-05",
+    };
+    const detection = {
+      status: "changed",
+      summary: A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE.summary,
+      change_type: A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE.change_type,
+      current_state: A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE.current_state,
+      impact: "medium",
+    };
+
+    async function runReading(truncated: boolean) {
+      const changes = tempLog([]);
+      const refusals = path.join(path.dirname(changes), "change_refusals.json");
+      const result = await runAiMode([{ index: 0, offer: weaviate }], { offers: [{ ...weaviate }] }, false, NOW, {
+        fetchFn: async () => ({ ok: true, text: WEAVIATE_PRICING_PAGE, truncated }),
+        verifyFn: async () => detection,
+        rateLimitMs: 0,
+        changesPath: changes,
+        refusalsPath: refusals,
+      });
+      rmSync(path.dirname(changes), { recursive: true, force: true });
+      return result;
+    }
+
+    it("records the restructure when it read the page in full", async () => {
+      const result = await runReading(false);
+      assert.strictEqual(result.rejected.length, 0, JSON.stringify(result.rejected));
+      assert.strictEqual(result.recorded.length, 1);
+      assert.strictEqual(result.recorded[0].change_type, "pricing_restructured");
+    });
+
+    it("refuses the same reading when the page was cut at the fetch limit", async () => {
+      const result = await runReading(true);
+      assert.strictEqual(result.recorded.length, 0);
+      assert.strictEqual(result.rejected[0].reason, REJECT_UNQUANTIFIED_LIMIT);
+    });
+  });
+
   it("still writes a change that describes one", async () => {
     const movedOffer = {
       ...offer,
@@ -724,7 +1046,19 @@ describe("the run does not write a change the gate refused", () => {
 
   it("counts the refusals in the run summary", () => {
     const lines = summaryLines(
-      { verified: 3, flagged: 1, changed: 4, recorded: [{}, {}], suppressed: [], unclassified: [], rejected: [{}, {}], unchecked: [{}] },
+      {
+        verified: 3,
+        flagged: 1,
+        changed: 4,
+        recorded: [{}, {}],
+        suppressed: [],
+        unclassified: [],
+        rejected: [
+          { candidate: A_DAILY_CAP_WAS_HALVED, reason: REJECT_CONFIRMED_UNCHANGED, detail: "" },
+          { candidate: SAME_TERMS_EITHER_SIDE, reason: REJECT_NULL_COMPARISON, detail: "" },
+        ],
+        unchecked: [{}],
+      },
       { useAi: true, checked: 8, oldestRemaining: "2026-01-01", total: 100 }
     );
     assert.ok(lines.includes("Rejected (no change described): 2"), lines.join("\n"));
