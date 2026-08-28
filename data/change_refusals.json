@@ -133,6 +133,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "file.io",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (2 storage)",
+      "summary": "The free tier now allows up to 4 GB of storage, an increase from the previously stated 2 GB.",
+      "previous_state": "2 GB storage of files. A file is auto-deleted after one download. REST API to interact with the storage. Rate limit one request/minute.",
+      "current_state": "File.io is free to use with no gotchas and no hidden fees. Users can upload files up to 4 GB.",
+      "source_url": "https://www.file.io",
+      "category": "Storage",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Flows",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (250 tracked)",
+      "summary": "The free tier now has a limit of 100 MTUs (monthly tracked users), down from 250.",
+      "previous_state": "A fully customizable product adoption platform for building onboarding and user engagement experiences. Free for up to 250 monthly tracked users.",
+      "current_state": "The free plan covers 100 MTUs, no credit card required.",
+      "source_url": "https://flows.sh/",
+      "category": "Design",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "GitHub",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -169,6 +193,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "image-charts.com",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "Stored description already indicated a watermark.",
+      "summary": "The free tier now includes a watermark.",
+      "previous_state": "Unlimited image chart generation with a watermark",
+      "current_state": "A small \"image-charts.com\" text watermark will appear at the top right hand corner.",
+      "source_url": "https://www.image-charts.com/",
+      "category": "Storage",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "IP Geolocation API by ipwho.org",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -181,6 +217,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "leapcell",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 service, 10 async, 100 redi)",
+      "summary": "The free tier now allows for deploying up to 20 projects, but the previous limits of 100k service invocations, 10k async tasks and 100k Redis commands are no longer mentioned.",
+      "previous_state": "Leapcell is a reliable distributed applications platform, providing everything you need to seamlessly support your rapid growth. The free plan includes 100k service invocations, 10k async tasks and 100k Redis commands.",
+      "current_state": "Leapcell lets you deploy up to 20 projects for free.",
+      "source_url": "https://leapcell.io/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "LocalOps",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -190,6 +238,18 @@
       "current_state": "The free tier provides 12 vCPU and 24 GB of resources.",
       "source_url": "https://localops.co/",
       "category": "CI/CD",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "mailsac.com",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,500 api)",
+      "summary": "The free tier appears to be limited to public email addresses (@mailsac.com) which are subject to throttling. Accessing features like custom forwarding (to web socket, webhook, slack, etc.) requires 'reserving' an address, implying a paid feature. The original deal info stated a 1,500 monthly API limit for the free tier, which is not mentioned on the current pricing page.",
+      "previous_state": "Free API for temporary email testing, free public email hosting, outbound capture, email-to-slack/websocket/webhook (1,500 monthly API limit)",
+      "current_state": "Sending to any address @mailsac.com works, but it’s public and subject to throttling. To access custom forwarding features (to web socket, webhook, slack, etc), you must “reserve” that address first.",
+      "source_url": "https://mailsac.com",
+      "category": "Email",
       "refused_date": "2026-08-28"
     },
     {
@@ -265,6 +325,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Qoddi",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (3 static, 512 ram)",
+      "summary": "The free tier now offers unlimited static sites, but the specific limit of 3 static sites and 512MB RAM is no longer mentioned. The page highlights unlimited traffic and build minutes on the free tier.",
+      "previous_state": "PaaS service similar to Heroku with a developer-centric approach. Free tier: 3 static sites (512 MB RAM, shared CPU, Git deployment, unlimited bandwidth). Preview environments auto-deleted after 48 hours.",
+      "current_state": "The free tier includes unlimited traffic, build minutes, and allows users to start with a free static site offer and scale later.",
+      "source_url": "https://qoddi.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "RepoForge",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -286,6 +358,30 @@
       "current_state": "Ubuntu ARM $0.003 /min, 2vCPU $0.006 /min, 4vCPU $0.012 /min, 8vCPU Ubuntu x64 $0.0075 /min, 2vCPU $0.015 /min, 4vCPU MacOS $0.09 /min, 4vCPU Self-Hosted $0.0025 /min. Free Credits Get $15 free credits per month (≈ 2,000 Ubuntu x64 2-vCPU minutes). Concurrency Includes 20 concurrent jobs by default.",
       "source_url": "https://semaphore.io/pricing",
       "category": "CI/CD",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "StackBy",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 editor, 50 read, 20 stack, 2 attachment)",
+      "summary": "The free plan details from the stored information are not explicitly mentioned on the current pricing page. The page highlights a 'Free Forever Plan' and a '14 days Business Trial' but does not detail specific limits like the number of editors, read-only guests, stacks, or attachment size.",
+      "previous_state": "One tool that combines spreadsheets' flexibility, databases' power, and built-in integrations with your favorite business apps. The free plan includes 5 editors plus 50 read-only guests, 20 stacks, and a 2GB attachment per stack.",
+      "current_state": "The page mentions a 'Free Forever Plan' and a '14 days Business Trial' but does not provide specific details about the limits of the free plan.",
+      "source_url": "https://stackby.com/",
+      "category": "Databases",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "taskade.com",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 file, 1 week)",
+      "summary": "The free plan now has limitations on AI agents, automations, and AI credits that were not previously mentioned. The free plan includes AI agents, but with limitations. The pro plan is $10/month billed annually.",
+      "previous_state": "Real-time collaborative task lists and team outlines. The free plan has one workspace with unlimited tasks and projects; 1GB file storage; 1-week project history; and five attendees per video meeting.",
+      "current_state": "The free plan includes AI agents, up to 3 automations, basic integrations, and limited AI credits. The Pro plan is $10/month billed annually and includes unlimited AI agents and automations, 100+ integrations, and 50,000 AI credits per month.",
+      "source_url": "https://www.taskade.com/",
+      "category": "Project Management",
       "refused_date": "2026-08-28"
     },
     {
