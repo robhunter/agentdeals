@@ -9555,7 +9555,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-09",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -9674,7 +9674,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -12564,7 +12564,7 @@
         "continuous-integration",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -15465,7 +15465,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-13",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -15482,7 +15482,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -15585,7 +15585,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -15942,7 +15942,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -15993,7 +15993,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-11",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -16112,7 +16112,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-11",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -16163,7 +16163,7 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -29376,7 +29376,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-07-11",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",

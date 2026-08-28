@@ -85,6 +85,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "DB Designer",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2 database)",
+      "summary": "The page does not explicitly state the limits of the free tier. It only mentions a 'generous free plan' and 'competitive pricing'.",
+      "previous_state": "Cloud-based Database schema design and modeling tool with a free starter plan of 2 Database models and ten tables per model.",
+      "current_state": "The page states there is a 'generous free plan' but does not specify the number of database models or tables per model.",
+      "source_url": "https://www.dbdesigner.net/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Docker Hub",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The descriptions both refer to pull limits, and the current page's limit of 100 pulls/hr is equivalent to the stored description's 200 pulls per 6-hour window (100/3 hours = ~33 pulls/hr, but the report incorrectly states a reduction).",
+      "summary": "The free tier now has a pull rate limit of 100 pulls/hr per user, down from 200 pulls per 6-hour window.",
+      "previous_state": "1 private repository, unlimited public repositories. 200 pulls per 6-hour window (authenticated). No automated builds on free tier",
+      "current_state": "Includes: 100 Docker Hub pulls/hr* 1 private Docker Hub repo",
+      "source_url": "https://www.docker.com/pricing/",
+      "category": "Container Registry",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "duo.com",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -94,6 +118,18 @@
       "current_state": "Duo Free for teams of 10 or less",
       "source_url": "https://duo.com/",
       "category": "Auth",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Emailvalidation.io",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (100 email)",
+      "summary": "The free tier now offers 150 monthly credits instead of a one-time 100 verifications.",
+      "previous_state": "100 free email verifications total (one-time, not monthly)",
+      "current_state": "The free plan includes 150 requests - premium plans start at $9/mo",
+      "source_url": "https://emailvalidation.io",
+      "category": "Email",
       "refused_date": "2026-08-28"
     },
     {
@@ -181,6 +217,42 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Notion",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 member, 10 guest, 5 file, 7 page, 1 notion)",
+      "summary": "The free tier now has limits on collaborative blocks and page history. The stored information stated unlimited pages and blocks for individuals, 7-day page history. The current pricing page states unlimited pages and blocks for individuals, but also states 'Teams who want to try collaborating in Notion can use the Free Plan with up to certain number of blocks before upgrading.' and 'Page history 7 days'.",
+      "previous_state": "Free for individuals — unlimited pages and blocks, 1 member workspace with up to 10 guest collaborators, 5MB file uploads, 7-day page history, basic forms, 1 notion.site, Notion Calendar, Notion Mail (Gmail sync), offline access, basic integrations, API access. Team block limits apply on multi-member workspaces.",
+      "current_state": "The free plan includes unlimited pages and blocks for individuals, but has limits on collaborative blocks for teams. Page history is 7 days.",
+      "source_url": "https://www.notion.com/pricing",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "pagecrawl.io",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page clarifies the existing limits (6 pages, 220 checks, 60-minute interval) and adds it's a 'Free Forever' plan at $0/month, which doesn't alter the functionality described in the stored description.",
+      "summary": "The free tier now only allows tracking of 6 pages with up to 220 checks at a 60-minute interval. The stored information stated this was the limit, but the page now explicitly lists it as a 'Free Forever' plan with a monthly cost of $0.",
+      "previous_state": "Monitor website changes, free for up to 6 monitors with 60-minute interval checks.",
+      "current_state": "There is a 'Free Forever' plan that allows tracking up to 6 pages with up to 220 checks at a 60-minute frequency for $0/month.",
+      "source_url": "https://pagecrawl.io/",
+      "category": "Monitoring",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "pagertree.com",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already indicated a limit of 5 users and implied a free tier. The current page simply clarifies the pricing as $0 and adds details not present in the original description.",
+      "summary": "The free tier now has a price of $0/user/mo or $0/user/yr and is limited to up to 5 users.",
+      "previous_state": "Simple interface for alerting and on-call management. Free up to 5 users.",
+      "current_state": "Basic: $0 / user/mo $0 /user/yr Up to 5 Users OnCall Schedules Push, Email, & Slack Notifications",
+      "source_url": "https://pagertree.com/",
+      "category": "Monitoring",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "PDF-API.io",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -201,6 +273,18 @@
       "previous_state": "Private cloud-hosted repository for Python, Debian, NPM packages and Docker registries. Free plan: 100MB storage, unlimited public packages, non-commercial use only.",
       "current_state": "The free tier costs £0 / user / mo, includes 100 MB storage, unlimited public packages, and is not for commercial use.",
       "source_url": "https://repoforge.io",
+      "category": "CI/CD",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Semaphore CI",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page provides more detail on pricing options, but the core free tier offering ($15 credits/month, 20 concurrent jobs) remains the same. The stored description didn't claim to have a comprehensive list of all pricing options.",
+      "summary": "The pricing has been restructured. The free tier still exists, offering $15 credits per month (≈ 2,000 Ubuntu x64 2-vCPU minutes) and 20 concurrent jobs. However, the pricing for compute is now tiered based on CPU and OS (Ubuntu ARM, Ubuntu x64, MacOS) and self-hosted is $0.0025/min.",
+      "previous_state": "CI/CD platform — free cloud plan: $15 credits/month (~2,000 Ubuntu build minutes), 20 concurrent jobs, YAML pipelines, secrets management. Self-hosted available at $0.0025/min. Cloud starts at $0.0075/min for Ubuntu",
+      "current_state": "Ubuntu ARM $0.003 /min, 2vCPU $0.006 /min, 4vCPU $0.012 /min, 8vCPU Ubuntu x64 $0.0075 /min, 2vCPU $0.015 /min, 4vCPU MacOS $0.09 /min, 4vCPU Self-Hosted $0.0025 /min. Free Credits Get $15 free credits per month (≈ 2,000 Ubuntu x64 2-vCPU minutes). Concurrency Includes 20 concurrent jobs by default.",
+      "source_url": "https://semaphore.io/pricing",
       "category": "CI/CD",
       "refused_date": "2026-08-28"
     },
@@ -226,6 +310,30 @@
       "current_state": "The page states you can 'Get started—it’s free' and build forms with AI automation, but does not specify response limits for the free tier.",
       "source_url": "https://www.typeform.com/",
       "category": "Forms",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "UniRateAPI",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page clarifies the 200 requests/day limit by adding '30 requests per minute', which is consistent with the daily limit.",
+      "summary": "The free tier now has a limit of 30 requests/minute, and 200 requests/day, down from the previously stated 200 requests/day.",
+      "previous_state": "Real-time exchange rates for 590+ currencies and crypto. 200 requests/day API calls on the free plan, perfect for developers and finance apps.",
+      "current_state": "Free tier includes 30 requests per minute and 200 requests/day.",
+      "source_url": "https://unirateapi.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "uptimetoolbox.com",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report states the stored information still matches and the difference is simply clarification of the plan name ('Basic').",
+      "summary": "The free tier now includes 5 monitors, 3-minute checks, and 1 status page, which matches the stored information. However, the page explicitly states the Basic plan is free, and details features included in the Basic plan. The stored description is still accurate, but the pricing page clarifies it's the 'Basic' plan.",
+      "previous_state": "Free monitoring for five websites, 3-minute intervals, public statuspage.",
+      "current_state": "The Basic plan is $0 per month and includes 5 Monitors, 3 Minute Checks, 1 Status Page, 1 Server, 7 Day Hi-Res Retention, 3 Month Historical Data, and SSL Monitoring.",
+      "source_url": "https://uptimetoolbox.com/",
+      "category": "Monitoring",
       "refused_date": "2026-08-28"
     },
     {
