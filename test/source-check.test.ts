@@ -2,10 +2,13 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 import {
   SOURCE_CHECK_OUTCOMES,
+  LEVEL_WITHHOLDING_OUTCOMES,
   sourceDoesNotNameVendor,
   cannotVouchForLevel,
   levelWithheldReason,
   sourceCheckNotice,
+  withheldLevelClause,
+  withheldLevelSentence,
 } from "../dist/source-check.js";
 import { enrichOffers, loadOffers, checkVendorRisk } from "../dist/data.js";
 
@@ -23,6 +26,12 @@ const CITED_PAGE_COULD_NOT_BE_READ = {
   detail: "page content too short (likely JS-rendered SPA)",
 };
 
+const CITED_PAGE_STATES_NO_TERMS = {
+  checked: "2026-08-28",
+  outcome: "states_no_terms",
+  detail: "the page names Canva but states no amount, tier or rate we can read",
+};
+
 describe("an offer whose cited page cannot verify it", () => {
   it("uses the same outcome vocabulary as the job that writes it", () => {
     assert.deepStrictEqual([...SOURCE_CHECK_OUTCOMES].sort(), [...WRITTEN_OUTCOMES].sort());
@@ -37,18 +46,44 @@ describe("an offer whose cited page cannot verify it", () => {
     assert.strictEqual(cannotVouchForLevel({ source_check: CITED_PAGE_COULD_NOT_BE_READ }, null), true);
   });
 
-  it("does not withhold on an outcome that only says the page was thin", () => {
-    const thin = { checked: "2026-08-28", outcome: "states_no_terms", detail: "no amount, tier or rate" };
-    assert.strictEqual(sourceDoesNotNameVendor({ source_check: thin }), false);
-    assert.strictEqual(cannotVouchForLevel({ source_check: thin }, null), false);
-    assert.ok(sourceCheckNotice({ source_check: thin }));
+  it("withholds a favourable risk level where the cited page states no terms we can read", () => {
+    assert.strictEqual(sourceDoesNotNameVendor({ source_check: CITED_PAGE_STATES_NO_TERMS }), false);
+    assert.strictEqual(cannotVouchForLevel({ source_check: CITED_PAGE_STATES_NO_TERMS }, null), true);
+    assert.ok(sourceCheckNotice({ source_check: CITED_PAGE_STATES_NO_TERMS }));
+  });
+
+  it("publishes a level for the one outcome that confirms the terms we cite", () => {
+    assert.strictEqual(
+      cannotVouchForLevel({ source_check: { checked: "2026-08-28", outcome: "ok", detail: "text" } }, null),
+      false
+    );
   });
 
   it("names which of the reasons is holding the level back", () => {
     assert.strictEqual(levelWithheldReason({ source_check: CITED_PAGE_NAMES_SOMEBODY_ELSE }, null), "does_not_name_vendor");
     assert.strictEqual(levelWithheldReason({ source_check: CITED_PAGE_COULD_NOT_BE_READ }, null), "unreadable");
+    assert.strictEqual(levelWithheldReason({ source_check: CITED_PAGE_STATES_NO_TERMS }, null), "states_no_terms");
     assert.strictEqual(levelWithheldReason({}, { checked: "2026-08-28" }), "link_unreachable");
     assert.strictEqual(levelWithheldReason({}, null), null);
+  });
+
+  it("names a reason for every outcome that withholds, so none can fall through", () => {
+    for (const outcome of LEVEL_WITHHOLDING_OUTCOMES) {
+      assert.strictEqual(
+        levelWithheldReason({ source_check: { checked: "2026-08-28", outcome, detail: "d" } }, null),
+        outcome,
+        `${outcome} withholds a level but names no reason for it`
+      );
+    }
+  });
+
+  it("gives every reason its own prose, so no two of them read alike", () => {
+    const reasons = ["link_unreachable", ...LEVEL_WITHHOLDING_OUTCOMES] as const;
+    const clauses = reasons.map((r) => withheldLevelClause(r, ""));
+    const sentences = reasons.map((r) => withheldLevelSentence(r, "Examplebase", ""));
+    for (const text of [...clauses, ...sentences]) assert.ok(text.length > 0);
+    assert.strictEqual(new Set(clauses).size, reasons.length, "two reasons share a clause");
+    assert.strictEqual(new Set(sentences).size, reasons.length, "two reasons share a sentence");
   });
 
   it("reports a dead link ahead of anything the page check said about it", () => {
@@ -152,6 +187,65 @@ describe("what the enriched record publishes for a source we could not read", ()
       if (++checked === 20) break;
     }
     assert.ok(checked > 0, "no vendor is sourced only from pages that state no figure we recognise");
+  });
+});
+
+describe("what the tool tells an agent about a source that states no terms we can read", () => {
+  const vendorsSourcedOnlyFromPagesStatingNoTerms = (): string[] => {
+    const byVendor = new Map<string, any[]>();
+    for (const offer of loadOffers() as any[]) {
+      const key = offer.vendor.toLowerCase();
+      if (!byVendor.has(key)) byVendor.set(key, []);
+      byVendor.get(key)!.push(offer);
+    }
+    return [...byVendor.values()]
+      .filter((records) => records.every((o) => o.source_check?.outcome === "states_no_terms"))
+      .map((records) => records[0].vendor);
+  };
+
+  it("holds every such record back from a stable badge", () => {
+    const enriched = enrichOffers(loadOffers() as any[]) as any[];
+    const statingNoTerms = enriched.filter(
+      (o) => o.source_check?.outcome === "states_no_terms" && !o.link_unreachable
+    );
+    assert.ok(statingNoTerms.length > 0, "no record in the index cites a page that states no terms");
+    for (const offer of statingNoTerms) {
+      assert.notStrictEqual(
+        offer.risk_level,
+        "stable",
+        `${offer.vendor} is badged stable from a page that states no terms we can read`
+      );
+    }
+  });
+
+  it("does not claim a stable pricing history for it", () => {
+    let checked = 0;
+    for (const vendor of vendorsSourcedOnlyFromPagesStatingNoTerms()) {
+      const { result } = checkVendorRisk(vendor) as any;
+      if (result.risk_level !== null) continue;
+      assert.doesNotMatch(
+        result.summary,
+        /has a stable pricing history/,
+        `${vendor} is told it has a stable pricing history from a page that states no terms`
+      );
+      if (++checked === 20) break;
+    }
+    assert.ok(checked > 0, "no vendor is sourced only from pages that state no terms we can read");
+  });
+
+  it("says which reason held the level back rather than leaving it unexplained", () => {
+    let said = 0;
+    for (const vendor of vendorsSourcedOnlyFromPagesStatingNoTerms()) {
+      const { result } = checkVendorRisk(vendor) as any;
+      if (result.risk_level !== null) continue;
+      assert.match(
+        result.summary,
+        /states no terms we can read/,
+        `${vendor} withholds a level without saying why`
+      );
+      if (++said === 20) break;
+    }
+    assert.ok(said > 0, "no vendor tells a caller its cited page states no terms we can read");
   });
 });
 

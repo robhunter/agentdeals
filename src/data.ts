@@ -6,7 +6,7 @@ import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
-import { cannotVouchForLevel, sourceDoesNotNameVendor, sourceUnreadable } from "./source-check.js";
+import { cannotVouchForLevel, levelWithheldReason, withheldLevelSentence } from "./source-check.js";
 import { filterAlternatives } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause } from "./change-dates.js";
 
@@ -775,19 +775,17 @@ export function checkVendorRisk(
   // and a warning without its reason is an assertion.
   let summary: string;
   const cause = assessment.cause;
+  const unreachableSince = linkUnreachable?.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
+  const withheldReason = levelWithheldReason(offer, linkUnreachable);
   const unreachableClause = linkUnreachable
-    ? ` Its pricing page has not resolved for us${linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : ""}, so we cannot confirm its current terms.`
+    ? ` Its pricing page has not resolved for us${unreachableSince}, so we cannot confirm its current terms.`
     : "";
   if (riskLevel === "risky" && cause) {
     summary = `${offer.vendor} is high risk — ${changeDateClause(cause)}: ${cause.summary} Consider alternatives.${unreachableClause}`;
   } else if (riskLevel === "caution" && cause) {
     summary = `${offer.vendor} warrants caution — ${changeDateClause(cause)}: ${cause.summary} Monitor for further changes.${unreachableClause}`;
-  } else if (linkUnreachable) {
-    summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}.${unreachableClause} Treat that as a statement about our records, not as a stable pricing history.`;
-  } else if (sourceDoesNotNameVendor(offer)) {
-    summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}. The page we cite for it does not name it, so nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
-  } else if (sourceUnreadable(offer)) {
-    summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}. We could not read the page we cite for it, so nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
+  } else if (withheldReason) {
+    summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}. ${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
     summary = `${offer.vendor} has a stable pricing history with no free tier removal, limit reduction or pricing restructure on record. Free tier verified for ${longevityDays} days.`;
   }

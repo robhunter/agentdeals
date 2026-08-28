@@ -72,17 +72,18 @@ m_unreadable_no_longer_withholds() {
   py <<'PY'
 p = "src/source-check.ts"
 s = open(p).read()
-s = s.replace('  "does_not_name_vendor",\n  "unreadable",\n];', '  "does_not_name_vendor",\n];')
+s = s.replace('  "does_not_name_vendor",\n  "states_no_terms",\n  "unreadable",\n];',
+              '  "does_not_name_vendor",\n  "states_no_terms",\n];')
 open(p, "w").write(s)
 PY
 }
 
-m_thin_page_also_withholds() {
+m_thin_page_no_longer_withholds() {
   py <<'PY'
 p = "src/source-check.ts"
 s = open(p).read()
-s = s.replace('  "does_not_name_vendor",\n  "unreadable",\n];',
-              '  "does_not_name_vendor",\n  "unreadable",\n  "states_no_terms",\n];')
+s = s.replace('  "does_not_name_vendor",\n  "states_no_terms",\n  "unreadable",\n];',
+              '  "does_not_name_vendor",\n  "unreadable",\n];')
 open(p, "w").write(s)
 PY
 }
@@ -121,20 +122,20 @@ PY
 
 m_clause_does_not_distinguish() {
   py <<'PY'
-p = "src/serve.ts"
+p = "src/source-check.ts"
 s = open(p).read()
-s = s.replace('  return `we could not read the page we cite for this offer`;',
-              '  return `the page we cite for this offer does not name it`;')
+s = s.replace('  unreadable: () => `we could not read the page we cite for this offer`,',
+              '  unreadable: () => `the page we cite for this offer does not name it`,')
 open(p, "w").write(s)
 PY
 }
 
 m_sentence_does_not_distinguish() {
   py <<'PY'
-p = "src/serve.ts"
+p = "src/source-check.ts"
 s = open(p).read()
-s = s.replace('  return `We could not read the page we cite for ${vendorName}.`;',
-              '  return `The page we cite for ${vendorName} does not name it.`;')
+s = s.replace('  unreadable: (subject) => `We could not read the page we cite for ${subject}.`,',
+              '  unreadable: (subject) => `The page we cite for ${subject} does not name it.`,')
 open(p, "w").write(s)
 PY
 }
@@ -190,23 +191,24 @@ m_tool_result_claims_a_stable_history() {
   py <<'PY'
 p = "src/data.ts"
 s = open(p).read()
-s = s.replace("  } else if (sourceUnreadable(offer)) {", "  } else if (false) {")
+s = s.replace('  } else if (withheldReason) {',
+              '  } else if (withheldReason && withheldReason !== "unreadable") {')
 open(p, "w").write(s)
 PY
 }
 
-m_unreadable_predicate_matches_anything() {
+m_unreadable_reason_matches_any_imperfect_check() {
   py <<'PY'
 p = "src/source-check.ts"
 s = open(p).read()
-s = s.replace('  return offer.source_check?.outcome === "unreadable";',
-              '  return offer.source_check ? offer.source_check.outcome !== "ok" : false;')
+s = s.replace('  if (outcome && LEVEL_WITHHOLDING_OUTCOMES.includes(outcome)) return outcome as LevelWithheldReason;',
+              '  if (outcome && LEVEL_WITHHOLDING_OUTCOMES.includes(outcome)) return "unreadable";')
 open(p, "w").write(s)
 PY
 }
 
 run_mutation "a page we could not read no longer withholds the level" m_unreadable_no_longer_withholds
-run_mutation "a page stating no terms also withholds the level" m_thin_page_also_withholds
+run_mutation "a page stating no terms no longer withholds the level" m_thin_page_no_longer_withholds
 run_mutation "every non-ok outcome withholds the level" m_every_outcome_withholds
 run_mutation "both withheld reasons report as the same reason" m_reason_collapses_to_one
 run_mutation "a dead link loses its precedence over the page check" m_dead_link_loses_its_precedence
@@ -218,7 +220,7 @@ run_mutation "the page still calls an empty history good news" m_empty_history_r
 run_mutation "the reliability answer still calls it stable" m_faq_keeps_its_answer
 run_mutation "the change answer still reads as a positive signal" m_change_answer_keeps_its_positive_signal
 run_mutation "the tool result still claims a stable history" m_tool_result_claims_a_stable_history
-run_mutation "the unread-page predicate matches any imperfect check" m_unreadable_predicate_matches_anything
+run_mutation "the unread-page reason matches any imperfect check" m_unreadable_reason_matches_any_imperfect_check
 
 echo ""
 echo "killed=$killed survived=$survived"

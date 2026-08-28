@@ -77,6 +77,14 @@ const get = async (p: string) => {
   return { status: res.status, body: await res.text() };
 };
 
+function faqAnswers(body: string): string[] {
+  const page = [...body.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+    .map((m) => { try { return JSON.parse(m[1]); } catch { return null; } })
+    .find((json) => json && json["@type"] === "FAQPage");
+  assert.ok(page, "the page must ship FAQPage structured data for the assertion to mean anything");
+  return page.mainEntity.map((entry: { acceptedAnswer: { text: string } }) => entry.acceptedAnswer.text);
+}
+
 function aboutThisVendor({ body }: { body: string }): string {
   const verdict = body.match(/<div class="quick-verdict">[\s\S]*?<\/div>/)?.[0];
   const history = body.match(/<p class="no-changes">[\s\S]*?<\/p>/)?.[0];
@@ -211,18 +219,90 @@ describe("the two withheld reasons read differently to somebody deciding whether
   });
 });
 
-describe("a vendor page whose cited source names it but states its terms in prose", () => {
-  it("still publishes a stability judgement", async () => {
+describe("a vendor page whose cited source names it but states no terms we can read", () => {
+  it("publishes no stability judgement", async () => {
     const { body } = await get("/vendor/prosecorp");
-    assert.match(body, /This is a good sign — stable pricing/);
+    assert.doesNotMatch(body, /This is a good sign — stable pricing/);
+    assert.doesNotMatch(body, /It's stable — zero pricing changes recorded/);
     const row = body.match(/<tr class="current-vendor-row">[\s\S]*?<\/tr>/)?.[0] ?? "";
     assert.ok(row.includes("Prosecorp"), "the row under test must be the vendor's own");
-    assert.doesNotMatch(row, /source unconfirmed/);
-    assert.match(row, /stability-dot/);
+    assert.match(row, /source unconfirmed/);
+    assert.doesNotMatch(row, /stability-dot/);
   });
 
-  it("still publishes a level through the API", async () => {
+  it("publishes no level through the API", async () => {
     const { body } = await get("/api/offers?q=prosecorp");
-    assert.strictEqual(JSON.parse(body).offers[0].risk_level, "stable");
+    const offer = JSON.parse(body).offers[0];
+    assert.strictEqual(offer.risk_level, null);
+    assert.strictEqual(offer.source_check.outcome, "states_no_terms");
   });
+
+  it("says the page states no terms rather than that we could not read it", async () => {
+    const own = aboutThisVendor(await get("/vendor/prosecorp"));
+    assert.match(own, /states no terms we can read/);
+    assert.doesNotMatch(own, /could not read the page we cite/);
+    assert.doesNotMatch(own, /does not name it/);
+  });
+});
+
+describe("the question an answer engine quotes first", () => {
+  const q1 = (body: string) => faqAnswers(body)[0];
+  const q2 = (body: string) => faqAnswers(body)[1];
+
+  it("answers a bare Yes only where the source confirms the terms", async () => {
+    const { body } = await get("/vendor/controlcorp");
+    assert.match(q1(body), /^Yes, Controlcorp offers a free tier/);
+    assert.match(q2(body), /^Controlcorp's free tier is called/);
+  });
+
+  for (const [slug, vendor, reason] of [
+    ["fixturecorp", "Fixturecorp", /does not name it/],
+    ["shellcorp", "Shellcorp", /could not read the page we cite/],
+    ["prosecorp", "Prosecorp", /states no terms we can read/],
+  ] as const) {
+    it(`does not answer Yes for ${vendor}, and carries the reason in the answer itself`, async () => {
+      const { body } = await get(`/vendor/${slug}`);
+      for (const answer of [q1(body), q2(body)]) {
+        assert.doesNotMatch(answer, /^Yes, /);
+        assert.match(answer, reason);
+        assert.match(answer, /treat them as unverified/);
+      }
+    });
+
+    it(`still shows the stored terms for ${vendor} rather than dropping them`, async () => {
+      const { body } = await get(`/vendor/${slug}`);
+      assert.match(q1(body), /30% off for 3 months/);
+    });
+  }
+});
+
+describe("an alternatives page for a vendor whose source we cannot vouch for", () => {
+  it("publishes a stable risk level only where the source confirms the terms", async () => {
+    const { body } = await get("/alternative-to/controlcorp");
+    assert.match(body, /Risk Level:[\s\S]{0,220}>stable</);
+    assert.match(faqAnswers(body)[1], /^Yes, Controlcorp currently offers a free tier/);
+  });
+
+  for (const [slug, vendor, reason] of [
+    ["fixturecorp", "Fixturecorp", /does not name it/],
+    ["shellcorp", "Shellcorp", /could not read the page we cite/],
+    ["prosecorp", "Prosecorp", /states no terms we can read/],
+  ] as const) {
+    it(`does not re-assert a stable risk level for ${vendor}`, async () => {
+      const { body } = await get(`/alternative-to/${slug}`);
+      const riskRow = body.match(/Risk Level:[\s\S]{0,300}?<\/div>/)?.[0] ?? "";
+      assert.ok(riskRow.length > 0, "the page must carry a risk row for the assertion to mean anything");
+      assert.doesNotMatch(riskRow, />stable</);
+      assert.match(riskRow, /source unconfirmed/);
+      assert.match(body, reason);
+    });
+
+    it(`does not read an empty change history for ${vendor} as stable pricing`, async () => {
+      const { body } = await get(`/alternative-to/${slug}`);
+      assert.doesNotMatch(body, /This indicates stable pricing/);
+      const stillAvailable = faqAnswers(body)[1];
+      assert.doesNotMatch(stillAvailable, /^Yes, /);
+      assert.match(stillAvailable, reason);
+    });
+  }
 });
