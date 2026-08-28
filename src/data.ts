@@ -5,6 +5,7 @@ import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, Ch
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
+import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
 import { cannotVouchForLevel, sourceDoesNotNameVendor, sourceUnreadable } from "./source-check.js";
 import { filterAlternatives } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause } from "./change-dates.js";
@@ -59,6 +60,7 @@ export function resetCache(): void {
   cachedOffers = null;
   cachedChanges = null;
   resetLinkHealthCache();
+  resetVerificationStateCache();
 }
 
 export function getCategories(): { name: string; count: number }[] {
@@ -1034,6 +1036,7 @@ export interface FreshnessMetrics {
   stalest_entries: Array<{ vendor: string; category: string; verifiedDate: string; url: string; days_since_verified: number }>;
   freshest_entries: Array<{ vendor: string; category: string; verifiedDate: string; url: string; days_since_verified: number }>;
   by_category: Array<{ category: string; count: number; avg_days_since_verified: number; freshness_score: number }>;
+  quarantine: QuarantineSummary;
 }
 
 export function getFreshnessMetrics(): FreshnessMetrics {
@@ -1091,6 +1094,7 @@ export function getFreshnessMetrics(): FreshnessMetrics {
     stalest_entries: stalest,
     freshest_entries: freshest,
     by_category: byCategory,
+    quarantine: quarantineSummary(),
   };
 }
 

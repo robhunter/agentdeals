@@ -21,7 +21,7 @@ export const AI_FLAG = "--ai";
 
 export const DETECTOR_CLI_OPTIONS = {
   takesValue: ["--limit"],
-  boolean: ["--ai", "--dry-run"],
+  boolean: ["--ai", "--dry-run", "--seed-state"],
 };
 
 export function tokenizeArgs(argText) {

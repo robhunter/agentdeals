@@ -33,6 +33,7 @@ import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from ".
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
+import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, feedEntryUpdated, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
@@ -1479,6 +1480,7 @@ function rankCategory(categoryName: string, date = utcDate()): RankingResult<Enr
     queryKey: `best-of:${categoryName}`,
     changes: dealChanges,
     date,
+    verificationLedger: verificationLedger(),
   });
 }
 
@@ -50416,6 +50418,45 @@ function buildFreshnessPage(): string {
         </tr>`
   ).join("\n");
 
+  const QUARANTINE_REASON_PROSE: Record<string, string> = {
+    bot_block: "our checker was refused",
+    unreachable: "the page is gone",
+    http_error: "the server returned an error",
+    timeout: "the request timed out",
+    network_error: "we could not connect",
+    empty_page: "the page rendered nothing we could read",
+    ai_extraction: "our reader failed",
+    ai_undecided: "our reader could not decide",
+    source_unusable: "the page we cite states no terms",
+  };
+  const quarantineReason = (code: string | null) =>
+    (code && QUARANTINE_REASON_PROSE[code]) ?? "not recorded";
+  const quarantineRows = m.quarantine.entries.map((e) =>
+    `        <tr>
+          <td><a href="/vendor/${toSlug(e.vendor)}">${escHtmlServer(e.vendor)}</a></td>
+          <td>${escHtmlServer(quarantineReason(e.failure_category))}</td>
+          <td>${e.consecutive_failures}</td>
+          <td>${escHtmlServer(e.last_success ?? "never")}</td>
+          <td>${escHtmlServer(e.next_retry ?? "unscheduled")}</td>
+        </tr>`
+  ).join("\n");
+  const quarantineReasons = Object.entries(m.quarantine.by_reason)
+    .sort((a, b) => b[1] - a[1])
+    .map(([reason, count]) => `${count} where ${escHtmlServer(quarantineReason(reason))}`)
+    .join(", ");
+  const quarantineSection = m.quarantine.count === 0
+    ? ""
+    : `  <h2>Records we cannot currently check</h2>
+  <p class="section-desc">${m.quarantine.count} record${m.quarantine.count === 1 ? " has" : "s have"} failed ${QUARANTINE_AFTER_FAILURES} re-checks in a row, so ${m.quarantine.count === 1 ? "it is" : "they are"} retried every ${m.quarantine.retry_after_days} days instead of every day. ${quarantineReasons}. A failure here is usually our checker being refused or reading the wrong page &mdash; it is not evidence that the vendor changed anything.</p>
+  <table>
+    <thead><tr><th>Vendor</th><th>What failed</th><th>Failures</th><th>Last confirmed</th><th>Next retry</th></tr></thead>
+    <tbody>
+${quarantineRows}
+    </tbody>
+  </table>
+
+`;
+
   // Freshest entries
   const freshestRows = m.freshest_entries.map((e) =>
     `        <tr>
@@ -50539,7 +50580,7 @@ ${stalestRows}
     </tbody>
   </table>
 
-  <h2>Recently Verified</h2>
+${quarantineSection}  <h2>Recently Verified</h2>
   <p class="section-desc">Top 20 most recently verified entries.</p>
   <button class="toggle-btn" onclick="document.getElementById('freshest-table').classList.toggle('show');this.textContent=this.textContent==='Show recently verified'?'Hide recently verified':'Show recently verified'">Show recently verified</button>
   <div id="freshest-table" class="hidden-section">

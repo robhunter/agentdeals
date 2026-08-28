@@ -1,6 +1,7 @@
 import { searchOffers, loadDealChanges, vendorRiskLevel, classifyStability } from "./data.js";
 import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NOTICE } from "./ranking.js";
 import type { Demerit, Disclosure, TieBreak } from "./ranking.js";
+import { verificationLedger } from "./verification-state.js";
 import type { Offer, StabilityClass, DealChange } from "./types.js";
 import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
 
@@ -319,6 +320,7 @@ export function getStackRecommendation(
       queryKey: `stack:${useCase}:${role}`,
       changes: allChanges,
       date,
+      verificationLedger: verificationLedger(),
     });
 
     // Draw from the best band available. If nothing is unblemished we still
