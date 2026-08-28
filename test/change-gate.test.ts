@@ -327,9 +327,11 @@ describe("a recorded change must describe a change", () => {
       assert.strictEqual(describesChange(TWO_CAPS_TRADED_PLACES).ok, true);
     });
 
-    it("keeps a record whose figures match but whose type is not a claim about figures", () => {
+    it("refuses an agreeing record whose type is not a claim about figures", () => {
       const notAQuantityClaim = { ...SUMMARY_SAYS_IT_MATCHES, change_type: "rebranded" };
-      assert.strictEqual(describesChange(notAQuantityClaim).ok, true);
+      const verdict = describesChange(notAQuantityClaim);
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_STATES_NO_DIFFERENCE);
     });
 
     it("reads the same figures on both sides of the record it refuses", () => {

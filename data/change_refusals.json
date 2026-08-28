@@ -37,6 +37,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Activepieces",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The free tier information is no longer explicitly stated. The page highlights 'Start free' but does not specify any limits on tasks or usage. It mentions '0 per execution' for self-hosting, but this is different from the original free tier.",
+      "previous_state": "Build automation flows to connect several apps together in your app's backend. For example, send a Slack message or add a Google Sheet row when an event fires in your app. Free up to 5,000 tasks per month.",
+      "current_state": "The page promotes a 'Start free' option but does not detail any specific limits or features of a free tier. It mentions '0 per execution' for self-hosted deployments.",
+      "source_url": "https://www.activepieces.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Amazon Kiro (AWS Startups)",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The Kiro Pro+ free tier is no longer mentioned as a specific benefit. The AWS Startups program now offers up to $200,000 in AWS Activate Credits.",
+      "previous_state": "Up to 1 year of free Kiro Pro+ (worth $480/year) through AWS Startups program. Three tiers: Starter (up to 2 users), Growth (up to 50 users), Scale (up to 100 users). Eligible: early-stage to Series B companies. Application via AWS Startups portal.",
+      "current_state": "AWS for Startups offers up to $200,000 in AWS Activate Credits and expert support. Credits are redeemable on third-party models on Amazon Bedrock. AI startups may be eligible for additional credits.",
+      "source_url": "https://aws.amazon.com/startups/",
+      "category": "Startup Programs",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "Amazon Q Developer",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -73,6 +97,42 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Argos",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier information is not explicitly stated. The page focuses on features and integrations, and directs users to the pricing page for details. It highlights cost savings compared to competitors but doesn't detail a free tier with specific limits.",
+      "previous_state": "Open Source visual testing for developers. Unlimitedprojects, with 5,000 screenshots per month. Free for open-source projects.",
+      "current_state": "The page does not mention a free tier with 5,000 screenshots per month for open-source projects. It directs users to the pricing page for details.",
+      "source_url": "https://argos-ci.com",
+      "category": "Testing",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "asgardeo.io",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not explicitly state the free tier limits of 7,500 Consumer MAUs and 250 B2B MAUs, or the 2 social login providers. It only mentions a 'generous free-forever tier' and doesn't provide specific numbers.",
+      "previous_state": "Seamless Integration of SSO, MFA, passwordless auth and more. Includes SDKs for frontend and backend apps. Free tier: 7,500 Consumer MAUs (B2C), 250 B2B MAUs, 2 social login providers.",
+      "current_state": "Offers a 'generous free-forever tier' and options for self-hosted or SaaS deployment.",
+      "source_url": "https://wso2.com/asgardeo",
+      "category": "Auth",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "AssemblyAI",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The free tier with $50 in credits is no longer explicitly mentioned. The page states a 'Start free, pay-as-you-go' model after initial use, with pricing starting at $0.15/hr for Universal-2 and $0.21/hr for Universal-3.5 Pro for pre-recorded audio. Realtime transcription starts at $0.15/hr (Universal-Streaming) or $0.45/hr (Universal-3.5 Pro Realtime).",
+      "previous_state": "Speech-to-text and audio intelligence API — free: $50 in credits (~185 hours pre-recorded transcription). Up to 5 concurrent streams. Core STT and Audio Intelligence models. Pay-as-you-go at $0.15/hr after",
+      "current_state": "The pricing page details pay-as-you-go pricing for various models and features, starting at $0.15/hr. A free trial is implied with a 'Start free, pay-as-you-go' option.",
+      "source_url": "https://www.assemblyai.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "Authress",
       "change_type": "pricing_model_change",
       "reason": "confirmed_unchanged",
@@ -97,6 +157,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Brex",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page mentions \"Over $350K in discounts and credits on AI and SaaS\" which aligns with the stored deal info's aggregate perks value, but doesn't list the specific credits for AWS, OpenAI, Google Cloud, GitHub, Notion, or Anthropic.",
+      "previous_state": "$350,000+ in aggregate partner perks for Brex cardholders — includes $5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud, 20 free GitHub Enterprise seats, 6mo free Notion, $500 Anthropic credits, and 30+ more partner discounts",
+      "current_state": "The page states \"Over $350K in discounts and credits on AI and SaaS.\"",
+      "source_url": "https://www.brex.com/solutions/startups",
+      "category": "Startup Programs",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "BuddyNS",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -106,6 +178,18 @@
       "current_state": "Free, incl. commercial use. Gets individuals continuity and security, swiftly. Free and fully unattended. feature-tooltip-traffic 0.3 Mqr",
       "source_url": "https://www.buddyns.com/services/",
       "category": "DNS & Domain Management",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Cal.com",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the description is significantly more detailed and includes features not previously mentioned. The stored information stated '1 user', while the current pricing page details many features included in the free tier.",
+      "previous_state": "Open-source scheduling — unlimited event types, unlimited bookings, unlimited calendar connections, routing forms, workflow automation, payment processing, Cal Video conferencing. 1 user",
+      "current_state": "Individuals Free Everything you could need for scheduling as an individual. Use for free *Free forever Free features: 1 user Unlimited event types & calendars Email & SMS notifications Integrate with 100+ apps Mobile App Browser Extension Accept Stripe & PayPal payments Two-way Salesforce & HubSpot sync 1-click import Calendly events",
+      "source_url": "https://cal.com/pricing",
+      "category": "Team Collaboration",
       "refused_date": "2026-08-28"
     },
     {
@@ -205,6 +289,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "DatoCMS",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://www.datocms.com/, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier is no longer explicitly mentioned. The page states that agency partners get a 30% discount starting from €39/month, implying a paid model. It also mentions 5M API calls and 2TB traffic monthly, which suggests limits beyond a basic free tier.",
+      "previous_state": "Offers free tier for small projects. DatoCMS is a GraphQL-based CMS. On the lower tier, you have 100k/month calls.",
+      "current_state": "The page does not mention a free tier. It highlights features and benefits for paid users and agency partners, with pricing starting at €39/month for agency partners.",
+      "source_url": "https://www.datocms.com/",
+      "category": "Headless CMS",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "DB Designer",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -214,6 +310,18 @@
       "current_state": "The page states there is a 'generous free plan' but does not specify the number of database models or tables per model.",
       "source_url": "https://www.dbdesigner.net/",
       "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "deployhq.com",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or hedge rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier now appears to be limited to a trial and then requires a paid subscription starting at $9/month. The original deal of 3 projects with unlimited deployments is no longer explicitly stated as a free offering.",
+      "previous_state": "Automated deployment platform — free plan: 3 projects with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
+      "current_state": "Offers a free trial, then paid plans starting at $9/month for unlimited deployments.",
+      "source_url": "https://www.deployhq.com/",
+      "category": "CI/CD",
       "refused_date": "2026-08-28"
     },
     {
@@ -337,6 +445,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "heap.io",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not explicitly mention a free tier. It highlights a free trial and emphasizes a partnership with Contentsquare, focusing on a complete data capture solution.",
+      "previous_state": "Automatically captures every user action in iOS or web apps. Free for up to 10K monthly sessions.",
+      "current_state": "The page promotes a free trial and a paid platform with features like automatic event tracking, session replay, and data science capabilities (Heap Illuminate). It does not mention a free tier with a 10K monthly sessions limit.",
+      "source_url": "https://heap.io",
+      "category": "Analytics",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "Hyperping",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -361,6 +481,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "InfluxDB Cloud",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms",
+      "summary": "The free tier details have changed. While a free tier exists for Cloud Serverless with a $250 credit, the original limits of 5 MB writes per 5 minutes, 10,000 data series, and 30-day retention are no longer explicitly stated.",
+      "previous_state": "Time-series database — free tier: 5 MB writes per 5 minutes, up to 10,000 data series, 30-day data retention. Auto-provisioned for new accounts. Ideal for IoT and monitoring workloads",
+      "current_state": "Cloud Serverless has a $250 free credit to start, with usage-based pricing for data in ($0.0025/MB), query count ($0.012 per 100 executions), storage ($0.002/GB-hour), and data out ($0.09/GB).",
+      "source_url": "https://www.influxdata.com/influxdb-pricing/",
+      "category": "Databases",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Integrately",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://integrately.com, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The page does not explicitly mention a free tier with 100 tasks and a 15-minute limit. It highlights a $5 premium plan for the first month and emphasizes a 'Free' signup with Google, but doesn't detail the limitations of that free access.",
+      "previous_state": "Automate tedious tasks with a single click. Free 100 Tasks, 15 Minute",
+      "current_state": "The page promotes a $5 premium plan for the first month and offers a 'Free' signup with Google, but details of the free tier are not specified.",
+      "source_url": "https://integrately.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "IP Geolocation API by ipwho.org",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -369,6 +513,18 @@
       "previous_state": "2,000 free requests per day. Fast, enterprise grade API at non-enterprise prices. Trusted by developers, corporate, government and education clients. Servers in 12+ regions.",
       "current_state": "Free forever for side projects, learning and non-profits. No card, no catch. $2.50/mo lifts the cap and clears you for business use.",
       "source_url": "https://ipwho.org/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "IPLocate",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the limit has increased from 1,000 requests/day to an unspecified amount implied by '400M+ API requests served per day'. The page also highlights that all data is available on the free tier, which wasn't explicitly stated in the stored information.",
+      "previous_state": "IP Geolocation API, free up to 1,000 requests/day. Includes proxy/VPN/hosting detection, ASN data, IP to Company, and more. IPLocate also offers free downloadable IP to Country and IP to ASN databases in CSV or GeoIP-compatible MMDB formats.",
+      "current_state": "Offers a free tier with access to all data, and states 400M+ API requests are served per day.",
+      "source_url": "https://www.iplocate.io",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
     },
@@ -445,6 +601,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Lokalise",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier information is no longer explicitly stated. The pricing now focuses on Explorer, Growth, Advanced, and Enterprise plans, all of which are paid. The page states hosted words are unlimited on all paid plans, and translator/reviewer seats are unlimited on all paid plans. The previous limits of 1 project, 2 target languages, 500K hosted words, 500 translation keys, 10K processed words/year, 2 advanced seats, 1 integration, 1 automation, and 1 GB OTA calls are no longer mentioned.",
+      "previous_state": "Localization platform — 1 project, 2 target languages, 500K hosted words, 500 translation keys, 10K processed words/year, 2 advanced seats, 1 integration, 1 automation, 1 GB OTA calls",
+      "current_state": "Lokalise offers Explorer ($144/mo), Growth ($375/mo), Advanced ($999/mo), and Enterprise plans. Hosted words are unlimited on all paid plans. Translator and reviewer seats are unlimited on all paid plans. Advanced seats are included per tier and available as add-ons.",
+      "source_url": "https://lokalise.com/pricing/",
+      "category": "Localization",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "mailsac.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -493,6 +661,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Mergify",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or hedge rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not explicitly mention a free tier for public GitHub repositories. It focuses on features and benefits without detailing specific pricing plans or free options. The page highlights features like Merge Queue, CI Insights, and Test Insights, and encourages users to 'Get started' or 'Talk to our team', suggesting a potential need for a paid plan.",
+      "previous_state": "workflow automation and merge queue for GitHub — Free for public GitHub repositories",
+      "current_state": "The pricing page does not mention a free tier. It highlights features and encourages users to contact the team or get started, implying a paid service.",
+      "source_url": "https://mergify.com",
+      "category": "CI/CD",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Mockplus iDoc",
+      "change_type": "limits_increased",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free plan now includes up to 10 users and active projects, an increase from the previously stated three users and five projects.",
+      "previous_state": "Mockplus iDoc is a powerful design collaboration & handoff tool. Free Plan includes three users and five projects with all features available.",
+      "current_state": "Everyone can register for an account to get the basic free plan for up to 10 users and active projects.",
+      "source_url": "https://www.mockplus.com/idoc",
+      "category": "Design",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "mouseflow.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -502,6 +694,18 @@
       "current_state": "Free forever, no card required.",
       "source_url": "https://mouseflow.com/",
       "category": "Analytics",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Mux",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the description is more nuanced. While 100,000 delivery minutes are still free, the page details additional costs for storage, workflows (like captions and AI), and higher resolutions. The original description implied a completely free offering for on-demand video, but the current page shows costs for input, storage, and delivery beyond the free minutes, as well as costs for various video quality levels.",
+      "previous_state": "100,000 delivery minutes/month, up to 10 stored videos, on-demand video only (no live streaming). No credit card required",
+      "current_state": "The free plan includes 100K free monthly delivery minutes. Storage costs start at $0.0024/min, and delivery costs start at $0.0008/min after the free minutes are used. Different resolutions have different pricing.",
+      "source_url": "https://www.mux.com/pricing",
+      "category": "Video",
       "refused_date": "2026-08-28"
     },
     {
@@ -517,6 +721,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Okta",
+      "change_type": "rebranded",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or hedge rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier is now the 'Okta Integrator Free Plan' and appears to be focused on integration building and testing, not general developer authentication. The 25,000 MAU limit is no longer mentioned.",
+      "previous_state": "Developer authentication via Auth0 platform — 25,000 MAU free, social login, passwordless, MFA, SSO. Note: developer.okta.com/signup now routes to Auth0.",
+      "current_state": "The Okta Integrator Free Plan is available for building, testing, and managing integrations. It requires first name, last name, work email, and country/region for signup. Access expires after 180 days of inactivity.",
+      "source_url": "https://developer.okta.com/signup/",
+      "category": "Auth",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "OpenStatus",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -526,6 +742,18 @@
       "current_state": "Free plan includes one monitor, one status page (with three page components), and a minimum check interval of 10m. Paid plans from $30/mo.",
       "source_url": "https://www.openstatus.dev/",
       "category": "Status Pages",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Paddle",
+      "change_type": "restriction",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The pricing is 5% + $0.50 per transaction, which matches the stored information. However, the page mentions custom pricing for products under $10 and for invoicing, suggesting the standard pricing may not apply in those cases.",
+      "previous_state": "Merchant of record — no monthly fee, 5% + $0.50 per transaction. All-in-one: payments, tax compliance, fraud protection, buyer support",
+      "current_state": "5% + 50¢ per Checkout transaction. Custom pricing is available for products under $10 or if invoicing is required.",
+      "source_url": "https://www.paddle.com/pricing",
+      "category": "Payments",
       "refused_date": "2026-08-28"
     },
     {
@@ -553,6 +781,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "pantheon.io",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier is no longer explicitly mentioned. The page focuses on paid plans (Enterprise, Educational Institution) and highlights features available on the platform, but does not detail a free offering with the same characteristics as the stored information.",
+      "previous_state": "Drupal and WordPress hosting, automated DevOps, and scalable infrastructure. Free for developers and agencies. No custom domain.",
+      "current_state": "The pricing page details Enterprise Plans, Educational Institution Plans, WordPress Hosting, and Drupal Hosting. It encourages users to 'See Plan Details' and 'Start free or see how much you could save by switching to Pantheon.'",
+      "source_url": "https://pantheon.io/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "PDF-API.io",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -562,6 +802,30 @@
       "current_state": "The free plan includes 1 User, 1 Template, and 100 PDFs per month.",
       "source_url": "https://pdf-api.io",
       "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "PDFBolt",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://pdfbolt.com, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier offering of 500 free PDF conversions per month is no longer explicitly mentioned. The page focuses on AI-powered template generation with a limited number of AI generations (5/10,000 characters for initial generation, 4/10,000 for AI assistance). There's no clear indication of a free tier with a set number of conversions.",
+      "previous_state": "Developer-focused PDF generation API designed with privacy in mind. It offers Stripe-inspired documentation and includes 500 free PDF conversions per month.",
+      "current_state": "The page highlights AI-powered template generation with limited AI generations and focuses on features like template creation, API integration, and scalability. It does not mention a free tier with a specific number of conversions.",
+      "source_url": "https://pdfbolt.com",
+      "category": "API Development",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Phase Two",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier with a 100 user limit is no longer explicitly mentioned. The pricing page focuses on managed hosting with unlimited users and SSO connections for a flat price, and enterprise support. It highlights cost savings compared to other IAMs, but doesn't detail a free starter realm.",
+      "previous_state": "Keycloak Open Source Identity and Access Management. Free Starter realm up to 100 users. SSO connections require paid Premium tier ($749/month). Leveraging Phase Two's enhanced Keycloak container with Organization extension.",
+      "current_state": "Managed Keycloak Hosting offers unlimited users and SSO connections for a single, flat price. Clusters are priced by active session count, not total users.",
+      "source_url": "https://phasetwo.io",
+      "category": "Auth",
       "refused_date": "2026-08-28"
     },
     {
@@ -625,6 +889,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Reducto",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://reducto.ai, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier with 15k credits is no longer explicitly mentioned. The page states you can get API access by starting on the Standard tier, which is a pay-as-you-go plan.",
+      "previous_state": "Turn any unstructured documents (PDF, XLSX, JPG, PPTX, etc.) into structured JSON data. Parse, extract data, and edit PDF forms. Free tier with 15k free credits and pay-as-you-go.",
+      "current_state": "API access is available through the Standard tier, a pay-as-you-go plan.",
+      "source_url": "https://reducto.ai",
+      "category": "AI / ML",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "Renamer.ai",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -646,6 +922,18 @@
       "current_state": "The free tier costs £0 / user / mo, includes 100 MB storage, unlimited public packages, and is not for commercial use.",
       "source_url": "https://repoforge.io",
       "category": "CI/CD",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "robusta.dev",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not mention a free tier with 20 Kubernetes nodes. It focuses on a per-incident pricing model based on LLM investigations and grouping of duplicate alerts.",
+      "previous_state": "Powerful Kubernetes monitoring based on Prometheus. Bring your own Prometheus or install the all-in-one bundle. The free tier includes up to 20 Kubernetes nodes. Alerts via Slack, Microsoft Teams, Discord, and more. Integrations with PagerDuty, OpsGenie, VictorOps, DataDog, and many other tools.",
+      "current_state": "Robusta offers a per-incident pricing model. The cost depends on the number of unique alerts and the price per investigation (benchmarked at $2.50). Grouping alerts significantly reduces the cost.",
+      "source_url": "https://home.robusta.dev/",
+      "category": "Monitoring",
       "refused_date": "2026-08-28"
     },
     {
@@ -706,6 +994,30 @@
       "current_state": "The free plan includes AI agents, up to 3 automations, basic integrations, and limited AI credits. The Pro plan is $10/month billed annually and includes unlimited AI agents and automations, 100+ integrations, and 50,000 AI credits per month.",
       "source_url": "https://www.taskade.com/",
       "category": "Project Management",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Tavily AI",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://tavily.com/, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The page does not explicitly mention a free tier with 1000 requests/month and no credit card required. It states they handle 300M+ monthly requests, but this is for all users, not a free tier.",
+      "previous_state": "API for online search and rapid insights and comprehensive research, with the capability of organization of research results. 1000 request/month for the Free tier with No credit card required.",
+      "current_state": "The page highlights a high volume of requests (300M+ monthly) and does not detail a specific free tier. It encourages users to 'Try it for free' but doesn't specify limits.",
+      "source_url": "https://tavily.com/",
+      "category": "AI / ML",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Tawk.to",
+      "change_type": "new_tier",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "While the core live chat functionality remains free, the stored information doesn't mention the paid options for removing branding ($29/month), AI Assist (from $29/month), or hiring agents ($1/hour).",
+      "previous_state": "100% free live chat software — unlimited agents, unlimited concurrent chats, unlimited message history, unlimited sites, 45+ languages, CRM, ticketing, knowledge base, video/voice chat, screen sharing",
+      "current_state": "Tawk.to offers a free plan with all core features. Paid options include removing branding for $29/month, AI Assist starting at $29/month, and hiring live agents for $1/hour.",
+      "source_url": "https://www.tawk.to/pricing/",
+      "category": "Communication",
       "refused_date": "2026-08-28"
     },
     {
@@ -777,6 +1089,30 @@
       "previous_state": "Workflow automation — 100 tasks/month, unlimited Zaps but limited to 2-step only (one trigger + one action), 2,500 table records, 10 form pages",
       "current_state": "The free tier includes Zap workflows, Tables, and Forms with 100 tasks per month, unlimited Zap workflows, Tables, and Forms, and two-step Zap workflows.",
       "source_url": "https://zapier.com/pricing",
+      "category": "Workflow Automation",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Zenscrape",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the description is different. The stored information states 'One thousand free API calls/month and extra credits for students and non-profits.' The current pricing page states '1,000 Searched' with no mention of student or non-profit credits.",
+      "previous_state": "Web scraping API with headless browsers, residentials IPs, and straightforward pricing. One thousand free API calls/month and extra credits for students and non-profits.",
+      "current_state": "The free plan includes 1,000 searches per month.",
+      "source_url": "https://zenscrape.com/web-scraping-api",
+      "category": "Web Scraping",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Zoho Bookings",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping or hedge rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free plan now appears to be a 15-day trial of the premium features, after which users must pay based on the number of staff. The original deal of a perpetually free plan with limitations is no longer available.",
+      "previous_state": "Appointment scheduling for 1 staff member, 1 service type, with calendar sync free",
+      "current_state": "Offers a 15-day premium trial, then user-based pricing.",
+      "source_url": "https://zoho.com/bookings",
       "category": "Workflow Automation",
       "refused_date": "2026-08-28"
     },

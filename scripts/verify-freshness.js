@@ -99,6 +99,7 @@ export async function fetchPageText(url) {
       ok: true,
       text: text.slice(0, MAX_PAGE_TEXT_LENGTH),
       truncated: text.length > MAX_PAGE_TEXT_LENGTH,
+      finalUrl: res.url || url,
     };
   } catch (err) {
     const reason = err.name === "AbortError" ? "timeout" : err.message;

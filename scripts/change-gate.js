@@ -6,6 +6,10 @@ export const REJECT_NO_PRICE_SIGNAL = "no_price_signal";
 export const REJECT_PAGE_NOT_ABOUT_VENDOR = "page_does_not_name_vendor";
 export const REJECT_UNQUANTIFIED_LIMIT = "unquantified_limit";
 export const REJECT_CONFIRMED_UNCHANGED = "confirmed_unchanged";
+export const REJECT_STATES_NO_TERMS = "states_no_terms";
+export const REJECT_NO_REMOVAL_EVIDENCE = "no_removal_evidence";
+export const REJECT_REMOVAL_READ_FROM_ROOT = "removal_read_from_root";
+export const REJECT_FREE_TIER_STILL_OFFERED = "free_tier_still_offered";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -14,7 +18,13 @@ export const GATE_REASONS = [
   REJECT_PAGE_NOT_ABOUT_VENDOR,
   REJECT_UNQUANTIFIED_LIMIT,
   REJECT_CONFIRMED_UNCHANGED,
+  REJECT_STATES_NO_TERMS,
+  REJECT_NO_REMOVAL_EVIDENCE,
+  REJECT_REMOVAL_READ_FROM_ROOT,
+  REJECT_FREE_TIER_STILL_OFFERED,
 ];
+
+export const FREE_TIER_REMOVED = "free_tier_removed";
 
 const QUANTITY_CHANGE_TYPES = ["limits_reduced", "limits_increased"];
 
@@ -227,7 +237,225 @@ export function nullComparisons(summary) {
 export function assertsAgreement(summary) {
   if (typeof summary !== "string") return false;
   const lower = summary.toLowerCase();
-  return AGREEMENT_PHRASES.some((phrase) => lower.includes(phrase));
+  if (AGREEMENT_PHRASES.some((phrase) => lower.includes(phrase))) return true;
+  return AGREEMENT_CLAUSES.some((pattern) => pattern.test(summary));
+}
+
+const AGREEMENT_CLAUSES = [
+  /\bmatch(?:es|ing)?\s+(?:the|our|what)\b/i,
+  /\baligns?\s+with\b/i,
+  /\bconsistent\s+with\b/i,
+  /\bidentical\s+to\b/i,
+  /\bremains?\s+(?:the\s+same|unchanged|in\s+place)\b/i,
+  /\b(?:is|are|was|were)\s+unchanged\b/i,
+  /\bha(?:s|ve)\s?n[o']?t\s+changed\b/i,
+  /\bno\s+(?:actual\s+|material\s+|real\s+)?changes?\s+(?:to|in|was|were|has|have|is|are)\b/i,
+  /\b(?:tier|plan|program|offering)\s+still\s+(?:exists?|applies|stands)\b/i,
+  /\bstill\s+(?:offers?|provides?|includes?|allows?)\b/i,
+];
+
+const CLAUSE_BREAK = "\u0000";
+const CONTINUES_A_SENTENCE = "\u0001";
+const TRAILING_CONNECTIVE =
+  /^(?:but|while|whereas|which|although|though|however|yet|and|with)\b[,\s]*/i;
+
+export function summaryClauses(summary) {
+  if (typeof summary !== "string") return [];
+  return summary
+    .replace(/([.!?])\s+(?=["'“(]?[A-Z0-9])/g, `$1${CLAUSE_BREAK}`)
+    .replace(
+      /[,;]\s+(?=(?:but|while|whereas|which|although|though|however|yet)\b)/gi,
+      CLAUSE_BREAK + CONTINUES_A_SENTENCE
+    )
+    .replace(
+      /[,;]?\s+(?=(?:compared\s+to|versus|vs\.?|as\s+opposed\s+to|instead\s+of|rather\s+than)\s+(?:the\s+|our\s+|what\s+)?(?:stored|previously|prior|original|old|we)\b)/gi,
+      CLAUSE_BREAK + CONTINUES_A_SENTENCE
+    )
+    .replace(/;\s+/g, CLAUSE_BREAK + CONTINUES_A_SENTENCE)
+    .replace(/\s+[—–]\s+|\s+--\s+/g, CLAUSE_BREAK + CONTINUES_A_SENTENCE)
+    .split(CLAUSE_BREAK)
+    .map((clause) => clause.trim())
+    .filter(Boolean);
+}
+
+const ABSENCE_FRAMES = [
+  /\bdoes\s?n[o']?t\s+(?:explicitly\s+|specifically\s+|clearly\s+|directly\s+)?(?:mention|specify|state|detail|list|describe|indicate|provide|show|give)/i,
+  /\b(?:is|are|was|were)\s+not\s+(?:explicitly\s+|specifically\s+|clearly\s+)?(?:mentioned|specified|stated|listed|detailed|described|indicated|shown|provided|given)\b/i,
+  /\bno\s+longer\s+(?:explicitly\s+|specifically\s+|clearly\s+)?(?:mentioned|stated|specified|detailed|described|shown|indicated)\b/i,
+  /\bno\s+(?:specific|explicit|detailed)\s+(?:limits?|figures?|numbers?|details?|information|mention|pricing)\b/i,
+  /\bno\s+(?:mention|details?|information|specifics|breakdown)\s+(?:of|about|on|regarding|for)\b/i,
+  /\bnot\s+specified\b/i,
+  /\bunspecified\b/i,
+  /\bwithout\s+(?:detailing|specifying|mentioning|stating|listing|providing)\b/i,
+  /\bfails?\s+to\s+(?:mention|state|specify|detail|list)\b/i,
+  /\black(?:s|ing)?\s+(?:any\s+|specific\s+)?(?:detail|mention|information|specifics)\b/i,
+];
+
+const BOOKKEEPING_FRAMES = [
+  /\b(?:the\s+)?stored\s+(?:info|information|deal|description|record|data|state|figures?|values?|limits?|entry|text)/i,
+  /\bwe\s+(?:stored|store|recorded|previously|had|listed)\b/i,
+  /\bour\s+(?:record|records|stored|previous|listing|data|description)\b/i,
+  /\bpreviously\s+(?:stated|mentioned|listed|recorded|noted|described|specified|offered|included|allowed|had|was|were)\b/i,
+  /\b(?:was|were|is|are|had|stated)\s+previously\b/i,
+  /\bthe\s+(?:previous|original|old|prior)\s+(?:record|description|information|entry|listing|state|figures?|limits?|free\s+tier|terms|deal)\b/i,
+  /\bdiffer(?:s|ent)\s+from\s+the\s+(?:original|previous|stored|old|prior)\b/i,
+];
+
+const HEDGE_FRAMES = [
+  /\bwhich\s+equates?\s+to\b/i,
+  /\bappears?\s+to\b/i,
+  /\bseems?\s+to\b/i,
+  /\bsuggest(?:s|ing)\b/i,
+  /\bimpl(?:y|ies|ying)\b/i,
+  /\bpresumabl(?:y|e)\b/i,
+  /\bpossibly\b/i,
+  /\bmay\s+(?:not\s+)?(?:apply|be|have|mean|indicate)\b/i,
+  /\bmight\s+(?:not\s+)?(?:apply|be|have|mean|indicate)\b/i,
+  /\bpotential(?:ly)?\s+(?:need|change|reduction|increase)\b/i,
+];
+
+const PAGE_SUBJECT = /\b(?:the\s+)?(?:current\s+|new\s+|updated\s+|live\s+)?(?:pricing|landing|product|home|main|vendor'?s?|linked|cited|source)?\s*(?:page|site|website|homepage|url)\b/i;
+const READING_VERB =
+  /\b(?:mentions?|highlights?|promotes?|focuses|emphasi[sz]es?|details?|lists?|states?|shows?|says?|describes?|specifies|notes?|refers?|advertises?|displays?|indicates?|encourages?)\b/i;
+
+const PRONOUN_SUBJECT = /^\s*(?:but|while|whereas|which|although|though|however|yet|and)?\s*(?:it|they)\b/i;
+const PAGE_HOLDS = /\b(?:includes?|contains?|carries|only\s+has|has\s+no)\b/i;
+
+export function narratesTheReading(clause) {
+  if (typeof clause !== "string") return false;
+  const verbAt = clause.search(READING_VERB);
+  if (verbAt === -1) return PAGE_SUBJECT.test(clause) && PAGE_HOLDS.test(clause);
+  const subject = clause.slice(0, verbAt);
+  return PAGE_SUBJECT.test(subject) || PRONOUN_SUBJECT.test(subject);
+}
+
+export const CLAUSE_TERMS = "terms";
+export const CLAUSE_ABSENCE = "absence";
+export const CLAUSE_BOOKKEEPING = "bookkeeping";
+export const CLAUSE_HEDGE = "hedge";
+export const CLAUSE_NARRATION = "narration";
+
+export function clauseText(clause) {
+  return typeof clause === "string" ? clause.replace(CONTINUES_A_SENTENCE, "") : clause;
+}
+
+export function classifyClause(raw) {
+  const clause = clauseText(raw);
+  if (ABSENCE_FRAMES.some((pattern) => pattern.test(clause))) return CLAUSE_ABSENCE;
+  if (BOOKKEEPING_FRAMES.some((pattern) => pattern.test(clause))) return CLAUSE_BOOKKEEPING;
+  if (HEDGE_FRAMES.some((pattern) => pattern.test(clause))) return CLAUSE_HEDGE;
+  if (narratesTheReading(clause) && !statesTerms(clause)) return CLAUSE_NARRATION;
+  return CLAUSE_TERMS;
+}
+
+export function statesTerms(clause) {
+  return priceSignals(clause).length > 0 || quantifiedAttributes(clause).length > 0;
+}
+
+const DIFFERENCE_MARKER =
+  /\b(?:now|no\s+longer|instead\s+of|rather\s+than|down\s+from|up\s+from|increased|decreased|reduced|raised|lowered|dropped|removed|added|replaced|introduced|discontinued|eliminated|ended|rose|fell|shrank|grew|expanded|narrowed|changed|moved|new(?:ly)?\s+|from\s+\d)/i;
+
+export function statesADifference(clause) {
+  return typeof clause === "string" && DIFFERENCE_MARKER.test(clause);
+}
+
+export const CLAUSE_RESTATEMENT = "restatement";
+
+function sameQuantities(a, b) {
+  const left = quantities(a);
+  const right = quantities(b);
+  return left.length > 0 && multisetEqual(left, right);
+}
+
+export function summaryEvidence(summary) {
+  const clauses = summaryClauses(summary);
+  const kinds = clauses.map(classifyClause);
+  for (let i = 1; i < clauses.length; i++) {
+    if (kinds[i] !== CLAUSE_TERMS && kinds[i] !== CLAUSE_NARRATION) continue;
+    if (kinds[i - 1] === CLAUSE_TERMS || kinds[i - 1] === CLAUSE_RESTATEMENT) continue;
+    if (sameQuantities(clauses[i - 1], clauses[i])) kinds[i] = CLAUSE_RESTATEMENT;
+  }
+  const kept = [];
+  const dropped = [];
+  clauses.forEach((clause, i) => {
+    if (kinds[i] === CLAUSE_TERMS) kept.push(clause);
+    else dropped.push({ clause: clauseText(clause), kind: kinds[i] });
+  });
+  return { kept, dropped, changed: kept.filter(statesADifference) };
+}
+
+export function summaryFromClauses(clauses) {
+  const sentences = [];
+  for (const clause of clauses) {
+    const continues = clause.startsWith(CONTINUES_A_SENTENCE);
+    const opened = clause.replace(CONTINUES_A_SENTENCE, "").replace(TRAILING_CONNECTIVE, "");
+    const trimmed = opened.replace(/[\s,;]+$/, "").replace(/\.$/, "").trim();
+    if (!trimmed) continue;
+    const started = continues || opened.length !== clause.length;
+    sentences.push(started ? trimmed.charAt(0).toUpperCase() + trimmed.slice(1) : trimmed);
+  }
+  return sentences.length === 0 ? "" : `${sentences.join(". ")}.`;
+}
+
+const REMOVAL_EVIDENCE = [
+  /\b(?:removed|removing|discontinued|discontinuing|deprecated|retired|retiring|sunset|shut\s?down|shutting\s+down|eliminated|withdrawn|closed|ceased|killed|ends?|ended|ending)\b/i,
+  /\bno\s+longer\s+(?:offer|offers|offered|offering|available|free|listed|includes?|included|provides?|provided|has|have|exists?|accessible|supported|on\s+offer)\b/i,
+  /\bno\s+(?:ongoing|permanent|permanently|public|documented|visible|clear)?\s?free\b/i,
+  /\b(?:trial|paid|subscription|enterprise)[-\s]only\b/i,
+  /\bonly\s+(?:a\s+|the\s+)?(?:\d+[-\s]day\s+)?(?:free\s+)?trial\b/i,
+  /\b(?:now|only)\s+(?:offers?\s+|has\s+)?(?:a\s+)?(?:\d+[-\s]day\s+)?(?:free\s+)?trial\b/i,
+  /\b(?:plans?|pricing|tiers?)\s+(?:now\s+)?(?:start|starts|starting|begin|begins|from)\b/i,
+  /\bstarting\s+(?:plan|price|tier|at|from)\b/i,
+  /\b(?:starts?|starting|priced|paid|pricing|from)\s+(?:at\s+|from\s+)?[$€£¥₹]\d/i,
+  /\bminimum\s+plan\b/i,
+  /\blowest\s+(?:tier|plan)\s+is\s+(?:a\s+)?paid\b/i,
+  /\b(?:locked|gated|moved|placed)\s+behind\b/i,
+  /\brequires?\s+(?:a\s+)?(?:paid|payment|purchase|subscription|credit\s+card|licen[cs]e)\b/i,
+  /\b(?:replaced|superseded)\s+by\b/i,
+  /\bmust\s+migrate\b/i,
+  /\ball\s+plans?\s+(?:now\s+)?(?:start|require|cost)\b/i,
+];
+
+export function statesARemoval(summary) {
+  if (typeof summary !== "string") return false;
+  return REMOVAL_EVIDENCE.some((pattern) => pattern.test(summary));
+}
+
+const FREE_STILL_OFFERED = [
+  /\b(?:start|get\s+started|sign\s?-?up|signup|try|begin)\s+(?:it\s+|now\s+)?(?:for\s+)?free\b/i,
+  /\b['"‘“]free['"’”]\s+(?:sign\s?-?up|signup|account|access|option)\b/i,
+  /\bfree\s+(?:plan|tier|version)\s+(?:is\s+|are\s+)?(?:still|remains?)\b/i,
+  /\bstill\s+(?:offers?|has|provides?)\s+a\s+free\s+(?:plan|tier|version)\b/i,
+];
+
+export function reportsSomethingStillFree(summary) {
+  if (typeof summary !== "string") return false;
+  const withoutTrials = summary.replace(/\bfree\s+trials?\b/gi, "trial");
+  return FREE_STILL_OFFERED.some((pattern) => pattern.test(withoutTrials));
+}
+
+export function isDomainRoot(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.pathname === "/" && !parsed.search && !parsed.hash;
+  } catch {
+    return false;
+  }
+}
+
+export function registrableHost(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./i, "").toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+export function redirectedOffDomain(requestedUrl, finalUrl) {
+  const from = registrableHost(requestedUrl);
+  const to = registrableHost(finalUrl);
+  if (!from || !to || from === to) return false;
+  return !from.endsWith(`.${to}`) && !to.endsWith(`.${from}`);
 }
 
 export function describesChange(entry, context = {}) {
@@ -253,6 +481,12 @@ export function describesChange(entry, context = {}) {
       };
     }
   }
+
+  const audit = auditRecord(entry, context);
+  const refusedByAudit =
+    audit.outcome === OUTCOME_REFUSED
+      ? { ok: false, reason: audit.reason, detail: audit.detail }
+      : null;
 
   const nulls = nullComparisons(entry?.summary);
   if (nulls.length > 0 && containsAll(current, previous)) {
@@ -281,10 +515,12 @@ export function describesChange(entry, context = {}) {
       const gone =
         context.pageComplete === true ? storedDimensionsAbsentFromPage(entry, pageText) : [];
       if (gone.length > 0) {
+        if (refusedByAudit) return refusedByAudit;
         const missing = gone.map((a) => `${a.value} ${a.measured}`).join(", ");
         return {
           ok: true,
           reclassifyAs: RECLASSIFIED_AS_RESTRUCTURE,
+          rewriteSummary: audit.summary ?? undefined,
           detail: `the whole page was read and states nothing at all about ${missing}, so the stored dimension is gone rather than left unquantified`,
         };
       }
@@ -297,7 +533,8 @@ export function describesChange(entry, context = {}) {
     }
   }
 
-  return { ok: true };
+  if (refusedByAudit) return refusedByAudit;
+  return { ok: true, rewriteSummary: audit.summary ?? undefined };
 }
 
 export function changeConfirmationPrompt(entry) {
@@ -363,16 +600,19 @@ export async function gateCandidates(candidates, options = {}) {
   const confirmFn = options.confirmFn;
   const pageTextFor = options.pageTextFor ?? (() => undefined);
   const pageCompleteFor = options.pageCompleteFor ?? (() => false);
+  const finalUrlFor = options.finalUrlFor ?? (() => undefined);
   const accepted = [];
   const rejected = [];
   const unchecked = [];
   const reclassified = [];
+  const rewritten = [];
   const overruled = [];
 
   for (const original of candidates) {
     const verdict = describesChange(original, {
       pageText: pageTextFor(original),
       pageComplete: pageCompleteFor(original),
+      finalUrl: finalUrlFor(original),
     });
     if (!verdict.ok) {
       rejected.push({ candidate: original, reason: verdict.reason, detail: verdict.detail });
@@ -387,6 +627,11 @@ export async function gateCandidates(candidates, options = {}) {
         to: verdict.reclassifyAs,
         detail: verdict.detail,
       });
+    }
+    if (verdict.rewriteSummary) {
+      const was = candidate.summary;
+      candidate = { ...candidate, summary: verdict.rewriteSummary };
+      rewritten.push({ candidate, was, now: verdict.rewriteSummary });
     }
     if (!confirmFn) {
       accepted.push(candidate);
@@ -425,5 +670,108 @@ export async function gateCandidates(candidates, options = {}) {
     accepted.push(candidate);
   }
 
-  return { accepted, rejected, unchecked, reclassified, overruled };
+  return { accepted, rejected, unchecked, reclassified, rewritten, overruled };
+}
+
+
+
+const QUANTITY_CLAIMS = ["limits_reduced", "limits_increased"];
+const UNBOUNDED = /\bunlimited\b/i;
+
+function namesSomethingNew(summary, previousState) {
+  const held = new Set(quantities(previousState));
+  return quantities(summary).some((figure) => !held.has(figure));
+}
+
+export const OUTCOME_UNCHANGED = "unchanged";
+export const OUTCOME_REWRITTEN = "rewritten";
+export const OUTCOME_REFUSED = "refused";
+
+export function auditRecord(record, context = {}) {
+  const evidence = summaryEvidence(record?.summary);
+  const dropped = evidence.dropped;
+  const refuse = (reason, detail) => ({ outcome: OUTCOME_REFUSED, reason, detail, summary: null, dropped });
+
+  const movedOffDomain = redirectedOffDomain(record?.source_url, context.finalUrl);
+  if (movedOffDomain) {
+    const host = registrableHost(context.finalUrl);
+    return {
+      outcome: OUTCOME_REWRITTEN,
+      reason: null,
+      detail: `the page we cite redirects to ${host}, so the change is sourced from the redirect rather than from what the page failed to say`,
+      summary: summaryFromClauses([`${record.vendor}'s own page now redirects to ${host}`, ...evidence.kept]),
+      dropped,
+    };
+  }
+
+  if (evidence.kept.length === 0) {
+    const kinds = [...new Set(dropped.map(({ kind }) => kind))].sort();
+    return refuse(
+      REJECT_STATES_NO_TERMS,
+      `every clause of the summary states ${kinds.join(" or ")} rather than a term the page carries, so it reports the reading rather than a change`
+    );
+  }
+
+  const rewritten = summaryFromClauses(evidence.kept);
+
+  if (
+    assertsAgreement(record?.summary) &&
+    evidence.changed.length === 0 &&
+    !namesSomethingNew(rewritten, record?.previous_state)
+  ) {
+    return refuse(
+      REJECT_STATES_NO_DIFFERENCE,
+      `the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry`
+    );
+  }
+
+  if (
+    QUANTITY_CLAIMS.includes(record?.change_type) &&
+    quantities(record?.summary).length > 0 &&
+    quantities(rewritten).length === 0 &&
+    !UNBOUNDED.test(rewritten)
+  ) {
+    return refuse(
+      REJECT_STATES_NO_DIFFERENCE,
+      `${record.change_type} claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms`
+    );
+  }
+
+  if (record?.change_type === FREE_TIER_REMOVED) {
+    const evidenced = statesARemoval(rewritten);
+    if (reportsSomethingStillFree(record?.summary)) {
+      return refuse(
+        REJECT_FREE_TIER_STILL_OFFERED,
+        `a free tier was recorded as removed by a summary that reports the page still offering one`
+      );
+    }
+    if (!evidenced && isDomainRoot(record?.source_url)) {
+      return refuse(
+        REJECT_REMOVAL_READ_FROM_ROOT,
+        `a free tier was recorded as removed from ${record.source_url}, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended`
+      );
+    }
+    if (!evidenced && dropped.some(({ kind }) => kind === CLAUSE_ABSENCE)) {
+      return refuse(
+        REJECT_NO_REMOVAL_EVIDENCE,
+        `a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was`
+      );
+    }
+  }
+
+  if (dropped.length === 0 || rewritten === record?.summary) {
+    return { outcome: OUTCOME_UNCHANGED, reason: null, detail: null, summary: null, dropped };
+  }
+  return {
+    outcome: OUTCOME_REWRITTEN,
+    reason: null,
+    detail: `dropped ${dropped.length} clause(s) that stated our reading rather than the vendor's terms`,
+    summary: rewritten,
+    dropped,
+  };
+}
+
+export function applyAudit(record, verdict) {
+  if (verdict.outcome !== OUTCOME_REWRITTEN) return record;
+  return { ...record, summary: verdict.summary };
 }
