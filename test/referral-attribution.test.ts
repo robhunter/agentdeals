@@ -139,10 +139,10 @@ describe("Attribution Logic", () => {
   });
 
   it("vendor matching is case-insensitive", () => {
-    const now = new Date();
     logReferralRequest({ agent_id: "agent_1", vendor: "Railway", referral_code: "C1", referral_url: "http://u1" });
+    const now = new Date();
     const result = attributeConversion("railway", now);
-    assert.strictEqual(result, "agent_1");
+    assert.strictEqual(result, "agent_1", "a request logged in the millisecond after the conversion date is not attributed");
   });
 
   it("does not attribute requests after the conversion date", () => {
