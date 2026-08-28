@@ -34,7 +34,7 @@ import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMO
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable } from "./types.js";
-import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
+import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, feedEntryUpdated, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -54639,7 +54639,7 @@ const httpServer = createHttpServer(async (req, res) => {
       if (digest.top_changes.length === 0) continue;
       const weekUrl = w === 0 ? `${baseUrl}/this-week` : `${baseUrl}/this-week?week=${w}`;
       const newestChange = latestChangeDate(digest.top_changes) ?? digest.week_of;
-      const pubDate = new Date(newestChange + "T12:00:00Z").toISOString();
+      const pubDate = feedEntryUpdated(newestChange);
       entryUpdates.push(pubDate);
       const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       const ws = new Date(digest.week_of + "T00:00:00Z");
