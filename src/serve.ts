@@ -17,6 +17,7 @@ import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVend
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS } from "./link-health.js";
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
+import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
@@ -3918,19 +3919,10 @@ function buildVendorPage(slug: string): string | null {
 
   // --- NEW: Growth Path ---
   const growthBullets: string[] = [];
-  const desc = primary.description.toLowerCase();
-  const limitPatterns = [
-    { regex: /(\d[\d,]*)\s*(gb|gib)\s*(storage|data|disk)/i, unit: "storage", format: (m: RegExpMatchArray) => `${m[1]} ${m[2].toUpperCase()} storage` },
-    { regex: /(\d[\d,]*)\s*(gb|gib)\s*(bandwidth|transfer|egress)/i, unit: "bandwidth", format: (m: RegExpMatchArray) => `${m[1]} ${m[2].toUpperCase()} bandwidth` },
-    { regex: /(\d[\d,]*k?)\s*(mau|monthly active users)/i, unit: "users", format: (m: RegExpMatchArray) => `${m[1]} MAU` },
-    { regex: /(\d[\d,]*k?)\s*(api\s*calls|requests|invocations|events|emails|messages)(\/(?:mo|month|day))?/i, unit: "requests", format: (m: RegExpMatchArray) => `${m[1]} ${m[2]}${m[3] || "/mo"}` },
-    { regex: /(\d[\d,]*)\s*(projects?|repos?|sites?|apps?|databases?|instances?)/i, unit: "projects", format: (m: RegExpMatchArray) => `${m[1]} ${m[2]}` },
-  ];
-  for (const pat of limitPatterns) {
-    const m = primary.description.match(pat.regex);
-    if (m) {
-      growthBullets.push(`At ${pat.format(m)}, you'll need to upgrade.`);
-    }
+  for (const phrase of growthLimitPhrases(primary.description)) {
+    growthBullets.push(levelWithheld
+      ? `We record ${phrase} as the limit, but ${withheldClause}, so we cannot confirm that threshold today.`
+      : `At ${phrase}, you'll need to upgrade.`);
   }
   if (growthBullets.length === 0 && hasFree) {
     growthBullets.push(`When your usage exceeds the free tier limits, you'll need to upgrade.`);
