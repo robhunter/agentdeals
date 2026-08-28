@@ -60,6 +60,12 @@ export function capListSections<T>(sections: T[][], cap: number): T[] {
   return sections.flatMap((section, i) => section.slice(0, allotted[i]));
 }
 
+export function feedEntryUpdated(day: string, now: Date = new Date()): string {
+  const noon = Date.parse(`${day}T12:00:00Z`);
+  if (Number.isNaN(noon)) return now.toISOString();
+  return new Date(Math.min(noon, now.getTime())).toISOString();
+}
+
 export function latestEventDate(changes: DatedChange[], notAfter?: string): string | null {
   let latest: string | null = null;
   for (const c of changes) {

@@ -16,6 +16,7 @@ import {
   capListSections,
   changeDateLabel,
   changeDatePublished,
+  feedEntryUpdated,
   undatedGroupHeading,
   DISCOVERED_DATE_PREFIX,
   UNDATED_GROUP_NOTE,
@@ -473,5 +474,27 @@ describe("capping a list built from several sections", () => {
 
   it("fills the earlier sections first with whatever the reservations leave", () => {
     assert.deepStrictEqual(capListSections([big("up", 5), big("recent", 5)], 4), ["up0", "up1", "up2", "recent0"]);
+  });
+});
+
+describe("feed entry updated timestamps", () => {
+  it("never stamps an entry later than the moment the feed is built", () => {
+    const now = new Date("2026-08-28T01:03:00Z");
+    assert.strictEqual(feedEntryUpdated("2026-08-28", now), "2026-08-28T01:03:00.000Z");
+  });
+
+  it("still stamps noon for a day that is already over", () => {
+    const now = new Date("2026-08-28T01:03:00Z");
+    assert.strictEqual(feedEntryUpdated("2026-08-27", now), "2026-08-27T12:00:00.000Z");
+  });
+
+  it("stamps noon once the day's noon has passed", () => {
+    const now = new Date("2026-08-28T18:00:00Z");
+    assert.strictEqual(feedEntryUpdated("2026-08-28", now), "2026-08-28T12:00:00.000Z");
+  });
+
+  it("falls back to now when the day is not a date", () => {
+    const now = new Date("2026-08-28T01:03:00Z");
+    assert.strictEqual(feedEntryUpdated("not-a-date", now), "2026-08-28T01:03:00.000Z");
   });
 });
