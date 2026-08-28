@@ -25,6 +25,12 @@ run_mutation() {
   echo "=== $name"
   restore
   "$@"
+  if diff -q "$BACKUP_DIR/change-gate.js" "$GATE" > /dev/null && \
+     diff -q "$BACKUP_DIR/reverify-rolling.js" "$ROLLING" > /dev/null; then
+    echo "    NOT APPLIED: the mutation changed no file, so it proves nothing"
+    survived=$((survived + 1))
+    return
+  fi
   if timeout 300 node --test test/change-gate.test.ts > /tmp/mutate-1101-test.log 2>&1; then
     echo "    SURVIVED"
     survived=$((survived + 1))
@@ -40,7 +46,7 @@ m_never_rejects() {
 import re
 p = "scripts/change-gate.js"
 s = open(p).read()
-s = s.replace("export function describesChange(entry) {", "export function describesChange(entry) {\n  return { ok: true };")
+s = s.replace("export function describesChange(entry, context = {}) {", "export function describesChange(entry, context = {}) {\n  return { ok: true };")
 open(p, "w").write(s)
 PY
 }
@@ -144,8 +150,8 @@ m_second_opinion_asked_before_the_first_layer() {
 p = "scripts/change-gate.js"
 s = open(p).read()
 s = s.replace(
-  "    const verdict = describesChange(candidate);\n    if (!verdict.ok) {\n      rejected.push({ candidate, reason: verdict.reason, detail: verdict.detail });\n      continue;\n    }\n    if (!confirmFn) {",
-  "    const verdict = describesChange(candidate);\n    if (!confirmFn) {")
+  "    const verdict = describesChange(candidate, { pageText: pageTextFor(candidate) });\n    if (!verdict.ok) {\n      rejected.push({ candidate, reason: verdict.reason, detail: verdict.detail });\n      continue;\n    }\n    if (!confirmFn) {",
+  "    const verdict = describesChange(candidate, { pageText: pageTextFor(candidate) });\n    if (!confirmFn) {")
 s = s.replace(
   "    if (confirmation.verdict === \"no\") {",
   "    if (!verdict.ok) {\n      rejected.push({ candidate, reason: verdict.reason, detail: verdict.detail });\n      continue;\n    }\n    if (confirmation.verdict === \"no\") {")

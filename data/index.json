@@ -5960,9 +5960,9 @@
     {
       "vendor": "Thunder Client",
       "category": "API Development",
-      "description": "Lightweight REST API client for VS Code. Free tier includes collections, environments, local storage, and request history. No account required for local use. Premium ($10/yr) adds cloud sync and team collaboration",
+      "description": "Lightweight REST API client for VS Code and JetBrains. Free plan is $0 per user/month with local storage and 1 local collection run per month. Paid plans are billed annually from Starter at $3 per user/month, which adds JetBrains, team features, CLI and CI/CD, WebSocket/SSE/gRPC and 250 collection runs; Business is $7 and Enterprise $16.",
       "tier": "Free",
-      "url": "https://www.thunderclient.com",
+      "url": "https://www.thunderclient.com/pricing",
       "tags": [
         "api",
         "rest",
@@ -5970,7 +5970,7 @@
         "testing",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-28"
     },
     {
       "vendor": "Gel",
@@ -7125,14 +7125,14 @@
     {
       "vendor": "Doczilla",
       "category": "Dev Utilities",
-      "description": "SaaS API empowering the generation of screenshots or PDFs directly from HTML/CSS/JS code. The free plan allows 250 documents month.",
+      "description": "SaaS API for generating screenshots or PDFs directly from HTML/CSS/JS code. Hobby plan is free at €0/month with 250 requests/month and 30 requests per minute, no credit card required. Pro is €4.99/month with 2,000 requests/month and 120 requests per minute.",
       "tier": "Free",
-      "url": "https://www.doczilla.app/",
+      "url": "https://www.doczilla.app/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05"
+      "verifiedDate": "2026-08-28"
     },
     {
       "vendor": "Doppio",
