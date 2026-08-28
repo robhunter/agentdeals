@@ -4722,7 +4722,7 @@
     },
     {
       "vendor": "Weaviate",
-      "change_type": "limits_reduced",
+      "change_type": "pricing_restructured",
       "date": "2026-08-28",
       "date_source": "discovered",
       "summary": "The free tier now has specific limits: 100,000 objects, 1 GB memory, 10 GB disk, 1 collection, up to 3 tenants, 2,000 embedding requests/day, and 1,000 Query Agent requests/month. The cloud offering is now structured into 'Free', 'Flex', and 'Premium' tiers. The original description of a 14-day free sandbox is no longer present.",

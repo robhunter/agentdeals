@@ -7,6 +7,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { changeLogFreshness as serverFreshness } from "../dist/data.js";
 
+process.env.AGENTDEALS_REFUSALS_PATH = path.join(
+  mkdtempSync(path.join(tmpdir(), "refusals-writer-")),
+  "change_refusals.json"
+);
+
 const {
   buildChangeEntry,
   selectNewChanges,

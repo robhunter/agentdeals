@@ -18,6 +18,8 @@ export const GATE_REASONS = [
 
 const QUANTITY_CHANGE_TYPES = ["limits_reduced", "limits_increased"];
 
+export const RECLASSIFIED_AS_RESTRUCTURE = "pricing_restructured";
+
 export const MIN_PRICE_SIGNALS = 1;
 
 const COMPARISON_CONNECTIVES = [
@@ -69,6 +71,21 @@ const ATTRIBUTE_STOPWORDS = new Set([
   "limit", "limits",
 ]);
 
+export const BYTE_UNITS = new Map([
+  ["kb", 1e3],
+  ["mb", 1e6],
+  ["gb", 1e9],
+  ["tb", 1e12],
+  ["pb", 1e15],
+  ["kib", 1024],
+  ["mib", 1024 ** 2],
+  ["gib", 1024 ** 3],
+  ["tib", 1024 ** 4],
+  ["pib", 1024 ** 5],
+]);
+
+const UNIT_AFTER_NUMBER = /^\s?(kib|mib|gib|tib|pib|kb|mb|gb|tb|pb)\b/i;
+
 export function priceSignals(text) {
   if (typeof text !== "string") return [];
   const found = [];
@@ -103,9 +120,61 @@ export function quantifiedAttributes(text) {
       if (stem.length <= 2) continue;
       words.push(stem);
     }
-    if (words.length > 0) attributes.push({ value: match[0], words });
+    const unitMatch = text.slice(start, start + ATTRIBUTE_WINDOW).match(UNIT_AFTER_NUMBER);
+    const unit = unitMatch ? unitMatch[1].toLowerCase() : null;
+    if (words.length > 0) attributes.push({ value: match[0], words, unit });
   }
   return attributes;
+}
+
+export function measuredWord(attribute) {
+  return (attribute?.words ?? []).find((word) => !BYTE_UNITS.has(word)) ?? null;
+}
+
+export function normalizedMagnitude(attribute) {
+  const scale = BYTE_UNITS.get(attribute?.unit ?? "");
+  if (scale === undefined) return null;
+  const value = Number(String(attribute.value).replace(/,/g, ""));
+  return Number.isFinite(value) ? value * scale : null;
+}
+
+export function measuredDifferences(entry) {
+  const previous = quantifiedAttributes(entry?.previous_state);
+  const current = quantifiedAttributes(entry?.current_state);
+  const differences = [];
+  for (const before of previous) {
+    const word = measuredWord(before);
+    const from = normalizedMagnitude(before);
+    if (!word || from === null) continue;
+    for (const after of current) {
+      if (measuredWord(after) !== word) continue;
+      const to = normalizedMagnitude(after);
+      if (to === null || to === from) continue;
+      differences.push({
+        attribute: word,
+        previous: `${before.value} ${before.unit}`,
+        current: `${after.value} ${after.unit}`,
+        from,
+        to,
+        direction: to > from ? "increase" : "decrease",
+      });
+    }
+  }
+  return differences;
+}
+
+export function storedDimensionsAbsentFromPage(entry, pageText) {
+  if (typeof pageText !== "string") return [];
+  const lower = pageText.toLowerCase();
+  const carriesAnAmount = new RegExp(CURRENCY_AMOUNT.source, "i").test(pageText);
+  const absent = [];
+  for (const attribute of quantifiedAttributes(entry?.previous_state)) {
+    const word = measuredWord(attribute);
+    if (!word) continue;
+    const present = word === PRICE_ATTRIBUTE ? carriesAnAmount : lower.includes(word);
+    if (!present) absent.push({ value: attribute.value, measured: word });
+  }
+  return absent;
 }
 
 export function unquantifiedInCurrentState(entry) {
@@ -209,6 +278,16 @@ export function describesChange(entry, context = {}) {
   if (QUANTITY_CHANGE_TYPES.includes(entry?.change_type)) {
     const unquantified = unquantifiedInCurrentState(entry);
     if (unquantified) {
+      const gone =
+        context.pageComplete === true ? storedDimensionsAbsentFromPage(entry, pageText) : [];
+      if (gone.length > 0) {
+        const missing = gone.map((a) => `${a.value} ${a.measured}`).join(", ");
+        return {
+          ok: true,
+          reclassifyAs: RECLASSIFIED_AS_RESTRUCTURE,
+          detail: `the whole page was read and states nothing at all about ${missing}, so the stored dimension is gone rather than left unquantified`,
+        };
+      }
       const stored = unquantified.previous.map((a) => `${a.value} ${a.words[0]}`).join(", ");
       return {
         ok: false,
@@ -276,18 +355,38 @@ export function rejectionCounts(rejected = []) {
   return counts;
 }
 
+export function describesQuantifiedDifference(entry) {
+  return measuredDifferences(entry)[0] ?? null;
+}
+
 export async function gateCandidates(candidates, options = {}) {
   const confirmFn = options.confirmFn;
   const pageTextFor = options.pageTextFor ?? (() => undefined);
+  const pageCompleteFor = options.pageCompleteFor ?? (() => false);
   const accepted = [];
   const rejected = [];
   const unchecked = [];
+  const reclassified = [];
+  const overruled = [];
 
-  for (const candidate of candidates) {
-    const verdict = describesChange(candidate, { pageText: pageTextFor(candidate) });
+  for (const original of candidates) {
+    const verdict = describesChange(original, {
+      pageText: pageTextFor(original),
+      pageComplete: pageCompleteFor(original),
+    });
     if (!verdict.ok) {
-      rejected.push({ candidate, reason: verdict.reason, detail: verdict.detail });
+      rejected.push({ candidate: original, reason: verdict.reason, detail: verdict.detail });
       continue;
+    }
+    let candidate = original;
+    if (verdict.reclassifyAs) {
+      candidate = { ...original, change_type: verdict.reclassifyAs };
+      reclassified.push({
+        candidate,
+        from: original.change_type,
+        to: verdict.reclassifyAs,
+        detail: verdict.detail,
+      });
     }
     if (!confirmFn) {
       accepted.push(candidate);
@@ -302,11 +401,22 @@ export async function gateCandidates(candidates, options = {}) {
       continue;
     }
     if (confirmation.verdict === "no") {
-      rejected.push({
+      const difference = describesQuantifiedDifference(candidate);
+      if (!difference) {
+        rejected.push({
+          candidate,
+          reason: REJECT_CONFIRMED_UNCHANGED,
+          detail: confirmation.reason || "a second pass judged the report to describe no change",
+        });
+        continue;
+      }
+      overruled.push({
         candidate,
-        reason: REJECT_CONFIRMED_UNCHANGED,
-        detail: confirmation.reason || "a second pass judged the report to describe no change",
+        opinion: confirmation.reason || "a second pass judged the report to describe no change",
+        difference,
+        detail: `the two states measure ${difference.attribute} at ${difference.previous} and ${difference.current}, a ${difference.direction} from ${difference.from.toLocaleString("en-US")} to ${difference.to.toLocaleString("en-US")} bytes`,
       });
+      accepted.push(candidate);
       continue;
     }
     if (confirmation.verdict === "unparsed") {
@@ -315,5 +425,5 @@ export async function gateCandidates(candidates, options = {}) {
     accepted.push(candidate);
   }
 
-  return { accepted, rejected, unchecked };
+  return { accepted, rejected, unchecked, reclassified, overruled };
 }

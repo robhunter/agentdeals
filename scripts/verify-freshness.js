@@ -25,7 +25,7 @@ const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
 const DEFAULT_THRESHOLD_DAYS = 25;
 const FETCH_TIMEOUT_MS = 15_000;
 const RATE_LIMIT_MS = 500; // 2 requests per second
-const MAX_PAGE_TEXT_LENGTH = 12_000; // chars of page text sent to the model
+export const MAX_PAGE_TEXT_LENGTH = 12_000; // chars of page text sent to the model
 const MAX_RESPONSE_TOKENS = 400;
 
 export const VERIFIER_MODEL = "google/gemma-3-27b-it";
@@ -95,8 +95,11 @@ export async function fetchPageText(url) {
     if (text.length < 50) {
       return { ok: false, error: "page content too short (likely JS-rendered SPA)" };
     }
-    const truncated = text.slice(0, MAX_PAGE_TEXT_LENGTH);
-    return { ok: true, text: truncated };
+    return {
+      ok: true,
+      text: text.slice(0, MAX_PAGE_TEXT_LENGTH),
+      truncated: text.length > MAX_PAGE_TEXT_LENGTH,
+    };
   } catch (err) {
     const reason = err.name === "AbortError" ? "timeout" : err.message;
     return { ok: false, error: reason };
