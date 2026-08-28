@@ -7,13 +7,24 @@
  *   node scripts/gate-report.js                        # every machine-detected record, first layer only
  *   node scripts/gate-report.js --on 2026-08-28        # only records recorded that day
  *   node scripts/gate-report.js --confirm              # also ask the second-opinion pass
+ *   node scripts/gate-report.js --fetch                # re-read each source_url so the price-signal rule applies
  */
 
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readChangeLog, CHANGES_PATH, DETECTED_BY_AI } from "./change-log.js";
 import { gateCandidates, confirmDescribesChange } from "./change-gate.js";
-import { createVerifierClient, VERIFIER_MODEL } from "./verify-freshness.js";
+import { createVerifierClient, VERIFIER_MODEL, fetchPageText } from "./verify-freshness.js";
+
+export async function readSourcePages(candidates, fetchFn = fetchPageText) {
+  const pages = new Map();
+  for (const candidate of candidates) {
+    const page = await fetchFn(candidate.source_url);
+    if (page.ok) pages.set(candidate, page.text);
+    else console.log(`  · ${candidate.vendor} — source_url unreadable (${page.error}), price-signal rule not applied`);
+  }
+  return pages;
+}
 
 export function machineDetected(changes, onDate) {
   return changes.filter(
@@ -47,6 +58,7 @@ export function reportLines({ candidates, accepted, rejected, unchecked }) {
 async function main() {
   const args = process.argv.slice(2);
   const confirm = args.includes("--confirm");
+  const fetchPages = args.includes("--fetch");
   const onIdx = args.indexOf("--on");
   const onDate = onIdx !== -1 ? args[onIdx + 1] : null;
 
@@ -56,7 +68,8 @@ async function main() {
   console.log(
     `Change gate report — ${candidates.length} machine-detected records` +
       (onDate ? ` recorded on ${onDate}` : "") +
-      (confirm ? ` (second opinion: ${VERIFIER_MODEL})` : " (first layer only)")
+      (confirm ? ` (second opinion: ${VERIFIER_MODEL})` : " (first layer only)") +
+      (fetchPages ? " (re-reading each source_url)" : "")
   );
   console.log("");
 
@@ -71,7 +84,11 @@ async function main() {
     confirmFn = (entry) => confirmDescribesChange(client, entry);
   }
 
-  const result = await gateCandidates(candidates, { confirmFn });
+  const pages = fetchPages ? await readSourcePages(candidates) : new Map();
+  const result = await gateCandidates(candidates, {
+    confirmFn,
+    pageTextFor: (candidate) => pages.get(candidate),
+  });
   for (const line of reportLines({ candidates, ...result })) console.log(line);
 
   process.exit(0);

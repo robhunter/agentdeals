@@ -3,6 +3,11 @@ import assert from "node:assert";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import {
+  THUNDER_CLIENT_LANDING_PAGE,
+  DOCZILLA_LANDING_PAGE,
+  FREEIPAPI_LANDING_PAGE,
+} from "./vendor-page-fixture.ts";
 
 const {
   describesChange,
@@ -10,10 +15,16 @@ const {
   nullComparisons,
   assertsAgreement,
   quantities,
+  priceSignals,
+  quantifiedAttributes,
+  rejectionCounts,
   parseConfirmation,
   changeConfirmationPrompt,
+  MIN_PRICE_SIGNALS,
   REJECT_NULL_COMPARISON,
   REJECT_STATES_NO_DIFFERENCE,
+  REJECT_NO_PRICE_SIGNAL,
+  REJECT_UNQUANTIFIED_LIMIT,
   REJECT_CONFIRMED_UNCHANGED,
 } = await import("../scripts/change-gate.js");
 
@@ -128,6 +139,68 @@ const THE_SAME_CAP_WRITTEN_WITHOUT_ITS_SEPARATOR = {
   impact: "medium",
 };
 
+const READ_FROM_A_PAGE_WITH_NO_PRICING = {
+  vendor: "Thunder Client",
+  change_type: "pricing_model_change",
+  summary:
+    "The pricing information has changed. The page no longer explicitly mentions a free tier. It highlights Git Sync for team collaboration, which was previously a premium feature.",
+  previous_state:
+    "Lightweight REST API client for VS Code. Free tier includes collections, environments, local storage, and request history. No account required for local use. Premium ($10/yr) adds cloud sync and team collaboration",
+  current_state:
+    "The page describes Thunder Client as a lightweight REST API client with local storage and Git Sync for team collaboration. It does not mention a free or premium tier, or any pricing.",
+  impact: "high",
+  source_url: "https://www.thunderclient.com",
+};
+
+const READ_FROM_A_LANDING_PAGE_THAT_ONLY_LINKS_TO_PRICING = {
+  vendor: "Doczilla",
+  change_type: "limits_increased",
+  summary:
+    "The pricing page states there are 'no strict limits' on the number of documents or screenshots, contradicting the stored information of a 250 documents/month limit.",
+  previous_state:
+    "SaaS API empowering the generation of screenshots or PDFs directly from HTML/CSS/JS code. The free plan allows 250 documents month.",
+  current_state: "There are no strict limits to the number of documents or screenshots that can be generated.",
+  impact: "high",
+  source_url: "https://www.doczilla.app/",
+};
+
+const READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING = {
+  vendor: "FreeIPAPI",
+  change_type: "limits_reduced",
+  summary:
+    "While a free tier still exists, it is limited to 60 requests per minute. Paid tiers are now available with higher limits and additional features.",
+  previous_state:
+    "Free, Fast and Reliable IP Geolocation API for commercial and non-commercial users available in JSON",
+  current_state:
+    "FreeIPAPI is still FREE with no account required! We're introducing subscriptions for users who want to increase the request limit to more than 60 requests per minute. The free tier includes 60 Requests per minute.",
+  impact: "medium",
+  source_url: "https://freeipapi.com",
+};
+
+const A_LIMIT_CLAIMED_AGAINST_DIFFERENT_ATTRIBUTES = {
+  vendor: "Harness CI",
+  change_type: "limits_reduced",
+  summary:
+    "The free plan now has significantly reduced limits compared to the stored information. The stored info stated 2,000 build credits/month, while the current page details limits for concurrent pipeline executions (up to 60), storage (250GB), and organizations (up to 1).",
+  previous_state:
+    "CI/CD platform — free plan: 2,000 Harness Cloud build credits/month (Linux, macOS, Windows runners), YAML pipelines, secrets management, test intelligence. Requires business email for cloud runners; self-hosted runner alternative available",
+  current_state:
+    "Free Plan is available for individual developers and small teams. It includes up to 60 concurrent pipeline executions, 250GB storage, up to 1 organization, up to 500 maximum users, up to 5 custom dashboards, unlimited templates, up to 5 custom roles, and policy as code.",
+  impact: "high",
+};
+
+const A_TRIAL_REPLACED_BY_A_CAPPED_FREE_PLAN = {
+  vendor: "Weaviate",
+  change_type: "limits_reduced",
+  summary:
+    "The free tier now has specific limits: 100,000 objects, 1 GB memory, 10 GB disk, 1 collection, up to 3 tenants, 2,000 embedding requests/day, and 1,000 Query Agent requests/month. The original description of a 14-day free sandbox is no longer present.",
+  previous_state:
+    "Open-source vector database — self-hosted: free forever with full features (hybrid search, multi-tenancy, compression). Cloud: 14-day free sandbox with full access. Paid cloud from $45/mo (Flex)",
+  current_state:
+    "Always free: $0 /mo. 1 cluster per user, upgrade to paid anytime. 100,000 objects, 1 GB memory, 10 GB disk, 1 collection, up to 3 tenants, 2,000 req/day Embeddings + Query Agent (1,000 req/mo).",
+  impact: "medium",
+};
+
 const RECORDS_THAT_DESCRIBE_A_REAL_CHANGE = [
   AGREES_ON_ONE_FIGURE_AND_DIFFERS_ON_ANOTHER,
   A_LIMIT_ACTUALLY_MOVED,
@@ -136,6 +209,7 @@ const RECORDS_THAT_DESCRIBE_A_REAL_CHANGE = [
   A_FREE_PLAN_BECAME_A_TRIAL,
   THE_CHANGE_WORD_SITS_FAR_FROM_BOTH_FIGURES,
   TWO_CAPS_TRADED_PLACES,
+  A_TRIAL_REPLACED_BY_A_CAPPED_FREE_PLAN,
 ];
 
 function tempLog(changes: unknown[]): string {
@@ -241,6 +315,152 @@ describe("a recorded change must describe a change", () => {
       const { accepted, rejected } = await gateCandidates(all);
       assert.deepStrictEqual(rejected.map((r: any) => r.candidate.vendor), ["Abby", "Cloudflare DNS"]);
       assert.strictEqual(accepted.length, RECORDS_THAT_DESCRIBE_A_REAL_CHANGE.length);
+    });
+  });
+
+  describe("the page it read states no terms at all", () => {
+    it("finds no price signal on a landing page whose only pricing is a nav link", () => {
+      assert.deepStrictEqual(priceSignals(THUNDER_CLIENT_LANDING_PAGE), []);
+    });
+
+    it("counts download and country totals as no kind of price", () => {
+      assert.ok(THUNDER_CLIENT_LANDING_PAGE.includes("6M+ Downloads"));
+      assert.ok(THUNDER_CLIENT_LANDING_PAGE.includes("100+ Countries"));
+      assert.strictEqual(priceSignals(THUNDER_CLIENT_LANDING_PAGE).length, 0);
+    });
+
+    it("does not read a hyphenated word ending in free as a tier", () => {
+      assert.ok(DOCZILLA_LANDING_PAGE.includes("hassle-free"));
+      assert.deepStrictEqual(priceSignals(DOCZILLA_LANDING_PAGE), []);
+    });
+
+    it("finds every amount and rate a root that does publish its pricing states", () => {
+      const signals = priceSignals(FREEIPAPI_LANDING_PAGE);
+      assert.ok(signals.length >= MIN_PRICE_SIGNALS);
+      assert.ok(signals.includes("€0"));
+      assert.ok(signals.includes("€9.90"));
+      assert.ok(signals.includes("€99.00"));
+      assert.ok(signals.some((s: string) => /60 [Rr]equests per minute/.test(s)));
+    });
+
+    it("reads an allowance written as an adjective rather than with per", () => {
+      const noTierWordAndNoAmount = "The cap is 500 daily requests.";
+      assert.deepStrictEqual(priceSignals(noTierWordAndNoAmount), ["500 daily r"]);
+    });
+
+    it("reads the cap a page states without an amount or the word per", () => {
+      const asDbIpWritesIt = "The Free API is a fast and easy way to implement IP geolocation in a prototype or small website. It provides a simple IP to country, state and city mapping and is limited to 500 daily requests.";
+      assert.ok(priceSignals(asDbIpWritesIt).some((s: string) => s.startsWith("500 daily")));
+    });
+
+    it("refuses the record read from a page with no pricing on it", () => {
+      const verdict = describesChange(READ_FROM_A_PAGE_WITH_NO_PRICING, {
+        pageText: THUNDER_CLIENT_LANDING_PAGE,
+      });
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_NO_PRICE_SIGNAL);
+    });
+
+    it("refuses the record read from a landing page that only links to its pricing", () => {
+      const verdict = describesChange(READ_FROM_A_LANDING_PAGE_THAT_ONLY_LINKS_TO_PRICING, {
+        pageText: DOCZILLA_LANDING_PAGE,
+      });
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_NO_PRICE_SIGNAL);
+    });
+
+    it("keeps the record read from a root that does publish its pricing", () => {
+      const verdict = describesChange(READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING, {
+        pageText: FREEIPAPI_LANDING_PAGE,
+      });
+      assert.strictEqual(verdict.ok, true, `refused as ${verdict.reason}`);
+    });
+
+    it("cannot refuse a record for a page nobody supplied", () => {
+      const verdict = describesChange(READ_FROM_A_PAGE_WITH_NO_PRICING);
+      assert.strictEqual(verdict.ok, true);
+    });
+  });
+
+  describe("a limit is claimed to have moved without being cited on both sides", () => {
+    it("refuses a reduction whose current state quantifies only other attributes", () => {
+      const verdict = describesChange(A_LIMIT_CLAIMED_AGAINST_DIFFERENT_ATTRIBUTES);
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_UNQUANTIFIED_LIMIT);
+    });
+
+    it("refuses an increase whose current state quantifies nothing at all", () => {
+      const verdict = describesChange(READ_FROM_A_LANDING_PAGE_THAT_ONLY_LINKS_TO_PRICING);
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_UNQUANTIFIED_LIMIT);
+    });
+
+    it("keeps a restructure that states a price on both sides", () => {
+      const verdict = describesChange(A_TRIAL_REPLACED_BY_A_CAPPED_FREE_PLAN);
+      assert.strictEqual(verdict.ok, true, `refused as ${verdict.reason}`);
+    });
+
+    it("treats an amount as an attribute of its own so a restructure is not read as a silent side", () => {
+      const previous = quantifiedAttributes("Paid cloud from $45/mo (Flex)");
+      const current = quantifiedAttributes("Always free: $0 /mo.");
+      assert.ok(previous.some((a: any) => a.words.includes("currency")));
+      assert.ok(current.some((a: any) => a.words.includes("currency")));
+    });
+
+    it("keeps a reduction whose stored state quantified nothing to cite", () => {
+      const verdict = describesChange(READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING);
+      assert.strictEqual(verdict.ok, true, `refused as ${verdict.reason}`);
+      assert.deepStrictEqual(quantifiedAttributes(READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING.previous_state), []);
+    });
+
+    it("keeps a reduction that cites the same attribute in a different unit", () => {
+      const verdict = describesChange(A_RETENTION_WINDOW_SHRANK);
+      assert.strictEqual(verdict.ok, true, `refused as ${verdict.reason}`);
+    });
+
+    it("leaves a change type that claims no quantity alone", () => {
+      const verdict = describesChange({
+        ...A_LIMIT_CLAIMED_AGAINST_DIFFERENT_ATTRIBUTES,
+        change_type: "pricing_restructured",
+      });
+      assert.strictEqual(verdict.ok, true, `refused as ${verdict.reason}`);
+    });
+  });
+
+  describe("the run reports each refusal under its own heading", () => {
+    it("counts the two new refusals separately", async () => {
+      const { rejected } = await gateCandidates(
+        [READ_FROM_A_PAGE_WITH_NO_PRICING, A_LIMIT_CLAIMED_AGAINST_DIFFERENT_ATTRIBUTES, A_LIMIT_ACTUALLY_MOVED],
+        { pageTextFor: (c: any) => (c.vendor === "Thunder Client" ? THUNDER_CLIENT_LANDING_PAGE : undefined) }
+      );
+      const counts = rejectionCounts(rejected);
+      assert.strictEqual(counts.get(REJECT_NO_PRICE_SIGNAL), 1);
+      assert.strictEqual(counts.get(REJECT_UNQUANTIFIED_LIMIT), 1);
+      assert.strictEqual(counts.get(REJECT_NULL_COMPARISON), 0);
+    });
+
+    it("puts both counts in the run summary under the total they belong to", () => {
+      const lines = summaryLines(
+        {
+          verified: 0,
+          flagged: 0,
+          changed: 3,
+          recorded: [],
+          suppressed: [],
+          unclassified: [],
+          unchecked: [],
+          rejected: [
+            { candidate: READ_FROM_A_PAGE_WITH_NO_PRICING, reason: REJECT_NO_PRICE_SIGNAL, detail: "" },
+            { candidate: READ_FROM_A_LANDING_PAGE_THAT_ONLY_LINKS_TO_PRICING, reason: REJECT_NO_PRICE_SIGNAL, detail: "" },
+            { candidate: A_LIMIT_CLAIMED_AGAINST_DIFFERENT_ATTRIBUTES, reason: REJECT_UNQUANTIFIED_LIMIT, detail: "" },
+          ],
+        },
+        { useAi: true, checked: 3, oldestRemaining: "2026-07-05", total: 1580 }
+      );
+      const text = lines.join("\n");
+      assert.match(text, /Rejected \(no change described\): 3/);
+      assert.match(text, /page carried no pricing: 2/);
+      assert.match(text, /quantified on one side only: 1/);
     });
   });
 });
@@ -375,6 +595,60 @@ describe("the run does not write a change the gate refused", () => {
         change_type: A_LIMIT_ACTUALLY_MOVED.change_type,
         current_state: A_LIMIT_ACTUALLY_MOVED.current_state,
         impact: "high",
+      }),
+      rateLimitMs: 0,
+      changesPath: file,
+    });
+    assert.strictEqual(result.recorded.length, 1);
+    assert.strictEqual(result.rejected.length, 0);
+    rmSync(path.dirname(file), { recursive: true, force: true });
+  });
+
+  it("refuses the record when the page it actually read states no terms", async () => {
+    const silentOffer = {
+      ...offer,
+      vendor: "Thunder Client",
+      description: READ_FROM_A_PAGE_WITH_NO_PRICING.previous_state,
+      url: READ_FROM_A_PAGE_WITH_NO_PRICING.source_url,
+    };
+    const file = tempLog([]);
+    const data = { offers: [{ ...silentOffer }] };
+    const result = await runAiMode([{ index: 0, offer: silentOffer }], data, false, NOW, {
+      fetchFn: async () => ({ ok: true, text: THUNDER_CLIENT_LANDING_PAGE }),
+      verifyFn: async () => ({
+        status: "changed",
+        summary: READ_FROM_A_PAGE_WITH_NO_PRICING.summary,
+        change_type: READ_FROM_A_PAGE_WITH_NO_PRICING.change_type,
+        current_state: READ_FROM_A_PAGE_WITH_NO_PRICING.current_state,
+        impact: "high",
+      }),
+      rateLimitMs: 0,
+      changesPath: file,
+    });
+    assert.strictEqual(result.changed, 1);
+    assert.strictEqual(result.recorded.length, 0);
+    assert.strictEqual(result.rejected[0].reason, REJECT_NO_PRICE_SIGNAL);
+    assert.strictEqual(JSON.parse(readFileSync(file, "utf-8")).changes.length, 0);
+    rmSync(path.dirname(file), { recursive: true, force: true });
+  });
+
+  it("records the same report when the page it read does state terms", async () => {
+    const pricedOffer = {
+      ...offer,
+      vendor: "FreeIPAPI",
+      description: READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING.previous_state,
+      url: READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING.source_url,
+    };
+    const file = tempLog([]);
+    const data = { offers: [{ ...pricedOffer }] };
+    const result = await runAiMode([{ index: 0, offer: pricedOffer }], data, false, NOW, {
+      fetchFn: async () => ({ ok: true, text: FREEIPAPI_LANDING_PAGE }),
+      verifyFn: async () => ({
+        status: "changed",
+        summary: READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING.summary,
+        change_type: READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING.change_type,
+        current_state: READ_FROM_A_ROOT_THAT_PUBLISHES_ITS_PRICING.current_state,
+        impact: "medium",
       }),
       rateLimitMs: 0,
       changesPath: file,

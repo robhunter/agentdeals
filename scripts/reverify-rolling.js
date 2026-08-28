@@ -21,7 +21,13 @@ import { fileURLToPath } from "node:url";
 import { reverifyBatch } from "./reverify.js";
 import { fetchPageText, verifyOfferAgainstPage, createVerifierClient, VERIFIER_MODEL } from "./verify-freshness.js";
 import { buildChangeEntry, appendChangeEntries } from "./change-log.js";
-import { gateCandidates, confirmDescribesChange } from "./change-gate.js";
+import {
+  gateCandidates,
+  confirmDescribesChange,
+  rejectionCounts,
+  REJECT_NO_PRICE_SIGNAL,
+  REJECT_UNQUANTIFIED_LIMIT,
+} from "./change-gate.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -94,6 +100,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   let changed = 0;
   const changes = [];
   const unclassified = [];
+  const pageTexts = new Map();
 
   for (const entry of picked) {
     const { offer, index } = entry;
@@ -123,6 +130,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
       const { entry: change, missing } = buildChangeEntry(offer, result, { now });
       if (change) {
         changes.push(change);
+        pageTexts.set(change, page.text);
         console.log(`  ⚠ ${offer.vendor} (${offer.category}, ${change.change_type}): ${change.summary}`);
       } else {
         unclassified.push({ vendor: offer.vendor, url: offer.url, missing, summary: result.summary });
@@ -137,7 +145,10 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     await sleep(rateLimitMs);
   }
 
-  const { accepted, rejected, unchecked } = await gateCandidates(changes, { confirmFn });
+  const { accepted, rejected, unchecked } = await gateCandidates(changes, {
+    confirmFn,
+    pageTextFor: (candidate) => pageTexts.get(candidate),
+  });
   for (const { candidate, reason, detail } of rejected) {
     console.log(`  ✗ ${candidate.vendor} (${candidate.change_type}) describes no change [${reason}]: ${detail}`);
   }
@@ -166,7 +177,10 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total })
   const lines = ["", "── Summary ──", `Checked: ${checked}`, `Verified (date bumped): ${result.verified}`];
   if (useAi) {
     lines.push(`Changed (PM review needed): ${result.changed}`);
+    const refusals = rejectionCounts(result.rejected ?? []);
     lines.push(`Rejected (no change described): ${(result.rejected ?? []).length}`);
+    lines.push(`  of which the page carried no pricing: ${refusals.get(REJECT_NO_PRICE_SIGNAL) ?? 0}`);
+    lines.push(`  of which claimed a limit quantified on one side only: ${refusals.get(REJECT_UNQUANTIFIED_LIMIT) ?? 0}`);
     lines.push(`Recorded without a second opinion: ${(result.unchecked ?? []).length}`);
     lines.push(`Recorded to data/deal_changes.json: ${result.recorded.length}`);
     lines.push(`Already recorded, not written again: ${result.suppressed.length}`);
