@@ -16,6 +16,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS } from "./link-health.js";
+import { sourceDoesNotNameVendor } from "./source-check.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
@@ -33,7 +34,7 @@ import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
-import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable } from "./types.js";
+import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, feedEntryUpdated, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -477,10 +478,13 @@ function riskBadgeHtml(
   return `${badge} <span style="font-size:${size};color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`;
 }
 
-function stabilityCellHtml(stability: string, linkUnreachable: LinkUnreachable | null | undefined): string {
+function stabilityCellHtml(stability: string, linkUnreachable: LinkUnreachable | null | undefined, offer?: Pick<Offer, "source_check">): string {
   if (linkUnreachable) {
     const since = linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
     return `<span style="color:var(--text-dim)" title="Link has not resolved${escHtmlServer(since)}">link unreachable</span>`;
+  }
+  if (offer && sourceDoesNotNameVendor(offer)) {
+    return `<span style="color:var(--text-dim)" title="The page we cite for this offer does not name it">source unconfirmed</span>`;
   }
   const color = STABILITY_COLORS[stability] ?? "#8b949e";
   return `<span class="stability-dot" style="background:${color}"></span> ${escHtmlServer(stability)}`;
@@ -3882,10 +3886,12 @@ function buildVendorPage(slug: string): string | null {
     : "";
   const verdictLine2 = linkUnreachable
     ? `Its pricing page has not resolved for us${unconfirmableSince}, so we cannot confirm these terms today.`
+    : sourceDoesNotNameVendor(primary)
+    ? `The page we cite for it does not name it, so we cannot confirm these terms today.`
     : vendorChanges.length === 0
     ? `It's ${stabilityText} — zero pricing changes recorded.`
     : `It's ${stabilityText} — ${vendorChanges.length} pricing change${vendorChanges.length > 1 ? "s" : ""} recorded.`;
-  const verdictLine3 = alternatives.length > 0 && !linkUnreachable
+  const verdictLine3 = alternatives.length > 0 && !linkUnreachable && !sourceDoesNotNameVendor(primary)
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";
   const quickVerdictHtml = `
@@ -3955,13 +3961,13 @@ function buildVendorPage(slug: string): string | null {
           <tr class="current-vendor-row">
             <td><strong>${escHtmlServer(vendorName)}</strong></td>
             <td>${escHtmlServer(primary.tier)}</td>
-            <td>${stabilityCellHtml(stability, linkUnreachable)}</td>
+            <td>${stabilityCellHtml(stability, linkUnreachable, primary)}</td>
           </tr>
 ${enrichedAlts.map(a => {
   return `          <tr>
             <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
             <td>${escHtmlServer(a.tier)}</td>
-            <td>${stabilityCellHtml(a.stability ?? "stable", a.link_unreachable)}</td>
+            <td>${stabilityCellHtml(a.stability ?? "stable", a.link_unreachable, a)}</td>
           </tr>`;
 }).join("\n")}
         </tbody>
@@ -3983,7 +3989,9 @@ ${enrichedAlts.map(a => {
         <div class="change-summary">${escHtmlServer(c.summary)}</div>
         ${c.previous_state && c.current_state ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
       </div>`;
-  }).join("\n") : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
+  }).join("\n") : sourceDoesNotNameVendor(primary)
+    ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)} — but the page we cite for this offer does not name it, so nothing we have read describes these terms. Treat the empty history as a statement about our records, not about this vendor's pricing.</p>`
+    : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
 
   // Prominent change notice for vendors with significant changes
   const latestChange = vendorChanges[0];
@@ -4199,6 +4207,8 @@ ${allCompareLinks.join("\n")}
   // produced the level, and nothing else.
   const faqReliableAnswer = linkUnreachable
     ? `We cannot say. ${vendorName}'s pricing page has not resolved for us${unconfirmableSince}, so we are not publishing a stability judgement for this vendor until it does.`
+    : sourceDoesNotNameVendor(primary)
+    ? `We cannot say. The page we cite for this offer does not name ${vendorName}, so nothing we have read describes these terms, and we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === "stable"
     ? `${vendorName}'s free tier is considered stable: we hold no free tier removal, limit reduction or pricing restructure on record for this vendor.${vendorChanges.length > 0 ? ` We do hold ${vendorChanges.length === 1 ? "1 other recorded change" : `${vendorChanges.length} other recorded changes`} — see the pricing history below.` : ""}`
     : riskLevel === "caution"
@@ -4209,6 +4219,8 @@ ${allCompareLinks.join("\n")}
   // NEW: Additional FAQ items
   const faqProductionAnswer = linkUnreachable
     ? `${vendorName}'s pricing page has not resolved for us${unconfirmableSince}. We cannot confirm what its free tier offers today, so we are not recommending it for production or for anything else until we can.`
+    : sourceDoesNotNameVendor(primary)
+    ? `The page we cite for ${vendorName} does not name it. We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (riskLevel === "stable"
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. With ${stabilityText} pricing and ${escHtmlServer(keyLimit)}, it's a reasonable starting point. Monitor your usage against the limits and have an upgrade plan ready.`
@@ -4218,6 +4230,8 @@ ${allCompareLinks.join("\n")}
     ? `Yes, ${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).`
     : linkUnreachable
     ? `We hold no recorded pricing changes for ${vendorName}, but its pricing page has not resolved for us${unconfirmableSince}, so that is a statement about our records rather than a positive signal.`
+    : sourceDoesNotNameVendor(primary)
+    ? `We hold no recorded pricing changes for ${vendorName}, but the page we cite for this offer does not name it, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
   const faqAlternativesAnswer = alternatives.length > 0
     ? `The top free alternatives to ${vendorName} in ${primary.category} include ${alternatives.slice(0, 5).map(a => `${a.vendor} (${a.tier})`).join(", ")}. See all ${alternatives.length} alternatives above.`

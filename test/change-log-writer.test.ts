@@ -274,13 +274,21 @@ describe("change log writer", () => {
       { index: 1, offer: { ...OFFER, vendor: "Otherbase", verifiedDate: "2026-01-02" } },
     ];
 
+    const reachable = async (batch: any[]) => ({
+      verified: batch.map((b) => ({ index: b.index, vendor: b.offer.vendor })),
+      flagged: [],
+    });
+    const namesEveryone = async () => ({
+      ok: true,
+      text: "Examplebase and Otherbase both cost $10/month.",
+    });
+
     it("returns a change count of zero even when every entry is reachable", async () => {
       const data = { offers: picked.map((p) => ({ ...p.offer })) };
-      const batchFn = async (batch: any[]) => ({
-        verified: batch.map((b) => ({ index: b.index, vendor: b.offer.vendor })),
-        flagged: [],
+      const result = await runUrlMode(picked, data, false, NOW, {
+        batchFn: reachable,
+        fetchFn: namesEveryone,
       });
-      const result = await runUrlMode(picked, data, false, NOW, batchFn);
       assert.strictEqual(result.verified, 2);
       assert.strictEqual(result.changed, 0);
       assert.deepStrictEqual(result.changes, []);
@@ -293,20 +301,52 @@ describe("change log writer", () => {
         verified: [],
         flagged: batch.map((b) => ({ vendor: b.offer.vendor, url: b.offer.url, error: "HTTP 500" })),
       });
-      const result = await runUrlMode(picked, data, false, NOW, batchFn);
+      const result = await runUrlMode(picked, data, false, NOW, { batchFn });
       assert.strictEqual(result.flagged, 2);
       assert.strictEqual(result.changed, 0);
       assert.deepStrictEqual(result.changes, []);
     });
 
-    it("stamps a fresh verifiedDate on a page that merely answered", async () => {
+    it("stamps a fresh verifiedDate on a page that answered and named the vendor", async () => {
       const data = { offers: picked.map((p) => ({ ...p.offer })) };
-      const batchFn = async (batch: any[]) => ({
-        verified: batch.map((b) => ({ index: b.index, vendor: b.offer.vendor })),
-        flagged: [],
-      });
-      await runUrlMode(picked, data, false, NOW, batchFn);
+      await runUrlMode(picked, data, false, NOW, { batchFn: reachable, fetchFn: namesEveryone });
       assert.notStrictEqual(data.offers[0].verifiedDate, "2026-01-01");
+      assert.strictEqual(data.offers[0].source_check.outcome, "ok");
+    });
+
+    it("holds verifiedDate in AI mode too, on a page a model confirmed", async () => {
+      const sourcedFromAnAggregator = {
+        index: 0,
+        offer: { ...OFFER, url: "https://dealmarket.example/offers", verifiedDate: "2026-01-01" },
+      };
+      const data = { offers: [{ ...sourcedFromAnAggregator.offer }] };
+      const result = await runAiMode([sourcedFromAnAggregator], data, false, NOW, {
+        fetchFn: async () => ({ ok: true, text: "Deals for startups. Save 30% on 400 tools." }),
+        verifyFn: async () => ({ status: "confirmed" }),
+        confirmFn: async () => ({ verdict: "yes", reason: null }),
+        rateLimitMs: 0,
+      });
+      assert.strictEqual(result.verified, 0);
+      assert.strictEqual(data.offers[0].verifiedDate, "2026-01-01");
+      assert.strictEqual(data.offers[0].source_check.outcome, "does_not_name_vendor");
+    });
+
+    it("holds verifiedDate where the page that answered names somebody else", async () => {
+      const sourcedFromAnAggregator = [
+        {
+          index: 0,
+          offer: { ...OFFER, url: "https://dealmarket.example/offers", verifiedDate: "2026-01-01" },
+        },
+      ];
+      const data = { offers: [{ ...sourcedFromAnAggregator[0].offer }] };
+      const result = await runUrlMode(sourcedFromAnAggregator, data, false, NOW, {
+        batchFn: reachable,
+        fetchFn: async () => ({ ok: true, text: "Deals for startups. Save 30% on 400 tools." }),
+      });
+      assert.strictEqual(result.verified, 0);
+      assert.strictEqual(data.offers[0].verifiedDate, "2026-01-01");
+      assert.strictEqual(data.offers[0].source_check.outcome, "does_not_name_vendor");
+      assert.strictEqual(data.offers[0].source_check.checked, "2026-08-27");
     });
   });
 

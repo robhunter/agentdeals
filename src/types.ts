@@ -61,6 +61,15 @@ export interface Offer {
   referral?: Referral;
   referral_program?: ReferralProgram;
   product_role?: ProductRole;
+  source_check?: SourceCheck;
+}
+
+export type SourceCheckOutcome = "ok" | "does_not_name_vendor" | "states_no_terms" | "unreadable";
+
+export interface SourceCheck {
+  checked: string;
+  outcome: SourceCheckOutcome;
+  detail: string;
 }
 
 export type StabilityClass = "stable" | "watch" | "volatile" | "improving";

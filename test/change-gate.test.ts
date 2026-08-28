@@ -7,6 +7,7 @@ import {
   THUNDER_CLIENT_LANDING_PAGE,
   DOCZILLA_LANDING_PAGE,
   FREEIPAPI_LANDING_PAGE,
+  JOINSECRET_OFFERS_PAGE,
 } from "./vendor-page-fixture.ts";
 
 const {
@@ -24,6 +25,7 @@ const {
   REJECT_NULL_COMPARISON,
   REJECT_STATES_NO_DIFFERENCE,
   REJECT_NO_PRICE_SIGNAL,
+  REJECT_PAGE_NOT_ABOUT_VENDOR,
   REJECT_UNQUANTIFIED_LIMIT,
   REJECT_CONFIRMED_UNCHANGED,
 } = await import("../scripts/change-gate.js");
@@ -150,6 +152,17 @@ const READ_FROM_A_PAGE_WITH_NO_PRICING = {
     "The page describes Thunder Client as a lightweight REST API client with local storage and Git Sync for team collaboration. It does not mention a free or premium tier, or any pricing.",
   impact: "high",
   source_url: "https://www.thunderclient.com",
+};
+
+const READ_FROM_A_PAGE_ABOUT_OTHER_COMPANIES = {
+  vendor: "Cloudways",
+  change_type: "limits_reduced",
+  summary:
+    "The offer has been reduced from 30% off for 3 months to a single free deal, with subsequent deals requiring a 99 EUR annual membership.",
+  previous_state: "30% off for 3 months. Access via: First deal free, then 99€/year or invite friends",
+  current_state: "The page lists a first deal free, then 99€/year or invite friends.",
+  impact: "high",
+  source_url: "https://www.joinsecret.com/offers",
 };
 
 const READ_FROM_A_LANDING_PAGE_THAT_ONLY_LINKS_TO_PRICING = {
@@ -427,6 +440,33 @@ describe("a recorded change must describe a change", () => {
     });
   });
 
+  describe("the page it read is about a different company", () => {
+    it("refuses a record read from a marketplace page that never names the vendor", () => {
+      const verdict = describesChange(READ_FROM_A_PAGE_ABOUT_OTHER_COMPANIES, {
+        pageText: JOINSECRET_OFFERS_PAGE,
+      });
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_PAGE_NOT_ABOUT_VENDOR);
+    });
+
+    it("refuses it although that page carries more price signals than one it accepts", () => {
+      assert.ok(
+        priceSignals(JOINSECRET_OFFERS_PAGE).length > priceSignals(FREEIPAPI_LANDING_PAGE).length
+      );
+      assert.strictEqual(
+        describesChange(READ_FROM_A_PAGE_ABOUT_OTHER_COMPANIES, { pageText: JOINSECRET_OFFERS_PAGE }).reason,
+        REJECT_PAGE_NOT_ABOUT_VENDOR
+      );
+    });
+
+    it("keeps a record read from a thin page that is the vendor's own", () => {
+      const verdict = describesChange(A_LIMIT_ACTUALLY_MOVED, {
+        pageText: "Deno Deploy free plan: 20GiB egress, 10 hours CPU time per month.",
+      });
+      assert.strictEqual(verdict.ok, true);
+    });
+  });
+
   describe("the run reports each refusal under its own heading", () => {
     it("counts the two new refusals separately", async () => {
       const { rejected } = await gateCandidates(
@@ -437,6 +477,25 @@ describe("a recorded change must describe a change", () => {
       assert.strictEqual(counts.get(REJECT_NO_PRICE_SIGNAL), 1);
       assert.strictEqual(counts.get(REJECT_UNQUANTIFIED_LIMIT), 1);
       assert.strictEqual(counts.get(REJECT_NULL_COMPARISON), 0);
+    });
+
+    it("counts a page about other companies under its own heading", async () => {
+      const { rejected } = await gateCandidates(
+        [READ_FROM_A_PAGE_ABOUT_OTHER_COMPANIES, READ_FROM_A_PAGE_WITH_NO_PRICING],
+        {
+          pageTextFor: (c: any) =>
+            c.vendor === "Cloudways" ? JOINSECRET_OFFERS_PAGE : THUNDER_CLIENT_LANDING_PAGE,
+        }
+      );
+      const counts = rejectionCounts(rejected);
+      assert.strictEqual(counts.get(REJECT_PAGE_NOT_ABOUT_VENDOR), 1);
+      assert.strictEqual(counts.get(REJECT_NO_PRICE_SIGNAL), 1);
+
+      const text = summaryLines(
+        { verified: 0, flagged: 0, changed: 2, recorded: [], suppressed: [], unclassified: [], unchecked: [], rejected },
+        { useAi: true, checked: 2, oldestRemaining: "2026-07-05", total: 1580 }
+      ).join("\n");
+      assert.match(text, /Rejected \(page does not name the vendor\): 1/);
     });
 
     it("puts both counts in the run summary under the total they belong to", () => {
@@ -584,11 +643,16 @@ describe("the run does not write a change the gate refused", () => {
   });
 
   it("still writes a change that describes one", async () => {
-    const movedOffer = { ...offer, vendor: "Deno Deploy", description: A_LIMIT_ACTUALLY_MOVED.previous_state };
+    const movedOffer = {
+      ...offer,
+      vendor: "Deno Deploy",
+      url: "https://deno.com/deploy/pricing",
+      description: A_LIMIT_ACTUALLY_MOVED.previous_state,
+    };
     const file = tempLog([]);
     const data = { offers: [{ ...movedOffer }] };
     const result = await runAiMode([{ index: 0, offer: movedOffer }], data, false, NOW, {
-      fetchFn,
+      fetchFn: async () => ({ ok: true, text: A_LIMIT_ACTUALLY_MOVED.current_state }),
       verifyFn: async () => ({
         status: "changed",
         summary: A_LIMIT_ACTUALLY_MOVED.summary,
