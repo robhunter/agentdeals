@@ -7,8 +7,19 @@ export const SOURCE_CHECK_OUTCOMES: SourceCheckOutcome[] = [
   "unreadable",
 ];
 
+export type LevelWithheldReason = "link_unreachable" | "does_not_name_vendor" | "unreadable";
+
+export const LEVEL_WITHHOLDING_OUTCOMES: SourceCheckOutcome[] = [
+  "does_not_name_vendor",
+  "unreadable",
+];
+
 export function sourceDoesNotNameVendor(offer: Pick<Offer, "source_check">): boolean {
   return offer.source_check?.outcome === "does_not_name_vendor";
+}
+
+export function sourceUnreadable(offer: Pick<Offer, "source_check">): boolean {
+  return offer.source_check?.outcome === "unreadable";
 }
 
 export function sourceCheckNotice(offer: Pick<Offer, "source_check">): SourceCheck | null {
@@ -17,9 +28,19 @@ export function sourceCheckNotice(offer: Pick<Offer, "source_check">): SourceChe
   return check;
 }
 
+export function levelWithheldReason(
+  offer: Pick<Offer, "source_check">,
+  linkUnreachable: unknown,
+): LevelWithheldReason | null {
+  if (linkUnreachable) return "link_unreachable";
+  const outcome = offer.source_check?.outcome;
+  if (outcome && LEVEL_WITHHOLDING_OUTCOMES.includes(outcome)) return outcome as LevelWithheldReason;
+  return null;
+}
+
 export function cannotVouchForLevel(
   offer: Pick<Offer, "source_check">,
   linkUnreachable: unknown,
 ): boolean {
-  return Boolean(linkUnreachable) || sourceDoesNotNameVendor(offer);
+  return levelWithheldReason(offer, linkUnreachable) !== null;
 }

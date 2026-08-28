@@ -9,9 +9,14 @@
  * established by fetching candidates and looking for price text, not by
  * status code.
  *
+ * The same question is worth asking of any population whose stored URL reads
+ * badly, not only of the bare roots, so --outcome selects the offers by the
+ * verdict their own cited page earned instead.
+ *
  * Usage:
  *   node scripts/bare-root-pricing-audit.js                  # every bare-root offer
  *   node scripts/bare-root-pricing-audit.js --limit 40       # first 40 only
+ *   node scripts/bare-root-pricing-audit.js --outcome unreadable
  *   node scripts/bare-root-pricing-audit.js --out /tmp/x.json
  */
 
@@ -102,12 +107,19 @@ async function main() {
   const limit = limitIdx !== -1 ? parseInt(args[limitIdx + 1], 10) : Infinity;
   const outIdx = args.indexOf("--out");
   const out = outIdx !== -1 ? args[outIdx + 1] : null;
+  const outcomeIdx = args.indexOf("--outcome");
+  const outcome = outcomeIdx !== -1 ? args[outcomeIdx + 1] : null;
 
   const data = JSON.parse(readFileSync(INDEX_PATH, "utf-8"));
-  const offers = (data.offers || []).filter((o) => isBareRoot(o.url));
+  const all = data.offers || [];
+  const offers = outcome
+    ? all.filter((o) => o.source_check?.outcome === outcome)
+    : all.filter((o) => isBareRoot(o.url));
   const subject = offers.slice(0, limit);
 
-  console.log(`Bare-root offers: ${offers.length} of ${(data.offers || []).length}`);
+  console.log(
+    `${outcome ? `Offers whose cited page came back ${outcome}` : "Bare-root offers"}: ${offers.length} of ${all.length}`
+  );
   console.log(`Reading ${subject.length} of them, ${1 + CANDIDATE_PATHS.length} URLs each`);
   console.log("");
 
@@ -126,7 +138,7 @@ async function main() {
   const stats = summarise(audits);
   console.log("");
   console.log("── Summary ──");
-  console.log(`Bare-root offers read: ${stats.total}`);
+  console.log(`Offers read: ${stats.total}`);
   console.log(`Stored root itself carries price text: ${stats.rootPriced}`);
   console.log(`A candidate pricing page carries price text: ${stats.candidatePriced}`);
   console.log(`A candidate pricing page is readable but carries none: ${stats.candidateReadableNoPricing}`);

@@ -5,7 +5,7 @@ import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, Ch
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
-import { cannotVouchForLevel, sourceDoesNotNameVendor } from "./source-check.js";
+import { cannotVouchForLevel, sourceDoesNotNameVendor, sourceUnreadable } from "./source-check.js";
 import { filterAlternatives } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause } from "./change-dates.js";
 
@@ -784,6 +784,8 @@ export function checkVendorRisk(
     summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}.${unreachableClause} Treat that as a statement about our records, not as a stable pricing history.`;
   } else if (sourceDoesNotNameVendor(offer)) {
     summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}. The page we cite for it does not name it, so nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
+  } else if (sourceUnreadable(offer)) {
+    summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}. We could not read the page we cite for it, so nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
     summary = `${offer.vendor} has a stable pricing history with no free tier removal, limit reduction or pricing restructure on record. Free tier verified for ${longevityDays} days.`;
   }

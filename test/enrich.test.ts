@@ -59,6 +59,7 @@ describe("enrichOffers", () => {
   // the property the rule is supposed to have.
   it("counts nothing — the number of records a vendor has cannot move its risk level", async () => {
     const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
+    const { levelWithheldReason } = await import("../dist/source-check.js");
     const changes = loadDealChanges();
     const offers = loadOffers();
 
@@ -83,6 +84,7 @@ describe("enrichOffers", () => {
       const offer = offers.find((o: { vendor: string }) => o.vendor.toLowerCase() === vendor);
       if (!offer) continue;
       const enriched = enrichOffers([offer])[0];
+      if (levelWithheldReason(offer, enriched.link_unreachable)) continue;
       assert.strictEqual(
         enriched.risk_level,
         "stable",
@@ -120,10 +122,10 @@ describe("enrichOffers", () => {
 
   it("withholds a level only against a recorded reason, never for any other", async () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
-    const { sourceDoesNotNameVendor } = await import("../dist/source-check.js");
+    const { levelWithheldReason } = await import("../dist/source-check.js");
     const withheld = enrichOffers(loadOffers()).filter((o: { risk_level: string | null }) => o.risk_level === null);
     const unexplained = withheld.filter(
-      (o: { link_unreachable: unknown }) => !o.link_unreachable && !sourceDoesNotNameVendor(o as never)
+      (o: { link_unreachable: unknown }) => !levelWithheldReason(o as never, o.link_unreachable)
     );
     assert.strictEqual(unexplained.length, 0, `${unexplained.length} offers publish no level and no reason for withholding it`);
   });

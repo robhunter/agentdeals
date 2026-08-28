@@ -223,7 +223,7 @@ m_empty_history_reads_as_good_news() {
   py <<'PY'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace('  }).join("\\n") : sourceDoesNotNameVendor(primary)', '  }).join("\\n") : false')
+s = s.replace('  }).join("\\n") : levelWithheld', '  }).join("\\n") : false')
 open(p, "w").write(s)
 PY
 }
@@ -232,7 +232,7 @@ m_hero_keeps_its_verdict() {
   py <<'PY2'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace("    : sourceDoesNotNameVendor(primary)\n    ? `The page we cite for it does not name it, so we cannot confirm these terms today.`\n", "")
+s = s.replace("  const verdictLine2 = levelWithheld", "  const verdictLine2 = false")
 open(p, "w").write(s)
 PY2
 }
@@ -241,7 +241,7 @@ m_table_keeps_its_value() {
   py <<'PY2'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace("  if (offer && sourceDoesNotNameVendor(offer)) {", "  if (false) {")
+s = s.replace("  const withheld = offer ? levelWithheldReason(offer, null) : null;", "  const withheld = null;")
 open(p, "w").write(s)
 PY2
 }
@@ -250,7 +250,7 @@ m_faq_keeps_its_answer() {
   py <<'PY2'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace("    : sourceDoesNotNameVendor(primary)\n    ? `We cannot say. The page we cite for this offer does not name ${vendorName}, so nothing we have read describes these terms, and we are not publishing a stability judgement for this vendor until that is fixed.`\n", "")
+s = s.replace("  const faqReliableAnswer = levelWithheld", "  const faqReliableAnswer = false")
 open(p, "w").write(s)
 PY2
 }
@@ -259,7 +259,7 @@ m_level_published_anyway() {
   py <<'PY'
 p = "src/source-check.ts"
 s = open(p).read()
-s = s.replace("  return Boolean(linkUnreachable) || sourceDoesNotNameVendor(offer);", "  return Boolean(linkUnreachable);")
+s = s.replace("  return levelWithheldReason(offer, linkUnreachable) !== null;", "  return Boolean(linkUnreachable);")
 open(p, "w").write(s)
 PY
 }
@@ -269,7 +269,7 @@ m_thin_page_also_withholds_the_level() {
 p = "src/source-check.ts"
 s = open(p).read()
 s = s.replace('  return offer.source_check?.outcome === "does_not_name_vendor";',
-              '  return Boolean(offer.source_check) && offer.source_check.outcome !== "ok";')
+              '  return offer.source_check ? offer.source_check.outcome !== "ok" : false;')
 open(p, "w").write(s)
 PY
 }
