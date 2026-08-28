@@ -229,8 +229,8 @@ m_the_queue_ignores_the_refusal() {
   py <<'PY'
 p = "scripts/reverify-rolling.js"
 s = open(p).read()
-s = s.replace('  const dates = [offer?.verifiedDate, held, refusedOn].filter(Boolean);',
-              '  const dates = [offer?.verifiedDate, held].filter(Boolean);')
+s = s.replace('  const dates = [offer?.verifiedDate, held, refusedOn, verificationRecord?.last_attempt_at].filter(Boolean);',
+              '  const dates = [offer?.verifiedDate, held, verificationRecord?.last_attempt_at].filter(Boolean);')
 open(p, "w").write(s)
 PY
 }
