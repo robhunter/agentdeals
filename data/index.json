@@ -1728,7 +1728,7 @@
         "pubsub",
         "free tier"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -2134,7 +2134,7 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-07-26",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -2291,7 +2291,7 @@
         "content",
         "free tier"
       ],
-      "verifiedDate": "2026-07-26",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -3527,7 +3527,7 @@
         "nameserver",
         "dynamic-dns"
       ],
-      "verifiedDate": "2026-07-26",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -5015,7 +5015,7 @@
         "uptime",
         "notifications"
       ],
-      "verifiedDate": "2026-07-24",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -6000,7 +6000,7 @@
         "admin panel",
         "open source"
       ],
-      "verifiedDate": "2026-07-26",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -20701,7 +20701,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-20",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -21331,7 +21331,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-19",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -21565,7 +21565,7 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-19",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -22949,7 +22949,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-22",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -22985,7 +22985,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-22",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -23111,7 +23111,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-20",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -23381,7 +23381,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -23471,7 +23471,7 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -23546,8 +23546,8 @@
       "verifiedDate": "2026-07-21",
       "source_check": {
         "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "outcome": "states_no_terms",
+        "detail": "the page names UXtweak.com but states no amount, tier or rate we can read"
       }
     },
     {
@@ -24074,7 +24074,7 @@
         "security",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -24295,7 +24295,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-22",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -24363,7 +24363,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -24414,7 +24414,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-23",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -24431,7 +24431,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-22",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -24465,7 +24465,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -24601,7 +24601,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -24703,7 +24703,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-22",
+      "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -24737,7 +24737,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",
@@ -25303,7 +25303,7 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-07-23",
+      "verifiedDate": "2026-08-28",
       "eligibility": {
         "type": "startup",
         "conditions": [
@@ -28037,7 +28037,7 @@
         "containers",
         "open-source"
       ],
-      "verifiedDate": "2026-07-24",
+      "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-08-28",
         "outcome": "ok",

@@ -13,6 +13,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Ably",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The report misinterprets '500 messages / second' as a different limit than '6M messages / month'. Both descriptions state a 6M message/month limit and 200 concurrent connections. The report also incorrectly states 'max subscribers per channel of unlimited' which isn't present in either description.",
+      "summary": "The free tier now has a limit of 500 messages/second, while the stored information states 6M messages/month. The free tier also has a max presence of 200, and max subscribers per channel of unlimited.",
+      "previous_state": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "current_state": "The Free tier includes 200 concurrent connections, 500 messages / second, 6M messages / month, and includes community & email support.",
+      "source_url": "https://ably.com/pricing",
+      "category": "Messaging",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "AppFit",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -61,6 +73,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "CloudAMQP",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The report misinterprets '1 M Message quota/month' as a queued message limit. Both descriptions state 1M messages/month and 20 connections.",
+      "summary": "The Little Lemur tier now has 10,000 queued messages instead of 1M messages/month, and 20 connections.",
+      "previous_state": "Managed RabbitMQ — 1M messages/month, 20 connections, 100 queues free",
+      "current_state": "Little Lemur - For Development Max 100 queues Max 10 000 queued messages Max idle queue time 28 days Shared RabbitMQ broker 1 M Message quota/month 20 Connection limit FREE",
+      "source_url": "https://www.cloudamqp.com/plans.html",
+      "category": "Messaging",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "Cloudflare DNS",
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
@@ -82,6 +106,18 @@
       "current_state": "Free $ 0 USD / year 10 projects Get started All core features Release snapshotting, build server integrations, and config variables (secrets management). 10 projects Project: A container for a single deployable component like an application, microservice, API, or database that holds your deployment process, variables, releases, and configurations. 10 tenants Tenant: An entity that represents a customer, a physical location, a customer’s physical location, or something else that has its own variables and deployment settings, allowing the same project to be deployed multiple times without duplicating configuration. 10 machines Machines: A Windows, Linux, or macOS application host registered as a deployment target. 1 space Spaces: The highest-level container within Octopus that provides complete isolation of projects, environments, and resources for different teams, departments, or business units. 10 users 5 concurrent tasks Task: A unit of work, like a deployment, runbook, health check, or other operation, that is executed in order and tracked with progress and logs.",
       "source_url": "https://codefresh.io/pricing/",
       "category": "CI/CD",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Cronhooks",
+      "change_type": "limits_increased",
+      "reason": "null_comparison",
+      "detail": "summary states \"previously\" between two values of 5 and no stored quantity is absent from the current state",
+      "summary": "The free tier now allows both ad-hoc and recurring schedules, up to 5 total schedules. Previously, the free tier only allowed 5 ad-hoc schedules.",
+      "previous_state": "Schedule on-time or recurring webhooks. The free plan allows 5 ad-hoc schedules.",
+      "current_state": "Free $0 /month Just for playing around. 5 schedules ad-hoc & recurring schedules only",
+      "source_url": "https://cronhooks.io/",
+      "category": "Dev Utilities",
       "refused_date": "2026-08-28"
     },
     {
@@ -241,6 +277,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Logz.io",
+      "change_type": "free_tier_removed",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page doesn't specify a trial duration, but the stored description only stated there *wasn't* a permanent free tier, not that the trial was limited to 14 days. The lack of a duration isn't a contradiction.",
+      "summary": "The stored deal info states a 14-day free trial only, with no permanent free tier. The pricing page offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing, but does not specify a duration. It primarily focuses on consumption-based pricing starting at $0.92/ingested GB/day for Log Management. The Community plan mentioned in the stored deal info has been removed.",
+      "previous_state": "ELK-based log management — 14-day free trial only. No permanent free tier. Consumption-based pricing starts at $0.92/ingested GB/day. Community plan removed",
+      "current_state": "Logz.io offers a 'Free Trial' for its services (Log Management, Infrastructure Monitoring, Distributed Tracing) but the duration is not specified. Pricing is primarily consumption-based: Log Management at $0.92 per ingested GB, Infrastructure Monitoring at $0.40 per 1000 time series metrics, and Distributed Tracing at $0.16 per 1 million spans.",
+      "source_url": "https://logz.io/pricing/",
+      "category": "Logging",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "mailsac.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -265,6 +313,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "MDBootstrap",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (700 component, 1 installation)",
+      "summary": "While a free tier still appears to exist, the page heavily promotes 'MDB Pro' and focuses on paid features like charts, datatables, and advanced support. The original description emphasized a comprehensive free tier with 'over 700 components'. The current page highlights a 'MDB Standard' with a MIT License and a collection of components, but also pushes users towards the Pro version for 'advanced needs'. The free offering seems more limited now, focusing on core components.",
+      "previous_state": "Free for personal & commercial use Bootstrap, Angular, React, and Vue UI Kits with over 700 components, stunning templates, 1-min installation, extensive tutorials & colossal community.",
+      "current_state": "MDB Standard is available with a MIT License, offering a collection of components like forms, cards, and buttons. MDB Pro offers advanced components like charts, datatables, pickers, and lightbox.",
+      "source_url": "https://mdbootstrap.com/",
+      "category": "Design",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "Mendix",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -274,6 +334,18 @@
       "current_state": "The Free tier is available for $0/month and includes everything needed to design, build, and deploy demos, prototypes, or small applications with a deployment environment for each application with unlimited users. It includes access to the Online Academy.",
       "source_url": "https://www.mendix.com/pricing/",
       "category": "Low-Code Platforms",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "mouseflow.com",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (500 session)",
+      "summary": "The page states \"Free forever. No card required.\", but does not mention a limit of 500 sessions/month for one website.",
+      "previous_state": "500 sessions/month free for one website",
+      "current_state": "Free forever, no card required.",
+      "source_url": "https://mouseflow.com/",
+      "category": "Analytics",
       "refused_date": "2026-08-28"
     },
     {
@@ -337,6 +409,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Renamer.ai",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "More detail, but no functional change.",
+      "summary": "The free tier now explicitly lists features included: Smart AI File renaming, 25 free renames/month, Desktop App (Win & Mac), Batch Rename, Auto Rename (Magic Folders), and Normal Support. The stored information was accurate, but the current pricing page provides more detail about the free tier's features.",
+      "previous_state": "AI-powered file renaming tool with OCR, metadata extraction, and automation for 20+ languages. Free tier: 25 files/month, including desktop app, batch rename, auto-rename, and normal support.",
+      "current_state": "Starter Plan: Free - 25 files per month, includes Smart AI File renaming, Desktop App (Win & Mac), Batch Rename, Auto Rename (Magic Folders), and Normal Support.",
+      "source_url": "https://renamer.ai",
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "RepoForge",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -370,6 +454,30 @@
       "current_state": "The page mentions a 'Free Forever Plan' and a '14 days Business Trial' but does not provide specific details about the limits of the free plan.",
       "source_url": "https://stackby.com/",
       "category": "Databases",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "SurveyMonkey.com",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (10 question, 100 respons)",
+      "summary": "The free plan now allows unlimited surveys but has limitations on responses and features.",
+      "previous_state": "Create online surveys. Analyze the results online. The free plan allows only 10 questions and 100 responses per survey.",
+      "current_state": "The free 'Basic' plan allows creating unlimited surveys and collecting limited responses on each survey.",
+      "source_url": "https://www.surveymonkey.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "SVB (Silicon Valley Bank)",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 currency, 100 currency, 5 currency, 9 currency, 50 currency)",
+      "summary": "The specific credit amounts for AWS, Google Cloud, MongoDB, Slack, and Segment are no longer explicitly mentioned. The page highlights 'Discounted partner offers' and 'Benefit from exclusive partner discounts on software and services' but does not detail the specific amounts or partners.",
+      "previous_state": "$5K AWS credits, up to $100K Google Cloud credits (usage-based annual cap), $5K MongoDB credits, $9K off Slack, and $50K Segment credits for SVB startup banking customers. Now a division of First Citizens BancShares",
+      "current_state": "SVB technology, life science/healthcare & global business clients can save on software and services such as workforce collaboration, infrastructure, talents and more.",
+      "source_url": "https://www.svb.com/startup-banking/",
+      "category": "Startup Programs",
       "refused_date": "2026-08-28"
     },
     {
