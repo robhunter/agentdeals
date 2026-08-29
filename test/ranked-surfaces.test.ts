@@ -165,8 +165,8 @@ describe("/referral-programs stops being ordered by our own money", () => {
 
   it("orders within a section by rotation, not the alphabet", async () => {
     const { text } = await get("/referral-programs");
-    // Only one vendor currently has one of our codes, so the observable
-    // section is the unpaid one — the second table.
+    // The unpaid section — the second table — is the larger of the two, and is
+    // the one this pins.
     const secondBodyAt = text.indexOf("<tbody>", text.indexOf("</tbody>"));
     const secondTable = text.slice(secondBodyAt, text.indexOf("</tbody>", secondBodyAt));
     const vendors = [...secondTable.matchAll(/class="vendor-link">([^<]+)</g)].map((m) => m[1]);
@@ -176,6 +176,7 @@ describe("/referral-programs stops being ordered by our own money", () => {
     // Pinned to the rotation the module actually produces over the source
     // order, so reintroducing any other sort fails here.
     const { rotateListing } = await import("../src/ranking.ts");
+    const { hasOurReferralLink } = await import("../dist/referral-surfaces.js");
     const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8")) as {
       offers: { vendor: string; referral?: unknown; referral_program?: { available?: boolean } }[];
     };
@@ -184,7 +185,7 @@ describe("/referral-programs stops being ordered by our own money", () => {
     for (const o of index.offers) {
       if (o.referral_program?.available && !seen.has(o.vendor)) {
         seen.add(o.vendor);
-        if (!o.referral) sourceOrder.push(o.vendor);
+        if (!hasOurReferralLink(o.vendor, o)) sourceOrder.push(o.vendor);
       }
     }
     assert.deepStrictEqual(vendors, rotateListing(sourceOrder, "referral-programs:without-code"));
