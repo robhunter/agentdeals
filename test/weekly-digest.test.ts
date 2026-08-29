@@ -23,8 +23,7 @@ describe("getWeeklyDigest logic", () => {
     const allChanges = loadDealChanges() as Array<{ vendor: string; date: string; change_type: string; summary: string }>;
     const now = new Date();
     const today = now.toISOString().slice(0, 10);
-    const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-    const futureChanges = allChanges.filter((c) => c.date >= today && c.date <= thirtyDaysFromNow);
+    const futureChanges = allChanges.filter((c) => c.date >= today);
 
     const digest = getWeeklyDigest();
 

@@ -21,6 +21,44 @@ export function partitionByDateProvenance<T extends Pick<DealChange, "date_sourc
   return { dated, discovered };
 }
 
+export interface DateWindow {
+  start: string;
+  end?: string;
+}
+
+export function isoWeekWindow(date: Date): DateWindow {
+  const dayOfWeek = date.getUTCDay();
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const start = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + mondayOffset)
+  );
+  const end = new Date(start.getTime() + 6 * 86400000);
+  return { start: start.toISOString().slice(0, 10), end: end.toISOString().slice(0, 10) };
+}
+
+export function withinWindow(date: string, window: DateWindow): boolean {
+  return date >= window.start && (window.end === undefined || date <= window.end);
+}
+
+export function changesInWindow<T extends Pick<DealChange, "date" | "date_source">>(
+  changes: T[],
+  window: DateWindow
+): { dated: T[]; discovered: T[] } {
+  return partitionByDateProvenance(changes.filter((c) => withinWindow(c.date, window)));
+}
+
+export function firstReadHeading(count: number): string {
+  return `Pages read for the first time (${count})`;
+}
+
+export function discoveryBatchNote(count: number, when: string): string {
+  const pages = `${count} pricing page${count === 1 ? "" : "s"}`;
+  const subject = count === 1 ? "it is" : "they are";
+  const verb = count === 1 ? "is" : "are";
+  const object = count === 1 ? "a change that took" : "changes that took";
+  return `${pages} read for the first time ${when}. Each records terms that differ from what we had stored, on a page that does not say when they changed — so ${subject} dated by discovery and ${verb} not counted as ${object} effect ${when}.`;
+}
+
 export const UNDATED_GROUP_NOTE =
   "The vendor’s page states these terms but not when they took effect, so we can only tell you when we found them. They are listed by discovery date and are excluded from the monthly groups and the Last 30 Days count above, both of which count changes by the date they took effect.";
 
