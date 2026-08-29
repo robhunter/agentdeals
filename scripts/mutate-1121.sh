@@ -136,8 +136,8 @@ m_the_period_is_read_from_anywhere_in_the_description() {
   py <<'PY'
 p = "src/growth-limits.ts"
 s = open(p).read()
-s = s.replace('const WORDED_PERIOD = /^(?:\\s+for)?(?:\\s+free)?\\s+(?:per|a|an|every)\\s+(?:(\\d[\\d,]*)\\s*)?([a-z]+)/i;',
-              'const WORDED_PERIOD = /(?:\\s+for)?(?:\\s+free)?\\s+(?:per|a|an|every)\\s+(?:(\\d[\\d,]*)\\s*)?([a-z]+)/i;')
+s = s.replace('const WORDED_PERIOD = /^(?:\\s+for)?(?:\\s+free)?\\s+(?:per|a|an|every)\\s+(?:(\\d[\\d,]*)[\\s-]*)?([a-z]+)/i;',
+              'const WORDED_PERIOD = /(?:\\s+for)?(?:\\s+free)?\\s+(?:per|a|an|every)\\s+(?:(\\d[\\d,]*)[\\s-]*)?([a-z]+)/i;')
 open(p, "w").write(s)
 PY
 }

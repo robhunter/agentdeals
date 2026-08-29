@@ -1,4 +1,5 @@
 import { pageNamesVendor } from "./vendor-naming.js";
+import { readPeriod, renderPeriod } from "../src/growth-limits.ts";
 
 export const REJECT_NULL_COMPARISON = "null_comparison";
 export const REJECT_STATES_NO_DIFFERENCE = "states_no_difference";
@@ -12,6 +13,8 @@ export const REJECT_REMOVAL_READ_FROM_ROOT = "removal_read_from_root";
 export const REJECT_FREE_TIER_STILL_OFFERED = "free_tier_still_offered";
 export const REJECT_NO_BASELINE = "no_baseline";
 export const REJECT_DANGLING_REFERENCE = "dangling_reference";
+export const REJECT_MEASURES_NO_CHANGE = "measures_no_change";
+export const REJECT_MEASURES_THE_OPPOSITE = "measures_the_opposite";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -26,6 +29,8 @@ export const GATE_REASONS = [
   REJECT_FREE_TIER_STILL_OFFERED,
   REJECT_NO_BASELINE,
   REJECT_DANGLING_REFERENCE,
+  REJECT_MEASURES_NO_CHANGE,
+  REJECT_MEASURES_THE_OPPOSITE,
 ];
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
@@ -101,6 +106,67 @@ export const BYTE_UNITS = new Map([
 
 const UNIT_AFTER_NUMBER = /^\s?(kib|mib|gib|tib|pib|kb|mb|gb|tb|pb)\b/i;
 
+export const MAGNITUDE_UNITS = new Map([
+  ["k", 1e3],
+  ["m", 1e6],
+  ["bn", 1e9],
+  ["b", 1e9],
+  ["thousand", 1e3],
+  ["million", 1e6],
+  ["billion", 1e9],
+  ["trillion", 1e12],
+]);
+
+const MAGNITUDE_AFTER_NUMBER = /^(?:(bn|k|m|b)|\s(thousand|million|billion|trillion))\b/i;
+
+const DURATION_AFTER_NUMBER =
+  /^[\s-]?(seconds?|secs?|minutes?|mins?|hours?|hrs?|h|days?|weeks?|wks?|months?|years?|yrs?)\b/i;
+
+const PERIOD_SECONDS = new Map([
+  ["sec", 1],
+  ["min", 60],
+  ["hour", 3600],
+  ["day", 86400],
+  ["week", 604800],
+  ["mo", 2592000],
+  ["yr", 31536000],
+]);
+
+const PERIOD_SCAN_WORDS = 4;
+const PERIOD_SCAN_ENDS = /[,;()]/;
+const A_WORD = /[A-Za-z][\w-]*/g;
+const A_FIGURE = /\d/;
+const CLAUSE_ENDS = /[,;.()✓•|]/;
+const A_SCOPE = /\sper\s/i;
+
+function periodAfter(window) {
+  const ends = window.search(PERIOD_SCAN_ENDS);
+  const scan = ends === -1 ? window : window.slice(0, ends);
+  const offsets = [0];
+  const words = new RegExp(A_WORD.source, "g");
+  for (let word = words.exec(scan); word && offsets.length <= PERIOD_SCAN_WORDS; word = words.exec(scan)) {
+    offsets.push(word.index + word[0].length);
+  }
+  for (const at of offsets) {
+    if (A_FIGURE.test(scan.slice(0, at))) break;
+    const rest = scan.slice(at);
+    const period = readPeriod(rest) ?? readPeriod(rest.replace(/^\s+/, ""));
+    if (period) return { period, at, ends: at + period.length };
+  }
+  return null;
+}
+
+export function periodSeconds(period) {
+  const seconds = PERIOD_SECONDS.get(period?.unit ?? "");
+  if (seconds === undefined) return null;
+  const count = Number(String(period.count ?? "1").replace(/,/g, ""));
+  return Number.isFinite(count) && count > 0 ? count * seconds : seconds;
+}
+
+function spanOf(word) {
+  return word ? (PERIOD_SECONDS.get(readPeriod(`/${word}`)?.unit ?? "") ?? null) : null;
+}
+
 export function priceSignals(text) {
   if (typeof text !== "string") return [];
   const found = [];
@@ -121,61 +187,143 @@ function singular(word) {
 
 export const PRICE_ATTRIBUTE = "currency";
 
-export function quantifiedAttributes(text) {
+function wordsIn(trailing) {
+  const words = [];
+  for (const word of trailing.toLowerCase().split(/[^a-z0-9%]+/).filter(Boolean).slice(0, ATTRIBUTE_WORDS)) {
+    const stem = singular(word);
+    if (ATTRIBUTE_STOPWORDS.has(word) || ATTRIBUTE_STOPWORDS.has(stem)) continue;
+    if (A_FIGURE.test(stem.charAt(0))) continue;
+    if (stem.length <= 2 && !BYTE_UNITS.has(stem)) continue;
+    words.push(stem);
+  }
+  return words;
+}
+
+export function readQuantities(text) {
   if (typeof text !== "string") return [];
-  const attributes = [];
+  const read = [];
+  let readThrough = 0;
   for (const match of text.matchAll(NUMBER)) {
     const start = match.index + match[0].length;
-    const trailing = text.slice(start, start + ATTRIBUTE_WINDOW).toLowerCase();
+    const trailing = text.slice(start, start + ATTRIBUTE_WINDOW);
+    const rate = periodAfter(trailing);
+    const beside = trailing.slice(rate?.at === 0 ? rate.ends : 0);
+    const stops = [
+      rate?.at > 0 ? rate.at : -1,
+      beside.search(A_FIGURE),
+      beside.search(CLAUSE_ENDS),
+      beside.search(A_SCOPE),
+    ];
+    const describes = Math.min(...stops.filter((at) => at !== -1), beside.length);
     const words = [];
     if (/[$€£¥₹]\s?$/.test(text.slice(0, match.index))) words.push(PRICE_ATTRIBUTE);
-    for (const word of trailing.split(/[^a-z0-9%]+/).filter(Boolean).slice(0, ATTRIBUTE_WORDS)) {
-      const stem = singular(word);
-      if (ATTRIBUTE_STOPWORDS.has(word) || ATTRIBUTE_STOPWORDS.has(stem)) continue;
-      if (stem.length <= 2) continue;
-      words.push(stem);
-    }
-    const unitMatch = text.slice(start, start + ATTRIBUTE_WINDOW).match(UNIT_AFTER_NUMBER);
+    const named = wordsIn(beside.slice(0, describes));
+    words.push(...(named.length > 0 || rate ? named : wordsIn(trailing)));
+    const unitMatch = trailing.match(UNIT_AFTER_NUMBER);
     const unit = unitMatch ? unitMatch[1].toLowerCase() : null;
-    if (words.length > 0) attributes.push({ value: match[0], words, unit });
+    const magnitudeMatch = unit === null ? trailing.match(MAGNITUDE_AFTER_NUMBER) : null;
+    const magnitude = magnitudeMatch ? (magnitudeMatch[1] ?? magnitudeMatch[2]).toLowerCase() : "";
+    const durationMatch = unit === null && magnitude === "" ? trailing.match(DURATION_AFTER_NUMBER) : null;
+    const scale =
+      BYTE_UNITS.get(unit ?? "") ??
+      MAGNITUDE_UNITS.get(magnitude) ??
+      spanOf(durationMatch ? durationMatch[1] : null) ??
+      1;
+    const period = rate?.period ?? null;
+    read.push({ value: match[0], words, unit, scale, period, spellsAPeriod: match.index < readThrough });
+    if (rate) readThrough = start + rate.ends;
   }
-  return attributes;
+  return read;
+}
+
+export function quantifiedAttributes(text) {
+  return readQuantities(text).filter(({ words, spellsAPeriod }) => words.length > 0 && !spellsAPeriod);
+}
+
+function isAMeasureWord(word) {
+  return !BYTE_UNITS.has(word) && !MAGNITUDE_UNITS.has(word) && !A_FIGURE.test(word.charAt(0));
 }
 
 export function measuredWord(attribute) {
-  return (attribute?.words ?? []).find((word) => !BYTE_UNITS.has(word)) ?? null;
+  return (attribute?.words ?? []).find(isAMeasureWord) ?? null;
 }
 
-export function normalizedMagnitude(attribute) {
-  const scale = BYTE_UNITS.get(attribute?.unit ?? "");
-  if (scale === undefined) return null;
-  const value = Number(String(attribute.value).replace(/,/g, ""));
-  return Number.isFinite(value) ? value * scale : null;
+export function measuredValue(attribute) {
+  const value = Number(String(attribute?.value ?? "").replace(/,/g, ""));
+  if (!Number.isFinite(value)) return null;
+  return value * (attribute?.scale ?? 1);
+}
+
+export function measuresTheSameThing(before, after) {
+  const priced = (attribute) => (attribute?.words ?? []).includes(PRICE_ATTRIBUTE);
+  if (priced(before) !== priced(after)) return false;
+  const left = measuredWord(before);
+  const right = measuredWord(after);
+  if (!left || !right) return false;
+  return after.words.includes(left) || before.words.includes(right);
+}
+
+function sameAmount(from, to) {
+  return Math.abs(from - to) <= 1e-9 * Math.max(Math.abs(from), Math.abs(to), 1);
+}
+
+export function comparedQuantity(before, after) {
+  if (!measuresTheSameThing(before, after)) return null;
+  let from = measuredValue(before);
+  let to = measuredValue(after);
+  if (from === null || to === null) return null;
+  const over = periodSeconds(before?.period);
+  const under = periodSeconds(after?.period);
+  if (over !== null && under !== null) {
+    from /= over;
+    to /= under;
+  }
+  return {
+    attribute: measuredWord(before),
+    previous: renderedQuantity(before),
+    current: renderedQuantity(after),
+    priced: (before.words ?? []).includes(PRICE_ATTRIBUTE),
+    before,
+    after,
+    from,
+    to,
+    direction: sameAmount(from, to) ? "equal" : to > from ? "increase" : "decrease",
+  };
+}
+
+function renderedQuantity(attribute) {
+  const unit = attribute?.unit ? ` ${attribute.unit.toUpperCase()}` : "";
+  const period = attribute?.period ? renderPeriod(attribute.period) : "";
+  return `${attribute?.value}${unit} ${measuredWord(attribute) ?? ""}${period}`.replace(/\s+/g, " ").trim();
+}
+
+function measuresAnAmount(attribute) {
+  return !(attribute?.words ?? []).includes(PRICE_ATTRIBUTE);
+}
+
+export function quantityComparison(entry) {
+  const previous = quantifiedAttributes(entry?.previous_state).filter(measuresAnAmount);
+  const current = quantifiedAttributes(entry?.current_state).filter(measuresAnAmount);
+  const compared = [];
+  const matched = new Set();
+  for (const before of previous) {
+    for (const after of current) {
+      const quantity = comparedQuantity(before, after);
+      if (!quantity) continue;
+      compared.push(quantity);
+      matched.add(before).add(after);
+    }
+  }
+  const unmatched = [...previous, ...current].filter((attribute) => !matched.has(attribute));
+  return { compared, unmatched };
+}
+
+export function comparedQuantities(entry) {
+  return quantityComparison(entry).compared;
 }
 
 export function measuredDifferences(entry) {
-  const previous = quantifiedAttributes(entry?.previous_state);
-  const current = quantifiedAttributes(entry?.current_state);
-  const differences = [];
-  for (const before of previous) {
-    const word = measuredWord(before);
-    const from = normalizedMagnitude(before);
-    if (!word || from === null) continue;
-    for (const after of current) {
-      if (measuredWord(after) !== word) continue;
-      const to = normalizedMagnitude(after);
-      if (to === null || to === from) continue;
-      differences.push({
-        attribute: word,
-        previous: `${before.value} ${before.unit}`,
-        current: `${after.value} ${after.unit}`,
-        from,
-        to,
-        direction: to > from ? "increase" : "decrease",
-      });
-    }
-  }
-  return differences;
+  return comparedQuantities(entry).filter(({ direction }) => direction !== "equal");
 }
 
 export function storedDimensionsAbsentFromPage(entry, pageText) {
@@ -475,11 +623,7 @@ export function statesTheSameFigure(baseline, elsewhere) {
   if (carried.length === 0) return false;
   const already = elsewhere.flatMap((text) => quantifiedAttributes(text));
   return carried.every((figure) =>
-    already.some(
-      (other) =>
-        other.value === figure.value &&
-        figure.words.some((word) => other.words.includes(word) && !BYTE_UNITS.has(word))
-    )
+    already.some((other) => comparedQuantity(figure, other)?.direction === "equal")
   );
 }
 
@@ -533,13 +677,6 @@ export function namesTheDimensionThatChanged(record, summary) {
       before.words.some((word) => after.words.includes(word) && !BYTE_UNITS.has(word))
     )
   );
-}
-
-function comparableMagnitude(attribute) {
-  const scaled = normalizedMagnitude(attribute);
-  if (scaled !== null) return scaled;
-  const value = Number(String(attribute?.value).replace(/,/g, ""));
-  return Number.isFinite(value) ? value : null;
 }
 
 export function summaryFromClauses(clauses) {
@@ -823,7 +960,7 @@ export async function gateCandidates(candidates, options = {}) {
         candidate,
         opinion: confirmation.reason || "a second pass judged the report to describe no change",
         difference,
-        detail: `the two states measure ${difference.attribute} at ${difference.previous} and ${difference.current}, a ${difference.direction} from ${difference.from.toLocaleString("en-US")} to ${difference.to.toLocaleString("en-US")} bytes`,
+        detail: `the two states measure ${difference.attribute} at ${difference.previous} and ${difference.current}, a ${difference.direction} from ${difference.from.toLocaleString("en-US")} to ${difference.to.toLocaleString("en-US")} once notation and period are normalised`,
       });
       accepted.push(candidate);
       continue;
@@ -876,6 +1013,58 @@ function baselineWasDropped(evidence) {
 export function hasABaselineToRestate(record, evidence) {
   if (!DIRECTIONAL_CLAIMS.includes(record?.change_type)) return false;
   return baselineWasDropped(evidence);
+}
+
+const EXPECTED_DIRECTION = {
+  limits_reduced: "decrease",
+  limits_increased: "increase",
+};
+
+export function statesBothSides(summary, quantity) {
+  const stated = quantifiedAttributes(summary);
+  const carries = (attribute) =>
+    stated.some((other) => comparedQuantity(attribute, other)?.direction === "equal");
+  return carries(quantity.before) && carries(quantity.after);
+}
+
+function everyStatedFigureHeldStill(summary, compared, restated) {
+  const held = restated.map(({ value }) => value);
+  return readQuantities(summary)
+    .filter(({ spellsAPeriod }) => !spellsAPeriod)
+    .filter(measuresAnAmount)
+    .every((stated) => {
+      if (held.includes(Number(String(stated.value).replace(/,/g, "")))) return true;
+      if (measuredWord(stated) === null) return false;
+      return compared.some(
+        ({ before, after }) =>
+          comparedQuantity(before, stated)?.direction === "equal" ||
+          comparedQuantity(after, stated)?.direction === "equal"
+      );
+    });
+}
+
+export function measuredAgainstItsClaim(record, published = record?.summary) {
+  const expected = EXPECTED_DIRECTION[record?.change_type];
+  if (!expected) return null;
+  const { compared } = quantityComparison(record);
+  const restated = nullComparisons(published);
+  if (compared.length + restated.length === 0) return null;
+  const moved = compared.filter(({ direction }) => direction !== "equal");
+  if (moved.length === 0) {
+    if (!everyStatedFigureHeldStill(published, compared, restated)) return null;
+    return { reason: REJECT_MEASURES_NO_CHANGE, quantities: compared, restated };
+  }
+  const contradicts = moved.filter(({ direction }) => direction !== expected);
+  if (contradicts.length === moved.length && contradicts.some((q) => statesBothSides(published, q))) {
+    return { reason: REJECT_MEASURES_THE_OPPOSITE, quantities: contradicts, restated };
+  }
+  return null;
+}
+
+function readsAsAList(measured) {
+  const pairs = measured.quantities.map(({ previous, current }) => `${previous} against ${current}`);
+  const stated = measured.restated.map(({ connective, value }) => `${value} "${connective}" ${value}`);
+  return [...pairs, ...stated].slice(0, 3).join(", ");
 }
 
 export function lostTheSubjectOfItsClaim(record, evidence, summary) {
@@ -968,6 +1157,20 @@ export function auditRecord(record, context = {}) {
         `a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was`
       );
     }
+  }
+
+  const measured = measuredAgainstItsClaim(record, rewritten);
+  if (measured?.reason === REJECT_MEASURES_NO_CHANGE) {
+    return refuse(
+      REJECT_MEASURES_NO_CHANGE,
+      `${record.change_type} claimed, and every quantity the record compares holds the same value once notation and period are normalised — ${readsAsAList(measured)}`
+    );
+  }
+  if (measured?.reason === REJECT_MEASURES_THE_OPPOSITE) {
+    return refuse(
+      REJECT_MEASURES_THE_OPPOSITE,
+      `${record.change_type} claimed, and every quantity that moved between the two states moved the other way — ${readsAsAList(measured)}`
+    );
   }
 
   if (lostTheSubjectOfItsClaim(record, evidence, rewritten)) {

@@ -26,7 +26,9 @@ const {
   quantifiedAttributes,
   storedDimensionsAbsentFromPage,
   measuredDifferences,
-  normalizedMagnitude,
+  measuredValue,
+  comparedQuantity,
+  measuredAgainstItsClaim,
   rejectionCounts,
   parseConfirmation,
   changeConfirmationPrompt,
@@ -39,6 +41,8 @@ const {
   REJECT_PAGE_NOT_ABOUT_VENDOR,
   REJECT_UNQUANTIFIED_LIMIT,
   REJECT_CONFIRMED_UNCHANGED,
+  REJECT_MEASURES_NO_CHANGE,
+  REJECT_MEASURES_THE_OPPOSITE,
 } = await import("../scripts/change-gate.js");
 
 const { runAiMode, summaryLines } = await import("../scripts/reverify-rolling.js");
@@ -105,6 +109,14 @@ const A_DAILY_CAP_WAS_HALVED = {
   impact: "medium",
 };
 
+const A_SUPPORT_CHANNEL_CLOSED = {
+  vendor: "Papertrail",
+  change_type: "limits_reduced",
+  summary: "Support on the free plan is now community forums only.",
+  previous_state: "Log aggregation — free plan with email support from the Papertrail team",
+  current_state: "The free plan is supported through the community forum.",
+  impact: "medium",
+};
 const A_RETENTION_WINDOW_SHRANK = {
   vendor: "Sematext",
   change_type: "limits_reduced",
@@ -292,13 +304,13 @@ describe("a recorded change must describe a change", () => {
       assert.strictEqual(verdict.reason, REJECT_NULL_COMPARISON);
     });
 
-    it("keeps a record where the equal figure sits beside a figure that vanished", () => {
+    it("does not read the equal figure as a null comparison where a figure vanished", () => {
       const droppedAlongside = {
         ...SAME_TERMS_EITHER_SIDE,
         current_state: "Free: 1 A/B Test, 3 Feature Flags, 5 Environments",
       };
       assert.deepStrictEqual(nullComparisons(droppedAlongside.summary).length, 1);
-      assert.strictEqual(describesChange(droppedAlongside).ok, true);
+      assert.notStrictEqual(describesChange(droppedAlongside).reason, REJECT_NULL_COMPARISON);
     });
   });
 
@@ -579,44 +591,48 @@ describe("a recorded change must describe a change", () => {
   });
 
   describe("a figure measured in binary units against one measured in decimal", () => {
+    const sized = (value: string, unit: string) => ({
+      value,
+      words: ["x"],
+      unit,
+      scale: BYTE_UNITS.get(unit),
+      period: null,
+    });
+
     it("reads the unit written against the figure", () => {
       const [egress] = quantifiedAttributes("20GiB egress").filter((a: any) => a.unit);
       assert.strictEqual(egress.unit, "gib");
-      assert.strictEqual(normalizedMagnitude(egress), 20 * 1024 ** 3);
+      assert.strictEqual(measuredValue(egress), 20 * 1024 ** 3);
     });
 
     it("scales each binary unit above its decimal namesake", () => {
       for (const [binary, decimal] of [["kib", "kb"], ["mib", "mb"], ["gib", "gb"], ["tib", "tb"]]) {
-        const one = normalizedMagnitude({ value: "1", words: ["x"], unit: binary });
-        const other = normalizedMagnitude({ value: "1", words: ["x"], unit: decimal });
+        const one = measuredValue(sized("1", binary));
+        const other = measuredValue(sized("1", decimal));
         assert.ok(one > other, `${binary} did not exceed ${decimal}`);
       }
     });
 
     it("reads 20 GiB as smaller than 100 GB and 200 GiB as larger", () => {
-      const twenty = normalizedMagnitude({ value: "20", words: ["x"], unit: "gib" });
-      const twoHundred = normalizedMagnitude({ value: "200", words: ["x"], unit: "gib" });
-      const hundred = normalizedMagnitude({ value: "100", words: ["x"], unit: "gb" });
-      assert.ok(twenty < hundred);
-      assert.ok(twoHundred > hundred);
+      assert.strictEqual(comparedQuantity(sized("20", "gib"), sized("100", "gb")).direction, "increase");
+      assert.strictEqual(comparedQuantity(sized("200", "gib"), sized("100", "gb")).direction, "decrease");
     });
 
     it("reads 1 TiB as larger than 1,000 GB and 1 TB as exactly that", () => {
-      const tebibyte = normalizedMagnitude({ value: "1", words: ["x"], unit: "tib" });
-      const terabyte = normalizedMagnitude({ value: "1", words: ["x"], unit: "tb" });
-      const thousand = normalizedMagnitude({ value: "1,000", words: ["x"], unit: "gb" });
-      assert.ok(tebibyte > thousand);
-      assert.strictEqual(terabyte, thousand);
+      assert.strictEqual(comparedQuantity(sized("1", "tib"), sized("1,000", "gb")).direction, "decrease");
+      assert.strictEqual(comparedQuantity(sized("1", "tb"), sized("1,000", "gb")).direction, "equal");
     });
 
-    it("has no magnitude for a figure written without a size unit", () => {
-      assert.strictEqual(normalizedMagnitude({ value: "500", words: ["request"], unit: null }), null);
+    it("reads a figure written without a size unit at its face value", () => {
+      const [requests] = quantifiedAttributes("500 requests");
+      assert.strictEqual(requests.unit, null);
+      assert.strictEqual(measuredValue(requests), 500);
     });
 
     it("measures the egress the two states state in different units", () => {
-      const [difference, ...rest] = measuredDifferences(A_LIMIT_ACTUALLY_MOVED);
-      assert.strictEqual(rest.length, 0);
-      assert.strictEqual(difference.attribute, "egres");
+      const difference = measuredDifferences(A_LIMIT_ACTUALLY_MOVED).find(
+        (d: any) => d.attribute === "egres"
+      );
       assert.strictEqual(difference.direction, "decrease");
       assert.strictEqual(difference.from, 100e9);
       assert.strictEqual(difference.to, 20 * 1024 ** 3);
@@ -636,8 +652,17 @@ describe("a recorded change must describe a change", () => {
       );
     });
 
-    it("measures nothing where only one state carries a size unit", () => {
-      assert.deepStrictEqual(measuredDifferences(A_RETENTION_WINDOW_SHRANK), []);
+    it("reads a retention window shrinking although neither state carries a size unit", () => {
+      const window = measuredDifferences(A_RETENTION_WINDOW_SHRANK).find(
+        (d: any) => d.previous === "7 retention"
+      );
+      assert.strictEqual(window.direction, "decrease");
+      assert.strictEqual(window.from, 7 * 86400);
+      assert.strictEqual(window.to, 86400);
+    });
+
+    it("measures nothing between two states that share no quantified term", () => {
+      assert.deepStrictEqual(measuredDifferences(A_SUPPORT_CHANNEL_CLOSED), []);
     });
 
     it("keeps a record whose figures the second opinion read backwards", async () => {
@@ -654,12 +679,232 @@ describe("a recorded change must describe a change", () => {
     });
 
     it("still refuses a record the second opinion calls unchanged and no figure contradicts", async () => {
-      const { accepted, rejected, overruled } = await gateCandidates([A_RETENTION_WINDOW_SHRANK], {
+      const { accepted, rejected, overruled } = await gateCandidates([A_SUPPORT_CHANNEL_CLOSED], {
         confirmFn: async () => ({ verdict: "no", reason: "the page restates the stored terms" }),
       });
       assert.strictEqual(accepted.length, 0);
       assert.strictEqual(overruled.length, 0);
       assert.strictEqual(rejected[0].reason, REJECT_CONFIRMED_UNCHANGED);
+    });
+  });
+
+  describe("#1136 the direction comes from the quantities, not from the prose", () => {
+    const DOCKER_HUB_REBASED_THE_PERIOD = {
+      vendor: "Docker Hub",
+      change_type: "limits_reduced",
+      summary:
+        "The Docker Hub Personal tier now includes 100 Docker Hub pulls/hr instead of 200 pulls per 6-hour window. It also includes 1 Docker Scout-enabled repo.",
+      previous_state:
+        "1 private repository, unlimited public repositories. 200 pulls per 6-hour window (authenticated). No automated builds on free tier",
+      current_state:
+        "Docker Personal $0 $0 ... Includes: 100 Docker Hub pulls/hr* 1 private Docker Hub repo 1 Docker Scout-enabled repo*",
+      impact: "medium",
+    };
+
+    const A_CAP_APPEARED_BESIDE_A_RISE = {
+      vendor: "Zoho Meeting",
+      change_type: "limits_reduced",
+      summary:
+        "The free tier now has a 60-minute meeting limit and supports up to 100 participants. Previously unlimited meeting duration with up to 3 meeting participants & 10 Webinar attendees.",
+      previous_state: "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
+      current_state: "Free plan offers up to 60 minutes of meetings and 100 meeting participants.",
+      impact: "high",
+    };
+
+    const A_REAL_TENFOLD_CUT = {
+      vendor: "Alibaba Cloud Qwen Code",
+      change_type: "limits_reduced",
+      summary: "The free tier now offers 100 requests/day, down from 1,000 requests/day.",
+      previous_state: "Free tier: 1,000 requests/day with the Qwen Code CLI, no token cap",
+      current_state: "The free tier offers 100 requests/day with the Qwen Code CLI.",
+      impact: "high",
+    };
+
+    it("reads 200 per 6 hours against 100 per hour as a rise", () => {
+      const [pulls] = measuredDifferences(DOCKER_HUB_REBASED_THE_PERIOD);
+      assert.strictEqual(pulls.attribute, "pull");
+      assert.strictEqual(pulls.direction, "increase");
+    });
+
+    it("refuses a reduction whose only compared quantity rose", () => {
+      const verdict = describesChange(DOCKER_HUB_REBASED_THE_PERIOD);
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_MEASURES_THE_OPPOSITE);
+      assert.match(verdict.detail, /200 pull per 6 hours/);
+    });
+
+    it("takes the direction from the matched quantity, not from a cap the page added", () => {
+      assert.strictEqual(
+        measuredAgainstItsClaim(A_CAP_APPEARED_BESIDE_A_RISE).reason,
+        REJECT_MEASURES_THE_OPPOSITE
+      );
+    });
+
+    it("keeps a reduction whose matched quantity really fell", () => {
+      assert.strictEqual(measuredAgainstItsClaim(A_REAL_TENFOLD_CUT), null);
+      assert.strictEqual(describesChange(A_REAL_TENFOLD_CUT).ok, true);
+    });
+
+    it("keeps a record whose contradicting figures the summary never puts to the reader", () => {
+      const buriedInTheStates = {
+        ...A_CAP_APPEARED_BESIDE_A_RISE,
+        summary: "The free tier now has a 60-minute meeting limit.",
+      };
+      assert.strictEqual(measuredAgainstItsClaim(buriedInTheStates), null);
+    });
+
+    it("keeps a record where one figure contradicts the claim and another supports it", () => {
+      const mixed = {
+        ...A_REAL_TENFOLD_CUT,
+        summary: "The free tier now offers 100 requests/day, down from 1,000 requests/day, and 5 seats, up from 2 seats.",
+        previous_state: "Free tier: 1,000 requests/day with the Qwen Code CLI, 2 seats",
+        current_state: "The free tier offers 100 requests/day with the Qwen Code CLI, 5 seats",
+      };
+      const [requests, seats] = measuredDifferences(mixed);
+      assert.strictEqual(requests.direction, "decrease");
+      assert.strictEqual(seats.direction, "increase");
+      assert.strictEqual(measuredAgainstItsClaim(mixed), null);
+    });
+
+    it("reads what a figure measures from past the period written against it", () => {
+      const [minutes] = quantifiedAttributes("10 per 6 hours of build time");
+      assert.deepStrictEqual(minutes.words, ["build", "time"]);
+      assert.strictEqual(minutes.period.unit, "hour");
+    });
+
+    it("does not read a period's own count as a quantity of its own", () => {
+      const [pulls, ...rest] = quantifiedAttributes("200 pulls per 6-hour window");
+      assert.strictEqual(rest.length, 0);
+      assert.strictEqual(pulls.value, "200");
+      assert.strictEqual(pulls.period.count, "6");
+    });
+
+    it("does not compare a price with a count of the same value", () => {
+      const [price] = quantifiedAttributes("$9 per project");
+      const [projects] = quantifiedAttributes("9 projects");
+      assert.strictEqual(comparedQuantity(price, projects), null);
+    });
+
+    it("does not let a paid plan's price decide the direction", () => {
+      const pricedAlongside = {
+        vendor: "deployhq.com",
+        change_type: "limits_reduced",
+        summary: "The free tier still offers 3 projects. Unlimited deployments now start at $9/month.",
+        previous_state: "Free plan: 3 projects with unlimited deployments. Paid plans from $5/month",
+        current_state: "Start free with 3 projects. Unlimited deployments from $9/month.",
+        impact: "high",
+      };
+      assert.strictEqual(
+        measuredAgainstItsClaim(pricedAlongside).reason,
+        REJECT_MEASURES_NO_CHANGE
+      );
+    });
+  });
+
+  describe("#1136 a directional record whose figures did not move", () => {
+    const NOTATION_ONLY = {
+      vendor: "Bugsnag",
+      change_type: "limits_reduced",
+      summary:
+        "The free tier now includes 7.5K events and 1M spans per month, and 1 user. Previously 7,500 events/month and 1M spans/month, 1 user.",
+      previous_state: "Error monitoring — 7,500 events/month and 1M spans/month on free plan, 1 user",
+      current_state: "Includes: 1 user 7.5K events and 1M spans per month 50+ platforms",
+      impact: "medium",
+    };
+
+    const A_RATE_RESTATED_IN_ANOTHER_PERIOD = {
+      vendor: "Imitate Email",
+      change_type: "limits_increased",
+      summary: "The free tier now offers 450 test emails a month, instead of 15 emails a day.",
+      previous_state: "Sandbox email server. Free accounts get 15 emails a day forever.",
+      current_state: "Get started with 450 test emails a month, free forever",
+      impact: "medium",
+    };
+
+    it("reads 7.5K as the same figure as 7,500", () => {
+      assert.strictEqual(measuredAgainstItsClaim(NOTATION_ONLY).reason, REJECT_MEASURES_NO_CHANGE);
+    });
+
+    it("reads 450 a month as the same rate as 15 a day", () => {
+      assert.strictEqual(
+        measuredAgainstItsClaim(A_RATE_RESTATED_IN_ANOTHER_PERIOD).reason,
+        REJECT_MEASURES_NO_CHANGE
+      );
+    });
+
+    it("keeps a record whose summary states a figure that is in neither comparison", () => {
+      const alsoNamesANewCap = {
+        ...NOTATION_ONLY,
+        summary: `${NOTATION_ONLY.summary} The Agent now has a 10 message limit per week.`,
+      };
+      assert.strictEqual(measuredAgainstItsClaim(alsoNamesANewCap), null);
+    });
+
+    it("keeps a record whose equal figures sit beside one that moved", () => {
+      const oneOfThemMoved = {
+        ...NOTATION_ONLY,
+        current_state: "Includes: 1 user 7.5K events and 500K spans per month 50+ platforms",
+      };
+      assert.strictEqual(measuredAgainstItsClaim(oneOfThemMoved), null);
+    });
+
+    it("refuses a record whose only comparison the summary itself states, at the same value", () => {
+      const twoAgainstTwo = {
+        vendor: "OnlineOrNot",
+        change_type: "limits_reduced",
+        summary: "The free tier now only includes up to 2 users instead of 2 team members.",
+        previous_state:
+          "Uptime monitoring — free plan: 3 monitors, 3-minute check interval, 2 team members, 1 status page, SSL monitoring",
+        current_state:
+          "Hobby (Free) includes up to 2 users, a 3-minute check interval, a limited status page, and basic alerting.",
+        impact: "medium",
+      };
+      assert.strictEqual(
+        measuredAgainstItsClaim(twoAgainstTwo).reason,
+        REJECT_MEASURES_NO_CHANGE,
+        "the summary states 2 against 2 and no compared quantity moved"
+      );
+    });
+
+    it("does not read a figure's subject past the clause it sits in", () => {
+      const acrossAComma = quantifiedAttributes(
+        "Hobby (Free) includes up to 2 users, a 3-minute check interval, a limited status page"
+      );
+      const interval = acrossAComma.find((a: any) => a.value === "3");
+      assert.ok(!interval.words.includes("statu"), interval.words.join("/"));
+    });
+
+    it("does not read what a figure is measured per as the thing it measures", () => {
+      const [subscribers] = quantifiedAttributes("Max 10,000 subscribers per send");
+      const [sends] = quantifiedAttributes("10,000 sends a month");
+      assert.deepStrictEqual(subscribers.words, ["subscriber"]);
+      assert.strictEqual(comparedQuantity(subscribers, sends), null);
+    });
+
+    it("keeps a record whose stated figures name nothing our comparison can reach", () => {
+      const ratesWithNoSubject = {
+        vendor: "codehooks.io",
+        change_type: "limits_reduced",
+        summary: "The free tier now has significantly reduced API call limits (1/sec, 500/day). Previously 60/minute.",
+        previous_state: "Serverless backend — free plan: 1 developer, 150 MB database storage",
+        current_state: "The free plan includes 1 Developer, 150 MB Database Storage",
+        impact: "high",
+      };
+      assert.strictEqual(measuredAgainstItsClaim(ratesWithNoSubject), null);
+    });
+
+    it("judges the figures the rewritten summary states, not the ones the gate dropped", () => {
+      const baselineInADroppedClause = {
+        ...NOTATION_ONLY,
+        summary:
+          "The free tier now includes 7.5K events and 1M spans per month, and 1 user. The stored information does not mention the 90-day retention the page states.",
+      };
+      assert.strictEqual(
+        measuredAgainstItsClaim(baselineInADroppedClause),
+        null,
+        "the raw summary states 90, which is in no comparison"
+      );
+      assert.strictEqual(describesChange(baselineInADroppedClause).reason, REJECT_MEASURES_NO_CHANGE);
     });
   });
 
@@ -780,7 +1025,7 @@ describe("the second opinion on whether a report describes a change", () => {
   });
 
   it("refuses a record the second opinion calls unchanged", async () => {
-    const { accepted, rejected } = await gateCandidates([A_DAILY_CAP_WAS_HALVED], {
+    const { accepted, rejected } = await gateCandidates([A_SUPPORT_CHANNEL_CLOSED], {
       confirmFn: async () => ({ verdict: "no", reason: "the page restates the stored terms" }),
     });
     assert.strictEqual(accepted.length, 0);
