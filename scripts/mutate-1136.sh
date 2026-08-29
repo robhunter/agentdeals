@@ -125,7 +125,7 @@ m_two_figures_measure_the_same_thing_whatever_they_name() {
   py <<'PY'
 p = "scripts/change-gate.js"
 s = open(p).read()
-s = s.replace("  return after.words.includes(left) || before.words.includes(right);", "  return true;")
+s = s.replace("  return namesTheSameUnit(left, after.words, aliases) || namesTheSameUnit(right, before.words, aliases);", "  return true;")
 open(p, "w").write(s)
 PY
 }

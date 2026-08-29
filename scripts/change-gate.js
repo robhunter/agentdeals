@@ -1,4 +1,5 @@
 import { pageNamesVendor } from "./vendor-naming.js";
+import { definedEquivalences } from "./unit-aliases.js";
 import { readPeriod, renderPeriod } from "../src/growth-limits.ts";
 
 export const REJECT_NULL_COMPARISON = "null_comparison";
@@ -15,6 +16,8 @@ export const REJECT_NO_BASELINE = "no_baseline";
 export const REJECT_DANGLING_REFERENCE = "dangling_reference";
 export const REJECT_MEASURES_NO_CHANGE = "measures_no_change";
 export const REJECT_MEASURES_THE_OPPOSITE = "measures_the_opposite";
+export const REJECT_STATES_NO_NARROWING = "states_no_narrowing";
+export const REJECT_NO_TERMS_TO_NARROW = "no_terms_to_narrow";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -31,13 +34,18 @@ export const GATE_REASONS = [
   REJECT_DANGLING_REFERENCE,
   REJECT_MEASURES_NO_CHANGE,
   REJECT_MEASURES_THE_OPPOSITE,
+  REJECT_STATES_NO_NARROWING,
+  REJECT_NO_TERMS_TO_NARROW,
 ];
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
+export const RESTRICTION = "restriction";
 
 const QUANTITY_CHANGE_TYPES = ["limits_reduced", "limits_increased"];
 
 export const RECLASSIFIED_AS_RESTRUCTURE = "pricing_restructured";
+export const RECLASSIFIED_AS_CORRECTION = "record_corrected";
+export const HAND_WRITTEN = "hand_written";
 
 export const MIN_PRICE_SIGNALS = 1;
 
@@ -254,21 +262,50 @@ export function measuredValue(attribute) {
   return value * (attribute?.scale ?? 1);
 }
 
-export function measuresTheSameThing(before, after) {
+const NO_ALIASES = new Map();
+
+export function unitAliases(pageText) {
+  const index = new Map();
+  const link = (from, to) => {
+    if (!from || !to || from === to) return;
+    if (!index.has(from)) index.set(from, new Set());
+    index.get(from).add(to);
+  };
+  for (const { left, right } of definedEquivalences(pageText)) {
+    const leftWords = wordsIn(left);
+    const rightWords = wordsIn(right);
+    for (const a of leftWords) {
+      for (const b of rightWords) {
+        link(a, b);
+        link(b, a);
+      }
+    }
+  }
+  return index;
+}
+
+function namesTheSameUnit(word, words, aliases) {
+  if (words.includes(word)) return true;
+  const equivalents = aliases.get(word);
+  return equivalents ? words.some((other) => equivalents.has(other)) : false;
+}
+
+export function measuresTheSameThing(before, after, aliases = NO_ALIASES) {
   const priced = (attribute) => (attribute?.words ?? []).includes(PRICE_ATTRIBUTE);
   if (priced(before) !== priced(after)) return false;
   const left = measuredWord(before);
   const right = measuredWord(after);
   if (!left || !right) return false;
-  return after.words.includes(left) || before.words.includes(right);
+  return namesTheSameUnit(left, after.words, aliases) || namesTheSameUnit(right, before.words, aliases);
 }
 
 function sameAmount(from, to) {
   return Math.abs(from - to) <= 1e-9 * Math.max(Math.abs(from), Math.abs(to), 1);
 }
 
-export function comparedQuantity(before, after) {
-  if (!measuresTheSameThing(before, after)) return null;
+export function comparedQuantity(before, after, aliases = NO_ALIASES) {
+  if (!measuresTheSameThing(before, after, aliases)) return null;
+  const aliased = !measuresTheSameThing(before, after, NO_ALIASES);
   let from = measuredValue(before);
   let to = measuredValue(after);
   if (from === null || to === null) return null;
@@ -282,6 +319,7 @@ export function comparedQuantity(before, after) {
     attribute: measuredWord(before),
     previous: renderedQuantity(before),
     current: renderedQuantity(after),
+    aliased,
     priced: (before.words ?? []).includes(PRICE_ATTRIBUTE),
     before,
     after,
@@ -301,14 +339,14 @@ function measuresAnAmount(attribute) {
   return !(attribute?.words ?? []).includes(PRICE_ATTRIBUTE);
 }
 
-export function quantityComparison(entry) {
+export function quantityComparison(entry, aliases = NO_ALIASES) {
   const previous = quantifiedAttributes(entry?.previous_state).filter(measuresAnAmount);
   const current = quantifiedAttributes(entry?.current_state).filter(measuresAnAmount);
   const compared = [];
   const matched = new Set();
   for (const before of previous) {
     for (const after of current) {
-      const quantity = comparedQuantity(before, after);
+      const quantity = comparedQuantity(before, after, aliases);
       if (!quantity) continue;
       compared.push(quantity);
       matched.add(before).add(after);
@@ -729,6 +767,79 @@ export function reportsSomethingStillFree(summary) {
   return FREE_STILL_OFFERED.some((pattern) => pattern.test(withoutTrials));
 }
 
+const ONLY_THE_WORDING_MOVED = [
+  /\b(?:description|wording|phrasing)\s+is\s+(?:now\s+)?less\s+(?:specific|detailed|explicit)\b/i,
+  /\bonly\s+the\s+(?:description|wording|phrasing)\s+(?:has\s+)?changed\b/i,
+  /\b(?:terms?|limits?|allowances?)\s+(?:are|is|remain|remains)\s+(?:the\s+)?(?:same|unchanged)\b/i,
+];
+
+export function reportsNoNarrowing(summary) {
+  if (typeof summary !== "string") return false;
+  const nothingMoved =
+    reportsSomethingStillFree(summary) || ONLY_THE_WORDING_MOVED.some((pattern) => pattern.test(summary));
+  return nothingMoved && summaryEvidence(summary).changed.length === 0;
+}
+
+const OUR_OWN_ENTRY =
+  /\b(?:data\s+correction|(?:the\s+)?(?:previous|prior|original|old)\s+(?:entry|listing|record|description)|our\s+(?:entry|listing|record)|we\s+(?:previously\s+)?(?:listed|recorded|stored))\b/i;
+const STATED_IT_WRONGLY =
+  /\b(?:incorrect(?:ly)?|erroneous(?:ly)?|mistaken(?:ly)?|wrongly|in\s+error|corrected|correction)\b/i;
+
+export function correctsOurOwnRecord(record) {
+  return summaryClauses(record?.summary).some((raw) => {
+    const clause = clauseText(raw);
+    return OUR_OWN_ENTRY.test(clause) && STATED_IT_WRONGLY.test(clause);
+  });
+}
+
+export function baselineIsAStoredDescription(record) {
+  return record?.date_source !== HAND_WRITTEN;
+}
+
+export function restrictionEvidence(record, context = {}) {
+  if (record?.change_type !== RESTRICTION) return { ok: true };
+
+  if (correctsOurOwnRecord(record)) {
+    return {
+      ok: true,
+      reclassifyAs: RECLASSIFIED_AS_CORRECTION,
+      detail: `the summary states that our own earlier entry was wrong, so the record corrects our data rather than reporting terms the vendor narrowed`,
+    };
+  }
+
+  if (reportsNoNarrowing(record?.summary)) {
+    return {
+      ok: false,
+      reason: REJECT_STATES_NO_NARROWING,
+      detail: `a restriction was recorded by a summary that reports the free tier still standing and names no term that moved`,
+    };
+  }
+
+  if (baselineIsAStoredDescription(record) && !statesTerms(record?.previous_state)) {
+    return {
+      ok: false,
+      reason: REJECT_NO_TERMS_TO_NARROW,
+      detail: `a restriction was measured against "${record?.previous_state}", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from`,
+    };
+  }
+
+  const { compared, unmatched } = quantityComparison(record, unitAliases(context.pageText));
+  if (
+    unmatched.length === 0 &&
+    compared.some(({ aliased }) => aliased) &&
+    compared.every(({ direction }) => direction === "equal")
+  ) {
+    const held = compared.map(({ previous, current }) => `${previous} against ${current}`).slice(0, 3).join(", ");
+    return {
+      ok: false,
+      reason: REJECT_MEASURES_NO_CHANGE,
+      detail: `a restriction was recorded over quantities that all hold the same value once notation, period and any unit the page defines as equivalent are normalised — ${held}`,
+    };
+  }
+
+  return { ok: true };
+}
+
 export function isDomainRoot(url) {
   try {
     const parsed = new URL(url);
@@ -832,6 +943,12 @@ export function describesChange(entry, context = {}) {
         detail: `${entry.change_type} claimed, but the current state names no quantity for anything the stored state measured (${stored})`,
       };
     }
+  }
+
+  const restriction = restrictionEvidence(entry, context);
+  if (!restriction.ok) return restriction;
+  if (restriction.reclassifyAs) {
+    return { ok: true, reclassifyAs: restriction.reclassifyAs, detail: restriction.detail };
   }
 
   if (refusedByAudit) return refusedByAudit;

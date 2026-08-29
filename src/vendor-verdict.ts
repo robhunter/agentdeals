@@ -1,5 +1,5 @@
 import type { DealChange, RiskCause } from "./types.js";
-import { CHANGE_DIRECTION } from "./data.js";
+import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
 import { changeDateClause } from "./change-dates.js";
 import { withheldLevelClause, type LevelWithheldReason } from "./source-check.js";
 
@@ -21,6 +21,7 @@ export const CHANGE_KIND_NOUN: Record<DealChange["change_type"], string> = {
   startup_program_expanded: "startup program expansion",
   pricing_postponed: "postponed price change",
   rebranded: "rebrand",
+  record_corrected: "correction to our own entry",
 };
 
 export function changeKindNoun(changeType: string): string {
@@ -57,9 +58,16 @@ export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel
 }
 
 export function narrowingSentence(changes: VendorVerdictInput["changes"]): string {
-  const total = changes.length;
-  if (total === 0) return "";
-  const narrowing = narrowingChanges(changes);
+  const corrections = changes.filter(isACorrectionToOurOwnRecord);
+  const byTheVendor = changes.filter(c => !isACorrectionToOurOwnRecord(c));
+  const total = byTheVendor.length;
+  if (total === 0) {
+    if (corrections.length === 0) return "";
+    return corrections.length === 1
+      ? `The one record we hold corrects our own earlier entry rather than reporting a change the vendor made.`
+      : `All ${corrections.length} records we hold correct our own earlier entries rather than reporting changes the vendor made.`;
+  }
+  const narrowing = narrowingChanges(byTheVendor);
   if (narrowing.length === 0) {
     return total === 1
       ? `The one change we have recorded did not narrow the terms.`

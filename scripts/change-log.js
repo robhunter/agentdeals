@@ -23,6 +23,7 @@ export const CHANGE_TYPES = [
   "pricing_postponed",
   "product_deprecated",
   "rebranded",
+  "record_corrected",
 ];
 
 const IMPACTS = ["high", "medium", "low"];

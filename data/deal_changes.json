@@ -1316,7 +1316,7 @@
     },
     {
       "vendor": "DigitalOcean",
-      "change_type": "restriction",
+      "change_type": "record_corrected",
       "date": "2026-03-21",
       "summary": "Managed databases are not part of the free tier. Pricing starts at $15/month. Previous listing incorrectly included '1 basic cluster' as a free tier benefit",
       "previous_state": "Listed as: Free static sites (up to 3), functions (90K GiB-seconds/mo), and managed databases (1 basic cluster)",
@@ -1431,7 +1431,7 @@
     },
     {
       "vendor": "Neo4j AuraDB",
-      "change_type": "restriction",
+      "change_type": "record_corrected",
       "date": "2026-03-22",
       "summary": "Data correction — previous entry incorrectly reduced limits to 50K nodes/175K relationships. Actual free tier is 200,000 nodes and 400,000 relationships per Neo4j AuraDB FAQ",
       "previous_state": "50,000 nodes, 175,000 relationships (incorrectly listed)",
@@ -5381,21 +5381,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "debugmail.io",
-      "change_type": "restriction",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier is now limited to OSS projects. A Silver plan is available for free for OSS projects, but other users have a 2 week trial then $2 per user per month.",
-      "previous_state": "Easy to use testing mail server for developers",
-      "current_state": "We provide a free Silver plan for OSS projects. Contact us here to connect. Plans and pricing We provide a free Silver plan for OSS projects. Contact us here to connect. Free Silver Gold Projects 1 10 Unlimited Team Members 2 20 Unlimited Test Emails per Day Unlimited Unlimited Unlimited Forwarding Emails per Day 1 100 Unlimited Mailbox Storage Limit 10MB per team 1GB per team 5GB per team Forwarding Rules – 1 per project 20 per project IMAP – Soon Soon REST API – Spam Rating – – Soon Mail Client Viewer – – Soon Pricing $0 2 weeks trial period then $2 per user per month $5 per user per month",
-      "impact": "high",
-      "source_url": "https://debugmail.io/",
-      "category": "Email",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "DNSExit",
       "change_type": "pricing_restructured",
       "date": "2026-08-28",
@@ -6356,21 +6341,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Geocodio",
-      "change_type": "restriction",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now offers 2,500 lookups *daily*. Is limited to US, Canada, and Mexico.",
-      "previous_state": "Geocoding and reverse geocoding API for US and Canada — free tier: 2,500 lookups/day. Includes address parsing, congressional districts, timezone, and census data fields",
-      "current_state": "Pay-as-you-go accounts get the first 2,500 credits per day for free. US, Canada, and Mexico only.",
-      "impact": "medium",
-      "source_url": "https://www.geocod.io/pricing/",
-      "category": "Maps/Geolocation",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "Roboflow",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
@@ -6701,21 +6671,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "houndci.com",
-      "change_type": "restriction",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier is now limited to public repositories. Private repositories require a paid plan.",
-      "previous_state": "Comments on GitHub commits about code quality, free for Open Source",
-      "current_state": "Hound is free for public repos! Private repository plans start at $29/month for up to 50 reviews.",
-      "impact": "high",
-      "source_url": "https://houndci.com/",
-      "category": "Code Quality",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "Webvizio",
       "change_type": "free_tier_removed",
       "date": "2026-08-28",
@@ -6776,21 +6731,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "tickgit.com",
-      "change_type": "restriction",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier is now limited to public repositories. Private repositories require a $3/month subscription with a 3-day free trial.",
-      "previous_state": "Surfaces `TODO` comments (and other markers) to identify areas of code worth returning to for improvement.",
-      "current_state": "Free for Public Repositories 🎉 No login required. $3/month for Private Repositories 💵 3 day free trial.",
-      "impact": "high",
-      "source_url": "https://www.tickgit.com/",
-      "category": "Code Quality",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "BugBug",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
@@ -6800,21 +6740,6 @@
       "current_state": "The Free plan includes: Unlimited local test runs, 15 tests, 4 test suites, 1 user, 1 project, AI Test recorder, Components, Edit & rewind, Screenshots, 7 days of tests history.",
       "impact": "medium",
       "source_url": "https://bugbug.io/",
-      "category": "Testing",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "testingbot.com",
-      "change_type": "restriction",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier is still offered. The description is less specific. The current page only mentions a 'free plan' and a 'free trial of paid features' without explicitly linking it to open-source projects.",
-      "previous_state": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
-      "current_state": "TestingBot offers a free plan and a free trial of paid features. No credit card is required to start.",
-      "impact": "medium",
-      "source_url": "https://testingbot.com/",
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
