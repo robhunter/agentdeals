@@ -12,7 +12,7 @@ import {
   vendorVerdictWord,
   type VendorVerdictInput,
 } from "../dist/vendor-verdict.js";
-import { enrichOffers, loadDealChanges, loadOffers, vendorRiskAssessment, classifyStability } from "../dist/data.js";
+import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { levelWithheldReason } from "../dist/source-check.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
@@ -23,6 +23,7 @@ const REPO = path.join(__dirname, "..");
 const STABILITY_SCALE_WORDS = /\b(volatile|improving)\b|on our watch list/i;
 const OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES = /\bvolatile\b|on our watch list/i;
 const COUNT_AS_EVIDENCE = /\b\d+ pricing changes? recorded/;
+const CLAIMS_A_NARROWING = /(?:One recorded [^.]*|(?<!None of the )\d+ recorded changes) narrowed the terms/;
 
 function change(over: Partial<DealChange> = {}): DealChange {
   return {
@@ -133,6 +134,43 @@ describe("vendor verdict — a stable rating reports direction, not volume", () 
       change({ change_type: "rebranded", date: "2026-03-01" }),
     ];
     assert.strictEqual(narrowingSentence(changes), "None of the 3 recorded changes narrowed the terms.");
+  });
+
+  it("says what a record that repairs our own entry is, rather than counting it as a change", () => {
+    const changes = [change({ change_type: "record_corrected", date: "2026-03-22" })];
+    assert.strictEqual(
+      narrowingSentence(changes),
+      "The one record we hold corrects our own earlier entry rather than reporting a change the vendor made.",
+    );
+    assert.doesNotMatch(narrowingSentence(changes), /narrowed the terms/);
+    assert.doesNotMatch(vendorVerdictSentence(input({ changes })), /zero pricing changes recorded/);
+  });
+
+  it("says so for every repair when we hold nothing else", () => {
+    const changes = [
+      change({ change_type: "record_corrected", date: "2026-03-22" }),
+      change({ change_type: "record_corrected", date: "2026-03-21" }),
+    ];
+    assert.strictEqual(
+      narrowingSentence(changes),
+      "All 2 records we hold correct our own earlier entries rather than reporting changes the vendor made.",
+    );
+  });
+
+  it("leaves a repair out of both sides of the narrowing count", () => {
+    const changes = [
+      change({ change_type: "limits_increased", date: "2026-01-01" }),
+      change({ change_type: "limits_increased", date: "2025-01-22" }),
+      change({ change_type: "record_corrected", date: "2026-03-21" }),
+      change({ change_type: "restriction", date: "2026-08-28" }),
+    ];
+    assert.strictEqual(
+      narrowingSentence(changes),
+      "One recorded restriction narrowed the terms, on 2026-08-28.",
+    );
+    assert.doesNotMatch(narrowingSentence(changes), /2 recorded changes narrowed/);
+    const noNarrowing = changes.filter(c => c.change_type !== "restriction");
+    assert.strictEqual(narrowingSentence(noNarrowing), "None of the 2 recorded changes narrowed the terms.");
   });
 
   it("never reaches for the second scale's vocabulary", () => {
@@ -371,6 +409,43 @@ describe("vendor verdict — as rendered", () => {
     };
     await Promise.all(Array.from({ length: 12 }, worker));
     assert.deepStrictEqual(wrong.slice(0, 20), [], `vendor routes whose FAQ contradicts their badge:\n${wrong.slice(0, 20).join("\n")}`);
+  });
+
+  it("names a narrowing only where a record of the vendor's own establishes one", async () => {
+    const rows = vendorRows().filter(r => r.changes.length > 0);
+    const wrong: string[] = [];
+    let index = 0;
+    const worker = async () => {
+      while (index < rows.length) {
+        const row = rows[index++];
+        const html = await get(`/vendor/${row.slug}`);
+        const verdict = verdictParagraph(html);
+        const narrowing = row.changes.filter(c => CHANGE_DIRECTION[c.change_type] === "negative");
+        if (CLAIMS_A_NARROWING.test(verdict) && narrowing.length === 0) {
+          wrong.push(`${row.slug}: names a narrowing over ${row.changes.length} record(s), none of which point down`);
+        }
+        if (row.changes.every(c => c.change_type === "record_corrected")) {
+          if (!/corrects? our own earlier entr/.test(verdict)) {
+            wrong.push(`${row.slug}: holds only repairs to our own entries and does not say so — ${verdict}`);
+          }
+          if (CLAIMS_A_NARROWING.test(verdict) || /pricing changes? recorded/.test(verdict)) {
+            wrong.push(`${row.slug}: renders a repair to our own entry as a change the vendor made — ${verdict}`);
+          }
+        }
+      }
+    };
+    await Promise.all(Array.from({ length: 12 }, worker));
+    assert.deepStrictEqual(wrong.slice(0, 20), [], `vendor routes claiming a narrowing they cannot show:\n${wrong.slice(0, 20).join("\n")}`);
+  });
+
+  it("counts one narrowing on the route that carried a repair as a second", async () => {
+    const digitalocean = verdictParagraph(await get("/vendor/digitalocean"));
+    assert.match(digitalocean, /One recorded restriction narrowed the terms/);
+    assert.doesNotMatch(digitalocean, /2 recorded changes narrowed the terms/);
+
+    const neo4j = verdictParagraph(await get("/vendor/neo4j-auradb"));
+    assert.match(neo4j, /The one record we hold corrects our own earlier entry rather than reporting a change the vendor made\./);
+    assert.doesNotMatch(neo4j, /narrowed the terms/);
   });
 
   it("resolves the four routes that rendered a green badge over a negative verdict", async () => {

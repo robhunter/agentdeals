@@ -263,7 +263,14 @@ export const CHANGE_DIRECTION: Record<DealChange["change_type"], "negative" | "p
   startup_program_expanded: "positive",
   pricing_postponed: "positive",
   rebranded: "neutral",
+  record_corrected: "neutral",
 };
+
+export const CORRECTION_TO_OUR_OWN_RECORD = "record_corrected";
+
+export function isACorrectionToOurOwnRecord(change: Pick<DealChange, "change_type">): boolean {
+  return change.change_type === CORRECTION_TO_OUR_OWN_RECORD;
+}
 
 const directionSet = (d: "negative" | "positive" | "neutral") =>
   new Set(Object.entries(CHANGE_DIRECTION).filter(([, v]) => v === d).map(([k]) => k));
@@ -665,11 +672,11 @@ export const RISK_DEMOTION: Record<DealChange["change_type"], "risky" | "caution
   startup_program_expanded: null,
   pricing_postponed: null,
   rebranded: null, // a naming event, not a pricing one
+  record_corrected: null, // a repair to our own entry, not an act of the vendor
   // Negative, but not risk inputs today — see the #1038 PR description. In
   // short: `product_deprecated` is dominated by unrelated products of large
   // vendors (an AWS Lambda runtime deprecation says nothing about AWS's free
-  // tier) and `restriction` currently holds at least one correction to our own
-  // data. Both would reintroduce the coverage proxy this issue removed.
+  // tier).
   product_deprecated: null,
   restriction: null,
   pricing_model_change: null,

@@ -397,6 +397,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "debugmail.io",
+      "change_type": "restriction",
+      "reason": "no_terms_to_narrow",
+      "detail": "a restriction was measured against \"Easy to use testing mail server for developers\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
+      "summary": "The free tier is now limited to OSS projects. A Silver plan is available for free for OSS projects, but other users have a 2 week trial then $2 per user per month.",
+      "previous_state": "Easy to use testing mail server for developers",
+      "current_state": "We provide a free Silver plan for OSS projects. Contact us here to connect. Plans and pricing We provide a free Silver plan for OSS projects. Contact us here to connect. Free Silver Gold Projects 1 10 Unlimited Team Members 2 20 Unlimited Test Emails per Day Unlimited Unlimited Unlimited Forwarding Emails per Day 1 100 Unlimited Mailbox Storage Limit 10MB per team 1GB per team 5GB per team Forwarding Rules – 1 per project 20 per project IMAP – Soon Soon REST API – Spam Rating – – Soon Mail Client Viewer – – Soon Pricing $0 2 weeks trial period then $2 per user per month $5 per user per month",
+      "source_url": "https://debugmail.io/",
+      "category": "Email",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "deployhq.com",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -529,6 +541,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Geocodio",
+      "change_type": "restriction",
+      "reason": "measures_no_change",
+      "detail": "a restriction was recorded over quantities that all hold the same value once notation, period and any unit the page defines as equivalent are normalised — 2,500 lookup/day against 2,500 credit/day",
+      "summary": "The free tier now offers 2,500 lookups *daily*. Is limited to US, Canada, and Mexico.",
+      "previous_state": "Geocoding and reverse geocoding API for US and Canada — free tier: 2,500 lookups/day. Includes address parsing, congressional districts, timezone, and census data fields",
+      "current_state": "Pay-as-you-go accounts get the first 2,500 credits per day for free. US, Canada, and Mexico only.",
+      "source_url": "https://www.geocod.io/pricing/",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "GitDailies",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -587,6 +611,18 @@
       "source_url": "https://heap.io",
       "category": "Analytics",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "houndci.com",
+      "change_type": "restriction",
+      "reason": "no_terms_to_narrow",
+      "detail": "a restriction was measured against \"Comments on GitHub commits about code quality, free for Open Source\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
+      "summary": "The free tier is now limited to public repositories. Private repositories require a paid plan.",
+      "previous_state": "Comments on GitHub commits about code quality, free for Open Source",
+      "current_state": "Hound is free for public repos! Private repository plans start at $29/month for up to 50 reviews.",
+      "source_url": "https://houndci.com/",
+      "category": "Code Quality",
+      "refused_date": "2026-08-28"
     },
     {
       "vendor": "Hyperping",
@@ -1261,6 +1297,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "testingbot.com",
+      "change_type": "restriction",
+      "reason": "states_no_narrowing",
+      "detail": "a restriction was recorded by a summary that reports the free tier still standing and names no term that moved",
+      "summary": "The free tier is still offered. The description is less specific. The current page only mentions a 'free plan' and a 'free trial of paid features' without explicitly linking it to open-source projects.",
+      "previous_state": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
+      "current_state": "TestingBot offers a free plan and a free trial of paid features. No credit card is required to start.",
+      "source_url": "https://testingbot.com/",
+      "category": "Testing",
+      "refused_date": "2026-08-28"
+    },
+    {
       "vendor": "Thunder Client",
       "change_type": "pricing_model_change",
       "reason": "no_price_signal",
@@ -1271,6 +1319,18 @@
       "source_url": "https://www.thunderclient.com",
       "category": "Dev Utilities",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "tickgit.com",
+      "change_type": "restriction",
+      "reason": "no_terms_to_narrow",
+      "detail": "a restriction was measured against \"Surfaces `TODO` comments (and other markers) to identify areas of code worth returning to for improvement.\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
+      "summary": "The free tier is now limited to public repositories. Private repositories require a $3/month subscription with a 3-day free trial.",
+      "previous_state": "Surfaces `TODO` comments (and other markers) to identify areas of code worth returning to for improvement.",
+      "current_state": "Free for Public Repositories 🎉 No login required. $3/month for Private Repositories 💵 3 day free trial.",
+      "source_url": "https://www.tickgit.com/",
+      "category": "Code Quality",
+      "refused_date": "2026-08-28"
     },
     {
       "vendor": "Toggled.dev",
