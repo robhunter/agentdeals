@@ -44,7 +44,7 @@ const PLURAL_UNITS: Record<string, string> = {
 };
 
 const SLASH_PERIOD = /^\/(\d[\d,]*)?\s*([a-z]+)(?:\/([a-z]+))?/i;
-const WORDED_PERIOD = /^(?:\s+for)?(?:\s+free)?\s+(?:per|a|an|every)\s+(?:(\d[\d,]*)\s*)?([a-z]+)/i;
+const WORDED_PERIOD = /^(?:\s+for)?(?:\s+free)?\s+(?:per|a|an|every)\s+(?:(\d[\d,]*)[\s-]*)?([a-z]+)/i;
 const ADVERB_PERIOD = /^(?:\s+for)?(?:\s+free)?\s+(hourly|daily|weekly|monthly|yearly|annually)\b/i;
 const SCOPE_SUFFIX = /^\s+per\s+([a-z]+)/i;
 const NON_RATE_QUALIFIER = /^\s+of\s+((?!and\b)[a-z]+(?:\s+(?!and\b)[a-z]+){0,2})/i;

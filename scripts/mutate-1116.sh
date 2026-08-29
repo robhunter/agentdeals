@@ -102,7 +102,7 @@ m_measured_word_takes_the_unit() {
   py <<'PY'
 p = "scripts/change-gate.js"
 s = open(p).read()
-s = s.replace('  return (attribute?.words ?? []).find((word) => !BYTE_UNITS.has(word)) ?? null;',
+s = s.replace('  return (attribute?.words ?? []).find(isAMeasureWord) ?? null;',
               '  return (attribute?.words ?? [])[0] ?? null;')
 open(p, "w").write(s)
 PY
@@ -131,8 +131,8 @@ m_magnitude_ignores_the_unit() {
   py <<'PY'
 p = "scripts/change-gate.js"
 s = open(p).read()
-s = s.replace('  return Number.isFinite(value) ? value * scale : null;',
-              '  return Number.isFinite(value) ? value : null;')
+s = s.replace('  return value * (attribute?.scale ?? 1);',
+              '  return value;')
 open(p, "w").write(s)
 PY
 }
@@ -141,8 +141,7 @@ m_a_figure_without_a_unit_still_measures() {
   py <<'PY'
 p = "scripts/change-gate.js"
 s = open(p).read()
-s = s.replace('  const scale = BYTE_UNITS.get(attribute?.unit ?? "");\n  if (scale === undefined) return null;',
-              '  const scale = BYTE_UNITS.get(attribute?.unit ?? "") ?? 1;')
+s = s.replace('      BYTE_UNITS.get(unit ?? "") ??\n', '')
 open(p, "w").write(s)
 PY
 }
@@ -271,7 +270,7 @@ run_mutation "the unit is read as the thing being measured" m_measured_word_take
 run_mutation "an amount is looked for on the page as the word currency" m_an_amount_is_looked_for_literally
 run_mutation "a gibibyte is scaled as a gigabyte" m_binary_units_scale_like_decimal
 run_mutation "the magnitude ignores the unit written against it" m_magnitude_ignores_the_unit
-run_mutation "a figure with no size unit is measured anyway" m_a_figure_without_a_unit_still_measures
+run_mutation "a size unit does not scale the figure written against it" m_a_figure_without_a_unit_still_measures
 run_mutation "no unit is read out of the text at all" m_no_unit_is_extracted_from_the_text
 run_mutation "the second opinion is never overruled" m_the_second_opinion_is_never_overruled
 run_mutation "the second opinion is always overruled" m_the_second_opinion_is_always_overruled

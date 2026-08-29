@@ -116,7 +116,7 @@ m_two_figures_of_equal_value_are_the_same_figure() {
   py <<'PY'
 p = "scripts/change-gate.js"
 s = open(p).read()
-s = s.replace("        other.value === figure.value &&\n        figure.words.some((word) => other.words.includes(word) && !BYTE_UNITS.has(word))", "        other.value === figure.value")
+s = s.replace('already.some((other) => comparedQuantity(figure, other)?.direction === "equal")', "already.some((other) => measuredValue(figure) === measuredValue(other))")
 open(p, "w").write(s)
 PY
 }

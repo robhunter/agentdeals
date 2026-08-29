@@ -61,6 +61,30 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Aircall",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Aircall and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The rewards page no longer offers 2 months free and instead advertises up to 7x points.",
+      "previous_state": "2 months free. Access via: Free for Brex customers",
+      "current_state": "Earn up to 7x points on purchases and redeem for business-building rewards.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Aiven",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1 cpu against 1 cpu, 1 GB ram against 1 GB ram, 1 \"previously\" 1",
+      "summary": "The free tier now has limitations on cloud/region selection (cannot select a specific one) and does not include integrations or connection pooling. The free tier also only provides 1GB of total storage. Previously 1GB per service.",
+      "previous_state": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) — 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
+      "current_state": "Free $0 / month Get building 1 dedicated VM 1 CPU per VM 1 GB RAM per VM 1 GB total storage Cannot select a specific cloud or region No integrations or connection pooling",
+      "source_url": "https://aiven.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-08-29"
+    },
+    {
       "vendor": "Amazon Kiro (AWS Startups)",
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
@@ -205,6 +229,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Bugsnag",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 7,500 event/mo against 7.5 event, 1 span/mo against 1 span/mo, 1 user against 1 user",
+      "summary": "The free tier now includes 7.5K events and 1M spans per month, and 1 user. Previously 7,500 events/month and 1M spans/month, 1 user. The free tier is still available. The limits are now tied to the Enterprise plan description.",
+      "previous_state": "Error monitoring — 7,500 events/month and 1M spans/month on free plan, 1 user, unlimited projects, 7-day data retention. 14-day free trial of paid features available. Rebranded as SmartBear Insight Hub",
+      "current_state": "Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications Select plan features, plus: Automatic error prioritization Stability benchmarks Advanced segmentation Custom notifications SAML single sign-on System Metrics (CPU, Memory, Rendering)",
+      "source_url": "https://www.bugsnag.com/pricing/",
+      "category": "Error Tracking",
+      "refused_date": "2026-08-29"
+    },
+    {
       "vendor": "Cal.com",
       "change_type": "limits_increased",
       "reason": "states_no_difference",
@@ -275,6 +311,18 @@
       "source_url": "https://www.cloudflare.com/plans/free/",
       "category": "DNS & Domain Management",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Cloudways",
+      "change_type": "limits_reduced",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Cloudways and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The offer has been reduced: the page now shows a first deal free, then 99€/year, rather than 30% off for 3 months.",
+      "previous_state": "30% off for 3 months. Access via: First deal free, then 99€/year or invite friends",
+      "current_state": "First deal free, then 99€/year or invite friends.",
+      "source_url": "https://www.joinsecret.com/offers",
+      "category": "Startup Perks",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Codefresh",
@@ -350,6 +398,18 @@
     },
     {
       "vendor": "deployhq.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 3 project against 3 project",
+      "summary": "The free tier now offers unlimited deployments. Requires a paid plan starting at $9/month for unlimited projects.",
+      "previous_state": "Automated deployment platform — free plan: 3 projects with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
+      "current_state": "Start free with 3 projects and unlimited deployments. Automatic or manual. Unlimited deployments from $9/month.",
+      "source_url": "https://www.deployhq.com/",
+      "category": "CI/CD",
+      "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "deployhq.com",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or hedge rather than a term the page carries, so it reports the reading rather than a change",
@@ -371,6 +431,30 @@
       "source_url": "https://www.docker.com/pricing/",
       "category": "Container Registry",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Docker Hub",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 200 pull per 6 hours against 100 docker/hour",
+      "summary": "The Docker Hub Personal tier now includes 100 Docker Hub pulls/hr instead of 200 pulls per 6-hour window. It also includes 1 Docker Scout-enabled repo.",
+      "previous_state": "1 private repository, unlimited public repositories. 200 pulls per 6-hour window (authenticated). No automated builds on free tier",
+      "current_state": "Docker Personal $0 $0 ... Includes: 100 Docker Hub pulls/hr* 1 private Docker Hub repo 1 Docker Scout-enabled repo*",
+      "source_url": "https://www.docker.com/pricing/",
+      "category": "Container Registry",
+      "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Doczilla",
+      "change_type": "limits_increased",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 4163 characters, so it states no terms to have changed",
+      "summary": "The pricing page states there are 'no strict limits' on the number of documents or screenshots, contradicting the stored information of a 250 documents/month limit.",
+      "previous_state": "SaaS API empowering the generation of screenshots or PDFs directly from HTML/CSS/JS code. The free plan allows 250 documents month.",
+      "current_state": "There are no strict limits to the number of documents or screenshots that can be generated.",
+      "source_url": "https://www.doczilla.app/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "duo.com",
@@ -485,12 +569,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2,000 harnes)",
-      "summary": "The free plan now offers a limited set of features and resources compared to the stored information. The original deal of 2,000 build credits/month is no longer explicitly mentioned. The free plan is now focused on individual developers and small teams and doesn't detail the same features (YAML pipelines, secrets management, test intelligence) as previously stated.",
+      "summary": "The free plan now has significantly reduced limits compared to the stored information. The stored info stated 2,000 build credits/month, while the current page details limits for concurrent pipeline executions (up to 60), storage (250GB), and organizations (up to 1).",
       "previous_state": "CI/CD platform — free plan: 2,000 Harness Cloud build credits/month (Linux, macOS, Windows runners), YAML pipelines, secrets management, test intelligence. Requires business email for cloud runners; self-hosted runner alternative available",
-      "current_state": "The free plan is available for individual developers and small teams. It includes up to 60 concurrent pipeline executions, 250GB storage, and up to 5 custom roles. It also includes features like Native Deployment Integration, GitOps, and Self Hosted Runners (up to 60).",
+      "current_state": "Free Plan is available for individual developers and small teams. It includes up to 60 concurrent pipeline executions, 250GB storage, up to 1 organization, up to 500 maximum users, up to 5 custom dashboards, unlimited templates, up to 5 custom roles, and policy as code.",
       "source_url": "https://www.harness.io/pricing",
-      "category": "CI/CD",
-      "refused_date": "2026-08-28"
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "heap.io",
@@ -527,6 +611,30 @@
       "source_url": "https://www.image-charts.com/",
       "category": "Storage",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Imitate Email",
+      "change_type": "limits_increased",
+      "reason": "measures_no_change",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 15 email/day against 450 test/mo",
+      "summary": "The free tier now offers 450 test emails a month, instead of 15 emails a day.",
+      "previous_state": "Sandbox Email Server for testing email functionality across build/qa and ci/cd. Free accounts get 15 emails a day forever.",
+      "current_state": "Get started with 450 test emails a month, free forever",
+      "source_url": "https://imitate.email",
+      "category": "Email",
+      "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "incidenthub.cloud",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 monitor against 5 monitor",
+      "summary": "The free tier now has no status page.",
+      "previous_state": "Cloud and SaaS status page aggregator — 5 monitors and 2 notification channels (Slack and Discord) are free forever.",
+      "current_state": "We also have a free tier with 5 monitors, Discord and Slack integration, and no status page.",
+      "source_url": "https://incidenthub.cloud/",
+      "category": "Monitoring",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "InfluxDB Cloud",
@@ -685,6 +793,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "MantleDB",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 72 inactivity against 90 inactivity",
+      "summary": "The free tier now has a limit of 100 entries and 64KB per entry, and unclaimed namespaces are purged after 30 days of inactivity. Claimed namespaces are purged after 90 days of inactivity. Previously a 1MB limit for the free tier and a 72h inactivity scavenger policy.",
+      "previous_state": "Anonymous JSON storage for scripts and tiny apps. No signup required; uses Master AID for updates and Read-Only RID for public fetching. Free tier includes 1 bucket (1MB limit) with a 72h inactivity scavenger policy.",
+      "current_state": "Unclaimed namespaces have a limit of up to 100 entries, 64 KB per entry and are purged after 30 days of no writes. Claimed namespaces have a limit of up to 100 entries, 64 KB per entry and are purged after 90 days of inactivity.",
+      "source_url": "https://mantledb.sh",
+      "category": "Storage",
+      "refused_date": "2026-08-29"
+    },
+    {
       "vendor": "Market Data API",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -707,6 +827,18 @@
       "source_url": "https://mdbootstrap.com/",
       "category": "Design",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Meeting",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 3 meeting against 60 minut, 3 meeting against 100 meeting",
+      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants. Previously unlimited meeting duration with up to 3 meeting participants & 10 Webinar attendees.",
+      "previous_state": "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
+      "current_state": "Free plan offers up to 60 minutes of meetings and 100 meeting participants.",
+      "source_url": "https://zoho.com/meeting",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Mendix",
@@ -778,6 +910,18 @@
       "current_state": "The Okta Integrator Free Plan is available for building, testing, and managing integrations. It requires first name, last name, work email, and country/region for signup. Access expires after 180 days of inactivity.",
       "source_url": "https://developer.okta.com/signup/",
       "category": "Auth",
+      "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "OnlineOrNot",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 3 check against 3 check, 2 \"instead of\" 2",
+      "summary": "The free tier now only includes up to 2 users instead of 2 team members. The free tier also no longer includes SSL monitoring, multi-location checks, or Discord alerts.",
+      "previous_state": "Uptime and status page monitoring — free plan: 3 monitors (uptime, keyword, heartbeat), 3-minute check interval, 2 team members, 1 status page, SSL monitoring, multi-location checks, email/Slack/Discord alerts",
+      "current_state": "Hobby (Free) includes up to 2 users, a 3-minute check interval, a limited status page, and basic alerting.",
+      "source_url": "https://onlineornot.com/pricing",
+      "category": "Monitoring",
       "refused_date": "2026-08-29"
     },
     {
@@ -1021,6 +1165,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "snappify",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 3 snap against 3 snap, 3 snap against 3 snap, 5 powered/mo against 5 explanation/mo",
+      "summary": "The free tier now has a watermark on snaps and videos, and limits on snap storage, folder storage, and other features. The free tier also has a limit of 3 snaps at once, and 5 AI explanations per month.",
+      "previous_state": "Enables developers to create stunning visuals. From beautiful code snippets to fully fletched technical presentations. The free plan includes up to 3 snaps at once with unlimited downloads and 5 AI-powered code explanations per month.",
+      "current_state": "The free tier includes 3 snaps at once, 5 AI explanations per month, 100MB image upload limit, 3 snap storage limit, and includes a watermark on videos and snaps.",
+      "source_url": "https://snappify.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-29"
+    },
+    {
       "vendor": "StackBy",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1105,6 +1261,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Thunder Client",
+      "change_type": "pricing_model_change",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1443 characters, so it states no terms to have changed",
+      "summary": "The pricing information has changed. The page no longer explicitly mentions a free tier. It highlights Git Sync for team collaboration, which was previously a premium feature.",
+      "previous_state": "Lightweight REST API client for VS Code. Free tier includes collections, environments, local storage, and request history. No account required for local use. Premium ($10/yr) adds cloud sync and team collaboration",
+      "current_state": "The page describes Thunder Client as a lightweight REST API client with local storage and Git Sync for team collaboration. It does not mention a free or premium tier, or any pricing.",
+      "source_url": "https://www.thunderclient.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-08-29"
+    },
+    {
       "vendor": "Toggled.dev",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -1151,6 +1319,18 @@
       "source_url": "https://uptimetoolbox.com/",
       "category": "Monitoring",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "userforge.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 3 persona against 5 persona/mo",
+      "summary": "The free tier still exists. The limits have changed. Previously up to 3 personas and 2 collaborators. The current pricing page states 3 personas with portraits & scenes, 3 pages & 5 persona reviews a month, and 1 collaborator.",
+      "previous_state": "Interconnected online personas, user stories and context mapping. Helps keep design and dev in sync free for up to 3 personas and two collaborators.",
+      "current_state": "Free gets you started — you meet your personas and hear their first feedback. ✓ 3 personas with portraits & scenes ✓ 3 pages & 5 persona reviews a month ✓ 10 context sources to ground them ✓ Live share links & clean printing ✓ Bring a collaborator",
+      "source_url": "https://userforge.com/",
+      "category": "Design",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "vatcheckapi.com",

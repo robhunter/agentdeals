@@ -4646,21 +4646,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Aiven",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now has limitations on cloud/region selection (cannot select a specific one) and does not include integrations or connection pooling. The free tier also only provides 1GB of total storage. Previously 1GB per service.",
-      "previous_state": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) — 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
-      "current_state": "Free $0 / month Get building 1 dedicated VM 1 CPU per VM 1 GB RAM per VM 1 GB total storage Cannot select a specific cloud or region No integrations or connection pooling",
-      "impact": "medium",
-      "source_url": "https://aiven.io/pricing",
-      "category": "Databases",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "Algolia",
       "change_type": "pricing_restructured",
       "date": "2026-08-28",
@@ -4841,21 +4826,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "OnlineOrNot",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now only includes up to 2 users instead of 2 team members. The free tier also no longer includes SSL monitoring, multi-location checks, or Discord alerts.",
-      "previous_state": "Uptime and status page monitoring — free plan: 3 monitors (uptime, keyword, heartbeat), 3-minute check interval, 2 team members, 1 status page, SSL monitoring, multi-location checks, email/Slack/Discord alerts",
-      "current_state": "Hobby (Free) includes up to 2 users, a 3-minute check interval, a limited status page, and basic alerting.",
-      "impact": "medium",
-      "source_url": "https://onlineornot.com/pricing",
-      "category": "Monitoring",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "Financial Data",
       "change_type": "free_tier_removed",
       "date": "2026-08-28",
@@ -4866,21 +4836,6 @@
       "impact": "high",
       "source_url": "https://financialdata.net/",
       "category": "Dev Utilities",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "Docker Hub",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The Docker Hub Personal tier now includes 100 Docker Hub pulls/hr instead of 200 pulls per 6-hour window. It also includes 1 Docker Scout-enabled repo.",
-      "previous_state": "1 private repository, unlimited public repositories. 200 pulls per 6-hour window (authenticated). No automated builds on free tier",
-      "current_state": "Docker Personal $0 $0 ... Includes: 100 Docker Hub pulls/hr* 1 private Docker Hub repo 1 Docker Scout-enabled repo*",
-      "impact": "medium",
-      "source_url": "https://www.docker.com/pricing/",
-      "category": "Container Registry",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"
@@ -4941,21 +4896,6 @@
       "impact": "medium",
       "source_url": "https://ipwho.org/",
       "category": "Dev Utilities",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "userforge.com",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier still exists. The limits have changed. Previously up to 3 personas and 2 collaborators. The current pricing page states 3 personas with portraits & scenes, 3 pages & 5 persona reviews a month, and 1 collaborator.",
-      "previous_state": "Interconnected online personas, user stories and context mapping. Helps keep design and dev in sync free for up to 3 personas and two collaborators.",
-      "current_state": "Free gets you started — you meet your personas and hear their first feedback. ✓ 3 personas with portraits & scenes ✓ 3 pages & 5 persona reviews a month ✓ 10 context sources to ground them ✓ Live share links & clean printing ✓ Bring a collaborator",
-      "impact": "medium",
-      "source_url": "https://userforge.com/",
-      "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"
@@ -5216,21 +5156,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "deployhq.com",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now offers unlimited deployments. Requires a paid plan starting at $9/month for unlimited projects.",
-      "previous_state": "Automated deployment platform — free plan: 3 projects with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
-      "current_state": "Start free with 3 projects and unlimited deployments. Automatic or manual. Unlimited deployments from $9/month.",
-      "impact": "high",
-      "source_url": "https://www.deployhq.com/",
-      "category": "CI/CD",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "Terrateam",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
@@ -5381,21 +5306,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "incidenthub.cloud",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now has no status page.",
-      "previous_state": "Cloud and SaaS status page aggregator — 5 monitors and 2 notification channels (Slack and Discord) are free forever.",
-      "current_state": "We also have a free tier with 5 monitors, Discord and Slack integration, and no status page.",
-      "impact": "medium",
-      "source_url": "https://incidenthub.cloud/",
-      "category": "Monitoring",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "linkok.com",
       "change_type": "pricing_restructured",
       "date": "2026-08-28",
@@ -5541,21 +5451,6 @@
       "impact": "high",
       "source_url": "https://xitoring.com/",
       "category": "Monitoring",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "Imitate Email",
-      "change_type": "limits_increased",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now offers 450 test emails a month, instead of 15 emails a day.",
-      "previous_state": "Sandbox Email Server for testing email functionality across build/qa and ci/cd. Free accounts get 15 emails a day forever.",
-      "current_state": "Get started with 450 test emails a month, free forever",
-      "impact": "medium",
-      "source_url": "https://imitate.email",
-      "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"
@@ -5816,21 +5711,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "MantleDB",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now has a limit of 100 entries and 64KB per entry, and unclaimed namespaces are purged after 30 days of inactivity. Claimed namespaces are purged after 90 days of inactivity. Previously a 1MB limit for the free tier and a 72h inactivity scavenger policy.",
-      "previous_state": "Anonymous JSON storage for scripts and tiny apps. No signup required; uses Master AID for updates and Read-Only RID for public fetching. Free tier includes 1 bucket (1MB limit) with a 72h inactivity scavenger policy.",
-      "current_state": "Unclaimed namespaces have a limit of up to 100 entries, 64 KB per entry and are purged after 30 days of no writes. Claimed namespaces have a limit of up to 100 entries, 64 KB per entry and are purged after 90 days of inactivity.",
-      "impact": "medium",
-      "source_url": "https://mantledb.sh",
-      "category": "Storage",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "Circum Icons",
       "change_type": "free_tier_removed",
       "date": "2026-08-28",
@@ -5871,21 +5751,6 @@
       "impact": "medium",
       "source_url": "https://icon.horse",
       "category": "Design",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "Bugsnag",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now includes 7.5K events and 1M spans per month, and 1 user. Previously 7,500 events/month and 1M spans/month, 1 user. The free tier is still available. The limits are now tied to the Enterprise plan description.",
-      "previous_state": "Error monitoring — 7,500 events/month and 1M spans/month on free plan, 1 user, unlimited projects, 7-day data retention. 14-day free trial of paid features available. Rebranded as SmartBear Insight Hub",
-      "current_state": "Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications Select plan features, plus: Automatic error prioritization Stability benchmarks Advanced segmentation Custom notifications SAML single sign-on System Metrics (CPU, Memory, Rendering)",
-      "impact": "medium",
-      "source_url": "https://www.bugsnag.com/pricing/",
-      "category": "Error Tracking",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"
@@ -5946,21 +5811,6 @@
       "impact": "medium",
       "source_url": "https://teleporthq.io/",
       "category": "Design",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "snappify",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now has a watermark on snaps and videos, and limits on snap storage, folder storage, and other features. The free tier also has a limit of 3 snaps at once, and 5 AI explanations per month.",
-      "previous_state": "Enables developers to create stunning visuals. From beautiful code snippets to fully fletched technical presentations. The free plan includes up to 3 snaps at once with unlimited downloads and 5 AI-powered code explanations per month.",
-      "current_state": "The free tier includes 3 snaps at once, 5 AI explanations per month, 100MB image upload limit, 3 snap storage limit, and includes a watermark on videos and snaps.",
-      "impact": "medium",
-      "source_url": "https://snappify.com",
-      "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"
@@ -6741,21 +6591,6 @@
       "impact": "high",
       "source_url": "https://www.comet.com/site/pricing/",
       "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "Meeting",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants. Previously unlimited meeting duration with up to 3 meeting participants & 10 Webinar attendees.",
-      "previous_state": "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
-      "current_state": "Free plan offers up to 60 minutes of meetings and 100 meeting participants.",
-      "impact": "high",
-      "source_url": "https://zoho.com/meeting",
-      "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"
