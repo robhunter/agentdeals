@@ -242,6 +242,110 @@ describe("#1038 — the level is checkable", () => {
   });
 });
 
+describe("#1147 — a shutdown of the product we list demotes the vendor", () => {
+  it("every severe type either demotes flatly or states why it decides per record", async () => {
+    const { RISK_DEMOTION, VOLATILE_TYPES, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION } = await import("../dist/data.js");
+    const severe = [...VOLATILE_TYPES] as string[];
+    assert.ok(severe.length > 0, "the severity set is empty");
+    for (const type of severe) {
+      if (RISK_DEMOTION[type as keyof typeof RISK_DEMOTION]) continue;
+      const reason = SEVERE_TYPES_WITHOUT_FLAT_DEMOTION[type];
+      assert.ok(
+        typeof reason === "string" && reason.length > 40,
+        `${type} is severe enough for the stability scale and demotes nothing, with no reason a reader of this test can check`,
+      );
+    }
+    for (const type of Object.keys(SEVERE_TYPES_WITHOUT_FLAT_DEMOTION)) {
+      assert.ok(severe.includes(type), `${type} is excused from demoting but is not in the severity set`);
+      assert.strictEqual(
+        RISK_DEMOTION[type as keyof typeof RISK_DEMOTION],
+        null,
+        `${type} demotes flatly, so the excuse recorded for it is stale`,
+      );
+    }
+  });
+
+  it("a vendor whose own product is discontinued cannot publish stable", async () => {
+    const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const enriched = enrichOffers(loadOffers());
+    for (const vendor of ["Hypertune", "smartlook.com", "lost-pixel.com"]) {
+      const offer = enriched.find((o: { vendor: string }) => o.vendor === vendor);
+      assert.ok(offer, `${vendor} has no offer to rate`);
+      assert.notStrictEqual(offer.risk_level, "stable", `${vendor} still publishes stable`);
+      assert.ok(offer.risk_cause, `${vendor} carries a level with no record behind it`);
+      assert.strictEqual(offer.risk_cause.change_type, "product_deprecated");
+    }
+  });
+
+  it("a vendor that retired one of its other services keeps the level its own record earned", async () => {
+    const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
+    const enriched = enrichOffers(loadOffers());
+    const held = changesByVendor(loadDealChanges() as Change[]);
+    const expected: Record<string, string> = {
+      "Google Gemini API": "stable",
+      "MiniMax": "stable",
+      "AWS": "caution",
+      "Firebase": "caution",
+    };
+    for (const [vendor, level] of Object.entries(expected)) {
+      const offer = enriched.find((o: { vendor: string }) => o.vendor === vendor);
+      assert.ok(offer, `${vendor} has no offer to rate`);
+      assert.ok(
+        (held.get(vendor.toLowerCase()) ?? []).some((c) => c.change_type === "product_deprecated"),
+        `${vendor} holds no deprecation record, so it is not controlling anything`,
+      );
+      assert.strictEqual(offer.risk_level, level, `${vendor} should stay ${level}`);
+      assert.notStrictEqual(
+        offer.risk_cause?.change_type,
+        "product_deprecated",
+        `${vendor} was demoted for retiring one of its other products`,
+      );
+    }
+  });
+
+  it("no offer in the index carries a stable level beside a volatile stability", async () => {
+    const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const contradicting = enrichOffers(loadOffers())
+      .filter((o: { risk_level: string | null; stability: string }) => o.risk_level === "stable" && o.stability === "volatile")
+      .map((o: { vendor: string }) => o.vendor);
+    assert.deepStrictEqual(contradicting, [], "these offers ship two judgements that cannot both be true");
+  });
+
+  it("keeps a vendor whose narrowings the risk scale does not act on off both ends of the scale", async () => {
+    const { classifyStability } = await import("../dist/data.js");
+    const restriction = (date: string) => ({
+      vendor: "V", change_type: "restriction", date, summary: "Free tier narrowed",
+      previous_state: "", current_state: "", impact: "medium" as const, source_url: "", category: "c", alternatives: [],
+    });
+    const three = [restriction("2026-01-01"), restriction("2026-04-01"), restriction("2026-06-01")];
+    assert.strictEqual(classifyStability(three), "watch");
+    assert.strictEqual(classifyStability([restriction("2026-01-01")]), "watch");
+  });
+
+  it("never calls a vendor stable on a scale where it holds a narrowing", async () => {
+    const { classifyStability, loadDealChanges, NEGATIVE_CHANGE_TYPES } = await import("../dist/data.js");
+    const held = changesByVendor(loadDealChanges() as Change[]);
+    const wrong: string[] = [];
+    for (const [vendor, changes] of held) {
+      const narrowing = changes.filter((c) => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
+      if (narrowing > 0 && classifyStability(changes as never) === "stable") {
+        wrong.push(`${vendor} holds ${narrowing} narrowing record(s) and reads stable`);
+      }
+    }
+    assert.deepStrictEqual(wrong, []);
+  });
+
+  it("the volatile population is not empty, so that invariant is not vacuous", async () => {
+    const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const enriched = enrichOffers(loadOffers());
+    const volatile = enriched.filter((o: { stability: string }) => o.stability === "volatile");
+    assert.ok(volatile.length > 0, "nothing in the index is volatile");
+    for (const offer of volatile) {
+      assert.notStrictEqual(offer.risk_level, "stable", `${offer.vendor} is volatile and rated stable`);
+    }
+  });
+});
+
 describe("#1038 — risk does not rank", () => {
   it("src/ranking.ts does not read risk_level or stability", () => {
     const src = readFileSync(path.join(REPO, "src", "ranking.ts"), "utf8");

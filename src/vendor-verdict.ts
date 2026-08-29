@@ -43,6 +43,10 @@ export function publishedVendorLevel(
   return level && (level === "stable" || cause) ? level : "stable";
 }
 
+function capitalise(text: string): string {
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
+}
+
 function narrowingChanges(
   changes: VendorVerdictInput["changes"],
 ): VendorVerdictInput["changes"] {
@@ -52,8 +56,12 @@ function narrowingChanges(
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+export function withholdingDecides(input: VendorVerdictInput): boolean {
+  return input.levelWithheld !== null && publishedVendorLevel(input.level, input.cause) === "stable";
+}
+
 export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel | null {
-  if (input.levelWithheld) return null;
+  if (withholdingDecides(input)) return null;
   return publishedVendorLevel(input.level, input.cause);
 }
 
@@ -80,14 +88,17 @@ export function narrowingSentence(changes: VendorVerdictInput["changes"]): strin
 }
 
 export function vendorVerdictSentence(input: VendorVerdictInput): string {
-  if (input.levelWithheld) {
-    const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
+  if (withholdingDecides(input)) {
+    const clause = withheldLevelClause(input.levelWithheld!, input.unconfirmableSince);
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
   }
 
   const level = publishedVendorLevel(input.level, input.cause);
   if (level !== "stable" && input.cause) {
-    return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.`;
+    const unconfirmed = input.levelWithheld
+      ? ` ${capitalise(withheldLevelClause(input.levelWithheld, input.unconfirmableSince))}, so we cannot confirm the terms above.`
+      : "";
+    return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.${unconfirmed}`;
   }
 
   if (input.changes.length === 0) return `It's stable — zero pricing changes recorded.`;

@@ -242,14 +242,17 @@ describe("vendor verdict — corpus invariant, computed offline", () => {
         wrong.push(`${row.slug}: verdict reaches for a second scale — ${row.sentence}`);
         continue;
       }
-      if (row.withheld) {
-        if (/\bWe rate it\b/.test(row.sentence)) wrong.push(`${row.slug}: publishes a rating we are withholding`);
+      if (!row.badgeRendered) {
+        if (/\bWe rate it\b/.test(row.sentence)) wrong.push(`${row.slug}: rates a vendor whose badge is withheld`);
         continue;
       }
       const named = row.sentence.match(/We rate it (stable|caution|risky)\b/)?.[1]
         ?? (row.sentence.startsWith("It's stable") ? "stable" : null);
       if (named !== row.expected) {
         wrong.push(`${row.slug}: badge says ${row.expected}, verdict says ${named ?? "nothing"}`);
+      }
+      if (row.withheld && !/cannot confirm the terms above/.test(row.sentence)) {
+        wrong.push(`${row.slug}: rates the vendor without saying we cannot confirm the terms we print`);
       }
     }
     assert.deepStrictEqual(wrong, [], `vendors whose two stability judgements disagree:\n${wrong.join("\n")}`);
@@ -460,5 +463,33 @@ describe("vendor verdict — as rendered", () => {
       assert.ok(verdict.includes(row.sentence), `/vendor/${slug} verdict does not render "${row.sentence}"`);
       assert.match(row.sentence, /narrowed the terms/, `/vendor/${slug} still names the records that pointed down`);
     }
+  });
+
+  it("stops offering a product whose own shutdown date has passed", async () => {
+    const html = await get("/vendor/hypertune");
+    const pageMeta = html.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
+    assert.match(pageMeta, /Discontinued 2026-08-10/);
+    assert.doesNotMatch(pageMeta, /Verified/, "the subhead still stamps a discontinued product as verified");
+
+    const metaDesc = html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
+    assert.doesNotMatch(metaDesc, /Verified [A-Z][a-z]+ \d{4}/, "search results still stamp it as verified");
+
+    const verdict = verdictParagraph(html);
+    assert.match(verdict, /discontinued on 2026-08-10, so it is not a current option/);
+    assert.doesNotMatch(verdict, /Best for [a-z ]*workloads/, "the verdict still recommends it for a workload");
+
+    assert.ok(
+      !/class="section growth-section"/.test(html),
+      "the page still tells the reader when they will outgrow a free tier that has ended",
+    );
+    assert.match(html, /<div class="detail-label">Discontinued<\/div>\s*<div class="detail-value"[^>]*>2026-08-10<\/div>/);
+  });
+
+  it("leaves the verified stamp on a product being sunset with no date past", async () => {
+    const html = await get("/vendor/lost-pixel-com");
+    const pageMeta = html.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
+    assert.match(pageMeta, /Verified [A-Z][a-z]+ \d{4}/);
+    assert.doesNotMatch(pageMeta, /Discontinued/);
+    assert.strictEqual(badgeWord(html), "risky", "a product being sunset is still rated on the record we hold");
   });
 });

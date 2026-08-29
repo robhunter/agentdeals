@@ -121,6 +121,32 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
     assert.ok(["stable", "watch", "volatile", "improving"].includes(body.stability["Neon"]));
   });
 
+  it("search_deals never pairs a stable risk_level with a volatile stability (issue #1147)", async () => {
+    proc = await startHttpServer();
+    const sessionId = await initSession();
+    const result = await callTool(sessionId, 2, "search_deals", {
+      stability: "volatile", limit: 500,
+    });
+    const body = JSON.parse(result.content[0].text);
+    assert.ok(Array.isArray(body.results) && body.results.length > 0, "no volatile offers came back to check");
+    const contradicting = body.results.filter((r: { risk_level: string }) => r.risk_level === "stable");
+    assert.deepStrictEqual(
+      contradicting.map((r: { vendor: string }) => r.vendor),
+      [],
+      "an agent filtering on risk_level would keep these while the same object calls them volatile",
+    );
+  });
+
+  it("search_deals hands a discontinued product a level an agent can filter out (issue #1147)", async () => {
+    proc = await startHttpServer();
+    const sessionId = await initSession();
+    const result = await callTool(sessionId, 2, "search_deals", { query: "Hypertune", limit: 5 });
+    const body = JSON.parse(result.content[0].text);
+    const row = body.results.find((r: { vendor: string }) => r.vendor === "Hypertune");
+    assert.ok(row, "Hypertune is not searchable by name");
+    assert.notStrictEqual(row.risk_level, "stable", "Hypertune is shutting down and search_deals calls it stable");
+  });
+
   it("plan_stack recommend mode returns risk_level/stability per component and risk_warnings", async () => {
     proc = await startHttpServer();
     const sessionId = await initSession();

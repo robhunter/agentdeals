@@ -35,6 +35,7 @@ import { linkifyVerdictBlocks, overdueReport, pageCompiledClause, pageDataProven
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
+import { discontinuedOnOrBefore } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
@@ -3755,6 +3756,8 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
+  const discontinuedOn = discontinuedOnOrBefore(vendorChanges, new Date().toISOString().slice(0, 10));
+
   const linkUnreachable = enriched.link_unreachable;
   const h1RiskBadge = enriched.risk_level === null || (linkUnreachable && riskLevel === "stable")
     ? ""
@@ -3796,7 +3799,9 @@ function buildVendorPage(slug: string): string | null {
     : `${vendorName} Pricing ${currentYear}: Plans, Costs & Free Alternatives | AgentDeals`;
   const descLimits = primary.description.slice(0, 100).replace(/\.\s.*$/, "");
   const verifiedMonth = (() => { const d = primary.verifiedDate.split("-"); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${months[parseInt(d[1],10)-1]} ${d[0]}`; })();
-  const verifiedSentence = enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
+  const verifiedSentence = discontinuedOn
+    ? ` Discontinued ${discontinuedOn}.`
+    : enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
   const metaDesc = hasFree
     ? `${vendorName} free tier includes ${descLimits}.${verifiedSentence} Compare with ${alternatives.length} alternatives in ${primary.category}.`
     : `${vendorName} pricing details and ${alternatives.length} free alternatives in ${primary.category}.${verifiedSentence}`;
@@ -3816,7 +3821,9 @@ function buildVendorPage(slug: string): string | null {
     unconfirmableSince,
   };
   const verdictLine2 = vendorVerdictSentence(verdictInput);
-  const verdictLine3 = alternatives.length > 0 && !levelWithheld
+  const verdictLine3 = discontinuedOn
+    ? `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
+    : alternatives.length > 0 && !levelWithheld
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";
   const quickVerdictHtml = `
@@ -3851,7 +3858,7 @@ function buildVendorPage(slug: string): string | null {
     const topAlt = alternatives[0];
     growthBullets.push(`At that point, consider <a href="/vendor/${toSlug(topAlt.vendor)}">${escHtmlServer(topAlt.vendor)}</a> which offers ${escHtmlServer(topAlt.tier)} in the same category.`);
   }
-  const growthPathHtml = growthBullets.length > 0 ? `
+  const growthPathHtml = growthBullets.length > 0 && !discontinuedOn ? `
   <div class="section growth-section">
     <h2>When You'll Outgrow ${escHtmlServer(vendorName)}'s Free Tier</h2>
     <ul class="growth-list">
@@ -4301,8 +4308,8 @@ ${referralCalloutHtml}
       <div class="detail-value"><a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">Visit &rarr;</a></div>
     </div>
     <div class="detail-card">
-      <div class="detail-label">${linkUnreachable ? "Link last reachable" : "Verified"}</div>
-      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : primary.verifiedDate)}</div>
+      <div class="detail-label">${discontinuedOn ? "Discontinued" : linkUnreachable ? "Link last reachable" : "Verified"}</div>
+      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(discontinuedOn ?? (linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : primary.verifiedDate))}</div>
     </div>
   </div>
 
