@@ -153,7 +153,7 @@ m_hero_keeps_its_verdict() {
   py <<'PY'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace("  const verdictLine2 = levelWithheld", "  const verdictLine2 = false")
+s = s.replace("    levelWithheld,\n    unconfirmableSince,", "    levelWithheld: null,\n    unconfirmableSince,")
 open(p, "w").write(s)
 PY
 }

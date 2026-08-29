@@ -19,6 +19,7 @@ import { LINK_GRACE_DAYS } from "./link-health.js";
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeKindNoun, DEMOTING_KINDS_PHRASE, type VendorVerdictInput } from "./vendor-verdict.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -449,7 +450,6 @@ const changeTypeBadge: Record<string, { label: string; color: string }> = {
 };
 
 const RISK_COLORS: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
-const STABILITY_COLORS: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
 
 function riskCauseLabel(cause: RiskCause): string {
   return `${changeDateLabel(cause)} ${changeTypeBadge[cause.change_type]?.label ?? cause.change_type.replace(/_/g, " ")}`;
@@ -482,7 +482,12 @@ function riskBadgeHtml(
   return `${badge} <span style="font-size:${size};color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`;
 }
 
-function stabilityCellHtml(stability: string, linkUnreachable: LinkUnreachable | null | undefined, offer?: Pick<Offer, "source_check">): string {
+function stabilityCellHtml(
+  level: "stable" | "caution" | "risky" | null | undefined,
+  cause: RiskCause | null | undefined,
+  linkUnreachable: LinkUnreachable | null | undefined,
+  offer?: Pick<Offer, "source_check">,
+): string {
   if (linkUnreachable) {
     const since = linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
     return `<span style="color:var(--text-dim)" title="Link has not resolved${escHtmlServer(since)}">link unreachable</span>`;
@@ -492,8 +497,10 @@ function stabilityCellHtml(stability: string, linkUnreachable: LinkUnreachable |
     const why = withheldLevelClause(withheld, "");
     return `<span style="color:var(--text-dim)" title="${escHtmlServer(why.charAt(0).toUpperCase() + why.slice(1))}">source unconfirmed</span>`;
   }
-  const color = STABILITY_COLORS[stability] ?? "#8b949e";
-  return `<span class="stability-dot" style="background:${color}"></span> ${escHtmlServer(stability)}`;
+  const published = publishedVendorLevel(level ?? null, cause ?? null);
+  const color = RISK_COLORS[published] ?? "#8b949e";
+  const title = published === "stable" || !cause ? "" : ` title="${escHtmlServer(`${changeDateLabel(cause)} — ${cause.summary}`)}"`;
+  return `<span class="stability-dot" style="background:${color}"></span> <span${title}>${escHtmlServer(published)}</span>`;
 }
 
 /** Table-cell form of the same rule: the level, and under it the dated cause. */
@@ -3739,9 +3746,8 @@ function buildVendorPage(slug: string): string | null {
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskCause = enriched.risk_cause;
   // #1038: a level we cannot show the cause for is not publishable in the H1.
-  const riskLevel = enriched.risk_level && (enriched.risk_level === "stable" || riskCause) ? enriched.risk_level : "stable";
+  const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
-  const stability = enriched.stability ?? "stable";
   // The badge sits in the largest text on the page. Its reason sits directly
   // under it — not only in the history section further down, which for a cause
   // older than 90 days did not carry it at all (Neon, #1038).
@@ -3796,19 +3802,20 @@ function buildVendorPage(slug: string): string | null {
     : `${vendorName} pricing details and ${alternatives.length} free alternatives in ${primary.category}.${verifiedSentence}`;
 
   // --- NEW: Quick Verdict ---
-  const stabilityLabel: Record<string, string> = { stable: "stable", watch: "on our watch list", volatile: "volatile", improving: "improving" };
-  const stabilityText = stabilityLabel[stability] || "stable";
   const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
   const unconfirmableSince = linkUnreachable
     ? (linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "")
     : "";
   const levelWithheld = levelWithheldReason(primary, linkUnreachable);
   const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
-  const verdictLine2 = levelWithheld
-    ? `${withheldClause.charAt(0).toUpperCase()}${withheldClause.slice(1)}, so we cannot confirm these terms today.`
-    : vendorChanges.length === 0
-    ? `It's ${stabilityText} — zero pricing changes recorded.`
-    : `It's ${stabilityText} — ${vendorChanges.length} pricing change${vendorChanges.length > 1 ? "s" : ""} recorded.`;
+  const verdictInput: VendorVerdictInput = {
+    level: enriched.risk_level ?? null,
+    cause: riskCause,
+    changes: vendorChanges,
+    levelWithheld,
+    unconfirmableSince,
+  };
+  const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = alternatives.length > 0 && !levelWithheld
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";
@@ -3870,13 +3877,13 @@ function buildVendorPage(slug: string): string | null {
           <tr class="current-vendor-row">
             <td><strong>${escHtmlServer(vendorName)}</strong></td>
             <td>${escHtmlServer(primary.tier)}</td>
-            <td>${stabilityCellHtml(stability, linkUnreachable, primary)}</td>
+            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary)}</td>
           </tr>
 ${enrichedAlts.map(a => {
   return `          <tr>
             <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
             <td>${escHtmlServer(a.tier)}</td>
-            <td>${stabilityCellHtml(a.stability ?? "stable", a.link_unreachable, a)}</td>
+            <td>${stabilityCellHtml(a.risk_level, a.risk_cause, a.link_unreachable, a)}</td>
           </tr>`;
 }).join("\n")}
         </tbody>
@@ -4127,7 +4134,7 @@ ${allCompareLinks.join("\n")}
   const faqReliableAnswer = levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === "stable"
-    ? `${vendorName}'s free tier is considered stable: we hold no free tier removal, limit reduction or pricing restructure on record for this vendor.${vendorChanges.length > 0 ? ` We do hold ${vendorChanges.length === 1 ? "1 other recorded change" : `${vendorChanges.length} other recorded changes`} — see the pricing history below.` : ""}`
+    ? `${vendorName}'s free tier is considered stable: we hold no ${DEMOTING_KINDS_PHRASE} on record for this vendor.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
     : riskLevel === "caution"
     ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
     : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider alternatives.`;
@@ -4138,8 +4145,8 @@ ${allCompareLinks.join("\n")}
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (riskLevel === "stable"
-      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. With ${stabilityText} pricing and ${escHtmlServer(keyLimit)}, it's a reasonable starting point. Monitor your usage against the limits and have an upgrade plan ready.`
-      : `${vendorName}'s free tier is usable for prototyping and development, but exercise caution for production workloads given its ${stabilityText} pricing history. Consider alternatives with more stable pricing for critical services.`)
+      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. We rate it stable and it offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
+      : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`;
   const faqChangedAnswer = vendorChanges.length > 0
     ? `Yes, ${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).`
