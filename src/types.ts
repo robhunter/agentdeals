@@ -9,6 +9,7 @@ export interface Referral {
   url: string;
   referee_value: string;
   referrer_value?: string;
+  referrer_compensation?: "commission" | "credit" | "none";
   type: "dual-sided" | "referrer-only" | "referee-only";
   source: "curated" | "sovrn" | "agent-submitted";
   submitted_by?: string | null;

@@ -840,7 +840,7 @@ export const openapiSpec = {
                 },
                 example: {
                   codes: [
-                    { vendor: "Railway", category: "Cloud Hosting", code: "7RZL9q", referral_url: "https://railway.com?referralCode=7RZL9q", referee_benefit: "$20 in credits", source: "platform" }
+                    { vendor: "Railway", category: "Cloud Hosting", code: "7RZL9q", referral_url: "https://railway.com?referralCode=7RZL9q", referee_benefit: "$20 in credits", restrictions: [], source: "platform" }
                   ],
                   total: 1
                 }
@@ -867,7 +867,7 @@ export const openapiSpec = {
             content: {
               "application/json": {
                 schema: { $ref: "#/components/schemas/ReferralCodeListing" },
-                example: { vendor: "Railway", code: "7RZL9q", referral_url: "https://railway.com?referralCode=7RZL9q", referee_benefit: "$20 in credits", source: "platform" }
+                example: { vendor: "Railway", code: "7RZL9q", referral_url: "https://railway.com?referralCode=7RZL9q", referee_benefit: "$20 in credits", restrictions: [], source: "platform" }
               }
             }
           },
@@ -939,9 +939,10 @@ export const openapiSpec = {
           code: { type: "string", description: "The referral code string" },
           referral_url: { type: "string", format: "uri", description: "Full referral URL the referee should visit" },
           referee_benefit: { type: "string", description: "What the person using the code gets (e.g. '$20 in credits')" },
+          restrictions: { type: "array", items: { type: "string" }, description: "Conditions the referee must meet before the benefit is theirs (e.g. 'A payment method must be linked'). Empty when the record records none. Publish these wherever you publish referee_benefit." },
           source: { type: "string", enum: ["platform", "agent-submitted"], description: "platform = AgentDeals-owned code, agent-submitted = marketplace-submitted code" }
         },
-        required: ["vendor", "code", "referral_url", "referee_benefit", "source"]
+        required: ["vendor", "code", "referral_url", "referee_benefit", "restrictions", "source"]
       },
       DealChange: {
         type: "object",

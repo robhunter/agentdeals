@@ -26,8 +26,8 @@ import { logReferralRequest } from "./referral-requests.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
-import { getPlatformCodeForVendor, getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
-import { allOurReferralLinks, hasAnyReferralSurface, ourReferralLinkFor, referralLinkCountClause } from "./referral-surfaces.js";
+import { getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
+import { allOurReferralLinks, hasAnyReferralSurface, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
@@ -3983,17 +3983,20 @@ ${enrichedAlts.map(a => {
     </div>`;
   })() : "";
 
-  // Platform referral code CTA (shown when we have a platform code for this vendor)
-  const platformCode = getPlatformCodeForVendor(vendorName);
-  const referralCalloutHtml = platformCode ? `
+  const ourLink = ourReferralLinkFor(vendorName, primary);
+  const referralCalloutHtml = ourLink ? `
   <div class="section" style="margin-top:1.5rem">
     <div style="border:2px solid #3fb950;border-radius:12px;padding:1.25rem;background:linear-gradient(135deg,rgba(63,185,80,0.08),rgba(63,185,80,0.02))">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
         <span style="font-size:1.25rem">&#127873;</span>
-        <strong style="font-size:1rem;color:var(--text)">Sign up via our referral link and get ${escHtmlServer(platformCode.referee_benefit)}</strong>
-      </div>
-      <a href="${escHtmlServer(platformCode.referral_url)}" rel="noopener sponsored" target="_blank" style="display:inline-block;padding:.6rem 1.25rem;background:#3fb950;color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none">Get ${escHtmlServer(platformCode.referee_benefit)} &rarr;</a>
-      <p style="margin-top:.75rem;font-size:.75rem;color:var(--text-dim)">We may earn a commission if you sign up through this link. See our <a href="/disclosure">affiliate disclosure</a>.</p>
+        <strong style="font-size:1rem;color:var(--text)">Sign up via our referral link and get ${escHtmlServer(ourLink.refereeBenefit)}</strong>
+      </div>${ourLink.restrictions.length > 0 ? `
+      <div class="referral-conditions" style="margin:0 0 .9rem;padding:.65rem .85rem;border-left:3px solid #d29922;border-radius:0 6px 6px 0;background:rgba(210,153,34,0.08)">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono);margin-bottom:.35rem">What you have to do to get it</div>
+        <ul style="margin:0;padding-left:1.1rem;font-size:.8rem;color:var(--text);line-height:1.5">${ourLink.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul>
+      </div>` : ""}
+      <a href="${escHtmlServer(ourLink.url)}" rel="noopener sponsored" target="_blank" style="display:inline-block;padding:.6rem 1.25rem;background:#3fb950;color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none">Get ${escHtmlServer(ourLink.refereeBenefit)} &rarr;</a>
+      <p style="margin-top:.75rem;font-size:.75rem;color:var(--text-dim)">${escHtmlServer(referrerDisclosureSentence(ourLink.compensation))} See our <a href="/disclosure">affiliate disclosure</a>.</p>
     </div>
   </div>` : "";
 
@@ -51921,7 +51924,7 @@ ${agentSubmittedCodes.length > 0 ? `
   </div>` : ""}
   <div class="section">
     <h2>Current Referral Partners</h2>
-    ${ourReferralLinks.length > 0 ? `<ul>${ourReferralLinks.map(l => `<li><a href="/vendor/${toSlug(l.vendor)}">${escHtmlServer(l.vendor)}</a>: ${escHtmlServer(l.refereeBenefit)}${l.termsUrl ? ` (<a href="${escHtmlServer(l.termsUrl)}" rel="noopener" target="_blank">program terms</a>)` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
+    ${ourReferralLinks.length > 0 ? `<ul>${ourReferralLinks.map(l => `<li><a href="/vendor/${toSlug(l.vendor)}">${escHtmlServer(l.vendor)}</a>: ${escHtmlServer(l.refereeBenefit)}${l.termsUrl ? ` (<a href="${escHtmlServer(l.termsUrl)}" rel="noopener" target="_blank">program terms</a>)` : ""}${l.restrictions.length > 0 ? `<ul class="referral-conditions">${l.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul>` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
     ${vendorsWithOwnProgram.size > 0 ? `<p>We also document ${vendorsWithOwnProgram.size} ${vendorsWithOwnProgram.size === 1 ? "vendor that runs its own referral program" : "vendors that run their own referral programs"} on <a href="/referral-programs">/referral-programs</a>. We hold no code and earn nothing from ${vendorsWithOwnProgram.size === 1 ? "it" : "those"} &mdash; the program is listed because it exists, not because of any relationship with us.</p>` : ""}
   </div>
 
@@ -56449,6 +56452,7 @@ ${catList}
         code: best.code,
         referral_url: best.referral_url,
         referee_benefit: best.referee_benefit,
+        restrictions: best.restrictions,
         source: best.source,
       }));
       return;

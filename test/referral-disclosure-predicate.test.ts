@@ -49,11 +49,14 @@ function sectionAfter(html: string, heading: string, nextHeading: string): strin
 }
 
 describe("one predicate decides whether we hold a referral link for a vendor", () => {
-  it("a vendor held only in the platform code store still counts as one of ours", () => {
-    const link = ourReferralLinkFor("Proton Mail", offerFor("Proton Mail"));
-    assert.ok(link, "Proton Mail is in data/platform_codes.json and should resolve to a referral link");
-    assert.strictEqual(link!.source, "platform_code");
-    assert.ok(link!.url.length > 0);
+  it("holds no link for a vendor that is in neither store", () => {
+    for (const vendor of ["Proton Mail", "Proton VPN", "Proton Pass", "Proton Drive"]) {
+      const offer = offerFor(vendor);
+      assert.ok(offer, `${vendor} should be in the index`);
+      assert.strictEqual(ourReferralLinkFor(vendor, offer), null, `we hold no code for ${vendor}`);
+      assert.strictEqual(hasOurReferralLink(vendor, offer), false);
+      assert.strictEqual(hasAnyReferralSurface(vendor, offer), true, "the vendor's own program is still a referral surface");
+    }
   });
 
   it("a vendor that documents its own program is a referral surface but not a link of ours", () => {
@@ -267,7 +270,9 @@ describe("a new row in the platform code store is disclosed on its own", () => {
     code: "EXAMPLECODE",
     referral_url: "https://example.com/ref/EXAMPLECODE",
     referrer_benefit: "$1 credit",
+    referrer_compensation: "credit",
     referee_benefit: "$1 credit",
+    restrictions: [],
     source: "platform",
     active: true,
     added_at: "2026-08-29",
