@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "date": "2026-08-29",
+  "generated_at": "2026-08-29T00:12:39.810Z",
+  "complete": false,
+  "page_views": {
+    "served": 28,
+    "not_found": 0,
+    "redirects": 0,
+    "unclassified_legacy": 0,
+    "by_route": {
+      "/vendor/:slug": 10,
+      "/compare/:slug": 7,
+      "/search": 5,
+      "/": 1,
+      "/aws-app-runner-migration": 1,
+      "/category/:slug": 1,
+      "/compare": 1,
+      "/free-llm-apis": 1,
+      "/tenor-alternatives": 1
+    }
+  },
+  "traffic": {
+    "by_class": {
+      "browser": 26,
+      "seo_crawler": 18,
+      "internal": 16,
+      "unknown": 15,
+      "sdk_client": 9,
+      "search_crawler": 9,
+      "ai_agent": 3,
+      "other_bot": 2
+    },
+    "by_class_route": {
+      "internal|/health": 16,
+      "seo_crawler|/vendor/:slug": 15,
+      "browser|/vendor/:slug": 9,
+      "sdk_client|/api/changes": 9,
+      "browser|/compare/:slug": 7,
+      "unknown|/api/changes": 7,
+      "search_crawler|/vendor/:slug": 6,
+      "browser|/search": 5,
+      "unknown|/api/newest": 3,
+      "seo_crawler|/digest/:slug": 2,
+      "unknown|/api/categories": 2,
+      "unknown|/api/offers": 2,
+      "ai_agent|/robots.txt": 1,
+      "ai_agent|/tenor-alternatives": 1,
+      "ai_agent|/vendor/:slug": 1,
+      "browser|/": 1,
+      "browser|/aws-app-runner-migration": 1,
+      "browser|/category/:slug": 1,
+      "browser|/compare": 1,
+      "browser|/free-llm-apis": 1,
+      "other_bot|/": 1,
+      "other_bot|/aws-app-runner-migration": 1,
+      "search_crawler|/free-llm-apis": 1,
+      "search_crawler|/llm-api-pricing": 1,
+      "search_crawler|/search": 1,
+      "seo_crawler|/compare/:slug": 1,
+      "unknown|/api/costs": 1
+    },
+    "ai_agent_families": {
+      "Claude-User": 3
+    },
+    "not_found_by_class": {
+      "seo_crawler": 1
+    },
+    "redirects_by_class": {
+      "other_bot": 1
+    }
+  },
+  "mcp_tool_calls": 0,
+  "referrers": {
+    "agentdeals.dev": 10,
+    "claude.ai": 1
+  },
+  "signals": {
+    "total": 0,
+    "by_event": {},
+    "by_transport": {},
+    "by_client_class": {},
+    "by_source": {},
+    "by_reporting_agent": {},
+    "unresolved_vendor_name_count": 0,
+    "unrecognized_event_count": 0,
+    "vendor_key_count": 0
+  },
+  "vendors": null,
+  "excluded": [
+    "per-vendor counts: a durable per-vendor series is a placement metric a vendor could acquire by firing an endpoint at itself, and this artifact is public",
+    "caller-supplied vendor names and event strings: counted here, never transcribed, because a rolling window and a permanent public file are different publications",
+    "reported free-text notes",
+    "request paths that resolved to no page",
+    "anything identifying an individual caller"
+  ]
+}
