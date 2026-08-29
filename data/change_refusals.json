@@ -118,7 +118,7 @@
       "current_state": "The page does not mention a free tier with 5,000 screenshots per month for open-source projects. It directs users to the pricing page for details.",
       "source_url": "https://argos-ci.com",
       "category": "Testing",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "asgardeo.io",
@@ -167,6 +167,18 @@
       "source_url": "https://www.baseten.co/pricing/",
       "category": "AI / ML",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Braid",
+      "change_type": "pricing_restructured",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The free tier now appears to be called 'Community' and is described as an 'Open group with public access'. It still offers unlimited users, history, and integrations. There is also a 'Team' plan which is a private group with a 30 day free trial, then 'pick your own price'.",
+      "previous_state": "Chat app designed for teams. Free for public access group, unlimited users, history, and integrations. also, it provides a self-hostable open-source version.",
+      "current_state": "Community: Open group with public access, Free Forever, ∞ Users, ∞ History, ∞ Integrations. Team: Private group with invite-only access, 30 day free trial then pick your own price, ∞ Users, ∞ History, ∞ Integrations.",
+      "source_url": "https://www.braidchat.com/",
+      "category": "Team Collaboration",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Brex",
@@ -277,6 +289,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Coupler",
+      "change_type": "limits_reduced",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The page does not explicitly mention a free tier with the same limitations as previously stated. It prominently features a 'Start for free' button, but details about the free tier's limitations (one user, one data connection, etc.) are not present on the provided text. The page focuses on features and integrations rather than specific free tier limits.",
+      "previous_state": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination. Also requires manual data refresh.",
+      "current_state": "The page offers a 'Start for free' option, but does not detail the limitations of the free plan. It highlights features like connecting to 400+ sources, blending and transforming data, and AI integrations.",
+      "source_url": "https://www.coupler.io/",
+      "category": "Notebooks & Data Science",
+      "refused_date": "2026-08-29"
+    },
+    {
       "vendor": "Crisp",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -310,7 +334,7 @@
       "current_state": "The page does not mention a free tier. It highlights features and benefits for paid users and agency partners, with pricing starting at €39/month for agency partners.",
       "source_url": "https://www.datocms.com/",
       "category": "Headless CMS",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "DB Designer",
@@ -568,7 +592,7 @@
       "vendor": "LaunchDarkly",
       "change_type": "limits_reduced",
       "reason": "no_baseline",
-      "detail": "limits_reduced claimed, and the figure it was measured against sat in a clause about our own record that cannot be restated as the vendor's earlier terms",
+      "detail": "limits_reduced claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured",
       "summary": "The Developer tier exists, but the limits have changed. The stored information states 1K client MAU, while the current pricing page states 1K client-side MAU. The stored information states 5K session replays/month, while the current pricing page states 5K session replays /mo. The stored information does not mention AgentControl features, while the current pricing page includes 5k AI runs/mo.",
       "previous_state": "Feature management — unlimited seats and flags, 1K client MAU, 1 project, 3 environments, A/B testing, 5K session replays/month",
       "current_state": "Developer: $0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. CodeControl: Unlimited feature flags, 30 SDKs, 5 service connections and 1K client-side MAU /mo, 5K session replays and 5K errors /mo. AgentControl: 5k AI runs/mo included.",
@@ -838,7 +862,7 @@
       "current_state": "The page highlights AI-powered template generation with limited AI generations and focuses on features like template creation, API integration, and scalability. It does not mention a free tier with a specific number of conversions.",
       "source_url": "https://pdfbolt.com",
       "category": "API Development",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Phase Two",
@@ -934,7 +958,7 @@
       "current_state": "API access is available through the Standard tier, a pay-as-you-go plan.",
       "source_url": "https://reducto.ai",
       "category": "AI / ML",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Remote for Startups",
@@ -1009,6 +1033,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Stream",
+      "change_type": "limits_reduced",
+      "reason": "no_baseline",
+      "detail": "limits_reduced claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured",
+      "summary": "The chat limit is now 2,000 monthly active users and 100 concurrent connections, down from 2,000 MAU with no mention of concurrent connections. The Maker Account now has requirements of 5 or less team members, less than $100k in funding, and less than $10k/mo revenue.",
+      "previous_state": "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video. Hard limits, no surprise overages",
+      "current_state": "Maker Account Details If your company has five or less team members, less than $100k in funding and has taken less than $10k/mo revenue, Stream is free/gratis/complimentary. What you get: Chat Start Plan Hard limits - no surprise bills Vision Agents Open Source Activity Feeds Start Plan AI Moderation Pay-as-You-Go w/$100 Monthly Credit Video & Audio Build Plan. The Maker Account for Chat offers a modified Chat Start Plan with all the same capabilities, but with a limit of 2,000 monthly active users and 100 concurrent connections.",
+      "source_url": "https://getstream.io/maker-account/",
+      "category": "Communication",
+      "refused_date": "2026-08-29"
+    },
+    {
       "vendor": "SurveyMonkey.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1054,7 +1090,7 @@
       "current_state": "The page highlights a high volume of requests (300M+ monthly) and does not detail a specific free tier. It encourages users to 'Try it for free' but doesn't specify limits.",
       "source_url": "https://tavily.com/",
       "category": "AI / ML",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Tawk.to",
@@ -1150,7 +1186,7 @@
       "current_state": "The free plan includes 1,000 searches per month.",
       "source_url": "https://zenscrape.com/web-scraping-api",
       "category": "Web Scraping",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Zoho Bookings",
