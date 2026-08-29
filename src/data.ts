@@ -8,7 +8,7 @@ import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js"
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
 import { cannotVouchForLevel, levelWithheldReason, withheldLevelSentence } from "./source-check.js";
 import { filterAlternatives } from "./product-role.js";
-import { DATE_SOURCES, isEventDated, changeDateClause } from "./change-dates.js";
+import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -1133,6 +1133,8 @@ export function getWeeklyDigest(): {
   week: string;
   date_range: string;
   deal_changes: DealChange[];
+  discovered_changes: DealChange[];
+  discovery_note: string;
   new_offers: { vendor: string; category: string; description: string }[];
   upcoming_deadlines: { vendor: string; date: string; change_type: string; summary: string }[];
   summary: string;
@@ -1140,16 +1142,22 @@ export function getWeeklyDigest(): {
   const now = new Date();
   const fmt = (d: Date) => d.toISOString().slice(0, 10);
   const today = fmt(now);
-  const thirtyDaysFromNow = fmt(new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000));
 
-  // Get deal changes — 7-day window, fallback to 30 if <3 changes
-  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const allDealChanges = loadDealChanges();
+  const weekWindow = isoWeekWindow(now);
+  const week = `${weekWindow.start} to ${weekWindow.end}`;
+  const inWeek = changesInWindow(allDealChanges, weekWindow);
+
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  let changes = getDealChanges(sevenDaysAgo).changes;
-  const usedFallback = changes.length < 3;
-  if (usedFallback) {
-    changes = getDealChanges(thirtyDaysAgo).changes;
-  }
+  const usedFallback = inWeek.dated.length < 3;
+  const changeWindow: DateWindow = usedFallback
+    ? { start: thirtyDaysAgo, end: today }
+    : weekWindow;
+  const changes = [...changesInWindow(allDealChanges, changeWindow).dated].sort((a, b) =>
+    b.date.localeCompare(a.date)
+  );
+  const discovered = [...inWeek.discovered].sort((a, b) => b.date.localeCompare(a.date));
+  const discoveryNote = discovered.length > 0 ? discoveryBatchNote(discovered.length, "this week") : "";
 
   // New offers added in last 7 days
   const newOffers = getNewOffers(7).offers.slice(0, 10).map((o) => ({
@@ -1166,10 +1174,8 @@ export function getWeeklyDigest(): {
     summary: `${d.vendor} deal expires`,
   }));
 
-  // Upcoming deadlines from deal changes with future dates (next 30 days)
-  const allChanges = loadDealChanges();
-  const changeDeadlines = allChanges
-    .filter((c) => isEventDated(c) && c.date >= today && c.date <= thirtyDaysFromNow)
+  const changeDeadlines = allDealChanges
+    .filter((c) => isEventDated(c) && c.date >= today)
     .map((c) => ({
       vendor: c.vendor,
       date: c.date,
@@ -1189,30 +1195,28 @@ export function getWeeklyDigest(): {
     })
     .slice(0, 25);
 
-  // Week label
-  const weekStart = new Date(now.getTime() - now.getUTCDay() * 86400000 + 86400000); // Monday
-  const weekEnd = new Date(weekStart.getTime() + 6 * 86400000);
-  const week = `${fmt(weekStart)} to ${fmt(weekEnd)}`;
-
   // Build summary
   const parts: string[] = [];
   if (changes.length > 0) {
     const negative = changes.filter((c) => CHANGE_DIRECTION[c.change_type] === "negative");
     const positive = changes.filter((c) => CHANGE_DIRECTION[c.change_type] === "positive");
-    parts.push(`${changes.length} pricing change${changes.length !== 1 ? "s" : ""} tracked${usedFallback ? " in the past 30 days" : " this week"}`);
+    parts.push(`${changes.length} pricing change${changes.length !== 1 ? "s" : ""} with a known effective date tracked${usedFallback ? " in the past 30 days" : " this week"}`);
     if (negative.length > 0) parts.push(`${negative.length} negative (${negative.map((c) => c.vendor).join(", ")})`);
     if (positive.length > 0) parts.push(`${positive.length} positive (${positive.map((c) => c.vendor).join(", ")})`);
   } else {
-    parts.push("No pricing changes this week");
+    parts.push("No pricing change with a known effective date this week");
   }
+  if (discoveryNote) parts.push(discoveryNote.replace(/\.$/, ""));
   if (newOffers.length > 0) parts.push(`${newOffers.length} new offer${newOffers.length !== 1 ? "s" : ""} added`);
-  if (deadlines.length > 0) parts.push(`${deadlines.length} upcoming deadline${deadlines.length !== 1 ? "s" : ""} in the next 30 days`);
+  if (deadlines.length > 0) parts.push(`${deadlines.length} upcoming deadline${deadlines.length !== 1 ? "s" : ""} through ${deadlines[deadlines.length - 1].date}`);
   const summary = parts.join(". ") + ".";
 
   return {
     week,
-    date_range: `${fmt(weekStart)} to ${fmt(weekEnd)}`,
+    date_range: `${changeWindow.start} to ${changeWindow.end}`,
     deal_changes: changes,
+    discovered_changes: discovered,
+    discovery_note: discoveryNote,
     new_offers: newOffers,
     upcoming_deadlines: deadlines,
     summary,
@@ -1244,6 +1248,8 @@ export interface FormattedWeeklyDigest {
   week_of: string;
   week_ending: string;
   total_changes: number;
+  changes_in_week: number;
+  discovered_in_week: number;
   summary: {
     free_tiers_removed: number;
     new_free_tiers: number;
@@ -1254,6 +1260,8 @@ export interface FormattedWeeklyDigest {
   };
   headline: string;
   top_changes: DealChange[];
+  discovered_changes: DealChange[];
+  discovery_note: string;
   digest_markdown: string;
   digest_html: string;
 }
@@ -1263,18 +1271,16 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   const now = new Date();
   const targetDate = new Date(now.getTime() - weeksAgo * 7 * 86400000);
 
-  const dayOfWeek = targetDate.getUTCDay();
-  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-  const weekStart = new Date(Date.UTC(targetDate.getUTCFullYear(), targetDate.getUTCMonth(), targetDate.getUTCDate() + mondayOffset));
-  const weekEnd = new Date(weekStart.getTime() + 6 * 86400000);
+  const week = isoWeekWindow(targetDate);
+  const weekStartStr = week.start;
+  const weekEndStr = week.end!;
+  const weekStart = new Date(weekStartStr + "T00:00:00Z");
+  const weekEnd = new Date(weekEndStr + "T00:00:00Z");
 
-  const fmt = (d: Date) => d.toISOString().slice(0, 10);
-  const weekStartStr = fmt(weekStart);
-  const weekEndStr = fmt(weekEnd);
-
-  const weekChanges = allChanges.filter(c => c.date >= weekStartStr && c.date <= weekEndStr);
+  const { dated: weekChanges, discovered: weekDiscovered } = changesInWindow(allChanges, week);
   const sorted = [...weekChanges].sort((a, b) => scoreChange(b) - scoreChange(a));
   const topChanges = sorted.slice(0, limit);
+  const discoveredChanges = [...weekDiscovered].sort((a, b) => scoreChange(b) - scoreChange(a)).slice(0, limit);
 
   const summary = {
     free_tiers_removed: weekChanges.filter(c => c.change_type === "free_tier_removed").length,
@@ -1285,6 +1291,10 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
     pricing_restructured: weekChanges.filter(c => c.change_type === "pricing_restructured").length,
   };
 
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const dateLabel = `${months[weekStart.getUTCMonth()]} ${weekStart.getUTCDate()}\u2013${weekEnd.getUTCDate()}, ${weekStart.getUTCFullYear()}`;
+  const discoveryNote = weekDiscovered.length > 0 ? discoveryBatchNote(weekDiscovered.length, `during ${dateLabel}`) : "";
+
   const headlineParts: string[] = [];
   if (summary.free_tiers_removed > 0) headlineParts.push(`${summary.free_tiers_removed} free tier${summary.free_tiers_removed !== 1 ? "s" : ""} removed`);
   if (summary.new_free_tiers > 0) headlineParts.push(`${summary.new_free_tiers} new one${summary.new_free_tiers !== 1 ? "s" : ""} added`);
@@ -1293,11 +1303,8 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   if (summary.limits_increased > 0) headlineParts.push(`${summary.limits_increased} limit${summary.limits_increased !== 1 ? "s" : ""} increased`);
   if (summary.pricing_restructured > 0) headlineParts.push(`${summary.pricing_restructured} pricing restructure${summary.pricing_restructured !== 1 ? "s" : ""}`);
   const headline = headlineParts.length > 0
-    ? `${headlineParts.join(", ")} across ${weekChanges.length} developer tool pricing changes`
+    ? `${headlineParts.join(", ")} across ${weekChanges.length} developer tool pricing change${weekChanges.length !== 1 ? "s" : ""}`
     : `${weekChanges.length} developer tool pricing change${weekChanges.length !== 1 ? "s" : ""} tracked this week`;
-
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const dateLabel = `${months[weekStart.getUTCMonth()]} ${weekStart.getUTCDate()}\u2013${weekEnd.getUTCDate()}, ${weekStart.getUTCFullYear()}`;
 
   const negativeTypes = NEGATIVE_STABILITY_TYPES;
   const positiveTypes = POSITIVE_STABILITY_TYPES;
@@ -1329,6 +1336,11 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   }
   if (topChanges.length === 0) {
     mdSections.push(`No pricing changes tracked this week.`);
+  }
+  if (discoveredChanges.length > 0) {
+    mdSections.push(`## ${firstReadHeading(weekDiscovered.length)}`);
+    mdSections.push(discoveryNote);
+    mdSections.push(discoveredChanges.map(changeToMd).join("\n"));
   }
 
   mdSections.push(`---`);
@@ -1364,6 +1376,11 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   if (topChanges.length === 0) {
     htmlSections.push(`<p>No pricing changes tracked this week.</p>`);
   }
+  if (discoveredChanges.length > 0) {
+    htmlSections.push(`<h2>${escHtml(firstReadHeading(weekDiscovered.length))}</h2>`);
+    htmlSections.push(`<p>${escHtml(discoveryNote)}</p>`);
+    htmlSections.push(`<ul>${discoveredChanges.map(changeToHtml).join("")}</ul>`);
+  }
 
   htmlSections.push(`<hr>`);
   htmlSections.push(`<p><a href="https://agentdeals.dev/changes">View all ${allChanges.length} changes</a> | Powered by <a href="https://agentdeals.dev">AgentDeals</a></p>`);
@@ -1374,9 +1391,13 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
     week_of: weekStartStr,
     week_ending: weekEndStr,
     total_changes: allChanges.length,
+    changes_in_week: weekChanges.length,
+    discovered_in_week: weekDiscovered.length,
     summary,
     headline,
     top_changes: topChanges,
+    discovered_changes: discoveredChanges,
+    discovery_note: discoveryNote,
     digest_markdown: digestMarkdown,
     digest_html: digestHtml,
   };

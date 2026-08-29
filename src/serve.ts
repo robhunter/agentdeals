@@ -41,7 +41,8 @@ import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
-import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, feedEntryUpdated, undatedGroupHeading, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
+import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
+import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -3155,12 +3156,17 @@ function buildDigestPage(weekKey: string): string | null {
   const { year, week } = parsed;
 
   const byWeek = getChangesByWeek();
-  const changes = byWeek.get(weekKey) ?? [];
+  const weekRecords = byWeek.get(weekKey) ?? [];
+  const { dated: changes, discovered } = partitionByDateProvenance(weekRecords);
   const dateRange = formatDateRange(year, week);
+  const discoveryNote = discovered.length > 0 ? discoveryBatchNote(discovered.length, `during ${dateRange}`) : "";
+  const discoveryClause = discovered.length > 0
+    ? ` ${discovered.length} pricing page${discovered.length !== 1 ? "s" : ""} read for the first time, with no effective date of their own.`
+    : "";
   const title = `Developer Tool Pricing Changes: ${dateRange} — AgentDeals`;
   const metaDesc = changes.length > 0
-    ? `${changes.length} pricing changes tracked for developer tools during ${dateRange}. ${changes.filter(c => c.impact === "high").length} high-impact changes.`
-    : `No pricing changes tracked for developer tools during ${dateRange}.`;
+    ? `${changes.length} pricing changes tracked for developer tools during ${dateRange}. ${changes.filter(c => c.impact === "high").length} high-impact changes.${discoveryClause}`
+    : `No pricing changes tracked for developer tools during ${dateRange}.${discoveryClause}`;
 
   // Stats
   const byType = new Map<string, number>();
@@ -3168,14 +3174,20 @@ function buildDigestPage(weekKey: string): string | null {
     byType.set(c.change_type, (byType.get(c.change_type) ?? 0) + 1);
   }
 
+  const discoveryPill = discovered.length > 0
+    ? `\n    <div class="stat-pill"><span style="width:8px;height:8px;border-radius:50%;background:#8b949e;display:inline-block"></span> <strong>${discovered.length}</strong> first read</div>`
+    : "";
   const statsHtml = changes.length > 0 ? `
   <div class="stats-bar">
-    <div class="stat-pill"><strong>${changes.length}</strong> changes</div>
+    <div class="stat-pill"><strong>${changes.length}</strong> change${changes.length !== 1 ? "s" : ""}</div>
     ${Array.from(byType.entries()).map(([type, count]) => {
       const badge = changeTypeBadge[type] ?? { label: type, color: "#8b949e" };
       return `<div class="stat-pill"><span style="width:8px;height:8px;border-radius:50%;background:${badge.color};display:inline-block"></span> <strong>${count}</strong> ${badge.label}</div>`;
-    }).join("\n    ")}
-  </div>` : "";
+    }).join("\n    ")}${discoveryPill}
+  </div>` : (discovered.length > 0 ? `
+  <div class="stats-bar">
+    <div class="stat-pill"><strong>0</strong> changes</div>${discoveryPill}
+  </div>` : "");
 
   // Group by impact
   const byImpact: Record<string, typeof changes> = { high: [], medium: [], low: [] };
@@ -3186,13 +3198,9 @@ function buildDigestPage(weekKey: string): string | null {
   const impactColors = { high: "#f85149", medium: "#d29922", low: "#8b949e" };
   const impactLabels = { high: "High Impact", medium: "Medium Impact", low: "Low Impact" };
 
-  const changesHtml = changes.length > 0
-    ? (["high", "medium", "low"] as const).filter(level => byImpact[level].length > 0).map(level => `
-  <div class="impact-section">
-    <h2><span class="impact-dot" style="background:${impactColors[level]}"></span> ${impactLabels[level]} (${byImpact[level].length})</h2>
-    ${byImpact[level].sort((a, b) => b.date.localeCompare(a.date)).map(c => {
-      const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-      return `<div class="change-entry" style="border-left-color:${impactColors[level]}">
+  function digestEntry(c: typeof weekRecords[0], borderColor: string): string {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    return `<div class="change-entry" style="border-left-color:${borderColor}">
       <div class="change-header">
         <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
         <span class="change-vendor">${escHtmlServer(c.vendor)}</span>
@@ -3201,9 +3209,24 @@ function buildDigestPage(weekKey: string): string | null {
       </div>
       <div class="change-summary">${escHtmlServer(c.summary)}</div>
     </div>`;
-    }).join("\n    ")}
+  }
+
+  const changesHtml = changes.length > 0
+    ? (["high", "medium", "low"] as const).filter(level => byImpact[level].length > 0).map(level => `
+  <div class="impact-section">
+    <h2><span class="impact-dot" style="background:${impactColors[level]}"></span> ${impactLabels[level]} (${byImpact[level].length})</h2>
+    ${byImpact[level].sort((a, b) => b.date.localeCompare(a.date)).map(c => digestEntry(c, impactColors[level])).join("\n    ")}
   </div>`).join("\n")
     : `<div class="empty-msg"><p>No pricing changes tracked this week.</p><p style="margin-top:.5rem"><a href="/digest/archive">Browse the archive</a> or <a href="/feed.xml">subscribe via RSS</a>.</p></div>`;
+
+  const firstReadHtml = discovered.length > 0 ? `
+  <div class="impact-section">
+    <h2><span class="impact-dot" style="background:#8b949e"></span> ${escHtmlServer(firstReadHeading(discovered.length))}</h2>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.75rem">${escHtmlServer(discoveryNote)}</p>
+    ${[...discovered].sort((a, b) => b.date.localeCompare(a.date)).map(c => digestEntry(c, "#8b949e")).join("\n    ")}
+  </div>` : "";
+
+  const bodyHtml = [changesHtml, firstReadHtml].filter(Boolean).join("\n");
 
   // Trending categories
   const catCounts = new Map<string, number>();
@@ -3265,9 +3288,9 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
   ${buildGlobalNav("digest")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/digest/archive">Digest</a> &rsaquo; ${weekKey}</div>
   <h1>Pricing Changes: ${dateRange}</h1>
-  <p class="page-meta">Week ${week}, ${year}. ${changes.length} change${changes.length !== 1 ? "s" : ""} tracked.</p>
+  <p class="page-meta">Week ${week}, ${year}. ${changes.length} change${changes.length !== 1 ? "s" : ""} tracked.${discoveryClause}</p>
 ${statsHtml}
-${changesHtml}
+${bodyHtml}
 ${trendingHtml}
 
   <div class="rss-cta">
@@ -3288,10 +3311,12 @@ function buildDigestArchivePage(): string {
   const title = "Pricing Change Digest Archive — AgentDeals";
   const metaDesc = `Browse ${weeks.length} weeks of developer tool pricing changes. Free tier removals, limit changes, and new deals tracked weekly.`;
 
-  const listHtml = weeks.map(([key, changes]) => {
+  const listHtml = weeks.map(([key, records]) => {
     const parsed = parseWeekKey(key)!;
     const dateRange = formatDateRange(parsed.year, parsed.week);
-    return `<li><a href="/digest/${key}"><span class="week-label">${dateRange}</span><span class="week-count">${changes.length} change${changes.length !== 1 ? "s" : ""}</span></a></li>`;
+    const { dated, discovered } = partitionByDateProvenance(records);
+    const firstRead = discovered.length > 0 ? ` + ${discovered.length} first read` : "";
+    return `<li><a href="/digest/${key}"><span class="week-label">${dateRange}</span><span class="week-count">${dated.length} change${dated.length !== 1 ? "s" : ""}${firstRead}</span></a></li>`;
   }).join("\n    ");
 
   const jsonLd = {
@@ -3381,13 +3406,35 @@ function buildThisWeekPage(weeksAgo: number): string {
     </section>`;
   }
 
-  const contentHtml = digest.top_changes.length > 0
+  const changesHtml = digest.top_changes.length > 0
     ? [
         renderSection("Biggest Losses", losses, "#f85149"),
         renderSection("Bright Spots", brightSpots, "#3fb950"),
         renderSection("Other Notable Changes", other, "#d29922"),
       ].filter(Boolean).join("\n")
     : `<div class="empty-msg"><p>No pricing changes tracked this week.</p><p style="margin-top:.5rem"><a href="/this-week?week=${weeksAgo + 1}">View previous week</a> or <a href="/feed.xml">subscribe via RSS</a>.</p></div>`;
+
+  const firstReadHtml = digest.discovered_in_week > 0
+    ? `<section class="tw-section tw-first-read">
+      <h2><span class="tw-dot" style="background:#8b949e"></span> ${escHtmlServer(firstReadHeading(digest.discovered_in_week))}</h2>
+      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.75rem">${escHtmlServer(digest.discovery_note)}</p>
+      ${digest.discovered_changes.map(c => {
+        const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+        return `<div class="tw-change" style="border-left-color:#8b949e">
+        <div class="change-header">
+          <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
+          <a href="/vendor/${toSlug(c.vendor)}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
+          <span class="change-cat" style="font-family:var(--mono)">${changeDateLabel(c)}</span>
+          <span class="change-cat">${escHtmlServer(c.category)}</span>
+        </div>
+        <div class="change-summary">${escHtmlServer(c.summary)}</div>
+      </div>`;
+      }).join("\n      ")}
+      ${digest.discovered_in_week > digest.discovered_changes.length ? `<p style="font-size:.85rem;color:var(--text-dim);margin-top:.75rem">Showing ${digest.discovered_changes.length} of ${digest.discovered_in_week}. <a href="/changes">See every page we have read</a>.</p>` : ""}
+    </section>`
+    : "";
+
+  const contentHtml = [changesHtml, firstReadHtml].filter(Boolean).join("\n");
 
   const { summary: s } = digest;
   const summaryPills: string[] = [];
@@ -3397,6 +3444,7 @@ function buildThisWeekPage(weeksAgo: number): string {
   if (s.limits_increased > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#3fb950"><strong>${s.limits_increased}</strong> limit${s.limits_increased !== 1 ? "s" : ""} increased</span>`);
   if (s.products_deprecated > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#f85149"><strong>${s.products_deprecated}</strong> deprecated</span>`);
   if (s.pricing_restructured > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#bc8cff"><strong>${s.pricing_restructured}</strong> restructured</span>`);
+  if (digest.discovered_in_week > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#8b949e"><strong>${digest.discovered_in_week}</strong> pages read for the first time</span>`);
   const summaryBar = summaryPills.length > 0 ? `<div class="tw-summary-bar">${summaryPills.join("")}</div>` : "";
 
   const navHtml = `<div class="tw-nav">
@@ -54294,9 +54342,15 @@ const httpServer = createHttpServer(async (req, res) => {
     } else {
       const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
       const allTimeTotal = loadDealChanges().length;
+      const { dated, discovered } = partitionByDateProvenance(result.changes);
+      const dateProvenance = {
+        event_dated: dated.length,
+        discovered: discovered.length,
+        note: discovered.length > 0 ? discoveryBatchNote(discovered.length, "in this window") : "",
+      };
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ ...result, all_time_total: allTimeTotal, change_log_freshness: changeLogFreshness }));
+      res.end(JSON.stringify({ ...result, date_provenance: dateProvenance, all_time_total: allTimeTotal, change_log_freshness: changeLogFreshness }));
     }
   } else if (url.pathname === "/api/deadlines" && isGetOrHead) {
     recordApiHit("/api/deadlines");
@@ -54656,6 +54710,8 @@ const httpServer = createHttpServer(async (req, res) => {
     <summary type="html">${escXml(digest.digest_html)}</summary>
   </entry>`);
     }
+    const corrections = correctionEntriesXml(baseUrl, escXml);
+    for (const c of FEED_CORRECTIONS) entryUpdates.push(c.updated);
     const updatedTs = entryUpdates.length > 0 ? entryUpdates.reduce((a, b) => (b > a ? b : a)) : new Date().toISOString();
     const atom = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
@@ -54666,7 +54722,7 @@ const httpServer = createHttpServer(async (req, res) => {
   <id>urn:agentdeals:weekly-digest</id>
   <updated>${updatedTs}</updated>
   <author><name>AgentDeals</name></author>
-${weekEntries.join("\n")}
+${[...corrections, ...weekEntries].join("\n")}
 </feed>`;
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: feedPath, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: weekEntries.length });
     res.writeHead(200, { "Content-Type": "application/atom+xml; charset=utf-8", "Cache-Control": "public, max-age=3600", "Access-Control-Allow-Origin": "*" });
