@@ -17,6 +17,8 @@ import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVend
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS } from "./link-health.js";
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
+import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
+import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
@@ -2154,110 +2156,7 @@ ${report.notes.map(n => `    <li>${escHtmlServer(n)}</li>`).join("\n")}
 
 // --- Comparison pages ---
 
-// Define comparison pairs: [vendorA, vendorB] — canonical order is alphabetical
-const COMPARISON_PAIRS: [string, string][] = [
-  // Cloud Hosting
-  ["Netlify", "Vercel"],
-  ["Railway", "Render"],
-  ["Cloudflare Pages", "Vercel"],
-  ["Netlify", "Render"],
-  ["Cloudflare Pages", "Netlify"],
-  // Databases
-  ["Firebase", "Supabase"],
-  ["Neon", "Supabase"],
-  ["CockroachDB", "Neon"],
-  ["MongoDB", "Supabase"],
-  ["CockroachDB", "MongoDB"],
-  // Monitoring
-  ["Datadog", "Grafana Cloud"],
-  ["Bugsnag", "Sentry"],
-  ["Grafana Cloud", "Sentry"],
-  // CI/CD
-  ["GitHub Actions", "GitLab CI"],
-  ["CircleCI", "GitHub Actions"],
-  ["CircleCI", "GitLab CI"],
-  // Auth
-  ["Auth0", "Clerk"],
-  // AI Coding
-  ["Cursor", "GitHub Copilot"],
-  ["Cursor", "Windsurf"],
-  ["Amazon Q Developer", "GitHub Copilot"],
-  ["Cline", "Aider"],
-  ["Claude Code", "Cursor"],
-  ["Cursor", "Devin"],
-  ["GitHub Copilot", "Windsurf"],
-  ["Augment Code", "Cursor"],
-  ["Bolt.new", "Lovable"],
-  ["Claude Code", "OpenAI Codex"],
-  // Cross-category high-interest
-  ["Firebase", "Vercel"],
-  ["Railway", "Supabase"],
-  ["Netlify", "Railway"],
-  ["Render", "Vercel"],
-  ["Cloudflare Pages", "Render"],
-];
-
-// Build slug for a comparison pair (canonical: alphabetical)
-function comparisonSlug(a: string, b: string): string {
-  return `${toSlug(a)}-vs-${toSlug(b)}`;
-}
-
-/**
- * Auto-generate comparison pairs from categories with 3+ vendors.
- *
- * This used to score vendors on `changeCount * 3 + description.length / 50`,
- * which meant the length of the copy WE wrote decided which vendors got an
- * indexed SEO page at all — a placement lever on 25 vendor slots across 20 of
- * 57 categories, pullable with no code change and no audit trail. The other
- * term was no better: `deal_changes` covers 16% of vendors and 51% of the
- * well-known ones, so leaving it as the sole driver would have selected on
- * how closely we happen to watch a vendor.
- *
- * A comparison page is an inventory surface, not a recommendation, so it does
- * not need the demerit model — it needs no lever at all. Which vendors get one
- * is a single unbiased draw per category, seeded on the category name alone.
- * It is deliberately date-free: rotating which URLs exist would churn the site
- * daily for a crawler with no benefit to a reader.
- */
-function generateCategoryPairs(): [string, string][] {
-  const catVendors = new Map<string, string[]>();
-  for (const o of offers) {
-    if (!catVendors.has(o.category)) catVendors.set(o.category, []);
-    const arr = catVendors.get(o.category)!;
-    if (!arr.includes(o.vendor)) arr.push(o.vendor);
-  }
-
-  const pairs: [string, string][] = [];
-  for (const [category, vendors] of catVendors) {
-    if (vendors.length < 3) continue;
-    const topN = rotateListing(vendors, `compare-pairs:${category}`).slice(0, 4);
-    let catPairCount = 0;
-    for (let i = 0; i < topN.length && catPairCount < 5; i++) {
-      for (let j = i + 1; j < topN.length && catPairCount < 5; j++) {
-        const [a, b] = [topN[i], topN[j]].sort() as [string, string];
-        pairs.push([a, b]);
-        catPairCount++;
-      }
-    }
-  }
-  return pairs;
-}
-
-// Build lookup maps for comparison pages
-const comparisonMap = new Map<string, [string, string]>();
-for (const [a, b] of COMPARISON_PAIRS) {
-  const offerA = offers.find(o => o.vendor === a);
-  const offerB = offers.find(o => o.vendor === b);
-  if (offerA && offerB) {
-    comparisonMap.set(comparisonSlug(a, b), [a, b]);
-  }
-}
-for (const [a, b] of generateCategoryPairs()) {
-  const slug = comparisonSlug(a, b);
-  if (!comparisonMap.has(slug)) {
-    comparisonMap.set(slug, [a, b]);
-  }
-}
+const comparisonMap = buildComparisonMap();
 
 // Group comparisons by category for the index page
 function getComparisonsByCategory(): Map<string, Array<{ slug: string; a: string; b: string }>> {
@@ -2395,7 +2294,11 @@ function buildComparisonPage(slug: string): string | null {
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
-    return changes.sort((x, y) => y.date.localeCompare(x.date)).slice(0, 5).map(c => {
+    const shown = changes.sort((x, y) => y.date.localeCompare(x.date)).slice(0, 5);
+    const truncationNote = changes.length > shown.length
+      ? `<p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Showing the ${shown.length} most recent of ${changes.length} recorded changes for ${escHtmlServer(vendor)}.</p>`
+      : "";
+    return shown.map(c => {
       const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
       return `<div style="margin-bottom:.75rem;padding:.6rem .75rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 6px 6px 0">
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
@@ -2405,7 +2308,7 @@ function buildComparisonPage(slug: string): string | null {
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
       </div>`;
-    }).join("\n");
+    }).join("\n") + truncationNote;
   };
 
   // Category context
@@ -2425,10 +2328,23 @@ function buildComparisonPage(slug: string): string | null {
   const hasFreeB = tierB !== "none" && !b.description.toLowerCase().includes("no free tier");
   // These are risk levels, not stability classes — two different scales.
   // They render only when their cause does (#1038).
-  const stabilityA = riskA.risk_cause || riskA.risk_level === "stable" ? riskA.risk_level ?? "unknown" : "unknown";
-  const stabilityB = riskB.risk_cause || riskB.risk_level === "stable" ? riskB.risk_level ?? "unknown" : "unknown";
-  const changesCountA = a.deal_changes.length;
-  const changesCountB = b.deal_changes.length;
+  const comparisonSide = (
+    vendor: string,
+    risk: typeof riskA,
+    recordedChanges: number,
+  ): ComparisonSide => {
+    const rated = risk.risk_cause || risk.risk_level === "stable" ? risk.risk_level : null;
+    return {
+      vendor,
+      recordedChanges,
+      rating: rated as StabilityRating | null,
+      ratingWithheldBecause: levelWithheldReason(risk, risk.link_unreachable),
+      unconfirmableSince: risk.link_unreachable?.last_reachable ? ` since ${risk.link_unreachable.last_reachable}` : "",
+    };
+  };
+  const sideA = comparisonSide(a.vendor, riskA, a.deal_changes.length);
+  const sideB = comparisonSide(b.vendor, riskB, b.deal_changes.length);
+  const stabilityClause = stabilityVerdictClause(sideA, sideB);
 
   let verdictText = "";
   if (hasFreeA && hasFreeB) {
@@ -2440,10 +2356,7 @@ function buildComparisonPage(slug: string): string | null {
   } else {
     verdictText = `Neither ${a.vendor} nor ${b.vendor} currently offers a free tier.`;
   }
-  if (stabilityA !== stabilityB) {
-    const betterVendor = stabilityA === "stable" ? a.vendor : stabilityB === "stable" ? b.vendor : null;
-    if (betterVendor) verdictText += ` ${betterVendor} has a more stable pricing history.`;
-  }
+  if (stabilityClause) verdictText += ` ${stabilityClause}`;
 
   const verdictHtml = `
   <div class="verdict-section">
@@ -2470,7 +2383,7 @@ function buildComparisonPage(slug: string): string | null {
   // FAQ items for JSON-LD
   const faqItems = [
     { q: `Which is cheaper, ${a.vendor} or ${b.vendor}?`, a: hasFreeA && hasFreeB ? `Both offer free tiers. ${a.vendor} provides "${a.tier}" and ${b.vendor} offers "${b.tier}". Compare the specific limits above to determine which fits your usage.` : hasFreeA ? `${a.vendor} offers a free tier ("${a.tier}") while ${b.vendor} does not.` : hasFreeB ? `${b.vendor} offers a free tier ("${b.tier}") while ${a.vendor} does not.` : `Neither currently offers a free tier.` },
-    { q: `Is ${a.vendor} or ${b.vendor} more stable?`, a: `${a.vendor} is rated ${stabilityA} with ${changesCountA} pricing change${changesCountA !== 1 ? "s" : ""} recorded. ${b.vendor} is rated ${stabilityB} with ${changesCountB} change${changesCountB !== 1 ? "s" : ""} recorded.` },
+    { q: `Is ${a.vendor} or ${b.vendor} more stable?`, a: stabilityFaqAnswer(sideA, sideB) },
     { q: `Can I use ${a.vendor} and ${b.vendor} together?`, a: sameCategory ? `While both are in the ${primaryCategory} category, some teams use both for different workloads. Check each vendor's free tier limits to see if they complement your stack.` : `Yes — ${a.vendor} (${a.category}) and ${b.vendor} (${b.category}) serve different purposes and can work well together.` },
   ];
 
