@@ -9,6 +9,7 @@ import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary 
 import { cannotVouchForLevel, levelWithheldReason, withheldLevelSentence } from "./source-check.js";
 import { filterAlternatives } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause } from "./change-dates.js";
+import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -279,11 +280,35 @@ export const NEGATIVE_CHANGE_TYPES = directionSet("negative");
 export const POSITIVE_CHANGE_TYPES = directionSet("positive");
 
 /** Severity, not direction: the negatives that end a free tier outright. */
-const VOLATILE_TYPES = new Set([
+export const VOLATILE_TYPES = new Set([
   "free_tier_removed",
   "open_source_killed",
   "product_deprecated",
 ]);
+
+export const SEVERE_TYPES_WITHOUT_FLAT_DEMOTION: Record<string, string> = {
+  product_deprecated:
+    "Whether a deprecation is severe is a property of the record, not of the type: it demotes when " +
+    "the record says the product we list is the thing going away, and does not when a vendor retires " +
+    "one of its other services. demotionForChange decides per record.",
+};
+
+export function demotionForChange(
+  change: Pick<DealChange, "change_type" | "vendor" | "summary">,
+): "risky" | "caution" | null {
+  const flat = RISK_DEMOTION[change.change_type];
+  if (flat) return flat;
+  if (change.change_type === PRODUCT_DEPRECATED) {
+    return deprecationEndsTheListedProduct(change) ? "risky" : null;
+  }
+  return null;
+}
+
+export function isSevereChange(
+  change: Pick<DealChange, "change_type" | "vendor" | "summary">,
+): boolean {
+  return VOLATILE_TYPES.has(change.change_type) && demotionForChange(change) !== null;
+}
 
 /** The two the risk scale treats as severe. Exported so no caller inlines them. */
 export const SEVERE_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed"]);
@@ -294,18 +319,19 @@ const POSITIVE_STABILITY_TYPES = POSITIVE_CHANGE_TYPES;
 export function classifyStability(vendorChanges: DealChange[]): StabilityClass {
   if (vendorChanges.length === 0) return "stable";
 
-  const hasVolatile = vendorChanges.some(c => VOLATILE_TYPES.has(c.change_type));
+  const hasVolatile = vendorChanges.some(isSevereChange);
   const negativeCount = vendorChanges.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
   const positiveCount = vendorChanges.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
+  const riskScaleActs = vendorChanges.some(c => demotionForChange(c) !== null);
 
-  // Volatile: free tier removed, OSS killed, product deprecated, or multiple negative changes
-  if (hasVolatile || negativeCount >= 2) return "volatile";
+  // Volatile: a severe change, or multiple negative changes the risk scale acts on
+  if (hasVolatile || (negativeCount >= 2 && riskScaleActs)) return "volatile";
 
   // Improving: only positive changes (no negative)
   if (positiveCount > 0 && negativeCount === 0) return "improving";
 
-  // Watch: one negative change
-  if (negativeCount === 1) return "watch";
+  // Watch: at least one negative change
+  if (negativeCount >= 1) return "watch";
 
   // No negative or positive (e.g. only pricing_model_change) = stable
   return "stable";
@@ -701,7 +727,7 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
 
   let best: { level: "caution" | "risky"; cause: DealChange } | null = null;
   for (const c of vendorChanges) {
-    const demotion = RISK_DEMOTION[c.change_type];
+    const demotion = demotionForChange(c);
     if (!demotion) continue;
     // A severe change ages into `caution`, never into `stable`. We still hold
     // the record, and `stable` is itself a published claim — SendGrid's free

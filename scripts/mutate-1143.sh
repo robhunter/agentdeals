@@ -136,7 +136,7 @@ m_the_cause_is_reported_as_a_count() {
   py <<'PY'
 p = "src/vendor-verdict.ts"
 s = open(p).read()
-s = s.replace('    return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.`;',
+s = s.replace('    return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.${unconfirmed}`;',
               '    return `We rate it ${level} — ${input.changes.length} pricing changes recorded.`;')
 open(p, "w").write(s)
 PY
@@ -156,7 +156,7 @@ m_a_withheld_rating_is_published_as_a_word() {
   py <<'PY'
 p = "src/vendor-verdict.ts"
 s = open(p).read()
-s = s.replace('  if (input.levelWithheld) return null;\n  return publishedVendorLevel(input.level, input.cause);',
+s = s.replace('  if (withholdingDecides(input)) return null;\n  return publishedVendorLevel(input.level, input.cause);',
               '  return publishedVendorLevel(input.level, input.cause);')
 open(p, "w").write(s)
 PY
