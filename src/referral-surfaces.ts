@@ -1,4 +1,5 @@
-import { getAllPlatformCodes, getPlatformCodeForVendor } from "./platform-codes.js";
+import { getAllPlatformCodes, getPlatformCodeForVendor, referrerCompensationOf, restrictionsOf } from "./platform-codes.js";
+import type { ReferrerCompensation } from "./platform-codes.js";
 import { toSlug } from "./vendor-slug.js";
 import type { Offer } from "./types.js";
 
@@ -8,6 +9,8 @@ export interface OurReferralLink {
   vendor: string;
   url: string;
   refereeBenefit: string;
+  restrictions: string[];
+  compensation: ReferrerCompensation | null;
   termsUrl: string | null;
   source: OurReferralLinkSource;
 }
@@ -23,6 +26,8 @@ export function ourReferralLinkFor(vendorName: string, offer?: Offer | null): Ou
       vendor: platformCode.vendor,
       url: platformCode.referral_url,
       refereeBenefit: platformCode.referee_benefit,
+      restrictions: restrictionsOf(platformCode),
+      compensation: referrerCompensationOf(platformCode),
       termsUrl: offerReferral?.terms_url ?? null,
       source: "platform_code",
     };
@@ -33,12 +38,21 @@ export function ourReferralLinkFor(vendorName: string, offer?: Offer | null): Ou
       vendor: offer.vendor,
       url: offerReferral.url,
       refereeBenefit: offerReferral.referee_value ?? REFEREE_BENEFIT_FALLBACK,
+      restrictions: restrictionsOf(offerReferral),
+      compensation: referrerCompensationOf(offerReferral),
       termsUrl: offerReferral.terms_url ?? null,
       source: "offer_referral",
     };
   }
 
   return null;
+}
+
+export function referrerDisclosureSentence(compensation: ReferrerCompensation | null): string {
+  if (compensation === "commission") return "We may earn a commission if you sign up through this link.";
+  if (compensation === "credit") return "We are paid in vendor credit, not cash, if you sign up through this link.";
+  if (compensation === "none") return "We are paid nothing if you sign up through this link.";
+  return "This is a referral link of ours. We have not recorded what it pays us.";
 }
 
 export function referralLinkCountClause(count: number): string {
