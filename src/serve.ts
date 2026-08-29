@@ -27,6 +27,7 @@ import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalanc
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getPlatformCodeForVendor, getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
+import { allOurReferralLinks, hasAnyReferralSurface, ourReferralLinkFor, referralLinkCountClause } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
@@ -4115,8 +4116,7 @@ ${allCompareLinks.join("\n")}
   // Marketplace solicitation (low-pressure) — shown only when this vendor has no
   // platform code, no documented program, and no offer-level referral. Converts
   // dormant vendor pages into acquisition surfaces for code submitters.
-  const hasAnyReferralSurface = !!platformCode || primary.referral_program?.available === true || !!primary.referral;
-  const marketplaceSolicitationHtml = !hasAnyReferralSurface ? `
+  const marketplaceSolicitationHtml = !hasAnyReferralSurface(vendorName, primary) ? `
   <div class="section marketplace-solicitation">
     <div style="border:1px dashed var(--border);border-radius:8px;padding:1rem;background:var(--bg-card);opacity:.92">
       <h3 style="margin:0 0 .5rem;font-size:.95rem;color:var(--text)">Know a referral or partner program for ${escHtmlServer(vendorName)}?</h3>
@@ -51076,6 +51076,7 @@ function buildReferralProgramsPage(): string {
   for (const o of offers) {
     if (o.referral_program?.available && !seen.has(o.vendor)) {
       seen.add(o.vendor);
+      const ourLink = ourReferralLinkFor(o.vendor, o);
       programVendors.push({
         vendor: o.vendor,
         category: o.category,
@@ -51084,9 +51085,9 @@ function buildReferralProgramsPage(): string {
         program_url: o.referral_program.program_url,
         type: o.referral_program.type,
         commission_type: o.referral_program.commission_type,
-        hasCode: !!o.referral,
-        referralUrl: o.referral?.url,
-        refereeValue: o.referral?.referee_value,
+        hasCode: ourLink !== null,
+        referralUrl: ourLink?.url,
+        refereeValue: ourLink?.refereeBenefit,
       });
     }
   }
@@ -51104,8 +51105,9 @@ function buildReferralProgramsPage(): string {
    */
   const paidSection = rotateListing(programVendors.filter(v => v.hasCode), "referral-programs:with-code");
   const unpaidSection = rotateListing(programVendors.filter(v => !v.hasCode), "referral-programs:without-code");
+  const inventoryOrder = rotateListing([...programVendors], "referral-programs:inventory");
   programVendors.length = 0;
-  programVendors.push(...paidSection, ...unpaidSection);
+  programVendors.push(...inventoryOrder);
 
   const withCodes = paidSection.length;
   const withoutCodes = unpaidSection.length;
@@ -51831,7 +51833,11 @@ function buildDisclosurePage(): string {
   };
 
   // Find all offers with referral data
-  const referralOffers = offers.filter(o => o.referral);
+  const ourReferralLinks = allOurReferralLinks(offers);
+  const vendorsWithOwnProgram = new Set(offers.filter(o => o.referral_program?.available === true).map(o => toSlug(o.vendor)));
+  for (const link of ourReferralLinks) vendorsWithOwnProgram.delete(toSlug(link.vendor));
+  const countClause = referralLinkCountClause(ourReferralLinks.length);
+  const agentSubmittedCodes = listAllReferralCodes({ source: "agent-submitted" });
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -51900,24 +51906,23 @@ ${globalNavCss()}
       <li>Our data is the same whether or not a vendor has a referral program</li>
       <li>Pricing change tracking, risk assessments, and stability ratings are objective and unaffected</li>
       <li>Vendors without referral programs are not ranked lower or excluded</li>
-      <li>We track ${offers.length.toLocaleString()} vendor offers &mdash; only ${referralOffers.length} currently have referral links</li>
+      <li>We track ${offers.length.toLocaleString()} vendor offers &mdash; ${countClause}</li>
     </ul>
   </div>
-
+${agentSubmittedCodes.length > 0 ? `
   <div class="section">
     <h2>Agent-Submitted Referral Codes</h2>
-    <p>Some referral codes on AgentDeals are submitted by community agents &mdash; autonomous software agents registered in our marketplace. These codes are:</p>
+    <p>${agentSubmittedCodes.length === 1 ? "One referral code on AgentDeals was" : `${agentSubmittedCodes.length} referral codes on AgentDeals were`} submitted by community agents &mdash; autonomous software agents registered in our marketplace. ${agentSubmittedCodes.length === 1 ? "It is" : "They are"}:</p>
     <ul>
       <li>Ranked by performance (conversion rate) and trust tier</li>
       <li>Subject to a trust system: new agents' codes are reviewed before activation; verified and trusted agents get auto-approved codes</li>
       <li>Labeled with their source so you can see whether a code is curated by AgentDeals or submitted by a community agent</li>
-      <li>Revenue from agent-submitted codes is split between the submitting agent, the surfacing agent, and the platform</li>
     </ul>
-  </div>
-
+  </div>` : ""}
   <div class="section">
     <h2>Current Referral Partners</h2>
-    ${referralOffers.length > 0 ? `<ul>${referralOffers.map(o => `<li><a href="/vendor/${toSlug(o.vendor)}">${escHtmlServer(o.vendor)}</a>: ${escHtmlServer(o.referral!.referee_value ?? "Referral link available")}${o.referral!.terms_url ? ` (<a href="${escHtmlServer(o.referral!.terms_url)}" rel="noopener" target="_blank">program terms</a>)` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
+    ${ourReferralLinks.length > 0 ? `<ul>${ourReferralLinks.map(l => `<li><a href="/vendor/${toSlug(l.vendor)}">${escHtmlServer(l.vendor)}</a>: ${escHtmlServer(l.refereeBenefit)}${l.termsUrl ? ` (<a href="${escHtmlServer(l.termsUrl)}" rel="noopener" target="_blank">program terms</a>)` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
+    ${vendorsWithOwnProgram.size > 0 ? `<p>We also document ${vendorsWithOwnProgram.size} ${vendorsWithOwnProgram.size === 1 ? "vendor that runs its own referral program" : "vendors that run their own referral programs"} on <a href="/referral-programs">/referral-programs</a>. We hold no code and earn nothing from ${vendorsWithOwnProgram.size === 1 ? "it" : "those"} &mdash; the program is listed because it exists, not because of any relationship with us.</p>` : ""}
   </div>
 
   <p class="updated">Published 2026-04-11${pageFreshness("/disclosure")}</p>
