@@ -17,6 +17,8 @@ export interface OurReferralLink {
 
 const REFEREE_BENEFIT_FALLBACK = "Referral link available";
 
+export const REFERRAL_CONDITIONS_HEADING = "What you have to do to get it";
+
 export function ourReferralLinkFor(vendorName: string, offer?: Offer | null): OurReferralLink | null {
   const platformCode = getPlatformCodeForVendor(vendorName);
   const offerReferral = offer?.referral ?? null;

@@ -27,7 +27,7 @@ import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalanc
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
-import { allOurReferralLinks, hasAnyReferralSurface, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
+import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, hasAnyReferralSurface, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
@@ -3992,7 +3992,7 @@ ${enrichedAlts.map(a => {
         <strong style="font-size:1rem;color:var(--text)">Sign up via our referral link and get ${escHtmlServer(ourLink.refereeBenefit)}</strong>
       </div>${ourLink.restrictions.length > 0 ? `
       <div class="referral-conditions" style="margin:0 0 .9rem;padding:.65rem .85rem;border-left:3px solid #d29922;border-radius:0 6px 6px 0;background:rgba(210,153,34,0.08)">
-        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono);margin-bottom:.35rem">What you have to do to get it</div>
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono);margin-bottom:.35rem">${REFERRAL_CONDITIONS_HEADING}</div>
         <ul style="margin:0;padding-left:1.1rem;font-size:.8rem;color:var(--text);line-height:1.5">${ourLink.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul>
       </div>` : ""}
       <a href="${escHtmlServer(ourLink.url)}" rel="noopener sponsored" target="_blank" style="display:inline-block;padding:.6rem 1.25rem;background:#3fb950;color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none">Get ${escHtmlServer(ourLink.refereeBenefit)} &rarr;</a>
@@ -30987,7 +30987,7 @@ function buildHostingPricingPage(): string {
 
   // Check for Railway referral
   const railwayOffer = offers.find(o => o.vendor === "Railway");
-  const hasRailwayReferral = railwayOffer?.referral_program?.available === true;
+  const hostingReferral = ourReferralLinkFor("Railway", railwayOffer ?? null);
 
   const pricingTableRows = services.map(s => {
     const freeColor = freeTypeColors[s.freeType] || "var(--text-muted)";
@@ -31147,6 +31147,10 @@ function buildHostingPricingPage(): string {
     '.referral-box h3{color:#3fb950;margin:0 0 .5rem;font-size:1rem}\n' +
     '.referral-box p{color:var(--text-muted);font-size:.9rem;margin:0}\n' +
     '.referral-box a{color:#3fb950}\n' +
+    '.referral-conditions{margin:.6rem 0 .75rem;padding:.6rem .8rem;border-left:3px solid #d29922;border-radius:0 6px 6px 0;background:rgba(210,153,34,0.08)}\n' +
+    '.referral-conditions-heading{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono);margin-bottom:.35rem}\n' +
+    '.referral-conditions ul{margin:0;padding-left:1.1rem;font-size:.85rem;color:var(--text-muted);line-height:1.5}\n' +
+    '.referral-compensation{margin-top:.6rem !important;font-size:.8rem !important;color:var(--text-dim) !important}\n' +
     '.faq-item{border-bottom:1px solid var(--border);padding:1rem 0}\n' +
     '.faq-item:last-child{border-bottom:none}\n' +
     '.faq-q{font-weight:600;color:var(--text);font-size:.95rem;margin-bottom:.5rem}\n' +
@@ -31176,10 +31180,17 @@ function buildHostingPricingPage(): string {
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, free tier analysis, cost comparison for solo devs and teams, hidden costs, pricing gotchas, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
-    (hasRailwayReferral ? (
+    (hostingReferral ? (
     '  <div class="referral-box">\n' +
-    '    <h3>\u{1F680} Railway \u2014 $20 in free credits with our referral</h3>\n' +
-    '    <p>Get $20 in Railway credits (4x the standard $5 trial credit). Railway is our top pick for side projects and production apps alike. <a href="' + escHtmlServer(railwayOffer?.referral_program?.program_url ?? "/vendor/railway") + '" rel="noopener sponsored">Claim your $20 credit</a> &middot; <a href="/disclosure" style="color:var(--text-dim);font-size:.8rem">Affiliate disclosure</a></p>\n' +
+    '    <h3>\u{1F680} ' + escHtmlServer(hostingReferral.vendor) + ' \u2014 ' + escHtmlServer(hostingReferral.refereeBenefit) + ' with our referral</h3>\n' +
+    (hostingReferral.restrictions.length > 0 ?
+    '    <div class="referral-conditions">\n' +
+    '      <div class="referral-conditions-heading">' + REFERRAL_CONDITIONS_HEADING + '</div>\n' +
+    '      <ul>' + hostingReferral.restrictions.map(r => '<li>' + escHtmlServer(r) + '</li>').join("") + '</ul>\n' +
+    '    </div>\n'
+    : '') +
+    '    <p><a href="' + escHtmlServer(hostingReferral.url) + '" rel="noopener sponsored" target="_blank">Get ' + escHtmlServer(hostingReferral.refereeBenefit) + ' &rarr;</a> &middot; <a href="/disclosure" style="color:var(--text-dim);font-size:.8rem">Affiliate disclosure</a></p>\n' +
+    '    <p class="referral-compensation">' + escHtmlServer(referrerDisclosureSentence(hostingReferral.compensation)) + '</p>\n' +
     '  </div>\n'
     ) : '') +
     '\n' +
