@@ -331,9 +331,25 @@ const STORED_REFERENCE_REWRITES = [
 ];
 
 const LEADING_PUNCTUATION = /^[\s,;:]+/;
-const DOUBLED_CONNECTIVE = /\bpreviously\s+(?:stated|listed|offered|included|allowed|had|was|were)\b/i;
+const DOUBLED_CONNECTIVE = new RegExp(
+  `\\bpreviously,?\\s+(?:also\\s+|only\\s+|explicitly\\s+)?(?:${REPORTING_VERB}|were|was)\\b(?:\\s+(?:as|that|of|for))?`,
+  "i"
+);
 const OPENS_ON_A_COMPARISON = /^(?:instead\s+of|rather\s+than|compared\s+(?:to|with)|versus|vs\.?)\s+/i;
 const WHOLLY_PARENTHESISED = /^\(([^()]*)\)\.?$/;
+
+const A_NEW_PREDICATE_AFTER_THE_FIGURE =
+  /(?:\s+(?:which|whilst|while|whereas|but|although|though|however)\b|\s+(?:is|are|was|were)\s+(?:no\s+longer|not|now)\b|\s+and\s+(?:is|are|was|were|did|does|do)\b|\s+(?:compared\s+(?:to|with)|according\s+to)\b|\s+on\s+the\s+(?:current|new|live|updated)\b)/i;
+
+export function trimmedToItsFigures(text) {
+  const numbers = [...text.matchAll(NUMBER)];
+  if (numbers.length === 0) return text;
+  const last = numbers[numbers.length - 1];
+  const tailFrom = last.index + last[0].length;
+  const breaks = text.slice(tailFrom).search(A_NEW_PREDICATE_AFTER_THE_FIGURE);
+  if (breaks === -1) return text;
+  return `${text.slice(0, tailFrom + breaks).replace(/[\s,;:]+$/, "")}.`;
+}
 
 export function withoutStoredReference(clause) {
   if (typeof clause !== "string") return "";
@@ -443,7 +459,7 @@ export function statesABaseline(summary) {
 
 export function restoredBaseline(clause, mustStateADifference = false) {
   const opening = clauseText(clause).trimStart().charAt(0);
-  const stripped = withoutStoredReference(clause);
+  const stripped = trimmedToItsFigures(withoutStoredReference(clause));
   if (!stripped || namesOurRecord(stripped) || quantities(stripped).length === 0) return null;
   if (classifyClause(stripped) !== CLAUSE_BOOKKEEPING && classifyClause(stripped) !== CLAUSE_TERMS) {
     return null;
@@ -452,6 +468,23 @@ export function restoredBaseline(clause, mustStateADifference = false) {
   const cased =
     opening === opening.toUpperCase() ? stripped.charAt(0).toUpperCase() + stripped.slice(1) : stripped;
   return clause.startsWith(CONTINUES_A_SENTENCE) ? CONTINUES_A_SENTENCE + cased : cased;
+}
+
+export function statesTheSameFigure(baseline, elsewhere) {
+  const carried = quantifiedAttributes(baseline);
+  if (carried.length === 0) return false;
+  const already = elsewhere.flatMap((text) => quantifiedAttributes(text));
+  return carried.every((figure) =>
+    already.some(
+      (other) =>
+        other.value === figure.value &&
+        figure.words.some((word) => other.words.includes(word) && !BYTE_UNITS.has(word))
+    )
+  );
+}
+
+export function namesWhatItMeasures(baseline) {
+  return quantifiedAttributes(baseline).length > 0;
 }
 
 export function withBaselineRestored(evidence, mustStateADifference = false) {
@@ -470,7 +503,15 @@ export function withBaselineRestored(evidence, mustStateADifference = false) {
       kinds[i] === CLAUSE_BOOKKEEPING && !restatedByTheNext
         ? restoredBaseline(clause, mustStateADifference)
         : null;
-    if (baseline === null) {
+    const carriesItsOwnSubject = baseline !== null && namesWhatItMeasures(baseline);
+    const followsASurvivor = i > 0 && kinds[i - 1] === CLAUSE_TERMS;
+    const alreadyStated =
+      baseline !== null &&
+      statesTheSameFigure(
+        baseline,
+        clauses.filter((_, j) => j !== i && kinds[j] === CLAUSE_TERMS)
+      );
+    if (baseline === null || alreadyStated || !(carriesItsOwnSubject || followsASurvivor)) {
       dropped.push({ clause: clauseText(clause), kind: kinds[i] });
       return;
     }
@@ -483,25 +524,15 @@ export function withBaselineRestored(evidence, mustStateADifference = false) {
   return { clauses, kinds, kept, dropped, restored, changed: kept.filter(statesADifference) };
 }
 
-const OPPOSITE_OF = { limits_reduced: "increase", limits_increased: "decrease" };
-
-export function measuresItsClaim(record, summary) {
-  const wrongWay = OPPOSITE_OF[record?.change_type];
-  if (!wrongWay) return true;
+export function namesTheDimensionThatChanged(record, summary) {
   const stored = quantifiedAttributes(record?.previous_state);
+  if (stored.length === 0) return true;
   const stated = quantifiedAttributes(summary);
-  for (const before of stored) {
-    for (const after of stated) {
-      if (Boolean(before.unit) !== Boolean(after.unit)) continue;
-      const shared = before.words.find((word) => after.words.includes(word) && !BYTE_UNITS.has(word));
-      if (!shared) continue;
-      const from = comparableMagnitude(before);
-      const to = comparableMagnitude(after);
-      if (from === null || to === null || from === to) continue;
-      if ((to > from ? "increase" : "decrease") !== wrongWay) return true;
-    }
-  }
-  return false;
+  return stored.some((before) =>
+    stated.some((after) =>
+      before.words.some((word) => after.words.includes(word) && !BYTE_UNITS.has(word))
+    )
+  );
 }
 
 function comparableMagnitude(attribute) {
@@ -831,9 +862,9 @@ export function opensWithDroppedAntecedent(evidence, summary) {
 
 const DIRECTIONAL_CLAIMS = [...QUANTITY_CLAIMS, FREE_TIER_REMOVED];
 
-function claimSurvives(record, summary) {
+function statesWhatChanged(record, summary) {
   if (record?.change_type === FREE_TIER_REMOVED) return statesARemoval(summary);
-  return measuresItsClaim(record, summary);
+  return namesTheDimensionThatChanged(record, summary);
 }
 
 function baselineWasDropped(evidence) {
@@ -842,10 +873,15 @@ function baselineWasDropped(evidence) {
   );
 }
 
-export function needsItsBaselineBack(record, evidence, summary) {
+export function hasABaselineToRestate(record, evidence) {
   if (!DIRECTIONAL_CLAIMS.includes(record?.change_type)) return false;
-  if (statesABaseline(summary) || claimSurvives(record, summary)) return false;
   return baselineWasDropped(evidence);
+}
+
+export function lostTheSubjectOfItsClaim(record, evidence, summary) {
+  if (!DIRECTIONAL_CLAIMS.includes(record?.change_type)) return false;
+  if (statesABaseline(summary) || statesWhatChanged(record, summary)) return false;
+  return evidence.dropped.some(({ clause }) => statesWhatChanged(record, clause));
 }
 
 export function auditRecord(record, context = {}) {
@@ -880,7 +916,7 @@ export function auditRecord(record, context = {}) {
 
   let rewritten = summaryFromClauses(evidence.kept);
 
-  if (needsItsBaselineBack(record, evidence, rewritten)) {
+  if (hasABaselineToRestate(record, evidence)) {
     const restored = withBaselineRestored(evidence);
     if (restored) {
       evidence = restored;
@@ -934,13 +970,10 @@ export function auditRecord(record, context = {}) {
     }
   }
 
-  if (
-    QUANTITY_CLAIMS.includes(record?.change_type) &&
-    needsItsBaselineBack(record, evidence, rewritten)
-  ) {
+  if (lostTheSubjectOfItsClaim(record, evidence, rewritten)) {
     return refuse(
       REJECT_NO_BASELINE,
-      `${record.change_type} claimed, and the figure it was measured against sat in a clause about our own record that cannot be restated as the vendor's earlier terms`
+      `${record.change_type} claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured`
     );
   }
 

@@ -16,9 +16,11 @@ const {
   clauseText,
   describesChange,
   isDomainRoot,
-  measuresItsClaim,
+  namesTheDimensionThatChanged,
   redirectedOffDomain,
   reportsSomethingStillFree,
+  statesTheSameFigure,
+  trimmedToItsFigures,
   withoutStoredReference,
   statesARemoval,
   summaryClauses,
@@ -394,8 +396,9 @@ describe("a change record must state a term the vendor's page carries now", () =
       assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
       assert.strictEqual(
         verdict.summary,
-        "The free tier now allows only 1 project and a maximum of 5 users."
+        "The free tier now allows only 1 project and a maximum of 5 users. Previously 3 projects and 20 users."
       );
+      assert.doesNotMatch(verdict.summary, /stored information/);
     });
 
     it("drops a false absence standing beside two real moves", () => {
@@ -419,7 +422,7 @@ describe("a change record must state a term the vendor's page carries now", () =
       );
     });
 
-    it("opens the rewritten sentence at the clause rather than at the connective it hung on", () => {
+    it("restates a leading baseline in place and opens the next sentence at its own clause", () => {
       const theTrueClauseTrails = {
         ...A_REAL_REDUCTION_WEARING_OUR_SUBJECT,
         summary:
@@ -427,7 +430,10 @@ describe("a change record must state a term the vendor's page carries now", () =
       };
       const verdict = auditRecord(theTrueClauseTrails);
       assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
-      assert.strictEqual(verdict.summary, "The free tier now allows only 1 project.");
+      assert.strictEqual(
+        verdict.summary,
+        "Previously 3 projects and 20 users. The free tier now allows only 1 project."
+      );
     });
 
     it("leaves a summary that already states the vendor's terms alone", () => {
@@ -461,34 +467,101 @@ describe("a change record must state a term the vendor's page carries now", () =
       assert.match(verdict.summary, /Previously 300 credits\/month and 90-minute build timeout/);
     });
 
-    it("drops a trailing baseline when a surviving clause already measures the reduction", () => {
+    it("keeps a trailing baseline even where the surviving clause states the new figure", () => {
       const verdict = auditRecord(A_REAL_REDUCTION_WEARING_OUR_SUBJECT);
       assert.strictEqual(
         verdict.summary,
-        "The free tier now allows only 1 project and a maximum of 5 users."
+        "The free tier now allows only 1 project and a maximum of 5 users. Previously 3 projects and 20 users."
       );
     });
 
-    it("reads a figure that moved the wrong way as not measuring the claim", () => {
-      const cutTheHobbyPlan = {
-        change_type: "limits_reduced",
-        previous_state: "Hobby plan: 90 minute build timeout.",
+    it("restates the figure rather than the clause that introduced it", () => {
+      const theClauseTrailsOffIntoOurReading = {
+        ...A_REDUCTION_WHOSE_BASELINE_TRAILS,
+        summary:
+          "The free tier now offers 5GB of storage. The original deal also mentioned a 1GB upload limit which is not present on the current pricing page.",
       };
+      const verdict = auditRecord(theClauseTrailsOffIntoOurReading);
       assert.strictEqual(
-        measuresItsClaim(cutTheHobbyPlan, "The Hobby plan now allows a 210 minute build timeout."),
-        false,
-        "a figure that rose was read as measuring a reduction"
+        verdict.summary,
+        "The free tier now offers 5GB of storage. Previously a 1GB upload limit."
       );
+    });
+
+    it("cuts the restated figure loose from the predicate that follows it", () => {
       assert.strictEqual(
-        measuresItsClaim(cutTheHobbyPlan, "The Hobby plan now allows a 45 minute build timeout."),
-        true
-      );
-      assert.strictEqual(
-        measuresItsClaim(
-          A_REAL_REDUCTION_WEARING_OUR_SUBJECT,
-          "The free tier now allows only 1 project."
+        trimmedToItsFigures(
+          "previously 100 GB/month data, 1,000 RUM sessions/month, and 14-day data retention are no longer offered as a permanent free tier."
         ),
+        "previously 100 GB/month data, 1,000 RUM sessions/month, and 14-day data retention."
+      );
+      assert.strictEqual(
+        trimmedToItsFigures("previously 300 credits/month and 90-minute build timeout."),
+        "previously 300 credits/month and 90-minute build timeout."
+      );
+    });
+
+    it("does not restate a figure a surviving clause already carries on the same attribute", () => {
+      assert.strictEqual(
+        statesTheSameFigure("previously 1K client MAU", ["the page states 1K client-side MAU"]),
         true
+      );
+      assert.strictEqual(
+        statesTheSameFigure("previously 3 projects and 20 users", [
+          "the free tier now allows only 1 project and a maximum of 5 users",
+        ]),
+        false,
+        "a baseline was read as already stated by figures that differ from it"
+      );
+      assert.strictEqual(
+        statesTheSameFigure("previously 10 of each", ["20 uptime monitors and 10 servers"]),
+        false,
+        "a baseline naming no attribute was read as already stated"
+      );
+      assert.strictEqual(
+        statesTheSameFigure("previously 3 projects", ["the free tier now includes 3 pages"]),
+        false,
+        "two figures of equal value on different attributes were read as the same figure"
+      );
+      assert.strictEqual(
+        statesTheSameFigure("previously 1K client MAU and 5K session replays", [
+          "the page states 1K client-side MAU",
+        ]),
+        false,
+        "a baseline was read as already stated when only one of its figures was"
+      );
+    });
+
+    it("leaves the baseline out where a surviving clause already carries the same figure", () => {
+      const theBaselineRepeatsWhatStands = {
+        ...A_REDUCTION_WHOSE_BASELINE_TRAILS,
+        summary:
+          "The free tier now offers 1GB storage, 1 gateway, and 10k requests per month. The original deal stated 1GB storage and API access.",
+      };
+      const verdict = auditRecord(theBaselineRepeatsWhatStands);
+      assert.strictEqual(
+        verdict.summary,
+        "The free tier now offers 1GB storage, 1 gateway, and 10k requests per month."
+      );
+    });
+
+    it("restates a baseline that names no attribute only where the clause it follows survives", () => {
+      const verdict = auditRecord({
+        ...A_REAL_REDUCTION_WEARING_OUR_SUBJECT,
+        vendor: "SweetUptime",
+        change_type: "limits_increased",
+        summary:
+          "The free tier now offers 20 uptime monitors, 20 domain & SSL checks, and 10 servers, whereas the stored information stated 10 of each.",
+        previous_state: "Monitor 10 server, 10 uptime, and 10 domain for free.",
+      });
+      assert.strictEqual(
+        verdict.summary,
+        "The free tier now offers 20 uptime monitors, 20 domain & SSL checks, and 10 servers. Previously 10 of each."
+      );
+      assert.strictEqual(
+        auditRecord(A_FALSE_ABSENCE_BESIDE_TWO_REAL_MOVES).summary,
+        "The free tier now offers unlimited projects instead of 3. The number of secret syncs is now 10 instead of 100+.",
+        "a bare figure was restated behind the absence clause that named what it measured"
       );
     });
 
@@ -549,6 +622,109 @@ describe("a change record must state a term the vendor's page carries now", () =
       });
       assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
       assert.doesNotMatch(verdict.summary, /Previously 300 credits/);
+    });
+  });
+
+  describe("a reduction left describing something else", () => {
+    const A_LIMIT_TRADED_FOR_AN_ELIGIBILITY_RULE = {
+      vendor: "Stream",
+      change_type: "limits_reduced",
+      summary:
+        "The chat limit is now 2,000 monthly active users and 100 concurrent connections, down from 2,000 MAU with no mention of concurrent connections. The Maker Account now has requirements of 5 or less team members, less than $100k in funding, and less than $10k/mo revenue.",
+      previous_state:
+        "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video.",
+      current_state:
+        "Maker Account Details If your company has five or less team members, less than $100k in funding and has taken less than $10k/mo revenue, Stream is free.",
+      impact: "medium",
+      source_url: "https://getstream.io/pricing/",
+    };
+
+    it("refuses a reduction whose surviving sentence measures none of the terms we stored", () => {
+      const verdict = auditRecord(A_LIMIT_TRADED_FOR_AN_ELIGIBILITY_RULE);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_NO_BASELINE);
+    });
+
+    it("keeps a reduction that still names a term the stored description measured", () => {
+      const verdict = auditRecord({
+        ...A_LIMIT_TRADED_FOR_AN_ELIGIBILITY_RULE,
+        summary:
+          "The chat limit is now 500 monthly active users with no mention of concurrent connections. The Maker Account allows 250 MAU chat.",
+      });
+      assert.notStrictEqual(verdict.outcome, OUTCOME_REFUSED);
+    });
+
+    it("keeps a reduction that states a baseline of its own, whatever it is measured on", () => {
+      const verdict = auditRecord({
+        ...A_LIMIT_TRADED_FOR_AN_ELIGIBILITY_RULE,
+        summary:
+          "The chat limit is now 2,000 monthly active users and 100 concurrent connections, down from 2,000 MAU with no mention of concurrent connections. The Maker Account now requires 5 or less team members, down from 10.",
+      });
+      assert.notStrictEqual(verdict.outcome, OUTCOME_REFUSED);
+    });
+
+    it("reads a removal by what the summary says, not by the figures we stored", () => {
+      const theRemovalNamesNoStoredFigure = {
+        vendor: "Burnermail",
+        change_type: FREE_TIER_REMOVED,
+        summary:
+          "The 5 burner addresses are no longer mentioned. Burner Mail is removing its free plan, and paid plans now start at $2.99/month.",
+        previous_state: "Free plan with 5 burner addresses and 1 mailbox.",
+        current_state: "Plans start at $2.99/month. The free plan is being retired.",
+        impact: "high",
+        source_url: "https://burnermail.io/pricing",
+      };
+      const verdict = auditRecord(theRemovalNamesNoStoredFigure);
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.strictEqual(
+        verdict.summary,
+        "Burner Mail is removing its free plan, and paid plans now start at $2.99/month."
+      );
+    });
+
+    it("keeps a record whose stored description measured nothing to lose", () => {
+      const verdict = auditRecord({
+        ...A_LIMIT_TRADED_FOR_AN_ELIGIBILITY_RULE,
+        previous_state: "Chat, Activity Feeds, and Video APIs. Maker Account is free for makers.",
+      });
+      assert.notStrictEqual(verdict.outcome, OUTCOME_REFUSED);
+    });
+
+    it("leaves alone a record the gate never took a measured term out of", () => {
+      const nothingWasDropped = {
+        ...A_LIMIT_TRADED_FOR_AN_ELIGIBILITY_RULE,
+        summary:
+          "The Maker Account now has requirements of 5 or less team members and less than $100k in funding.",
+      };
+      const verdict = auditRecord(nothingWasDropped);
+      assert.strictEqual(verdict.outcome, OUTCOME_UNCHANGED);
+    });
+
+    it("reads the stored description for the terms the claim was measured on", () => {
+      const storedTheChatLimit = {
+        change_type: "limits_reduced",
+        previous_state: "Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds.",
+      };
+      assert.strictEqual(
+        namesTheDimensionThatChanged(storedTheChatLimit, "The chat limit is now 500 MAU."),
+        true
+      );
+      assert.strictEqual(
+        namesTheDimensionThatChanged(
+          storedTheChatLimit,
+          "The Maker Account now requires 5 or less team members."
+        ),
+        false,
+        "a summary naming none of the stored terms was read as naming the change"
+      );
+      assert.strictEqual(
+        namesTheDimensionThatChanged(
+          { change_type: "limits_reduced", previous_state: "Free for makers." },
+          "The Maker Account now requires 5 or less team members."
+        ),
+        true,
+        "a stored description that measures nothing was read as naming a term the summary lost"
+      );
     });
   });
 
@@ -685,7 +861,7 @@ describe("a change record must state a term the vendor's page carries now", () =
       assert.strictEqual(rewritten.length, 1);
       assert.strictEqual(
         kept[0].summary,
-        "The free tier now allows only 1 project and a maximum of 5 users."
+        "The free tier now allows only 1 project and a maximum of 5 users. Previously 3 projects and 20 users."
       );
     });
 

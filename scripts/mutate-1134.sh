@@ -308,24 +308,6 @@ open(p, "w").write(s)
 PY
 }
 
-m_a_figure_that_moved_the_wrong_way_measures_the_claim() {
-  py <<'PY'
-p = "scripts/change-gate.js"
-s = open(p).read()
-s = s.replace('      if ((to > from ? "increase" : "decrease") !== wrongWay) return true;', "      return true;")
-open(p, "w").write(s)
-PY
-}
-
-m_no_figure_ever_measures_the_claim() {
-  py <<'PY'
-p = "scripts/change-gate.js"
-s = open(p).read()
-s = s.replace("  const wrongWay = OPPOSITE_OF[record?.change_type];\n  if (!wrongWay) return true;", "  const wrongWay = OPPOSITE_OF[record?.change_type];\n  if (!wrongWay) return true;\n  return false;")
-open(p, "w").write(s)
-PY
-}
-
 m_a_dangling_opener_is_published() {
   py <<'PY'
 p = "scripts/change-gate.js"
@@ -438,8 +420,6 @@ run_mutation "a dropped connective is left at the front of the sentence" m_a_dro
 run_mutation "a baseline is never restored" m_a_baseline_is_never_restored
 run_mutation "our record's subject survives the strip" m_our_records_subject_survives_the_strip
 run_mutation "a directional record never needs a baseline" m_a_directional_record_never_needs_a_baseline
-run_mutation "a figure that moved the wrong way measures the claim" m_a_figure_that_moved_the_wrong_way_measures_the_claim
-run_mutation "no figure ever measures the claim" m_no_figure_ever_measures_the_claim
 run_mutation "a dangling opener is published" m_a_dangling_opener_is_published
 run_mutation "any opening pronoun is a dangling reference" m_any_opening_pronoun_is_dangling
 run_mutation "a restated figure can supply the baseline" m_a_restated_figure_can_supply_the_baseline
