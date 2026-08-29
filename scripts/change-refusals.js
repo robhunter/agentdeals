@@ -68,6 +68,25 @@ export function recordRefusals(rejected, options = {}) {
   return { written: fresh, path };
 }
 
+const admissionKey = (entry) =>
+  [entry.vendor, entry.source_url, entry.change_type, entry.summary].join("|");
+
+export function withoutAdmitted(refusals, admitted) {
+  const readmitted = new Set(admitted.map(admissionKey));
+  return refusals.filter((refusal) => !readmitted.has(admissionKey(refusal)));
+}
+
+export function withdrawRefusals(admitted, options = {}) {
+  const path = options.path ?? refusalsPath();
+  const existing = readRefusals(path);
+  const remaining = withoutAdmitted(existing, admitted);
+  const withdrawn = existing.length - remaining.length;
+  if (withdrawn > 0 && !options.dryRun) {
+    writeFileSync(path, JSON.stringify({ refusals: remaining }, null, 2) + "\n");
+  }
+  return { withdrawn, path };
+}
+
 export function refusalHolds(refusals, offers) {
   const byKey = new Map(offers.map((offer) => [offerKey(offer.vendor, offer.url), offer]));
   const holds = new Map();
