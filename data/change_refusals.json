@@ -46,7 +46,19 @@
       "current_state": "The page promotes a 'Start free' option but does not detail any specific limits or features of a free tier. It mentions '0 per execution' for self-hosted deployments.",
       "source_url": "https://www.activepieces.com",
       "category": "Cloud Hosting",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "aikido.dev",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not explicitly mention a free tier with the same limits as the stored information (2 users, 10 repos, 1 cloud, 2 containers, 1 domain). It broadly advertises a 'Start for Free' option with 'No CC required' and mentions scanning results in 32 seconds, but doesn't detail the limits of that free offering.",
+      "previous_state": "All-in-one appsec platform covering SCA, SAST, CSPM, DAST, Secrets, IaC, Malware, Container scanning, EOL,... Free plan includes two users, scanning of 10 repos, 1 cloud, 2 containers & 1 domain.",
+      "current_state": "The page offers a 'Start for Free' option with no credit card required and claims scan results in 32 seconds. It does not specify the number of users, repos, clouds, containers, or domains included in the free tier.",
+      "source_url": "https://www.aikido.dev",
+      "category": "Security",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Amazon Kiro (AWS Startups)",
@@ -58,7 +70,7 @@
       "current_state": "AWS for Startups offers up to $200,000 in AWS Activate Credits and expert support. Credits are redeemable on third-party models on Amazon Bedrock. AI startups may be eligible for additional credits.",
       "source_url": "https://aws.amazon.com/startups/",
       "category": "Startup Programs",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Amazon Q Developer",
@@ -118,7 +130,7 @@
       "current_state": "Offers a 'generous free-forever tier' and options for self-hosted or SaaS deployment.",
       "source_url": "https://wso2.com/asgardeo",
       "category": "Auth",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "AssemblyAI",
@@ -130,7 +142,7 @@
       "current_state": "The pricing page details pay-as-you-go pricing for various models and features, starting at $0.15/hr. A free trial is implied with a 'Start free, pay-as-you-go' option.",
       "source_url": "https://www.assemblyai.com/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Authress",
@@ -166,7 +178,7 @@
       "current_state": "The page states \"Over $350K in discounts and credits on AI and SaaS.\"",
       "source_url": "https://www.brex.com/solutions/startups",
       "category": "Startup Programs",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "BuddyNS",
@@ -190,7 +202,7 @@
       "current_state": "Individuals Free Everything you could need for scheduling as an individual. Use for free *Free forever Free features: 1 user Unlimited event types & calendars Email & SMS notifications Integrate with 100+ apps Mobile App Browser Extension Accept Stripe & PayPal payments Two-way Salesforce & HubSpot sync 1-click import Calendly events",
       "source_url": "https://cal.com/pricing",
       "category": "Team Collaboration",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Calendly",
@@ -322,7 +334,7 @@
       "current_state": "Offers a free trial, then paid plans starting at $9/month for unlimited deployments.",
       "source_url": "https://www.deployhq.com/",
       "category": "CI/CD",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Docker Hub",
@@ -347,6 +359,18 @@
       "source_url": "https://duo.com/",
       "category": "Auth",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Dwh.dev",
+      "change_type": "limits_reduced",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The free tier appears to be limited to the Snowflake Marketplace and has usage limits. There are paid tiers available with increased limits.",
+      "previous_state": "Data Cloud Observability Solution (Snowflake). Free for personal use.",
+      "current_state": "Start now for free on marketplace. PRO plan is $0 with unlimited objects and 5000 users. Enterprise and consulting is $3,000/month.",
+      "source_url": "https://dwh.dev",
+      "category": "Analytics",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Emailvalidation.io",
@@ -454,7 +478,7 @@
       "current_state": "The page promotes a free trial and a paid platform with features like automatic event tracking, session replay, and data science capabilities (Heap Illuminate). It does not mention a free tier with a 10K monthly sessions limit.",
       "source_url": "https://heap.io",
       "category": "Analytics",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Hyperping",
@@ -490,7 +514,7 @@
       "current_state": "Cloud Serverless has a $250 free credit to start, with usage-based pricing for data in ($0.0025/MB), query count ($0.012 per 100 executions), storage ($0.002/GB-hour), and data out ($0.09/GB).",
       "source_url": "https://www.influxdata.com/influxdb-pricing/",
       "category": "Databases",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Integrately",
@@ -502,7 +526,7 @@
       "current_state": "The page promotes a $5 premium plan for the first month and offers a 'Free' signup with Google, but details of the free tier are not specified.",
       "source_url": "https://integrately.com",
       "category": "Cloud Hosting",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "IP Geolocation API by ipwho.org",
@@ -526,7 +550,7 @@
       "current_state": "Offers a free tier with access to all data, and states 400M+ API requests are served per day.",
       "source_url": "https://www.iplocate.io",
       "category": "Dev Utilities",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "JotForm",
@@ -539,6 +563,18 @@
       "source_url": "https://www.jotform.com/pricing/",
       "category": "Forms",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "LaunchDarkly",
+      "change_type": "limits_reduced",
+      "reason": "no_baseline",
+      "detail": "limits_reduced claimed, and the figure it was measured against sat in a clause about our own record that cannot be restated as the vendor's earlier terms",
+      "summary": "The Developer tier exists, but the limits have changed. The stored information states 1K client MAU, while the current pricing page states 1K client-side MAU. The stored information states 5K session replays/month, while the current pricing page states 5K session replays /mo. The stored information does not mention AgentControl features, while the current pricing page includes 5k AI runs/mo.",
+      "previous_state": "Feature management — unlimited seats and flags, 1K client MAU, 1 project, 3 environments, A/B testing, 5K session replays/month",
+      "current_state": "Developer: $0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. CodeControl: Unlimited feature flags, 30 SDKs, 5 service connections and 1K client-side MAU /mo, 5K session replays and 5K errors /mo. AgentControl: 5k AI runs/mo included.",
+      "source_url": "https://launchdarkly.com/pricing/",
+      "category": "Feature Flags",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "leapcell",
@@ -610,7 +646,7 @@
       "current_state": "Lokalise offers Explorer ($144/mo), Growth ($375/mo), Advanced ($999/mo), and Enterprise plans. Hosted words are unlimited on all paid plans. Translator and reviewer seats are unlimited on all paid plans. Advanced seats are included per tier and available as add-ons.",
       "source_url": "https://lokalise.com/pricing/",
       "category": "Localization",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "mailsac.com",
@@ -670,19 +706,7 @@
       "current_state": "The pricing page does not mention a free tier. It highlights features and encourages users to contact the team or get started, implying a paid service.",
       "source_url": "https://mergify.com",
       "category": "CI/CD",
-      "refused_date": "2026-08-28"
-    },
-    {
-      "vendor": "Mockplus iDoc",
-      "change_type": "limits_increased",
-      "reason": "states_no_terms",
-      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
-      "summary": "The free plan now includes up to 10 users and active projects, an increase from the previously stated three users and five projects.",
-      "previous_state": "Mockplus iDoc is a powerful design collaboration & handoff tool. Free Plan includes three users and five projects with all features available.",
-      "current_state": "Everyone can register for an account to get the basic free plan for up to 10 users and active projects.",
-      "source_url": "https://www.mockplus.com/idoc",
-      "category": "Design",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "mouseflow.com",
@@ -706,7 +730,7 @@
       "current_state": "The free plan includes 100K free monthly delivery minutes. Storage costs start at $0.0024/min, and delivery costs start at $0.0008/min after the free minutes are used. Different resolutions have different pricing.",
       "source_url": "https://www.mux.com/pricing",
       "category": "Video",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Notion",
@@ -730,7 +754,7 @@
       "current_state": "The Okta Integrator Free Plan is available for building, testing, and managing integrations. It requires first name, last name, work email, and country/region for signup. Access expires after 180 days of inactivity.",
       "source_url": "https://developer.okta.com/signup/",
       "category": "Auth",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "OpenStatus",
@@ -754,7 +778,7 @@
       "current_state": "5% + 50¢ per Checkout transaction. Custom pricing is available for products under $10 or if invoicing is required.",
       "source_url": "https://www.paddle.com/pricing",
       "category": "Payments",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "pagecrawl.io",
@@ -790,7 +814,7 @@
       "current_state": "The pricing page details Enterprise Plans, Educational Institution Plans, WordPress Hosting, and Drupal Hosting. It encourages users to 'See Plan Details' and 'Start free or see how much you could save by switching to Pantheon.'",
       "source_url": "https://pantheon.io/",
       "category": "Cloud Hosting",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "PDF-API.io",
@@ -826,7 +850,19 @@
       "current_state": "Managed Keycloak Hosting offers unlimited users and SSO connections for a single, flat price. Clusters are priced by active session count, not total users.",
       "source_url": "https://phasetwo.io",
       "category": "Auth",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "PostHog",
+      "change_type": "startup_program_expanded",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The YC deal is no longer explicitly mentioned. The current pricing offers a generous free tier with limits for various products (analytics, session replay, feature flags, etc.) that are comparable to the original deal's offerings, but it's a general free tier available to all, not specifically a YC deal. The original deal specified $50,000/year in credits, which is not mentioned on the current pricing page.",
+      "previous_state": "$50,000/year in credits for Y Combinator companies — auto-renews annually. Covers product analytics, session replay, feature flags, and experimentation. Must have raised less than $25M",
+      "current_state": "PostHog offers a free tier with limits of 1M events for analytics, 5K recordings for session replay, 1M requests for feature flags, 100K exceptions for error tracking, 1500 responses for surveys, 1M rows for data warehouse, 10K events + 1M rows for data pipelines, 100K events for AI Observability, 500 AI credits, 3 PRs for Inbox Beta, 10K messages per channel for Workflows, and 10 GB ingested for Logs. These limits reset monthly.",
+      "source_url": "https://posthog.com/pricing",
+      "category": "Startup Programs",
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Projects",
@@ -901,6 +937,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Remote for Startups",
+      "change_type": "new_tier",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The page does not explicitly mention a 'Startup Program' tier with specific details. It broadly discusses HR and payroll solutions for startups, emphasizing features like simplified onboarding, compliance, and cost savings. It highlights a 'Remote for Startups' offering focused on speed and scale, but doesn't detail specific benefits or pricing associated with a dedicated program. The page focuses on booking a demo and exploring pricing, with a mention of transparent pricing and no hidden fees. There's also a referral program offering a discount.",
+      "previous_state": "The Remote for Startups Program is designed to help you legally and compliantly employ global talent with world-class payroll, tax, benefits, and compliance solutions. Get access to the same powerful platform, HR experts, and localized legal support, at a fraction of the cost.",
+      "current_state": "Remote offers HR and payroll solutions for startups, emphasizing speed, scale, and compliance. They offer a 'Remote for Startups' solution, but specific program details are not outlined on the page. Pricing is described as transparent and based on usage, with a 'Book demo' call to action.",
+      "source_url": "https://remote.com/global-hr/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-08-29"
+    },
+    {
       "vendor": "Renamer.ai",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -934,7 +982,7 @@
       "current_state": "Robusta offers a per-incident pricing model. The cost depends on the number of unique alerts and the price per investigation (benchmarked at $2.50). Grouping alerts significantly reduces the cost.",
       "source_url": "https://home.robusta.dev/",
       "category": "Monitoring",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Semaphore CI",
@@ -1018,7 +1066,7 @@
       "current_state": "Tawk.to offers a free plan with all core features. Paid options include removing branding for $29/month, AI Assist starting at $29/month, and hiring live agents for $1/hour.",
       "source_url": "https://www.tawk.to/pricing/",
       "category": "Communication",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Toggled.dev",
@@ -1114,7 +1162,7 @@
       "current_state": "Offers a 15-day premium trial, then user-based pricing.",
       "source_url": "https://zoho.com/bookings",
       "category": "Workflow Automation",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-08-29"
     },
     {
       "vendor": "Zoho Survey",

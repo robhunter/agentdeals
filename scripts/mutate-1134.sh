@@ -281,6 +281,135 @@ open(p, "w").write(s)
 PY
 }
 
+m_a_baseline_is_never_restored() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("  if (restored === 0) return null;", "  return null;")
+open(p, "w").write(s)
+PY
+}
+
+m_our_records_subject_survives_the_strip() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("  for (const [pattern, replacement] of STORED_REFERENCE_REWRITES) text = text.replace(pattern, replacement);\n", "")
+open(p, "w").write(s)
+PY
+}
+
+m_a_directional_record_never_needs_a_baseline() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("  if (!DIRECTIONAL_CLAIMS.includes(record?.change_type)) return false;", "  if (!DIRECTIONAL_CLAIMS.includes(record?.change_type)) return false;\n  return false;")
+open(p, "w").write(s)
+PY
+}
+
+m_a_figure_that_moved_the_wrong_way_measures_the_claim() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace('      if ((to > from ? "increase" : "decrease") !== wrongWay) return true;', "      return true;")
+open(p, "w").write(s)
+PY
+}
+
+m_no_figure_ever_measures_the_claim() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("  const wrongWay = OPPOSITE_OF[record?.change_type];\n  if (!wrongWay) return true;", "  const wrongWay = OPPOSITE_OF[record?.change_type];\n  if (!wrongWay) return true;\n  return false;")
+open(p, "w").write(s)
+PY
+}
+
+m_a_dangling_opener_is_published() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("  const first = evidence.kinds.indexOf(CLAUSE_TERMS);\n  if (first <= 0) return false;", "  return false;")
+open(p, "w").write(s)
+PY
+}
+
+m_any_opening_pronoun_is_dangling() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("  if (first <= 0) return false;", "  if (first < 0) return false;")
+open(p, "w").write(s)
+PY
+}
+
+m_a_restated_figure_can_supply_the_baseline() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("    const restatedByTheNext = evidence.kinds[i + 1] === CLAUSE_RESTATEMENT;", "    const restatedByTheNext = false;")
+open(p, "w").write(s)
+PY
+}
+
+m_a_speed_claim_is_a_term_of_the_offer() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace('"hour", "minute", "min", "second", "sec", "mo", "yr",', '"hour", "minute", "min", "mo", "yr",')
+open(p, "w").write(s)
+PY
+}
+
+m_a_restored_clause_need_not_carry_a_figure() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("if (!stripped || namesOurRecord(stripped) || quantities(stripped).length === 0) return null;", "if (!stripped) return null;")
+open(p, "w").write(s)
+PY
+}
+
+m_a_restoration_leaves_the_record_unchanged() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("  if ((dropped.length === 0 && restored === 0) || rewritten === record?.summary) {", "  if (dropped.length === 0 || rewritten === record?.summary) {")
+open(p, "w").write(s)
+PY
+}
+
+m_a_reclassified_record_is_judged_as_the_type_it_had() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("""        const asRestructure = auditRecord(
+          { ...entry, change_type: RECLASSIFIED_AS_RESTRUCTURE },
+          context
+        );""", "        const asRestructure = auditRecord(entry, context);")
+open(p, "w").write(s)
+PY
+}
+
+m_a_summary_with_no_terms_is_refused_before_the_baseline_is_tried() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("    const restated = withBaselineRestored(evidence, true);", "    const restated = null;")
+open(p, "w").write(s)
+PY
+}
+
+m_a_restored_clause_need_not_state_a_difference() {
+  py <<'PY'
+p = "scripts/change-gate.js"
+s = open(p).read()
+s = s.replace("  if (mustStateADifference && !statesADifference(stripped)) return null;", "")
+open(p, "w").write(s)
+PY
+}
+
 run_mutation "an absence of mention is read as a term" m_an_absent_mention_is_read_as_a_term
 run_mutation "a summary with nothing left still describes a change" m_an_empty_summary_still_describes_a_change
 run_mutation "a clause about our own record is kept" m_a_clause_about_our_record_is_kept
@@ -306,6 +435,20 @@ run_mutation "a stripped summary need not keep a figure" m_a_stripped_summary_ne
 run_mutation "the rewrite is never applied to the record" m_the_rewrite_is_never_applied
 run_mutation "the rewrite mutates the record it was built from" m_the_rewrite_mutates_the_record_it_was_built_from
 run_mutation "a dropped connective is left at the front of the sentence" m_a_dropped_connective_is_left_at_the_front
+run_mutation "a baseline is never restored" m_a_baseline_is_never_restored
+run_mutation "our record's subject survives the strip" m_our_records_subject_survives_the_strip
+run_mutation "a directional record never needs a baseline" m_a_directional_record_never_needs_a_baseline
+run_mutation "a figure that moved the wrong way measures the claim" m_a_figure_that_moved_the_wrong_way_measures_the_claim
+run_mutation "no figure ever measures the claim" m_no_figure_ever_measures_the_claim
+run_mutation "a dangling opener is published" m_a_dangling_opener_is_published
+run_mutation "any opening pronoun is a dangling reference" m_any_opening_pronoun_is_dangling
+run_mutation "a restated figure can supply the baseline" m_a_restated_figure_can_supply_the_baseline
+run_mutation "a speed claim is a term of the offer" m_a_speed_claim_is_a_term_of_the_offer
+run_mutation "a restored clause need not carry a figure" m_a_restored_clause_need_not_carry_a_figure
+run_mutation "a restoration leaves the record unchanged" m_a_restoration_leaves_the_record_unchanged
+run_mutation "a reclassified record is judged as the type it had" m_a_reclassified_record_is_judged_as_the_type_it_had
+run_mutation "a summary with no terms is refused before the baseline is tried" m_a_summary_with_no_terms_is_refused_before_the_baseline_is_tried
+run_mutation "a restored clause need not state a difference" m_a_restored_clause_need_not_state_a_difference
 
 restore
 echo

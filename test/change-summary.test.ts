@@ -16,8 +16,10 @@ const {
   clauseText,
   describesChange,
   isDomainRoot,
+  measuresItsClaim,
   redirectedOffDomain,
   reportsSomethingStillFree,
+  withoutStoredReference,
   statesARemoval,
   summaryClauses,
   summaryEvidence,
@@ -32,7 +34,9 @@ const {
   OUTCOME_REFUSED,
   OUTCOME_REWRITTEN,
   OUTCOME_UNCHANGED,
+  REJECT_DANGLING_REFERENCE,
   REJECT_FREE_TIER_STILL_OFFERED,
+  REJECT_NO_BASELINE,
   REJECT_NO_REMOVAL_EVIDENCE,
   REJECT_REMOVAL_READ_FROM_ROOT,
   REJECT_STATES_NO_DIFFERENCE,
@@ -155,6 +159,55 @@ const A_DEPRECATION_THAT_NAMES_NO_FIGURE = {
   current_state: "AWS App Mesh reaches end of support.",
   impact: "medium",
   source_url: "https://docs.aws.amazon.com/app-mesh/",
+};
+
+const AN_INCREASE_WHOSE_BASELINE_HANGS_OFF_IT = {
+  vendor: "Hotjar",
+  change_type: "limits_increased",
+  summary:
+    "The free plan now offers 200k sessions per month, a significant increase from the previously stated 20,000 sessions. It also includes features like error monitoring, funnels, and 10+ integrations, which were not mentioned in the stored information. The free plan also includes a 15-day trial of the Growth plan.",
+  previous_state:
+    "Website Analytics and Reports. Now part of Contentsquare. Free Plan allows 20,000 sessions.",
+  current_state:
+    "The Contentsquare Free plan includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. It also includes a 15-day trial of the Growth plan.",
+  impact: "high",
+  source_url: "https://www.hotjar.com/pricing/",
+};
+
+const A_REDUCTION_WHOSE_BASELINE_TRAILS = {
+  vendor: "Bitrise",
+  change_type: "limits_reduced",
+  summary:
+    "The Hobby plan now has a monthly build credit limit and a build timeout of 210 minutes, and includes access to Linux Medium and macOS Medium build compute types. The stored information stated 300 credits/month and 90-minute build timeout.",
+  previous_state:
+    "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app, 1 user, 5 concurrent builds, 90-minute build timeout.",
+  current_state:
+    "Hobby: Free, Access for a team of one, Linux Medium, M2 Pro Medium, macOS Medium build compute types, 2 GB dependency cache storage, 210 minute build timeout.",
+  impact: "medium",
+  source_url: "https://bitrise.io/pricing",
+};
+
+const A_MARKETING_FIGURE_WEARING_THE_ABSENCE = {
+  vendor: "aikido.dev",
+  change_type: "pricing_restructured",
+  summary:
+    "The pricing page does not explicitly mention a free tier with the same limits as the stored information (2 users, 10 repos, 1 cloud, 2 containers, 1 domain). It broadly advertises a 'Start for Free' option with 'No CC required' and mentions scanning results in 32 seconds, but doesn't detail the limits of that free offering.",
+  previous_state: "Free plan includes two users, scanning of 10 repos, 1 cloud, 2 containers.",
+  current_state:
+    "The page offers a 'Start for Free' option with no credit card required and claims scan results in 32 seconds.",
+  impact: "high",
+  source_url: "https://www.aikido.dev/pricing",
+};
+
+const A_SURVIVOR_THAT_OPENS_ON_WHAT_WAS_DROPPED = {
+  vendor: "PostHog",
+  change_type: "startup_program_expanded",
+  summary:
+    "The YC deal is no longer explicitly mentioned. It's a general free tier available to all, not specifically a YC deal.",
+  previous_state: "$50,000/year in credits for Y Combinator companies.",
+  current_state: "PostHog offers a free tier with limits of 1M events for analytics.",
+  impact: "high",
+  source_url: "https://posthog.com/pricing",
 };
 
 describe("a change record must state a term the vendor's page carries now", () => {
@@ -384,6 +437,161 @@ describe("a change record must state a term the vendor's page carries now", () =
     });
   });
 
+  describe("the figure the change was measured against", () => {
+    it("strips our record from in front of the figure it introduces", () => {
+      assert.strictEqual(
+        withoutStoredReference("whereas the stored information stated 3 projects and 20 users"),
+        "whereas previously 3 projects and 20 users"
+      );
+      assert.strictEqual(
+        withoutStoredReference("a significant increase from the previously stated 20,000 sessions"),
+        "a significant increase from 20,000 sessions"
+      );
+    });
+
+    it("keeps an increase measured against a figure in the same clause", () => {
+      const verdict = auditRecord(AN_INCREASE_WHOSE_BASELINE_HANGS_OFF_IT);
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.match(verdict.summary, /200k sessions per month, a significant increase from 20,000/);
+    });
+
+    it("keeps a trailing baseline when nothing left standing measures the reduction", () => {
+      const verdict = auditRecord(A_REDUCTION_WHOSE_BASELINE_TRAILS);
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.match(verdict.summary, /Previously 300 credits\/month and 90-minute build timeout/);
+    });
+
+    it("drops a trailing baseline when a surviving clause already measures the reduction", () => {
+      const verdict = auditRecord(A_REAL_REDUCTION_WEARING_OUR_SUBJECT);
+      assert.strictEqual(
+        verdict.summary,
+        "The free tier now allows only 1 project and a maximum of 5 users."
+      );
+    });
+
+    it("reads a figure that moved the wrong way as not measuring the claim", () => {
+      const cutTheHobbyPlan = {
+        change_type: "limits_reduced",
+        previous_state: "Hobby plan: 90 minute build timeout.",
+      };
+      assert.strictEqual(
+        measuresItsClaim(cutTheHobbyPlan, "The Hobby plan now allows a 210 minute build timeout."),
+        false,
+        "a figure that rose was read as measuring a reduction"
+      );
+      assert.strictEqual(
+        measuresItsClaim(cutTheHobbyPlan, "The Hobby plan now allows a 45 minute build timeout."),
+        true
+      );
+      assert.strictEqual(
+        measuresItsClaim(
+          A_REAL_REDUCTION_WEARING_OUR_SUBJECT,
+          "The free tier now allows only 1 project."
+        ),
+        true
+      );
+    });
+
+    it("refuses rather than restating a clause that carries no earlier figure", () => {
+      const nothingToRestore = {
+        ...A_REDUCTION_WHOSE_BASELINE_TRAILS,
+        summary:
+          "The Hobby plan now has a build timeout of 210 minutes. The stored information mentioned none of this. The previous stored information stated 300 credits/month.",
+      };
+      const verdict = auditRecord(nothingToRestore);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_NO_BASELINE);
+    });
+
+    it("refuses a summary whose only figure sits in a clause stating no change", () => {
+      const noChangeToRestate = {
+        ...A_REDUCTION_WHOSE_BASELINE_TRAILS,
+        summary: "The stored information stated 300 credits/month and a 90-minute build timeout.",
+      };
+      const verdict = auditRecord(noChangeToRestate);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_STATES_NO_TERMS);
+    });
+
+    it("refuses a reduction whose baseline was only ever a restatement", () => {
+      const everyFigureRestatedButOne = {
+        ...ONE_WORD_OF_DIFFERENCE_ON_THE_SAME_FIGURE,
+        summary: `${ONE_WORD_OF_DIFFERENCE_ON_THE_SAME_FIGURE.summary} The stored information does not mention AgentControl features, while the current pricing page includes 5k AI runs/mo.`,
+      };
+      const verdict = auditRecord(everyFigureRestatedButOne);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_NO_BASELINE);
+    });
+
+    it("keeps a change whose only clause wore our record's subject", () => {
+      const oneClauseCarryingBoth = {
+        vendor: "Mockplus iDoc",
+        change_type: "limits_increased",
+        summary:
+          "The free plan now includes up to 10 users and active projects, an increase from the previously stated three users and five projects.",
+        previous_state: "Free Plan includes three users and five projects.",
+        current_state: "Everyone can register for the basic free plan for up to 10 users.",
+        impact: "medium",
+        source_url: "https://www.mockplus.com/pricing",
+      };
+      const verdict = auditRecord(oneClauseCarryingBoth);
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.strictEqual(
+        verdict.summary,
+        "The free plan now includes up to 10 users and active projects, an increase from three users and five projects."
+      );
+    });
+
+    it("does not restate a baseline onto a record that never claimed a direction", () => {
+      const verdict = auditRecord({
+        ...A_REDUCTION_WHOSE_BASELINE_TRAILS,
+        change_type: "pricing_restructured",
+      });
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.doesNotMatch(verdict.summary, /Previously 300 credits/);
+    });
+  });
+
+  describe("the sentence that travels alone needs a subject", () => {
+    it("refuses a summary left opening on a clause that was dropped", () => {
+      const verdict = auditRecord(A_SURVIVOR_THAT_OPENS_ON_WHAT_WAS_DROPPED);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_DANGLING_REFERENCE);
+    });
+
+    it("keeps a pronoun the summary opened on before the gate touched it", () => {
+      const verdict = auditRecord({
+        ...A_SURVIVOR_THAT_OPENS_ON_WHAT_WAS_DROPPED,
+        summary: "It now offers 1M events for analytics on a free tier open to everyone.",
+      });
+      assert.notStrictEqual(verdict.outcome, OUTCOME_REFUSED);
+    });
+
+    it("keeps a restored baseline standing in front of the pronoun it explains", () => {
+      const verdict = auditRecord(AN_INCREASE_WHOSE_BASELINE_HANGS_OFF_IT);
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.match(verdict.summary, /^The free plan now offers/);
+    });
+  });
+
+  describe("a figure that measures the marketing rather than the offer", () => {
+    it("refuses a record left carrying only a claim about how fast the product is", () => {
+      const verdict = auditRecord(A_MARKETING_FIGURE_WEARING_THE_ABSENCE);
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_STATES_NO_TERMS);
+    });
+
+    it("keeps a duration that is a term of the offer", () => {
+      const verdict = auditRecord({
+        ...A_MARKETING_FIGURE_WEARING_THE_ABSENCE,
+        summary:
+          "The page does not state the free tier limits. The free plan advertises a 210 minute build timeout.",
+      });
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.match(verdict.summary, /210 minute build timeout/);
+    });
+  });
+
   describe("one word of difference on the same figure", () => {
     it("drops the page half of a comparison against our record that restates its figure", () => {
       const evidence = summaryEvidence(ONE_WORD_OF_DIFFERENCE_ON_THE_SAME_FIGURE.summary);
@@ -444,7 +652,7 @@ describe("a change record must state a term the vendor's page carries now", () =
       assert.strictEqual(auditRecord(nowUnlimited).outcome, OUTCOME_REWRITTEN);
       assert.strictEqual(
         auditRecord(nowUnlimited).summary,
-        "The free tier still exists. The free tier now includes unlimited file uploads."
+        "The free tier still exists. The free tier now includes unlimited file uploads. It was previously limited to 5MB."
       );
     });
 
@@ -489,6 +697,10 @@ describe("a change record must state a term the vendor's page carries now", () =
         ONE_WORD_OF_DIFFERENCE_ON_THE_SAME_FIGURE,
         A_REMOVAL_THAT_SAYS_WHAT_REPLACED_IT,
         A_DEPRECATION_THAT_NAMES_NO_FIGURE,
+        AN_INCREASE_WHOSE_BASELINE_HANGS_OFF_IT,
+        A_REDUCTION_WHOSE_BASELINE_TRAILS,
+        A_MARKETING_FIGURE_WEARING_THE_ABSENCE,
+        A_SURVIVOR_THAT_OPENS_ON_WHAT_WAS_DROPPED,
       ]);
       const twice = sweepRecords(once.kept);
       assert.strictEqual(twice.refused.length, 0, "a summary the sweep wrote was refused by the sweep");

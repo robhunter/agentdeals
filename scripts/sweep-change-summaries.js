@@ -12,14 +12,34 @@ import {
   OUTCOME_REWRITTEN,
 } from "./change-gate.js";
 import { fetchPageText } from "./verify-freshness.js";
-import { recordRefusals } from "./change-refusals.js";
+import { recordRefusals, withdrawRefusals } from "./change-refusals.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_CHANGES_PATH = resolve(__dirname, "..", "data", "deal_changes.json");
 
+const identity = (record) =>
+  [record?.vendor, record?.change_type, record?.date, record?.source_url].join("|");
+
+export function asFirstWritten(records, snapshot) {
+  const queued = new Map();
+  for (const record of snapshot) {
+    const key = identity(record);
+    if (!queued.has(key)) queued.set(key, []);
+    queued.get(key).push(record);
+  }
+  const candidates = records.map((record) => {
+    const waiting = queued.get(identity(record));
+    const original = waiting?.shift();
+    return original ? { ...record, summary: original.summary } : record;
+  });
+  const readmitted = [...queued.values()].flat();
+  return { candidates: [...candidates, ...readmitted], readmitted };
+}
+
 export function sweepRecords(records, options = {}) {
   const finalUrlFor = options.finalUrlFor ?? (() => undefined);
   const kept = [];
+  const admitted = [];
   const refused = [];
   const rewritten = [];
   for (const record of records) {
@@ -33,8 +53,9 @@ export function sweepRecords(records, options = {}) {
       rewritten.push({ vendor: record.vendor, was: record.summary, now: verdict.summary });
     }
     kept.push(next);
+    admitted.push(record);
   }
-  return { kept, refused, rewritten };
+  return { kept, admitted, refused, rewritten };
 }
 
 export function countsByReason(refused) {
@@ -63,19 +84,30 @@ async function main() {
   const changesPath = process.env.AGENTDEALS_CHANGES_PATH || DEFAULT_CHANGES_PATH;
   const data = JSON.parse(readFileSync(changesPath, "utf-8"));
 
+  const restoreAt = process.argv.indexOf("--restore-from");
+  let candidates = data.changes;
+  if (restoreAt !== -1) {
+    const snapshotPath = process.argv[restoreAt + 1];
+    const snapshot = JSON.parse(readFileSync(snapshotPath, "utf-8")).changes;
+    const restored = asFirstWritten(data.changes, snapshot);
+    candidates = restored.candidates;
+    console.log(`Reading summaries as first written from ${snapshotPath}`);
+    console.log(`  ${snapshot.length} snapshot record(s), ${restored.readmitted.length} not in the log\n`);
+  }
+
   let redirects = new Map();
   if (checkRedirects) {
-    const wouldRefuse = sweepRecords(data.changes).refused.map(({ candidate }) => candidate);
+    const wouldRefuse = sweepRecords(candidates).refused.map(({ candidate }) => candidate);
     console.log(`Checking ${wouldRefuse.length} refused record(s) for a redirect off the vendor's domain`);
     redirects = await redirectsFor(wouldRefuse);
     console.log(`  ${redirects.size} record(s) re-sourced from a redirect\n`);
   }
 
-  const { kept, refused, rewritten } = sweepRecords(data.changes, {
+  const { kept, admitted, refused, rewritten } = sweepRecords(candidates, {
     finalUrlFor: (record) => redirects.get(record),
   });
 
-  console.log(`Read ${data.changes.length} recorded change(s) from ${changesPath}`);
+  console.log(`Read ${candidates.length} recorded change(s) from ${changesPath}`);
   console.log(`  kept:      ${kept.length}`);
   console.log(`  rewritten: ${rewritten.length}`);
   console.log(`  refused:   ${refused.length}`);
@@ -95,9 +127,11 @@ async function main() {
   }
   data.changes = kept;
   writeFileSync(changesPath, JSON.stringify(data, null, 2) + "\n");
+  const withdrawn = withdrawRefusals(admitted);
   const written = recordRefusals(refused);
   console.log(`\nWrote ${kept.length} change(s) to ${changesPath}`);
   console.log(`Wrote ${written.written.length} refusal(s) to ${written.path}`);
+  console.log(`Withdrew ${withdrawn.withdrawn} refusal(s) the gate now admits`);
 }
 
 const isMainModule =

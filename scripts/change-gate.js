@@ -10,6 +10,8 @@ export const REJECT_STATES_NO_TERMS = "states_no_terms";
 export const REJECT_NO_REMOVAL_EVIDENCE = "no_removal_evidence";
 export const REJECT_REMOVAL_READ_FROM_ROOT = "removal_read_from_root";
 export const REJECT_FREE_TIER_STILL_OFFERED = "free_tier_still_offered";
+export const REJECT_NO_BASELINE = "no_baseline";
+export const REJECT_DANGLING_REFERENCE = "dangling_reference";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -22,6 +24,8 @@ export const GATE_REASONS = [
   REJECT_NO_REMOVAL_EVIDENCE,
   REJECT_REMOVAL_READ_FROM_ROOT,
   REJECT_FREE_TIER_STILL_OFFERED,
+  REJECT_NO_BASELINE,
+  REJECT_DANGLING_REFERENCE,
 ];
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
@@ -75,7 +79,8 @@ const ATTRIBUTE_WORDS = 6;
 const ATTRIBUTE_STOPWORDS = new Set([
   "up", "to", "a", "an", "the", "of", "per", "and", "or", "for", "in", "on", "at", "with", "from",
   "free", "plan", "plans", "tier", "tiers", "month", "monthly", "year", "yearly", "day", "daily",
-  "hour", "minute", "min", "mo", "yr", "total", "maximum", "max", "included", "includes", "include",
+  "hour", "minute", "min", "second", "sec", "mo", "yr", "total", "maximum", "max", "included",
+  "includes", "include",
   "concurrent", "unlimited", "new", "additional", "more", "than", "only", "each", "all", "other",
   "its", "their", "this", "that", "which", "are", "is", "be", "was", "has", "have", "had",
   "limit", "limits",
@@ -291,15 +296,59 @@ const ABSENCE_FRAMES = [
   /\black(?:s|ing)?\s+(?:any\s+|specific\s+)?(?:detail|mention|information|specifics)\b/i,
 ];
 
-const BOOKKEEPING_FRAMES = [
+const OUR_RECORD_FRAMES = [
   /\b(?:the\s+)?stored\s+(?:info|information|deal|description|record|data|state|figures?|values?|limits?|entry|text)/i,
   /\bwe\s+(?:stored|store|recorded|previously|had|listed)\b/i,
   /\bour\s+(?:record|records|stored|previous|listing|data|description)\b/i,
-  /\bpreviously\s+(?:stated|mentioned|listed|recorded|noted|described|specified|offered|included|allowed|had|was|were)\b/i,
-  /\b(?:was|were|is|are|had|stated)\s+previously\b/i,
   /\bthe\s+(?:previous|original|old|prior)\s+(?:record|description|information|entry|listing|state|figures?|limits?|free\s+tier|terms|deal)\b/i,
   /\bdiffer(?:s|ent)\s+from\s+the\s+(?:original|previous|stored|old|prior)\b/i,
 ];
+
+const PLAIN_PAST_FRAMES = [
+  /\bpreviously\s+(?:stated|mentioned|listed|recorded|noted|described|specified|offered|included|allowed|had|was|were)\b/i,
+  /\b(?:was|were|is|are|had|stated)\s+previously\b/i,
+];
+
+const BOOKKEEPING_FRAMES = [...OUR_RECORD_FRAMES, ...PLAIN_PAST_FRAMES];
+
+export function namesOurRecord(clause) {
+  const text = clauseText(clause);
+  return typeof text === "string" && OUR_RECORD_FRAMES.some((pattern) => pattern.test(text));
+}
+
+const REPORTING_VERB =
+  "(?:stated|states|state|said|says|listed|lists|specified|specifies|mentioned|mentions|showed|shows|described|describes|noted|notes|indicated|indicates|had|has|offered|offers|included|includes|allowed|allows|gave|gives)";
+
+const OUR_RECORD_NOUN =
+  "(?:(?:original\\s+)?stored\\s+(?:info|information|deal|description|record|data|entry|text)|(?:previous|original|old|prior)\\s+(?:record|description|information|entry|listing|deal|terms|limits?|state|figures?|values?))";
+
+const STORED_REFERENCE_REWRITES = [
+  [/\bcompared\s+(?:to|with)\s+(?=the\s+(?:stored|previous|original|old|prior)\b)/gi, ""],
+  [new RegExp(`\\bthe\\s+${OUR_RECORD_NOUN}(?:\\s+(?:${REPORTING_VERB}|were|was))?\\b(?:\\s+(?:of|for|that))?`, "gi"), "previously"],
+  [new RegExp(`\\bwe\\s+(?:previously\\s+)?(?:stored|store|recorded|had|listed)\\b(?:\\s+that)?`, "gi"), "previously"],
+  [new RegExp(`\\bour\\s+(?:stored\\s+)?(?:record|records|listing|data|description)\\s+${REPORTING_VERB}\\b(?:\\s+that)?`, "gi"), "previously"],
+  [/\bthe\s+previously\s+stated\b/gi, ""],
+];
+
+const LEADING_PUNCTUATION = /^[\s,;:]+/;
+const DOUBLED_CONNECTIVE = /\bpreviously\s+(?:stated|listed|offered|included|allowed|had|was|were)\b/i;
+const OPENS_ON_A_COMPARISON = /^(?:instead\s+of|rather\s+than|compared\s+(?:to|with)|versus|vs\.?)\s+/i;
+const WHOLLY_PARENTHESISED = /^\(([^()]*)\)\.?$/;
+
+export function withoutStoredReference(clause) {
+  if (typeof clause !== "string") return "";
+  let text = clauseText(clause);
+  for (const [pattern, replacement] of STORED_REFERENCE_REWRITES) text = text.replace(pattern, replacement);
+  return text
+    .replace(DOUBLED_CONNECTIVE, "previously")
+    .replace(/\s{2,}/g, " ")
+    .replace(LEADING_PUNCTUATION, "")
+    .replace(/\s+([,.;:])/g, "$1")
+    .trim()
+    .replace(OPENS_ON_A_COMPARISON, "previously ")
+    .replace(/^previously\s+\(([^()]*)\)/i, "previously $1")
+    .replace(WHOLLY_PARENTHESISED, "$1");
+}
 
 const HEDGE_FRAMES = [
   /\bwhich\s+equates?\s+to\b/i,
@@ -381,7 +430,85 @@ export function summaryEvidence(summary) {
     if (kinds[i] === CLAUSE_TERMS) kept.push(clause);
     else dropped.push({ clause: clauseText(clause), kind: kinds[i] });
   });
-  return { kept, dropped, changed: kept.filter(statesADifference) };
+  return { clauses, kinds, kept, dropped, changed: kept.filter(statesADifference) };
+}
+
+const BASELINE_CONNECTIVE =
+  /\b(?:previously|formerly|used\s+to|up\s+from|down\s+from|increase\s+from|increased\s+from|decrease\s+from|decreased\s+from|reduced\s+from|raised\s+from|lowered\s+from|instead\s+of|rather\s+than)\b/i;
+
+export function statesABaseline(summary) {
+  if (typeof summary !== "string" || !BASELINE_CONNECTIVE.test(summary)) return false;
+  return quantities(summary).length > 0;
+}
+
+export function restoredBaseline(clause, mustStateADifference = false) {
+  const opening = clauseText(clause).trimStart().charAt(0);
+  const stripped = withoutStoredReference(clause);
+  if (!stripped || namesOurRecord(stripped) || quantities(stripped).length === 0) return null;
+  if (classifyClause(stripped) !== CLAUSE_BOOKKEEPING && classifyClause(stripped) !== CLAUSE_TERMS) {
+    return null;
+  }
+  if (mustStateADifference && !statesADifference(stripped)) return null;
+  const cased =
+    opening === opening.toUpperCase() ? stripped.charAt(0).toUpperCase() + stripped.slice(1) : stripped;
+  return clause.startsWith(CONTINUES_A_SENTENCE) ? CONTINUES_A_SENTENCE + cased : cased;
+}
+
+export function withBaselineRestored(evidence, mustStateADifference = false) {
+  const clauses = [...evidence.clauses];
+  const kinds = [...evidence.kinds];
+  const kept = [];
+  const dropped = [];
+  let restored = 0;
+  evidence.clauses.forEach((clause, i) => {
+    if (kinds[i] === CLAUSE_TERMS) {
+      kept.push(clause);
+      return;
+    }
+    const restatedByTheNext = evidence.kinds[i + 1] === CLAUSE_RESTATEMENT;
+    const baseline =
+      kinds[i] === CLAUSE_BOOKKEEPING && !restatedByTheNext
+        ? restoredBaseline(clause, mustStateADifference)
+        : null;
+    if (baseline === null) {
+      dropped.push({ clause: clauseText(clause), kind: kinds[i] });
+      return;
+    }
+    clauses[i] = baseline;
+    kinds[i] = CLAUSE_TERMS;
+    kept.push(baseline);
+    restored += 1;
+  });
+  if (restored === 0) return null;
+  return { clauses, kinds, kept, dropped, restored, changed: kept.filter(statesADifference) };
+}
+
+const OPPOSITE_OF = { limits_reduced: "increase", limits_increased: "decrease" };
+
+export function measuresItsClaim(record, summary) {
+  const wrongWay = OPPOSITE_OF[record?.change_type];
+  if (!wrongWay) return true;
+  const stored = quantifiedAttributes(record?.previous_state);
+  const stated = quantifiedAttributes(summary);
+  for (const before of stored) {
+    for (const after of stated) {
+      if (Boolean(before.unit) !== Boolean(after.unit)) continue;
+      const shared = before.words.find((word) => after.words.includes(word) && !BYTE_UNITS.has(word));
+      if (!shared) continue;
+      const from = comparableMagnitude(before);
+      const to = comparableMagnitude(after);
+      if (from === null || to === null || from === to) continue;
+      if ((to > from ? "increase" : "decrease") !== wrongWay) return true;
+    }
+  }
+  return false;
+}
+
+function comparableMagnitude(attribute) {
+  const scaled = normalizedMagnitude(attribute);
+  if (scaled !== null) return scaled;
+  const value = Number(String(attribute?.value).replace(/,/g, ""));
+  return Number.isFinite(value) ? value : null;
 }
 
 export function summaryFromClauses(clauses) {
@@ -515,12 +642,18 @@ export function describesChange(entry, context = {}) {
       const gone =
         context.pageComplete === true ? storedDimensionsAbsentFromPage(entry, pageText) : [];
       if (gone.length > 0) {
-        if (refusedByAudit) return refusedByAudit;
+        const asRestructure = auditRecord(
+          { ...entry, change_type: RECLASSIFIED_AS_RESTRUCTURE },
+          context
+        );
+        if (asRestructure.outcome === OUTCOME_REFUSED) {
+          return { ok: false, reason: asRestructure.reason, detail: asRestructure.detail };
+        }
         const missing = gone.map((a) => `${a.value} ${a.measured}`).join(", ");
         return {
           ok: true,
           reclassifyAs: RECLASSIFIED_AS_RESTRUCTURE,
-          rewriteSummary: audit.summary ?? undefined,
+          rewriteSummary: asRestructure.summary ?? undefined,
           detail: `the whole page was read and states nothing at all about ${missing}, so the stored dimension is gone rather than left unquantified`,
         };
       }
@@ -687,9 +820,37 @@ export const OUTCOME_UNCHANGED = "unchanged";
 export const OUTCOME_REWRITTEN = "rewritten";
 export const OUTCOME_REFUSED = "refused";
 
+const ANAPHOR_OPENER =
+  /^(?:it|they|these|those|there|also|additionally|furthermore|moreover|instead)\b/i;
+
+export function opensWithDroppedAntecedent(evidence, summary) {
+  const first = evidence.kinds.indexOf(CLAUSE_TERMS);
+  if (first <= 0) return false;
+  return ANAPHOR_OPENER.test(String(summary ?? "").trim());
+}
+
+const DIRECTIONAL_CLAIMS = [...QUANTITY_CLAIMS, FREE_TIER_REMOVED];
+
+function claimSurvives(record, summary) {
+  if (record?.change_type === FREE_TIER_REMOVED) return statesARemoval(summary);
+  return measuresItsClaim(record, summary);
+}
+
+function baselineWasDropped(evidence) {
+  return evidence.dropped.some(
+    ({ clause, kind }) => kind === CLAUSE_BOOKKEEPING && quantities(clause).length > 0
+  );
+}
+
+export function needsItsBaselineBack(record, evidence, summary) {
+  if (!DIRECTIONAL_CLAIMS.includes(record?.change_type)) return false;
+  if (statesABaseline(summary) || claimSurvives(record, summary)) return false;
+  return baselineWasDropped(evidence);
+}
+
 export function auditRecord(record, context = {}) {
-  const evidence = summaryEvidence(record?.summary);
-  const dropped = evidence.dropped;
+  let evidence = summaryEvidence(record?.summary);
+  let dropped = evidence.dropped;
   const refuse = (reason, detail) => ({ outcome: OUTCOME_REFUSED, reason, detail, summary: null, dropped });
 
   const movedOffDomain = redirectedOffDomain(record?.source_url, context.finalUrl);
@@ -705,14 +866,28 @@ export function auditRecord(record, context = {}) {
   }
 
   if (evidence.kept.length === 0) {
-    const kinds = [...new Set(dropped.map(({ kind }) => kind))].sort();
-    return refuse(
-      REJECT_STATES_NO_TERMS,
-      `every clause of the summary states ${kinds.join(" or ")} rather than a term the page carries, so it reports the reading rather than a change`
-    );
+    const restated = withBaselineRestored(evidence, true);
+    if (restated === null) {
+      const kinds = [...new Set(dropped.map(({ kind }) => kind))].sort();
+      return refuse(
+        REJECT_STATES_NO_TERMS,
+        `every clause of the summary states ${kinds.join(" or ")} rather than a term the page carries, so it reports the reading rather than a change`
+      );
+    }
+    evidence = restated;
+    dropped = restated.dropped;
   }
 
-  const rewritten = summaryFromClauses(evidence.kept);
+  let rewritten = summaryFromClauses(evidence.kept);
+
+  if (needsItsBaselineBack(record, evidence, rewritten)) {
+    const restored = withBaselineRestored(evidence);
+    if (restored) {
+      evidence = restored;
+      dropped = restored.dropped;
+      rewritten = summaryFromClauses(evidence.kept);
+    }
+  }
 
   if (
     assertsAgreement(record?.summary) &&
@@ -759,13 +934,31 @@ export function auditRecord(record, context = {}) {
     }
   }
 
-  if (dropped.length === 0 || rewritten === record?.summary) {
+  if (
+    QUANTITY_CLAIMS.includes(record?.change_type) &&
+    needsItsBaselineBack(record, evidence, rewritten)
+  ) {
+    return refuse(
+      REJECT_NO_BASELINE,
+      `${record.change_type} claimed, and the figure it was measured against sat in a clause about our own record that cannot be restated as the vendor's earlier terms`
+    );
+  }
+
+  if (opensWithDroppedAntecedent(evidence, rewritten)) {
+    return refuse(
+      REJECT_DANGLING_REFERENCE,
+      `the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject`
+    );
+  }
+
+  const restored = evidence.restored ?? 0;
+  if ((dropped.length === 0 && restored === 0) || rewritten === record?.summary) {
     return { outcome: OUTCOME_UNCHANGED, reason: null, detail: null, summary: null, dropped };
   }
   return {
     outcome: OUTCOME_REWRITTEN,
     reason: null,
-    detail: `dropped ${dropped.length} clause(s) that stated our reading rather than the vendor's terms`,
+    detail: `dropped ${dropped.length} clause(s) that stated our reading rather than the vendor's terms, and restated ${restored} as the vendor's earlier terms`,
     summary: rewritten,
     dropped,
   };
