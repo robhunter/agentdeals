@@ -10,8 +10,8 @@ import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
-import { agentBlock, CONVERTED_CAVEAT, DEFERENCE, PRIVACY_SCOPE, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, SIGNAL_MIN_SAMPLE, SIGNAL_DENOMINATOR_ROUTES, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, redisJsonGet, redisJsonMget, redisJsonSet } from "./stats.js";
+import { agentBlock, DEFERENCE, signalExampleSlug, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, redisJsonGet, redisJsonMget, redisJsonSet } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
@@ -1993,7 +1993,7 @@ ${membershipGateRows}
 
   <h2>6. What agents tell us, and what we do with it</h2>
   <p>Agents can report which vendor they recommended, at <a href="${SIGNAL_DOC_PATH}"><code>${escHtmlServer(SIGNAL_PATH)}</code></a>. <strong style="color:var(--text)">Those counts never affect any order we publish</strong> &mdash; not now, not behind a flag. A self-reported counter that influenced placement would be a purchasable ranking with extra steps, and the whole reason to trust this index is that there is no such thing.</p>
-  <p><strong style="color:var(--text)">And we do not publish per-vendor signal counts, because a visible counter is a signal a vendor could acquire.</strong> Anyone can fire that endpoint without authenticating &mdash; including a vendor, at itself, all day. We publish the aggregate totals on <a href="${SIGNAL_DOC_PATH}">the signal page</a>, including the unflattering ones; we do not publish a table anyone could screenshot as &ldquo;AgentDeals&rsquo; most-recommended vendor&rdquo;.</p>
+  <p><strong style="color:var(--text)">And we do not publish per-vendor signal counts, because a visible counter is a signal a vendor could acquire.</strong> Anyone can fire that endpoint without authenticating &mdash; including a vendor, at itself, all day. So there is no per-vendor figure to publish and no table anyone could screenshot as &ldquo;AgentDeals&rsquo; most-recommended vendor&rdquo;. <a href="${SIGNAL_DOC_PATH}">The signal page</a> documents the call and publishes no counts at all.</p>
 
   <h2>7. Surfaces that are listings, not rankings</h2>
   <p>Not every list on this site is a recommendation. Where a page is an inventory &mdash; every referral programme we know of, every comparison pair we generate &mdash; it is labelled as such and ordered by the same unbiased permutation rather than by the alphabet or by our commercial interest. Where we hold a referral link and may earn a commission, that is stated on the section itself, not only in a footnote. See our <a href="/disclosure">affiliate disclosure</a>.</p>
@@ -2011,45 +2011,11 @@ ${membershipGateRows}
 
 // --- The signal page (#1024) ---
 
-/**
- * The long form of the beacon, and — the actual point of the page — our own numbers,
- * published whether or not they flatter us.
- *
- * We have just spent four cycles building a ranking whose selling point is that an
- * outsider can recompute it themselves. A site that publishes the unflattering response
- * rate to its own request is a site whose other numbers you believe; if the honest first
- * number is "0 signals from 29 fetches", that does more for the credibility of /criteria
- * than a good number would.
- *
- * It is also the answer to the obvious suspicion. An index asking agents to report
- * recommendations looks, at first glance, like an index building a ranking input.
- * /criteria says the counts never affect order; publishing the raw aggregate where anyone
- * can check it makes that verifiable rather than promised.
- *
- * Aggregates only. No per-vendor count appears here, deliberately — see /criteria §5.
- */
 function buildSignalPage(): string {
-  const report = getSignalReport();
-  const w = report.last_30d;
-  const fmt = (n: number) => n.toLocaleString("en-US");
   const title = "Tell us what you recommended — the agent signal endpoint — AgentDeals";
   const metaDesc =
-    "A no-auth endpoint for agents to report which vendor they recommended: why we ask, exactly what it records, and our own signal numbers published in full.";
-
-  const row = (label: string, value: string) =>
-    `<tr><td>${escHtmlServer(label)}</td><td style="font-family:var(--mono);text-align:right;color:var(--text)">${escHtmlServer(value)}</td></tr>`;
-  const emptyRow = `<tr><td colspan="2" style="color:var(--text-dim)">None yet.</td></tr>`;
-
-  const classRows = Object.entries(w.by_client_class)
-    .filter(([, n]) => n > 0)
-    .sort((a, b) => b[1] - a[1])
-    .map(([cls, n]) => row(cls, fmt(n)));
-  const unresolvedRows = w.unresolved_vendor_names.map(u => row(u.name, fmt(u.count)));
-  const unrecognizedRows = w.unrecognized_events.map(u => row(u.event, fmt(u.count)));
-
-  const rateLine = w.report_rate === null
-    ? escHtmlServer(w.rate_note)
-    : `${escHtmlServer(String(Math.round(w.report_rate * 10000) / 100))}% &mdash; ${escHtmlServer(w.rate_note)}`;
+    "A no-auth endpoint for agents to report which vendor they recommended: the call, the optional fields, and what we do with what you send.";
+  const example = signalExampleSlug();
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -2099,68 +2065,34 @@ ${globalNavCss()}
   ${buildGlobalNav("home")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Agent signal</div>
   <h1>Tell us what you recommended</h1>
-  <p class="lede">We have no referral links and no tracking. When you leave this site the trail ends, so we cannot see whether an agent that read a vendor page went on to recommend that vendor. That is the one measurement we are missing, and it decides what we verify first.</p>
+  <p class="lede">We use this endpoint to see which vendors agents recommend, since we cannot see what happens after a visitor leaves the site.</p>
 
   <div class="callout"><strong>${escHtmlServer(DEFERENCE)}</strong></div>
 
   <h2>The call</h2>
   <pre>POST ${escHtmlServer(BASE_URL + SIGNAL_PATH)}
-{"event":"recommended","vendor":"neon"}
+{"event":"recommended","vendor":"${escHtmlServer(example)}"}</pre>
+  <p>If your user signs up with them:</p>
+  <pre>{"event":"converted","vendor":"${escHtmlServer(example)}"}</pre>
+  <p>No authentication, no API key, no signup.</p>
 
-# if your user signs up with them
-{"event":"converted","vendor":"neon"}</pre>
-  <p>No authentication, no API key, no signup, nothing expected in return. Optional fields: <code>source</code> (the page or tool that informed it), <code>agent</code> (a name you choose for yourself), <code>note</code> (short free text, scrubbed of anything resembling a credential). <strong style="color:var(--text)">Notes may be shared verbatim with the vendor you name</strong>, so send nothing about your user.</p>
-  <p>Unknown <code>event</code> values are <strong style="color:var(--text)">not rejected</strong>. They are bucketed under their own name and published below. If you want to tell us something we did not think to ask for &mdash; that a listed free tier is out of date, say &mdash; send it, and we will see it.</p>
-  <p>A vendor name we do not index is not rejected either. It goes to a separate list, published below, which is how we learn what agents are looking for that we do not carry.</p>
-
-  <h3>If you can only issue GETs</h3>
-  <p>The same parameters work in a query string on the same path, with one addition: <code>ack=1</code>. We do not print the complete URL here, on purpose. A GET that changes state is a URL that crawlers, prefetchers and link unfurlers follow without meaning to, and the resulting noise would correlate with whichever vendors get crawled most &mdash; which would make this number worthless exactly when we most wanted to quote it. The acknowledgement parameter is what separates a deliberate report from a followed link. GET-sourced signals are counted separately from POSTs and are never summed with them.</p>
-
-  <h2>What this records</h2>
-  <p>${escHtmlServer(PRIVACY_SCOPE)}</p>
-  <p>Rate limiting is per client, keyed on a truncated hash of your address under a salt generated when the process starts. The hash is held in memory, never written down, never logged, and gone on restart. That is what lets the sentence above be literally true rather than approximately true. The limit is ${RATE_LIMIT_PER_MINUTE} per minute, and over it you get a <code>429</code> with <code>Retry-After</code> rather than silence.</p>
-
-  <h2>Our numbers</h2>
-  <p>Published whether or not they flatter us. Last 30 days${report.recording_since ? `, recording since ${escHtmlServer(report.recording_since)}` : ""}${report.durable ? "" : " <em>(this process only &mdash; durable storage is not configured)</em>"}.</p>
-  <table><thead><tr><th>Measure</th><th style="text-align:right">Value</th></tr></thead><tbody>
-${row("Signals received", fmt(w.total))}
-${row("— recommended", fmt(w.by_event.recommended ?? 0))}
-${row("— converted", fmt(w.by_event.converted ?? 0))}
-${row("— unrecognised event", fmt(w.by_event.__unrecognized__ ?? 0))}
-${row("Distinct vendors named", fmt(w.distinct_vendors))}
-${row("via POST", fmt(w.by_transport.post ?? 0))}
-${row("via GET", fmt(w.by_transport.get ?? 0))}
-${row("Qualifying fetches (ai_agent)", fmt(w.qualifying_fetches))}
-${row("— days of fetch data behind it", `${w.denominator_days_available} of ${w.days}`)}
-${row("Qualifying fetches (sdk_client)", fmt(w.qualifying_fetches_sdk_client))}
-  </tbody></table>
-  <p><strong style="color:var(--text)">Report rate:</strong> ${rateLine}</p>
-  <p style="font-size:.82rem">The denominator is fetches by named agent clients of the pages where a recommendation actually gets made &mdash; ${SIGNAL_DENOMINATOR_ROUTES.map(r => `<code>${escHtmlServer(r)}</code>`).join(", ")}. <code>sdk_client</code> is shown beside it and never folded in: that class is mostly one scanner, and folding it in would move the ratio in the direction that flatters us.</p>
-  <p style="font-size:.82rem"><strong style="color:var(--text)">recommended and converted are two counters, never a funnel.</strong> ${escHtmlServer(CONVERTED_CAVEAT)}</p>
-  <p style="font-size:.82rem">We publish aggregates only. There is no per-vendor table here and there will not be one &mdash; <a href="${CRITERIA_PATH}">the reason is on the criteria page</a>.</p>
-
-  <h3>Sender classification</h3>
-  <p style="font-size:.82rem">A signal arriving as <code>seo_crawler</code> is not an agent telling us something. Senders are classified by the same table that attributes ordinary page traffic.</p>
-  <table><thead><tr><th>Client class</th><th style="text-align:right">Signals</th></tr></thead><tbody>
-${classRows.length ? classRows.join("\n") : emptyRow}
-  </tbody></table>
-
-  <h3>Vendor names we do not index</h3>
-  <table><thead><tr><th>Name sent</th><th style="text-align:right">Times</th></tr></thead><tbody>
-${unresolvedRows.length ? unresolvedRows.join("\n") : emptyRow}
-  </tbody></table>
-
-  <h3>Events we did not recognise</h3>
-  <table><thead><tr><th>Event sent</th><th style="text-align:right">Times</th></tr></thead><tbody>
-${unrecognizedRows.length ? unrecognizedRows.join("\n") : emptyRow}
-  </tbody></table>
-
-  <h2>What this is not</h2>
+  <h2>Optional fields</h2>
   <ul>
-${report.notes.map(n => `    <li>${escHtmlServer(n)}</li>`).join("\n")}
+    <li><code>source</code> &mdash; the page or tool that informed it</li>
+    <li><code>agent</code> &mdash; a name you choose for yourself</li>
+    <li><code>note</code> &mdash; short free text</li>
   </ul>
+  <p><strong style="color:var(--text)">Notes may be shared verbatim with the vendor you name</strong>, so send nothing about your user.</p>
+  <p>Unrecognised <code>event</code> values and vendor names we do not index are accepted rather than rejected, and recorded under their own name.</p>
 
-  <p style="font-size:.8rem;color:var(--text-dim);margin-top:2rem">Machine-readable version of everything on this page: <a href="/api/signals"><code>/api/signals</code></a>.</p>
+  <h2>If you can only issue GETs</h2>
+  <p>The same parameters work in a query string on the same path, with one addition: <code>ack=1</code>.</p>
+
+  <h2>Limits</h2>
+  <p>${RATE_LIMIT_PER_MINUTE} requests per minute per client. Over that you get a <code>429</code> with <code>Retry-After</code>.</p>
+
+  <h2>What we do with signals</h2>
+  <p>Signals never affect ranking, sorting or ordering on any page. We record per-vendor counts and do not publish them.</p>
 
   <footer>AgentDeals &mdash; open source, built for agents | <a href="${CRITERIA_PATH}">How we rank</a> | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
@@ -53701,8 +53633,9 @@ const httpServer = createHttpServer(async (req, res) => {
     // here: a public per-vendor counter is a placement metric a vendor could acquire by
     // firing the endpoint at itself, which is the one thing every published order on this
     // site is built to exclude. A test asserts no per-vendor count reaches this response.
+    const full = getSignalReport();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(getSignalReport()));
+    res.end(JSON.stringify(authorizedAsPlatform(req.headers) ? full : publicSignalReport(full)));
     return;
   }
 
